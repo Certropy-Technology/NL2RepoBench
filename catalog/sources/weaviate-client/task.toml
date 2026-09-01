@@ -6,7 +6,15 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "hard"
 category = "database-sdk"
-tags = ["python", "weaviate", "vector-database", "sdk", "query-builders", "pydantic", "separate-verifier"]
+tags = [
+    "python",
+    "weaviate",
+    "vector-database",
+    "sdk",
+    "query-builders",
+    "pydantic",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -17,51 +25,31 @@ license_spdx = "BSD-3-Clause"
 source_digest = "sha256:4f8ef5b9b30a22a4503895fea6cc77fa7280d4fcf2378a92650abb0d75315152"
 submodules = []
 
-[environment]
-status = "known"
-python_version = "3.12.14"
-os_name = "debian-12-amd64"
-base_image = "python:3.12.14-slim-bookworm"
-base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
-system_packages = []
-network_mode = "no-network"
-build_command = "pip install --target /tmp/candidate-site --no-deps --no-build-isolation /workspace with SETUPTOOLS_SCM_PRETEND_VERSION=4.23.1.dev26+g9f59a367f"
-
-[environment.network_policy]
-mode = "no-network"
-offline_dependencies = "preinstalled-image"
-reference_source_fetch = "forbidden"
-reason = "The exact runtime and build closure is installed from a hash-locked requirements file during Docker build. Agent and separate verifier phases have no egress; the trusted Oracle restores a digest-verified private archive of the frozen source revision."
-
-[dependencies]
-status = "known"
-installer = "pip"
-packages = ["annotated-types==0.8.0", "anyio==4.14.2", "authlib==1.7.2", "certifi==2026.7.22", "cffi==2.1.1", "cryptography==50.0.1", "grpcio==1.78.0", "h11==0.16.0", "httpcore==1.0.9", "httpx==0.28.1", "idna==3.19", "joserfc==1.7.5", "packaging==26.3", "protobuf==6.33.6", "pycparser==3.0", "pydantic==2.13.5", "pydantic-core==2.46.5", "setuptools==80.10.2", "setuptools-scm==9.2.2", "typing-extensions==4.16.0", "typing-inspection==0.4.4", "validators==0.35.0", "wheel==0.46.2"]
-lock_artifact = { digest = "sha256:d91def8f511391c301c8fbd131dca5316bdd9f599d61d91be074eab8c3839257", size_bytes = 35024, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:d91def8f511391c301c8fbd131dca5316bdd9f599d61d91be074eab8c3839257", visibility = "private" }
-
-[tests]
-framework = "pytest"
-expected_total = 94
-expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py", "/tests/verifier/probe.py", "/tests/verifier/cases.json"]
-
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:2e198ee35543b43ff8b9d0879a8f1a1a03f11663ca167eb04b982438d9519cda", size_bytes = 71680, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:2e198ee35543b43ff8b9d0879a8f1a1a03f11663ca167eb04b982438d9519cda", visibility = "private" }
 entrypoint = "run.py"
-environment = { SETUPTOOLS_SCM_PRETEND_VERSION = "4.23.1.dev26+g9f59a367f" }
 
-[metric]
-contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
-collection_mismatch = "fail"
-formula = "clamp(passed / frozen_total, 0, 1)"
+[verifier.bundle]
+digest = "sha256:2e198ee35543b43ff8b9d0879a8f1a1a03f11663ca167eb04b982438d9519cda"
+size_bytes = 71680
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:2e198ee35543b43ff8b9d0879a8f1a1a03f11663ca167eb04b982438d9519cda"
+visibility = "private"
+
+[verifier.environment]
+SETUPTOOLS_SCM_PRETEND_VERSION = "4.23.1.dev26+g9f59a367f"
 
 [harbor]
 description = "Build the pinned Weaviate Python client from an empty workspace and reproduce its deterministic offline authentication, connection configuration, utility, filter/query builder, collection configuration, and HFresh update contracts without contacting a Weaviate service."
-keywords = ["python", "weaviate", "vector-database", "sdk", "query-builders", "pydantic", "separate-verifier"]
+keywords = [
+    "python",
+    "weaviate",
+    "vector-database",
+    "sdk",
+    "query-builders",
+    "pydantic",
+    "separate-verifier",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 120.0
@@ -81,7 +69,64 @@ media_type = "application/vnd.nl2repobench.oracle+tar"
 uri = "artifact://private/sha256:ec57097f2db3dfcfb544dfb98a74edd1559e8b15987a056a01eeebb4c8df6e1c"
 visibility = "private"
 
+[environment]
+status = "unknown"
+os_name = "debian-12-amd64"
+base_image = "python:3.12.14-slim-bookworm"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
+build_command = "pip install --target /tmp/candidate-site --no-deps --no-build-isolation /workspace with SETUPTOOLS_SCM_PRETEND_VERSION=4.23.1.dev26+g9f59a367f"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The exact runtime and build closure is installed from a hash-locked requirements file during Docker build. Agent and separate verifier phases have no egress; the trusted Oracle restores a digest-verified private archive of the frozen source revision."
+
+[dependencies]
+status = "unknown"
+packages = [
+    "annotated-types==0.8.0",
+    "anyio==4.14.2",
+    "authlib==1.7.2",
+    "certifi==2026.7.22",
+    "cffi==2.1.1",
+    "cryptography==50.0.1",
+    "grpcio==1.78.0",
+    "h11==0.16.0",
+    "httpcore==1.0.9",
+    "httpx==0.28.1",
+    "idna==3.19",
+    "joserfc==1.7.5",
+    "packaging==26.3",
+    "protobuf==6.33.6",
+    "pycparser==3.0",
+    "pydantic==2.13.5",
+    "pydantic-core==2.46.5",
+    "setuptools==80.10.2",
+    "setuptools-scm==9.2.2",
+    "typing-extensions==4.16.0",
+    "typing-inspection==0.4.4",
+    "validators==0.35.0",
+    "wheel==0.46.2",
+]
+package_manager = "pip"
+
+[tests]
+expected_total = 94
+expected_total_source = "frozen-collection"
+framework = "custom"
+report_format = "custom-json-v1"
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = [
+    "passed",
+]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "python-author-wave2-20260828-weaviate-client"
-reason = "The remediated frozen source passed the 94-leaf Oracle at reward 1.0; empty, stub, forgery, install-timeout, call-timeout, and offline controls completed under the separate verifier. The unavailable pinned agent-runtime image remains an integrator infrastructure precondition."
+reason = "The remediated frozen source passed the 94-leaf Oracle at reward 1.0; empty, stub, forgery, install-timeout, call-timeout, and offline controls completed under the separate verifier. The unavailable pinned agent-runtime image remains an integrator infrastructure precondition. Canonical migration: exact Python runtime/package-manager evidence and canonical private dependency closure are not available; keep blocked until versioned artifacts and gates are recreated."

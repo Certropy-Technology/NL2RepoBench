@@ -6,7 +6,14 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "hard"
 category = "web-utilities"
-tags = ["python", "wsgi", "http", "routing", "datastructures", "separate-verifier"]
+tags = [
+    "python",
+    "wsgi",
+    "http",
+    "routing",
+    "datastructures",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -17,45 +24,15 @@ license_spdx = "BSD-3-Clause"
 source_digest = "sha256:239273928c7e07cb69a74fa21305921f41901f59b7e7d188eb46c47e9855ae4c"
 submodules = []
 
-[environment]
-status = "known"
-python_version = "3.12.14"
-os_name = "debian-12-amd64"
-base_image = "python:3.12.14-slim-bookworm"
-base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e"
-system_packages = []
-network_mode = "no-network"
-build_command = "install the hash-locked candidate build and runtime closure during image build"
-
-[environment.network_policy]
-mode = "no-network"
-offline_dependencies = "preinstalled-image"
-reference_source_fetch = "forbidden"
-reason = "The candidate closure is installed during image build from a private hash lock; the Agent and separate verifier have no egress, while the trusted Oracle fetches only the pinned upstream revision."
-
-[dependencies]
-status = "known"
-installer = "pip"
-packages = ["flit_core==3.12.0", "markupsafe==3.0.3"]
-lock_artifact = { digest = "sha256:5c3a43a596e4b578cd3689d9a253e1d82deca429e134468cd951c109e0050f1e", size_bytes = 8252, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:5c3a43a596e4b578cd3689d9a253e1d82deca429e134468cd951c109e0050f1e", visibility = "private" }
-
-[tests]
-framework = "pytest"
-expected_total = 35
-expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py"]
-
-[metric]
-contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
-collection_mismatch = "fail"
-formula = "clamp(passed / frozen_total, 0, 1)"
-
 [harbor]
 description = "Build the pinned Werkzeug WSGI and HTTP utility library from an empty workspace and satisfy deterministic data structure, URL, security, routing, request, response, and test-client contracts."
-keywords = ["python", "wsgi", "http", "routing", "separate-verifier"]
+keywords = [
+    "python",
+    "wsgi",
+    "http",
+    "routing",
+    "separate-verifier",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 120.0
@@ -70,8 +47,15 @@ workspace_artifact = "/workspace"
 [verifier]
 protocol = "custom-json-v1"
 entrypoint = "run.py"
-bundle = { digest = "sha256:ccf9f17647f4f7f41dca2d2be5b799288f0eaeb996651f2a059249fab573f0bc", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:ccf9f17647f4f7f41dca2d2be5b799288f0eaeb996651f2a059249fab573f0bc", visibility = "private" }
-environment = {}
+
+[verifier.bundle]
+digest = "sha256:ccf9f17647f4f7f41dca2d2be5b799288f0eaeb996651f2a059249fab573f0bc"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:ccf9f17647f4f7f41dca2d2be5b799288f0eaeb996651f2a059249fab573f0bc"
+visibility = "private"
+
+[verifier.environment]
 
 [oracle_bundle]
 digest = "sha256:23ea6b418747eef806bfdcc8281837ec5602a4604a8e5bc59f8d24f65fdcb789"
@@ -80,7 +64,43 @@ media_type = "application/vnd.nl2repobench.private-bundle+tar"
 uri = "artifact://private/sha256:23ea6b418747eef806bfdcc8281837ec5602a4604a8e5bc59f8d24f65fdcb789"
 visibility = "private"
 
+[environment]
+status = "unknown"
+os_name = "debian-12-amd64"
+base_image = "python:3.12.14-slim-bookworm"
+base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e"
+system_packages = []
+build_command = "install the hash-locked candidate build and runtime closure during image build"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The candidate closure is installed during image build from a private hash lock; the Agent and separate verifier have no egress, while the trusted Oracle fetches only the pinned upstream revision."
+
+[dependencies]
+status = "unknown"
+packages = [
+    "flit_core==3.12.0",
+    "markupsafe==3.0.3",
+]
+package_manager = "pip"
+
+[tests]
+expected_total = 35
+expected_total_source = "frozen-collection"
+framework = "custom"
+report_format = "custom-json-v1"
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = [
+    "passed",
+]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "python-author-wave2-20260828-c3"
-reason = "Production compile, Oracle, empty, stub, forgery, and offline controls passed; review, pilot, and publication remain separate integrator stages."
+reason = "Production compile, Oracle, empty, stub, forgery, and offline controls passed; review, pilot, and publication remain separate integrator stages. Canonical migration: exact Python runtime/package-manager evidence and canonical private dependency closure are not available; keep blocked until versioned artifacts and gates are recreated."

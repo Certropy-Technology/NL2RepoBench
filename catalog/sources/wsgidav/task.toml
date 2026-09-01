@@ -2,40 +2,53 @@ schema_version = "1.0"
 task_id = "wsgidav"
 version = "0.1.0"
 instruction = "blocked.md"
+
 [metadata]
 difficulty = "hard"
 category = "webdav-server"
-tags = ["python", "webdav", "server", "blocked"]
+tags = [
+    "python",
+    "webdav",
+    "server",
+    "blocked",
+]
 language = "python"
+
 [source]
 status = "unknown"
 upstream_url = "https://github.com/mar10/wsgidav"
 revision = "f12b2ec970e53e5127cb8b4fcb8d153457cd4d4f"
 submodules = []
+
 [environment]
 status = "unknown"
-network_mode = "no-network"
+
 [environment.network_policy]
 mode = "no-network"
 offline_dependencies = "missing"
 reference_source_fetch = "forbidden"
 reason = "Server/network fixture closure, deterministic collection, and separate verifier are not frozen."
+
 [dependencies]
 status = "unknown"
-installer = "pip"
 packages = []
+package_manager = "pip"
+
 [tests]
-framework = "pytest"
 expected_total = 0
 expected_total_source = "unknown"
-commands = []
+framework = "pytest"
+report_format = "pytest-junit-xml-v1"
+
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = ["skipped"]
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
+
 [lifecycle]
 status = "blocked"
 owner = "repair/wsgidav"
-reason = "The audit lacks a frozen server environment, dependency closure, separate verifier, Oracle, and controls."
+reason = "The audit lacks a frozen server environment, dependency closure, separate verifier, Oracle, and controls. Canonical migration: exact Python runtime/package-manager evidence and canonical private dependency closure are not available; keep blocked until versioned artifacts and gates are recreated."

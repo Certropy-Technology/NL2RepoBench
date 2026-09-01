@@ -6,7 +6,15 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "medium"
 category = "python-library"
-tags = ["python", "zipfile", "pathlib", "archives", "glob", "filesystem", "separate-verifier"]
+tags = [
+    "python",
+    "zipfile",
+    "pathlib",
+    "archives",
+    "glob",
+    "filesystem",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -17,57 +25,30 @@ license_spdx = "MIT"
 source_digest = "sha256:64c592a33b2a8e3cdd190b6bba014888aca0fe094f345c42a4c52a7fdd7e92f6"
 submodules = []
 
-[environment]
-status = "known"
-python_version = "3.12.14"
-os_name = "debian-12-amd64"
-base_image = "python:3.12-slim"
-base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
-system_packages = ["git", "ca-certificates"]
-network_mode = "no-network"
-build_command = "SETUPTOOLS_SCM_PRETEND_VERSION_FOR_ZIPP=4.1.0 python -m pip install --target /tmp/candidate-site --no-deps --no-build-isolation ."
-
-[environment.network_policy]
-mode = "no-network"
-offline_dependencies = "preinstalled-image"
-reference_source_fetch = "forbidden"
-reason = "The exact-pinned hash-locked setuptools/SCM/license build closure is installed during Docker build. Agent and separate verifier execution have no egress; only the trusted Oracle receives a run-scoped github.com authorization to fetch and verify the frozen revision."
-
-[dependencies]
-status = "known"
-installer = "pip"
-packages = [
-  "coherent-licensed==0.5.2",
-  "packaging==26.3",
-  "setuptools==84.0.0",
-  "setuptools-scm==10.2.1",
-  "vcs-versioning==2.3.1",
-]
-lock_artifact = { digest = "sha256:ab10714e1bce45f85ed12aac1b027c67fd60712025ee7d3af28a55636961e190", size_bytes = 1880, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:ab10714e1bce45f85ed12aac1b027c67fd60712025ee7d3af28a55636961e190", visibility = "private" }
-
-[tests]
-framework = "pytest"
-expected_total = 38
-expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py"]
-
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:dbd094bfa3f6f259043fe3bdb1ca0c93b8cbf2bf8fd69d1e19f70233b9cd624c", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:dbd094bfa3f6f259043fe3bdb1ca0c93b8cbf2bf8fd69d1e19f70233b9cd624c", visibility = "private" }
 entrypoint = "run.py"
-environment = { SETUPTOOLS_SCM_PRETEND_VERSION_FOR_ZIPP = "4.1.0" }
 
-[metric]
-contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
-collection_mismatch = "fail"
-formula = "clamp(passed / frozen_total, 0, 1)"
+[verifier.bundle]
+digest = "sha256:dbd094bfa3f6f259043fe3bdb1ca0c93b8cbf2bf8fd69d1e19f70233b9cd624c"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:dbd094bfa3f6f259043fe3bdb1ca0c93b8cbf2bf8fd69d1e19f70233b9cd624c"
+visibility = "private"
+
+[verifier.environment]
+SETUPTOOLS_SCM_PRETEND_VERSION_FOR_ZIPP = "4.1.0"
 
 [harbor]
 description = "Build zipp 4.1.0 from an empty workspace and reproduce deterministic ZIP-backed path navigation, I/O, glob, metadata, pickle, and compatibility behavior through a separate child-process verifier."
-keywords = ["python", "zipfile", "pathlib", "archives", "glob", "separate-verifier"]
+keywords = [
+    "python",
+    "zipfile",
+    "pathlib",
+    "archives",
+    "glob",
+    "separate-verifier",
+]
 agent_timeout_sec = 2400.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 120.0
@@ -87,7 +68,49 @@ media_type = "application/vnd.nl2repobench.private-bundle+tar"
 uri = "artifact://private/sha256:201015c82613652f9742ed03d51bf35cd3fe4e80bd62d10ff5c70cb96daa247a"
 visibility = "private"
 
+[environment]
+status = "unknown"
+os_name = "debian-12-amd64"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = [
+    "git",
+    "ca-certificates",
+]
+build_command = "SETUPTOOLS_SCM_PRETEND_VERSION_FOR_ZIPP=4.1.0 python -m pip install --target /tmp/candidate-site --no-deps --no-build-isolation ."
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The exact-pinned hash-locked setuptools/SCM/license build closure is installed during Docker build. Agent and separate verifier execution have no egress; only the trusted Oracle receives a run-scoped github.com authorization to fetch and verify the frozen revision."
+
+[dependencies]
+status = "unknown"
+packages = [
+    "coherent-licensed==0.5.2",
+    "packaging==26.3",
+    "setuptools==84.0.0",
+    "setuptools-scm==10.2.1",
+    "vcs-versioning==2.3.1",
+]
+package_manager = "pip"
+
+[tests]
+expected_total = 38
+expected_total_source = "frozen-collection"
+framework = "custom"
+report_format = "custom-json-v1"
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = [
+    "passed",
+]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "python-author-wave2-20260828"
-reason = "The final production Harbor bundle passed its 38/38 Oracle plus empty, stub, forgery, install-hang, call-hang, and explicit offline controls. Review, model Agent Run, pilot, and publication remain separate stages."
+reason = "The final production Harbor bundle passed its 38/38 Oracle plus empty, stub, forgery, install-hang, call-hang, and explicit offline controls. Review, model Agent Run, pilot, and publication remain separate stages. Canonical migration: exact Python runtime/package-manager evidence and canonical private dependency closure are not available; keep blocked until versioned artifacts and gates are recreated."

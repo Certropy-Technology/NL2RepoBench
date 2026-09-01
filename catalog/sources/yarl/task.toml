@@ -6,7 +6,15 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "hard"
 category = "url-value-library"
-tags = ["python", "url", "idna", "percent-encoding", "multidict", "pydantic", "separate-verifier"]
+tags = [
+    "python",
+    "url",
+    "idna",
+    "percent-encoding",
+    "multidict",
+    "pydantic",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -17,62 +25,32 @@ license_spdx = "Apache-2.0"
 source_digest = "sha256:6fd74fd871f05a4e41223934380e224f9f3b8383f153cdf9a468dfe55c21948f"
 submodules = []
 
-[environment]
-status = "known"
-python_version = "3.12.14"
-os_name = "debian-12-amd64"
-base_image = "python:3.12.14-slim-bookworm"
-base_image_digest = "sha256:0f5b26b9518d002b6173fd61daad821fa340635ebfec5bba471013f9ca114579"
-system_packages = ["ca-certificates", "git"]
-network_mode = "no-network"
-build_command = "install the hash-locked build/runtime closure during image build; install candidates with YARL_NO_EXTENSIONS=1 and no dependency resolution"
-
-[environment.network_policy]
-mode = "no-network"
-offline_dependencies = "preinstalled-image"
-reference_source_fetch = "forbidden"
-reason = "The pure-Python build and runtime closure are installed from the private hash lock during image construction. Agent and verifier execution have no egress; only the trusted Oracle receives the exact upstream source-host override."
-
-[dependencies]
-status = "known"
-installer = "pip"
-packages = [
-  "annotated-types==0.8.0",
-  "expandvars==1.1.2",
-  "idna==3.18",
-  "multidict==6.7.1",
-  "propcache==0.4.1",
-  "pydantic==2.13.4",
-  "pydantic-core==2.46.4",
-  "setuptools==84.0.0",
-  "typing-extensions==4.16.0",
-  "typing-inspection==0.4.4",
-]
-lock_artifact = { digest = "sha256:54d3d89472cf0919f20d83aa27182f4f7901214460b21928a37b78e81c09bbfe", size_bytes = 35078, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:54d3d89472cf0919f20d83aa27182f4f7901214460b21928a37b78e81c09bbfe", visibility = "private" }
-
-[tests]
-framework = "pytest"
-expected_total = 44
-expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py", "/tests/verifier/scenarios.py", "/tests/verifier/expected.json"]
-
-[metric]
-contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
-collection_mismatch = "fail"
-formula = "clamp(passed / frozen_total, 0, 1)"
-
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:bd23da8e8aaf9d6507a7f804fc67a60e2c2ee35b10e9b30c58faceb4fec0d15d", size_bytes = 40960, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:bd23da8e8aaf9d6507a7f804fc67a60e2c2ee35b10e9b30c58faceb4fec0d15d", visibility = "private" }
 entrypoint = "run.py"
-environment = { YARL_NO_EXTENSIONS = "1", NL2REPO_CANDIDATE_TOTAL_TIMEOUT_SEC = "60" }
+
+[verifier.bundle]
+digest = "sha256:bd23da8e8aaf9d6507a7f804fc67a60e2c2ee35b10e9b30c58faceb4fec0d15d"
+size_bytes = 40960
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:bd23da8e8aaf9d6507a7f804fc67a60e2c2ee35b10e9b30c58faceb4fec0d15d"
+visibility = "private"
+
+[verifier.environment]
+YARL_NO_EXTENSIONS = "1"
+NL2REPO_CANDIDATE_TOTAL_TIMEOUT_SEC = "60"
 
 [harbor]
 description = "Build yarl 1.24.5 from an empty workspace and satisfy a deterministic immutable URL contract covering canonical encoding, component properties, query/path transformations, RFC joins, errors, cache controls, and Pydantic integration."
-keywords = ["python", "url", "idna", "percent-encoding", "multidict", "pydantic", "separate-verifier"]
+keywords = [
+    "python",
+    "url",
+    "idna",
+    "percent-encoding",
+    "multidict",
+    "pydantic",
+    "separate-verifier",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 60.0
@@ -92,7 +70,54 @@ media_type = "application/vnd.nl2repobench.private-bundle+tar"
 uri = "artifact://private/sha256:e25195524e1cf9e987a29ca763aa56fc198cfbee042223ce7564d4cd84dcc7eb"
 visibility = "private"
 
+[environment]
+status = "unknown"
+os_name = "debian-12-amd64"
+base_image = "python:3.12.14-slim-bookworm"
+base_image_digest = "sha256:0f5b26b9518d002b6173fd61daad821fa340635ebfec5bba471013f9ca114579"
+system_packages = [
+    "ca-certificates",
+    "git",
+]
+build_command = "install the hash-locked build/runtime closure during image build; install candidates with YARL_NO_EXTENSIONS=1 and no dependency resolution"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The pure-Python build and runtime closure are installed from the private hash lock during image construction. Agent and verifier execution have no egress; only the trusted Oracle receives the exact upstream source-host override."
+
+[dependencies]
+status = "unknown"
+packages = [
+    "annotated-types==0.8.0",
+    "expandvars==1.1.2",
+    "idna==3.18",
+    "multidict==6.7.1",
+    "propcache==0.4.1",
+    "pydantic==2.13.4",
+    "pydantic-core==2.46.4",
+    "setuptools==84.0.0",
+    "typing-extensions==4.16.0",
+    "typing-inspection==0.4.4",
+]
+package_manager = "pip"
+
+[tests]
+expected_total = 44
+expected_total_source = "frozen-collection"
+framework = "custom"
+report_format = "custom-json-v1"
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = [
+    "passed",
+]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "python-author-wave2-20260828-yarl"
-reason = "Exact source, Apache-2.0 license, hash-locked pure-Python closure, private 44-leaf subprocess verifier, production compile, deterministic Oracle smoke, and task-local negative controls passed; Harbor Agent Run, independent review, and publication remain outside this lane."
+reason = "Exact source, Apache-2.0 license, hash-locked pure-Python closure, private 44-leaf subprocess verifier, production compile, deterministic Oracle smoke, and task-local negative controls passed; Harbor Agent Run, independent review, and publication remain outside this lane. Canonical migration: exact Python runtime/package-manager evidence and canonical private dependency closure are not available; keep blocked until versioned artifacts and gates are recreated."

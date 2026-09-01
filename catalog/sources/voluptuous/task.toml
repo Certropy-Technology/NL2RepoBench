@@ -6,7 +6,13 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "medium"
 category = "validation-library"
-tags = ["python", "schema-validation", "coercion", "markers", "separate-verifier"]
+tags = [
+    "python",
+    "schema-validation",
+    "coercion",
+    "markers",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -16,41 +22,16 @@ revision = "dcaaf3dd68be156253518a045feb1c4172dbd2d5"
 license_spdx = "BSD-3-Clause"
 source_digest = "sha256:30927e7f2445e3aba14c6a36b3f17cb7edd40e558046631b4e06654cbf4e5d70"
 
-[environment]
-status = "known"
-python_version = "3.12"
-os_name = "debian-12-amd64"
-base_image = "python:3.12.14-slim-bookworm"
-base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
-network_mode = "no-network"
-
-[environment.network_policy]
-mode = "no-network"
-offline_dependencies = "preinstalled-image"
-reference_source_fetch = "forbidden"
-reason = "Voluptuous has no runtime dependency; the candidate environment uses the pinned Python image and a hash-locked empty third-party dependency set."
-
-[dependencies]
-status = "unknown"
-installer = "pip"
-packages = []
-
-[tests]
-framework = "pytest"
-expected_total = 152
-expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-
-[metric]
-contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
-collection_mismatch = "fail"
-formula = "clamp(passed / frozen_total, 0, 1)"
-
 [harbor]
 description = "Build the voluptuous package from an empty workspace."
-keywords = ["python", "schema-validation", "coercion", "markers", "json-scenarios", "separate-verifier"]
+keywords = [
+    "python",
+    "schema-validation",
+    "coercion",
+    "markers",
+    "json-scenarios",
+    "separate-verifier",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 60.0
@@ -62,6 +43,37 @@ memory_mb = 4096
 storage_mb = 8192
 workspace_artifact = "/workspace"
 
+[environment]
+status = "unknown"
+os_name = "debian-12-amd64"
+base_image = "python:3.12.14-slim-bookworm"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "Voluptuous has no runtime dependency; the candidate environment uses the pinned Python image and a hash-locked empty third-party dependency set."
+
+[dependencies]
+status = "unknown"
+packages = []
+package_manager = "pip"
+
+[tests]
+expected_total = 152
+expected_total_source = "frozen-collection"
+framework = "pytest"
+report_format = "pytest-junit-xml-v1"
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = [
+    "passed",
+]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
 [lifecycle]
 status = "blocked"
-reason = "No authorized private dependency/verifier artifacts or local Oracle/control evidence is available; do not publish or run this task until the strict gates pass."
+reason = "No authorized private dependency/verifier artifacts or local Oracle/control evidence is available; do not publish or run this task until the strict gates pass. Canonical migration: exact Python runtime/package-manager evidence and canonical private dependency closure are not available; keep blocked until versioned artifacts and gates are recreated."

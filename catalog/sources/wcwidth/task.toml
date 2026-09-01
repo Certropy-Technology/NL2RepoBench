@@ -6,7 +6,15 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "hard"
 category = "unicode-terminal-text"
-tags = ["python", "unicode", "terminal", "grapheme", "ansi", "text-layout", "separate-verifier"]
+tags = [
+    "python",
+    "unicode",
+    "terminal",
+    "grapheme",
+    "ansi",
+    "text-layout",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -15,53 +23,34 @@ upstream_url = "https://github.com/jquast/wcwidth"
 revision = "551710eabf316ed2d9e3782c1fe9cf80ff0f6ed9"
 license_spdx = "MIT"
 source_digest = "sha256:d8621c78e2a93b9f7a97ee756832a3639e8bbb87c7c79f4c8344ef7fb4bf8fb6"
-submodules = ["ucs-detect@4ce9df355f17ee8278768d05dcbdde878b80dd48"]
-
-[environment]
-status = "known"
-python_version = "3.12.14"
-os_name = "debian-12-amd64"
-base_image = "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
-base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
-system_packages = []
-network_mode = "no-network"
-build_command = "install the hash-locked hatchling build backend during the image build; candidate installation uses pip --no-build-isolation and no runtime dependencies"
-
-[environment.network_policy]
-mode = "no-network"
-offline_dependencies = "preinstalled-image"
-reference_source_fetch = "forbidden"
-reason = "The candidate build backend closure is installed during image build from a private hash-locked requirements artifact. Agent and separate verifier runs have no egress; only the trusted Oracle receives a run-scoped authorization for github.com."
-
-[dependencies]
-status = "known"
-installer = "pip"
-packages = ["hatchling==1.27.0", "packaging==26.3", "pathspec==1.1.1", "pluggy==1.6.0", "trove-classifiers==2026.6.1.19"]
-lock_artifact = { digest = "sha256:b059b74bc449113dd6bada0ab1afb19364d30baa0c17fc61cfc480997be2f4e4", size_bytes = 1013, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:b059b74bc449113dd6bada0ab1afb19364d30baa0c17fc61cfc480997be2f4e4", visibility = "private" }
-
-[tests]
-framework = "pytest"
-expected_total = 36
-expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py"]
-
-[metric]
-contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
-collection_mismatch = "fail"
-formula = "clamp(passed / frozen_total, 0, 1)"
+submodules = [
+    "ucs-detect@4ce9df355f17ee8278768d05dcbdde878b80dd48",
+]
 
 [verifier]
 protocol = "custom-json-v1"
 entrypoint = "run.py"
-bundle = { digest = "sha256:b99d5780c09693b14ee2aed762b8ed8fcb2cad4838db0e9acc33c462a0f96b9a", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:b99d5780c09693b14ee2aed762b8ed8fcb2cad4838db0e9acc33c462a0f96b9a", visibility = "private" }
-environment = {}
+
+[verifier.bundle]
+digest = "sha256:b99d5780c09693b14ee2aed762b8ed8fcb2cad4838db0e9acc33c462a0f96b9a"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:b99d5780c09693b14ee2aed762b8ed8fcb2cad4838db0e9acc33c462a0f96b9a"
+visibility = "private"
+
+[verifier.environment]
 
 [harbor]
 description = "Build wcwidth from an empty workspace and reproduce deterministic Unicode display-width, grapheme, terminal-sequence, clipping, wrapping, and text-layout behavior through a separate child-side JSON verifier."
-keywords = ["python", "unicode", "terminal", "grapheme", "ansi", "text-layout", "separate-verifier"]
+keywords = [
+    "python",
+    "unicode",
+    "terminal",
+    "grapheme",
+    "ansi",
+    "text-layout",
+    "separate-verifier",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 900.0
 candidate_install_timeout_sec = 180.0
@@ -81,7 +70,46 @@ media_type = "application/vnd.nl2repobench.private-bundle+tar"
 uri = "artifact://private/sha256:047492fa3f7f6e6fbca042ed2e55ecc7cf2495fcb71223f70d78f50cc8860872"
 visibility = "private"
 
+[environment]
+status = "unknown"
+os_name = "debian-12-amd64"
+base_image = "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
+build_command = "install the hash-locked hatchling build backend during the image build; candidate installation uses pip --no-build-isolation and no runtime dependencies"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The candidate build backend closure is installed during image build from a private hash-locked requirements artifact. Agent and separate verifier runs have no egress; only the trusted Oracle receives a run-scoped authorization for github.com."
+
+[dependencies]
+status = "unknown"
+packages = [
+    "hatchling==1.27.0",
+    "packaging==26.3",
+    "pathspec==1.1.1",
+    "pluggy==1.6.0",
+    "trove-classifiers==2026.6.1.19",
+]
+package_manager = "pip"
+
+[tests]
+expected_total = 36
+expected_total_source = "frozen-collection"
+framework = "custom"
+report_format = "custom-json-v1"
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = [
+    "passed",
+]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
 [lifecycle]
-status = "packaged"
+status = "blocked"
 owner = "python-author-wave2-20260828"
-reason = "Source, dependency closure, private custom verifier, digest-checked Oracle bundle and controls are prepared; production compile and official Harbor gates are recorded in the handoff."
+reason = "Source, dependency closure, private custom verifier, digest-checked Oracle bundle and controls are prepared; production compile and official Harbor gates are recorded in the handoff. Canonical migration: exact Python runtime/package-manager evidence and canonical private dependency closure are not available; keep blocked until versioned artifacts and gates are recreated."

@@ -2,40 +2,54 @@ schema_version = "1.0"
 task_id = "wifiphisher"
 version = "0.1.0"
 instruction = "blocked.md"
+
 [metadata]
 difficulty = "hard"
 category = "network-security"
-tags = ["python", "wifi", "security", "hardware", "blocked"]
+tags = [
+    "python",
+    "wifi",
+    "security",
+    "hardware",
+    "blocked",
+]
 language = "python"
+
 [source]
 status = "unknown"
 upstream_url = "https://github.com/wifiphisher/wifiphisher"
 revision = "b11da3566b1c3430a23341a3b007ddcbf9cf61cc"
 submodules = []
+
 [environment]
 status = "unknown"
-network_mode = "no-network"
+
 [environment.network_policy]
 mode = "no-network"
 offline_dependencies = "missing"
 reference_source_fetch = "forbidden"
 reason = "Wireless hardware/network behavior and dependency closure are not reproducibly available."
+
 [dependencies]
 status = "unknown"
-installer = "pip"
 packages = []
+package_manager = "pip"
+
 [tests]
-framework = "pytest"
 expected_total = 0
 expected_total_source = "unknown"
-commands = []
+framework = "pytest"
+report_format = "pytest-junit-xml-v1"
+
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = ["skipped"]
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
+
 [lifecycle]
 status = "blocked"
 owner = "repair/wifiphisher"
-reason = "Hardware/network behavior, source/license authority, verifier, Oracle, and controls are not established."
+reason = "Hardware/network behavior, source/license authority, verifier, Oracle, and controls are not established. Canonical migration: exact Python runtime/package-manager evidence and canonical private dependency closure are not available; keep blocked until versioned artifacts and gates are recreated."

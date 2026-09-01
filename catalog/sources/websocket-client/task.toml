@@ -6,7 +6,15 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "hard"
 category = "python-websocket-protocol"
-tags = ["python", "websocket", "rfc6455", "framing", "url-parsing", "offline", "separate-verifier"]
+tags = [
+    "python",
+    "websocket",
+    "rfc6455",
+    "framing",
+    "url-parsing",
+    "offline",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -17,51 +25,30 @@ license_spdx = "Apache-2.0"
 source_digest = "sha256:dd31f1cc888e206078188aa1b208ec9ffdc887ed5108f49ed837ecba3ddeccb2"
 submodules = []
 
-[environment]
-status = "known"
-python_version = "3.12.14"
-os_name = "debian-12-amd64"
-base_image = "python:3.12.14-slim-bookworm"
-base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e"
-system_packages = []
-network_mode = "no-network"
-build_command = "install the hash-locked setuptools/wheel closure during image build; candidate installs the submitted setup.py project without network"
-
-[environment.network_policy]
-mode = "no-network"
-offline_dependencies = "preinstalled-image"
-reference_source_fetch = "forbidden"
-reason = "The scored protocol and utility contract is deterministic and local. Build tooling is installed from the private hash lock; only the trusted Oracle receives the exact upstream host override for the pinned source revision."
-
-[dependencies]
-status = "known"
-installer = "pip"
-packages = ["setuptools==80.9.0", "wheel==0.45.1"]
-lock_artifact = { digest = "sha256:53615811dc1d1f22b94617262702e9d02d56d5d8a0a180227344c700fcddae60", size_bytes = 373, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:53615811dc1d1f22b94617262702e9d02d56d5d8a0a180227344c700fcddae60", visibility = "private" }
-
-[tests]
-framework = "pytest"
-expected_total = 30
-expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py"]
-
-[metric]
-contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
-collection_mismatch = "fail"
-formula = "clamp(passed / frozen_total, 0, 1)"
-
 [verifier]
 protocol = "custom-json-v1"
 entrypoint = "run.py"
-bundle = { digest = "sha256:bb17c5aaaebb16709b39f82a51af1b50f592861fb13f2b5fc569fcbd5cbef542", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:bb17c5aaaebb16709b39f82a51af1b50f592861fb13f2b5fc569fcbd5cbef542", visibility = "private" }
-environment = {}
+
+[verifier.bundle]
+digest = "sha256:bb17c5aaaebb16709b39f82a51af1b50f592861fb13f2b5fc569fcbd5cbef542"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:bb17c5aaaebb16709b39f82a51af1b50f592861fb13f2b5fc569fcbd5cbef542"
+visibility = "private"
+
+[verifier.environment]
 
 [harbor]
 description = "Build websocket-client from an empty workspace and reproduce a bounded offline WebSocket framing, URL/proxy, cookie, handshake, object-state, logging, and exception contract through a separate child-side verifier."
-keywords = ["python", "websocket", "rfc6455", "framing", "url-parsing", "offline", "separate-verifier"]
+keywords = [
+    "python",
+    "websocket",
+    "rfc6455",
+    "framing",
+    "url-parsing",
+    "offline",
+    "separate-verifier",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 120.0
@@ -73,14 +60,50 @@ memory_mb = 4096
 storage_mb = 8192
 workspace_artifact = "/workspace"
 
-[lifecycle]
-status = "controls-passed"
-owner = "python-author-wave2-20260828"
-reason = "Current production compile, deterministic repeat compile, task-local separate-verifier Oracle replay, empty/stub/forgery/install-timeout/call-timeout controls, and no-network receipts passed. Harbor Agent Run, blind review, pilot, and publication remain integrator-owned."
-
 [oracle_bundle]
 digest = "sha256:c4b8bbe6ae7990b09e24626db856e3198e2666bd70d48e7da17763f10ab7bb99"
 size_bytes = 10240
 media_type = "application/vnd.nl2repobench.private-bundle+tar"
 uri = "artifact://private/sha256:c4b8bbe6ae7990b09e24626db856e3198e2666bd70d48e7da17763f10ab7bb99"
 visibility = "private"
+
+[environment]
+status = "unknown"
+os_name = "debian-12-amd64"
+base_image = "python:3.12.14-slim-bookworm"
+base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e"
+system_packages = []
+build_command = "install the hash-locked setuptools/wheel closure during image build; candidate installs the submitted setup.py project without network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The scored protocol and utility contract is deterministic and local. Build tooling is installed from the private hash lock; only the trusted Oracle receives the exact upstream host override for the pinned source revision."
+
+[dependencies]
+status = "unknown"
+packages = [
+    "setuptools==80.9.0",
+    "wheel==0.45.1",
+]
+package_manager = "pip"
+
+[tests]
+expected_total = 30
+expected_total_source = "frozen-collection"
+framework = "custom"
+report_format = "custom-json-v1"
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = [
+    "passed",
+]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[lifecycle]
+status = "blocked"
+owner = "python-author-wave2-20260828"
+reason = "Current production compile, deterministic repeat compile, task-local separate-verifier Oracle replay, empty/stub/forgery/install-timeout/call-timeout controls, and no-network receipts passed. Harbor Agent Run, blind review, pilot, and publication remain integrator-owned. Canonical migration: exact Python runtime/package-manager evidence and canonical private dependency closure are not available; keep blocked until versioned artifacts and gates are recreated."
