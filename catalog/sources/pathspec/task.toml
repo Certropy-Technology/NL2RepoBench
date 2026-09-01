@@ -1,12 +1,18 @@
-schema_version = "1.0"
 task_id = "pathspec"
 version = "1.0.0"
 instruction = "instruction.md"
+schema_version = "1.0"
 
 [metadata]
 difficulty = "hard"
 category = "python-library"
-tags = ["python", "path-matching", "gitignore", "filesystem", "separate-verifier"]
+tags = [
+    "python",
+    "path-matching",
+    "gitignore",
+    "filesystem",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -17,51 +23,36 @@ license_spdx = "MPL-2.0"
 source_digest = "sha256:0d8c72748d26926b3b0e7a3a983dd3135e9ad4b462388408a1bafc936a0236d9"
 submodules = []
 
-[environment]
-status = "known"
-python_version = "3.12.14"
-os_name = "debian-12-amd64"
-base_image = "python:3.12-slim"
-base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
-system_packages = []
-build_command = "install the hash-locked flit-core build dependency during Docker build"
-network_mode = "no-network"
-
-[environment.network_policy]
-mode = "no-network"
-offline_dependencies = "preinstalled-image"
-reference_source_fetch = "forbidden"
-reason = "Candidate and verifier execution are network-isolated. The only build dependency is installed from the private hash lock during image build; the trusted Oracle alone receives the exact upstream source-host authorization."
-
-[dependencies]
-status = "known"
-installer = "pip"
-packages = ["flit-core==3.12.0"]
-lock_artifact = { digest = "sha256:b3d7456ecf8cd481ce5ea8a7e28ad58078a134e6dd51c1a69e1cf6d6074f7d0e", size_bytes = 442, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:b3d7456ecf8cd481ce5ea8a7e28ad58078a134e6dd51c1a69e1cf6d6074f7d0e", visibility = "private" }
-
-[tests]
-framework = "pytest"
-expected_total = 43
-expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py"]
-
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:91cbef328f5dd0e20215ae547e6f0878e349ac4f0b3276edf01ebcce4b2e024a", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:91cbef328f5dd0e20215ae547e6f0878e349ac4f0b3276edf01ebcce4b2e024a", visibility = "private" }
 entrypoint = "run.py"
-environment = {}
+
+[verifier.bundle]
+digest = "sha256:91cbef328f5dd0e20215ae547e6f0878e349ac4f0b3276edf01ebcce4b2e024a"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:91cbef328f5dd0e20215ae547e6f0878e349ac4f0b3276edf01ebcce4b2e024a"
+visibility = "private"
+
+[verifier.environment]
 
 [harbor]
 description = "Build pathspec 1.1.1 from an empty workspace and implement deterministic Git-style path matching, pattern compilation, and bounded filesystem traversal through a separate verifier."
-keywords = ["python", "path-matching", "gitignore", "filesystem", "separate-verifier"]
+keywords = [
+    "python",
+    "path-matching",
+    "gitignore",
+    "filesystem",
+    "separate-verifier",
+]
 agent_timeout_sec = 2400.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 120.0
@@ -81,6 +72,33 @@ uri = "artifact://private/sha256:41cd24eb1bcc83c0f964b4617e7269d2e6d978f02f8e8fe
 visibility = "private"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "python-author-wave2-20260828-pathspec"
-reason = "Harbor 0.21 Oracle and negative control gates use a fixed 43-leaf UID-separated verifier with no public network. Model Agent Run and publication review remain with the integrator."
+reason = "Canonical source migration is blocked: exact Python runtime/package-manager version and canonical dependency closure evidence are unavailable. Previous status/reason: controls-passed: Harbor 0.21 Oracle and negative control gates use a fixed 43-leaf UID-separated verifier with no public network. Model Agent Run and publication review remain with the integrator."
+
+[environment]
+status = "unknown"
+os_name = "debian-12-amd64"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
+build_command = "install the hash-locked flit-core build dependency during Docker build"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "Candidate and verifier execution are network-isolated. The only build dependency is installed from the private hash lock during image build; the trusted Oracle alone receives the exact upstream source-host authorization."
+
+[dependencies]
+status = "unknown"
+packages = [
+    "flit-core==3.12.0",
+]
+package_manager = "pip"
+
+[tests]
+expected_total = 43
+expected_total_source = "frozen-collection"
+framework = "custom"
+report_format = "custom-json-v1"

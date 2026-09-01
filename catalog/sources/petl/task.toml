@@ -1,20 +1,20 @@
-schema_version = "1.0"
 task_id = "petl"
 version = "0.1.0"
 instruction = "instruction.md"
+schema_version = "1.0"
 
 [metadata]
 difficulty = "hard"
 category = "table-etl"
 tags = [
-  "python",
-  "csv",
-  "json",
-  "table-transform",
-  "lazy-iterators",
-  "unicode",
-  "stdlib",
-  "separate-verifier",
+    "python",
+    "csv",
+    "json",
+    "table-transform",
+    "lazy-iterators",
+    "unicode",
+    "stdlib",
+    "separate-verifier",
 ]
 language = "python"
 
@@ -23,18 +23,25 @@ status = "known"
 upstream_url = "https://github.com/petl-developers/petl"
 revision = "2e01e169d83e4f66bef108bc2f20cde878d0a8a1"
 license_spdx = "MIT"
-# Repeated unprefixed `git archive --format=tar HEAD` probes matched. See
-# audit.md and evidence.json for the tree, license, and file-count evidence.
 source_digest = "sha256:19d01de1786e1f12343d12c46f8992477b25d0b99dd303e4d76628045a6ed0f8"
 submodules = []
 
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = [
+    "passed",
+]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[lifecycle]
+status = "blocked"
+owner = "authoring-worker"
+reason = "Canonical source migration is blocked: exact Python runtime/package-manager version and canonical dependency closure evidence are unavailable. Previous status/reason: blocked: Exact source, MIT license, package metadata, tracked LOC, full and restricted test collection, optional integration risks, and an offline runtime/build probe are recorded. Publication is blocked because the final immutable environment and hash-locked build closure are absent, source JUnit leaves do not equal pytest collection items, no private adapted test/command artifact or petl-specific child-side table protocol exists, and no Oracle, controls, review, or Harbor bundle is authorized."
+
 [environment]
-# CPython 3.13.14 and 3.14.6 source probes agree, but no immutable image,
-# OS policy, locale policy, or toolchain digest is authorized in this lane.
 status = "unknown"
-python_version = "3.13.14"
 os_name = "linux-amd64"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -43,36 +50,18 @@ reference_source_fetch = "forbidden"
 reason = "The data fixture and dependency closure are not frozen; candidate and verifier execution remain network-isolated."
 
 [dependencies]
-# The restricted CSV/JSON path has no runtime third-party dependency. These
-# are observed build/test inputs only; no content-addressed requirements lock exists.
 status = "unknown"
-installer = "uv"
 packages = [
-  "setuptools==75.8.0",
-  "setuptools-scm==8.2.0",
-  "wheel==0.45.1",
-  "pytest==8.3.5",
-  "pytest-cov==6.0.0",
+    "setuptools==75.8.0",
+    "setuptools-scm==8.2.0",
+    "wheel==0.45.1",
+    "pytest==8.3.5",
+    "pytest-cov==6.0.0",
 ]
+package_manager = "uv"
 
 [tests]
-framework = "pytest"
-# Exact source-only collection of the pinned checkout under CPython 3.13.14
-# and 3.14.6. This remains provisional: the production JSON adapter may select
-# a smaller leaf set and must freeze a new denominator in its final image.
 expected_total = 543
 expected_total_source = "unknown"
-commands = ["python -m pytest --continue-on-collection-errors -q petl"]
-protected_paths = ["petl/test"]
-
-[metric]
-contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
-collection_mismatch = "fail"
-formula = "clamp(passed / frozen_total, 0, 1)"
-
-[lifecycle]
-status = "blocked"
-owner = "authoring-worker"
-reason = "Exact source, MIT license, package metadata, tracked LOC, full and restricted test collection, optional integration risks, and an offline runtime/build probe are recorded. Publication is blocked because the final immutable environment and hash-locked build closure are absent, source JUnit leaves do not equal pytest collection items, no private adapted test/command artifact or petl-specific child-side table protocol exists, and no Oracle, controls, review, or Harbor bundle is authorized."
+framework = "pytest"
+report_format = "pytest-junit-xml-v1"

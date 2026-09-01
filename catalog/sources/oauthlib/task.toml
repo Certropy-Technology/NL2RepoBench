@@ -1,12 +1,19 @@
-schema_version = "1.0"
 task_id = "oauthlib"
 version = "1.0.0"
 instruction = "instruction.md"
+schema_version = "1.0"
 
 [metadata]
 difficulty = "hard"
 category = "oauth-protocol-library"
-tags = ["python", "oauth1", "oauth2", "uri-signing", "request-building", "separate-verifier"]
+tags = [
+    "python",
+    "oauth1",
+    "oauth2",
+    "uri-signing",
+    "request-building",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -17,51 +24,37 @@ license_spdx = "BSD-3-Clause"
 source_digest = "sha256:7d459f401eb8595ad42c7a77edfb0ee17b67acf27213812d1c13a1ed505d7c2b"
 submodules = []
 
-[environment]
-status = "known"
-python_version = "3.12.14"
-os_name = "debian-12-amd64"
-base_image = "python:3.12.14-slim-bookworm"
-base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
-system_packages = []
-network_mode = "no-network"
-build_command = "install the hash-locked build and verifier closure during image build"
-
-[environment.network_policy]
-mode = "no-network"
-offline_dependencies = "preinstalled-image"
-reference_source_fetch = "forbidden"
-reason = "Candidate and separate verifier dependencies are installed during image build from the private hash lock. Agent and verifier execution is network-isolated; only the trusted Oracle receives the exact upstream host override."
-
-[dependencies]
-status = "known"
-installer = "pip"
-packages = ["setuptools==84.0.0", "wheel==0.45.1"]
-lock_artifact = { digest = "sha256:a55530deb66485e0d12a067aa6b80a0a92b51f0a5b79c9097b80e5a8ee1cbb11", size_bytes = 440, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:a55530deb66485e0d12a067aa6b80a0a92b51f0a5b79c9097b80e5a8ee1cbb11", visibility = "private" }
-
-[tests]
-framework = "pytest"
-expected_total = 42
-expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py", "/tests/verifier/scenarios.py"]
-
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:2acd29360c533e8b07384a1381f6aa9d636316440d647e22a08ff0fedf5e994b", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:2acd29360c533e8b07384a1381f6aa9d636316440d647e22a08ff0fedf5e994b", visibility = "private" }
 entrypoint = "run.py"
-environment = {}
+
+[verifier.bundle]
+digest = "sha256:2acd29360c533e8b07384a1381f6aa9d636316440d647e22a08ff0fedf5e994b"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:2acd29360c533e8b07384a1381f6aa9d636316440d647e22a08ff0fedf5e994b"
+visibility = "private"
+
+[verifier.environment]
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Build OAuthLib from an empty workspace and satisfy a deterministic OAuth1/OAuth2 request and URI behavior contract through a separate child-side verifier."
-keywords = ["python", "oauth1", "oauth2", "uri-signing", "request-building", "separate-verifier"]
+keywords = [
+    "python",
+    "oauth1",
+    "oauth2",
+    "uri-signing",
+    "request-building",
+    "separate-verifier",
+]
 agent_timeout_sec = 1800.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 120.0
@@ -82,6 +75,34 @@ uri = "artifact://private/sha256:e1ceac0c33ca06aa7f6b2f9e30abd72e13e4eb120eaa351
 visibility = "private"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "python-author-wave2-20260828-c2"
-reason = "The production bundle passed the 42/42 Oracle gate plus empty, stub, forgery, install-hang, call-hang, and offline controls; independent review and model pilot remain separate stages."
+reason = "Canonical source migration is blocked: exact Python runtime/package-manager version and canonical dependency closure evidence are unavailable. Previous status/reason: controls-passed: The production bundle passed the 42/42 Oracle gate plus empty, stub, forgery, install-hang, call-hang, and offline controls; independent review and model pilot remain separate stages."
+
+[environment]
+status = "unknown"
+os_name = "debian-12-amd64"
+base_image = "python:3.12.14-slim-bookworm"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
+build_command = "install the hash-locked build and verifier closure during image build"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "Candidate and separate verifier dependencies are installed during image build from the private hash lock. Agent and verifier execution is network-isolated; only the trusted Oracle receives the exact upstream host override."
+
+[dependencies]
+status = "unknown"
+packages = [
+    "setuptools==84.0.0",
+    "wheel==0.45.1",
+]
+package_manager = "pip"
+
+[tests]
+expected_total = 42
+expected_total_source = "frozen-collection"
+framework = "custom"
+report_format = "custom-json-v1"

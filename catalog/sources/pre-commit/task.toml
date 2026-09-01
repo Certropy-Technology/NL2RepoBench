@@ -1,12 +1,18 @@
-schema_version = "1.0"
 task_id = "pre-commit"
 version = "0.1.0"
 instruction = "blocked.md"
+schema_version = "1.0"
 
 [metadata]
 difficulty = "unknown"
 category = "developer-tool"
-tags = ["python", "developer-tool", "git", "subprocess", "blocked"]
+tags = [
+    "python",
+    "developer-tool",
+    "git",
+    "subprocess",
+    "blocked",
+]
 language = "python"
 
 [source]
@@ -17,50 +23,23 @@ license_spdx = "MIT"
 source_digest = "sha256:143b9d1dbc08a1edf79ffd947d2f7e847b89495569b6b9566f58a50b39bee6ec"
 submodules = []
 
-[environment]
-status = "unknown"
-network_mode = "no-network"
-
-[environment.network_policy]
-mode = "no-network"
-offline_dependencies = "missing"
-reference_source_fetch = "forbidden"
-reason = "No immutable verifier image or hash-locked dependency closure exists, and pre-commit installs hook repositories and language toolchains through subprocesses. Agent and verifier runs must remain offline until that closure and a task-specific adapter are reviewed."
-
-[dependencies]
-status = "unknown"
-installer = "pip"
-packages = [
-  "cfgv>=2.0.0",
-  "identify>=1.0.0",
-  "nodeenv>=0.11.1",
-  "pyyaml>=5.1",
-  "virtualenv>=20.10.0",
-  "covdefaults>=2.2",
-  "coverage",
-  "distlib",
-  "pytest",
-  "pytest-env",
-  "re-assert",
-  "tox",
-]
-
-[tests]
-framework = "pytest"
-expected_total = 0
-expected_total_source = "unknown"
-commands = []
-
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = ["skipped"]
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Blocked candidate: pre-commit needs a reviewed offline toolchain closure and a persistent separate-verifier adapter for its Git, subprocess, filesystem, and hook-installation behavior."
-keywords = ["python", "developer-tool", "git", "subprocess", "blocked"]
+keywords = [
+    "python",
+    "developer-tool",
+    "git",
+    "subprocess",
+    "blocked",
+]
 agent_timeout_sec = 1800.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 120.0
@@ -75,4 +54,37 @@ workspace_artifact = "/workspace"
 [lifecycle]
 status = "blocked"
 owner = "repair/pre-commit"
-reason = "The pinned source and archive/license evidence are known, but no immutable verifier image, hash-locked dependency closure, final collection denominator, private test bundle, task-specific persistent adapter, Oracle, controls, or catalog/tasks/pre-commit runtime exists."
+reason = "Canonical source migration is blocked: exact Python runtime/package-manager version and canonical dependency closure evidence are unavailable. Previous status/reason: blocked: The pinned source and archive/license evidence are known, but no immutable verifier image, hash-locked dependency closure, final collection denominator, private test bundle, task-specific persistent adapter, Oracle, controls, or catalog/tasks/pre-commit runtime exists."
+
+[environment]
+status = "unknown"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "No immutable verifier image or hash-locked dependency closure exists, and pre-commit installs hook repositories and language toolchains through subprocesses. Agent and verifier runs must remain offline until that closure and a task-specific adapter are reviewed."
+
+[dependencies]
+status = "unknown"
+packages = [
+    "cfgv>=2.0.0",
+    "identify>=1.0.0",
+    "nodeenv>=0.11.1",
+    "pyyaml>=5.1",
+    "virtualenv>=20.10.0",
+    "covdefaults>=2.2",
+    "coverage",
+    "distlib",
+    "pytest",
+    "pytest-env",
+    "re-assert",
+    "tox",
+]
+package_manager = "pip"
+
+[tests]
+expected_total = 0
+expected_total_source = "unknown"
+framework = "pytest"
+report_format = "pytest-junit-xml-v1"

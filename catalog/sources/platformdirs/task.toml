@@ -1,14 +1,25 @@
-schema_version = "1.0"
 task_id = "platformdirs"
 version = "0.2.0"
 instruction = "instruction.md"
+schema_version = "1.0"
 
-oracle_bundle = { digest = "sha256:35c3c271c7bf483eb3f3c2c86c4b50d821b9215ea0f2dfeccab3aef86f953654", size_bytes = 10240, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:35c3c271c7bf483eb3f3c2c86c4b50d821b9215ea0f2dfeccab3aef86f953654", visibility = "private" }
+[oracle_bundle]
+digest = "sha256:35c3c271c7bf483eb3f3c2c86c4b50d821b9215ea0f2dfeccab3aef86f953654"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:35c3c271c7bf483eb3f3c2c86c4b50d821b9215ea0f2dfeccab3aef86f953654"
+visibility = "private"
 
 [metadata]
 difficulty = "medium"
 category = "filesystem"
-tags = ["python", "platform-directories", "xdg", "path-api", "separate-verifier"]
+tags = [
+    "python",
+    "platform-directories",
+    "xdg",
+    "path-api",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -19,45 +30,23 @@ license_spdx = "MIT"
 source_digest = "sha256:01837750779cd8f90d271f9b6184cf7d8d78fac37c72ce40ac97ccfb4064d572"
 submodules = []
 
-[environment]
-status = "known"
-python_version = "3.12.14"
-os_name = "debian-12-amd64"
-base_image = "python:3.12.14-slim-bookworm"
-base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e"
-system_packages = ["git", "ca-certificates"]
-network_mode = "no-network"
-build_command = "generate static version.py and setuptools pyproject after exact archive verification"
-
-[environment.network_policy]
-mode = "no-network"
-offline_dependencies = "preinstalled-image"
-reference_source_fetch = "forbidden"
-reason = "Third-party build and test dependencies are installed during the Docker build phase, which has network. The agent phase therefore needs no egress. A model provider host, when needed, is injected per run via Harbor agent.extra_allowed_hosts."
-
-[dependencies]
-status = "known"
-installer = "pip"
-packages = ["setuptools==80.10.2", "wheel==0.45.1"]
-lock_artifact = { digest = "sha256:24713a5496e38f6da905cbc7944c15efd8863916e5da6825b835f66aa99068f7", size_bytes = 204, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:24713a5496e38f6da905cbc7944c15efd8863916e5da6825b835f66aa99068f7", visibility = "private" }
-
-[tests]
-framework = "pytest"
-expected_total = 20
-expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = []
-
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Build the pinned platformdirs Unix/XDG API slice from an empty workspace with a separate JSON verifier."
-keywords = ["python", "platform-directories", "xdg", "filesystem", "separate-verifier"]
+keywords = [
+    "python",
+    "platform-directories",
+    "xdg",
+    "filesystem",
+    "separate-verifier",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 90.0
@@ -71,11 +60,49 @@ workspace_artifact = "/workspace"
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:550041dc83296bd96733103e086fc7bb0e8ca8e83bcab9a869144e51818fddcc", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:550041dc83296bd96733103e086fc7bb0e8ca8e83bcab9a869144e51818fddcc", visibility = "private" }
 entrypoint = "run.py"
-environment = {}
+
+[verifier.bundle]
+digest = "sha256:550041dc83296bd96733103e086fc7bb0e8ca8e83bcab9a869144e51818fddcc"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:550041dc83296bd96733103e086fc7bb0e8ca8e83bcab9a869144e51818fddcc"
+visibility = "private"
+
+[verifier.environment]
 
 [lifecycle]
-status = "oracle-passed"
+status = "blocked"
 owner = "integrator"
-reason = "Generic private-bundle compiled Oracle passed 20/20 with reward 1.0; controls and review remain pending."
+reason = "Canonical source migration is blocked: exact Python runtime/package-manager version and canonical dependency closure evidence are unavailable. Previous status/reason: oracle-passed: Generic private-bundle compiled Oracle passed 20/20 with reward 1.0; controls and review remain pending."
+
+[environment]
+status = "unknown"
+os_name = "debian-12-amd64"
+base_image = "python:3.12.14-slim-bookworm"
+base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e"
+system_packages = [
+    "git",
+    "ca-certificates",
+]
+build_command = "generate static version.py and setuptools pyproject after exact archive verification"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "Third-party build and test dependencies are installed during the Docker build phase, which has network. The agent phase therefore needs no egress. A model provider host, when needed, is injected per run via Harbor agent.extra_allowed_hosts."
+
+[dependencies]
+status = "unknown"
+packages = [
+    "setuptools==80.10.2",
+    "wheel==0.45.1",
+]
+package_manager = "pip"
+
+[tests]
+expected_total = 20
+expected_total_source = "frozen-collection"
+framework = "custom"
+report_format = "custom-json-v1"

@@ -1,12 +1,18 @@
-schema_version = "1.0"
 task_id = "pathvalidate"
 version = "1.0.0"
 instruction = "instruction.md"
+schema_version = "1.0"
 
 [metadata]
 difficulty = "medium"
 category = "filesystem-utilities"
-tags = ["python", "path-validation", "sanitization", "cross-platform", "separate-verifier"]
+tags = [
+    "python",
+    "path-validation",
+    "sanitization",
+    "cross-platform",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -17,51 +23,38 @@ license_spdx = "MIT"
 source_digest = "sha256:4c83bac3feec196a0a9925d5be61bbe9581310cff4f09b6372e203ba13b81918"
 submodules = []
 
-[environment]
-status = "known"
-python_version = "3.12.14"
-os_name = "debian-12-amd64"
-base_image = "python:3.12-slim"
-base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
-system_packages = ["ca-certificates", "git"]
-build_command = "python -m pip install --no-deps --no-build-isolation"
-network_mode = "no-network"
-
-[environment.network_policy]
-mode = "no-network"
-offline_dependencies = "preinstalled-image"
-reference_source_fetch = "forbidden"
-reason = "The hash-locked build and Click-adapter closure is installed during Docker build. Agent and separate verifier phases have no egress; only the trusted Oracle receives a run-scoped exact source-host authorization."
-
-[dependencies]
-status = "known"
-installer = "pip"
-packages = ["click==8.5.0", "packaging==26.3", "setuptools==84.0.0", "setuptools-scm==10.2.1", "vcs-versioning==2.3.1", "wheel==0.48.0"]
-lock_artifact = { digest = "sha256:5eb3c82fcb606d102cd7e1c257745ec63e7dce8ffaafa8327a4dda0705762ad5", size_bytes = 2282, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:5eb3c82fcb606d102cd7e1c257745ec63e7dce8ffaafa8327a4dda0705762ad5", visibility = "private" }
-
-[tests]
-framework = "pytest"
-expected_total = 54
-expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py"]
-
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:6bcd04c8462bef3b7e6957aed7bc5344bf6a73b18e3cb6e2226161887978d7a0", size_bytes = 40960, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:6bcd04c8462bef3b7e6957aed7bc5344bf6a73b18e3cb6e2226161887978d7a0", visibility = "private" }
 entrypoint = "run.py"
-environment = { SETUPTOOLS_SCM_PRETEND_VERSION = "3.3.1" }
+
+[verifier.bundle]
+digest = "sha256:6bcd04c8462bef3b7e6957aed7bc5344bf6a73b18e3cb6e2226161887978d7a0"
+size_bytes = 40960
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:6bcd04c8462bef3b7e6957aed7bc5344bf6a73b18e3cb6e2226161887978d7a0"
+visibility = "private"
+
+[verifier.environment]
+SETUPTOOLS_SCM_PRETEND_VERSION = "3.3.1"
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Build pathvalidate 3.3.1 from an empty workspace and satisfy a bounded cross-platform filename, filepath, helper, error, and framework-adapter contract."
-keywords = ["python", "path-validation", "sanitization", "cross-platform", "custom-json-v1", "separate-verifier"]
+keywords = [
+    "python",
+    "path-validation",
+    "sanitization",
+    "cross-platform",
+    "custom-json-v1",
+    "separate-verifier",
+]
 agent_timeout_sec = 2400.0
 verifier_timeout_sec = 420.0
 candidate_install_timeout_sec = 20.0
@@ -82,6 +75,41 @@ uri = "artifact://private/sha256:b8561eb66c5d5287f281d303015e4a894c2fcc50fc840c4
 visibility = "private"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "python-author-wave2-20260828-c2/pathvalidate"
-reason = "Harbor 0.21.0 production gates passed with a fixed 54-leaf subprocess collection: Oracle 54/54 at reward 1.0; stub and forgery 5/54; call-hang 0/54; bounded empty, install-hang, and workspace-rejection controls scored zero; every verifier network receipt proves no public egress. Review, model pilot, dataset integration, and publication remain out of scope."
+reason = "Canonical source migration is blocked: exact Python runtime/package-manager version and canonical dependency closure evidence are unavailable. Previous status/reason: controls-passed: Harbor 0.21.0 production gates passed with a fixed 54-leaf subprocess collection: Oracle 54/54 at reward 1.0; stub and forgery 5/54; call-hang 0/54; bounded empty, install-hang, and workspace-rejection controls scored zero; every verifier network receipt proves no public egress. Review, model pilot, dataset integration, and publication remain out of scope."
+
+[environment]
+status = "unknown"
+os_name = "debian-12-amd64"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = [
+    "ca-certificates",
+    "git",
+]
+build_command = "python -m pip install --no-deps --no-build-isolation"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The hash-locked build and Click-adapter closure is installed during Docker build. Agent and separate verifier phases have no egress; only the trusted Oracle receives a run-scoped exact source-host authorization."
+
+[dependencies]
+status = "unknown"
+packages = [
+    "click==8.5.0",
+    "packaging==26.3",
+    "setuptools==84.0.0",
+    "setuptools-scm==10.2.1",
+    "vcs-versioning==2.3.1",
+    "wheel==0.48.0",
+]
+package_manager = "pip"
+
+[tests]
+expected_total = 54
+expected_total_source = "frozen-collection"
+framework = "custom"
+report_format = "custom-json-v1"

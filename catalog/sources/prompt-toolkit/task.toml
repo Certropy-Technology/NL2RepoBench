@@ -1,19 +1,19 @@
-schema_version = "1.0"
 task_id = "prompt-toolkit"
 version = "0.2.0"
 instruction = "instruction.md"
+schema_version = "1.0"
 
 [metadata]
 difficulty = "hard"
 category = "terminal"
 tags = [
-  "python",
-  "terminal",
-  "headless",
-  "buffer",
-  "completion",
-  "key-bindings",
-  "separate-verifier",
+    "python",
+    "terminal",
+    "headless",
+    "buffer",
+    "completion",
+    "key-bindings",
+    "separate-verifier",
 ]
 language = "python"
 
@@ -25,49 +25,38 @@ license_spdx = "BSD-3-Clause"
 source_digest = "sha256:b9dda9618cc8482f22128b28e60b095bb7eb95926e1c17276da2d4eeccc8feb0"
 submodules = []
 
-[environment]
-status = "known"
-python_version = "3.12.14"
-os_name = "debian-12-amd64"
-base_image = "python:3.12-slim"
-base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
-network_mode = "no-network"
-
-[environment.network_policy]
-mode = "no-network"
-offline_dependencies = "preinstalled-image"
-reference_source_fetch = "forbidden"
-reason = "The hash-locked third-party closure is installed during the Docker build phase. Agent and verifier runs require no egress, and the Oracle copies a local private source bundle."
-
-[dependencies]
-status = "known"
-installer = "pip"
-packages = ["setuptools==80.10.2", "wcwidth==0.8.1"]
-lock_artifact = { digest = "sha256:87346076fd5fc526db637b9d8703d331aff682e87c9c0a9534f5f171701526d8", size_bytes = 375, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:87346076fd5fc526db637b9d8703d331aff682e87c9c0a9534f5f171701526d8", visibility = "private" }
-
-[tests]
-framework = "pytest"
-expected_total = 9
-expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py"]
-
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:0a5f03d89b626de5be9bfdb507d3d1f2a2ae7ffafdb9655d1de3f9205c5bf5da", size_bytes = 30720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:0a5f03d89b626de5be9bfdb507d3d1f2a2ae7ffafdb9655d1de3f9205c5bf5da", visibility = "private" }
 entrypoint = "run.py"
-environment = {}
+
+[verifier.bundle]
+digest = "sha256:0a5f03d89b626de5be9bfdb507d3d1f2a2ae7ffafdb9655d1de3f9205c5bf5da"
+size_bytes = 30720
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:0a5f03d89b626de5be9bfdb507d3d1f2a2ae7ffafdb9655d1de3f9205c5bf5da"
+visibility = "private"
+
+[verifier.environment]
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Build prompt_toolkit 3.0.53 from an empty workspace; grading uses deterministic headless document, buffer, completion, data-model, and key-binding behavior through a separate child adapter."
-keywords = ["python", "terminal", "headless", "buffer", "completion", "key-bindings", "separate-verifier"]
+keywords = [
+    "python",
+    "terminal",
+    "headless",
+    "buffer",
+    "completion",
+    "key-bindings",
+    "separate-verifier",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 480.0
 candidate_install_timeout_sec = 120.0
@@ -87,9 +76,39 @@ uri = "artifact://private/sha256:863d30b08209c483f729cd0517fcfe7a074c3606266d337
 visibility = "private"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "worker"
-reason = "Official Harbor 0.21.0 Oracle passed 9/9 with reward 1.0; empty, stub, and forgery controls scored 0.0 and all final verifier network probes were false."
-evidence = [
-  { digest = "sha256:52d123a02d779f7fbf3c8e3e8fc99dcab15d1088b6d1351b4adb252eeac8cc32", size_bytes = 5847, media_type = "application/json", uri = "artifact://private/sha256:52d123a02d779f7fbf3c8e3e8fc99dcab15d1088b6d1351b4adb252eeac8cc32", visibility = "private" },
+reason = "Canonical source migration is blocked: exact Python runtime/package-manager version and canonical dependency closure evidence are unavailable. Previous status/reason: controls-passed: Official Harbor 0.21.0 Oracle passed 9/9 with reward 1.0; empty, stub, and forgery controls scored 0.0 and all final verifier network probes were false."
+
+[[lifecycle.evidence]]
+digest = "sha256:52d123a02d779f7fbf3c8e3e8fc99dcab15d1088b6d1351b4adb252eeac8cc32"
+size_bytes = 5847
+media_type = "application/json"
+uri = "artifact://private/sha256:52d123a02d779f7fbf3c8e3e8fc99dcab15d1088b6d1351b4adb252eeac8cc32"
+visibility = "private"
+
+[environment]
+status = "unknown"
+os_name = "debian-12-amd64"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The hash-locked third-party closure is installed during the Docker build phase. Agent and verifier runs require no egress, and the Oracle copies a local private source bundle."
+
+[dependencies]
+status = "unknown"
+packages = [
+    "setuptools==80.10.2",
+    "wcwidth==0.8.1",
 ]
+package_manager = "pip"
+
+[tests]
+expected_total = 9
+expected_total_source = "frozen-collection"
+framework = "custom"
+report_format = "custom-json-v1"

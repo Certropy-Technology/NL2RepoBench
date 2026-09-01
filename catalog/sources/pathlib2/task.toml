@@ -1,12 +1,15 @@
-schema_version = "1.0"
 task_id = "pathlib2"
 version = "0.1.0"
 instruction = "instruction.md"
+schema_version = "1.0"
 
 [metadata]
 difficulty = "medium"
 category = "python-library"
-tags = ["python", "repository-generation"]
+tags = [
+    "python",
+    "repository-generation",
+]
 language = "python"
 
 [source]
@@ -16,41 +19,21 @@ revision = "e9b1985b141a527061137d28a9f3c7f54e849343"
 license_spdx = "unknown"
 source_digest = "sha256:9ab707fade229054505c68d553a2777d33a7f7ffe9d8dbe951f25051d19ab619"
 
-[environment]
-status = "known"
-python_version = "3.11"
-os_name = "debian-12"
-base_image = "python:3.12-slim"
-base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
-network_mode = "no-network"
-
-[environment.network_policy]
-mode = "no-network"
-offline_dependencies = "missing"
-reference_source_fetch = "forbidden"
-reason = "BLOCKER: dependency closure is not yet frozen (dependencies.status=unknown, no declared packages), so nothing can be baked into the image at build time. Resolve by freezing the closure and declaring [dependencies].packages, and declaring a hash-locked dependency lock artifact. A model provider host, when needed, is injected per run via Harbor agent.extra_allowed_hosts."
-
-[dependencies]
-status = "unknown"
-installer = "pip"
-packages = []
-
-[tests]
-framework = "pytest"
-expected_total = 344
-expected_total_source = "unknown"
-commands = ["pip install -e .", "pytest --continue-on-collection-errors tests"]
-
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Build the pathlib2 package from an empty workspace."
-keywords = ["python", "repository-generation", "nl2repobench"]
+keywords = [
+    "python",
+    "repository-generation",
+    "nl2repobench",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 60.0
@@ -63,5 +46,28 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "discovered"
-reason = "Imported legacy task; source, dependency and collection locks still require freeze."
+status = "blocked"
+reason = "Canonical source migration is blocked: exact Python runtime/package-manager version and canonical dependency closure evidence are unavailable. Previous status/reason: discovered: Imported legacy task; source, dependency and collection locks still require freeze."
+
+[environment]
+status = "unknown"
+os_name = "debian-12"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "BLOCKER: dependency closure is not yet frozen (dependencies.status=unknown, no declared packages), so nothing can be baked into the image at build time. Resolve by freezing the closure and declaring [dependencies].packages, and declaring a hash-locked dependency lock artifact. A model provider host, when needed, is injected per run via Harbor agent.extra_allowed_hosts."
+
+[dependencies]
+status = "unknown"
+packages = []
+package_manager = "pip"
+
+[tests]
+expected_total = 344
+expected_total_source = "unknown"
+framework = "pytest"
+report_format = "pytest-junit-xml-v1"

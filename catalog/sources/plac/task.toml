@@ -1,12 +1,15 @@
-schema_version = "1.0"
 task_id = "plac"
 version = "0.1.0"
 instruction = "blocked.md"
+schema_version = "1.0"
 
 [metadata]
 difficulty = "unknown"
 category = "python-library"
-tags = ["python", "repository-generation"]
+tags = [
+    "python",
+    "repository-generation",
+]
 language = "python"
 
 [source]
@@ -16,38 +19,21 @@ revision = "0da08718131023893894e484d1a8133647e55e1d"
 license_spdx = "BSD-2-Clause"
 source_digest = "sha256:9b58509fedcb5d1a07e3bebd5756e699764bfaa60d514d5aa3e6978bdd10fdb7"
 
-[environment]
-status = "unknown"
-python_version = "3.10.11"
-network_mode = "no-network"
-
-[environment.network_policy]
-mode = "no-network"
-offline_dependencies = "missing"
-reference_source_fetch = "forbidden"
-reason = "BLOCKER: no hash-locked build or verifier dependency closure exists. Freeze that closure during remediation; run-time source fetch remains forbidden, and any model-provider host must be injected per run rather than declared here."
-
-[dependencies]
-status = "unknown"
-installer = "pip"
-packages = []
-
-[tests]
-framework = "pytest"
-expected_total = 28
-expected_total_source = "legacy-file"
-commands = ["pip install -e .", "pytest --continue-on-collection-errors doc"]
-
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = ["skipped"]
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Build the plac package from an empty workspace."
-keywords = ["python", "repository-generation", "nl2repobench"]
+keywords = [
+    "python",
+    "repository-generation",
+    "nl2repobench",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 60.0
@@ -61,4 +47,24 @@ workspace_artifact = "/workspace"
 
 [lifecycle]
 status = "blocked"
-reason = "Two frozen legacy test files contain Windows skip overlays absent from every upstream revision checked, and no owner-approved immutable overlay artifact identifies their provenance."
+reason = "Canonical source migration is blocked: exact Python runtime/package-manager version and canonical dependency closure evidence are unavailable. Previous status/reason: blocked: Two frozen legacy test files contain Windows skip overlays absent from every upstream revision checked, and no owner-approved immutable overlay artifact identifies their provenance."
+
+[environment]
+status = "unknown"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "BLOCKER: no hash-locked build or verifier dependency closure exists. Freeze that closure during remediation; run-time source fetch remains forbidden, and any model-provider host must be injected per run rather than declared here."
+
+[dependencies]
+status = "unknown"
+packages = []
+package_manager = "pip"
+
+[tests]
+expected_total = 28
+expected_total_source = "unknown"
+framework = "pytest"
+report_format = "pytest-junit-xml-v1"

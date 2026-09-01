@@ -1,12 +1,17 @@
-schema_version = "1.0"
 task_id = "pluggy"
 version = "0.1.0"
 instruction = "blocked.md"
+schema_version = "1.0"
 
 [metadata]
 difficulty = "easy"
 category = "testing"
-tags = ["python", "plugins", "hooks", "blocked"]
+tags = [
+    "python",
+    "plugins",
+    "hooks",
+    "blocked",
+]
 language = "python"
 
 [source]
@@ -15,9 +20,20 @@ upstream_url = "https://github.com/pytest-dev/pluggy"
 revision = "d23f110b240d67ee503eba0082f30cae73f3e1e3"
 license_spdx = "MIT"
 
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = [
+    "passed",
+]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[lifecycle]
+status = "blocked"
+reason = "Canonical source migration is blocked: exact Python runtime/package-manager version and canonical dependency closure evidence are unavailable. Previous status/reason: blocked: The audit records 127 static test definitions, not a frozen collection. Upstream access did not yield a detached archive or license-byte hash, and no immutable environment, dependency lock, private Pluggy-specific verifier/test bundle, Oracle, controls, or catalog/tasks/pluggy runtime exists."
+
 [environment]
 status = "unknown"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -27,22 +43,14 @@ reason = "The audit records an upstream URL, full commit, and MIT claim, but no 
 
 [dependencies]
 status = "unknown"
-installer = "pip"
-packages = ["setuptools>=65", "setuptools-scm[toml]>=8"]
+packages = [
+    "setuptools>=65",
+    "setuptools-scm[toml]>=8",
+]
+package_manager = "pip"
 
 [tests]
-framework = "pytest"
 expected_total = 0
 expected_total_source = "unknown"
-commands = []
-
-[metric]
-contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
-collection_mismatch = "fail"
-formula = "clamp(passed / frozen_total, 0, 1)"
-
-[lifecycle]
-status = "blocked"
-reason = "The audit records 127 static test definitions, not a frozen collection. Upstream access did not yield a detached archive or license-byte hash, and no immutable environment, dependency lock, private Pluggy-specific verifier/test bundle, Oracle, controls, or catalog/tasks/pluggy runtime exists."
+framework = "pytest"
+report_format = "pytest-junit-xml-v1"

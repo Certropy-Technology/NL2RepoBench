@@ -1,23 +1,38 @@
-schema_version = "1.0"
 task_id = "packaging"
 version = "0.1.0"
 instruction = "audit.md"
+schema_version = "1.0"
 
 [metadata]
 difficulty = "unknown"
 category = "packaging"
-tags = ["python", "packaging", "source-freeze", "blocked"]
+tags = [
+    "python",
+    "packaging",
+    "source-freeze",
+    "blocked",
+]
 language = "python"
 
 [source]
-# This locator is not immutable provenance; source status remains unknown.
 status = "unknown"
 upstream_url = "https://github.com/pypa/packaging"
 submodules = []
 
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = [
+    "passed",
+]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[lifecycle]
+status = "blocked"
+reason = "Canonical source migration is blocked: exact Python runtime/package-manager version and canonical dependency closure evidence are unavailable. Previous status/reason: blocked: The audit establishes neither an immutable upstream revision nor license/archive, package metadata, test collection, dependency, verifier, Oracle, or control evidence. This source-only candidate must not produce a catalog/tasks/packaging runtime."
+
 [environment]
 status = "unknown"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -27,22 +42,11 @@ reason = "The audit did not establish an immutable source checkout or a hash-loc
 
 [dependencies]
 status = "unknown"
-installer = "pip"
 packages = []
+package_manager = "pip"
 
 [tests]
-framework = "pytest"
 expected_total = 0
 expected_total_source = "unknown"
-commands = []
-
-[metric]
-contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = ["skipped"]
-collection_mismatch = "fail"
-formula = "clamp(passed / frozen_total, 0, 1)"
-
-[lifecycle]
-status = "blocked"
-reason = "The audit establishes neither an immutable upstream revision nor license/archive, package metadata, test collection, dependency, verifier, Oracle, or control evidence. This source-only candidate must not produce a catalog/tasks/packaging runtime."
+framework = "pytest"
+report_format = "pytest-junit-xml-v1"

@@ -1,12 +1,17 @@
-schema_version = "1.0"
 task_id = "prettytable"
 version = "0.1.0"
 instruction = "blocked.md"
+schema_version = "1.0"
 
 [metadata]
 difficulty = "unknown"
 category = "table-formatting"
-tags = ["python", "tables", "formatting", "blocked"]
+tags = [
+    "python",
+    "tables",
+    "formatting",
+    "blocked",
+]
 language = "python"
 
 [source]
@@ -17,44 +22,23 @@ license_spdx = "BSD-3-Clause"
 source_digest = "sha256:76f15330d9b102191694e8f0ef21632dfd80cdeb6ff5d14c95a8d21553052532"
 submodules = []
 
-[environment]
-status = "unknown"
-network_mode = "no-network"
-
-[environment.network_policy]
-mode = "no-network"
-offline_dependencies = "missing"
-reference_source_fetch = "forbidden"
-reason = "Agent and verifier runs must remain offline; no hash-locked wcwidth/test closure or immutable task image exists, and reference-source retrieval is forbidden during evaluation."
-
-[dependencies]
-status = "unknown"
-installer = "pip"
-packages = [
-  "wcwidth>=0.3.5",
-  "hatch-vcs",
-  "hatchling>=1.27",
-  "pytest>=9",
-  "pytest-cov",
-  "pytest-lazy-fixtures",
-]
-
-[tests]
-framework = "pytest"
-expected_total = 0
-expected_total_source = "unknown"
-commands = []
-
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Blocked candidate: the exact source is identified, but no immutable environment, offline dependency closure, frozen test contract, or separate verifier exists."
-keywords = ["python", "tables", "formatting", "wcwidth", "blocked"]
+keywords = [
+    "python",
+    "tables",
+    "formatting",
+    "wcwidth",
+    "blocked",
+]
 agent_timeout_sec = 1800.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 120.0
@@ -69,6 +53,41 @@ workspace_artifact = "/workspace"
 [lifecycle]
 status = "blocked"
 owner = "repair/prettytable"
-reason = "Exact upstream provenance is known. Tests are unavailable in a frozen production verifier, and publication remains blocked because the generated version file, hash-locked offline dependency closure, final environment, separate verifier, Oracle, and controls are absent. No catalog/tasks/prettytable runtime exists."
-evidence = [{ digest = "sha256:28519e3d6bf0dbf1d211d11c9a15a88ee945849d55f0648dea2d29440a884f36", size_bytes = 2760, media_type = "application/json", uri = "artifact://public/sha256:28519e3d6bf0dbf1d211d11c9a15a88ee945849d55f0648dea2d29440a884f36", visibility = "public" }]
-approval_refs = ["catalog/sources/prettytable/production-evidence.json"]
+reason = "Canonical source migration is blocked: exact Python runtime/package-manager version and canonical dependency closure evidence are unavailable. Previous status/reason: blocked: Exact upstream provenance is known. Tests are unavailable in a frozen production verifier, and publication remains blocked because the generated version file, hash-locked offline dependency closure, final environment, separate verifier, Oracle, and controls are absent. No catalog/tasks/prettytable runtime exists."
+approval_refs = [
+    "catalog/sources/prettytable/production-evidence.json",
+]
+
+[[lifecycle.evidence]]
+digest = "sha256:28519e3d6bf0dbf1d211d11c9a15a88ee945849d55f0648dea2d29440a884f36"
+size_bytes = 2760
+media_type = "application/json"
+uri = "artifact://public/sha256:28519e3d6bf0dbf1d211d11c9a15a88ee945849d55f0648dea2d29440a884f36"
+visibility = "public"
+
+[environment]
+status = "unknown"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "Agent and verifier runs must remain offline; no hash-locked wcwidth/test closure or immutable task image exists, and reference-source retrieval is forbidden during evaluation."
+
+[dependencies]
+status = "unknown"
+packages = [
+    "wcwidth>=0.3.5",
+    "hatch-vcs",
+    "hatchling>=1.27",
+    "pytest>=9",
+    "pytest-cov",
+    "pytest-lazy-fixtures",
+]
+package_manager = "pip"
+
+[tests]
+expected_total = 0
+expected_total_source = "unknown"
+framework = "pytest"
+report_format = "pytest-junit-xml-v1"
