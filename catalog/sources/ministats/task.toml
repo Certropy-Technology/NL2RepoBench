@@ -18,8 +18,16 @@ status = "unknown"
 # until the image is pinned by digest and recorded in toolchain.lock.
 [environment]
 status = "unknown"
-python_version = "3.12"
-network_mode = "no-network"
+os_name = "debian-12-amd64"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+
+[environment.runtime]
+language = "python"
+runtime = "cpython"
+version = "3.12.11"
+package_manager = "uv"
+package_manager_version = "0.11.32"
 
 [environment.network_policy]
 mode = "no-network"
@@ -29,19 +37,18 @@ reason = "Synthetic development fixture; the production dependency lock and immu
 
 [dependencies]
 status = "unknown"
-installer = "uv"
+package_manager = "uv"
 packages = []
 
 [tests]
 framework = "pytest"
+report_format = "pytest-junit-xml-v1"
 expected_total = 18
 expected_total_source = "frozen-collection"
-commands = ["python -m pytest --continue-on-collection-errors /tests/test_ministats.py"]
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
 passed_statuses = ["passed"]
-excluded_statuses = []
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
@@ -52,7 +59,7 @@ agent_timeout_sec = 600.0
 verifier_timeout_sec = 180.0
 candidate_install_timeout_sec = 15.0
 candidate_total_timeout_sec = 60.0
-agent_network_mode = "public"
+agent_network_mode = "no-network"
 verifier_network_mode = "no-network"
 cpus = 2
 memory_mb = 2048
