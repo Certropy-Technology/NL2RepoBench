@@ -1,13 +1,21 @@
-schema_version = "2.0"
+schema_version = "1.0"
 task_id = "vite"
 version = "2.0.0"
 instruction = "instruction.md"
-oracle_bundle = { digest = "sha256:dbc13a56cb12daf2158fe888d154aeae1304b4005b445e702a6ff994d03639a0", size_bytes = 20418560, media_type = "application/vnd.nl2repobench.oracle+tar", uri = "artifact://private/sha256:dbc13a56cb12daf2158fe888d154aeae1304b4005b445e702a6ff994d03639a0", visibility = "private" }
 
 [metadata]
 difficulty = "hard"
 category = "node-build-tool"
-tags = ["node", "npm", "esm", "vite", "configuration", "environment", "filesystem", "json"]
+tags = [
+    "node",
+    "npm",
+    "esm",
+    "vite",
+    "configuration",
+    "environment",
+    "filesystem",
+    "json",
+]
 language = "node"
 
 [source]
@@ -23,13 +31,6 @@ status = "known"
 os_name = "debian-bookworm"
 base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
 base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
-network_mode = "no-network"
-
-[environment.network_policy]
-mode = "no-network"
-offline_dependencies = "private-artifact"
-reference_source_fetch = "forbidden"
-reason = "Candidate and verifier phases use a zero-dependency npm v3 lock/cache artifact with no egress. The private Oracle bundle contains and verifies the frozen source archive; no source or registry host is exposed to a model run."
 
 [environment.runtime]
 language = "node"
@@ -37,20 +38,16 @@ runtime = "node"
 version = "24.19.0"
 package_manager = "npm"
 package_manager_version = "11.17.0"
-architecture = "linux/amd64"
-libc = "glibc"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "Candidate and verifier phases use a zero-dependency npm v3 lock/cache artifact with no egress. The private Oracle bundle contains and verifies the frozen source archive; no source or registry host is exposed to a model run."
 
 [dependencies]
-status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-artifact = { digest = "sha256:7b54530a511091c7b8910c71e9ae8161b7a46652b36981fbbe6956c0561ba1df", size_bytes = 10240, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:7b54530a511091c7b8910c71e9ae8161b7a46652b36981fbbe6956c0561ba1df", visibility = "private" }
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
+status = "unknown"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
 packages = []
 
 [tests]
@@ -58,24 +55,42 @@ framework = "node:test"
 report_format = "node-test-json-v1"
 expected_total = 24
 expected_total_source = "frozen-collection"
-commands_artifact = { digest = "sha256:ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a", size_bytes = 176, media_type = "application/json", uri = "artifact://private/sha256:ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a", visibility = "private" }
-test_bundle = { digest = "sha256:9de2959af2962980c2916338d3923f471829d8be1d78d87fd81ed5e4a634f2e0", size_bytes = 20480, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:9de2959af2962980c2916338d3923f471829d8be1d78d87fd81ed5e4a634f2e0", visibility = "private" }
+
+[tests.commands_artifact]
+digest = "sha256:ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a"
+size_bytes = 176
+media_type = "application/json"
+uri = "artifact://private/sha256:ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a"
+visibility = "private"
+
+[tests.test_bundle]
+digest = "sha256:9de2959af2962980c2916338d3923f471829d8be1d78d87fd81ed5e4a634f2e0"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.node-tests+tar"
+uri = "artifact://private/sha256:9de2959af2962980c2916338d3923f471829d8be1d78d87fd81ed5e4a634f2e0"
+visibility = "private"
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-denominator_statuses = ["passed", "failed", "error", "skipped", "todo"]
 collection_mismatch = "fail"
-formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "node-author-wide-20260826-remediation/vite"
-reason = "Harbor 0.21 production gates passed on the final scoped contract: Oracle 24/24 reward 1.0; empty, stub, forgery, hang, and offline controls reward 0.0; forgery output was ignored; every verifier network receipt reports public_network_available=false. Review and model pilot remain integrator stages."
+reason = "Harbor 0.21 production gates passed on the final scoped contract: Oracle 24/24 reward 1.0; empty, stub, forgery, hang, and offline controls reward 0.0; forgery output was ignored; every verifier network receipt reports public_network_available=false. Review and model pilot remain integrator stages. Canonical dependency closure requires a new versioned private artifact migration."
 
 [harbor]
 description = "Build the scoped Vite 8.2.2 configuration and environment utility API from an empty workspace."
-keywords = ["node", "npm", "esm", "vite", "configuration", "environment", "filesystem", "json"]
+keywords = [
+    "node",
+    "npm",
+    "esm",
+    "vite",
+    "configuration",
+    "environment",
+    "filesystem",
+    "json",
+]
 agent_timeout_sec = 1800.0
 verifier_timeout_sec = 900.0
 candidate_install_timeout_sec = 90.0
@@ -86,3 +101,10 @@ cpus = 2
 memory_mb = 2048
 storage_mb = 8192
 workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:dbc13a56cb12daf2158fe888d154aeae1304b4005b445e702a6ff994d03639a0"
+size_bytes = 20418560
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:dbc13a56cb12daf2158fe888d154aeae1304b4005b445e702a6ff994d03639a0"
+visibility = "private"

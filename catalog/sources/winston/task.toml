@@ -1,4 +1,4 @@
-schema_version = "2.0"
+schema_version = "1.0"
 task_id = "winston"
 version = "2.0.0"
 instruction = "instruction.md"
@@ -6,7 +6,15 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "hard"
 category = "logging-library"
-tags = ["node", "npm", "commonjs", "logging", "streams", "transports", "json"]
+tags = [
+    "node",
+    "npm",
+    "commonjs",
+    "logging",
+    "streams",
+    "transports",
+    "json",
+]
 language = "node"
 
 [source]
@@ -22,13 +30,6 @@ status = "known"
 os_name = "debian-bookworm"
 base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
 base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
-network_mode = "no-network"
-
-[environment.network_policy]
-mode = "no-network"
-offline_dependencies = "preinstalled-image"
-reference_source_fetch = "forbidden"
-reason = "The verifier installs the frozen npm closure from a private cache at image build time; candidate and verifier phases have no egress, and only the trusted Oracle receives the private reference bundle."
 
 [environment.runtime]
 language = "node"
@@ -36,37 +37,70 @@ runtime = "node"
 version = "24.19.0"
 package_manager = "npm"
 package_manager_version = "11.17.0"
-architecture = "linux/amd64"
-libc = "glibc"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The verifier installs the frozen npm closure from a private cache at image build time; candidate and verifier phases have no egress, and only the trusted Oracle receives the private reference bundle."
 
 [dependencies]
-status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-artifact = { digest = "sha256:603ce4138f7c02c8a4f610bc6dd6c3ceeff6219afe4064d340fb688b67665e61", size_bytes = 33894400, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:603ce4138f7c02c8a4f610bc6dd6c3ceeff6219afe4064d340fb688b67665e61", visibility = "private" }
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
+status = "unknown"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
-packages = ["@colors/colors", "@dabh/diagnostics", "async", "is-stream", "logform", "one-time", "readable-stream", "safe-stable-stringify", "stack-trace", "triple-beam", "winston-transport"]
+packages = [
+    "@colors/colors",
+    "@dabh/diagnostics",
+    "async",
+    "is-stream",
+    "logform",
+    "one-time",
+    "readable-stream",
+    "safe-stable-stringify",
+    "stack-trace",
+    "triple-beam",
+    "winston-transport",
+]
 
 [tests]
 framework = "node:test"
 report_format = "node-test-json-v1"
 expected_total = 24
 expected_total_source = "frozen-collection"
-commands_artifact = { digest = "sha256:fda65a1fae7a54d9433921e0c28ac2311ec9dbefc0b8c54efe69c954ad4433f7", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:fda65a1fae7a54d9433921e0c28ac2311ec9dbefc0b8c54efe69c954ad4433f7", visibility = "private" }
-test_bundle = { digest = "sha256:48941be9e66e63994be4b052dc6537387a1edcf1488d531bdf7e5f0e9031af6c", size_bytes = 20480, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:48941be9e66e63994be4b052dc6537387a1edcf1488d531bdf7e5f0e9031af6c", visibility = "private" }
+
+[tests.commands_artifact]
+digest = "sha256:fda65a1fae7a54d9433921e0c28ac2311ec9dbefc0b8c54efe69c954ad4433f7"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.node-commands+tar"
+uri = "artifact://private/sha256:fda65a1fae7a54d9433921e0c28ac2311ec9dbefc0b8c54efe69c954ad4433f7"
+visibility = "private"
+
+[tests.test_bundle]
+digest = "sha256:48941be9e66e63994be4b052dc6537387a1edcf1488d531bdf7e5f0e9031af6c"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.node-tests+tar"
+uri = "artifact://private/sha256:48941be9e66e63994be4b052dc6537387a1edcf1488d531bdf7e5f0e9031af6c"
+visibility = "private"
 
 [metric]
-contract_id = "node-test-leaf-pass-rate-v1"
+contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
+
+[lifecycle]
+status = "blocked"
+owner = "node-author-wide-20260826-remediation/winston"
+reason = "Source validation, full network lint, production compile, verifier image build, trusted Oracle, empty, stub, forgery, and offline controls passed. Review, pilot, and publication remain integrator-stage gates. Canonical dependency closure requires a new versioned private artifact migration."
 
 [harbor]
 description = "Build the Winston CommonJS logging library from an empty Node workspace."
-keywords = ["node", "npm", "commonjs", "logging", "streams", "transports", "json"]
+keywords = [
+    "node",
+    "npm",
+    "commonjs",
+    "logging",
+    "streams",
+    "transports",
+    "json",
+]
 agent_timeout_sec = 1500.0
 verifier_timeout_sec = 720.0
 candidate_install_timeout_sec = 120.0
@@ -77,11 +111,6 @@ cpus = 1
 memory_mb = 2048
 storage_mb = 8192
 workspace_artifact = "/workspace"
-
-[lifecycle]
-status = "controls-passed"
-owner = "node-author-wide-20260826-remediation/winston"
-reason = "Source validation, full network lint, production compile, verifier image build, trusted Oracle, empty, stub, forgery, and offline controls passed. Review, pilot, and publication remain integrator-stage gates."
 
 [oracle_bundle]
 digest = "sha256:0f7c00a9d0cee6ace869ec35f48455e08bb923a01ff5fb433c4b4339a364db0c"

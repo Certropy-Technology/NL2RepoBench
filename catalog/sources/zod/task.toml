@@ -1,4 +1,4 @@
-schema_version = "2.0"
+schema_version = "1.0"
 task_id = "zod"
 version = "2.0.0"
 instruction = "instruction.md"
@@ -6,7 +6,16 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "hard"
 category = "data-validation"
-tags = ["node", "npm", "esm", "validation", "schema", "json", "zod", "repository-generation"]
+tags = [
+    "node",
+    "npm",
+    "esm",
+    "validation",
+    "schema",
+    "json",
+    "zod",
+    "repository-generation",
+]
 language = "node"
 
 [source]
@@ -22,13 +31,6 @@ status = "known"
 os_name = "debian-bookworm"
 base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
 base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
-network_mode = "no-network"
-
-[environment.network_policy]
-mode = "no-network"
-offline_dependencies = "preinstalled-image"
-reference_source_fetch = "forbidden"
-reason = "The zero-dependency candidate and separate verifier use a verifier-owned empty npm v3 cache. The trusted Oracle receives exact-revision source and build archives only through its private bundle; the model agent has no source or registry access."
 
 [environment.runtime]
 language = "node"
@@ -36,53 +38,69 @@ runtime = "node"
 version = "24.19.0"
 package_manager = "npm"
 package_manager_version = "11.17.0"
-architecture = "linux/amd64"
-libc = "glibc"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The zero-dependency candidate and separate verifier use a verifier-owned empty npm v3 cache. The trusted Oracle receives exact-revision source and build archives only through its private bundle; the model agent has no source or registry access."
 
 [dependencies]
-status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
+status = "unknown"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
 packages = []
-artifact = { digest = "sha256:004e81d7f6260a7b7ea1e8d165c5862f5fad540daf08c7a89812028417f86702", size_bytes = 10240, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:004e81d7f6260a7b7ea1e8d165c5862f5fad540daf08c7a89812028417f86702", visibility = "private" }
 
 [tests]
 framework = "node:test"
 report_format = "node-test-json-v1"
 expected_total = 24
 expected_total_source = "frozen-collection"
-commands_artifact = { digest = "sha256:ff24615a926405b2fa2d1bde2ccbb0816fc0a5d3364f4585da23888979c665cf", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:ff24615a926405b2fa2d1bde2ccbb0816fc0a5d3364f4585da23888979c665cf", visibility = "private" }
-test_bundle = { digest = "sha256:11dd0eed5780818750414d7bafd77d19c74ef1db17403a5df9b7e25a985d0c1e", size_bytes = 20480, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:11dd0eed5780818750414d7bafd77d19c74ef1db17403a5df9b7e25a985d0c1e", visibility = "private" }
+
+[tests.commands_artifact]
+digest = "sha256:ff24615a926405b2fa2d1bde2ccbb0816fc0a5d3364f4585da23888979c665cf"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.node-commands+tar"
+uri = "artifact://private/sha256:ff24615a926405b2fa2d1bde2ccbb0816fc0a5d3364f4585da23888979c665cf"
+visibility = "private"
+
+[tests.test_bundle]
+digest = "sha256:11dd0eed5780818750414d7bafd77d19c74ef1db17403a5df9b7e25a985d0c1e"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.node-tests+tar"
+uri = "artifact://private/sha256:11dd0eed5780818750414d7bafd77d19c74ef1db17403a5df9b7e25a985d0c1e"
+visibility = "private"
 
 [metric]
-contract_id = "node-test-leaf-pass-rate-v1"
+contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
+
+[lifecycle]
+status = "blocked"
+owner = "node-author-gpt56-supplemental-20260827-r2"
+reason = "Production compile and Harbor 0.21 controls passed: Oracle 24/24 reward 1.0; empty reward 0; stub and forgery 1/24; call-hang timed out and failed closed at reward 0; offline network control reward 0. All verifier network receipts report no public network. Integrator review, pilot, and publication remain pending. Canonical dependency closure requires a new versioned private artifact migration."
 
 [harbor]
 description = "Production Zod v4 JSON validation slice with a verifier-owned subprocess boundary."
-keywords = ["node", "npm", "esm", "validation", "schema", "json", "zod", "node-test"]
+keywords = [
+    "node",
+    "npm",
+    "esm",
+    "validation",
+    "schema",
+    "json",
+    "zod",
+    "node-test",
+]
 agent_timeout_sec = 1200.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 90.0
 candidate_total_timeout_sec = 300.0
 agent_network_mode = "no-network"
-agent_allowed_hosts = []
 verifier_network_mode = "no-network"
 cpus = 1
 memory_mb = 2048
 storage_mb = 4096
 workspace_artifact = "/workspace"
-
-[lifecycle]
-status = "controls-passed"
-owner = "node-author-gpt56-supplemental-20260827-r2"
-reason = "Production compile and Harbor 0.21 controls passed: Oracle 24/24 reward 1.0; empty reward 0; stub and forgery 1/24; call-hang timed out and failed closed at reward 0; offline network control reward 0. All verifier network receipts report no public network. Integrator review, pilot, and publication remain pending."
 
 [oracle_bundle]
 digest = "sha256:6973315b66354891d2bf3772e9d83b92a86cfe7c713bd6241922dcfa8100c90e"

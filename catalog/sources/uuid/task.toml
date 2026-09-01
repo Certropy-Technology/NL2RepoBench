@@ -1,4 +1,4 @@
-schema_version = "2.0"
+schema_version = "1.0"
 task_id = "uuid"
 version = "2.0.1"
 instruction = "instruction.md"
@@ -6,7 +6,15 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "easy"
 category = "uuid-library"
-tags = ["node", "npm", "esm", "uuid", "rfc9562", "crypto", "json"]
+tags = [
+    "node",
+    "npm",
+    "esm",
+    "uuid",
+    "rfc9562",
+    "crypto",
+    "json",
+]
 language = "node"
 
 [source]
@@ -22,7 +30,6 @@ status = "known"
 os_name = "debian-bookworm"
 base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
 base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
-network_mode = "no-network"
 
 [environment.runtime]
 language = "node"
@@ -30,8 +37,6 @@ runtime = "node"
 version = "24.19.0"
 package_manager = "npm"
 package_manager_version = "11.17.0"
-architecture = "linux/amd64"
-libc = "glibc"
 
 [environment.network_policy]
 mode = "no-network"
@@ -40,23 +45,9 @@ reference_source_fetch = "forbidden"
 reason = "uuid has no runtime dependencies; npm and the empty v3 cache closure are frozen for offline installation, and the pinned upstream source is never reachable during task execution."
 
 [dependencies]
-status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
+status = "unknown"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
 packages = []
-
-[dependencies.artifact]
-digest = "sha256:5f9d04dc93501397cb67f7bbc8d7754e334d8d1b07cbf4bf471ba9096c2c2ef0"
-size_bytes = 10240
-media_type = "application/x-tar"
-uri = "artifact://private/sha256:5f9d04dc93501397cb67f7bbc8d7754e334d8d1b07cbf4bf471ba9096c2c2ef0"
-visibility = "private"
 
 [tests]
 framework = "node:test"
@@ -82,9 +73,22 @@ visibility = "private"
 contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
+[lifecycle]
+status = "blocked"
+owner = "uuid-repair"
+reason = "After the shared Node verifier network-proof change, production compilation with the Node lock succeeded without --allow-incomplete; fresh official Harbor 0.21.0 runs passed Oracle 11/11 at reward 1.0 and empty, stub, and forgery controls at reward 0.0, with every verifier run emitting network.json that proves no public egress. Review, pilot, and publication remain out of scope. Canonical dependency closure requires a new versioned private artifact migration."
+
 [harbor]
 description = "Build the real uuidjs/uuid v14.0.2 Node ESM package for a deterministic RFC 9562 API slice."
-keywords = ["node", "npm", "esm", "uuid", "rfc9562", "crypto", "json"]
+keywords = [
+    "node",
+    "npm",
+    "esm",
+    "uuid",
+    "rfc9562",
+    "crypto",
+    "json",
+]
 agent_timeout_sec = 1200.0
 verifier_timeout_sec = 900.0
 candidate_install_timeout_sec = 120.0
@@ -102,8 +106,3 @@ size_bytes = 983040
 media_type = "application/x-tar"
 uri = "artifact://private/sha256:32061c8cecbcc32135456832c087ddb7844ca073eea8d2f6eaddf029542833be"
 visibility = "private"
-
-[lifecycle]
-status = "controls-passed"
-owner = "uuid-repair"
-reason = "After the shared Node verifier network-proof change, production compilation with the Node lock succeeded without --allow-incomplete; fresh official Harbor 0.21.0 runs passed Oracle 11/11 at reward 1.0 and empty, stub, and forgery controls at reward 0.0, with every verifier run emitting network.json that proves no public egress. Review, pilot, and publication remain out of scope."

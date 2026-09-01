@@ -1,4 +1,4 @@
-schema_version = "2.0"
+schema_version = "1.0"
 task_id = "unist-util-is"
 version = "6.0.1"
 instruction = "instruction.md"
@@ -7,7 +7,16 @@ instruction = "instruction.md"
 language = "node"
 difficulty = "medium"
 category = "syntax-tree-utilities"
-tags = ["node", "npm", "esm", "unist", "syntax-tree", "predicate", "callbacks", "subprocess"]
+tags = [
+    "node",
+    "npm",
+    "esm",
+    "unist",
+    "syntax-tree",
+    "predicate",
+    "callbacks",
+    "subprocess",
+]
 
 [source]
 status = "known"
@@ -22,13 +31,6 @@ status = "known"
 os_name = "debian-bookworm"
 base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
 base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
-network_mode = "no-network"
-
-[environment.network_policy]
-mode = "no-network"
-offline_dependencies = "private-artifact"
-reference_source_fetch = "forbidden"
-reason = "The candidate and separate verifier install only from a private integrity-checked npm v3 cache and run without egress. Only the trusted Oracle receives run-scoped authorization for the exact upstream source host."
 
 [environment.runtime]
 language = "node"
@@ -36,53 +38,71 @@ runtime = "node"
 version = "24.19.0"
 package_manager = "npm"
 package_manager_version = "11.17.0"
-architecture = "linux/amd64"
-libc = "glibc"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "The candidate and separate verifier install only from a private integrity-checked npm v3 cache and run without egress. Only the trusted Oracle receives run-scoped authorization for the exact upstream source host."
 
 [dependencies]
-status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
+status = "unknown"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
-packages = ["@types/unist==3.0.3"]
-artifact = { digest = "sha256:1b7db8404885ad444b1059f1edd8cea20ea31b86e6b3b310d666d82e7f5bf2e8", size_bytes = 61440, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:1b7db8404885ad444b1059f1edd8cea20ea31b86e6b3b310d666d82e7f5bf2e8", visibility = "private" }
+packages = [
+    "@types/unist==3.0.3",
+]
 
 [tests]
 framework = "node:test"
 report_format = "node-test-json-v1"
 expected_total = 56
 expected_total_source = "frozen-collection"
-commands_artifact = { digest = "sha256:ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a", size_bytes = 176, media_type = "application/vnd.nl2repobench.node-commands+json", uri = "artifact://private/sha256:ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a", visibility = "private" }
-test_bundle = { digest = "sha256:2cfa0ed823f37ebd7dffe0a8e3c6cf281c9c959b743c5f79b9a72fc8d173890b", size_bytes = 30720, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:2cfa0ed823f37ebd7dffe0a8e3c6cf281c9c959b743c5f79b9a72fc8d173890b", visibility = "private" }
+
+[tests.commands_artifact]
+digest = "sha256:ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a"
+size_bytes = 176
+media_type = "application/vnd.nl2repobench.node-commands+json"
+uri = "artifact://private/sha256:ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a"
+visibility = "private"
+
+[tests.test_bundle]
+digest = "sha256:2cfa0ed823f37ebd7dffe0a8e3c6cf281c9c959b743c5f79b9a72fc8d173890b"
+size_bytes = 30720
+media_type = "application/vnd.nl2repobench.node-tests+tar"
+uri = "artifact://private/sha256:2cfa0ed823f37ebd7dffe0a8e3c6cf281c9c959b743c5f79b9a72fc8d173890b"
+visibility = "private"
 
 [metric]
-contract_id = "node-test-leaf-pass-rate-v1"
+contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
+
+[lifecycle]
+status = "blocked"
+owner = "node-author-wave2-20260828/unist-util-is"
+reason = "The immutable source, exact offline npm closure, 56-leaf private verifier, production compile, trusted Oracle, and empty/stub/forgery/install-script/loader-hook/call-hang/oversized-output/offline controls passed in this lane. Independent review, model Agent Run, dataset integration, and publication remain integrator stages. Canonical dependency closure requires a new versioned private artifact migration."
 
 [harbor]
 description = "Build the ESM unist-util-is 6.0.1 package with node recognition, string/object/array/function tests, context handling, and reusable checks."
-keywords = ["node", "npm", "esm", "unist", "syntax-tree", "predicate", "callbacks", "node-test"]
+keywords = [
+    "node",
+    "npm",
+    "esm",
+    "unist",
+    "syntax-tree",
+    "predicate",
+    "callbacks",
+    "node-test",
+]
 agent_timeout_sec = 900.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 90.0
 candidate_total_timeout_sec = 300.0
 agent_network_mode = "no-network"
-agent_allowed_hosts = []
 verifier_network_mode = "no-network"
 cpus = 1
 memory_mb = 1024
 storage_mb = 4096
 workspace_artifact = "/workspace"
-
-[lifecycle]
-status = "controls-passed"
-owner = "node-author-wave2-20260828/unist-util-is"
-reason = "The immutable source, exact offline npm closure, 56-leaf private verifier, production compile, trusted Oracle, and empty/stub/forgery/install-script/loader-hook/call-hang/oversized-output/offline controls passed in this lane. Independent review, model Agent Run, dataset integration, and publication remain integrator stages."
 
 [oracle_bundle]
 digest = "sha256:ddad6f374c5d80a846004b2e6013688fe8bd5cd55703fcab81e8af1fc9d37e62"

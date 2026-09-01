@@ -1,43 +1,48 @@
-schema_version = "2.0"
+schema_version = "1.0"
 task_id = "validator"
 version = "0.1.0"
 instruction = "blocked.md"
+
 [metadata]
 language = "node"
 difficulty = "medium"
 category = "validation"
-tags = ["node", "npm", "validator", "blocked"]
+tags = [
+    "node",
+    "npm",
+    "validator",
+    "blocked",
+]
+
 [source]
 status = "unknown"
 upstream_url = "https://github.com/validatorjs/validator.js"
 revision = "a79ff980ab14257e795332989e497bdff3218e87"
 submodules = []
+
 [environment]
 status = "unknown"
-network_mode = "no-network"
+
 [environment.network_policy]
 mode = "no-network"
 offline_dependencies = "missing"
 reference_source_fetch = "forbidden"
 reason = "The npm dependency/build closure and separate node:test verifier are not frozen."
+
 [dependencies]
 status = "unknown"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
+
 [tests]
 framework = "node:test"
 report_format = "node-test-json-v1"
 expected_total = 0
 expected_total_source = "unknown"
+
 [metric]
-contract_id = "node-test-leaf-pass-rate-v1"
+contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
+
 [lifecycle]
 status = "blocked"
 owner = "repair/validator"

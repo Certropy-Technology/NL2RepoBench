@@ -1,4 +1,4 @@
-schema_version = "2.0"
+schema_version = "1.0"
 task_id = "ws"
 version = "1.0.0"
 instruction = "instruction.md"
@@ -6,7 +6,16 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "hard"
 category = "networking-library"
-tags = ["node", "npm", "commonjs", "esm", "websocket", "rfc6455", "streams", "events"]
+tags = [
+    "node",
+    "npm",
+    "commonjs",
+    "esm",
+    "websocket",
+    "rfc6455",
+    "streams",
+    "events",
+]
 language = "node"
 
 [source]
@@ -22,13 +31,6 @@ status = "known"
 os_name = "debian-bookworm"
 base_image = "docker.io/library/node"
 base_image_digest = "sha256:4196d66a565c6f195728d9952f161f4adfe2ad753052a08b7ec7f1c5a6bda42b"
-network_mode = "no-network"
-
-[environment.network_policy]
-mode = "no-network"
-offline_dependencies = "private-artifact"
-reference_source_fetch = "forbidden"
-reason = "The candidate has no mandatory third-party runtime dependencies, and the verifier installs from a private empty npm v3 closure. Model Agent Runs receive no source-host authorization; only the trusted Oracle fetches and digest-verifies the frozen revision through a run-scoped host override."
 
 [environment.runtime]
 language = "node"
@@ -36,20 +38,16 @@ runtime = "node"
 version = "24.19.0"
 package_manager = "npm"
 package_manager_version = "11.17.0"
-architecture = "linux/amd64"
-libc = "glibc"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "The candidate has no mandatory third-party runtime dependencies, and the verifier installs from a private empty npm v3 closure. Model Agent Runs receive no source-host authorization; only the trusted Oracle fetches and digest-verifies the frozen revision through a run-scoped host override."
 
 [dependencies]
-status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
+status = "unknown"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
-artifact = { digest = "sha256:359d8250c8e5f5ee21ca088d7041da898990e9145a957ba0adde94f5160db515", size_bytes = 10240, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:359d8250c8e5f5ee21ca088d7041da898990e9145a957ba0adde94f5160db515", visibility = "private" }
 packages = []
 
 [tests]
@@ -57,17 +55,51 @@ framework = "node:test"
 report_format = "node-test-json-v1"
 expected_total = 44
 expected_total_source = "frozen-collection"
-commands_artifact = { digest = "sha256:a832562812d78324c3ac1b16a15a9ab97c6e9e92ad7de119f2da7bb997be8661", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:a832562812d78324c3ac1b16a15a9ab97c6e9e92ad7de119f2da7bb997be8661", visibility = "private" }
-test_bundle = { digest = "sha256:59c5daae8a1e5ec4a4539ec5d4d42d7b7ec31683fa7786b8d5c82c50841b3eb3", size_bytes = 30720, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:59c5daae8a1e5ec4a4539ec5d4d42d7b7ec31683fa7786b8d5c82c50841b3eb3", visibility = "private" }
+
+[tests.commands_artifact]
+digest = "sha256:a832562812d78324c3ac1b16a15a9ab97c6e9e92ad7de119f2da7bb997be8661"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.node-commands+tar"
+uri = "artifact://private/sha256:a832562812d78324c3ac1b16a15a9ab97c6e9e92ad7de119f2da7bb997be8661"
+visibility = "private"
+
+[tests.test_bundle]
+digest = "sha256:59c5daae8a1e5ec4a4539ec5d4d42d7b7ec31683fa7786b8d5c82c50841b3eb3"
+size_bytes = 30720
+media_type = "application/vnd.nl2repobench.node-tests+tar"
+uri = "artifact://private/sha256:59c5daae8a1e5ec4a4539ec5d4d42d7b7ec31683fa7786b8d5c82c50841b3eb3"
+visibility = "private"
 
 [metric]
-contract_id = "node-test-leaf-pass-rate-v1"
+contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "node-author-wide-20260826-remediation/ws"
-reason = "Source, environment, private verifier, Oracle, and empty/stub/forgery/call-hang controls passed in the production Harbor bundle; awaiting integrator review and model Agent Run."
+reason = "Source, environment, private verifier, Oracle, and empty/stub/forgery/call-hang controls passed in the production Harbor bundle; awaiting integrator review and model Agent Run. Canonical dependency closure requires a new versioned private artifact migration."
+
+[harbor]
+description = "Build the ws 8.21.3 WebSocket client/server library from an empty workspace with deterministic loopback protocol behavior."
+keywords = [
+    "node",
+    "npm",
+    "websocket",
+    "rfc6455",
+    "streams",
+    "events",
+    "separate-verifier",
+]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 900.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 600.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 1536
+storage_mb = 4096
+workspace_artifact = "/workspace"
 
 [oracle_bundle]
 digest = "sha256:7ecfc80b5cb9027e8b8c0e38afc4558a38349cb9b28e33a838524c265295a6f3"
@@ -75,18 +107,3 @@ size_bytes = 10240
 media_type = "application/vnd.nl2repobench.oracle+tar"
 uri = "artifact://private/sha256:7ecfc80b5cb9027e8b8c0e38afc4558a38349cb9b28e33a838524c265295a6f3"
 visibility = "private"
-
-[harbor]
-description = "Build the ws 8.21.3 WebSocket client/server library from an empty workspace with deterministic loopback protocol behavior."
-keywords = ["node", "npm", "websocket", "rfc6455", "streams", "events", "separate-verifier"]
-agent_timeout_sec = 1800.0
-verifier_timeout_sec = 900.0
-candidate_install_timeout_sec = 90.0
-candidate_total_timeout_sec = 600.0
-agent_network_mode = "no-network"
-agent_allowed_hosts = []
-verifier_network_mode = "no-network"
-cpus = 2
-memory_mb = 1536
-storage_mb = 4096
-workspace_artifact = "/workspace"
