@@ -1,13 +1,20 @@
-schema_version = "2.0"
+schema_version = "1.0"
 task_id = "strip-indent"
 version = "2.0.0"
 instruction = "instruction.md"
 
 [metadata]
-language = "node"
 difficulty = "easy"
 category = "text-processing"
-tags = ["node", "npm", "esm", "indentation", "whitespace", "string-utility"]
+tags = [
+    "node",
+    "npm",
+    "esm",
+    "indentation",
+    "whitespace",
+    "string-utility",
+]
+language = "node"
 
 [source]
 status = "known"
@@ -22,13 +29,6 @@ status = "known"
 os_name = "debian-bookworm"
 base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
 base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
-network_mode = "no-network"
-
-[environment.network_policy]
-mode = "no-network"
-offline_dependencies = "preinstalled-image"
-reference_source_fetch = "forbidden"
-reason = "The package has no runtime dependencies; its exact empty npm v3 cache contract is preinstalled. The model Agent and separate verifier have no egress. Only the trusted Oracle receives a run-scoped authorization for the pinned upstream source host."
 
 [environment.runtime]
 language = "node"
@@ -36,37 +36,52 @@ runtime = "node"
 version = "24.19.0"
 package_manager = "npm"
 package_manager_version = "11.17.0"
-architecture = "linux/amd64"
-libc = "glibc"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The package has no runtime dependencies; its exact empty npm v3 cache contract is preinstalled. The model Agent and separate verifier have no egress. Only the trusted Oracle receives a run-scoped authorization for the pinned upstream source host. Canonical dependency closure is not prepared."
 
 [dependencies]
-status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
+status = "unknown"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
 packages = []
-artifact = { digest = "sha256:95be625c81d5f4dad5b77093e856a814a5d4178e6e83209d214d5aaa9d0bf74c", size_bytes = 10240, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:95be625c81d5f4dad5b77093e856a814a5d4178e6e83209d214d5aaa9d0bf74c", visibility = "private" }
 
 [tests]
 framework = "node:test"
 report_format = "node-test-json-v1"
 expected_total = 32
 expected_total_source = "frozen-collection"
-commands_artifact = { digest = "sha256:a832562812d78324c3ac1b16a15a9ab97c6e9e92ad7de119f2da7bb997be8661", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:a832562812d78324c3ac1b16a15a9ab97c6e9e92ad7de119f2da7bb997be8661", visibility = "private" }
-test_bundle = { digest = "sha256:ea4719ad93c53e25513390c194bf1e20fdabc7211ac00556c89850fb3c2f635f", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:ea4719ad93c53e25513390c194bf1e20fdabc7211ac00556c89850fb3c2f635f", visibility = "private" }
+
+[tests.commands_artifact]
+digest = "sha256:a832562812d78324c3ac1b16a15a9ab97c6e9e92ad7de119f2da7bb997be8661"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.node-commands+tar"
+uri = "artifact://private/sha256:a832562812d78324c3ac1b16a15a9ab97c6e9e92ad7de119f2da7bb997be8661"
+visibility = "private"
+
+[tests.test_bundle]
+digest = "sha256:ea4719ad93c53e25513390c194bf1e20fdabc7211ac00556c89850fb3c2f635f"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.node-tests+tar"
+uri = "artifact://private/sha256:ea4719ad93c53e25513390c194bf1e20fdabc7211ac00556c89850fb3c2f635f"
+visibility = "private"
 
 [metric]
-contract_id = "node-test-leaf-pass-rate-v1"
+contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [harbor]
 description = "Build the strip-indent ESM utility from an empty workspace."
-keywords = ["node", "npm", "esm", "indentation", "whitespace", "separate-verifier"]
+keywords = [
+    "node",
+    "npm",
+    "esm",
+    "indentation",
+    "whitespace",
+    "separate-verifier",
+]
 agent_timeout_sec = 900.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 90.0
@@ -80,9 +95,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "node-author-wave2-20260828-strip-indent"
-reason = "Frozen source, API contract, private tests, exact empty npm closure, deterministic production compile, Oracle, and empty/stub/forgery/install-script/loader-hook/call-hang/offline controls passed in task-local Harbor receipts. Awaiting independent review and model Agent Run."
+reason = "Frozen source, API contract, private tests, exact empty npm closure, deterministic production compile, Oracle, and empty/stub/forgery/install-script/loader-hook/call-hang/offline controls passed in task-local Harbor receipts. Awaiting independent review and model Agent Run. Canonical dependency closure is not represented; versioned private-artifact migration is required."
 
 [oracle_bundle]
 digest = "sha256:b6ff269fc6f0cc81ca16e9d75574b2ec528d8e8f4ef009c9cb874a216a0ef313"

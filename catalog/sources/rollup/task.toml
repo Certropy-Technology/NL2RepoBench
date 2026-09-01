@@ -1,4 +1,4 @@
-schema_version = "2.0"
+schema_version = "1.0"
 task_id = "rollup"
 version = "2.0.0"
 instruction = "instruction.md"
@@ -6,7 +6,15 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "hard"
 category = "javascript-module-bundler"
-tags = ["node", "npm", "commonjs", "esm", "bundler", "cli", "wasm"]
+tags = [
+    "node",
+    "npm",
+    "commonjs",
+    "esm",
+    "bundler",
+    "cli",
+    "wasm",
+]
 language = "node"
 
 [source]
@@ -22,13 +30,6 @@ status = "known"
 os_name = "debian-bookworm"
 base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
 base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
-network_mode = "no-network"
-
-[environment.network_policy]
-mode = "no-network"
-offline_dependencies = "preinstalled-image"
-reference_source_fetch = "forbidden"
-reason = "Candidate and verifier runs are network-isolated; the empty npm runtime closure is preinstalled from a private hash-bound artifact, and the exact source plus WASM build are available only to the Oracle solution."
 
 [environment.runtime]
 language = "node"
@@ -36,27 +37,17 @@ runtime = "node"
 version = "24.19.0"
 package_manager = "npm"
 package_manager_version = "11.17.0"
-architecture = "linux/amd64"
-libc = "glibc"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "Candidate and verifier runs are network-isolated; the empty npm runtime closure is preinstalled from a private hash-bound artifact, and the exact source plus WASM build are available only to the Oracle solution. Canonical dependency closure is not prepared."
 
 [dependencies]
-status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
+status = "unknown"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
 packages = []
-
-[dependencies.artifact]
-digest = "sha256:354d09540f8578f335fed1936d2fe0a863bcbc1ae4b397c4c12aed9ff3eeb236"
-size_bytes = 10240
-media_type = "application/vnd.nl2repobench.npm-bundle+tar"
-uri = "artifact://private/sha256:354d09540f8578f335fed1936d2fe0a863bcbc1ae4b397c4c12aed9ff3eeb236"
-visibility = "private"
 
 [tests]
 framework = "node:test"
@@ -79,12 +70,20 @@ uri = "artifact://private/sha256:fa409c95c84c7773244502438fce96d2a73706c93ce4d45
 visibility = "private"
 
 [metric]
-contract_id = "node-test-leaf-pass-rate-v1"
+contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [harbor]
 description = "Recreate a self-contained WASM-backed Rollup JavaScript module bundler and CLI from an empty workspace."
-keywords = ["node", "npm", "commonjs", "esm", "bundler", "cli", "wasm"]
+keywords = [
+    "node",
+    "npm",
+    "commonjs",
+    "esm",
+    "bundler",
+    "cli",
+    "wasm",
+]
 agent_timeout_sec = 1800.0
 verifier_timeout_sec = 900.0
 candidate_install_timeout_sec = 120.0
@@ -97,9 +96,9 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "rollup-remediation"
-reason = "Exact source and Node-WASM build are hash-bound; production compile passed and the 11-leaf separate verifier passed Oracle plus empty, stub, forgery, install-script, loader-hook, hang, and offline controls."
+reason = "Exact source and Node-WASM build are hash-bound; production compile passed and the 11-leaf separate verifier passed Oracle plus empty, stub, forgery, install-script, loader-hook, hang, and offline controls. Canonical dependency closure is not represented; versioned private-artifact migration is required."
 
 [oracle_bundle]
 digest = "sha256:e44467c4e6072888e20f19df82bf4365b80642d9b0cf50203646e698ff3cadf5"

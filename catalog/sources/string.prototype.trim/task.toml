@@ -1,4 +1,4 @@
-schema_version = "2.0"
+schema_version = "1.0"
 task_id = "string.prototype.trim"
 version = "1.0.0"
 instruction = "instruction.md"
@@ -6,7 +6,15 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "medium"
 category = "string-whitespace-shim"
-tags = ["node", "npm", "commonjs", "string", "unicode", "shim", "subprocess"]
+tags = [
+    "node",
+    "npm",
+    "commonjs",
+    "string",
+    "unicode",
+    "shim",
+    "subprocess",
+]
 language = "node"
 
 [source]
@@ -22,13 +30,6 @@ status = "known"
 os_name = "debian-bookworm"
 base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
 base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
-network_mode = "no-network"
-
-[environment.network_policy]
-mode = "no-network"
-offline_dependencies = "private-artifact"
-reference_source_fetch = "forbidden"
-reason = "The candidate and verifier run without egress. The exact npm v3 dependency closure is installed from a private integrity-checked cache at build time; only the trusted Oracle receives run-scoped access to github.com."
 
 [environment.runtime]
 language = "node"
@@ -36,27 +37,26 @@ runtime = "node"
 version = "24.19.0"
 package_manager = "npm"
 package_manager_version = "11.17.0"
-architecture = "linux/amd64"
-libc = "glibc"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "The candidate and verifier run without egress. The exact npm v3 dependency closure is installed from a private integrity-checked cache at build time; only the trusted Oracle receives run-scoped access to github.com. Canonical dependency closure is not prepared."
 
 [dependencies]
-status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
+status = "unknown"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
-packages = ["call-bind", "call-bound", "define-data-property", "define-properties", "es-abstract", "es-object-atoms", "has-property-descriptors", "safe-regex-test"]
-
-[dependencies.artifact]
-digest = "sha256:7ef7a8bd06b92607c848ebf933f10a621bf70ae1c24ad2d7c3b890f013e9b1d8"
-size_bytes = 1604631
-media_type = "application/vnd.nl2repobench.npm-bundle+tar"
-uri = "artifact://private/sha256:7ef7a8bd06b92607c848ebf933f10a621bf70ae1c24ad2d7c3b890f013e9b1d8"
-visibility = "private"
+packages = [
+    "call-bind",
+    "call-bound",
+    "define-data-property",
+    "define-properties",
+    "es-abstract",
+    "es-object-atoms",
+    "has-property-descriptors",
+    "safe-regex-test",
+]
 
 [tests]
 framework = "node:test"
@@ -79,12 +79,20 @@ uri = "artifact://private/sha256:ed97d1c0536b6dfb6045f32c742f0ecfa40b4cb10c1aaec
 visibility = "private"
 
 [metric]
-contract_id = "node-test-leaf-pass-rate-v1"
+contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [harbor]
 description = "Build the string.prototype.trim CommonJS ES5 whitespace shim with a bounded JSON-tested API and helper methods."
-keywords = ["node", "npm", "commonjs", "string", "unicode", "shim", "trim"]
+keywords = [
+    "node",
+    "npm",
+    "commonjs",
+    "string",
+    "unicode",
+    "shim",
+    "trim",
+]
 agent_timeout_sec = 900.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 90.0
@@ -98,9 +106,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "node-author-wave2-20260828"
-reason = "Production source validation, Node v2 compile, trusted Oracle, and task-local negative controls passed; independent review, model run, and publication remain integrator stages."
+reason = "Production source validation, Node v2 compile, trusted Oracle, and task-local negative controls passed; independent review, model run, and publication remain integrator stages. Canonical dependency closure is not represented; versioned private-artifact migration is required."
 
 [oracle_bundle]
 digest = "sha256:1a5a25363a23231fd4afa53b7da8fe02e0dab47c77d82e0a4b478ed8ca7b8d7b"

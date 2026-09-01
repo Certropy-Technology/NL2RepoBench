@@ -1,4 +1,4 @@
-schema_version = "2.0"
+schema_version = "1.0"
 task_id = "qs"
 version = "2.0.0"
 instruction = "instruction.md"
@@ -6,7 +6,15 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "easy"
 category = "query-string"
-tags = ["node", "npm", "commonjs", "query-string", "parser", "serializer", "json"]
+tags = [
+    "node",
+    "npm",
+    "commonjs",
+    "query-string",
+    "parser",
+    "serializer",
+    "json",
+]
 language = "node"
 
 [source]
@@ -22,13 +30,6 @@ status = "known"
 os_name = "debian-bookworm"
 base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
 base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
-network_mode = "no-network"
-
-[environment.network_policy]
-mode = "no-network"
-offline_dependencies = "preinstalled-image"
-reference_source_fetch = "forbidden"
-reason = "Candidate and verifier run without egress; npm dependencies are preinstalled from the private hash-locked cache, and only Oracle receives the local pinned source archive."
 
 [environment.runtime]
 language = "node"
@@ -36,29 +37,40 @@ runtime = "node"
 version = "24.19.0"
 package_manager = "npm"
 package_manager_version = "11.17.0"
-architecture = "linux/amd64"
-libc = "glibc"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "Candidate and verifier run without egress; npm dependencies are preinstalled from the private hash-locked cache, and only Oracle receives the local pinned source archive. Canonical dependency closure is not prepared."
 
 [dependencies]
-status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
+status = "unknown"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
-packages = ["es-define-property", "side-channel"]
-artifact = { digest = "sha256:8e7c589b4204a84381dc37717692779bcf77c533e60bb78de316c80a0f0ec6ab", size_bytes = 11970560, media_type = "application/gzip", uri = "artifact://private/sha256:8e7c589b4204a84381dc37717692779bcf77c533e60bb78de316c80a0f0ec6ab", visibility = "private" }
+packages = [
+    "es-define-property",
+    "side-channel",
+]
 
 [tests]
 framework = "node:test"
 report_format = "node-test-json-v1"
 expected_total = 17
 expected_total_source = "frozen-collection"
-commands_artifact = { digest = "sha256:2d7be4fbb2b6fdc530c8581a2f6c73a494987b177a544a0e5c5d38337964d111", size_bytes = 10240, media_type = "application/gzip", uri = "artifact://private/sha256:2d7be4fbb2b6fdc530c8581a2f6c73a494987b177a544a0e5c5d38337964d111", visibility = "private" }
-test_bundle = { digest = "sha256:fea116e8b08b2c805fa579cc7994c45ebdb1151e7b77592023d1d7e4adeb4e83", size_bytes = 10240, media_type = "application/gzip", uri = "artifact://private/sha256:fea116e8b08b2c805fa579cc7994c45ebdb1151e7b77592023d1d7e4adeb4e83", visibility = "private" }
+
+[tests.commands_artifact]
+digest = "sha256:2d7be4fbb2b6fdc530c8581a2f6c73a494987b177a544a0e5c5d38337964d111"
+size_bytes = 10240
+media_type = "application/gzip"
+uri = "artifact://private/sha256:2d7be4fbb2b6fdc530c8581a2f6c73a494987b177a544a0e5c5d38337964d111"
+visibility = "private"
+
+[tests.test_bundle]
+digest = "sha256:fea116e8b08b2c805fa579cc7994c45ebdb1151e7b77592023d1d7e4adeb4e83"
+size_bytes = 10240
+media_type = "application/gzip"
+uri = "artifact://private/sha256:fea116e8b08b2c805fa579cc7994c45ebdb1151e7b77592023d1d7e4adeb4e83"
+visibility = "private"
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
@@ -66,7 +78,15 @@ collection_mismatch = "fail"
 
 [harbor]
 description = "Pinned qs CommonJS JSON query-string contract with a deterministic 17-leaf node:test slice."
-keywords = ["node", "npm", "commonjs", "query-string", "parser", "serializer", "json"]
+keywords = [
+    "node",
+    "npm",
+    "commonjs",
+    "query-string",
+    "parser",
+    "serializer",
+    "json",
+]
 agent_timeout_sec = 1200.0
 verifier_timeout_sec = 900.0
 candidate_install_timeout_sec = 120.0
@@ -79,9 +99,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "qs-repair"
-reason = "Fresh Harbor 0.21.0 Node production revalidation passed Oracle 17/17 with reward 1.0; empty, stub, and forgery controls returned reward 0.0; every verifier emitted network.json with public_network_available=false; and the forged workspace reward did not affect verifier-owned grading. Review, pilot, and publication remain out of scope."
+reason = "Fresh Harbor 0.21.0 Node production revalidation passed Oracle 17/17 with reward 1.0; empty, stub, and forgery controls returned reward 0.0; every verifier emitted network.json with public_network_available=false; and the forged workspace reward did not affect verifier-owned grading. Review, pilot, and publication remain out of scope. Canonical dependency closure is not represented; versioned private-artifact migration is required."
 
 [oracle_bundle]
 digest = "sha256:4a8830b28168e71bf06afd5f1741da3b5d1445ae5ee637a38fa65eb64482537d"

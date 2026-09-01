@@ -1,13 +1,20 @@
-schema_version = "2.0"
+schema_version = "1.0"
 task_id = "query-string"
 version = "0.1.0"
 instruction = "blocked.md"
 
 [metadata]
-language = "node"
 difficulty = "unknown"
 category = "unknown"
-tags = ["node", "npm", "query-string", "parse", "stringify", "blocked"]
+tags = [
+    "node",
+    "npm",
+    "query-string",
+    "parse",
+    "stringify",
+    "blocked",
+]
+language = "node"
 
 [source]
 status = "known"
@@ -19,7 +26,6 @@ submodules = []
 
 [environment]
 status = "unknown"
-network_mode = "no-network"
 
 [environment.runtime]
 language = "node"
@@ -27,8 +33,6 @@ runtime = "node"
 version = "22.23.1"
 package_manager = "npm"
 package_manager_version = "10.9.8"
-architecture = "linux/amd64"
-libc = "glibc"
 
 [environment.network_policy]
 mode = "no-network"
@@ -38,24 +42,17 @@ reason = "Agent and verifier runs must have no network access; the private npm c
 
 [dependencies]
 status = "unknown"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
 package_manager = "npm"
-package_manager_version = "10.9.8"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
 packages = [
-  "decode-uri-component",
-  "filter-obj",
-  "split-on-first",
-  "ava",
-  "benchmark",
-  "deep-equal",
-  "fast-check",
-  "tsd",
-  "xo",
+    "decode-uri-component",
+    "filter-obj",
+    "split-on-first",
+    "ava",
+    "benchmark",
+    "deep-equal",
+    "fast-check",
+    "tsd",
+    "xo",
 ]
 
 [tests]
@@ -65,7 +62,7 @@ expected_total = 0
 expected_total_source = "unknown"
 
 [metric]
-contract_id = "node-test-leaf-pass-rate-v1"
+contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [lifecycle]

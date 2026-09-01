@@ -1,5 +1,6 @@
-schema_version = "2.0"
+schema_version = "1.0"
 task_id = "semver"
+version = "1.0.0"
 instruction = "instruction.md"
 
 [metadata]
@@ -18,25 +19,16 @@ submodules = []
 
 [environment]
 status = "unknown"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
-allowed_hosts = []
 offline_dependencies = "missing"
 reference_source_fetch = "forbidden"
-reason = "No reviewed npm v3 development/test lock and content-addressed offline cache exist."
+reason = "No reviewed npm v3 development/test lock and content-addressed offline cache exist. Canonical dependency closure is not prepared."
 
 [dependencies]
 status = "unknown"
-ecosystem = "npm"
-consumer = "verifier-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
 package_manager = "npm"
-package_manager_version = "10.9.8"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
 packages = []
 
 [tests]
@@ -45,6 +37,9 @@ report_format = "node-test-json-v1"
 expected_total = 0
 expected_total_source = "unknown"
 
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+
 [lifecycle]
 status = "blocked"
-reason = "The npm 10.9.8 offline development/test closure attempt failed because its disposable lock did not match the resolved manifest; no reviewed offline dependency bundle exists."
+reason = "The npm 10.9.8 offline development/test closure attempt failed because its disposable lock did not match the resolved manifest; no reviewed offline dependency bundle exists. Canonical dependency closure is not represented; versioned private-artifact migration is required."

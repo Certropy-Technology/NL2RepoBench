@@ -1,4 +1,4 @@
-schema_version = "2.0"
+schema_version = "1.0"
 task_id = "strip-ansi"
 version = "2.0.0"
 instruction = "instruction.md"
@@ -6,7 +6,15 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "easy"
 category = "terminal-text-processing"
-tags = ["node", "npm", "esm", "terminal", "ansi", "unicode", "string"]
+tags = [
+    "node",
+    "npm",
+    "esm",
+    "terminal",
+    "ansi",
+    "unicode",
+    "string",
+]
 language = "node"
 
 [source]
@@ -22,13 +30,6 @@ status = "known"
 os_name = "debian-bookworm"
 base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
 base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
-network_mode = "no-network"
-
-[environment.network_policy]
-mode = "no-network"
-offline_dependencies = "private-artifact"
-reference_source_fetch = "forbidden"
-reason = "The candidate and separate verifier run without egress. The only optional runtime dependency, ansi-regex 6.3.0, is available from a private integrity-checked npm v3 cache. The frozen source archive is confined to the private Oracle bundle and never enters the model environment."
 
 [environment.runtime]
 language = "node"
@@ -36,37 +37,55 @@ runtime = "node"
 version = "24.19.0"
 package_manager = "npm"
 package_manager_version = "11.17.0"
-architecture = "linux/amd64"
-libc = "glibc"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "The candidate and separate verifier run without egress. The only optional runtime dependency, ansi-regex 6.3.0, is available from a private integrity-checked npm v3 cache. The frozen source archive is confined to the private Oracle bundle and never enters the model environment. Canonical dependency closure is not prepared."
 
 [dependencies]
-status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
+status = "unknown"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
-packages = ["ansi-regex"]
-artifact = { digest = "sha256:fca0905de2da87051d3d77c8c6ea2a643115894d0f1431b21b6673678ecb8c4c", size_bytes = 71680, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:fca0905de2da87051d3d77c8c6ea2a643115894d0f1431b21b6673678ecb8c4c", visibility = "private" }
+packages = [
+    "ansi-regex",
+]
 
 [tests]
 framework = "node:test"
 report_format = "node-test-json-v1"
 expected_total = 24
 expected_total_source = "frozen-collection"
-commands_artifact = { digest = "sha256:ff24615a926405b2fa2d1bde2ccbb0816fc0a5d3364f4585da23888979c665cf", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:ff24615a926405b2fa2d1bde2ccbb0816fc0a5d3364f4585da23888979c665cf", visibility = "private" }
-test_bundle = { digest = "sha256:2b156c1c4019d222dc87ad63e095e44ad1c5874ecb5ef1f17b7e4df9b7089f5e", size_bytes = 20480, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:2b156c1c4019d222dc87ad63e095e44ad1c5874ecb5ef1f17b7e4df9b7089f5e", visibility = "private" }
+
+[tests.commands_artifact]
+digest = "sha256:ff24615a926405b2fa2d1bde2ccbb0816fc0a5d3364f4585da23888979c665cf"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.node-commands+tar"
+uri = "artifact://private/sha256:ff24615a926405b2fa2d1bde2ccbb0816fc0a5d3364f4585da23888979c665cf"
+visibility = "private"
+
+[tests.test_bundle]
+digest = "sha256:2b156c1c4019d222dc87ad63e095e44ad1c5874ecb5ef1f17b7e4df9b7089f5e"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.node-tests+tar"
+uri = "artifact://private/sha256:2b156c1c4019d222dc87ad63e095e44ad1c5874ecb5ef1f17b7e4df9b7089f5e"
+visibility = "private"
 
 [metric]
-contract_id = "node-test-leaf-pass-rate-v1"
+contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [harbor]
 description = "Build an offline ESM strip-ansi package with deterministic ANSI/VT text cleaning behavior."
-keywords = ["node", "npm", "esm", "terminal", "ansi", "unicode", "string"]
+keywords = [
+    "node",
+    "npm",
+    "esm",
+    "terminal",
+    "ansi",
+    "unicode",
+    "string",
+]
 agent_timeout_sec = 900.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 90.0
@@ -79,9 +98,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "node-author-discovery-restart-20260826-r3"
-reason = "Production Node 24/npm 11.17 compilation passed. The final Oracle collected and passed 24/24 with reward 1.0; empty, stub, forgery, install-script, loader-hook, bounded hang, and offline controls passed, and every verifier network receipt reported public_network_available=false. Blind/spec review, projection, and model pilot remain integrator work."
+reason = "Production Node 24/npm 11.17 compilation passed. The final Oracle collected and passed 24/24 with reward 1.0; empty, stub, forgery, install-script, loader-hook, bounded hang, and offline controls passed, and every verifier network receipt reported public_network_available=false. Blind/spec review, projection, and model pilot remain integrator work. Canonical dependency closure is not represented; versioned private-artifact migration is required."
 
 [oracle_bundle]
 digest = "sha256:f9498afac8df8ccf36debd67aa6a884f8c3e6a11739607eab627471013a9e455"

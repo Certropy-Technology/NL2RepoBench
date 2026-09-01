@@ -1,44 +1,50 @@
-schema_version = "2.0"
+schema_version = "1.0"
 task_id = "smol-toml"
 version = "0.1.0"
 instruction = "blocked.md"
+
 [metadata]
-language = "node"
 difficulty = "hard"
 category = "toml-parser"
-tags = ["node", "npm", "toml", "blocked"]
+tags = [
+    "node",
+    "npm",
+    "toml",
+    "blocked",
+]
+language = "node"
+
 [source]
 status = "unknown"
 upstream_url = "https://github.com/squirrelchat/smol-toml"
 revision = "6d0f4774700c40ce8b5794934eb771870a9a93d3"
 submodules = []
+
 [environment]
 status = "unknown"
-network_mode = "no-network"
+
 [environment.network_policy]
 mode = "no-network"
 offline_dependencies = "missing"
 reference_source_fetch = "forbidden"
-reason = "The audit does not establish a complete npm closure or production verifier."
+reason = "The audit does not establish a complete npm closure or production verifier. Canonical dependency closure is not prepared."
+
 [dependencies]
 status = "unknown"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
+packages = []
+
 [tests]
 framework = "node:test"
 report_format = "node-test-json-v1"
 expected_total = 0
 expected_total_source = "unknown"
+
 [metric]
-contract_id = "node-test-leaf-pass-rate-v1"
+contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
+
 [lifecycle]
 status = "blocked"
 owner = "repair/smol-toml"
-reason = "The exact audit remains development-only; packaging, dependency closure, collection, separate verifier, Oracle, and controls are not established."
+reason = "The exact audit remains development-only; packaging, dependency closure, collection, separate verifier, Oracle, and controls are not established. Canonical dependency closure is not represented; versioned private-artifact migration is required."

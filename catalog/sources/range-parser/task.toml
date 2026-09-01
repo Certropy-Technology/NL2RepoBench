@@ -1,13 +1,21 @@
-schema_version = "2.0"
+schema_version = "1.0"
 task_id = "range-parser"
 version = "1.0.0"
 instruction = "instruction.md"
 
 [metadata]
-language = "node"
 difficulty = "medium"
 category = "http-range-parser"
-tags = ["node", "npm", "commonjs", "http", "parser", "ranges", "separate-verifier"]
+tags = [
+    "node",
+    "npm",
+    "commonjs",
+    "http",
+    "parser",
+    "ranges",
+    "separate-verifier",
+]
+language = "node"
 
 [source]
 status = "known"
@@ -22,13 +30,6 @@ status = "known"
 os_name = "debian-bookworm-amd64"
 base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
 base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
-network_mode = "no-network"
-
-[environment.network_policy]
-mode = "no-network"
-offline_dependencies = "private-artifact"
-reference_source_fetch = "forbidden"
-reason = "The package has no runtime dependencies; the exact npm v3 lock/cache closure is supplied as a private artifact. Candidate and verifier runs have no egress, while only the trusted Oracle receives the frozen GitHub source-host authorization."
 
 [environment.runtime]
 language = "node"
@@ -36,37 +37,52 @@ runtime = "node"
 version = "24.19.0"
 package_manager = "npm"
 package_manager_version = "11.17.0"
-architecture = "linux/amd64"
-libc = "glibc"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "The package has no runtime dependencies; the exact npm v3 lock/cache closure is supplied as a private artifact. Candidate and verifier runs have no egress, while only the trusted Oracle receives the frozen GitHub source-host authorization. Canonical dependency closure is not prepared."
 
 [dependencies]
-status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
+status = "unknown"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
 packages = []
-artifact = { digest = "sha256:086cf4f5910f13918ea2a7e277ae3551a8675f91bd20a303a14eeba70ddfc534", size_bytes = 10240, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:086cf4f5910f13918ea2a7e277ae3551a8675f91bd20a303a14eeba70ddfc534", visibility = "private" }
 
 [tests]
 framework = "node:test"
 report_format = "node-test-json-v1"
 expected_total = 37
 expected_total_source = "frozen-collection"
-commands_artifact = { digest = "sha256:ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a", size_bytes = 176, media_type = "application/vnd.nl2repobench.node-command-plan+json", uri = "artifact://private/sha256:ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a", visibility = "private" }
-test_bundle = { digest = "sha256:6b1b7fc33b0dbeaafe70fff7881490cd51b4bff3fd130c3c1ee49029772ae301", size_bytes = 20480, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:6b1b7fc33b0dbeaafe70fff7881490cd51b4bff3fd130c3c1ee49029772ae301", visibility = "private" }
+
+[tests.commands_artifact]
+digest = "sha256:ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a"
+size_bytes = 176
+media_type = "application/vnd.nl2repobench.node-command-plan+json"
+uri = "artifact://private/sha256:ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a"
+visibility = "private"
+
+[tests.test_bundle]
+digest = "sha256:6b1b7fc33b0dbeaafe70fff7881490cd51b4bff3fd130c3c1ee49029772ae301"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.node-tests+tar"
+uri = "artifact://private/sha256:6b1b7fc33b0dbeaafe70fff7881490cd51b4bff3fd130c3c1ee49029772ae301"
+visibility = "private"
 
 [metric]
-contract_id = "node-test-leaf-pass-rate-v1"
+contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [harbor]
 description = "Build the range-parser CommonJS package from an empty Node workspace, parsing HTTP Range header byte positions, suffixes, malformed inputs, and optionally combined ranges."
-keywords = ["node", "npm", "commonjs", "http", "range", "parser"]
+keywords = [
+    "node",
+    "npm",
+    "commonjs",
+    "http",
+    "range",
+    "parser",
+]
 agent_timeout_sec = 900.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 90.0
@@ -79,14 +95,14 @@ memory_mb = 1024
 storage_mb = 4096
 workspace_artifact = "/workspace"
 
+[lifecycle]
+status = "blocked"
+owner = "node-author-wave2-20260828-range-parser"
+reason = "Source validation, task-root network lint, production compile, separate verifier image, trusted Oracle, and empty/stub/forgery/install-script/loader-hook/hang/offline controls passed. Review, pilot, and publication remain integrator-owned stages. Canonical dependency closure is not represented; versioned private-artifact migration is required."
+
 [oracle_bundle]
 digest = "sha256:8b6369f91c14d9bd2c0d72e9be86ff52833e84bcda872dd66ffb984381a54e65"
 size_bytes = 10240
 media_type = "application/vnd.nl2repobench.oracle+tar"
 uri = "artifact://private/sha256:8b6369f91c14d9bd2c0d72e9be86ff52833e84bcda872dd66ffb984381a54e65"
 visibility = "private"
-
-[lifecycle]
-status = "controls-passed"
-owner = "node-author-wave2-20260828-range-parser"
-reason = "Source validation, task-root network lint, production compile, separate verifier image, trusted Oracle, and empty/stub/forgery/install-script/loader-hook/hang/offline controls passed. Review, pilot, and publication remain integrator-owned stages."
