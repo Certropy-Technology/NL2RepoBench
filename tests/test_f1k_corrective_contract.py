@@ -3,6 +3,8 @@ from __future__ import annotations
 import importlib.util
 from pathlib import Path
 
+from nl2repobench.harbor.node_compiler import NodeHarborCompiler
+
 ROOT = Path(__file__).parents[1]
 
 
@@ -21,28 +23,51 @@ def _source(path: str) -> str:
 
 def test_generated_python_trusted_invocations_are_absolute_isolated_and_no_as() -> None:
     compiler = _source("src/nl2repobench/harbor/compiler.py")
+    trusted_helper = compiler.split("def _trusted_python_command", 1)[1].split(
+        "def _select_command_plan", 1
+    )[0]
     generated_sections = compiler.split("def _test_script", 1)[1]
     generated_sections += compiler.split("def _custom_test_script", 1)[1]
-    assert "--address-space-bytes" not in generated_sections
-    assert "RLIMIT_AS" not in generated_sections
-    assert "python -m nl2repobench" not in generated_sections
-    assert "python3 -I" not in generated_sections
-    assert "python -I -m" not in generated_sections
-    assert "/usr/local/bin/python" in generated_sections
-    assert " -I -B " in generated_sections
+    for section in (trusted_helper, generated_sections):
+        assert "--address-space-bytes" not in section
+        assert "RLIMIT_AS" not in section
+        assert "python -m nl2repobench" not in section
+        assert "python3 -I" not in section
+        assert "python -I -m" not in section
+    assert "/usr/local/bin/python -I -B -c" in trusted_helper
+    assert " -I -B " in trusted_helper
 
 
-def test_generated_node_scripts_use_shared_install_boundary_and_python_manifest() -> None:
+def test_generated_node_scripts_use_shared_install_boundary_and_python_manifest(
+    tmp_path: Path,
+) -> None:
     node = _source("src/nl2repobench/harbor/node_compiler.py")
     pnpm = _source("src/nl2repobench/harbor/pnpm_compiler.py")
+    npm_adapter = tmp_path / "install_npm.py"
+    pnpm_adapter = tmp_path / "install_pnpm.py"
+    NodeHarborCompiler._write_npm_adapter(npm_adapter)  # noqa: SLF001
+    NodeHarborCompiler._write_pnpm_adapter(pnpm_adapter)  # noqa: SLF001
+    npm_adapter_source = npm_adapter.read_text(encoding="utf-8")
+    pnpm_adapter_source = pnpm_adapter.read_text(encoding="utf-8")
+
     assert "install_candidate.mjs" not in node
     assert "install_candidate_pnpm.mjs" not in pnpm
-    assert "node_candidate_install" in node or "candidate_install.py" in node
-    assert "node_candidate_install" in pnpm or "candidate_install.py" in pnpm
+    assert "node_candidate_install" in npm_adapter_source
+    assert "run_node_command" in pnpm_adapter_source
+    assert "/opt/nl2repobench-node/bin/node" in pnpm_adapter_source
+    assert "/opt/nl2repobench-node/lib/pnpm/bin/pnpm.cjs" in pnpm_adapter_source
+    assert "install_pnpm.py" not in pnpm_adapter_source
     for source in (node, pnpm):
-        assert "COPY python-runtime-manifest.json" in source
-        assert "runtime-manifest" in source
-        assert "manifest" in source and ("digest" in source or "tree_sha256" in source)
+        assert "COPY python-runtime /opt/nl2repobench-runtime" in source
+        assert "COPY python-runtime-manifest.json /tests/python-runtime-manifest.json" in source
+        assert (
+            "COPY python-runtime-manifest-check.py /tests/python-runtime-manifest-check.py"
+            in source
+        )
+        assert "python-runtime-manifest-check.py" in source
+        assert "/usr/local/bin/python3 -I -B" in source
+        assert "--root /opt/nl2repobench-runtime/nl2repobench" in source
+        assert "--manifest /tests/python-runtime-manifest.json" in source
 
 
 def test_node_trusted_bootstrap_has_no_interpreter_or_runtime_fallback() -> None:

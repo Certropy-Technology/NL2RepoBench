@@ -625,6 +625,14 @@ def test_node_runtime_report_script_collects_eight_leaf_tests(tmp_path: Path) ->
 
 
 def test_node_candidate_boundary_uses_json_subprocess(tmp_path: Path) -> None:
+    client_source = (ROOT / "src/nl2repobench/verification/node_candidate_client.py").read_text(
+        encoding="utf-8"
+    )
+    assert '"/usr/local/bin/python3", "-I", "-B", "-c"' in client_source
+    if not Path("/usr/local/bin/python3").is_file():
+        pytest.skip("target-image Python interpreter /usr/local/bin/python3 is not provisioned")
+    if not Path("/opt/nl2repobench-runtime").is_dir():
+        pytest.skip("target-image /opt/nl2repobench-runtime is not provisioned")
     node = shutil.which("node")
     if node is None:
         pytest.skip("node is not installed")
@@ -974,7 +982,9 @@ def test_node_compiler_rejects_python_source_and_existing_output(tmp_path: Path)
         compiler.compile_task(_node_source(tmp_path), tmp_path / "out", allow_incomplete=True)
 
 
-def test_node_candidate_install_protocol_and_environment(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_node_candidate_install_protocol_and_environment(
+    tmp_path: Path,
+) -> None:
     environment = node_candidate_install.sanitized_node_environment(
         cache=Path("/cache"), tmpdir=Path("/tmp")
     )
@@ -1002,16 +1012,19 @@ def test_node_candidate_install_protocol_and_environment(monkeypatch: pytest.Mon
     assert "/usr/local/bin/npm" not in node_candidate_install.npm_ci_command(
         Path("/src"), Path("/cache")
     )
-    pnpm_script = (
-        ROOT / "src/nl2repobench/verification/node/install_candidate_pnpm.mjs"
-    ).read_text()
     pnpm_compiler = (
         ROOT / "src/nl2repobench/harbor/pnpm_compiler.py"
     ).read_text()
+    pnpm_script_path = tmp_path / "install_pnpm.py"
+    NodeHarborCompiler._write_pnpm_adapter(pnpm_script_path)  # noqa: SLF001
+    pnpm_script = pnpm_script_path.read_text(encoding="utf-8")
     assert "install_candidate_pnpm.mjs" not in pnpm_compiler
-    assert "install_pnpm.py" in pnpm_compiler
-    assert 'const NODE_ROOT = "/opt/nl2repobench-node"' in pnpm_script
-    assert 'const PNPM = `${NODE_ROOT}/lib/pnpm/bin/pnpm.cjs`' in pnpm_script
+    assert "runtime_root / \"node/install_pnpm.py\"" in pnpm_compiler
+    assert "run_node_command" in pnpm_script
+    assert 'node = "/opt/nl2repobench-node/bin/node"' in pnpm_script
+    assert 'pnpm = "/opt/nl2repobench-node/lib/pnpm/bin/pnpm.cjs"' in pnpm_script
+    assert "--frozen-lockfile" in pnpm_script
+    assert "--ignore-scripts" in pnpm_script
     assert "/usr/local/bin/pnpm" not in pnpm_script
     assert "/usr/bin/prlimit" not in pnpm_script
     assert "timeout" in (
@@ -1188,6 +1201,10 @@ test('fail', () => assert.equal(1, 2));
 
 
 def test_node_runtime_grader_preserves_collected_count(tmp_path: Path) -> None:
+    if not Path("/usr/local/bin/python3").is_file():
+        pytest.skip("target-image Python interpreter /usr/local/bin/python3 is not provisioned")
+    if not Path("/opt/nl2repobench-runtime").is_dir():
+        pytest.skip("target-image /opt/nl2repobench-runtime is not provisioned")
     node = shutil.which("node")
     if node is None:
         pytest.skip("node is not installed")
