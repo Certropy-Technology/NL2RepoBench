@@ -2473,6 +2473,11 @@ def test_deployment_git_probes_ignore_hostile_environment(tmp_path: Path, monkey
             "GIT_CONFIG_SYSTEM": os.devnull,
         },
     ).stdout.splitlines()
+    trusted_status = [
+        line
+        for line in trusted_status
+        if line and not line.startswith(("?? .scratch/", '?? ".scratch/'))
+    ]
     assert cutover._deployment_checkout_dirty(repository) == trusted_status
 
 

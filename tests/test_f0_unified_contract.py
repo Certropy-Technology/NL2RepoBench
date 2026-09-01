@@ -823,8 +823,11 @@ def test_migration_plan_requires_all_selected_ids(tmp_path: Path) -> None:
         module.make_plan(root, tmp_path / "artifacts", tmp_path / "plan.json")
 
 
-def test_migration_fails_closed_without_private_staging_contract(tmp_path: Path) -> None:
+def test_migration_fails_closed_without_private_staging_contract(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     module = _migration_module()
+    monkeypatch.setattr(module, "PRIVATE_STAGING_CONTRACT", tmp_path / "missing-contract.json")
     root = tmp_path / "sources"
     root.mkdir()
     for task_id in ("ministats", "canonicalize", "node-pnpm-synthetic", "go-google-uuid"):

@@ -11,7 +11,7 @@ from __future__ import annotations
 
 import argparse
 import re
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 TASKS = {
     "aiofiles": ("https://github.com/Tinche/aiofiles", "Apache-2.0"),
@@ -31,6 +31,27 @@ TASKS = {
 }
 
 BASE_IMAGE = "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+
+
+def source_task_directory(root: Path, task: str) -> Path:
+    """Resolve a direct or scoped source leaf, never a nested Harbor asset."""
+
+    relative = PurePosixPath(task)
+    parts = relative.parts
+    raw_parts = task.split("/")
+    if (
+        not parts
+        or relative.is_absolute()
+        or any(part in {"", ".", ".."} for part in raw_parts)
+        or len(parts) not in {1, 2}
+        or (len(parts) == 2 and not parts[0].startswith("@"))
+    ):
+        raise ValueError(f"invalid source task path: {task!r}")
+    resolved_root = root.resolve()
+    task_dir = (resolved_root / Path(*parts)).resolve()
+    if resolved_root not in task_dir.parents or task_dir == resolved_root:
+        raise ValueError(f"source task escapes source root: {task!r}")
+    return task_dir
 
 
 def replace_section(text: str, section: str, replacement: str) -> str:
@@ -57,7 +78,7 @@ def update_task(task: str, root: Path, cache: Path) -> None:
         ).hexdigest()
     )
     url, license_spdx = TASKS[task]
-    task_dir = root / task
+    task_dir = source_task_directory(root, task)
     source_path = task_dir / "task.toml"
     text = source_path.read_text(encoding="utf-8")
     text = replace_section(
