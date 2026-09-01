@@ -2,12 +2,24 @@ schema_version = "1.0"
 task_id = "go-codeforces-go"
 version = "0.1.0"
 instruction = "instruction.md"
-oracle_bundle = { digest = "sha256:f7ce1cd0d8e1b9650a382c99c751577f5bd5672e51054544be7eede9a78c1854", size_bytes = 711, uri = "artifact://private/sha256:f7ce1cd0d8e1b9650a382c99c751577f5bd5672e51054544be7eede9a78c1854", visibility = "private" }
+
+[oracle_bundle]
+digest = "sha256:f7ce1cd0d8e1b9650a382c99c751577f5bd5672e51054544be7eede9a78c1854"
+size_bytes = 711
+uri = "artifact://private/sha256:f7ce1cd0d8e1b9650a382c99c751577f5bd5672e51054544be7eede9a78c1854"
+visibility = "private"
 
 [metadata]
 difficulty = "medium"
 category = "go-library"
-tags = ["go", "go-modules", "bitset", "data-structure", "typed-bridge", "public-api"]
+tags = [
+    "go",
+    "go-modules",
+    "bitset",
+    "data-structure",
+    "typed-bridge",
+    "public-api",
+]
 language = "go"
 
 [source]
@@ -20,8 +32,6 @@ source_digest = "sha256:4430dd7dc9bdddc82768874bc08ecfe694234af0367f7422c612e78d
 [environment]
 status = "known"
 os_name = "debian-bookworm"
-network_mode = "no-network"
-runtime_version = "1.26.5"
 base_image = "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
 base_image_digest = "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
 
@@ -31,28 +41,34 @@ offline_dependencies = "private-artifact"
 reference_source_fetch = "forbidden"
 reason = "The candidate and separate verifier use a pre-materialized standard-library-only Go module closure; only the trusted Oracle fetches the frozen source revision."
 
+[environment.runtime]
+language = "go"
+runtime = "go"
+version = "1.26.5"
+package_manager = "go-modules"
+package_manager_version = "1.26.5"
+
 [dependencies]
-status = "known"
-installer = "system"
+status = "unknown"
+package_manager = "go-modules"
 packages = []
-module_bundle = { digest = "sha256:efe4e91e6ede841148233895e19bfd30f72656e973a601459af07a627f0e7254", size_bytes = 426, uri = "artifact://private/sha256:efe4e91e6ede841148233895e19bfd30f72656e973a601459af07a627f0e7254", visibility = "private" }
 
 [tests]
-framework = "pytest"
+framework = "go-bridge"
+report_format = "go-test-json-v1"
 expected_total = 1
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1"]
-
-[metric]
-contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
-collection_mismatch = "fail"
-formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Recreate the bounded exported copypasta.Bitset API from EndlessCheng/codeforces-go through a typed Go subprocess bridge."
-keywords = ["go", "bitset", "codeforces", "go-modules", "typed-bridge", "public-api"]
+keywords = [
+    "go",
+    "bitset",
+    "codeforces",
+    "go-modules",
+    "typed-bridge",
+    "public-api",
+]
 agent_timeout_sec = 900.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 90.0
@@ -65,11 +81,15 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "packaged"
-owner = "go-author-wave2-20260828-c3"
-reason = "Bounded public Bitset adaptation is compiled and manually verified in the generated offline images; awaiting the independent Harbor Oracle/Agent Run loop."
+status = "blocked"
+reason = "Canonical source manifest is migrated, but the reviewed Go Harbor fixture is incomplete: missing contract.sh; missing solution/solve.sh; canonical dependency closure and command-plan artifacts must be prepared before release."
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:5460cfb57b7e382643a59fd1f43ee00d3b083e35bbcb5e6c4bcf6c415de8c964", size_bytes = 1230, uri = "artifact://private/sha256:5460cfb57b7e382643a59fd1f43ee00d3b083e35bbcb5e6c4bcf6c415de8c964", visibility = "private" }
 entrypoint = "contract.sh"
+
+[verifier.bundle]
+digest = "sha256:5460cfb57b7e382643a59fd1f43ee00d3b083e35bbcb5e6c4bcf6c415de8c964"
+size_bytes = 1230
+uri = "artifact://private/sha256:5460cfb57b7e382643a59fd1f43ee00d3b083e35bbcb5e6c4bcf6c415de8c964"
+visibility = "private"

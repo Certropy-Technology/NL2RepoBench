@@ -6,7 +6,14 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "hard"
 category = "go-library"
-tags = ["go", "go-modules", "data-selection", "selectors", "typed-bridge", "public-api"]
+tags = [
+    "go",
+    "go-modules",
+    "data-selection",
+    "selectors",
+    "typed-bridge",
+    "public-api",
+]
 language = "go"
 
 [source]
@@ -19,8 +26,6 @@ source_digest = "sha256:721efc08d83c9c24c20fe61758fa379d3d6ede5dd750811289b40056
 [environment]
 status = "known"
 os_name = "debian-bookworm"
-network_mode = "no-network"
-runtime_version = "1.26.5"
 base_image = "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
 base_image_digest = "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
 
@@ -30,40 +35,34 @@ offline_dependencies = "private-artifact"
 reference_source_fetch = "forbidden"
 reason = "Candidate and verifier execution use a private hash-addressed Go module closure and run without network; only the trusted Oracle may fetch the frozen source revision."
 
+[environment.runtime]
+language = "go"
+runtime = "go"
+version = "1.26.5"
+package_manager = "go-modules"
+package_manager_version = "1.26.5"
+
 [dependencies]
-status = "known"
-installer = "system"
-packages = [
-  "github.com/alecthomas/kong@v1.14.0",
-  "github.com/charmbracelet/bubbles@v1.0.0",
-  "github.com/charmbracelet/bubbletea@v1.3.10",
-  "github.com/charmbracelet/lipgloss@v1.1.0",
-  "github.com/goccy/go-json@v0.10.6",
-  "github.com/google/go-cmp@v0.7.0",
-  "github.com/hashicorp/hcl/v2@v2.24.0",
-  "github.com/pelletier/go-toml/v2@v2.4.3",
-  "github.com/zclconf/go-cty@v1.17.0",
-  "go.yaml.in/yaml/v4@v4.0.0-rc.3",
-  "gopkg.in/ini.v1@v1.67.0"
-]
-module_bundle = { digest = "sha256:1614d318bea93da429dced0e338071c59c971cfc879d9910e06f5db63fc3fab2", size_bytes = 4401408, uri = "artifact://private/sha256:1614d318bea93da429dced0e338071c59c971cfc879d9910e06f5db63fc3fab2", visibility = "private" }
+status = "unknown"
+package_manager = "go-modules"
+packages = []
 
 [tests]
-framework = "pytest"
+framework = "go-bridge"
+report_format = "go-test-json-v1"
 expected_total = 1
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1"]
-
-[metric]
-contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
-collection_mismatch = "fail"
-formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Recreate the deterministic public Query, Select, and Modify APIs of TomWright/dasel through a bounded typed Go subprocess bridge."
-keywords = ["go", "go-modules", "data-selection", "selectors", "typed-bridge", "public-api"]
+keywords = [
+    "go",
+    "go-modules",
+    "data-selection",
+    "selectors",
+    "typed-bridge",
+    "public-api",
+]
 agent_timeout_sec = 1200.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 90.0
@@ -76,9 +75,8 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "controls-passed"
-owner = "go-author-wave2-20260828"
-reason = "Current compiled bundle passed the one-run Oracle gate and the empty, stub, forgery, and offline verifier controls; independent review and model pilot remain pending."
+status = "blocked"
+reason = "Canonical source manifest is migrated, but the reviewed Go Harbor fixture is incomplete: missing contract.sh; missing solution/solve.sh; canonical dependency closure and command-plan artifacts must be prepared before release."
 
 [oracle_bundle]
 digest = "sha256:950bd43644fbf749c44b86894d7729c66a8ca01227236312ccc0d0ece913a930"
@@ -88,5 +86,10 @@ visibility = "private"
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:66ea8b65e6a9ca426d0f71303ffcda4064e15198834b3791be1b4cfc37798469", size_bytes = 1255, uri = "artifact://private/sha256:66ea8b65e6a9ca426d0f71303ffcda4064e15198834b3791be1b4cfc37798469", visibility = "private" }
 entrypoint = "contract.sh"
+
+[verifier.bundle]
+digest = "sha256:66ea8b65e6a9ca426d0f71303ffcda4064e15198834b3791be1b4cfc37798469"
+size_bytes = 1255
+uri = "artifact://private/sha256:66ea8b65e6a9ca426d0f71303ffcda4064e15198834b3791be1b4cfc37798469"
+visibility = "private"

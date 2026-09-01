@@ -2,12 +2,24 @@ schema_version = "1.0"
 task_id = "go-humanize"
 version = "0.1.0"
 instruction = "instruction.md"
-oracle_bundle = { digest = "sha256:2f30447997dd0e3dece96ea66e38208a297aa67e89f6ec81361f55d433e38964", size_bytes = 600, uri = "artifact://private/sha256:2f30447997dd0e3dece96ea66e38208a297aa67e89f6ec81361f55d433e38964", visibility = "private" }
+
+[oracle_bundle]
+digest = "sha256:2f30447997dd0e3dece96ea66e38208a297aa67e89f6ec81361f55d433e38964"
+size_bytes = 600
+uri = "artifact://private/sha256:2f30447997dd0e3dece96ea66e38208a297aa67e89f6ec81361f55d433e38964"
+visibility = "private"
 
 [metadata]
 difficulty = "medium"
 category = "go-library"
-tags = ["go", "go-modules", "formatting", "numbers", "typed-bridge", "public-api"]
+tags = [
+    "go",
+    "go-modules",
+    "formatting",
+    "numbers",
+    "typed-bridge",
+    "public-api",
+]
 language = "go"
 
 [source]
@@ -20,10 +32,8 @@ source_digest = "sha256:ce579ea6d7e8afd59ea2c9b3f8040984cc7ccb1fddc52e938a52ce64
 [environment]
 status = "known"
 os_name = "debian-bookworm"
-runtime_version = "1.26.5"
 base_image = "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
 base_image_digest = "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -31,28 +41,33 @@ offline_dependencies = "private-artifact"
 reference_source_fetch = "forbidden"
 reason = "The candidate and verifier run without network; the standard-library module closure is materialized before the run."
 
+[environment.runtime]
+language = "go"
+runtime = "go"
+version = "1.26.5"
+package_manager = "go-modules"
+package_manager_version = "1.26.5"
+
 [dependencies]
-status = "known"
-installer = "system"
+status = "unknown"
+package_manager = "go-modules"
 packages = []
-module_bundle = { digest = "sha256:ed5e8103205597cbf2294e04870b5278c31f1f23e51299f697f5652ae7058453", size_bytes = 477, uri = "artifact://private/sha256:ed5e8103205597cbf2294e04870b5278c31f1f23e51299f697f5652ae7058453", visibility = "private" }
 
 [tests]
-framework = "pytest"
+framework = "go-bridge"
+report_format = "go-test-json-v1"
 expected_total = 1
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1"]
-
-[metric]
-contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
-collection_mismatch = "fail"
-formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Recreate selected deterministic formatting APIs of dustin/go-humanize through a typed Go bridge."
-keywords = ["go", "go-modules", "formatting", "typed-bridge", "public-api"]
+keywords = [
+    "go",
+    "go-modules",
+    "formatting",
+    "typed-bridge",
+    "public-api",
+]
 agent_timeout_sec = 900.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 90.0
@@ -65,11 +80,15 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "controls-passed"
-owner = "go-author-scale-pilot-20260826-r1"
-reason = "Source freeze, typed bridge, private verifier, offline closure, three stable Oracle runs, and required controls passed; awaiting independent review and pilot."
+status = "blocked"
+reason = "Canonical source manifest is migrated, but the reviewed Go Harbor fixture is incomplete: missing contract.sh; missing solution/solve.sh; canonical dependency closure and command-plan artifacts must be prepared before release."
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:e59d7e1bf2e35fabf43fc8aa155b9cef8ad923a4a2453c2c5759422d753265a9", size_bytes = 1068, uri = "artifact://private/sha256:e59d7e1bf2e35fabf43fc8aa155b9cef8ad923a4a2453c2c5759422d753265a9", visibility = "private" }
 entrypoint = "contract.sh"
+
+[verifier.bundle]
+digest = "sha256:e59d7e1bf2e35fabf43fc8aa155b9cef8ad923a4a2453c2c5759422d753265a9"
+size_bytes = 1068
+uri = "artifact://private/sha256:e59d7e1bf2e35fabf43fc8aa155b9cef8ad923a4a2453c2c5759422d753265a9"
+visibility = "private"

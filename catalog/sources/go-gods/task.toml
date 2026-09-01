@@ -2,12 +2,24 @@ schema_version = "1.0"
 task_id = "go-gods"
 version = "0.1.0"
 instruction = "instruction.md"
-oracle_bundle = { digest = "sha256:ec410f4c4da4b3694ffbd59b599bb958f7bee82036b5e141d4568e551927bef6", size_bytes = 836, uri = "artifact://private/sha256:ec410f4c4da4b3694ffbd59b599bb958f7bee82036b5e141d4568e551927bef6", visibility = "private" }
+
+[oracle_bundle]
+digest = "sha256:ec410f4c4da4b3694ffbd59b599bb958f7bee82036b5e141d4568e551927bef6"
+size_bytes = 836
+uri = "artifact://private/sha256:ec410f4c4da4b3694ffbd59b599bb958f7bee82036b5e141d4568e551927bef6"
+visibility = "private"
 
 [metadata]
 difficulty = "hard"
 category = "go-data-structures"
-tags = ["go", "go-modules", "data-structures", "generics", "typed-bridge", "public-api"]
+tags = [
+    "go",
+    "go-modules",
+    "data-structures",
+    "generics",
+    "typed-bridge",
+    "public-api",
+]
 language = "go"
 
 [source]
@@ -20,8 +32,6 @@ source_digest = "sha256:a92231b4759f195eb0dc3467badc410494761aeefedbf1afed96411b
 [environment]
 status = "known"
 os_name = "debian-bookworm"
-network_mode = "no-network"
-runtime_version = "1.26.5"
 base_image = "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
 base_image_digest = "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
 build_command = "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -mod=vendor ./..."
@@ -32,28 +42,34 @@ offline_dependencies = "private-artifact"
 reference_source_fetch = "forbidden"
 reason = "The candidate and separate verifier use a private pre-materialized Go module closure and run without network."
 
+[environment.runtime]
+language = "go"
+runtime = "go"
+version = "1.26.5"
+package_manager = "go-modules"
+package_manager_version = "1.26.5"
+
 [dependencies]
-status = "known"
-installer = "system"
+status = "unknown"
+package_manager = "go-modules"
 packages = []
-module_bundle = { digest = "sha256:77876a99db85ec8ae3f7691ef62254bd5df22d31a318efe284b58d71e2f6f9fc", size_bytes = 587, uri = "artifact://private/sha256:77876a99db85ec8ae3f7691ef62254bd5df22d31a318efe284b58d71e2f6f9fc", visibility = "private" }
 
 [tests]
-framework = "pytest"
+framework = "go-bridge"
+report_format = "go-test-json-v1"
 expected_total = 1
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1"]
-
-[metric]
-contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
-collection_mismatch = "fail"
-formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Recreate the deterministic public data-structure APIs of emirpasic/gods through a typed JSON subprocess bridge."
-keywords = ["go", "go-modules", "data-structures", "generics", "typed-bridge", "public-api"]
+keywords = [
+    "go",
+    "go-modules",
+    "data-structures",
+    "generics",
+    "typed-bridge",
+    "public-api",
+]
 agent_timeout_sec = 1200.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 120.0
@@ -66,11 +82,15 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "packaged"
-owner = "go-author-wave2-20260828-c3"
-reason = "Frozen Go v2 data-structure library with a deterministic typed bridge, private offline closure, verifier, Oracle, and controls compiled into a production bundle; Harbor Oracle and runtime controls remain for the integrator because this lane cannot start Agent Runs."
+status = "blocked"
+reason = "Legacy module_bundle is not a canonical lock/offline-store/inventory closure; prepare canonical dependency and command-plan artifacts before release."
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:50c81a438eb3da19aa8ecad3e2393ab55b62cf5768c605d4782d3facd47b5db2", size_bytes = 1608, uri = "artifact://private/sha256:50c81a438eb3da19aa8ecad3e2393ab55b62cf5768c605d4782d3facd47b5db2", visibility = "private" }
 entrypoint = "contract.sh"
+
+[verifier.bundle]
+digest = "sha256:50c81a438eb3da19aa8ecad3e2393ab55b62cf5768c605d4782d3facd47b5db2"
+size_bytes = 1608
+uri = "artifact://private/sha256:50c81a438eb3da19aa8ecad3e2393ab55b62cf5768c605d4782d3facd47b5db2"
+visibility = "private"

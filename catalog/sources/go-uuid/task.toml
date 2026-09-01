@@ -2,12 +2,23 @@ schema_version = "1.0"
 task_id = "go-uuid"
 version = "0.1.0"
 instruction = "instruction.md"
-oracle_bundle = { digest = "sha256:a3900cb4f9517d3d126230edf28d8a8dc27be2acfb782aaa242a4fc1560951fc", size_bytes = 739, uri = "artifact://private/sha256:a3900cb4f9517d3d126230edf28d8a8dc27be2acfb782aaa242a4fc1560951fc", visibility = "private" }
+
+[oracle_bundle]
+digest = "sha256:a3900cb4f9517d3d126230edf28d8a8dc27be2acfb782aaa242a4fc1560951fc"
+size_bytes = 739
+uri = "artifact://private/sha256:a3900cb4f9517d3d126230edf28d8a8dc27be2acfb782aaa242a4fc1560951fc"
+visibility = "private"
 
 [metadata]
 difficulty = "medium"
 category = "go-library"
-tags = ["go", "go-modules", "uuid", "typed-bridge", "public-api"]
+tags = [
+    "go",
+    "go-modules",
+    "uuid",
+    "typed-bridge",
+    "public-api",
+]
 language = "go"
 
 [source]
@@ -20,10 +31,8 @@ source_digest = "sha256:e08c0dc34cb6ca21d5ebff08053403b8bf4e91efb97aa2eccf25f17d
 [environment]
 status = "known"
 os_name = "debian-bookworm"
-runtime_version = "1.26.5"
 base_image = "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
 base_image_digest = "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
-network_mode = "no-network"
 build_command = "GOWORK=off GOTOOLCHAIN=local GOPROXY=off GOSUMDB=off go test ./..."
 
 [environment.network_policy]
@@ -32,28 +41,33 @@ offline_dependencies = "private-artifact"
 reference_source_fetch = "forbidden"
 reason = "The candidate and verifier use a prebuilt, empty Go module closure; only the trusted Oracle may fetch the pinned source revision."
 
+[environment.runtime]
+language = "go"
+runtime = "go"
+version = "1.26.5"
+package_manager = "go-modules"
+package_manager_version = "1.26.5"
+
 [dependencies]
-status = "known"
-installer = "system"
-module_bundle = { digest = "sha256:13eef327dbfbe50b6bf6c3e111a9d16e77385846458fbbc5997025a153994e3d", size_bytes = 476, uri = "artifact://private/sha256:13eef327dbfbe50b6bf6c3e111a9d16e77385846458fbbc5997025a153994e3d", visibility = "private" }
+status = "unknown"
+package_manager = "go-modules"
 packages = []
 
 [tests]
-framework = "pytest"
+framework = "go-bridge"
+report_format = "go-test-json-v1"
 expected_total = 1
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1"]
-
-[metric]
-contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
-collection_mismatch = "fail"
-formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Recreate the serializable Parse and UUID.String behavior of google/uuid through a Go bridge."
-keywords = ["go", "uuid", "go-modules", "typed-bridge", "public-api"]
+keywords = [
+    "go",
+    "uuid",
+    "go-modules",
+    "typed-bridge",
+    "public-api",
+]
 agent_timeout_sec = 900.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 90.0
@@ -67,11 +81,15 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "packaged"
-owner = "go-author-discover-20260829T173503Z"
-reason = "Source, public contract, typed bridge, private verifier, Oracle bundle, offline module closure, and control fixtures are prepared; Harbor Oracle and controls are executed before handoff."
+status = "blocked"
+reason = "Canonical source manifest is migrated, but the reviewed Go Harbor fixture is incomplete: missing contract.sh; missing solution/solve.sh; canonical dependency closure and command-plan artifacts must be prepared before release."
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:e31d432c18d39b7c1b2f3d433b2204ab75bf1af8896bfe84639834cf417dcc0d", size_bytes = 595, uri = "artifact://private/sha256:e31d432c18d39b7c1b2f3d433b2204ab75bf1af8896bfe84639834cf417dcc0d", visibility = "private" }
 entrypoint = "contract.sh"
+
+[verifier.bundle]
+digest = "sha256:e31d432c18d39b7c1b2f3d433b2204ab75bf1af8896bfe84639834cf417dcc0d"
+size_bytes = 595
+uri = "artifact://private/sha256:e31d432c18d39b7c1b2f3d433b2204ab75bf1af8896bfe84639834cf417dcc0d"
+visibility = "private"

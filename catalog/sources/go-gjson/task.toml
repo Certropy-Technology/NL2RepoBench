@@ -2,12 +2,24 @@ schema_version = "1.0"
 task_id = "go-gjson"
 version = "0.1.0"
 instruction = "instruction.md"
-oracle_bundle = { digest = "sha256:045d5af2641c5d19c9367398e9f3a76367987bd96eaa68ff42ef139e2c2e1c31", size_bytes = 9699, uri = "artifact://private/sha256:045d5af2641c5d19c9367398e9f3a76367987bd96eaa68ff42ef139e2c2e1c31", visibility = "private" }
+
+[oracle_bundle]
+digest = "sha256:045d5af2641c5d19c9367398e9f3a76367987bd96eaa68ff42ef139e2c2e1c31"
+size_bytes = 9699
+uri = "artifact://private/sha256:045d5af2641c5d19c9367398e9f3a76367987bd96eaa68ff42ef139e2c2e1c31"
+visibility = "private"
 
 [metadata]
 difficulty = "medium"
 category = "json-query"
-tags = ["go", "go-modules", "json", "query", "typed-bridge", "public-api"]
+tags = [
+    "go",
+    "go-modules",
+    "json",
+    "query",
+    "typed-bridge",
+    "public-api",
+]
 language = "go"
 
 [source]
@@ -20,8 +32,6 @@ source_digest = "sha256:91ec8257d29e04f0b67cac8641197ddb86d975138a8588d128bf4f27
 [environment]
 status = "known"
 os_name = "debian-bookworm"
-network_mode = "no-network"
-runtime_version = "1.26.5"
 base_image = "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
 base_image_digest = "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
 
@@ -31,28 +41,34 @@ offline_dependencies = "private-artifact"
 reference_source_fetch = "forbidden"
 reason = "Candidate and verifier use the private pre-materialized Go module closure and run without network."
 
+[environment.runtime]
+language = "go"
+runtime = "go"
+version = "1.26.5"
+package_manager = "go-modules"
+package_manager_version = "1.26.5"
+
 [dependencies]
-status = "known"
-installer = "system"
-packages = ["github.com/tidwall/match@v1.1.1", "github.com/tidwall/pretty@v1.2.0"]
-module_bundle = { digest = "sha256:fc252f8a424717d8370b50ae874a2ad088d6def9b8e997dc0725eeab9aefdb1c", size_bytes = 9128, uri = "artifact://private/sha256:fc252f8a424717d8370b50ae874a2ad088d6def9b8e997dc0725eeab9aefdb1c", visibility = "private" }
+status = "unknown"
+package_manager = "go-modules"
+packages = []
 
 [tests]
-framework = "pytest"
+framework = "go-bridge"
+report_format = "go-test-json-v1"
 expected_total = 1
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1"]
-
-[metric]
-contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
-collection_mismatch = "fail"
-formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Recreate a bounded, serializable slice of the pure-Go GJSON JSON query API."
-keywords = ["go", "json", "query", "go-modules", "typed-bridge", "public-api"]
+keywords = [
+    "go",
+    "json",
+    "query",
+    "go-modules",
+    "typed-bridge",
+    "public-api",
+]
 agent_timeout_sec = 900.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 90.0
@@ -65,11 +81,15 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "controls-passed"
-owner = "go-author-gpt56-scale-pilot-20260826-r1"
-reason = "Three stable Oracle runs, direct offline verification, and required negative controls passed; awaiting integrator review and pilot."
+status = "blocked"
+reason = "Canonical source manifest is migrated, but the reviewed Go Harbor fixture is incomplete: missing contract.sh; missing solution/solve.sh; canonical dependency closure and command-plan artifacts must be prepared before release."
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:f7173db9c94d96b2fe860fe36096592065b03052e0af89f5423af5c575b032b0", size_bytes = 1251, uri = "artifact://private/sha256:f7173db9c94d96b2fe860fe36096592065b03052e0af89f5423af5c575b032b0", visibility = "private" }
 entrypoint = "contract.sh"
+
+[verifier.bundle]
+digest = "sha256:f7173db9c94d96b2fe860fe36096592065b03052e0af89f5423af5c575b032b0"
+size_bytes = 1251
+uri = "artifact://private/sha256:f7173db9c94d96b2fe860fe36096592065b03052e0af89f5423af5c575b032b0"
+visibility = "private"

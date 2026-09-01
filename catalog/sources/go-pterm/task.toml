@@ -2,12 +2,25 @@ schema_version = "1.0"
 task_id = "go-pterm"
 version = "0.1.0"
 instruction = "instruction.md"
-oracle_bundle = { digest = "sha256:16a496828951925f7c4e422b013ba250101b7713e3371f06c6dacd2d42169d01", size_bytes = 2106, uri = "artifact://private/sha256:16a496828951925f7c4e422b013ba250101b7713e3371f06c6dacd2d42169d01", visibility = "private" }
+
+[oracle_bundle]
+digest = "sha256:16a496828951925f7c4e422b013ba250101b7713e3371f06c6dacd2d42169d01"
+size_bytes = 2106
+uri = "artifact://private/sha256:16a496828951925f7c4e422b013ba250101b7713e3371f06c6dacd2d42169d01"
+visibility = "private"
 
 [metadata]
 difficulty = "hard"
 category = "terminal-formatting"
-tags = ["go", "go-modules", "terminal", "ansi", "formatting", "typed-bridge", "public-api"]
+tags = [
+    "go",
+    "go-modules",
+    "terminal",
+    "ansi",
+    "formatting",
+    "typed-bridge",
+    "public-api",
+]
 language = "go"
 
 [source]
@@ -20,8 +33,6 @@ source_digest = "sha256:18b19c2db580502951d0082e0215a2f6008488e6f5ed441024fa4ac4
 [environment]
 status = "known"
 os_name = "debian-bookworm"
-network_mode = "no-network"
-runtime_version = "1.26.5"
 base_image = "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
 base_image_digest = "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
 
@@ -31,43 +42,35 @@ offline_dependencies = "private-artifact"
 reference_source_fetch = "forbidden"
 reason = "Candidate and verifier use the pre-materialized private Go module closure and run without network; only the trusted Oracle may receive a run-scoped github.com source authorization."
 
+[environment.runtime]
+language = "go"
+runtime = "go"
+version = "1.26.5"
+package_manager = "go-modules"
+package_manager_version = "1.26.5"
+
 [dependencies]
-status = "known"
-installer = "system"
-packages = [
-  "atomicgo.dev/cursor@v0.2.0",
-  "atomicgo.dev/keyboard@v0.2.10",
-  "atomicgo.dev/schedule@v0.1.0",
-  "github.com/clipperhouse/uax29/v2@v2.7.0",
-  "github.com/containerd/console@v1.0.5",
-  "github.com/davecgh/go-spew@v1.1.1",
-  "github.com/lithammer/fuzzysearch@v1.1.8",
-  "github.com/mattn/go-runewidth@v0.0.23",
-  "github.com/pmezard/go-difflib@v1.0.0",
-  "github.com/stretchr/testify@v1.11.1",
-  "golang.org/x/sys@v0.43.0",
-  "golang.org/x/term@v0.42.0",
-  "golang.org/x/text@v0.36.0",
-  "gopkg.in/yaml.v3@v3.0.1",
-]
-module_bundle = { digest = "sha256:f2c548708a2e8fce5d83dca4048d4c7ffcdf02426137c0a6f833d841a8c69f48", size_bytes = 1835857, uri = "artifact://private/sha256:f2c548708a2e8fce5d83dca4048d4c7ffcdf02426137c0a6f833d841a8c69f48", visibility = "private" }
+status = "unknown"
+package_manager = "go-modules"
+packages = []
 
 [tests]
-framework = "pytest"
+framework = "go-bridge"
+report_format = "go-test-json-v1"
 expected_total = 1
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1"]
-
-[metric]
-contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
-collection_mismatch = "fail"
-formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Recreate PTerm's deterministic ANSI formatting core and selected pure helpers through a bounded Go bridge."
-keywords = ["go", "go-modules", "terminal", "ansi", "formatting", "typed-bridge", "public-api"]
+keywords = [
+    "go",
+    "go-modules",
+    "terminal",
+    "ansi",
+    "formatting",
+    "typed-bridge",
+    "public-api",
+]
 agent_timeout_sec = 1200.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 90.0
@@ -81,11 +84,15 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "controls-passed"
-owner = "go-author-wave2-20260828-c2"
-reason = "Frozen source, typed bridge, private offline closure, official Harbor Oracle, fixed-denominator negative controls, process cleanup, and direct offline verifier replay passed; awaiting integrator review and model Agent Run."
+status = "blocked"
+reason = "Canonical source manifest is migrated, but the reviewed Go Harbor fixture is incomplete: missing contract.sh; missing solution/solve.sh; canonical dependency closure and command-plan artifacts must be prepared before release."
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:19613ffeac932cb4e608661b9be87021482abd6ef5b80b821c877f9aeb2cad0f", size_bytes = 1507, uri = "artifact://private/sha256:19613ffeac932cb4e608661b9be87021482abd6ef5b80b821c877f9aeb2cad0f", visibility = "private" }
 entrypoint = "contract.sh"
+
+[verifier.bundle]
+digest = "sha256:19613ffeac932cb4e608661b9be87021482abd6ef5b80b821c877f9aeb2cad0f"
+size_bytes = 1507
+uri = "artifact://private/sha256:19613ffeac932cb4e608661b9be87021482abd6ef5b80b821c877f9aeb2cad0f"
+visibility = "private"
