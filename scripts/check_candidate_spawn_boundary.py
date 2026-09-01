@@ -55,6 +55,7 @@ _PYTHON_OS_CALLS = {
 _PYTHON_RESOURCE_CALLS = {"setrlimit", "prlimit"}
 _NODE_CHILD_CALLS = {"spawn", "spawnSync", "exec", "execFile", "fork"}
 _SHELL_WORDS = {"runuser", "su", "sudo", "prlimit", "timeout"}
+_SHELL_WRAPPER_WORDS = _SHELL_WORDS - {"timeout"}
 _SUPERVISOR_OS_CALLS = {
     "chdir", "close", "dup", "execve", "_exit", "fork", "killpg", "pipe",
     "read", "scandir", "set_blocking", "set_inheritable", "setgroups",
@@ -182,7 +183,10 @@ def _string_shell_violation(token: tokenize.TokenInfo) -> bool:
     if token.type != tokenize.STRING:
         return False
     value = token.string.lower()
-    return any(re.search(rf"(?<![a-z0-9_-]){re.escape(word)}(?![a-z0-9_-])", value) for word in _SHELL_WORDS)
+    return any(
+        re.search(rf"(?<![a-z0-9_-]){re.escape(word)}(?![a-z0-9_-])", value)
+        for word in _SHELL_WRAPPER_WORDS
+    )
 
 
 def _ast_assignment(tree: ast.AST, name: str) -> ast.AST | None:
@@ -236,12 +240,20 @@ def _trusted_bootstrap(value: ast.AST | None, tree: ast.AST) -> bool:
                 marker in ast.unparse(tree)
                 for marker in ("candidate_process_cli", "PYTHON_RUNTIME_ROOT", "sys.path.insert")
             )
-    if "candidate_process_cli" not in rendered:
+    required = (
+        "from nl2repobench.verification.candidate_process_cli import main",
+        "raise SystemExit(main())",
+    )
+    if any(marker not in rendered for marker in required):
         return False
     runtime_marker = "PYTHON_RUNTIME_ROOT" in rendered or "runtime_root" in rendered
     if not runtime_marker:
         return False
     if "sys.path.insert" not in rendered and "sys.path.insert" not in ast.unparse(tree):
+        return False
+    if any(marker not in ast.unparse(tree) for marker in required):
+        return False
+    if "PYTHONPATH" in rendered or "sys.executable" in rendered:
         return False
     return True
 
@@ -298,7 +310,13 @@ def _python_trusted_call(relative: str, node: ast.Call, tree: ast.AST) -> bool:
         "src/nl2repobench/verification/node_candidate_client.py",
         "src/nl2repobench/verification/go_supervisor.py",
     }:
-        if not node.args or {"input", "capture_output", "timeout", "check", "env"} - keywords:
+        allowed_keywords = {"input", "capture_output", "timeout", "check", "env", "cwd"}
+        required_keywords = {"input", "capture_output", "timeout", "check", "env"}
+        if (
+            len(node.args) != 1
+            or not required_keywords <= keywords
+            or not keywords <= allowed_keywords
+        ):
             return False
         if not _python_transport_command(node.args[0], tree):
             return False
@@ -310,12 +328,40 @@ def _python_trusted_call(relative: str, node: ast.Call, tree: ast.AST) -> bool:
             and keyword_values["check"].value is False
         ):
             return False
-        return _clean_environment(keyword_values["env"])
+        if not _clean_environment(keyword_values["env"]):
+            return False
+        timeout = keyword_values["timeout"]
+        if isinstance(timeout, ast.Constant) and (
+            not isinstance(timeout.value, (int, float)) or timeout.value <= 0
+        ):
+            return False
+        return True
     if relative == "src/nl2repobench/verification/custom_verifier.py":
-        return bool(node.args) and "-I" in ast.unparse(node)
+        if len(node.args) != 1 or keywords != {"cwd", "capture_output", "text", "timeout", "check"}:
+            return False
+        command = node.args[0]
+        if not isinstance(command, ast.List) or len(command.elts) != 3:
+            return False
+        return (
+            isinstance(command.elts[0], ast.Attribute)
+            and isinstance(command.elts[0].value, ast.Name)
+            and command.elts[0].value.id == "sys"
+            and command.elts[0].attr == "executable"
+            and _string_value(command.elts[1]) == "-I"
+            and isinstance(command.elts[2], ast.Call)
+        )
     if relative == "src/nl2repobench/verification/go_contract_runner.py":
-        rendered = ast.unparse(node)
-        return bool(node.args) and "/bin/bash" in rendered and "args.script" in rendered and "args.bridge" in rendered
+        if len(node.args) != 1 or keywords != {"capture_output", "text", "check", "timeout"}:
+            return False
+        command = node.args[0]
+        if not isinstance(command, ast.List) or len(command.elts) != 4:
+            return False
+        return (
+            _string_value(command.elts[0]) == "/bin/bash"
+            and isinstance(command.elts[1], ast.Call)
+            and isinstance(command.elts[2], ast.Call)
+            and isinstance(command.elts[3], ast.Call)
+        )
     return False
 
 
@@ -521,6 +567,10 @@ def _js_string(argument: list[_Token], value: str) -> bool:
     return any(token.kind == "string" and token.value[1:-1] == value for token in argument)
 
 
+def _js_exact_identifier(argument: list[_Token], values: tuple[str, ...]) -> bool:
+    return tuple(token.value for token in argument) == values
+
+
 def _node_trusted_call(relative: str, tokens: list[_Token], index: int) -> bool:
     if relative not in _TRUSTED_FILES:
         return False
@@ -530,33 +580,40 @@ def _node_trusted_call(relative: str, tokens: list[_Token], index: int) -> bool:
     if relative == "src/nl2repobench/verification/node/run_tests.mjs":
         return (
             len(arguments) >= 3
-            and _js_has_sequence(arguments[0], ("process", ".", "execPath"))
+            and _js_exact_identifier(arguments[0], ("process", ".", "execPath"))
             and _js_has_sequence(arguments[1], ("[",))
             and _js_string(arguments[1], "--test")
+            and _js_string(arguments[1], "--no-addons")
+            and _js_string(arguments[1], "--test-reporter=tap")
             and any(token.value == "file" for token in arguments[1])
             and any(token.value == "NODE_TEST_CLIENT" for token in arguments[2])
             and any(token.value == "cwd" for token in arguments[2])
             and any(token.value == "env" for token in arguments[2])
+            and not any(token.value == "shell" for token in arguments[2])
         )
     if relative == "src/nl2repobench/verification/node/validate-package.mjs":
         return (
             len(arguments) >= 3
-            and any(token.value in {'"/usr/bin/tar"', "'/usr/bin/tar'"} for token in arguments[0])
+            and _js_string(arguments[0], "/usr/bin/tar")
             and any(token.value in {'"-tvzf"', '"-xOzf"', "'-tvzf'", "'-xOzf'"} for token in arguments[1])
             and any(token.value == "archive" for token in arguments[1])
             and any(token.value == "encoding" for token in arguments[2])
             and any(token.value == "maxBuffer" for token in arguments[2])
         )
     if relative == "src/nl2repobench/verification/node/grade-report.mjs":
+        python = _js_assignment_tokens(tokens, "python")
         python_args = _js_assignment_tokens(tokens, "pythonArgs")
+        python_code = _js_assignment_tokens(tokens, "pythonCode")
         return (
             len(arguments) >= 3
-            and any(token.value == "python" for token in arguments[0])
-            and any(token.value == "pythonArgs" for token in arguments[1])
+            and _js_exact_identifier(arguments[0], ("python",))
+            and _js_exact_identifier(arguments[1], ("pythonArgs",))
+            and _js_string(python, "/usr/local/bin/python3")
             and _js_string(python_args, "-I")
             and _js_string(python_args, "-B")
-            and any(token.value == "runtime" for token in python_args)
-            and any(token.value == "nl2repobench" for token in python_args)
+            and _js_string(python_args, "--runtime")
+            and _js_string(python_code, "from nl2repobench.verification.cli import main")
+            and _js_string(python_code, "main()")
             and any(token.value == "stdio" for token in arguments[2])
             and any(token.value == "env" for token in arguments[2])
             and any(token.value == "timeout" for token in arguments[2])
@@ -569,9 +626,15 @@ def _scan_node(relative: str, text: str) -> list[dict[str, object]]:
     aliases, module_aliases = _js_aliases(tokens)
     violations: list[dict[str, object]] = []
     for index, token in enumerate(tokens):
-        if token.value in _SHELL_WORDS or (
+        if token.value in _SHELL_WRAPPER_WORDS or (
             token.kind == "string"
-            and any(re.search(rf"(?<![A-Za-z0-9_-]){re.escape(word)}(?![A-Za-z0-9_-])", token.value.lower()) for word in _SHELL_WORDS)
+            and any(
+                re.search(
+                    rf"(?<![A-Za-z0-9_-]){re.escape(word)}(?![A-Za-z0-9_-])",
+                    token.value.lower(),
+                )
+                for word in _SHELL_WRAPPER_WORDS
+            )
         ):
             violations.append(_violation(relative, token.line, "forbidden-shell-token"))
         if token.value in _NODE_CHILD_CALLS and index + 1 < len(tokens) and tokens[index + 1].value == "(":
