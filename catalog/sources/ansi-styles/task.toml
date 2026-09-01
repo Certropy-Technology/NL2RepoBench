@@ -1,4 +1,4 @@
-schema_version = "2.0"
+schema_version = "1.0"
 task_id = "ansi-styles"
 version = "2.0.0"
 instruction = "instruction.md"
@@ -22,7 +22,6 @@ status = "known"
 os_name = "debian-bookworm"
 base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
 base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
-network_mode = "no-network"
 
 [environment.runtime]
 language = "node"
@@ -30,8 +29,6 @@ runtime = "node"
 version = "24.19.0"
 package_manager = "npm"
 package_manager_version = "11.17.0"
-architecture = "linux/amd64"
-libc = "glibc"
 
 [environment.network_policy]
 mode = "no-network"
@@ -40,23 +37,9 @@ reference_source_fetch = "forbidden"
 reason = "ansi-styles has no runtime dependency roots; the npm v3 lock and empty integrity-checked cache are frozen for offline installation, while the pinned source is available only to the trusted Oracle bundle."
 
 [dependencies]
-status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
+status = "unknown"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
 packages = []
-
-[dependencies.artifact]
-digest = "sha256:7a9d19aa3a974d1d98b2efa737054916be0a385036536a2a793fc1b4220ea4b5"
-size_bytes = 443
-media_type = "application/vnd.nl2repobench.npm-bundle+tar"
-uri = "artifact://private/sha256:7a9d19aa3a974d1d98b2efa737054916be0a385036536a2a793fc1b4220ea4b5"
-visibility = "private"
 
 [tests]
 framework = "node:test"
@@ -79,7 +62,7 @@ uri = "artifact://private/sha256:eb823ef76d0bd6546c0c88d116db288603ad0548174981c
 visibility = "private"
 
 [metric]
-contract_id = "node-test-leaf-pass-rate-v1"
+contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [harbor]
@@ -97,7 +80,7 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "ansi-styles-authoring"
 reason = "Production Harbor Oracle passed 32/32 with reward 1.0. Empty, stub, forgery, install-script, loader-hook, hang, and offline controls completed with verifier-owned results and no public verifier network."
 

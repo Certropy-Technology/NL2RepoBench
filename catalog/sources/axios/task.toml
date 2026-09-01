@@ -1,4 +1,4 @@
-schema_version = "2.0"
+schema_version = "1.0"
 task_id = "axios"
 version = "1.0.0"
 instruction = "instruction.md"
@@ -22,7 +22,6 @@ status = "known"
 os_name = "debian-bookworm"
 base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
 base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -36,21 +35,11 @@ runtime = "node"
 version = "24.19.0"
 package_manager = "npm"
 package_manager_version = "11.17.0"
-architecture = "linux/amd64"
-libc = "glibc"
 
 [dependencies]
-status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
+status = "unknown"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
 packages = ["follow-redirects", "form-data", "https-proxy-agent", "proxy-from-env"]
-artifact = { digest = "sha256:0e35bc17ec8b681baa3f7b3627ee24bee36d9fb647ae1bb1ba9ce399b8fd7df6", size_bytes = 2109440, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:0e35bc17ec8b681baa3f7b3627ee24bee36d9fb647ae1bb1ba9ce399b8fd7df6", visibility = "private" }
 
 [tests]
 framework = "node:test"
@@ -61,7 +50,7 @@ commands_artifact = { digest = "sha256:907c74f99d8321118b161724922c3538b3b625481
 test_bundle = { digest = "sha256:5671d8ba2273380868314df434c0cafb1e4e9c244b67f9741f600a48c13f1186", size_bytes = 20480, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:5671d8ba2273380868314df434c0cafb1e4e9c244b67f9741f600a48c13f1186", visibility = "private" }
 
 [metric]
-contract_id = "node-test-leaf-pass-rate-v1"
+contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [harbor]
@@ -79,7 +68,7 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "axios-remediation"
 reason = "Frozen source archive, exact npm 11.17 cache closure, private 16-leaf node:test bundle, production compile, Oracle 16/16 reward 1.0, verifier network proof, and empty/stub/forgery/install-script/loader-hook/hang/offline controls are recorded in task-local evidence. Review, pilot, and publication remain out of scope."
 

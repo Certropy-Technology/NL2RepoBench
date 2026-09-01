@@ -1,4 +1,4 @@
-schema_version = "2.0"
+schema_version = "1.0"
 task_id = "canonicalize"
 version = "2.0.0"
 instruction = "instruction.md"
@@ -22,7 +22,6 @@ status = "known"
 os_name = "debian-bookworm"
 base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
 base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -36,21 +35,11 @@ runtime = "node"
 version = "24.19.0"
 package_manager = "npm"
 package_manager_version = "11.17.0"
-architecture = "linux/amd64"
-libc = "glibc"
 
 [dependencies]
 # Generated and validated from the exact source revision with npm 11.17.0.
-status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
+status = "unknown"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
-artifact = { digest = "sha256:911470dae44f1bcb844fd01523adf9f082db227f52e51d0695f2ad0a96ead73a", size_bytes = 4321280, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:911470dae44f1bcb844fd01523adf9f082db227f52e51d0695f2ad0a96ead73a", visibility = "private" }
 packages = ["@eslint/js", "c8", "eslint", "globals"]
 
 [tests]
@@ -80,7 +69,7 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "packaged"
+status = "blocked"
 owner = "integrator"
 reason = "Production Node vertical slice; Oracle and controls are recorded in the campaign gate."
 approval_refs = ["node-production-vertical-slice-v1"]

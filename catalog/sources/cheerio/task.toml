@@ -1,4 +1,4 @@
-schema_version = "2.0"
+schema_version = "1.0"
 task_id = "cheerio"
 version = "1.0.0"
 instruction = "instruction.md"
@@ -22,7 +22,6 @@ status = "known"
 os_name = "debian-bookworm-amd64"
 base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
 base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
-network_mode = "no-network"
 
 [environment.runtime]
 language = "node"
@@ -30,8 +29,6 @@ runtime = "node"
 version = "24.19.0"
 package_manager = "npm"
 package_manager_version = "11.17.0"
-architecture = "linux/amd64"
-libc = "glibc"
 
 [environment.network_policy]
 mode = "no-network"
@@ -40,15 +37,8 @@ reference_source_fetch = "forbidden"
 reason = "Agent and verifier runs have no egress. The verifier receives a content-addressed npm v3 cache containing the scripts-free runtime closure; the Oracle is a private prebuilt distribution and performs no source or registry fetch."
 
 [dependencies]
-status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
+status = "unknown"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
 packages = [
   "boolbase@1.0.0",
   "cheerio-select@2.1.0",
@@ -72,7 +62,6 @@ packages = [
   "whatwg-mimetype@5.0.0",
   "nested runtime entries are frozen by the lock artifact",
 ]
-artifact = { digest = "sha256:b6b746448a44d78794f97aecd591503065bcb323f5788e6dd2ea965ebf473cfb", size_bytes = 4536320, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:b6b746448a44d78794f97aecd591503065bcb323f5788e6dd2ea965ebf473cfb", visibility = "private" }
 
 [tests]
 framework = "node:test"
@@ -83,7 +72,7 @@ commands_artifact = { digest = "sha256:10e70a89b271a2cd71d8dbaa6848530c6550ac4d8
 test_bundle = { digest = "sha256:9dd3d86620b8e6ffd7930870ff44261f31d8d46831c6ac9b7ed5df9fcd091368", size_bytes = 30720, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:9dd3d86620b8e6ffd7930870ff44261f31d8d46831c6ac9b7ed5df9fcd091368", visibility = "private" }
 
 [metric]
-contract_id = "node-test-leaf-pass-rate-v1"
+contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [harbor]
@@ -109,6 +98,6 @@ uri = "artifact://private/sha256:21bc4efbc7b2bb24b34b74019b7699a4a4b3a68bb7f9bf5
 visibility = "private"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "repair/cheerio"
 reason = "The frozen local HTML/XML subset has a scripts-free runtime package, locked npm cache, 51-leaf subprocess verifier, private Oracle, deterministic production compile, a valid 51/51 Oracle receipt, and passing empty/stub/forgery/install-script/loader-hook/hang/offline controls. Review, pilot, and publication remain integrator work."

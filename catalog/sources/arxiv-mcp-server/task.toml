@@ -1,4 +1,4 @@
-schema_version = "2.0"
+schema_version = "1.0"
 task_id = "arxiv-mcp-server"
 version = "0.1.0"
 instruction = "blocked.md"
@@ -22,7 +22,6 @@ status = "known"
 os_name = "debian-linux-amd64"
 base_image = "ghcr.io/multimodal-art-projection/nl2repobench/arxiv-mcp-server@sha256:1e8074506767811ba7445749212b1f4eece516b003766112ce76b07c4fc2f3c8"
 base_image_digest = "sha256:1e8074506767811ba7445749212b1f4eece516b003766112ce76b07c4fc2f3c8"
-network_mode = "no-network"
 
 [environment.runtime]
 language = "node"
@@ -30,8 +29,6 @@ runtime = "node"
 version = "24.19.0"
 package_manager = "npm"
 package_manager_version = "11.17.0"
-architecture = "linux/amd64"
-libc = "glibc"
 
 [environment.network_policy]
 mode = "no-network"
@@ -41,14 +38,7 @@ reason = "Agent and verifier runs must remain offline; the historical image is n
 
 [dependencies]
 status = "unknown"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
 packages = ["legacy image installed Python .[test,dev]; hash-locked production closure not available"]
 
 [tests]
@@ -58,7 +48,7 @@ expected_total = 0
 expected_total_source = "unknown"
 
 [metric]
-contract_id = "node-test-leaf-pass-rate-v1"
+contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [lifecycle]

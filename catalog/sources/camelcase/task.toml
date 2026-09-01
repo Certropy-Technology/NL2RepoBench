@@ -1,4 +1,4 @@
-schema_version = "2.0"
+schema_version = "1.0"
 task_id = "camelcase"
 version = "2.0.0"
 instruction = "instruction.md"
@@ -22,7 +22,6 @@ status = "known"
 os_name = "debian-bookworm"
 base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
 base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -36,21 +35,11 @@ runtime = "node"
 version = "24.19.0"
 package_manager = "npm"
 package_manager_version = "11.17.0"
-architecture = "linux/amd64"
-libc = "glibc"
 
 [dependencies]
-status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
+status = "unknown"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
 packages = []
-artifact = { digest = "sha256:9c05c7a0634ce1566ef2aa36b4f62b6da1ae6d0b4e2fe6b0a5cf842a729689d8", size_bytes = 396, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:9c05c7a0634ce1566ef2aa36b4f62b6da1ae6d0b4e2fe6b0a5cf842a729689d8", visibility = "private" }
 
 [tests]
 framework = "node:test"
@@ -61,7 +50,7 @@ commands_artifact = { digest = "sha256:8f6c05645b4ef96eb1fa5828fef0c244fcb1a2449
 test_bundle = { digest = "sha256:d8fc725915e94c60f25688dca0a44acc3f347baade9f3c2520286e75e1d7d027", size_bytes = 3224, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:d8fc725915e94c60f25688dca0a44acc3f347baade9f3c2520286e75e1d7d027", visibility = "private" }
 
 [metric]
-contract_id = "node-test-leaf-pass-rate-v1"
+contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [harbor]
@@ -79,7 +68,7 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "node-author-wave2-20260828-c2"
 reason = "The exact source, public contract, private 32-leaf node:test collection, npm v3 offline closure, digest-checking Oracle, production compile, and bounded controls have passed. Independent review and any future model Agent Run remain outside this lane."
 
