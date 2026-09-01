@@ -6,7 +6,12 @@ instruction = "blocked.md"
 [metadata]
 difficulty = "unknown"
 category = "data-serialization-cli"
-tags = ["python", "cli", "serialization", "blocked"]
+tags = [
+    "python",
+    "cli",
+    "serialization",
+    "blocked",
+]
 language = "python"
 
 [source]
@@ -19,9 +24,7 @@ submodules = []
 
 [environment]
 status = "unknown"
-python_version = "3.12.11"
 os_name = "fedora-44-linux-x86_64"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -31,33 +34,34 @@ reason = "No production image or approved offline dependency artifact exists; ca
 
 [dependencies]
 status = "unknown"
-installer = "uv"
+package_manager = "uv"
 packages = [
-  "cbor2==5.9.0",
-  "colorama==0.4.6",
-  "ruamel-yaml==0.19.1",
-  "starlark==0.5.0",
-  "termcolor==3.3.0",
-  "tomli==2.4.1",
-  "tomlkit==0.15.0",
-  "u-msgpack-python==2.8.0",
-  "poetry-core>=2.0 (build backend range is not locked in uv.lock)",
+    "cbor2==5.9.0",
+    "colorama==0.4.6",
+    "ruamel-yaml==0.19.1",
+    "starlark==0.5.0",
+    "termcolor==3.3.0",
+    "tomli==2.4.1",
+    "tomlkit==0.15.0",
+    "u-msgpack-python==2.8.0",
+    "poetry-core>=2.0 (build backend range is not locked in uv.lock)",
 ]
 
 [tests]
-framework = "pytest"
 expected_total = 0
 expected_total_source = "unknown"
-commands = []
+framework = "pytest"
+report_format = "pytest-junit-xml-v1"
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = ["skipped"]
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
 status = "blocked"
 owner = "repair/remarshal"
-reason = "The exact upstream revision, archive digest, and MIT license are known, but no reviewed binary-safe CLI adapter, approved offline dependency artifact, private test bundle, separate verifier, Harbor Oracle, controls, or production runtime exists. Keep the candidate blocked until the adapter and immutable dependency closure are approved and gated."
+reason = "Canonical runtime/package-manager version and dependency closure are not available; legacy single closure refs were not retyped. Previous status/reason: blocked: The exact upstream revision, archive digest, and MIT license are known, but no reviewed binary-safe CLI adapter, approved offline dependency artifact, private test bundle, separate verifier, Harbor Oracle, controls, or production runtime exists. Keep the candidate blocked until the adapter and immutable dependency closure are approved and gated."

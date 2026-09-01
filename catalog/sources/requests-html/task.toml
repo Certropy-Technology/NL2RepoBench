@@ -6,7 +6,13 @@ instruction = "blocked.md"
 [metadata]
 difficulty = "unknown"
 category = "python-library"
-tags = ["python", "html", "browser", "legacy-overlay", "blocked"]
+tags = [
+    "python",
+    "html",
+    "browser",
+    "legacy-overlay",
+    "blocked",
+]
 language = "python"
 
 [source]
@@ -19,11 +25,9 @@ submodules = []
 
 [environment]
 status = "unknown"
-python_version = "3.12.4"
 os_name = "linux-amd64"
 base_image = "ghcr.io/multimodal-art-projection/nl2repobench/requests-html@sha256:1bf7a654410b6ca33899bf2a37fabed66113f97d5f36c8e4d3374dd3cb09b45d"
 base_image_digest = "sha256:1bf7a654410b6ca33899bf2a37fabed66113f97d5f36c8e4d3374dd3cb09b45d"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -33,30 +37,36 @@ reason = "BLOCKED: the available image has no reviewed hash-locked Python/Chromi
 
 [dependencies]
 status = "unknown"
-installer = "pip"
+package_manager = "pip"
 packages = []
 
 [tests]
-framework = "pytest"
 expected_total = 41
-expected_total_source = "legacy-file"
-commands = ["pip install -e .", "pytest --continue-on-collection-errors tests"]
-protected_paths = ["tests"]
+expected_total_source = "unknown"
+framework = "pytest"
+report_format = "pytest-junit-xml-v1"
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = ["skipped"]
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
 status = "blocked"
-reason = "The exact upstream source archive and license are known, but publication is blocked by an undocumented functional source/test overlay, live-network assertions incompatible with the required no-network verifier, an unclosed Python/Chromium dependency lock, and the absence of a reviewed separate candidate boundary. No Harbor runtime exists."
+reason = "Canonical runtime/package-manager version and dependency closure are not available; legacy single closure refs were not retyped. Previous status/reason: blocked: The exact upstream source archive and license are known, but publication is blocked by an undocumented functional source/test overlay, live-network assertions incompatible with the required no-network verifier, an unclosed Python/Chromium dependency lock, and the absence of a reviewed separate candidate boundary. No Harbor runtime exists."
 
 [harbor]
 description = "Blocked requests-html candidate: the available legacy image and tests do not yet define a reproducible production verifier."
-keywords = ["python", "html", "browser", "pytest", "blocked"]
+keywords = [
+    "python",
+    "html",
+    "browser",
+    "pytest",
+    "blocked",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 60.0

@@ -6,7 +6,13 @@ instruction = "blocked.md"
 [metadata]
 difficulty = "hard"
 category = "http-mocking"
-tags = ["python", "requests", "mocking", "loopback", "blocked"]
+tags = [
+    "python",
+    "requests",
+    "mocking",
+    "loopback",
+    "blocked",
+]
 language = "python"
 
 [source]
@@ -18,7 +24,6 @@ submodules = []
 
 [environment]
 status = "unknown"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -28,23 +33,24 @@ reason = "The candidate contract requires loopback-only mocking; source/package/
 
 [dependencies]
 status = "unknown"
-installer = "pip"
+package_manager = "pip"
 packages = []
 
 [tests]
-framework = "pytest"
 expected_total = 0
 expected_total_source = "unknown"
-commands = []
+framework = "pytest"
+report_format = "pytest-junit-xml-v1"
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = ["skipped"]
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
 status = "blocked"
 owner = "repair/responses"
-reason = "The exact commit and project-level Apache-2.0 claim are known, but archive/license bytes, packaging/dependency closure, collection, loopback-only separate verifier, Oracle, and controls are not established. No runtime task exists."
+reason = "Canonical runtime/package-manager version and dependency closure are not available; legacy single closure refs were not retyped. Previous status/reason: blocked: The exact commit and project-level Apache-2.0 claim are known, but archive/license bytes, packaging/dependency closure, collection, loopback-only separate verifier, Oracle, and controls are not established. No runtime task exists."

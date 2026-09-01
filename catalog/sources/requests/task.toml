@@ -6,7 +6,15 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "hard"
 category = "http-client"
-tags = ["python", "http", "sessions", "cookies", "redirects", "offline", "separate-verifier"]
+tags = [
+    "python",
+    "http",
+    "sessions",
+    "cookies",
+    "redirects",
+    "offline",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -18,13 +26,11 @@ source_digest = "sha256:be1c2c2e74293ab92b50f6044c345e20ccf2e1b28c1e5bdc73dd17d6
 submodules = []
 
 [environment]
-status = "known"
-python_version = "3.12.14"
+status = "unknown"
 os_name = "debian-12-amd64"
 base_image = "python:3.12-slim"
 base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
 system_packages = []
-network_mode = "no-network"
 build_command = "install the hash-locked build and runtime closure during image build; the Oracle verifies the pinned source archive before copying the frozen requests source"
 
 [environment.network_policy]
@@ -34,34 +40,47 @@ reference_source_fetch = "forbidden"
 reason = "All build and runtime dependencies are installed during the Docker build phase. Agent and verifier runs use deterministic local adapters and require no egress; only the trusted Oracle receives a run-scoped source-host authorization."
 
 [dependencies]
-status = "known"
-installer = "pip"
-packages = ["certifi==2025.8.3", "charset-normalizer==3.4.3", "idna==3.10", "setuptools==80.10.2", "urllib3==2.5.0", "wheel==0.45.1"]
-lock_artifact = { digest = "sha256:9b7299b62de007629eda85f97c12e5a96abda1b1d65b36311db67c41e5bfaf62", size_bytes = 8570, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:9b7299b62de007629eda85f97c12e5a96abda1b1d65b36311db67c41e5bfaf62", visibility = "private" }
+status = "unknown"
+package_manager = "pip"
+packages = [
+    "certifi==2025.8.3",
+    "charset-normalizer==3.4.3",
+    "idna==3.10",
+    "setuptools==80.10.2",
+    "urllib3==2.5.0",
+    "wheel==0.45.1",
+]
 
 [tests]
-framework = "pytest"
 expected_total = 21
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py"]
-
-[verifier]
-protocol = "custom-json-v1"
-bundle = { digest = "sha256:bf54eadddea027ca17473849697fe39efe2545340cf196dfc5925c86b19b5914", size_bytes = 30720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:bf54eadddea027ca17473849697fe39efe2545340cf196dfc5925c86b19b5914", visibility = "private" }
-entrypoint = "run.py"
-environment = {}
+framework = "custom"
+report_format = "custom-json-v1"
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
+[lifecycle]
+status = "blocked"
+owner = "worker"
+reason = "Canonical runtime/package-manager version and dependency closure are not available; legacy single closure refs were not retyped. Previous status/reason: controls-passed: Source/license frozen, hash-locked closure and digest-pinned environment compiled, Oracle passed 21/21 with valid=true, and empty/stub, forgery, install-timeout, and offline controls passed their bounded gates. Worker endpoint is awaiting-agent-run; this lane did not start a Harbor model Agent Run."
+
 [harbor]
 description = "Build the pinned requests HTTP client from an empty workspace and reproduce deterministic request preparation, responses, sessions, cookies, authentication, redirects, and utility behavior through a separate offline JSON adapter."
-keywords = ["python", "http-client", "sessions", "cookies", "redirects", "offline", "repository-generation"]
+keywords = [
+    "python",
+    "http-client",
+    "sessions",
+    "cookies",
+    "redirects",
+    "offline",
+    "repository-generation",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 120.0
@@ -73,14 +92,22 @@ memory_mb = 4096
 storage_mb = 8192
 workspace_artifact = "/workspace"
 
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+
+[verifier.bundle]
+digest = "sha256:bf54eadddea027ca17473849697fe39efe2545340cf196dfc5925c86b19b5914"
+size_bytes = 30720
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:bf54eadddea027ca17473849697fe39efe2545340cf196dfc5925c86b19b5914"
+visibility = "private"
+
+[verifier.environment]
+
 [oracle_bundle]
 digest = "sha256:78940a3e95d12ae7109ff88975ba36dd564eb59a9f51e51e4475591bee9e06dd"
 size_bytes = 4577280
 media_type = "application/vnd.nl2repobench.private-bundle+tar"
 uri = "artifact://private/sha256:78940a3e95d12ae7109ff88975ba36dd564eb59a9f51e51e4475591bee9e06dd"
 visibility = "private"
-
-[lifecycle]
-status = "controls-passed"
-owner = "worker"
-reason = "Source/license frozen, hash-locked closure and digest-pinned environment compiled, Oracle passed 21/21 with valid=true, and empty/stub, forgery, install-timeout, and offline controls passed their bounded gates. Worker endpoint is awaiting-agent-run; this lane did not start a Harbor model Agent Run."

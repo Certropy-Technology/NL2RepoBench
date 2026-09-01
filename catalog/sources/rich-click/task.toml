@@ -6,7 +6,10 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "hard"
 category = "python-library"
-tags = ["python", "repository-generation"]
+tags = [
+    "python",
+    "repository-generation",
+]
 language = "python"
 
 [source]
@@ -17,12 +20,10 @@ license_spdx = "unknown"
 source_digest = "sha256:386a1d57ef6be6783dba45814dfcecd12b53b5429856e4b1e7026556ac5995d4"
 
 [environment]
-status = "known"
-python_version = "3.13"
+status = "unknown"
 os_name = "debian-12"
 base_image = "python:3.12-slim"
 base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -32,25 +33,34 @@ reason = "BLOCKER: dependency closure is not yet frozen (dependencies.status=unk
 
 [dependencies]
 status = "unknown"
-installer = "pip"
+package_manager = "pip"
 packages = []
 
 [tests]
-framework = "pytest"
 expected_total = 139
 expected_total_source = "unknown"
-commands = ["pip install 'setuptools>=45'", "pip install click", "pip install --no-build-isolation -e .[dev]", "pytest --continue-on-collection-errors tests"]
+framework = "pytest"
+report_format = "pytest-junit-xml-v1"
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
+[lifecycle]
+status = "blocked"
+reason = "Canonical runtime/package-manager version and dependency closure are not available; legacy single closure refs were not retyped. Previous status/reason: discovered: Imported legacy task; source, dependency and collection locks still require freeze."
+
 [harbor]
 description = "Build the rich-click package from an empty workspace."
-keywords = ["python", "repository-generation", "nl2repobench"]
+keywords = [
+    "python",
+    "repository-generation",
+    "nl2repobench",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 60.0
@@ -61,7 +71,3 @@ cpus = 2
 memory_mb = 4096
 storage_mb = 8192
 workspace_artifact = "/workspace"
-
-[lifecycle]
-status = "discovered"
-reason = "Imported legacy task; source, dependency and collection locks still require freeze."

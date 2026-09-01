@@ -6,26 +6,31 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "hard"
 category = "terminal-rendering"
-tags = ["python", "terminal", "ansi", "unicode", "renderables", "markdown", "syntax-highlighting", "pytest", "repository-generation", "separate-verifier"]
+tags = [
+    "python",
+    "terminal",
+    "ansi",
+    "unicode",
+    "renderables",
+    "markdown",
+    "syntax-highlighting",
+    "pytest",
+    "repository-generation",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
 status = "known"
 upstream_url = "https://github.com/Textualize/rich"
-# Detached full commit resolved from refs/heads/main on 2026-08-23.
 revision = "9d8f9a372cc5916fd4781fec207ced7ddac2f08f"
 license_spdx = "MIT"
-# Unprefixed `git archive --format=tar HEAD` at the detached revision.
 source_digest = "sha256:f921363393f98d285226590333b41bf254dd311de46422d9a9d39f97deab25dd"
 submodules = []
 
 [environment]
-# Source probes are Linux-only. No final verifier image or OS digest is
-# approved; terminal behavior must be frozen before publication.
 status = "unknown"
-python_version = ">=3.9"
 os_name = "unknown"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -34,39 +39,30 @@ reference_source_fetch = "forbidden"
 reason = "The terminal runtime and deterministic output fixture closure are not frozen; candidate and verifier execution remain network-isolated."
 
 [dependencies]
-# Poetry's locked core runtime closure is pygments 2.19.2, markdown-it-py
-# 3.0.0, and mdurl 0.1.2. The optional `jupyter` extra is deliberately not
-# part of the core candidate. No requirements lock or build-backend closure is stored.
 status = "unknown"
-installer = "uv"
+package_manager = "uv"
 packages = [
-  "poetry-core>=1.0.0",
-  "pygments==2.19.2",
-  "markdown-it-py==3.0.0",
-  "mdurl==0.1.2",
-  "pytest==7.4.4",
+    "poetry-core>=1.0.0",
+    "pygments==2.19.2",
+    "markdown-it-py==3.0.0",
+    "mdurl==0.1.2",
+    "pytest==7.4.4",
 ]
 
 [tests]
-framework = "pytest"
-# Static AST inventory: 67 official test modules and 721 test-function nodes.
-# Parametrization/unittest expansion was not collected in this lane, so this
-# is evidence only and not a frozen production denominator.
 expected_total = 721
 expected_total_source = "unknown"
-commands = [
-  "python -m pip install --no-build-isolation -e .",
-  "python -m pytest --continue-on-collection-errors -q tests",
-]
-protected_paths = ["tests"]
+framework = "pytest"
+report_format = "pytest-junit-xml-v1"
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
 status = "blocked"
-reason = "Evidence-first candidate only. The exact commit/archive and MIT license are verified, with source-only LOC, official test inventory, terminal/rendering risk review, dependency metadata, and a deterministic JSONL/text adapter boundary recorded in audit.md and candidate-boundary.json. Publication is blocked because no final OS/image lock, content-addressed offline dependency bundle, collect-only result, private verifier assets, Oracle, or controls are present; optional Jupyter behavior and TTY/timing-sensitive tests require an explicit environment policy."
+reason = "Canonical runtime/package-manager version and dependency closure are not available; legacy single closure refs were not retyped. Previous status/reason: blocked: Evidence-first candidate only. The exact commit/archive and MIT license are verified, with source-only LOC, official test inventory, terminal/rendering risk review, dependency metadata, and a deterministic JSONL/text adapter boundary recorded in audit.md and candidate-boundary.json. Publication is blocked because no final OS/image lock, content-addressed offline dependency bundle, collect-only result, private verifier assets, Oracle, or controls are present; optional Jupyter behavior and TTY/timing-sensitive tests require an explicit environment policy."

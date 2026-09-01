@@ -6,7 +6,15 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "hard"
 category = "filesystem-adapter"
-tags = ["python", "s3", "fsspec", "asyncio", "filesystem", "fake-client", "separate-verifier"]
+tags = [
+    "python",
+    "s3",
+    "fsspec",
+    "asyncio",
+    "filesystem",
+    "fake-client",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -18,13 +26,11 @@ source_digest = "sha256:0fe21881f4329f8981e139200722a7b6934065d40f976cd3d0afd987
 submodules = []
 
 [environment]
-status = "known"
-python_version = "3.12.11"
+status = "unknown"
 os_name = "debian-12-amd64"
 base_image = "python:3.12.14-slim-bookworm"
 base_image_digest = "sha256:0f5b26b9518d002b6173fd61daad821fa340635ebfec5bba471013f9ca114579"
 system_packages = []
-network_mode = "no-network"
 build_command = "install candidate and verifier dependencies during image build from hash-locked requirements"
 
 [environment.network_policy]
@@ -34,41 +40,46 @@ reference_source_fetch = "forbidden"
 reason = "Build-time dependencies are installed from the private hash lock. Agent and verifier execution is network-isolated; only the trusted Oracle receives the exact upstream source-host override."
 
 [dependencies]
-status = "known"
-installer = "pip"
+status = "unknown"
+package_manager = "pip"
 packages = [
-  "aiobotocore==2.25.1",
-  "aiohttp==3.12.15",
-  "fsspec==2026.7.0",
-  "pytest==9.1.1",
-  "setuptools==84.0.0",
-  "wheel==0.46.1",
+    "aiobotocore==2.25.1",
+    "aiohttp==3.12.15",
+    "fsspec==2026.7.0",
+    "pytest==9.1.1",
+    "setuptools==84.0.0",
+    "wheel==0.46.1",
 ]
-lock_artifact = { digest = "sha256:38a692d95ba6065b5b0c55eb13e41b332f2d49691fbc3bb84ba6a5d8d297e5d3", size_bytes = 69204, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:38a692d95ba6065b5b0c55eb13e41b332f2d49691fbc3bb84ba6a5d8d297e5d3", visibility = "private" }
 
 [tests]
-framework = "pytest"
 expected_total = 20
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py"]
+framework = "custom"
+report_format = "custom-json-v1"
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
-[verifier]
-protocol = "custom-json-v1"
-bundle = { digest = "sha256:4bf0eb13eb0eb418f0bfcb3473105961fd0bf424fa85a83c3d853e963600ee0e", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:4bf0eb13eb0eb418f0bfcb3473105961fd0bf424fa85a83c3d853e963600ee0e", visibility = "private" }
-entrypoint = "run.py"
-environment = {}
+[lifecycle]
+status = "blocked"
+owner = "python-author-wave2-archive-r2-c3"
+reason = "Canonical runtime/package-manager version and dependency closure are not available; legacy single closure refs were not retyped. Previous status/reason: controls-passed: Source freeze, deterministic fake-client adaptation, production compile, Oracle, and required verifier controls passed in task-local replay."
 
 [harbor]
 description = "Build s3fs from an empty workspace and satisfy a deterministic fake-client filesystem contract through a separate child-side verifier."
-keywords = ["python", "s3", "fsspec", "asyncio", "fake-client", "filesystem"]
+keywords = [
+    "python",
+    "s3",
+    "fsspec",
+    "asyncio",
+    "fake-client",
+    "filesystem",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 900.0
 candidate_install_timeout_sec = 180.0
@@ -80,14 +91,22 @@ memory_mb = 4096
 storage_mb = 8192
 workspace_artifact = "/workspace"
 
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+
+[verifier.bundle]
+digest = "sha256:4bf0eb13eb0eb418f0bfcb3473105961fd0bf424fa85a83c3d853e963600ee0e"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:4bf0eb13eb0eb418f0bfcb3473105961fd0bf424fa85a83c3d853e963600ee0e"
+visibility = "private"
+
+[verifier.environment]
+
 [oracle_bundle]
 digest = "sha256:197200e9c762ec487f98511e6d8638c9638ba83b10f8dbb1a63f23cd3b726a9e"
 size_bytes = 10240
 media_type = "application/vnd.nl2repobench.private-bundle+tar"
 uri = "artifact://private/sha256:197200e9c762ec487f98511e6d8638c9638ba83b10f8dbb1a63f23cd3b726a9e"
 visibility = "private"
-
-[lifecycle]
-status = "controls-passed"
-owner = "python-author-wave2-archive-r2-c3"
-reason = "Source freeze, deterministic fake-client adaptation, production compile, Oracle, and required verifier controls passed in task-local replay."

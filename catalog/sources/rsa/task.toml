@@ -6,7 +6,15 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "hard"
 category = "cryptography-library"
-tags = ["python", "rsa", "cryptography", "pkcs1", "serialization", "cli", "separate-verifier"]
+tags = [
+    "python",
+    "rsa",
+    "cryptography",
+    "pkcs1",
+    "serialization",
+    "cli",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -18,12 +26,10 @@ source_digest = "sha256:d5f3ae5ac30dc2c284dd449bb8f3aada2612ed41a0eab1decdd1d70b
 submodules = []
 
 [environment]
-status = "known"
-python_version = "3.12.11"
+status = "unknown"
 os_name = "debian-12-amd64"
 base_image = "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
 base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
-network_mode = "no-network"
 build_command = "python -m pip install --no-cache-dir --require-hashes -r candidate-requirements.lock.txt"
 
 [environment.network_policy]
@@ -33,40 +39,51 @@ reference_source_fetch = "forbidden"
 reason = "The hash-locked Python build and test closure is installed during image construction. Candidate and verifier execution have no egress; only the trusted Oracle receives a run-scoped authorization for github.com to fetch the pinned revision."
 
 [dependencies]
-status = "known"
-installer = "pip"
+status = "unknown"
+package_manager = "pip"
 packages = [
-  "coverage==7.16.0",
-  "iniconfig==2.3.0",
-  "mypy==1.5.1",
-  "mypy-extensions==1.1.0",
-  "packaging==26.3",
-  "pluggy==1.6.0",
-  "poetry-core==1.9.1",
-  "pyasn1==0.5.0",
-  "pytest==7.4.0",
-  "pytest-cov==4.1.0",
-  "typing-extensions==4.16.0",
+    "coverage==7.16.0",
+    "iniconfig==2.3.0",
+    "mypy==1.5.1",
+    "mypy-extensions==1.1.0",
+    "packaging==26.3",
+    "pluggy==1.6.0",
+    "poetry-core==1.9.1",
+    "pyasn1==0.5.0",
+    "pytest==7.4.0",
+    "pytest-cov==4.1.0",
+    "typing-extensions==4.16.0",
 ]
-lock_artifact = { digest = "sha256:66b2e89bac10a56ee786628d1bbac6586215d27c8e73bd8eb6abf5950b58bd52", size_bytes = 14749, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:66b2e89bac10a56ee786628d1bbac6586215d27c8e73bd8eb6abf5950b58bd52", visibility = "private" }
 
 [tests]
-framework = "pytest"
 expected_total = 100
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py"]
+framework = "custom"
+report_format = "custom-json-v1"
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
+[lifecycle]
+status = "blocked"
+owner = "python-author-wave2-20260828-rsa"
+reason = "Canonical runtime/package-manager version and dependency closure are not available; legacy single closure refs were not retyped. Previous status/reason: controls-passed: Production compile, Oracle, empty, stub, forgery, timeout, and offline verifier gates are complete. Review, pilot, publication, and the model Agent Run remain integrator-stage work."
+
 [harbor]
 description = "Build the pure-Python RSA implementation with PKCS#1 v1.5 encryption/signatures, key generation and serialization, integer primitives, and its command-line tools from an empty workspace."
-keywords = ["python", "rsa", "cryptography", "pkcs1", "serialization", "separate-verifier"]
+keywords = [
+    "python",
+    "rsa",
+    "cryptography",
+    "pkcs1",
+    "serialization",
+    "separate-verifier",
+]
 agent_timeout_sec = 2400.0
 verifier_timeout_sec = 900.0
 candidate_install_timeout_sec = 120.0
@@ -81,9 +98,16 @@ workspace_artifact = "/workspace"
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:4f2ffae1c5159ada1d0d042f357cec19654315185af6c5ec5aa12994baba88cc", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:4f2ffae1c5159ada1d0d042f357cec19654315185af6c5ec5aa12994baba88cc", visibility = "private" }
 entrypoint = "run.py"
-environment = {}
+
+[verifier.bundle]
+digest = "sha256:4f2ffae1c5159ada1d0d042f357cec19654315185af6c5ec5aa12994baba88cc"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:4f2ffae1c5159ada1d0d042f357cec19654315185af6c5ec5aa12994baba88cc"
+visibility = "private"
+
+[verifier.environment]
 
 [oracle_bundle]
 digest = "sha256:39379d4fb13c73144845ba2bd49b3b2b8d5404b72fb6a154c049328e9f5edfd4"
@@ -91,8 +115,3 @@ size_bytes = 10240
 media_type = "application/vnd.nl2repobench.private-bundle+tar"
 uri = "artifact://private/sha256:39379d4fb13c73144845ba2bd49b3b2b8d5404b72fb6a154c049328e9f5edfd4"
 visibility = "private"
-
-[lifecycle]
-status = "controls-passed"
-owner = "python-author-wave2-20260828-rsa"
-reason = "Production compile, Oracle, empty, stub, forgery, timeout, and offline verifier gates are complete. Review, pilot, publication, and the model Agent Run remain integrator-stage work."
