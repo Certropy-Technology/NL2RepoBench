@@ -121,7 +121,7 @@ def install_candidate(
         ],
     )
     process = transport.process
-    if process.returncode in {64, 70, 75}:
+    if transport.trusted_failure or transport.outer_returncode in {64, 70, 75}:
         # These codes belong to the trusted transport, not to pip.  In
         # particular, a malformed or oversized trusted result must not become
         # a candidate installation failure/model zero.

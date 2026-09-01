@@ -53,6 +53,8 @@ class _TransportResult:
     process: CandidateProcessResult
     timed_out: bool = False
     output_limit_exceeded: bool = False
+    outer_returncode: int | None = None
+    trusted_failure: bool = False
 
 
 def _command(arguments: list[str]) -> list[str]:
@@ -183,10 +185,16 @@ def _invoke_cli(request_id: str, encoded: bytes, timeout_sec: float) -> _Transpo
         return _TransportResult(
             CandidateProcessResult(70, "", "candidate CLI result exceeds size limit"),
             output_limit_exceeded=True,
+            outer_returncode=completed.returncode,
+            trusted_failure=True,
         )
     if completed.returncode in {64, 70, 75}:
         detail = completed.stderr.decode("utf-8", errors="replace")[-2000:]
-        return _TransportResult(CandidateProcessResult(completed.returncode, "", detail))
+        return _TransportResult(
+            CandidateProcessResult(completed.returncode, "", detail),
+            outer_returncode=completed.returncode,
+            trusted_failure=True,
+        )
     try:
         response = json.loads(completed.stdout.decode("utf-8"))
         if not isinstance(response, dict):
@@ -218,10 +226,13 @@ def _invoke_cli(request_id: str, encoded: bytes, timeout_sec: float) -> _Transpo
             ),
             bool(response.get("timed_out")),
             bool(response.get("output_limit_exceeded")),
+            outer_returncode=completed.returncode,
         )
     except (KeyError, TypeError, ValueError, json.JSONDecodeError, UnicodeDecodeError) as exc:
         return _TransportResult(
-            CandidateProcessResult(70, "", f"invalid candidate CLI result: {exc}")
+            CandidateProcessResult(70, "", f"invalid candidate CLI result: {exc}"),
+            outer_returncode=completed.returncode,
+            trusted_failure=True,
         )
 
 

@@ -482,6 +482,8 @@ def test_candidate_cli_transport_success_and_nonzero(monkeypatch: pytest.MonkeyP
     )
     result = candidate_client._invoke_cli("a" * 32, b"request", 1)  # noqa: SLF001
     assert result.process == expected
+    assert result.outer_returncode == 0
+    assert result.trusted_failure is False
     monkeypatch.setattr(
         candidate_client.subprocess,
         "run",
@@ -492,6 +494,25 @@ def test_candidate_cli_transport_success_and_nonzero(monkeypatch: pytest.MonkeyP
     nonzero = candidate_client._invoke_cli("a" * 32, b"request", 1)  # noqa: SLF001
     assert nonzero.process.returncode == 3
     assert nonzero.process.stderr == "failed"
+    assert nonzero.outer_returncode == 0
+    assert nonzero.trusted_failure is False
+
+
+@pytest.mark.parametrize("candidate_returncode", [2, 64, 70, 75])
+def test_candidate_cli_valid_envelope_preserves_candidate_exit(
+    monkeypatch: pytest.MonkeyPatch, candidate_returncode: int
+) -> None:
+    monkeypatch.setattr(
+        candidate_client.subprocess,
+        "run",
+        lambda *args, **kwargs: subprocess.CompletedProcess(
+            args[0], 0, _cli_response(returncode=candidate_returncode), b""
+        ),
+    )
+    result = candidate_client._invoke_cli("a" * 32, b"request", 1)  # noqa: SLF001
+    assert result.process.returncode == candidate_returncode
+    assert result.outer_returncode == 0
+    assert result.trusted_failure is False
 
 
 def test_candidate_cli_transport_rejects_timeout_and_exit_contract(
@@ -515,6 +536,8 @@ def test_candidate_cli_transport_rejects_timeout_and_exit_contract(
         result = candidate_client._invoke_cli("a" * 32, b"request", 1)  # noqa: SLF001
         assert result.process.returncode == exit_code
         assert result.process.stderr == "bad transport"
+        assert result.outer_returncode == exit_code
+        assert result.trusted_failure is True
 
 
 @pytest.mark.parametrize(
@@ -537,6 +560,8 @@ def test_candidate_cli_transport_rejects_malformed_result(
     result = candidate_client._invoke_cli("a" * 32, b"request", 1)  # noqa: SLF001
     assert result.process.returncode == 70
     assert "invalid candidate CLI result" in result.process.stderr
+    assert result.outer_returncode == 0
+    assert result.trusted_failure is True
 
 
 def test_candidate_cli_transport_rejects_result_flood(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -549,6 +574,8 @@ def test_candidate_cli_transport_rejects_result_flood(monkeypatch: pytest.Monkey
     result = candidate_client._invoke_cli("a" * 32, b"request", 1)  # noqa: SLF001
     assert result.process.returncode == 70
     assert result.output_limit_exceeded is True
+    assert result.outer_returncode == 0
+    assert result.trusted_failure is True
 
 
 def test_candidate_call_maps_transport_failure(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -566,20 +593,33 @@ def test_candidate_call_maps_transport_failure(monkeypatch: pytest.MonkeyPatch) 
 
 
 @pytest.mark.parametrize(
-    ("returncode", "expected_outcome"),
+    ("returncode", "expected_outcome", "outer_returncode", "trusted_failure"),
     [
-        (64, "internal-error"),
-        (70, "internal-error"),
-        (75, "internal-error"),
-        (2, "candidate-failure"),
+        (2, "candidate-failure", 0, False),
+        (64, "candidate-failure", 0, False),
+        (70, "candidate-failure", 0, False),
+        (75, "candidate-failure", 0, False),
+        (64, "internal-error", 64, True),
+        (70, "internal-error", 70, True),
+        (75, "internal-error", 75, True),
     ],
-    ids=["malformed-transport", "verifier-internal", "cleanup-failure", "candidate"],
+    ids=[
+        "candidate-2",
+        "candidate-64",
+        "candidate-70",
+        "candidate-75",
+        "outer-64",
+        "outer-70",
+        "outer-75",
+    ],
 )
 def test_candidate_install_preserves_transport_and_candidate_mapping(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
     returncode: int,
     expected_outcome: str,
+    outer_returncode: int,
+    trusted_failure: bool,
 ) -> None:
     source = tmp_path / "source"
     source.write_bytes(b"source")
@@ -592,7 +632,9 @@ def test_candidate_install_preserves_transport_and_candidate_mapping(
     monkeypatch.setattr(
         "nl2repobench.verification.candidate_client._run_cli_request",
         lambda *args, **kwargs: candidate_client._TransportResult(  # noqa: SLF001
-            candidate_client.CandidateProcessResult(returncode, "", "transport or pip failure")
+            candidate_client.CandidateProcessResult(returncode, "", "transport or pip failure"),
+            outer_returncode=outer_returncode,
+            trusted_failure=trusted_failure,
         ),
     )
     result = candidate_install.install_candidate(source, target, 1)
