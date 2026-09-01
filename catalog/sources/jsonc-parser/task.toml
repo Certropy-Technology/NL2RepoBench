@@ -1,4 +1,4 @@
-schema_version = "2.0"
+schema_version = "1.0"
 task_id = "jsonc-parser"
 version = "2.0.0"
 instruction = "instruction.md"
@@ -6,7 +6,15 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "medium"
 category = "json-parser"
-tags = ["node", "npm", "esm", "jsonc", "parser", "formatter", "editor"]
+tags = [
+    "node",
+    "npm",
+    "esm",
+    "jsonc",
+    "parser",
+    "formatter",
+    "editor",
+]
 language = "node"
 
 [source]
@@ -22,7 +30,6 @@ status = "known"
 os_name = "debian-bookworm"
 base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
 base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -36,37 +43,47 @@ runtime = "node"
 version = "24.19.0"
 package_manager = "npm"
 package_manager_version = "11.17.0"
-architecture = "linux/amd64"
-libc = "glibc"
 
 [dependencies]
-status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
+status = "unknown"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
 packages = []
-artifact = { digest = "sha256:95f5d2f3b01cdde10bd0755a35f81fcafe3481f035a87ba55604092f3a5eab48", size_bytes = 10240, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:95f5d2f3b01cdde10bd0755a35f81fcafe3481f035a87ba55604092f3a5eab48", visibility = "private" }
 
 [tests]
 framework = "node:test"
 report_format = "node-test-json-v1"
 expected_total = 37
 expected_total_source = "frozen-collection"
-commands_artifact = { digest = "sha256:e3eae4a8e5200c195e49c2a40e53b184d57bb3c291d1abbd94f2710daec42233", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:e3eae4a8e5200c195e49c2a40e53b184d57bb3c291d1abbd94f2710daec42233", visibility = "private" }
-test_bundle = { digest = "sha256:44f78a303e09ed29d26b217fa368606f063079d931dd5876aa9d052132069f55", size_bytes = 30720, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:44f78a303e09ed29d26b217fa368606f063079d931dd5876aa9d052132069f55", visibility = "private" }
+
+[tests.commands_artifact]
+digest = "sha256:e3eae4a8e5200c195e49c2a40e53b184d57bb3c291d1abbd94f2710daec42233"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.node-commands+tar"
+uri = "artifact://private/sha256:e3eae4a8e5200c195e49c2a40e53b184d57bb3c291d1abbd94f2710daec42233"
+visibility = "private"
+
+[tests.test_bundle]
+digest = "sha256:44f78a303e09ed29d26b217fa368606f063079d931dd5876aa9d052132069f55"
+size_bytes = 30720
+media_type = "application/vnd.nl2repobench.node-tests+tar"
+uri = "artifact://private/sha256:44f78a303e09ed29d26b217fa368606f063079d931dd5876aa9d052132069f55"
+visibility = "private"
 
 [metric]
-contract_id = "node-test-leaf-pass-rate-v1"
+contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [harbor]
 description = "Scripts-stripped zero-dependency JSONC parser with a bounded JSON-safe parse, modify, and format contract."
-keywords = ["node", "npm", "esm", "jsonc", "parser", "formatter", "editor"]
+keywords = [
+    "node",
+    "npm",
+    "esm",
+    "jsonc",
+    "parser",
+    "formatter",
+    "editor",
+]
 agent_timeout_sec = 1200.0
 verifier_timeout_sec = 900.0
 candidate_install_timeout_sec = 90.0
@@ -78,14 +95,14 @@ memory_mb = 1024
 storage_mb = 4096
 workspace_artifact = "/workspace"
 
-[lifecycle]
-status = "controls-passed"
-owner = "jsonc-parser-repair"
-reason = "Fresh production compile and Harbor gates passed: Oracle 37/37 reward 1.0; empty 0 collected; stub 37 collected with verifier reward 1/37; forgery 37 collected with verifier reward 1/37 despite forged workspace reward; all verifier network.json probes report public_network_available=false."
-
 [oracle_bundle]
 digest = "sha256:3d2ff9790b3049f39f3f93621a45bd79cef6ec3f89485611a1812cc1c09280b8"
 size_bytes = 389120
 media_type = "application/vnd.nl2repobench.oracle+tar"
 uri = "artifact://private/sha256:3d2ff9790b3049f39f3f93621a45bd79cef6ec3f89485611a1812cc1c09280b8"
 visibility = "private"
+
+[lifecycle]
+status = "blocked"
+owner = "jsonc-parser-repair"
+reason = "Fresh production compile and Harbor gates passed: Oracle 37/37 reward 1.0; empty 0 collected; stub 37 collected with verifier reward 1/37; forgery 37 collected with verifier reward 1/37 despite forged workspace reward; all verifier network.json probes report public_network_available=false. Canonical dependency closure requires lock, offline_store, and inventory refs; the legacy single closure artifact is retained only as historical handoff evidence."

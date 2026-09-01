@@ -1,4 +1,4 @@
-schema_version = "2.0"
+schema_version = "1.0"
 task_id = "json-stable-stringify"
 version = "1.0.0"
 instruction = "instruction.md"
@@ -7,7 +7,14 @@ instruction = "instruction.md"
 language = "node"
 difficulty = "hard"
 category = "deterministic-serialization"
-tags = ["node", "npm", "commonjs", "json", "stable-stringify", "custom-comparator"]
+tags = [
+    "node",
+    "npm",
+    "commonjs",
+    "json",
+    "stable-stringify",
+    "custom-comparator",
+]
 
 [source]
 status = "known"
@@ -22,7 +29,6 @@ status = "known"
 os_name = "debian-bookworm"
 base_image = "docker.io/library/node"
 base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
-network_mode = "no-network"
 
 [environment.runtime]
 language = "node"
@@ -30,8 +36,6 @@ runtime = "node"
 version = "24.19.0"
 package_manager = "npm"
 package_manager_version = "11.17.0"
-architecture = "linux/amd64"
-libc = "glibc"
 
 [environment.network_policy]
 mode = "no-network"
@@ -40,52 +44,21 @@ reference_source_fetch = "forbidden"
 reason = "The candidate and separate verifier use only the frozen private npm cache closure; the model run has no source-host or registry authorization."
 
 [dependencies]
-status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
+status = "unknown"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
-packages = ["call-bind@1.0.9", "call-bound@1.0.4", "isarray@2.0.5", "jsonify@0.0.1", "object-keys@1.1.1"]
+packages = [
+    "call-bind@1.0.9",
+    "call-bound@1.0.4",
+    "isarray@2.0.5",
+    "jsonify@0.0.1",
+    "object-keys@1.1.1",
+]
 
 [tests]
 framework = "node:test"
 report_format = "node-test-json-v1"
 expected_total = 52
 expected_total_source = "frozen-collection"
-
-[metric]
-contract_id = "node-test-leaf-pass-rate-v1"
-collection_mismatch = "fail"
-
-[harbor]
-description = "Implement json-stable-stringify as a deterministic CommonJS JSON serializer with comparator and formatting options."
-keywords = ["node", "npm", "commonjs", "json", "serialization", "deterministic"]
-agent_timeout_sec = 900.0
-verifier_timeout_sec = 600.0
-candidate_install_timeout_sec = 90.0
-candidate_total_timeout_sec = 300.0
-agent_network_mode = "no-network"
-verifier_network_mode = "no-network"
-cpus = 1
-memory_mb = 1024
-storage_mb = 4096
-workspace_artifact = "/workspace"
-
-[lifecycle]
-status = "controls-passed"
-owner = "node-author-wave2-20260828/json-stable-stringify"
-reason = "Frozen Node/npm source, private test collection, production bundle, Oracle, empty/stub/forgery/install-script/loader-hook/hang/offline controls, and no-network receipts are recorded in production-evidence.json; model Agent Run and integrator review remain outstanding."
-
-[dependencies.artifact]
-digest = "sha256:2ea87d8d7f4ab8922e374bd5283f34e55fafb085610481038800a252b5a43cb9"
-size_bytes = 860160
-media_type = "application/vnd.nl2repobench.npm-bundle+tar"
-uri = "artifact://private/sha256:2ea87d8d7f4ab8922e374bd5283f34e55fafb085610481038800a252b5a43cb9"
-visibility = "private"
 
 [tests.commands_artifact]
 digest = "sha256:7c01784a886870bdd39d14eb870029fc492c9fcad9be6793e74a462702227ebb"
@@ -101,9 +74,39 @@ media_type = "application/vnd.nl2repobench.node-tests+tar"
 uri = "artifact://private/sha256:223eb0d8efbc4567c4ece80dd00471528c91b1a9596220e03cca75205e55baa6"
 visibility = "private"
 
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Implement json-stable-stringify as a deterministic CommonJS JSON serializer with comparator and formatting options."
+keywords = [
+    "node",
+    "npm",
+    "commonjs",
+    "json",
+    "serialization",
+    "deterministic",
+]
+agent_timeout_sec = 900.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
 [oracle_bundle]
 digest = "sha256:7bc11961cf63932550d75f7f4db7c5294175ddd2e92e1dc8f7d4b96e59559b2a"
 size_bytes = 92160
 media_type = "application/vnd.nl2repobench.oracle+tar"
 uri = "artifact://private/sha256:7bc11961cf63932550d75f7f4db7c5294175ddd2e92e1dc8f7d4b96e59559b2a"
 visibility = "private"
+
+[lifecycle]
+status = "blocked"
+owner = "node-author-wave2-20260828/json-stable-stringify"
+reason = "Frozen Node/npm source, private test collection, production bundle, Oracle, empty/stub/forgery/install-script/loader-hook/hang/offline controls, and no-network receipts are recorded in production-evidence.json; model Agent Run and integrator review remain outstanding. Canonical dependency closure requires lock, offline_store, and inventory refs; the legacy single closure artifact is retained only as historical handoff evidence."

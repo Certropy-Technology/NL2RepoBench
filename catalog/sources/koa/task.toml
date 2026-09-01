@@ -1,13 +1,21 @@
-schema_version = "2.0"
+schema_version = "1.0"
 task_id = "koa"
 version = "2.1.1"
 instruction = "instruction.md"
-oracle_bundle = { digest = "sha256:aef8a655ae3c67a6352f3a7642f4542b8e973dcc40694f1914f4e57295db6577", size_bytes = 524177, media_type = "application/gzip", uri = "artifact://private/sha256:aef8a655ae3c67a6352f3a7642f4542b8e973dcc40694f1914f4e57295db6577", visibility = "private" }
 
 [metadata]
 difficulty = "medium"
 category = "node-web-framework"
-tags = ["node", "npm", "http", "middleware", "web-framework", "json", "cookies", "async"]
+tags = [
+    "node",
+    "npm",
+    "http",
+    "middleware",
+    "web-framework",
+    "json",
+    "cookies",
+    "async",
+]
 language = "node"
 
 [source]
@@ -23,8 +31,10 @@ status = "known"
 os_name = "debian-bookworm"
 base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
 base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
-system_packages = ["ca-certificates", "git"]
-network_mode = "no-network"
+system_packages = [
+    "ca-certificates",
+    "git",
+]
 
 [environment.network_policy]
 mode = "no-network"
@@ -38,45 +48,78 @@ runtime = "node"
 version = "24.19.0"
 package_manager = "npm"
 package_manager_version = "11.17.0"
-architecture = "linux/amd64"
-libc = "glibc"
 
 [dependencies]
-status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-artifact = { digest = "sha256:ecf3bc094dd2de65ed386273fcd90ac1881e55e0b7d36b5c0ebbec654ad3993d", size_bytes = 532951, media_type = "application/gzip", uri = "artifact://private/sha256:ecf3bc094dd2de65ed386273fcd90ac1881e55e0b7d36b5c0ebbec654ad3993d", visibility = "private" }
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
+status = "unknown"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
-packages = ["accepts", "content-disposition", "content-type", "cookies", "delegates", "destroy", "encodeurl", "escape-html", "fresh", "http-assert", "http-errors", "koa-compose", "mime-types", "on-finished", "parseurl", "statuses", "type-is", "vary"]
+packages = [
+    "accepts",
+    "content-disposition",
+    "content-type",
+    "cookies",
+    "delegates",
+    "destroy",
+    "encodeurl",
+    "escape-html",
+    "fresh",
+    "http-assert",
+    "http-errors",
+    "koa-compose",
+    "mime-types",
+    "on-finished",
+    "parseurl",
+    "statuses",
+    "type-is",
+    "vary",
+]
 
 [tests]
 framework = "node:test"
 report_format = "node-test-json-v1"
 expected_total = 16
 expected_total_source = "frozen-collection"
-commands_artifact = { digest = "sha256:59c5dabbbb3147a356167e447a5d25b753b45f269c20741d6b6c12c603d6a195", size_bytes = 507, media_type = "application/json", uri = "artifact://private/sha256:59c5dabbbb3147a356167e447a5d25b753b45f269c20741d6b6c12c603d6a195", visibility = "private" }
-test_bundle = { digest = "sha256:2ff5d903a37fa742e8ad7f55e41faef7db5d070d316e9d151d581e8f0d30f36b", size_bytes = 3288, media_type = "application/gzip", uri = "artifact://private/sha256:2ff5d903a37fa742e8ad7f55e41faef7db5d070d316e9d151d581e8f0d30f36b", visibility = "private" }
+
+[tests.commands_artifact]
+digest = "sha256:59c5dabbbb3147a356167e447a5d25b753b45f269c20741d6b6c12c603d6a195"
+size_bytes = 507
+media_type = "application/json"
+uri = "artifact://private/sha256:59c5dabbbb3147a356167e447a5d25b753b45f269c20741d6b6c12c603d6a195"
+visibility = "private"
+
+[tests.test_bundle]
+digest = "sha256:2ff5d903a37fa742e8ad7f55e41faef7db5d070d316e9d151d581e8f0d30f36b"
+size_bytes = 3288
+media_type = "application/gzip"
+uri = "artifact://private/sha256:2ff5d903a37fa742e8ad7f55e41faef7db5d070d316e9d151d581e8f0d30f36b"
+visibility = "private"
 
 [metric]
-contract_id = "node-test-leaf-pass-rate-v1"
-passed_statuses = ["passed"]
-denominator_statuses = ["passed", "failed", "error", "skipped", "todo"]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = [
+    "passed",
+]
+denominator_statuses = [
+    "passed",
+    "failed",
+    "error",
+    "skipped",
+    "todo",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
-[lifecycle]
-status = "controls-passed"
-owner = "node-author-gpt5-koa-remediation-20260827"
-reason = "Exact source and license are frozen; the Node 24/npm 11 closure installs from a coherent private lock/cache offline; the separate verifier collects 16 subprocess-isolated behaviors; Oracle scores 1.0; and empty, stub, forgery, lifecycle, offline, candidate-hang, and outer-timeout controls are bounded and cannot produce a high score."
-
 [harbor]
 description = "Build the Koa HTTP middleware framework from an empty Node workspace."
-keywords = ["node", "npm", "http", "middleware", "web-framework", "json", "cookies", "async"]
+keywords = [
+    "node",
+    "npm",
+    "http",
+    "middleware",
+    "web-framework",
+    "json",
+    "cookies",
+    "async",
+]
 agent_timeout_sec = 1200.0
 verifier_timeout_sec = 720.0
 candidate_install_timeout_sec = 120.0
@@ -87,3 +130,15 @@ cpus = 2
 memory_mb = 2048
 storage_mb = 8192
 workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:aef8a655ae3c67a6352f3a7642f4542b8e973dcc40694f1914f4e57295db6577"
+size_bytes = 524177
+media_type = "application/gzip"
+uri = "artifact://private/sha256:aef8a655ae3c67a6352f3a7642f4542b8e973dcc40694f1914f4e57295db6577"
+visibility = "private"
+
+[lifecycle]
+status = "blocked"
+owner = "node-author-gpt5-koa-remediation-20260827"
+reason = "Exact source and license are frozen; the Node 24/npm 11 closure installs from a coherent private lock/cache offline; the separate verifier collects 16 subprocess-isolated behaviors; Oracle scores 1.0; and empty, stub, forgery, lifecycle, offline, candidate-hang, and outer-timeout controls are bounded and cannot produce a high score. Canonical dependency closure requires lock, offline_store, and inventory refs; the legacy single closure artifact is retained only as historical handoff evidence."

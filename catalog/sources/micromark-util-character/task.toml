@@ -1,4 +1,4 @@
-schema_version = "2.0"
+schema_version = "1.0"
 task_id = "micromark-util-character"
 version = "2.1.1"
 instruction = "instruction.md"
@@ -6,7 +6,16 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "easy"
 category = "character-classification"
-tags = ["node", "npm", "esm", "micromark", "unicode", "ascii", "predicate", "repository-generation"]
+tags = [
+    "node",
+    "npm",
+    "esm",
+    "micromark",
+    "unicode",
+    "ascii",
+    "predicate",
+    "repository-generation",
+]
 language = "node"
 
 [source]
@@ -22,7 +31,6 @@ status = "known"
 os_name = "debian-bookworm"
 base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
 base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -36,37 +44,51 @@ runtime = "node"
 version = "24.19.0"
 package_manager = "npm"
 package_manager_version = "11.17.0"
-architecture = "linux/amd64"
-libc = "glibc"
 
 [dependencies]
-status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
+status = "unknown"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
-packages = ["micromark-util-symbol==2.0.1", "micromark-util-types==2.0.2"]
-artifact = { digest = "sha256:3715cd959353c56f2b92dfef87816b61d2344cbcb83110b387e9e2f91ab89ace", size_bytes = 112640, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:3715cd959353c56f2b92dfef87816b61d2344cbcb83110b387e9e2f91ab89ace", visibility = "private" }
+packages = [
+    "micromark-util-symbol==2.0.1",
+    "micromark-util-types==2.0.2",
+]
 
 [tests]
 framework = "node:test"
 report_format = "node-test-json-v1"
 expected_total = 106
 expected_total_source = "frozen-collection"
-commands_artifact = { digest = "sha256:2a5d540886d7b8c93d91a758afe340389ba3c6a0d8bf14333f4733c602ecbbaa", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:2a5d540886d7b8c93d91a758afe340389ba3c6a0d8bf14333f4733c602ecbbaa", visibility = "private" }
-test_bundle = { digest = "sha256:d2677ae768b2f7198eb693f236f0ed59b94cdde456ec536a69897698abfbd089", size_bytes = 20480, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:d2677ae768b2f7198eb693f236f0ed59b94cdde456ec536a69897698abfbd089", visibility = "private" }
+
+[tests.commands_artifact]
+digest = "sha256:2a5d540886d7b8c93d91a758afe340389ba3c6a0d8bf14333f4733c602ecbbaa"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.node-commands+tar"
+uri = "artifact://private/sha256:2a5d540886d7b8c93d91a758afe340389ba3c6a0d8bf14333f4733c602ecbbaa"
+visibility = "private"
+
+[tests.test_bundle]
+digest = "sha256:d2677ae768b2f7198eb693f236f0ed59b94cdde456ec536a69897698abfbd089"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.node-tests+tar"
+uri = "artifact://private/sha256:d2677ae768b2f7198eb693f236f0ed59b94cdde456ec536a69897698abfbd089"
+visibility = "private"
 
 [metric]
-contract_id = "node-test-leaf-pass-rate-v1"
+contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [harbor]
 description = "Build micromark-util-character 2.1.1 as an installable ESM package with the complete ASCII, Unicode, and micromark virtual-code predicate API."
-keywords = ["node", "npm", "esm", "micromark", "unicode", "ascii", "predicate", "node-test"]
+keywords = [
+    "node",
+    "npm",
+    "esm",
+    "micromark",
+    "unicode",
+    "ascii",
+    "predicate",
+    "node-test",
+]
 agent_timeout_sec = 900.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 90.0
@@ -79,14 +101,14 @@ memory_mb = 1024
 storage_mb = 4096
 workspace_artifact = "/workspace"
 
-[lifecycle]
-status = "controls-passed"
-owner = "node-author-wave2-20260828/micromark-util-character"
-reason = "Fresh Harbor 0.21.0 Node 24 production compile, Oracle, empty, stub, forgery, hang, and offline controls passed. Independent review, model Agent Run, and publication remain integrator work."
-
 [oracle_bundle]
 digest = "sha256:8e2a036e842d8db9e12a4db670f28c1a9a5430c96407db149000b2c039e054cd"
 size_bytes = 20480
 media_type = "application/vnd.nl2repobench.oracle+tar"
 uri = "artifact://private/sha256:8e2a036e842d8db9e12a4db670f28c1a9a5430c96407db149000b2c039e054cd"
 visibility = "private"
+
+[lifecycle]
+status = "blocked"
+owner = "node-author-wave2-20260828/micromark-util-character"
+reason = "Fresh Harbor 0.21.0 Node 24 production compile, Oracle, empty, stub, forgery, hang, and offline controls passed. Independent review, model Agent Run, and publication remain integrator work. Canonical dependency closure requires lock, offline_store, and inventory refs; legacy single closure data is retained only as historical handoff evidence."

@@ -1,4 +1,4 @@
-schema_version = "2.0"
+schema_version = "1.0"
 task_id = "mdast-util-find-and-replace"
 version = "2.0.0"
 instruction = "instruction.md"
@@ -6,7 +6,17 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "medium"
 category = "markdown-ast"
-tags = ["node", "npm", "esm", "markdown", "mdast", "unist", "regex", "tree-transform", "repository-generation"]
+tags = [
+    "node",
+    "npm",
+    "esm",
+    "markdown",
+    "mdast",
+    "unist",
+    "regex",
+    "tree-transform",
+    "repository-generation",
+]
 language = "node"
 
 [source]
@@ -22,8 +32,9 @@ status = "known"
 os_name = "debian-bookworm"
 base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
 base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
-system_packages = ["git=1:2.39.5-0+deb12u3"]
-network_mode = "no-network"
+system_packages = [
+    "git=1:2.39.5-0+deb12u3",
+]
 
 [environment.network_policy]
 mode = "no-network"
@@ -37,40 +48,64 @@ runtime = "node"
 version = "24.19.0"
 package_manager = "npm"
 package_manager_version = "11.17.0"
-architecture = "linux/amd64"
-libc = "glibc"
 
 [dependencies]
-status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
+status = "unknown"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
-packages = ["@types/mdast==4.0.4", "escape-string-regexp==5.0.0", "unist-util-is==6.0.1", "unist-util-visit-parents==6.0.2"]
-artifact = { digest = "sha256:cde2303142b36ec9b1f3f5a40973748bbca59c70e5c1808a6da19a8cf52f2767", size_bytes = 368640, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:cde2303142b36ec9b1f3f5a40973748bbca59c70e5c1808a6da19a8cf52f2767", visibility = "private" }
+packages = [
+    "@types/mdast==4.0.4",
+    "escape-string-regexp==5.0.0",
+    "unist-util-is==6.0.1",
+    "unist-util-visit-parents==6.0.2",
+]
 
 [tests]
 framework = "node:test"
 report_format = "node-test-json-v1"
 expected_total = 48
 expected_total_source = "frozen-collection"
-commands_artifact = { digest = "sha256:ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a", size_bytes = 176, media_type = "application/vnd.nl2repobench.node-commands+json", uri = "artifact://private/sha256:ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a", visibility = "private" }
-test_bundle = { digest = "sha256:bb83e1b66bbd37c370e415c68d33262795cc92529845603b1cb0b5ca40d26c36", size_bytes = 40960, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:bb83e1b66bbd37c370e415c68d33262795cc92529845603b1cb0b5ca40d26c36", visibility = "private" }
+
+[tests.commands_artifact]
+digest = "sha256:ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a"
+size_bytes = 176
+media_type = "application/vnd.nl2repobench.node-commands+json"
+uri = "artifact://private/sha256:ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a"
+visibility = "private"
+
+[tests.test_bundle]
+digest = "sha256:bb83e1b66bbd37c370e415c68d33262795cc92529845603b1cb0b5ca40d26c36"
+size_bytes = 40960
+media_type = "application/vnd.nl2repobench.node-tests+tar"
+uri = "artifact://private/sha256:bb83e1b66bbd37c370e415c68d33262795cc92529845603b1cb0b5ca40d26c36"
+visibility = "private"
 
 [metric]
-contract_id = "node-test-leaf-pass-rate-v1"
-passed_statuses = ["passed"]
-denominator_statuses = ["passed", "failed", "error", "skipped", "todo"]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = [
+    "passed",
+]
+denominator_statuses = [
+    "passed",
+    "failed",
+    "error",
+    "skipped",
+    "todo",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Build the ESM mdast-util-find-and-replace package with deterministic text matching, callback replacement, ancestor ignoring, and tree mutation behavior."
-keywords = ["node", "npm", "markdown", "mdast", "unist", "regex", "tree-transform", "node-test"]
+keywords = [
+    "node",
+    "npm",
+    "markdown",
+    "mdast",
+    "unist",
+    "regex",
+    "tree-transform",
+    "node-test",
+]
 agent_timeout_sec = 1200.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 90.0
@@ -83,14 +118,14 @@ memory_mb = 1024
 storage_mb = 4096
 workspace_artifact = "/workspace"
 
-[lifecycle]
-status = "controls-passed"
-owner = "node-author-wave2-20260828/mdast-util-find-and-replace"
-reason = "The exact source, environment, npm closure, UID-separated 48-leaf verifier, production Oracle, and empty/stub/forgery/hang/install-script/loader-hook/offline controls passed. Integrator review and model Agent Run remain outside this lane."
-
 [oracle_bundle]
 digest = "sha256:729739e81da7f099ce0ed2170fe184deb56f4bae2a8114fc554e42b812c44cb1"
 size_bytes = 20480
 media_type = "application/vnd.nl2repobench.oracle+tar"
 uri = "artifact://private/sha256:729739e81da7f099ce0ed2170fe184deb56f4bae2a8114fc554e42b812c44cb1"
 visibility = "private"
+
+[lifecycle]
+status = "blocked"
+owner = "node-author-wave2-20260828/mdast-util-find-and-replace"
+reason = "The exact source, environment, npm closure, UID-separated 48-leaf verifier, production Oracle, and empty/stub/forgery/hang/install-script/loader-hook/offline controls passed. Integrator review and model Agent Run remain outside this lane. Canonical dependency closure requires lock, offline_store, and inventory refs; legacy single closure data is retained only as historical handoff evidence."

@@ -1,4 +1,4 @@
-schema_version = "2.0"
+schema_version = "1.0"
 task_id = "magic-string"
 version = "2.0.0"
 instruction = "instruction.md"
@@ -7,7 +7,15 @@ instruction = "instruction.md"
 language = "node"
 difficulty = "medium"
 category = "source-transformation"
-tags = ["node", "npm", "esm", "typescript", "string", "sourcemap", "bundling"]
+tags = [
+    "node",
+    "npm",
+    "esm",
+    "typescript",
+    "string",
+    "sourcemap",
+    "bundling",
+]
 
 [source]
 status = "known"
@@ -22,7 +30,6 @@ status = "known"
 os_name = "debian-bookworm"
 base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
 base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -36,37 +43,49 @@ runtime = "node"
 version = "24.19.0"
 package_manager = "npm"
 package_manager_version = "11.17.0"
-architecture = "linux/amd64"
-libc = "glibc"
 
 [dependencies]
-status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
+status = "unknown"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
-packages = ["@jridgewell/sourcemap-codec"]
-artifact = { digest = "sha256:6f7ee0c4aed7b295ee5248da37f9804a9c1880ab862b68c50aa7a0ef76e7be35", size_bytes = 42327, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:6f7ee0c4aed7b295ee5248da37f9804a9c1880ab862b68c50aa7a0ef76e7be35", visibility = "private" }
+packages = [
+    "@jridgewell/sourcemap-codec",
+]
 
 [tests]
 framework = "node:test"
 report_format = "node-test-json-v1"
 expected_total = 44
 expected_total_source = "frozen-collection"
-commands_artifact = { digest = "sha256:b5424ada50a1b8cb7c7e0f76db8b9796a98964e524c3bf59d0300590b50b6176", size_bytes = 258, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:b5424ada50a1b8cb7c7e0f76db8b9796a98964e524c3bf59d0300590b50b6176", visibility = "private" }
-test_bundle = { digest = "sha256:4e15351e8c3a1b14b449752a861e1613ec204d2a9e230aa28b5e7268cf4007bf", size_bytes = 3948, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:4e15351e8c3a1b14b449752a861e1613ec204d2a9e230aa28b5e7268cf4007bf", visibility = "private" }
+
+[tests.commands_artifact]
+digest = "sha256:b5424ada50a1b8cb7c7e0f76db8b9796a98964e524c3bf59d0300590b50b6176"
+size_bytes = 258
+media_type = "application/vnd.nl2repobench.node-commands+tar"
+uri = "artifact://private/sha256:b5424ada50a1b8cb7c7e0f76db8b9796a98964e524c3bf59d0300590b50b6176"
+visibility = "private"
+
+[tests.test_bundle]
+digest = "sha256:4e15351e8c3a1b14b449752a861e1613ec204d2a9e230aa28b5e7268cf4007bf"
+size_bytes = 3948
+media_type = "application/vnd.nl2repobench.node-tests+tar"
+uri = "artifact://private/sha256:4e15351e8c3a1b14b449752a861e1613ec204d2a9e230aa28b5e7268cf4007bf"
+visibility = "private"
 
 [metric]
-contract_id = "node-test-leaf-pass-rate-v1"
+contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [harbor]
 description = "Build a deterministic JSON-safe ESM magic-string and Bundle package with source edits, movement, indentation, trimming, and source-map metadata."
-keywords = ["node", "npm", "esm", "magic-string", "sourcemap", "bundle", "json"]
+keywords = [
+    "node",
+    "npm",
+    "esm",
+    "magic-string",
+    "sourcemap",
+    "bundle",
+    "json",
+]
 agent_timeout_sec = 1200.0
 verifier_timeout_sec = 900.0
 candidate_install_timeout_sec = 120.0
@@ -79,14 +98,14 @@ memory_mb = 1024
 storage_mb = 4096
 workspace_artifact = "/workspace"
 
-[lifecycle]
-status = "controls-passed"
-owner = "node-author-wave2-20260828"
-reason = "Frozen source, locked Node/npm closure, production compiler output, Oracle, and required controls have passed in this lane; review, pilot, publication, and generated runtime projection remain integrator-owned."
-
 [oracle_bundle]
 digest = "sha256:bc15583f4cde2e49f31ee5e80ef669ff44b87da059f2b108dc59efe9f8fcf49e"
 size_bytes = 126528
 media_type = "application/vnd.nl2repobench.oracle+tar"
 uri = "artifact://private/sha256:bc15583f4cde2e49f31ee5e80ef669ff44b87da059f2b108dc59efe9f8fcf49e"
 visibility = "private"
+
+[lifecycle]
+status = "blocked"
+owner = "node-author-wave2-20260828"
+reason = "Frozen source, locked Node/npm closure, production compiler output, Oracle, and required controls have passed in this lane; review, pilot, publication, and generated runtime projection remain integrator-owned. Canonical dependency closure requires lock, offline_store, and inventory refs; legacy single closure data is retained only as historical handoff evidence."
