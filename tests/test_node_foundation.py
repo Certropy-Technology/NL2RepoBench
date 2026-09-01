@@ -3,12 +3,12 @@ from __future__ import annotations
 import hashlib
 import io
 import json
+import os
 import shutil
 import subprocess
 import sys
 import tarfile
 from pathlib import Path
-from types import SimpleNamespace
 
 import pytest
 from typer.testing import CliRunner
@@ -39,7 +39,7 @@ from nl2repobench.storage.artifacts import (
 )
 from nl2repobench.storage.materialize import ArchiveKind
 from nl2repobench.verification import cli as verifier_cli
-from nl2repobench.verification import node_candidate_install
+from nl2repobench.verification import node_candidate_client, node_candidate_install
 from nl2repobench.verification.evaluator import EvaluationResult
 from nl2repobench.verification.node_candidate_client import run_candidate
 from nl2repobench.verification.node_command_plan import (
@@ -621,20 +621,41 @@ def test_node_candidate_boundary_uses_json_subprocess(tmp_path: Path) -> None:
     node = shutil.which("node")
     if node is None:
         pytest.skip("node is not installed")
-    (tmp_path / "package.json").write_text(
-        '{"name":"candidate","version":"1.0.0"}\n', encoding="utf-8"
-    )
-    package = tmp_path / "node_modules/demo"
-    package.mkdir(parents=True)
-    (package / "package.json").write_text(
-        '{"name":"demo","version":"1.0.0","main":"index.cjs"}\n', encoding="utf-8"
-    )
-    (package / "index.cjs").write_text("exports.add=(a,b)=>a+b;\n", encoding="utf-8")
-    result = run_candidate(
-        tmp_path,
-        b'{"package":"demo","export":"add","args":[2,5]}',
-        node_executable=node,
-    )
+    runtime = tmp_path / "node-runtime"
+    executable = runtime / "bin/node"
+    runner = runtime / "lib/candidate_runner.mjs"
+    executable.parent.mkdir(parents=True)
+    runner.parent.mkdir(parents=True)
+    shutil.copy2(Path(node).resolve(), executable)
+    shutil.copy2(ROOT / "src/nl2repobench/verification/node/candidate_runner.mjs", runner)
+    executable.chmod(0o555)
+    runner.chmod(0o444)
+    monkeypatch = pytest.MonkeyPatch()
+    monkeypatch.setattr(node_candidate_client, "NODE_RUNTIME_ROOT", runtime)
+    monkeypatch.setattr(node_candidate_client, "NODE_EXECUTABLE", str(executable))
+    monkeypatch.setattr(node_candidate_client, "NODE_RUNNER", str(runner))
+    try:
+        os.chmod(tmp_path.parent.parent, 0o755)
+        os.chmod(tmp_path.parent, 0o755)
+        os.chmod(tmp_path, 0o755)
+        candidate_site = tmp_path / "workspace"
+        candidate_site.mkdir()
+        (candidate_site / "package.json").write_text(
+            '{"name":"candidate","version":"1.0.0"}\n', encoding="utf-8"
+        )
+        package = candidate_site / "node_modules/demo"
+        package.mkdir(parents=True)
+        (package / "package.json").write_text(
+            '{"name":"demo","version":"1.0.0","main":"index.cjs"}\n', encoding="utf-8"
+        )
+        (package / "index.cjs").write_text("exports.add=(a,b)=>a+b;\n", encoding="utf-8")
+        result = run_candidate(
+            candidate_site,
+            b'{"package":"demo","export":"add","args":[2,5]}',
+            node_executable=str(executable),
+        )
+    finally:
+        monkeypatch.undo()
     assert result.ok is True
     assert result.value == 7
 
@@ -960,11 +981,60 @@ def test_node_candidate_install_protocol_and_environment(monkeypatch: pytest.Mon
     assert "--offline" in node_candidate_install.npm_install_tar_command(
         Path("/pack/pkg.tgz"), Path("/target"), Path("/cache")
     )
+    for command in (
+        node_candidate_install.npm_ci_command(Path("/src"), Path("/cache")),
+        node_candidate_install.npm_pack_command(Path("/src"), Path("/pack")),
+        node_candidate_install.npm_install_tar_command(
+            Path("/pack/pkg.tgz"), Path("/target"), Path("/cache")
+        ),
+    ):
+        assert command[0] == node_candidate_install.NODE_EXECUTABLE
+        assert command[1] == node_candidate_install.NPM_LAUNCHER
+        assert command[0] == "/opt/nl2repobench-node/bin/node"
+        assert command[1] == "/opt/nl2repobench-node/lib/npm/bin/npm-cli.js"
+    assert "/usr/local/bin/npm" not in node_candidate_install.npm_ci_command(
+        Path("/src"), Path("/cache")
+    )
+    pnpm_script = (
+        ROOT / "src/nl2repobench/verification/node/install_candidate_pnpm.mjs"
+    ).read_text()
+    assert 'const NODE_ROOT = "/opt/nl2repobench-node"' in pnpm_script
+    assert 'const PNPM = `${NODE_ROOT}/lib/pnpm/bin/pnpm.cjs`' in pnpm_script
+    assert "/usr/local/bin/pnpm" not in pnpm_script
+    assert "/usr/bin/prlimit" not in pnpm_script
     assert "timeout" in (
         ROOT / "catalog/sources/node-synthetic/harbor/tests/test_client.mjs"
     ).read_text(encoding="utf-8")
     with pytest.raises(ValueError, match="regular directory"):
         node_candidate_install._check_directory(Path("/missing"), "source")  # noqa: SLF001
+
+
+def test_node_supervisor_request_uses_dedicated_staged_runtime(tmp_path: Path) -> None:
+    runtime = tmp_path / "runtime"
+    executable = runtime / "bin/node"
+    executable.parent.mkdir(parents=True)
+    executable.write_bytes(b"node")
+    executable.chmod(0o555)
+    workspace = tmp_path / "workspace"
+    workspace.mkdir()
+    request, request_id = node_candidate_client._make_supervisor_request(  # noqa: SLF001
+        [str(executable), "--no-addons", str(runtime / "lib/runner.mjs")],
+        cwd=workspace,
+        write_root=workspace,
+        timeout_sec=5,
+        stdin_data=b"payload",
+        environment={"HOME": str(workspace / "home")},
+        context="call",
+    )
+    payload = json.loads(request)
+    assert payload["request_id"] == request_id
+    assert payload["context"] == "call"
+    assert payload["command"]["argv"][0] == str(executable)
+    assert payload["command"]["argv"][0] != "/usr/bin/node"
+    assert payload["policy"]["allowed_executable_roots"] == [
+        "/opt/nl2repobench-node/bin"
+    ]
+    assert "PATH" not in payload["policy"]["allowed_environment_names"]
 
 
 def test_node_candidate_install_success_and_failure_paths(
@@ -978,17 +1048,16 @@ def test_node_candidate_install_success_and_failure_paths(
 
     def fake_run(command: list[str], **_: object) -> dict[str, object]:
         calls.append(command)
-        if command[1] == "pack":
+        if command[2] == "pack":
             destination = Path(command[command.index("--pack-destination") + 1])
             (destination / "node-synthetic.tgz").write_bytes(b"tar")
         return {"outcome": "success", "returncode": 0, "stdout": "", "stderr": ""}
 
     monkeypatch.setattr(node_candidate_install, "_run", fake_run)
     monkeypatch.setattr(node_candidate_install, "validate_npm_package_tarball", lambda path: None)
-    monkeypatch.setattr(node_candidate_install, "terminate_uid_processes", lambda uid: None)
     result = node_candidate_install.install_candidate(source, target, cache=cache)
     assert result["outcome"] == "success"
-    assert [command[1] for command in calls] == ["ci", "pack", "install"]
+    assert [command[2] for command in calls] == ["ci", "pack", "install"]
 
     monkeypatch.setattr(
         node_candidate_install,
@@ -1002,17 +1071,14 @@ def test_node_candidate_install_success_and_failure_paths(
 def test_node_candidate_install_timeout_and_status_cli(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    process = SimpleNamespace(pid=123, returncode=0)
-
-    def communicate(*, timeout: float | None = None) -> tuple[bytes, bytes]:
-        if timeout is not None:
-            raise subprocess.TimeoutExpired([], timeout)
-        return b"", b""
-
-    process.communicate = communicate
-    monkeypatch.setattr(node_candidate_install.subprocess, "Popen", lambda *args, **kwargs: process)
-    monkeypatch.setattr(node_candidate_install.os, "killpg", lambda *args: None)
-    timed = node_candidate_install._run(["node"], cwd=tmp_path, env={}, timeout_sec=0.1)  # noqa: SLF001
+    monkeypatch.setattr(
+        node_candidate_install,
+        "run_node_command",
+        lambda *args, **kwargs: node_candidate_client.NodeProcessResult(124),
+    )
+    timed = node_candidate_install._run(  # noqa: SLF001
+        ["node"], cwd=tmp_path, write_root=tmp_path, env={}, timeout_sec=0.1
+    )
     assert timed["outcome"] == "timeout"
 
     status = tmp_path / "status.json"

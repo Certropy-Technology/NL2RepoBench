@@ -4,9 +4,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
-import signal
-import subprocess
 import tempfile
 from pathlib import Path
 from typing import Any
@@ -14,20 +11,21 @@ from typing import Any
 from nl2repobench.harbor.node_dependencies import NodeDependencyError, validate_npm_package_tarball
 from nl2repobench.storage.files import atomic_write
 
-from .process_cleanup import terminate_uid_processes
+from .node_candidate_client import NODE_RUNTIME_ROOT, run_node_command
 
 CANDIDATE_FAILURE_EXIT = 71
 INTERNAL_ERROR_EXIT = 70
 MAX_OUTPUT_BYTES = 256 * 1024
 MAX_CANDIDATE_TARBALL_BYTES = 512 * 1024 * 1024
-NPM_EXECUTABLE = "/usr/local/bin/npm"
+NODE_EXECUTABLE = str(NODE_RUNTIME_ROOT / "bin/node")
+NPM_LAUNCHER = str(NODE_RUNTIME_ROOT / "lib/npm/bin/npm-cli.js")
+PNPM_LAUNCHER = str(NODE_RUNTIME_ROOT / "lib/pnpm/bin/pnpm.cjs")
 
 
 def sanitized_node_environment(*, cache: Path, tmpdir: Path) -> dict[str, str]:
     """Return a minimal environment with loader and registry controls removed."""
 
     return {
-        "PATH": "/usr/local/bin:/usr/bin:/bin",
         "HOME": "/tmp/candidate-home",
         "TMPDIR": str(tmpdir),
         "npm_config_cache": str(cache),
@@ -47,7 +45,8 @@ def _check_directory(path: Path, label: str) -> None:
 
 def npm_ci_command(source: Path, cache: Path) -> list[str]:
     return [
-        NPM_EXECUTABLE,
+        NODE_EXECUTABLE,
+        NPM_LAUNCHER,
         "ci",
         "--offline",
         "--ignore-scripts",
@@ -61,7 +60,8 @@ def npm_ci_command(source: Path, cache: Path) -> list[str]:
 
 def npm_pack_command(source: Path, destination: Path) -> list[str]:
     return [
-        NPM_EXECUTABLE,
+        NODE_EXECUTABLE,
+        NPM_LAUNCHER,
         "pack",
         "--ignore-scripts",
         "--pack-destination",
@@ -71,7 +71,8 @@ def npm_pack_command(source: Path, destination: Path) -> list[str]:
 
 def npm_install_tar_command(tarball: Path, target: Path, cache: Path) -> list[str]:
     return [
-        NPM_EXECUTABLE,
+        NODE_EXECUTABLE,
+        NPM_LAUNCHER,
         "install",
         str(tarball),
         "--offline",
@@ -85,37 +86,42 @@ def npm_install_tar_command(tarball: Path, target: Path, cache: Path) -> list[st
 
 
 def _run(
-    command: list[str], *, cwd: Path, env: dict[str, str], timeout_sec: float
+    command: list[str],
+    *,
+    cwd: Path,
+    write_root: Path,
+    env: dict[str, str],
+    timeout_sec: float,
 ) -> dict[str, Any]:
-    process = subprocess.Popen(
+    result = run_node_command(
         command,
         cwd=cwd,
-        env=env,
-        stdin=subprocess.DEVNULL,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        start_new_session=True,
-        text=False,
+        write_root=write_root,
+        timeout_sec=timeout_sec,
+        environment=env,
+        context="install",
     )
-    try:
-        stdout, stderr = process.communicate(timeout=timeout_sec)
-    except subprocess.TimeoutExpired:
-        try:
-            os.killpg(process.pid, signal.SIGKILL)
-        except ProcessLookupError:
-            pass
-        stdout, stderr = process.communicate()
+    stdout = result.stdout[:MAX_OUTPUT_BYTES].decode("utf-8", "replace")
+    stderr = result.stderr[:MAX_OUTPUT_BYTES].decode("utf-8", "replace")
+    if result.verifier_invalid:
+        return {
+            "outcome": "internal-error",
+            "returncode": INTERNAL_ERROR_EXIT,
+            "stdout": stdout,
+            "stderr": stderr,
+        }
+    if result.returncode == 124:
         return {
             "outcome": "timeout",
             "returncode": CANDIDATE_FAILURE_EXIT,
-            "stdout": stdout[:MAX_OUTPUT_BYTES].decode("utf-8", "replace"),
-            "stderr": stderr[:MAX_OUTPUT_BYTES].decode("utf-8", "replace"),
+            "stdout": stdout,
+            "stderr": stderr,
         }
     return {
-        "outcome": "success" if process.returncode == 0 else "failed",
-        "returncode": process.returncode,
-        "stdout": stdout[:MAX_OUTPUT_BYTES].decode("utf-8", "replace"),
-        "stderr": stderr[:MAX_OUTPUT_BYTES].decode("utf-8", "replace"),
+        "outcome": "success" if result.returncode == 0 else "failed",
+        "returncode": result.returncode,
+        "stdout": stdout,
+        "stderr": stderr,
     }
 
 
@@ -136,12 +142,26 @@ def install_candidate(
     with tempfile.TemporaryDirectory(prefix="node-pack-") as temporary:
         pack_root = Path(temporary)
         env = sanitized_node_environment(cache=cache, tmpdir=pack_root)
-        ci = _run(npm_ci_command(source, cache), cwd=source, env=env, timeout_sec=timeout_sec)
+        ci = _run(
+            npm_ci_command(source, cache),
+            cwd=source,
+            write_root=source,
+            env=env,
+            timeout_sec=timeout_sec,
+        )
+        if ci["outcome"] == "internal-error":
+            return {"outcome": "internal-error", "steps": [ci]}
         if ci["returncode"] != 0:
             return {"outcome": "install-failed", "steps": [ci]}
         packed = _run(
-            npm_pack_command(source, pack_root), cwd=source, env=env, timeout_sec=timeout_sec
+            npm_pack_command(source, pack_root),
+            cwd=source,
+            write_root=pack_root,
+            env=env,
+            timeout_sec=timeout_sec,
         )
+        if packed["outcome"] == "internal-error":
+            return {"outcome": "internal-error", "steps": [ci, packed]}
         if packed["returncode"] != 0:
             return {"outcome": "pack-failed", "steps": [ci, packed]}
         tarballs = sorted(pack_root.glob("*.tgz"))
@@ -158,9 +178,12 @@ def install_candidate(
         installed = _run(
             npm_install_tar_command(tarballs[0], target, cache),
             cwd=source,
+            write_root=target,
             env=env,
             timeout_sec=timeout_sec,
         )
+        if installed["outcome"] == "internal-error":
+            return {"outcome": "internal-error", "steps": [ci, packed, installed]}
         if installed["returncode"] != 0:
             return {"outcome": "package-install-failed", "steps": [ci, packed, installed]}
         root_manifest = target / "package.json"
@@ -169,7 +192,6 @@ def install_candidate(
                 root_manifest,
                 b'{"private":true,"type":"module"}\n',
             )
-        terminate_uid_processes(10001)
         return {"outcome": "success", "steps": [ci, packed, installed]}
 
 
