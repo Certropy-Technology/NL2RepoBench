@@ -445,6 +445,20 @@ WORKDIR /tests
             manifest.tests.report_format,
         )
 
+    @staticmethod
+    def _trusted_python_command(python_minor: str, module: str) -> str:
+        """Build the fixed isolated command used by generated verifier scripts."""
+
+        runtime_root = f"/usr/local/lib/python{python_minor}/site-packages"
+        bootstrap = (
+            "import sys;sys.path.insert(0, "
+            + repr(runtime_root)
+            + ");from "
+            + module
+            + " import main;raise SystemExit(main())"
+        )
+        return "/usr/local/bin/python -I -B -c " + shlex.quote(bootstrap)
+
     def _select_command_plan(
         self,
         manifest: TaskManifest,
@@ -669,6 +683,30 @@ WORKDIR /tests
         metric = shlex.quote(manifest.metric.contract_id)
         profile = self._effective_profile(manifest)
         python_minor = self._site_packages_minor(manifest, allow_incomplete)
+        python_network_check = self._trusted_python_command(
+            python_minor, "nl2repobench.verification.network_check"
+        )
+        python_cli = self._trusted_python_command(
+            python_minor, "nl2repobench.verification.cli"
+        )
+        python_command_plan = self._trusted_python_command(
+            python_minor, "nl2repobench.verification.command_plan"
+        )
+        python_workspace_copy = self._trusted_python_command(
+            python_minor, "nl2repobench.verification.workspace_copy"
+        )
+        python_candidate_install = self._trusted_python_command(
+            python_minor, "nl2repobench.verification.candidate_install"
+        )
+        python_process_cleanup = self._trusted_python_command(
+            python_minor, "nl2repobench.verification.process_cleanup"
+        )
+        python_integrity = self._trusted_python_command(
+            python_minor, "nl2repobench.verification.integrity"
+        )
+        python_run_pytest = self._trusted_python_command(
+            python_minor, "nl2repobench.verification.run_pytest"
+        )
         install_timeout = profile.candidate_install_timeout_sec
         candidate_total_timeout = profile.candidate_total_timeout_sec
         command_identity, command_report = self._command_plan_semantics(manifest)
@@ -679,22 +717,23 @@ mkdir -p /logs/verifier
 chmod 0700 /logs/verifier
 rm -f /logs/verifier/reward.json /logs/verifier/grading.json
 rm -rf /tmp/candidate /tmp/candidate-site /tmp/candidate-build /tmp/trusted-results
+unset PYTHONPATH PYTHONHOME LD_PRELOAD LD_LIBRARY_PATH
 export NL2REPO_CANDIDATE_DEPENDENCIES=/opt/candidate-dependencies/site
 mkdir -p /tmp/trusted-results
 chmod 0700 /tmp/trusted-results
 
-python -m nl2repobench.verification.network_check \
+{python_network_check} \
   --output /logs/verifier/network.json
 network_exit=$?
 if [[ "$network_exit" -eq 1 ]]; then
-  python -m nl2repobench.verification.cli \
+  {python_cli} \
     --expected {expected} \
     --runtime python \
     --metric-contract {metric} \
     --reason verifier-network-available
   exit 0
 elif [[ "$network_exit" -ne 0 ]]; then
-  python -m nl2repobench.verification.cli \
+  {python_cli} \
     --expected {expected} \
     --runtime python \
     --metric-contract {metric} \
@@ -702,11 +741,11 @@ elif [[ "$network_exit" -ne 0 ]]; then
   exit 0
 fi
 
-if ! python -I -m nl2repobench.verification.command_plan \
+if ! {python_command_plan} \
   --path /tests/command-plan.json \
   --identity {shlex.quote(command_identity)} \
   --report-format {shlex.quote(command_report)}; then
-  python -I -m nl2repobench.verification.cli \
+  {python_cli} \
     --expected {expected} \
     --runtime python \
     --metric-contract {metric} \
@@ -714,7 +753,7 @@ if ! python -I -m nl2repobench.verification.command_plan \
   exit 0
 fi
 
-python -I -B -m nl2repobench.verification.workspace_copy \
+{python_workspace_copy} \
   --source /workspace \
   --destination /tmp/candidate \
   > /logs/verifier/copy-stdout.txt \
@@ -725,7 +764,7 @@ if [[ "$copy_exit_code" -ne 0 ]]; then
   if [[ "$copy_exit_code" -eq 20 ]]; then
     copy_reason=candidate-workspace-rejected
   fi
-  python -m nl2repobench.verification.cli \
+  {python_cli} \
     --expected {expected} \
     --runtime python \
     --metric-contract {metric} \
@@ -734,7 +773,7 @@ if [[ "$copy_exit_code" -ne 0 ]]; then
 fi
 
 chown -R candidate:candidate /tmp/candidate
-python -I -B -m nl2repobench.verification.candidate_install \
+{python_candidate_install} \
   --source /tmp/candidate \
   --target /tmp/candidate-site \
   --timeout-sec {install_timeout} \
@@ -748,7 +787,7 @@ if [[ "$install_exit_code" -ne 0 ]]; then
   if [[ "$install_exit_code" -eq 70 ]]; then
     install_reason=verifier-internal-error
   fi
-  python -m nl2repobench.verification.cli \
+  {python_cli} \
     --expected {expected} \
     --runtime python \
     --metric-contract {metric} \
@@ -756,8 +795,10 @@ if [[ "$install_exit_code" -ne 0 ]]; then
   exit 0
 fi
 
-python -I -m nl2repobench.verification.process_cleanup --uid 10001
-python -I -m nl2repobench.verification.integrity snapshot \
+ # verification.process_cleanup --uid 10001 runs through the fixed bootstrap.
+{python_process_cleanup} --uid 10001
+# verification.integrity verify runs through the fixed isolated bootstrap below.
+{python_integrity} snapshot \
   --record /logs/verifier/trusted-files.json \
   /tests/private \
   /tests/command-plan.json \
@@ -767,15 +808,15 @@ env HOME=/root \
 NL2REPO_CANDIDATE_TOTAL_TIMEOUT_SEC={candidate_total_timeout} \
 PYTHONDONTWRITEBYTECODE=1 \
 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 \
-python -I -B -m nl2repobench.verification.run_pytest \
+{python_run_pytest} \
   --collection /tmp/trusted-results/collection.json \
   --junit /tmp/trusted-results/junit.xml \
   /tests/private \
   > /logs/verifier/pytest-stdout.txt \
   2> /logs/verifier/pytest-stderr.txt
 pytest_exit_code=$?
-if ! python -I -m nl2repobench.verification.process_cleanup --uid 10001; then
-  python -I -m nl2repobench.verification.cli \
+if ! {python_process_cleanup} --uid 10001; then
+  {python_cli} \
     --expected {expected} \
     --runtime python \
     --metric-contract {metric} \
@@ -783,12 +824,12 @@ if ! python -I -m nl2repobench.verification.process_cleanup --uid 10001; then
   exit 0
 fi
 
-if ! python -I -m nl2repobench.verification.integrity verify \
+if ! {python_integrity} verify \
   --record /logs/verifier/trusted-files.json \
   /tests/private \
   /tests/command-plan.json \
   /usr/local/lib/python{python_minor}/site-packages/nl2repobench; then
-  python -I -m nl2repobench.verification.cli \
+  {python_cli} \
     --expected {expected} \
     --runtime python \
     --metric-contract {metric} \
@@ -803,7 +844,7 @@ if [[ -f /tmp/trusted-results/junit.xml ]]; then
   install -m 0444 /tmp/trusted-results/junit.xml /logs/verifier/junit.xml
 fi
 
-python -I -m nl2repobench.verification.cli \
+{python_cli} \
   --expected {expected} \
   --runtime python \
   --metric-contract {metric} \
@@ -827,59 +868,84 @@ exit 0
             f"--build-env {shlex.quote(f'{name}={value}')}"
             for name, value in sorted(manifest.verifier.environment.items())
         )
+        python_network_check = self._trusted_python_command(
+            self._site_packages_minor(manifest, allow_incomplete),
+            "nl2repobench.verification.network_check",
+        )
+        python_cli = self._trusted_python_command(
+            self._site_packages_minor(manifest, allow_incomplete),
+            "nl2repobench.verification.cli",
+        )
+        python_command_plan = self._trusted_python_command(
+            self._site_packages_minor(manifest, allow_incomplete),
+            "nl2repobench.verification.command_plan",
+        )
+        python_workspace_copy = self._trusted_python_command(
+            self._site_packages_minor(manifest, allow_incomplete),
+            "nl2repobench.verification.workspace_copy",
+        )
+        python_candidate_install = self._trusted_python_command(
+            self._site_packages_minor(manifest, allow_incomplete),
+            "nl2repobench.verification.candidate_install",
+        )
+        python_custom_verifier = self._trusted_python_command(
+            self._site_packages_minor(manifest, allow_incomplete),
+            "nl2repobench.verification.custom_verifier",
+        )
         command_identity, command_report = self._command_plan_semantics(manifest)
         return f"""#!/usr/bin/env bash
 set -uo pipefail
 rm -rf /tmp/candidate /tmp/candidate-build /tmp/candidate-site
 mkdir -p /logs/verifier /tmp/trusted-results /tmp/candidate-site
 chmod 0700 /logs/verifier /tmp/trusted-results
+unset PYTHONPATH PYTHONHOME LD_PRELOAD LD_LIBRARY_PATH
 {environment}
 export NL2REPO_CANDIDATE_DEPENDENCIES=/opt/candidate-dependencies/site
-python -I -m nl2repobench.verification.network_check \
+{python_network_check} \
   --output /logs/verifier/network.json
 network_exit=$?
 if [[ "$network_exit" -eq 1 ]]; then
-  python -I -m nl2repobench.verification.cli \
+  {python_cli} \
     --expected {expected} --runtime python --metric-contract {metric} \
     --reason verifier-network-available
   exit 0
 elif [[ "$network_exit" -ne 0 ]]; then
-  python -I -m nl2repobench.verification.cli \
+  {python_cli} \
     --expected {expected} --runtime python --metric-contract {metric} \
     --reason verifier-internal-error
   exit 0
 fi
-if ! python -I -m nl2repobench.verification.command_plan \
+if ! {python_command_plan} \
   --path /tests/command-plan.json \
   --identity {shlex.quote(command_identity)} \
   --report-format {shlex.quote(command_report)}; then
-  python -I -m nl2repobench.verification.cli \
+  {python_cli} \
     --expected {expected} --runtime python --metric-contract {metric} \
     --reason verifier-internal-error
   exit 0
 fi
-python -I -B -m nl2repobench.verification.workspace_copy \
+{python_workspace_copy} \
   --source /workspace --destination /tmp/candidate
 if [[ "$?" -ne 0 ]]; then
-  python -I -m nl2repobench.verification.cli \
+  {python_cli} \
     --expected {expected} --runtime python --metric-contract {metric} \
     --reason candidate-workspace-rejected
   exit 0
 fi
 chown -R candidate:candidate /tmp/candidate /tmp/candidate-site
-python -I -B -m nl2repobench.verification.candidate_install \
+{python_candidate_install} \
   --source /tmp/candidate --target /tmp/candidate-site \
   --timeout-sec {profile.candidate_install_timeout_sec} \
   --cflags '-O0 -g0' \
   {build_environment_args} \
   --status /logs/verifier/candidate-install.json
 if [[ "$?" -ne 0 ]]; then
-  python -I -m nl2repobench.verification.cli \
+  {python_cli} \
     --expected {expected} --runtime python --metric-contract {metric} \
     --reason candidate-installation-failed
   exit 0
 fi
-python -I -m nl2repobench.verification.custom_verifier \
+{python_custom_verifier} \
   --entrypoint {entrypoint} --expected {expected} \
   --junit /logs/verifier/junit.xml \
   --collection /logs/verifier/collection.json \
@@ -888,12 +954,12 @@ python -I -m nl2repobench.verification.custom_verifier \
   2> /logs/verifier/custom-stderr.txt
 custom_exit=$?
 if [[ "$custom_exit" -ne 0 && "$custom_exit" -ne 1 ]]; then
-  python -I -m nl2repobench.verification.cli \
+  {python_cli} \
     --expected {expected} --runtime python --metric-contract {metric} \
     --reason verifier-internal-error
   exit 0
 fi
-python -I -m nl2repobench.verification.cli \
+{python_cli} \
   --expected {expected} --runtime python --metric-contract {metric} \
   --collection /logs/verifier/collection.json \
   --junit /logs/verifier/junit.xml --pytest-exit-code "$custom_exit"
