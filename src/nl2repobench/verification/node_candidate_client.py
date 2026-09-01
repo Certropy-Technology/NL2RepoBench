@@ -9,7 +9,6 @@ import os
 import re
 import secrets
 import subprocess
-import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -188,7 +187,7 @@ def run_node_command(
         environment=environment or {},
         context=context,
     )
-    runtime_root = str(Path(__file__).resolve().parents[2])
+    runtime_root = "/opt/nl2repobench-runtime"
     bootstrap = (
         "import sys;sys.path.insert(0, "
         + repr(runtime_root)
@@ -197,11 +196,15 @@ def run_node_command(
     )
     try:
         transport = subprocess.run(
-            [sys.executable, "-I", "-c", bootstrap],
+            ["/usr/local/bin/python3", "-I", "-B", "-c", bootstrap],
             input=request,
             capture_output=True,
             cwd=str(cwd),
-            env={"PATH": "/usr/local/bin:/usr/bin:/bin", "HOME": "/nonexistent"},
+            env={
+                "PATH": "/usr/bin:/bin",
+                "HOME": "/nonexistent",
+                "PYTHONDONTWRITEBYTECODE": "1",
+            },
             timeout=timeout_sec + 5,
             check=False,
         )

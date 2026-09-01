@@ -6,7 +6,7 @@ import argparse
 import json
 import tempfile
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 from nl2repobench.harbor.node_dependencies import NodeDependencyError, validate_npm_package_tarball
 from nl2repobench.storage.files import atomic_write
@@ -20,6 +20,7 @@ MAX_CANDIDATE_TARBALL_BYTES = 512 * 1024 * 1024
 NODE_EXECUTABLE = str(NODE_RUNTIME_ROOT / "bin/node")
 NPM_LAUNCHER = str(NODE_RUNTIME_ROOT / "lib/npm/bin/npm-cli.js")
 PNPM_LAUNCHER = str(NODE_RUNTIME_ROOT / "lib/pnpm/bin/pnpm.cjs")
+PackageManager = Literal["npm", "pnpm"]
 
 
 def sanitized_node_environment(*, cache: Path, tmpdir: Path) -> dict[str, str]:
@@ -85,6 +86,41 @@ def npm_install_tar_command(tarball: Path, target: Path, cache: Path) -> list[st
     ]
 
 
+def pnpm_install_command(source: Path, store: Path) -> list[str]:
+    return [
+        NODE_EXECUTABLE,
+        PNPM_LAUNCHER,
+        "install",
+        "--offline",
+        "--frozen-lockfile",
+        "--ignore-scripts",
+        f"--store-dir={store}",
+    ]
+
+
+def pnpm_pack_command(source: Path, destination: Path) -> list[str]:
+    return [
+        NODE_EXECUTABLE,
+        PNPM_LAUNCHER,
+        "pack",
+        "--pack-destination",
+        str(destination),
+    ]
+
+
+def pnpm_install_tar_command(tarball: Path, target: Path, store: Path) -> list[str]:
+    return [
+        NODE_EXECUTABLE,
+        PNPM_LAUNCHER,
+        "install",
+        str(tarball),
+        "--offline",
+        "--ignore-scripts",
+        f"--store-dir={store}",
+        f"--dir={target}",
+    ]
+
+
 def _run(
     command: list[str],
     *,
@@ -131,8 +167,12 @@ def install_candidate(
     *,
     cache: Path = Path("/opt/npm-cache"),
     timeout_sec: float = 90.0,
+    package_manager: PackageManager = "npm",
 ) -> dict[str, Any]:
-    """Run the three fixed npm commands with lifecycle scripts disabled."""
+    """Run the fixed npm or pnpm install/pack flow with scripts disabled."""
+
+    if package_manager not in {"npm", "pnpm"}:
+        raise ValueError("unsupported Node package manager")
 
     _check_directory(source, "candidate source")
     if target.exists() and (target.is_symlink() or not target.is_dir()):
@@ -142,8 +182,19 @@ def install_candidate(
     with tempfile.TemporaryDirectory(prefix="node-pack-") as temporary:
         pack_root = Path(temporary)
         env = sanitized_node_environment(cache=cache, tmpdir=pack_root)
+        store = cache
+        install_command = (
+            npm_ci_command(source, cache)
+            if package_manager == "npm"
+            else pnpm_install_command(source, store)
+        )
+        pack_command = (
+            npm_pack_command(source, pack_root)
+            if package_manager == "npm"
+            else pnpm_pack_command(source, pack_root)
+        )
         ci = _run(
-            npm_ci_command(source, cache),
+            install_command,
             cwd=source,
             write_root=source,
             env=env,
@@ -154,7 +205,7 @@ def install_candidate(
         if ci["returncode"] != 0:
             return {"outcome": "install-failed", "steps": [ci]}
         packed = _run(
-            npm_pack_command(source, pack_root),
+            pack_command,
             cwd=source,
             write_root=pack_root,
             env=env,
@@ -176,8 +227,12 @@ def install_candidate(
         except NodeDependencyError as exc:
             return {"outcome": "pack-rejected", "steps": [ci, packed], "reason": str(exc)}
         installed = _run(
-            npm_install_tar_command(tarballs[0], target, cache),
-            cwd=source,
+            (
+                npm_install_tar_command(tarballs[0], target, cache)
+                if package_manager == "npm"
+                else pnpm_install_tar_command(tarballs[0], target, store)
+            ),
+            cwd=source if package_manager == "npm" else target,
             write_root=target,
             env=env,
             timeout_sec=timeout_sec,
@@ -201,16 +256,23 @@ def main() -> None:
     parser.add_argument("--target", type=Path, required=True)
     parser.add_argument("--cache", type=Path, default=Path("/opt/npm-cache"))
     parser.add_argument("--timeout-sec", type=float, default=90.0)
+    parser.add_argument("--package-manager", choices=("npm", "pnpm"), default="npm")
     parser.add_argument("--status", type=Path, required=True)
     args = parser.parse_args()
     try:
         result = install_candidate(
-            args.source, args.target, cache=args.cache, timeout_sec=args.timeout_sec
+            args.source,
+            args.target,
+            cache=args.cache,
+            timeout_sec=args.timeout_sec,
+            package_manager=args.package_manager,
         )
         atomic_write(args.status, json.dumps(result, sort_keys=True).encode() + b"\n")
     except Exception as exc:
         result = {"outcome": "internal-error", "reason": str(exc)}
         atomic_write(args.status, json.dumps(result, sort_keys=True).encode() + b"\n")
         raise SystemExit(INTERNAL_ERROR_EXIT) from exc
+    if result.get("outcome") == "internal-error":
+        raise SystemExit(INTERNAL_ERROR_EXIT)
     if result.get("outcome") != "success":
         raise SystemExit(CANDIDATE_FAILURE_EXIT)

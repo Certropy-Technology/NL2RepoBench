@@ -1,7 +1,4 @@
 import { spawnSync } from "node:child_process";
-import { dirname, join } from "node:path";
-import { existsSync } from "node:fs";
-import { fileURLToPath } from "node:url";
 
 // Node is responsible only for transport. The trusted Python runtime owns
 // report normalization, canonical LeafReport construction, and evaluation.
@@ -14,18 +11,8 @@ const runnerExit = args.includes("--runner-exit-code") ? value("--runner-exit-co
 const output = value("--output");
 if (!expected || !output) process.exit(64);
 
-const bundledRuntime = "/opt/nl2repobench-runtime";
-const sourceRuntime = join(dirname(fileURLToPath(import.meta.url)), "../../..");
-const runtime = process.env.NL2REPO_RUNTIME
-  ?? (existsSync(join(bundledRuntime, "nl2repobench/__init__.py")) ? bundledRuntime : sourceRuntime);
-const pythonCandidates = [
-  process.env.NL2REPO_PYTHON,
-  process.env.VIRTUAL_ENV ? join(process.env.VIRTUAL_ENV, "bin/python") : null,
-  "/usr/local/bin/python",
-  "/usr/local/bin/python3",
-  "/usr/bin/python3",
-].filter(Boolean);
-const python = pythonCandidates.find((candidate) => existsSync(candidate)) ?? "/usr/bin/python3";
+const runtime = "/opt/nl2repobench-runtime";
+const python = "/usr/local/bin/python3";
 const pythonCode = [
   "import sys",
   `sys.path.insert(0, ${JSON.stringify(runtime)})`,
@@ -51,6 +38,11 @@ if (reason) pythonArgs.push("--reason", reason);
 
 const result = spawnSync(python, pythonArgs, {
   stdio: "inherit",
+  env: {
+    PATH: "/usr/bin:/bin",
+    HOME: "/nonexistent",
+    PYTHONDONTWRITEBYTECODE: "1",
+  },
   timeout: 120_000,
 });
 process.exit(result.error ? 70 : result.status ?? 70);
