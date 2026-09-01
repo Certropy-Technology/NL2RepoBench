@@ -62,7 +62,10 @@ def test_exact_candidate_transport_exception_is_path_bound(tmp_path: Path) -> No
         "import subprocess\n"
         "def invoke():\n"
         "    command = ['python', '-I', 'candidate_process_cli']\n"
-        "    return subprocess.run(command, stdin=b'{}')\n",
+        "    return subprocess.run(\n"
+        "        command, input=b'{}', capture_output=True, timeout=1, check=False,\n"
+        "        env={'HOME': '/nonexistent'}\n"
+        "    )\n",
     )
     assert report["passed"] is True
     assert report["violations"] == []
@@ -77,6 +80,28 @@ def test_exact_supervisor_exception_allows_explicit_os_fork(tmp_path: Path) -> N
         "os.execve('/bin/true', ['true'], {})\n",
     )
     assert report["passed"] is True
+
+
+def test_supervisor_exception_rejects_unapproved_os_call(tmp_path: Path) -> None:
+    report = _scan_file(
+        tmp_path,
+        "src/nl2repobench/verification/subprocess_supervisor.py",
+        "import os\n"
+        "os.system('candidate')\n",
+    )
+    assert report["passed"] is False
+    assert any(item["reason"] == "python-os-spawn" for item in report["violations"])
+
+
+def test_resource_prlimit_is_always_blocked(tmp_path: Path) -> None:
+    report = _scan_file(
+        tmp_path,
+        "src/nl2repobench/verification/subprocess_supervisor.py",
+        "import resource\n"
+        "resource.prlimit(1, resource.RLIMIT_CPU, (1, 1))\n",
+    )
+    assert report["passed"] is False
+    assert any(item["reason"] == "forbidden-resource-limit" for item in report["violations"])
 
 
 @pytest.mark.parametrize(
@@ -100,9 +125,24 @@ def test_exact_node_verifier_exception_is_path_bound(tmp_path: Path) -> None:
         "src/nl2repobench/verification/node/run_tests.mjs",
         "import { spawnSync } from 'node:child_process';\n"
         "const client = process.env.NODE_TEST_CLIENT;\n"
-        "spawnSync(process.execPath, ['--test', client]);\n",
+        "const file = client;\n"
+        "spawnSync(process.execPath, ['--test', file]);\n",
     )
     assert report["passed"] is True
+
+
+def test_node_trusted_file_rejects_extra_arbitrary_spawn(tmp_path: Path) -> None:
+    report = _scan_file(
+        tmp_path,
+        "src/nl2repobench/verification/node/run_tests.mjs",
+        "import { spawnSync } from 'node:child_process';\n"
+        "const client = process.env.NODE_TEST_CLIENT;\n"
+        "const file = client;\n"
+        "spawnSync(process.execPath, ['--test', file]);\n"
+        "spawnSync('/bin/sh', ['-c', 'candidate']);\n",
+    )
+    assert report["passed"] is False
+    assert any(item["reason"] == "node-direct-spawn" for item in report["violations"])
 
 
 def test_near_name_node_exception_and_historical_private_client_are_blocked(

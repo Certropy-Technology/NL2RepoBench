@@ -55,6 +55,13 @@ _PYTHON_OS_CALLS = {
 _PYTHON_RESOURCE_CALLS = {"setrlimit", "prlimit"}
 _NODE_CHILD_CALLS = {"spawn", "spawnSync", "exec", "execFile", "fork"}
 _SHELL_WORDS = {"runuser", "su", "sudo", "prlimit", "timeout"}
+_SUPERVISOR_OS_CALLS = {
+    "chdir", "close", "dup", "execve", "_exit", "fork", "killpg", "pipe",
+    "read", "scandir", "set_blocking", "set_inheritable", "setgroups",
+    "setresgid", "setresuid", "setsid", "strerror", "waitpid", "waitstatus_to_exitcode",
+    "write", "WNOHANG",
+}
+_MAX_VIOLATIONS = 10_000
 
 # Exact repo-relative files only.  These files still need shape validation in
 # _python_trusted_call/_node_trusted_call; this set is never a directory or a
@@ -179,25 +186,27 @@ def _string_shell_violation(token: tokenize.TokenInfo) -> bool:
 
 
 def _python_trusted_call(relative: str, node: ast.Call, text: str) -> bool:
-    """Allow only fixed trusted orchestration/transport calls."""
+    """Allow one exact trusted subprocess shape, never a whole-file marker."""
 
     if relative not in _TRUSTED_FILES:
         return False
-    if isinstance(node.func, ast.Attribute) and node.func.attr == "run":
-        if relative in {
-            "src/nl2repobench/verification/candidate_client.py",
-            "src/nl2repobench/verification/node_candidate_client.py",
-            "src/nl2repobench/verification/go_supervisor.py",
-        }:
-            return "candidate_process_cli" in text and "-I" in text and "stdin" in text
-        if relative == "src/nl2repobench/verification/custom_verifier.py":
-            return "trusted verifier" in text.lower() or "pytest" in text
-        if relative == "src/nl2repobench/verification/go_contract_runner.py":
-            return "/bin/bash" in text and "args.script" in text
-    # The supervisor's explicit fork/exec and the CLI's no-spawn parser are
-    # trusted by exact file identity; calls outside those files are not.
-    if relative == "src/nl2repobench/verification/subprocess_supervisor.py":
-        return isinstance(node.func, ast.Attribute) and isinstance(node.func.value, ast.Name) and node.func.value.id == "os"
+    if not isinstance(node.func, ast.Attribute) or node.func.attr != "run":
+        return False
+    keywords = {keyword.arg for keyword in node.keywords if keyword.arg is not None}
+    if relative in {
+        "src/nl2repobench/verification/candidate_client.py",
+        "src/nl2repobench/verification/node_candidate_client.py",
+        "src/nl2repobench/verification/go_supervisor.py",
+    }:
+        argument = node.args[0]
+        expected_argument = (
+            isinstance(argument, ast.Name) and argument.id == "command"
+        ) or isinstance(argument, (ast.List, ast.Tuple, ast.Call))
+        return bool(node.args) and expected_argument and {"input", "capture_output", "timeout", "check", "env"} <= keywords and "candidate_process_cli" in text and "-I" in text and "check=False" in text
+    if relative == "src/nl2repobench/verification/custom_verifier.py":
+        return bool(node.args) and "entrypoint" in text and "-I" in text
+    if relative == "src/nl2repobench/verification/go_contract_runner.py":
+        return bool(node.args) and "/bin/bash" in text and "args.script" in text and "args.bridge" in text
     return False
 
 
@@ -244,10 +253,12 @@ def _scan_python(relative: str, text: str) -> list[dict[str, object]]:
                 if member in _PYTHON_SUBPROCESS_CALLS and not _python_trusted_call(relative, node, text):
                     violations.append(_violation(relative, line, "python-direct-spawn", f"subprocess.{member}"))
             elif module in os_modules and member in _PYTHON_OS_CALLS:
-                if not (relative == "src/nl2repobench/verification/subprocess_supervisor.py"):
+                if not (relative == "src/nl2repobench/verification/subprocess_supervisor.py" and member in _SUPERVISOR_OS_CALLS):
                     violations.append(_violation(relative, line, "python-os-spawn", f"os.{member}"))
             elif module in resource_modules and member in _PYTHON_RESOURCE_CALLS:
-                if any(
+                if member == "prlimit":
+                    violations.append(_violation(relative, line, "forbidden-resource-limit", "resource.prlimit"))
+                elif any(
                     isinstance(argument, ast.Attribute) and argument.attr == "RLIMIT_AS"
                     or isinstance(argument, ast.Name) and argument.id == "RLIMIT_AS"
                     for argument in node.args
@@ -259,10 +270,15 @@ def _scan_python(relative: str, text: str) -> list[dict[str, object]]:
                 if not _python_trusted_call(relative, node, text):
                     violations.append(_violation(relative, line, "python-direct-spawn", f"from subprocess import {imported_name}"))
             elif imported_module == "os" and imported_name in _PYTHON_OS_CALLS:
-                if relative != "src/nl2repobench/verification/subprocess_supervisor.py":
+                if not (relative == "src/nl2repobench/verification/subprocess_supervisor.py" and imported_name in _SUPERVISOR_OS_CALLS):
                     violations.append(_violation(relative, line, "python-os-spawn", f"from os import {imported_name}"))
             elif imported_module == "resource" and imported_name in _PYTHON_RESOURCE_CALLS:
-                if any(isinstance(argument, ast.Name) and argument.id == "RLIMIT_AS" for argument in node.args):
+                if imported_name == "prlimit":
+                    violations.append(_violation(relative, line, "forbidden-resource-limit", "from resource import prlimit"))
+                elif any(
+                    isinstance(argument, ast.Name) and argument.id == "RLIMIT_AS"
+                    for argument in node.args
+                ):
                     violations.append(_violation(relative, line, "address-space-limit"))
         if isinstance(node.func, ast.Attribute) and node.func.attr in {"system", "popen"}:
             if not _python_trusted_call(relative, node, text):
@@ -340,15 +356,36 @@ def _js_aliases(tokens: list[_Token]) -> tuple[set[str], set[str]]:
     return aliases, module_aliases
 
 
+def _node_call_text(tokens: list[_Token], index: int) -> str:
+    """Return one bounded call statement without trusting unrelated file text."""
+
+    values: list[str] = []
+    for token in tokens[index : index + 80]:
+        values.append(token.value)
+        if token.value == ";":
+            break
+    return "".join(values)
+
+
 def _node_trusted_call(relative: str, tokens: list[_Token], index: int, text: str) -> bool:
     if relative not in _TRUSTED_FILES:
         return False
+    call = _node_call_text(tokens, index)
     if relative == "src/nl2repobench/verification/node/run_tests.mjs":
-        return "--test" in text and "NODE_TEST_CLIENT" in text
+        return (
+            call.startswith("spawnSync(")
+            and "process.execPath" in call
+            and "--test" in call
+            and "file" in call
+            and "NODE_TEST_CLIENT" in text
+        )
     if relative == "src/nl2repobench/verification/node/validate-package.mjs":
-        return '"/usr/bin/tar"' in text or "'/usr/bin/tar'" in text
-    if relative == "src/nl2repobench/verification/node/grade-report.mjs":
-        return "python" in text and "grade" in text
+        return (
+            call.startswith("spawnSync(")
+            and ("/usr/bin/tar" in call or "'/usr/bin/tar'" in call)
+            and ("-tvzf" in call or "-xOzf" in call)
+            and "archive" in call
+        )
     return False
 
 
@@ -375,7 +412,8 @@ def _scan_node(relative: str, text: str) -> list[dict[str, object]]:
         if token.value == "require" and index + 4 < len(tokens):
             if tokens[index + 1].value == "(" and "child_process" in tokens[index + 2].value:
                 if tokens[index + 3].value == "." and tokens[index + 4].value in _NODE_CHILD_CALLS:
-                    violations.append(_violation(relative, tokens[index + 4].line, "node-direct-spawn", tokens[index + 4].value))
+                    if not _node_trusted_call(relative, tokens, index + 4, text):
+                        violations.append(_violation(relative, tokens[index + 4].line, "node-direct-spawn", tokens[index + 4].value))
     return violations
 
 
@@ -444,7 +482,14 @@ def scan(root: Path) -> dict[str, object]:
             continue
         scanned += 1
         violations.extend(_scan_file(relative, path))
-    return {"passed": not violations, "files_scanned": scanned, "violations": violations}
+    bounded = violations[:_MAX_VIOLATIONS]
+    return {
+        "passed": not violations,
+        "files_scanned": scanned,
+        "violations": bounded,
+        "violation_count": len(violations),
+        "violations_truncated": len(violations) > len(bounded),
+    }
 
 
 def main() -> int:
