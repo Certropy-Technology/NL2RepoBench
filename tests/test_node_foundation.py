@@ -284,7 +284,10 @@ def test_canonical_development_compiler_is_deterministic_and_hides_private_fixtu
         '"' in agent_dockerfile
     )
     assert " AS node-runtime" in agent_dockerfile
-    assert "COPY --from=node-runtime /usr/local/bin/node" in agent_dockerfile
+    assert f"COPY --from=node-runtime /opt/nl2repobench-node /opt/nl2repobench-node" in agent_dockerfile
+    assert "cp --dereference" in agent_dockerfile
+    assert "runtime.manifest.json" in agent_dockerfile
+    assert "/usr/local/bin/npm" not in agent_dockerfile
     assert "COPY npm-bundle /opt/npm-bundle" in agent_dockerfile
     assert "npm_config_offline=true" in agent_dockerfile
     assert not list((first / "environment").rglob("solution"))

@@ -12,7 +12,7 @@ import shlex
 import shutil
 import tempfile
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 import tomli_w
 
@@ -44,7 +44,7 @@ from .node_dependencies import (
     validate_npm_dependency_bundle,
     validate_npm_lock_data,
 )
-from .node_toolchain import load_node_toolchain_lock
+from .node_toolchain import NodeRuntimeManifest, load_node_toolchain_lock
 from .private_artifacts import categorized_private_artifacts
 from .task_writer import (
     TaskWriterError,
@@ -191,7 +191,7 @@ class NodeHarborCompiler:
         temporary_root = Path(tempfile.mkdtemp(prefix=f".{temporary_prefix}-", dir=output_root))
         try:
             self._write_instruction(source_dir, source.instruction, temporary_root)
-            self._write_environment(manifest, temporary_root)
+            self._write_environment(manifest, temporary_root, allow_incomplete)
             self._write_verifier(source_dir, manifest, temporary_root, allow_incomplete)
             self._write_solution(
                 source_dir, manifest.oracle_bundle, temporary_root, allow_incomplete
@@ -263,15 +263,41 @@ class NodeHarborCompiler:
                 str(exc).replace("instruction", "Node instruction", 1)
             ) from exc
 
-    def _write_environment(self, manifest: TaskManifest, task_root: Path) -> None:
+    def _write_environment(
+        self, manifest: TaskManifest, task_root: Path, allow_incomplete: bool
+    ) -> None:
         node_image = self._runtime_image(manifest)
+        runtime_manifest = self._runtime_manifest_payload(
+            node_image, allow_incomplete=allow_incomplete
+        )
+        runtime_manifest_check = self._runtime_manifest_check()
+        atomic_write(
+            task_root / "environment/node-runtime.manifest.json",
+            json.dumps(runtime_manifest, sort_keys=True, separators=(",", ":")).encode()
+            + b"\n",
+        )
         agent_image = self.toolchain.agent_runtime.image
         system_checks = self._system_packages_check(manifest)
         dependency_setup = self._agent_dependency_setup()
+        runtime_stage_extra = self._runtime_stage_extra(allow_incomplete)
+        runtime_manifest_stage = self._runtime_manifest_stage(node_image, allow_incomplete)
+        runtime_manifest_final = (
+            "" if allow_incomplete else "COPY node-runtime.manifest.json "
+            f"{NODE_RUNTIME_ROOT}/runtime.manifest.json\n"
+        )
         dockerfile = f"""FROM --platform=linux/amd64 {node_image} AS node-runtime
 
-RUN test -f /usr/local/bin/node \\
-  && test "$(/usr/local/bin/node --version)" = "v{self.toolchain.runtime.runtime_version}"
+RUN resolved_node="$(readlink -f /usr/local/bin/node)" \\
+  && test -f "$resolved_node" \\
+  && test "$(/usr/local/bin/node --version)" = "v{self.toolchain.runtime.runtime_version}" \\
+  && mkdir -p {NODE_RUNTIME_ROOT}/bin {NODE_RUNTIME_ROOT}/lib \\
+  && cp --dereference "$resolved_node" {NODE_EXECUTABLE} \\
+  && cp -aL /usr/local/lib/node_modules/npm {NODE_RUNTIME_ROOT}/lib/npm \\
+  && test -f {NODE_RUNTIME_ROOT}/lib/npm/bin/npm-cli.js \\
+{runtime_stage_extra}  && chmod 0555 {NODE_EXECUTABLE} \\
+  && find {NODE_RUNTIME_ROOT} -type f ! -path {NODE_EXECUTABLE} -exec chmod 0444 {{}} + \\
+  && chmod -R a-w {NODE_RUNTIME_ROOT}
+{runtime_manifest_stage}
 
 FROM --platform=linux/amd64 {agent_image}
 
@@ -279,13 +305,16 @@ LABEL org.nl2repobench.agent-runtime-image="{agent_image}" \\
   org.nl2repobench.agent-runtime-image-id="{self.toolchain.agent_runtime.image_id}" \\
   org.nl2repobench.agent-dependency-build="npm-offline-bundle-v1"
 
-COPY --from=node-runtime /usr/local/bin/node {NODE_EXECUTABLE}
-COPY --from=node-runtime /usr/local/lib/node_modules/npm {NODE_RUNTIME_ROOT}/lib/npm
-RUN chmod 0555 {NODE_EXECUTABLE} \
-  && chmod -R a-w {NODE_RUNTIME_ROOT} \
+COPY --from=node-runtime {NODE_RUNTIME_ROOT} {NODE_RUNTIME_ROOT}
+{runtime_manifest_final}
+RUN test -f {NODE_RUNTIME_ROOT}/runtime.manifest.json \
+  && test -f {NODE_EXECUTABLE} \
+  && test ! -L {NODE_EXECUTABLE} \
   && test "$( {NODE_EXECUTABLE} --version)" = "v{self.toolchain.runtime.runtime_version}" \
   && test "$( {NODE_EXECUTABLE} {NPM_LAUNCHER} --version)" = "{self.toolchain.runtime.npm_version}" \
   && test -x /opt/openhands-sdk-venv/bin/python
+
+{runtime_manifest_check}
 
 {system_checks}{dependency_setup}
 
@@ -301,6 +330,67 @@ ENV npm_config_cache=/opt/npm-bundle/npm-cache \\
     npm_config_audit=false \\
     npm_config_fund=false
 """
+
+    def _runtime_stage_extra(self, allow_incomplete: bool) -> str:
+        del allow_incomplete
+        return ""
+
+    def _runtime_manifest_stage(self, source_image: str, allow_incomplete: bool) -> str:
+        if not allow_incomplete:
+            return (
+                "COPY node-runtime.manifest.json /tmp/node-runtime.manifest.json\n"
+                f"RUN cp /tmp/node-runtime.manifest.json {NODE_RUNTIME_ROOT}/runtime.manifest.json\n"
+            )
+        values = {
+            "source_image": source_image,
+            "runtime_version": self.toolchain.runtime.runtime_version,
+            "npm_version": self.toolchain.runtime.npm_version,
+            "pnpm_version": self.toolchain.runtime.pnpm_version,
+        }
+        script = (
+            "const f=require('fs'),c=require('crypto'),r='/opt/nl2repobench-node',"
+            f"v={json.dumps(values,separators=(',', ':'))},a=[];"
+            "const w=(d,p)=>{for(const e of f.readdirSync(d,{withFileTypes:true})){"
+            "const q=d+'/'+e.name,x=p?p+'/'+e.name:e.name,s=f.lstatSync(q);"
+            "if(e.isDirectory())w(q,x);else{if(!e.isFile()||s.nlink!==1)throw Error('unsafe runtime');"
+            "const b=f.readFileSync(q),h=c.createHash('sha256').update(b).digest('hex');"
+            "a.push({path:x,sha256:h,size_bytes:b.length,mode:s.mode&0o777,type:'file'})}}};"
+            "w(r,'');a.sort((x,y)=>Buffer.from(x.path).compare(Buffer.from(y.path)));"
+            "const h=c.createHash('sha256');for(const x of a){h.update(Buffer.from(x.path));"
+            "h.update(Buffer.from([0]));h.update(Buffer.from(x.sha256,'hex'))}"
+            "const by=new Map(a.map(x=>[x.path,x])),id=(name,path)=>({...by.get(path),name});"
+            "const m={schema_version:'1.0',ecosystem:'node',platform:'linux/amd64',"
+            "root:r,source_image:v.source_image,runtime_version:v.runtime_version,"
+            "npm_version:v.npm_version,pnpm_version:v.pnpm_version,digest_algorithm:'sha256',"
+            "files:a,executables:[id('node','bin/node')],launchers:[id('npm','lib/npm/bin/npm-cli.js')],"
+            "tree_sha256:'sha256:'+h.digest('hex')};"
+            "if(v.pnpm_version)m.launchers.push(id('pnpm','lib/pnpm/bin/pnpm.cjs'));"
+            "f.writeFileSync(r+'/runtime.manifest.json',JSON.stringify(m)+String.fromCharCode(10))"
+        )
+        return f"RUN {NODE_EXECUTABLE} -e {shlex.quote(script)}\n"
+
+    @staticmethod
+    def _runtime_manifest_check() -> str:
+        """Validate every staged file and the canonical tree digest in Docker."""
+
+        check = (
+            "const fs=require('fs'),c=require('crypto'),r='/opt/nl2repobench-node',"
+            "m=JSON.parse(fs.readFileSync(r+'/runtime.manifest.json')),a=[];"
+            "const w=(d,p)=>{for(const e of fs.readdirSync(d,{withFileTypes:true})){"
+            "const q=d+'/'+e.name,x=p?p+'/'+e.name:e.name,s=fs.lstatSync(q);"
+            "if(x==='runtime.manifest.json')continue;if(e.isDirectory())w(q,x);else{if(!e.isFile()||s.nlink!==1||(s.mode&0o6000))"
+            "throw Error('unsafe runtime entry '+x);a.push(x)}}};w(r,'');a.sort();"
+            "const f=m.files.map(x=>x.path);if(JSON.stringify(a)!==JSON.stringify(f))"
+            "throw Error('runtime manifest file set mismatch');const h=c.createHash('sha256');"
+            "for(const x of m.files){const q=r+'/'+x.path,s=fs.lstatSync(q),b=fs.readFileSync(q),"
+            "z=c.createHash('sha256').update(b).digest('hex');if(s.size!==x.size_bytes||z!==x.sha256||"
+            "(s.mode&0o777)!==x.mode)throw Error('runtime manifest file digest mismatch: '+x.path);"
+            "h.update(Buffer.from(x.path));h.update(Buffer.from([0]));h.update(Buffer.from(z,'hex'))}"
+            "if('sha256:'+h.digest('hex')!==m.tree_sha256)throw Error('runtime manifest tree digest mismatch');"
+            "for(const x of [...(m.executables||[]),...(m.launchers||[])])if(!f.includes(x.path))"
+            "throw Error('runtime identity is not in tree')"
+        )
+        return f"RUN {NODE_EXECUTABLE} -e {shlex.quote(check)}\n"
 
     def _runtime_image(self, manifest: TaskManifest) -> str:
         """Return the task-pinned Node image for production bundles."""
@@ -386,14 +476,32 @@ ENV npm_config_cache=/opt/npm-bundle/npm-cache \\
 
         image = self._runtime_image(manifest)
         python_image = self.toolchain.images.verifier_python_base
+        runtime_manifest = self._runtime_manifest_payload(image, allow_incomplete=allow_incomplete)
+        atomic_write(
+            tests_root / "node-runtime.manifest.json",
+            json.dumps(runtime_manifest, sort_keys=True, separators=(",", ":")).encode()
+            + b"\n",
+        )
         dockerfile = f"""FROM --platform=linux/amd64 {image} AS node-runtime
+
+RUN resolved_node="$(readlink -f /usr/local/bin/node)" \\
+  && test -f "$resolved_node" \\
+  && test "$(/usr/local/bin/node --version)" = "v{self.toolchain.runtime.runtime_version}" \\
+  && mkdir -p {NODE_RUNTIME_ROOT}/bin {NODE_RUNTIME_ROOT}/lib \\
+  && cp --dereference "$resolved_node" {NODE_EXECUTABLE} \\
+  && cp -a /usr/local/lib/node_modules/npm {NODE_RUNTIME_ROOT}/lib/npm \\
+  && test -f {NODE_RUNTIME_ROOT}/lib/npm/bin/npm-cli.js \\
+  && chmod 0555 {NODE_EXECUTABLE} \\
+  && chmod -R a-w {NODE_RUNTIME_ROOT}
 FROM --platform=linux/amd64 {python_image}
 
-COPY --from=node-runtime /usr/local/bin/node {NODE_EXECUTABLE}
-COPY --from=node-runtime /usr/local/lib/node_modules/npm {NODE_RUNTIME_ROOT}/lib/npm
-RUN chmod 0555 {NODE_EXECUTABLE} && chmod -R a-w {NODE_RUNTIME_ROOT}
-RUN ln -sf /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \\
-  && ln -sf /usr/local/lib/node_modules/npm/bin/npx-cli.js /usr/local/bin/npx
+COPY --from=node-runtime {NODE_RUNTIME_ROOT} {NODE_RUNTIME_ROOT}
+COPY node-runtime.manifest.json {NODE_RUNTIME_ROOT}/runtime.manifest.json
+RUN test -f {NODE_RUNTIME_ROOT}/runtime.manifest.json \\
+  && test -f {NODE_EXECUTABLE} \\
+  && test ! -L {NODE_EXECUTABLE} \\
+  && test "$( {NODE_EXECUTABLE} --version)" = "v{self.toolchain.runtime.runtime_version}" \\
+  && test "$( {NODE_EXECUTABLE} {NPM_LAUNCHER} --version)" = "{self.toolchain.runtime.npm_version}"
 
 COPY python-runtime /opt/nl2repobench-runtime
 COPY verifier-requirements.lock.txt /tmp/verifier-requirements.lock.txt
@@ -416,6 +524,61 @@ WORKDIR /tests
         )
         atomic_write(tests_root / "test.sh", self._test_script(manifest).encode())
         os.chmod(tests_root / "test.sh", 0o755)
+
+    def _runtime_manifest_payload(
+        self, source_image: str, *, allow_incomplete: bool
+    ) -> dict[str, Any]:
+        """Load locked closure bytes, or emit an explicitly incomplete fixture envelope."""
+
+        reference = self.toolchain.runtime.node_runtime_manifest
+        path = self.toolchain_path.parent / reference
+        if not allow_incomplete:
+            if not path.is_file():
+                raise NodeHarborCompileError(
+                    f"Node runtime closure manifest is unavailable: {path}"
+                )
+            data = path.read_bytes()
+            digest = f"sha256:{hashlib.sha256(data).hexdigest()}"
+            if digest != self.toolchain.runtime.node_runtime_manifest_sha256:
+                raise NodeHarborCompileError(
+                    "Node runtime closure manifest digest does not match lock"
+                )
+            try:
+                payload = json.loads(data)
+            except json.JSONDecodeError as exc:
+                raise NodeHarborCompileError(
+                    "Node runtime closure manifest is not JSON"
+                ) from exc
+            try:
+                validated = NodeRuntimeManifest.model_validate(payload)
+            except ValueError as exc:
+                raise NodeHarborCompileError(
+                    f"Node runtime closure manifest is invalid: {exc}"
+                ) from exc
+            if validated.source_image != source_image:
+                raise NodeHarborCompileError(
+                    "Node runtime closure manifest image does not match lock"
+                )
+            if validated.tree_sha256 != self.toolchain.runtime.node_runtime_tree_sha256:
+                raise NodeHarborCompileError(
+                    "Node runtime closure tree digest does not match lock"
+                )
+            return cast(dict[str, Any], payload)
+        return {
+            "schema_version": "1.0",
+            "ecosystem": "node",
+            "platform": "linux/amd64",
+            "root": NODE_RUNTIME_ROOT,
+            "source_image": source_image,
+            "runtime_version": self.toolchain.runtime.runtime_version,
+            "npm_version": self.toolchain.runtime.npm_version,
+            "pnpm_version": self.toolchain.runtime.pnpm_version,
+            "digest_algorithm": "sha256",
+            "files": [],
+            "executables": [],
+            "launchers": [],
+            "tree_sha256": self.toolchain.runtime.node_runtime_tree_sha256,
+        }
 
     def _resolve_node_command_plan(
         self,

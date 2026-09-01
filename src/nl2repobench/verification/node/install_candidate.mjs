@@ -1,7 +1,15 @@
-import { readdirSync, statSync, writeFileSync } from "node:fs";
+import { mkdtempSync, readdirSync, statSync } from "node:fs";
+import { randomBytes } from "node:crypto";
+import { dirname, relative, resolve } from "node:path";
 import { spawnSync } from "node:child_process";
-import { join } from "node:path";
 
+// All candidate commands use the reviewed generic supervisor transport. This
+// compatibility entry point is retained for old task bundles only.
+const ROOT = "/opt/nl2repobench-node";
+const NODE = `${ROOT}/bin/node`;
+const NPM = `${ROOT}/lib/npm/bin/npm-cli.js`;
+const PYTHON = "/usr/local/bin/python3";
+const RUNTIME = "/opt/nl2repobench-runtime";
 const args = process.argv.slice(2);
 const value = (name) => args[args.indexOf(name) + 1];
 const source = value("--source");
@@ -9,53 +17,62 @@ const target = value("--target");
 const cache = value("--cache");
 if (!source || !target || !cache) process.exit(64);
 
-function run(command, commandArgs, cwd) {
-  const result = spawnSync(command, commandArgs, {
-    cwd,
-    env: {
-      PATH: "/usr/bin:/bin",
-      HOME: join(target, "home"),
-      TMPDIR: join(target, "tmp"),
-      npm_config_cache: cache,
-      npm_config_offline: "true",
-      npm_config_ignore_scripts: "true",
-      npm_config_audit: "false",
-      npm_config_fund: "false",
-    },
-    encoding: "utf8",
-    timeout: 90_000,
-    maxBuffer: 256 * 1024,
-  });
-  if (result.error || result.status !== 0) {
-    process.stderr.write(`${command} failed\n${result.stderr ?? result.error}\n`);
-    process.exit(71);
+function commonRoot(paths) {
+  let root = resolve(paths[0]);
+  for (const item of paths.slice(1)) {
+    const candidate = resolve(item);
+    while (candidate !== root && !candidate.startsWith(`${root}/`)) root = dirname(root);
   }
+  return root;
 }
 
-const NODE_ROOT = "/opt/nl2repobench-node";
-const NODE = `${NODE_ROOT}/bin/node`;
-const NPM = `${NODE_ROOT}/lib/npm/bin/npm-cli.js`;
-run(NODE, [NPM, "ci", "--offline", "--ignore-scripts", "--no-audit", "--no-fund", `--cache=${cache}`], source);
-run(NODE, [NPM, "pack", "--ignore-scripts", "--pack-destination", target], source);
-const tarballs = readdirSync(target).filter((name) => name.endsWith(".tgz"));
-if (tarballs.length !== 1) process.exit(71);
-run(NODE, ["/tests/runtime/node/validate-package.mjs", join(target, tarballs[0])], target);
-run(NODE, [NPM, "install", join(target, tarballs[0]), "--offline", "--ignore-scripts", "--no-audit", "--no-fund", `--cache=${cache}`, "--prefix", target], source);
-// npm installs the packed dependency tree but may not create a package root
-// descriptor for an empty prefix. Keep the resolver's cwd contract explicit
-// without giving the candidate site the candidate's self-referencing name.
-const targetPackage = join(target, "package.json");
-try {
-  statSync(targetPackage);
-} catch {
-  writeFileSync(
-    targetPackage,
-    JSON.stringify({ private: true, type: "module" }) + "\n",
-    { mode: 0o444 },
-  );
+function run(command, cwd, writeRoot) {
+  const root = commonRoot([cwd, writeRoot]);
+  const id = randomBytes(16).toString("hex");
+  const environment = {
+    HOME: `${resolve(writeRoot)}/home`,
+    TMPDIR: `${resolve(writeRoot)}/tmp`,
+    npm_config_cache: resolve(cache),
+    npm_config_ignore_scripts: "true",
+    npm_config_offline: "true",
+    npm_config_audit: "false",
+    npm_config_fund: "false",
+  };
+  const body = {
+    schema_version: "1.0", request_id: id, context: "install",
+    command: {
+      argv: command, cwd: relative(root, resolve(cwd)) || ".",
+      environment: Object.entries(environment).sort(([a], [b]) => a.localeCompare(b)),
+    },
+    limits: { timeout_sec: 90, cpu_sec: 90, max_stdin_bytes: 1048576,
+      max_output_bytes: 8388608, max_file_bytes: 536870912, max_open_files: 256,
+      uid: 10001, gid: 10001, max_processes: 64 },
+    policy: { task_id: "node-npm-install", staging_root: root,
+      read_only_roots: [ROOT], write_root: resolve(writeRoot),
+      allowed_executable_roots: [`${ROOT}/bin`],
+      allowed_environment_names: Object.keys(environment).sort(),
+      require_no_new_privs: true, require_empty_capabilities: true },
+    stdin_base64: "",
+  };
+  const bootstrap = `import sys;sys.path.insert(0,${JSON.stringify(RUNTIME)});from nl2repobench.verification.candidate_process_cli import main;raise SystemExit(main())`;
+  const transport = spawnSync(PYTHON, ["-I", "-c", bootstrap], {
+    cwd: resolve(cwd), input: JSON.stringify(body), encoding: "utf8",
+    env: { PATH: "/usr/local/bin:/usr/bin:/bin", HOME: "/nonexistent" },
+    timeout: 100000, maxBuffer: 8 * 1024 * 1024,
+  });
+  if (transport.error || transport.status !== 0) process.exit(70);
+  let result;
+  try { result = JSON.parse(transport.stdout); } catch { process.exit(70); }
+  if (result.request_id !== id || result.cleanup_complete !== true ||
+      result.spawn_error !== null || result.cleanup_error !== null) process.exit(70);
+  if (result.timed_out || result.output_limit_exceeded || result.returncode !== 0) process.exit(71);
 }
-try {
-  for (const name of readdirSync(target)) statSync(join(target, name));
-} catch {
-  process.exit(71);
-}
+
+const pack = mkdtempSync("/tmp/node-pack-");
+run([NODE, NPM, "ci", "--offline", "--ignore-scripts", "--no-audit", "--no-fund", `--cache=${cache}`], source, source);
+run([NODE, NPM, "pack", "--ignore-scripts", "--pack-destination", pack], source, pack);
+const tarballs = readdirSync(pack).filter((name) => name.endsWith(".tgz"));
+if (tarballs.length !== 1 || !statSync(`${pack}/${tarballs[0]}`).isFile()) process.exit(71);
+run([NODE, "/tests/runtime/node/validate-package.mjs", `${pack}/${tarballs[0]}`], pack, pack);
+run([NODE, NPM, "install", `${pack}/${tarballs[0]}`, "--offline", "--ignore-scripts", "--no-audit", "--no-fund", `--cache=${cache}`, "--prefix", resolve(target)], source, target);
+process.exit(0);

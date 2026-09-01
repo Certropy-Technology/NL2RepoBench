@@ -27,6 +27,12 @@ class NodeRuntimeFile(RecordModel):
     type: Literal["file"] = "file"
 
 
+class NodeRuntimeIdentity(NodeRuntimeFile):
+    """A named executable or launcher that is also part of the closed tree."""
+
+    name: str
+
+
 class NodeRuntimeManifest(RecordModel):
     schema_version: Literal["1.0"] = "1.0"
     ecosystem: Literal["node"] = "node"
@@ -38,8 +44,8 @@ class NodeRuntimeManifest(RecordModel):
     pnpm_version: str | None = Field(default=None, pattern=SEMVER_PATTERN)
     digest_algorithm: Literal["sha256"] = "sha256"
     files: tuple[NodeRuntimeFile, ...]
-    executables: tuple[NodeRuntimeFile, ...] = ()
-    launchers: tuple[NodeRuntimeFile, ...] = ()
+    executables: tuple[NodeRuntimeIdentity, ...] = ()
+    launchers: tuple[NodeRuntimeIdentity, ...] = ()
     tree_sha256: str = Field(pattern=r"^sha256:[0-9a-f]{64}$")
 
     @model_validator(mode="after")
@@ -56,9 +62,26 @@ class NodeRuntimeManifest(RecordModel):
         if not any(entry.path == "bin/node" and entry.mode == 0o555 for entry in self.files):
             raise ValueError("Node runtime manifest requires bin/node mode 0555")
         file_paths = set(paths)
+        identity_names = [entry.name for entry in (*self.executables, *self.launchers)]
+        if len(identity_names) != len(set(identity_names)):
+            raise ValueError("Node runtime identities must be unique")
         for entry in (*self.executables, *self.launchers):
             if entry.path not in file_paths:
                 raise ValueError("Node runtime executable is not in files")
+            if entry.path.startswith("/") or ".." in Path(entry.path).parts:
+                raise ValueError("Node runtime identity path is unsafe")
+        identity_pairs = {
+            (entry.name, entry.path) for entry in (*self.executables, *self.launchers)
+        }
+        if ("node", "bin/node") not in identity_pairs:
+            raise ValueError("Node runtime manifest requires the node executable identity")
+        if ("npm", "lib/npm/bin/npm-cli.js") not in identity_pairs:
+            raise ValueError("Node runtime manifest requires the npm launcher identity")
+        if self.pnpm_version is not None and (
+            "pnpm",
+            "lib/pnpm/bin/pnpm.cjs",
+        ) not in identity_pairs:
+            raise ValueError("Node runtime manifest requires the pnpm launcher identity")
         return self
 
 
@@ -70,7 +93,11 @@ def node_tree_digest(root: Path, files: tuple[NodeRuntimeFile, ...]) -> str:
         if not stat.S_ISREG(metadata.st_mode) or metadata.st_nlink != 1:
             raise ValueError(f"Node runtime entry is not a regular unique file: {entry.path}")
         data = path.read_bytes()
-        if len(data) != entry.size_bytes or hashlib.sha256(data).hexdigest() != entry.sha256:
+        if (
+            len(data) != entry.size_bytes
+            or hashlib.sha256(data).hexdigest() != entry.sha256
+            or stat.S_IMODE(metadata.st_mode) != entry.mode
+        ):
             raise ValueError(f"Node runtime entry digest mismatch: {entry.path}")
         digest.update(entry.path.encode("utf-8"))
         digest.update(b"\0")
@@ -79,11 +106,19 @@ def node_tree_digest(root: Path, files: tuple[NodeRuntimeFile, ...]) -> str:
 
 
 def validate_node_runtime_manifest(root: Path, manifest: NodeRuntimeManifest) -> None:
-    actual = {
-        path.relative_to(root).as_posix()
-        for path in root.rglob("*")
-        if path.is_file() or path.is_symlink()
-    }
+    actual: set[str] = set()
+    for path in root.rglob("*"):
+        relative = path.relative_to(root).as_posix()
+        metadata = path.lstat()
+        if stat.S_ISDIR(metadata.st_mode):
+            if metadata.st_nlink != 1:
+                raise ValueError(f"Node runtime directory is a hardlink: {relative}")
+            continue
+        actual.add(relative)
+        if not stat.S_ISREG(metadata.st_mode) or metadata.st_nlink != 1:
+            raise ValueError(f"Node runtime tree contains a non-regular file: {relative}")
+        if metadata.st_mode & 0o6000:
+            raise ValueError(f"Node runtime tree contains setuid/setgid file: {relative}")
     declared = {entry.path for entry in manifest.files}
     if actual != declared:
         raise ValueError("Node runtime tree has an extra or missing file")
@@ -124,9 +159,30 @@ class NodeRuntimeLock(RecordModel):
     npm_executable: str = f"{NODE_RUNTIME_ROOT}/lib/npm/bin/npm-cli.js"
     pnpm_executable: str | None = None
     runtime_root: str = NODE_RUNTIME_ROOT
-    node_runtime_manifest: str | None = None
-    node_runtime_manifest_sha256: str | None = Field(default=None, pattern=r"^sha256:[0-9a-f]{64}$")
-    node_runtime_tree_sha256: str | None = Field(default=None, pattern=r"^sha256:[0-9a-f]{64}$")
+    node_runtime_manifest: str
+    node_runtime_manifest_sha256: str = Field(pattern=r"^sha256:[0-9a-f]{64}$")
+    node_runtime_tree_sha256: str = Field(pattern=r"^sha256:[0-9a-f]{64}$")
+
+    @model_validator(mode="after")
+    def validate_runtime_identity(self) -> NodeRuntimeLock:
+        if (
+            not self.node_runtime_manifest
+            or Path(self.node_runtime_manifest).is_absolute()
+            or ".." in Path(self.node_runtime_manifest).parts
+        ):
+            raise ValueError("Node runtime manifest must be a safe repository-relative path")
+        if self.runtime_root != NODE_RUNTIME_ROOT:
+            raise ValueError("Node runtime root is fixed to /opt/nl2repobench-node")
+        if self.executable != f"{NODE_RUNTIME_ROOT}/bin/node":
+            raise ValueError("Node executable must be the staged absolute node path")
+        if self.npm_executable != f"{NODE_RUNTIME_ROOT}/lib/npm/bin/npm-cli.js":
+            raise ValueError("npm executable must be the staged absolute launcher path")
+        expected_pnpm = f"{NODE_RUNTIME_ROOT}/lib/pnpm/bin/pnpm.cjs"
+        if self.pnpm_version is not None and self.pnpm_executable != expected_pnpm:
+            raise ValueError("pnpm version requires the staged absolute pnpm launcher path")
+        if self.pnpm_version is None and self.pnpm_executable is not None:
+            raise ValueError("pnpm executable requires a pinned pnpm version")
+        return self
 
 
 class NodeHarborToolchainLock(RecordModel):
@@ -153,6 +209,11 @@ class NodeHarborToolchainLock(RecordModel):
             raise ValueError("production Node toolchain requires a locked Node grader")
         if self.status == "locked" and self.node_runtime_sha256 is None:
             raise ValueError("production Node toolchain requires a Node runtime hash")
+        if self.status == "locked" and self.runtime.pnpm_version is not None:
+            if self.runtime.pnpm_executable != f"{NODE_RUNTIME_ROOT}/lib/pnpm/bin/pnpm.cjs":
+                raise ValueError("production Node toolchain requires the staged pnpm launcher")
+        if self.status == "locked" and not self.runtime.node_runtime_manifest:
+            raise ValueError("production Node toolchain requires a runtime manifest")
         if self.status == "locked" and self.verifier_requirements_sha256 is None:
             raise ValueError("production Node toolchain requires verifier requirements hash")
         return self

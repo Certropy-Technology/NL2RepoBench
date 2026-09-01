@@ -49,6 +49,26 @@ class PnpmHarborCompiler(NodeHarborCompiler):
     def pnpm_version(self) -> str:
         return self.toolchain.runtime.pnpm_version or "9.15.0"
 
+    def _write_environment(
+        self, manifest: TaskManifest, task_root: Path, allow_incomplete: bool
+    ) -> None:
+        if not allow_incomplete:
+            raise NodeHarborCompileError(
+                "Node pnpm closure manifest/artifact is unavailable for production"
+            )
+        self._write_pnpm_runtime(task_root / "environment/pnpm-runtime")
+        super()._write_environment(manifest, task_root, allow_incomplete)
+
+    def _runtime_stage_extra(self, allow_incomplete: bool) -> str:
+        if not allow_incomplete:
+            raise NodeHarborCompileError(
+                "Node pnpm closure manifest/artifact is unavailable for production"
+            )
+        return (
+            f"  && cp -a /usr/lib/node_modules/pnpm {NODE_RUNTIME_ROOT}/lib/pnpm \\\n"
+            f"  && test -f {PNPM_LAUNCHER} \\\n"
+        )
+
     def _write_verifier(
         self,
         source_dir: Path,
@@ -103,16 +123,41 @@ class PnpmHarborCompiler(NodeHarborCompiler):
 
         image = self.toolchain.images.verifier_base
         python_image = self.toolchain.images.verifier_python_base
-        self._write_pnpm_runtime(task_root)
+        self._write_pnpm_runtime(tests_root / "pnpm-runtime")
+        runtime_manifest = self._runtime_manifest_payload(image, allow_incomplete=allow_incomplete)
+        atomic_write(
+            tests_root / "node-runtime.manifest.json",
+            json.dumps(runtime_manifest, sort_keys=True, separators=(",", ":")).encode()
+            + b"\n",
+        )
+        runtime_manifest_check = self._runtime_manifest_check()
+        runtime_manifest_stage = self._runtime_manifest_stage(image, allow_incomplete)
+        runtime_manifest_final = (
+            "" if allow_incomplete else "COPY node-runtime.manifest.json "
+            f"{NODE_RUNTIME_ROOT}/runtime.manifest.json\n"
+        )
         dockerfile = f"""FROM --platform=linux/amd64 {image} AS node-runtime
+RUN resolved_node="$(readlink -f /usr/local/bin/node)" \\
+  && test -f "$resolved_node" \\
+  && test "$(/usr/local/bin/node --version)" = "v{self.toolchain.runtime.runtime_version}" \\
+  && mkdir -p {NODE_RUNTIME_ROOT}/bin {NODE_RUNTIME_ROOT}/lib \\
+  && cp --dereference "$resolved_node" {NODE_EXECUTABLE} \\
+  && cp -aL /usr/local/lib/node_modules/npm {NODE_RUNTIME_ROOT}/lib/npm \\
+  && cp -aL /usr/lib/node_modules/pnpm {NODE_RUNTIME_ROOT}/lib/pnpm \\
+  && test -f {PNPM_LAUNCHER} \\
+  && chmod 0555 {NODE_EXECUTABLE} \\
+  && find {NODE_RUNTIME_ROOT} -type f ! -path {NODE_EXECUTABLE} -exec chmod 0444 {{}} + \\
+  && chmod -R a-w {NODE_RUNTIME_ROOT}
+{runtime_manifest_stage}
 FROM --platform=linux/amd64 {python_image}
 
-COPY --from=node-runtime /usr/local/bin/node {NODE_EXECUTABLE}
-COPY --from=node-runtime /usr/local/lib/node_modules/npm {NODE_RUNTIME_ROOT}/lib/npm
-COPY pnpm-runtime {NODE_RUNTIME_ROOT}/lib/pnpm
-RUN chmod 0555 {NODE_EXECUTABLE} \\
-  && chmod -R a-w {NODE_RUNTIME_ROOT} \\
+COPY --from=node-runtime {NODE_RUNTIME_ROOT} {NODE_RUNTIME_ROOT}
+{runtime_manifest_final}
+RUN test -f {NODE_RUNTIME_ROOT}/runtime.manifest.json \\
+  && test -f {NODE_EXECUTABLE} \\
+  && test ! -L {NODE_EXECUTABLE} \\
   && test "$({NODE_EXECUTABLE} {PNPM_LAUNCHER} --version)" = "{self.pnpm_version}"
+{runtime_manifest_check}
 COPY python-runtime /opt/nl2repobench-runtime
 COPY verifier-requirements.lock.txt /tmp/verifier-requirements.lock.txt
 RUN python -m pip install --no-cache-dir --require-hashes \\
@@ -144,13 +189,13 @@ ENV PNPM_HOME=/usr/local/share/pnpm \\
     npm_config_ignore_scripts=true
 """
 
-    def _write_pnpm_runtime(self, task_root: Path) -> None:
+    def _write_pnpm_runtime(self, destination: Path) -> None:
         """Stage the host's packaged pnpm closure for development builds."""
 
         source = Path("/usr/lib/node_modules/pnpm")
         if not source.is_dir():
             raise NodeHarborCompileError("packaged pnpm closure is unavailable")
-        self._copy_tree(source, task_root / "environment/pnpm-runtime")
+        self._copy_tree(source, destination)
 
     def _write_empty_pnpm_bundle(self, root: Path) -> None:
         lock = b"""lockfileVersion: '9.0'
