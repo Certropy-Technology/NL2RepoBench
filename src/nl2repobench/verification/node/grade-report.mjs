@@ -21,6 +21,7 @@ const pythonCode = [
 ].join("; ");
 const pythonArgs = [
   "-I",
+  "-B",
   "-c",
   pythonCode,
   "--runtime",
