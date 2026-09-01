@@ -6,7 +6,13 @@ instruction = "blocked.md"
 [metadata]
 difficulty = "hard"
 category = "python-linter"
-tags = ["python", "lint", "plugins", "overlay", "blocked"]
+tags = [
+    "python",
+    "lint",
+    "plugins",
+    "overlay",
+    "blocked",
+]
 language = "python"
 
 [source]
@@ -19,7 +25,6 @@ submodules = []
 
 [environment]
 status = "unknown"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -29,23 +34,26 @@ reason = "The immutable image contains unapproved setup/test overlays and no has
 
 [dependencies]
 status = "unknown"
-installer = "pip"
-packages = ["linter plugin and test dependencies are not a hash-locked offline closure"]
+package_manager = "pip"
+packages = [
+    "linter plugin and test dependencies are not a hash-locked offline closure",
+]
 
 [tests]
 framework = "pytest"
+report_format = "pytest-junit-xml-v1"
 expected_total = 0
 expected_total_source = "unknown"
-commands = []
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = ["skipped"]
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
-status = "blocked"
 owner = "repair/pylama"
+status = "blocked"
 reason = "The exact source and MIT archive/license evidence are known, but the image has two unapproved overlays, the legacy denominator 34 conflicts with 35 static test items, and no approved dependency closure, structured collection, separate verifier, Oracle, or controls exist."

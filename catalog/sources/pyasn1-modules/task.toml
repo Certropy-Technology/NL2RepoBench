@@ -3,10 +3,25 @@ task_id = "pyasn1-modules"
 version = "1.0.0"
 instruction = "instruction.md"
 
+[oracle_bundle]
+digest = "sha256:0967006a713d6a099c856c96a65f156779d7712c5914ef30bf4b7b29de8ddc7f"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:0967006a713d6a099c856c96a65f156779d7712c5914ef30bf4b7b29de8ddc7f"
+visibility = "private"
+
 [metadata]
 difficulty = "hard"
 category = "asn1-protocol-modules"
-tags = ["python", "asn1", "der", "x509", "cryptography", "protocols", "separate-verifier"]
+tags = [
+    "python",
+    "asn1",
+    "der",
+    "x509",
+    "cryptography",
+    "protocols",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -18,13 +33,11 @@ source_digest = "sha256:5f7359441c2f6c58f1ee04134963b6b4c333ed62e45fdd4cacbdad4f
 submodules = []
 
 [environment]
-status = "known"
-python_version = "3.12.11"
+status = "unknown"
 os_name = "debian-12-amd64"
 base_image = "python:3.12-slim"
 base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
 system_packages = []
-network_mode = "no-network"
 build_command = "Install the hash-locked candidate dependency closure during image build; install the submitted project with pip --no-build-isolation in the verifier."
 
 [environment.network_policy]
@@ -34,33 +47,50 @@ reference_source_fetch = "forbidden"
 reason = "The agent and separate verifier run with no network. The hash-locked pyasn1/build closure is installed during image build; only the trusted Oracle may fetch the frozen upstream revision from the declared source host."
 
 [dependencies]
-status = "known"
-installer = "pip"
-packages = ["pyasn1==0.6.1", "setuptools==80.9.0"]
-lock_artifact = { digest = "sha256:e3bc914b0a408ea00c822e5126c3e9837a3818dcf2b332a79232d15ba873999c", size_bytes = 621, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:e3bc914b0a408ea00c822e5126c3e9837a3818dcf2b332a79232d15ba873999c", visibility = "private" }
+status = "unknown"
+package_manager = "pip"
+packages = [
+    "pyasn1==0.6.1",
+    "setuptools==80.9.0",
+]
 
 [tests]
-framework = "pytest"
+framework = "custom"
+report_format = "custom-json-v1"
 expected_total = 282
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-
-[verifier]
-protocol = "custom-json-v1"
-bundle = { digest = "sha256:caee125238398681f17b477a62177b38fd7420d4fecf5c0f493d35892a1f7a61", size_bytes = 788480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:caee125238398681f17b477a62177b38fd7420d4fecf5c0f493d35892a1f7a61", visibility = "private" }
-entrypoint = "run.py"
-environment = {}
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+
+[verifier.bundle]
+digest = "sha256:caee125238398681f17b477a62177b38fd7420d4fecf5c0f493d35892a1f7a61"
+size_bytes = 788480
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:caee125238398681f17b477a62177b38fd7420d4fecf5c0f493d35892a1f7a61"
+visibility = "private"
+
+[verifier.environment]
+
 [harbor]
 description = "Build pyasn1-modules 0.4.2 from an empty workspace and reproduce its frozen ASN.1 protocol schemas, DER fixtures, open types, and PEM helpers under a separate no-network verifier."
-keywords = ["python", "asn1", "der", "x509", "protocols", "pytest"]
+keywords = [
+    "python",
+    "asn1",
+    "der",
+    "x509",
+    "protocols",
+    "pytest",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 900.0
 candidate_install_timeout_sec = 180.0
@@ -72,14 +102,7 @@ memory_mb = 4096
 storage_mb = 8192
 workspace_artifact = "/workspace"
 
-[oracle_bundle]
-digest = "sha256:0967006a713d6a099c856c96a65f156779d7712c5914ef30bf4b7b29de8ddc7f"
-size_bytes = 10240
-media_type = "application/vnd.nl2repobench.private-bundle+tar"
-uri = "artifact://private/sha256:0967006a713d6a099c856c96a65f156779d7712c5914ef30bf4b7b29de8ddc7f"
-visibility = "private"
-
 [lifecycle]
-status = "controls-passed"
 owner = "worker"
-reason = "Harbor 0.21.0 Oracle passed 282/282; empty, stub, forgery, install-timeout, workspace-boundary, and offline network controls completed under the separate no-network verifier."
+status = "blocked"
+reason = "Harbor 0.21.0 Oracle passed 282/282; empty, stub, forgery, install-timeout, workspace-boundary, and offline network controls completed under the separate no-network verifier. Canonical migration removed legacy dependency closure fields because no exact lock/offline-store/inventory refs were available. Environment/package-manager version evidence is not exact; production release remains blocked."

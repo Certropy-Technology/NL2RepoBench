@@ -3,10 +3,25 @@ task_id = "pycparser"
 version = "1.0.0"
 instruction = "instruction.md"
 
+[oracle_bundle]
+digest = "sha256:38394f71a2706274960c425b234cb38d45181ebef554e294120241bf8d23d9d6"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:38394f71a2706274960c425b234cb38d45181ebef554e294120241bf8d23d9d6"
+visibility = "private"
+
 [metadata]
 difficulty = "hard"
 category = "parser"
-tags = ["python", "c", "lexer", "parser", "ast", "code-generator", "subprocess-boundary"]
+tags = [
+    "python",
+    "c",
+    "lexer",
+    "parser",
+    "ast",
+    "code-generator",
+    "subprocess-boundary",
+]
 language = "python"
 
 [source]
@@ -18,13 +33,13 @@ source_digest = "sha256:ed31469eea243e25ce86310039c174a61890d2acc7586cd06f8be38c
 submodules = []
 
 [environment]
-status = "known"
-python_version = "3.12.14"
+status = "unknown"
 os_name = "debian-12-amd64"
 base_image = "python:3.12.14-slim-bookworm"
 base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e"
-system_packages = ["gcc"]
-network_mode = "no-network"
+system_packages = [
+    "gcc",
+]
 
 [environment.network_policy]
 mode = "no-network"
@@ -33,34 +48,50 @@ reference_source_fetch = "forbidden"
 reason = "Build-time dependencies are installed from the private hash lock; candidate and verifier runs are network-isolated. The Oracle consumes only a digest-verified private source archive."
 
 [dependencies]
-status = "known"
-installer = "pip"
-packages = ["setuptools==80.9.0", "wheel==0.45.1"]
-lock_artifact = { digest = "sha256:53615811dc1d1f22b94617262702e9d02d56d5d8a0a180227344c700fcddae60", size_bytes = 373, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:53615811dc1d1f22b94617262702e9d02d56d5d8a0a180227344c700fcddae60", visibility = "private" }
+status = "unknown"
+package_manager = "pip"
+packages = [
+    "setuptools==80.9.0",
+    "wheel==0.45.1",
+]
 
 [tests]
-framework = "pytest"
+framework = "custom"
+report_format = "custom-json-v1"
 expected_total = 38
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = []
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:c50ff5ef31c218a7cadfd11c4d117f3995338367d4b7ba6c674b16ad9c7df736", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:c50ff5ef31c218a7cadfd11c4d117f3995338367d4b7ba6c674b16ad9c7df736", visibility = "private" }
 entrypoint = "run.py"
-environment = {}
+
+[verifier.bundle]
+digest = "sha256:c50ff5ef31c218a7cadfd11c4d117f3995338367d4b7ba6c674b16ad9c7df736"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:c50ff5ef31c218a7cadfd11c4d117f3995338367d4b7ba6c674b16ad9c7df736"
+visibility = "private"
+
+[verifier.environment]
 
 [harbor]
 description = "Build the pure-Python pycparser C99 parser from an empty workspace and satisfy deterministic lexer, AST, parser, generator, transform, and local file parsing scenarios."
-keywords = ["python", "c", "lexer", "parser", "ast", "code-generator"]
+keywords = [
+    "python",
+    "c",
+    "lexer",
+    "parser",
+    "ast",
+    "code-generator",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 900.0
 candidate_install_timeout_sec = 180.0
@@ -72,14 +103,7 @@ memory_mb = 4096
 storage_mb = 8192
 workspace_artifact = "/workspace"
 
-[oracle_bundle]
-digest = "sha256:38394f71a2706274960c425b234cb38d45181ebef554e294120241bf8d23d9d6"
-size_bytes = 10240
-media_type = "application/vnd.nl2repobench.private-bundle+tar"
-uri = "artifact://private/sha256:38394f71a2706274960c425b234cb38d45181ebef554e294120241bf8d23d9d6"
-visibility = "private"
-
 [lifecycle]
-status = "controls-passed"
 owner = "python-author-wave2-archive-r2-c3"
-reason = "Source, dependency closure, production compile, Oracle, and task-local Harbor controls passed; awaiting downstream model Agent Run and integrator review."
+status = "blocked"
+reason = "Source, dependency closure, production compile, Oracle, and task-local Harbor controls passed; awaiting downstream model Agent Run and integrator review. Canonical migration removed legacy dependency closure fields because no exact lock/offline-store/inventory refs were available. Environment/package-manager version evidence is not exact; production release remains blocked."

@@ -3,10 +3,22 @@ task_id = "pyperclip"
 version = "0.2.0"
 instruction = "instruction.md"
 
+[oracle_bundle]
+digest = "sha256:1b5e9e40ff098af6a0c2931d9819f1d722e3660332f4d820c23a34bda5ed7fe8"
+size_bytes = 92160
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:1b5e9e40ff098af6a0c2931d9819f1d722e3660332f4d820c23a34bda5ed7fe8"
+visibility = "private"
+
 [metadata]
 difficulty = "medium"
 category = "python-library"
-tags = ["python", "clipboard", "fixture-adapter", "separate-verifier"]
+tags = [
+    "python",
+    "clipboard",
+    "fixture-adapter",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -17,13 +29,14 @@ license_spdx = "BSD-3-Clause"
 source_digest = "sha256:4e80effb92cd84116a2541bb5aa4df7d7832761c04600322f558265ba73c0275"
 
 [environment]
-status = "known"
-python_version = "3.12.4"
+status = "unknown"
 os_name = "debian-12"
 base_image = "python:3.12-slim"
 base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
-system_packages = ["git", "ca-certificates"]
-network_mode = "no-network"
+system_packages = [
+    "git",
+    "ca-certificates",
+]
 
 [environment.network_policy]
 mode = "no-network"
@@ -32,33 +45,51 @@ reference_source_fetch = "forbidden"
 reason = "Third-party build and test dependencies are installed during the Docker build phase, which has network. The agent phase therefore needs no egress. A model provider host, when needed, is injected per run via Harbor agent.extra_allowed_hosts."
 
 [dependencies]
-status = "known"
-installer = "pip"
-packages = ["setuptools==80.10.2", "wheel==0.45.1", "pytest==8.3.5", "iniconfig==2.0.0", "packaging==24.2", "pluggy==1.5.0"]
-lock_artifact = { digest = "sha256:fefd050bfda3dd90a8926b8adbe2dbf7998d86fc0a2627c3333a07fe56c2c577", size_bytes = 664, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:fefd050bfda3dd90a8926b8adbe2dbf7998d86fc0a2627c3333a07fe56c2c577", visibility = "private" }
+status = "unknown"
+package_manager = "pip"
+packages = [
+    "setuptools==80.10.2",
+    "wheel==0.45.1",
+    "pytest==8.3.5",
+    "iniconfig==2.0.0",
+    "packaging==24.2",
+    "pluggy==1.5.0",
+]
 
 [tests]
-framework = "pytest"
+framework = "custom"
+report_format = "custom-json-v1"
 expected_total = 10
 expected_total_source = "frozen-collection"
-commands = ["python -m pytest --collect-only /tests/private/test_contract.py", "python -m pytest /tests/private/test_contract.py --junitxml=/logs/verifier/junit.xml"]
-protected_paths = ["/tests/private/test_contract.py", "/tests/private/runner.py"]
-
-[verifier]
-protocol = "custom-json-v1"
-bundle = { digest = "sha256:b85317c4a0f00084a1bcc8745c3a63b4a34ee086d2c47118ded3bafe0b790996", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:b85317c4a0f00084a1bcc8745c3a63b4a34ee086d2c47118ded3bafe0b790996", visibility = "private" }
-entrypoint = "run.py"
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+
+[verifier.bundle]
+digest = "sha256:b85317c4a0f00084a1bcc8745c3a63b4a34ee086d2c47118ded3bafe0b790996"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:b85317c4a0f00084a1bcc8745c3a63b4a34ee086d2c47118ded3bafe0b790996"
+visibility = "private"
+
 [harbor]
 description = "Build pyperclip from an empty workspace and satisfy deterministic clipboard contracts through a separate JSON-line verifier."
-keywords = ["python", "clipboard", "fixture-adapter", "lazy-loading", "separate-verifier"]
+keywords = [
+    "python",
+    "clipboard",
+    "fixture-adapter",
+    "lazy-loading",
+    "separate-verifier",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 90.0
@@ -71,12 +102,5 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "oracle-passed"
-reason = "Generic private-bundle compiled Oracle passed 10/10 with reward 1.0; controls and review remain pending."
-
-[oracle_bundle]
-digest = "sha256:1b5e9e40ff098af6a0c2931d9819f1d722e3660332f4d820c23a34bda5ed7fe8"
-size_bytes = 92160
-media_type = "application/vnd.nl2repobench.private-bundle+tar"
-uri = "artifact://private/sha256:1b5e9e40ff098af6a0c2931d9819f1d722e3660332f4d820c23a34bda5ed7fe8"
-visibility = "private"
+status = "blocked"
+reason = "Generic private-bundle compiled Oracle passed 10/10 with reward 1.0; controls and review remain pending. Canonical migration removed legacy dependency closure fields because no exact lock/offline-store/inventory refs were available. Environment/package-manager version evidence is not exact; production release remains blocked."

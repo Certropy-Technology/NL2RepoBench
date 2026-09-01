@@ -3,10 +3,24 @@ task_id = "pynacl"
 version = "1.0.0"
 instruction = "instruction.md"
 
+[oracle_bundle]
+digest = "sha256:e98a6fb4ef5bae437cb8fb16867664750eacbdbafdd53ba791e51f4cf3a11dbb"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:e98a6fb4ef5bae437cb8fb16867664750eacbdbafdd53ba791e51f4cf3a11dbb"
+visibility = "private"
+
 [metadata]
 difficulty = "hard"
 category = "cryptography-library"
-tags = ["python", "cryptography", "cffi", "libsodium", "native-extension", "separate-verifier"]
+tags = [
+    "python",
+    "cryptography",
+    "cffi",
+    "libsodium",
+    "native-extension",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -18,13 +32,14 @@ source_digest = "sha256:eec62a1ac27fd9cbe0452b5b7f12f2c1ca4f568c63b3b0b565a4ca0d
 submodules = []
 
 [environment]
-status = "known"
-python_version = "3.12.14"
+status = "unknown"
 os_name = "debian-13-amd64"
 base_image = "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
 base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
-system_packages = ["build-essential=12.12", "git=1:2.47.3-0+deb13u1"]
-network_mode = "no-network"
+system_packages = [
+    "build-essential=12.12",
+    "git=1:2.47.3-0+deb13u1",
+]
 build_command = "install the hash-locked PEP 517 and CFFI closure during Docker build, then build the candidate and bundled libsodium without dependency resolution"
 
 [environment.network_policy]
@@ -34,40 +49,53 @@ reference_source_fetch = "forbidden"
 reason = "The hash-locked Python build closure and pinned native toolchain are installed only during Docker build. Agent and verifier execution have no egress; only the trusted Oracle receives the exact upstream source-host override."
 
 [dependencies]
-status = "known"
-installer = "pip"
+status = "unknown"
+package_manager = "pip"
 packages = [
-  "cffi==2.1.1",
-  "packaging==26.3",
-  "pycparser==3.0",
-  "setuptools==84.0.0",
-  "wheel==0.48.0",
+    "cffi==2.1.1",
+    "packaging==26.3",
+    "pycparser==3.0",
+    "setuptools==84.0.0",
+    "wheel==0.48.0",
 ]
-lock_artifact = { digest = "sha256:0219751081b3099f05b069b50128fe6a94df58dc1aa8c34f22ab92d7dead368d", size_bytes = 9863, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:0219751081b3099f05b069b50128fe6a94df58dc1aa8c34f22ab92d7dead368d", visibility = "private" }
 
 [tests]
-framework = "pytest"
+framework = "custom"
+report_format = "custom-json-v1"
 expected_total = 49
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py", "/tests/verifier/expected.json"]
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:f1e2b40c487399ec44c7de330052ea63fafb8028fd980ea0f456662e62bb9489", size_bytes = 51200, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:f1e2b40c487399ec44c7de330052ea63fafb8028fd980ea0f456662e62bb9489", visibility = "private" }
 entrypoint = "run.py"
-environment = {}
+
+[verifier.bundle]
+digest = "sha256:f1e2b40c487399ec44c7de330052ea63fafb8028fd980ea0f456662e62bb9489"
+size_bytes = 51200
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:f1e2b40c487399ec44c7de330052ea63fafb8028fd980ea0f456662e62bb9489"
+visibility = "private"
+
+[verifier.environment]
 
 [harbor]
 description = "Build the pinned PyNaCl 1.6.2 high-level cryptographic package, including its local CFFI/libsodium boundary, from an empty workspace."
-keywords = ["python", "cryptography", "cffi", "libsodium", "native-extension", "separate-verifier"]
+keywords = [
+    "python",
+    "cryptography",
+    "cffi",
+    "libsodium",
+    "native-extension",
+    "separate-verifier",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 720.0
 candidate_install_timeout_sec = 300.0
@@ -79,14 +107,7 @@ memory_mb = 4096
 storage_mb = 8192
 workspace_artifact = "/workspace"
 
-[oracle_bundle]
-digest = "sha256:e98a6fb4ef5bae437cb8fb16867664750eacbdbafdd53ba791e51f4cf3a11dbb"
-size_bytes = 10240
-media_type = "application/vnd.nl2repobench.private-bundle+tar"
-uri = "artifact://private/sha256:e98a6fb4ef5bae437cb8fb16867664750eacbdbafdd53ba791e51f4cf3a11dbb"
-visibility = "private"
-
 [lifecycle]
-status = "controls-passed"
 owner = "python-author-wave2-20260828"
-reason = "The final production bundle passes the official one-run Harbor Oracle at 49/49 and the empty, stub, forgery, detached call-hang, offline verifier, and static network controls. Review, Agent Run, and publication remain integrator stages."
+status = "blocked"
+reason = "The final production bundle passes the official one-run Harbor Oracle at 49/49 and the empty, stub, forgery, detached call-hang, offline verifier, and static network controls. Review, Agent Run, and publication remain integrator stages. Canonical migration removed legacy dependency closure fields because no exact lock/offline-store/inventory refs were available. Environment/package-manager version evidence is not exact; production release remains blocked."

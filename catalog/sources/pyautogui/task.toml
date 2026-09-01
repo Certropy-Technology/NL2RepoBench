@@ -6,7 +6,13 @@ instruction = "blocked.md"
 [metadata]
 difficulty = "unknown"
 category = "desktop-automation"
-tags = ["python", "gui", "x11", "keyboard", "blocked"]
+tags = [
+    "python",
+    "gui",
+    "x11",
+    "keyboard",
+    "blocked",
+]
 language = "python"
 
 [source]
@@ -18,13 +24,17 @@ source_digest = "sha256:e0ec59dff155bf12f40f44b2d4acf3fc6dcb6173976f9b1f5f818c5f
 submodules = []
 
 [environment]
-status = "known"
-python_version = "3.9.23"
+status = "unknown"
 os_name = "debian-trixie-amd64"
 base_image = "ghcr.io/multimodal-art-projection/nl2repobench/pyautogui@sha256:806aaeb2ed7a61abbdff6d1a9b6ba2dedd146bb6b345842b8c8d61ae75732259"
 base_image_digest = "sha256:806aaeb2ed7a61abbdff6d1a9b6ba2dedd146bb6b345842b8c8d61ae75732259"
-system_packages = ["libxtst6", "scrot", "xvfb", "xauth", "python3-tk"]
-network_mode = "no-network"
+system_packages = [
+    "libxtst6",
+    "scrot",
+    "xvfb",
+    "xauth",
+    "python3-tk",
+]
 
 [environment.network_policy]
 mode = "no-network"
@@ -34,25 +44,32 @@ reason = "The pinned legacy verifier image is known, but no approved candidate d
 
 [dependencies]
 status = "unknown"
-installer = "pip"
+package_manager = "pip"
+packages = []
 
 [tests]
 framework = "pytest"
+report_format = "pytest-junit-xml-v1"
 expected_total = 28
-expected_total_source = "legacy-file"
-commands = ["pip install .", "xvfb-run -a pytest --continue-on-collection-errors tests"]
-protected_paths = ["tests"]
+expected_total_source = "unknown"
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = ["skipped"]
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Blocked candidate: the legacy PyAutoGUI suite requires a focused terminal and interactive stdin that Xvfb alone cannot provide."
-keywords = ["python", "gui", "x11", "keyboard", "blocked"]
+keywords = [
+    "python",
+    "gui",
+    "x11",
+    "keyboard",
+    "blocked",
+]
 agent_timeout_sec = 1800.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 120.0
@@ -65,6 +82,6 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
 owner = "repair/pyautogui"
+status = "blocked"
 reason = "Failure class: environment. Seven frozen keyboard tests call input() from worker threads and require a focused terminal; xvfb-run supplies only an X display, so a separate verifier cannot execute the legacy contract deterministically. No catalog/tasks/pyautogui runtime exists."

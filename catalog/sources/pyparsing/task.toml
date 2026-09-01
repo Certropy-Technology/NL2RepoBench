@@ -7,13 +7,13 @@ instruction = "instruction.md"
 difficulty = "hard"
 category = "parser-combinators"
 tags = [
-  "python",
-  "parser-combinators",
-  "text-parsing",
-  "unicode",
-  "repository-generation",
-  "pytest",
-  "separate-verifier",
+    "python",
+    "parser-combinators",
+    "text-parsing",
+    "unicode",
+    "repository-generation",
+    "pytest",
+    "separate-verifier",
 ]
 language = "python"
 
@@ -22,17 +22,12 @@ status = "known"
 upstream_url = "https://github.com/pyparsing/pyparsing"
 revision = "efd56db4e59f36b1673ce0eb0823e3afaa9d1201"
 license_spdx = "MIT"
-# Direct, unprefixed `git archive --format=tar HEAD`; two archives matched.
 source_digest = "sha256:a5dfb002ae8c378326c1f3395a0f2531080c5b5d0b480e33a3a4a29526a3c737"
 submodules = []
 
 [environment]
-# CPython 3.12/3.13 source probes are recorded in audit.md and evidence.json,
-# but no final OS, base image, image digest, locale, or platform policy exists.
 status = "unknown"
-python_version = ">=3.9"
 os_name = "unknown"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -41,44 +36,38 @@ reference_source_fetch = "forbidden"
 reason = "The parser fixtures, dependency closure, and separate verifier are not frozen; candidate and verifier execution remain network-isolated."
 
 [dependencies]
-# Source-declared build/unit/doctest/type/dev requirements. These names are
-# observations, not a hash-locked offline DependencyBundle.
 status = "unknown"
-installer = "uv"
+package_manager = "pip"
 packages = [
-  "flit_core>=3.12,<4",
-  "pytest",
-  "railroad-diagrams",
-  "jinja2",
-  "matplotlib; platform_python_implementation != 'PyPy' and python_version < '3.15'",
-  "tox",
-  "coverage",
-  "pre-commit",
-  "sphinx",
-  "myst-parser",
-  "alabaster",
-  "mypy",
+    "flit_core>=3.12,<4",
+    "pytest",
+    "railroad-diagrams",
+    "jinja2",
+    "matplotlib; platform_python_implementation != 'PyPy' and python_version < '3.15'",
+    "tox",
+    "coverage",
+    "pre-commit",
+    "sphinx",
+    "myst-parser",
+    "alabaster",
+    "mypy",
 ]
 
 [tests]
 framework = "pytest"
-# Repeated CPython 3.12.11 and 3.13.14 source-only probes each collected the
-# same 2,157 pytest item node IDs. This is not a final verifier denominator.
+report_format = "pytest-junit-xml-v1"
 expected_total = 2157
 expected_total_source = "unknown"
-# Provisional upstream unit command only. Production command bytes must be a
-# private allowlisted commands artifact after task-specific test adaptation.
-commands = ["python -m pytest --continue-on-collection-errors -q tests examples/tiny/tests"]
-protected_paths = ["tests", "examples/tiny/tests"]
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
-status = "blocked"
 owner = "authoring-worker"
+status = "blocked"
 reason = "The exact commit, repeatable source archive, MIT license evidence, tracked LOC, public API inventory, dependency/native-risk review, and repeatable source-only pytest collection plus one passing source baseline are recorded. Publication is blocked because no final immutable environment or hash-locked offline dependency bundle exists; pytest item count and JUnit subtest count differ; no private adapted test/command artifacts, Oracle bundle, pyparsing-specific child-side scenario adapter, traceability approval, three Oracle runs, or negative controls exist. No Harbor or production bundle is created."

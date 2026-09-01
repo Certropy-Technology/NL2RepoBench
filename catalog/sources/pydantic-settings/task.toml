@@ -3,10 +3,22 @@ task_id = "pydantic-settings"
 version = "0.1.0"
 instruction = "instruction.md"
 
+[oracle_bundle]
+digest = "sha256:356386c9450c398697aabed64a487d768914a0db19f9cd14ddf4a4d42acfce4e"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:356386c9450c398697aabed64a487d768914a0db19f9cd14ddf4a4d42acfce4e"
+visibility = "private"
+
 [metadata]
 difficulty = "hard"
 category = "python-library"
-tags = ["python", "configuration", "pydantic", "repository-generation"]
+tags = [
+    "python",
+    "configuration",
+    "pydantic",
+    "repository-generation",
+]
 language = "python"
 
 [source]
@@ -17,13 +29,14 @@ license_spdx = "MIT"
 source_digest = "sha256:57b7dab78777c75bcc2c138d561dea097afe3088c0b3e7f1d67481d6b4bbd5aa"
 
 [environment]
-status = "known"
-python_version = "3.12"
+status = "unknown"
 os_name = "debian-12"
 base_image = "python:3.12-slim"
 base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
-system_packages = ["git", "ca-certificates"]
-network_mode = "no-network"
+system_packages = [
+    "git",
+    "ca-certificates",
+]
 
 [environment.network_policy]
 mode = "no-network"
@@ -32,32 +45,58 @@ reference_source_fetch = "forbidden"
 reason = "Third-party build and test dependencies are installed during the Docker build phase, which has network. The agent phase therefore needs no egress. A model provider host, when needed, is injected per run via Harbor agent.extra_allowed_hosts."
 
 [dependencies]
-status = "known"
-installer = "pip"
-lock_artifact = { digest = "sha256:b350283c9b3a343cc38b05affa57957f035da0794d4c074f3c50a666e2c86c89", size_bytes = 14279, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:b350283c9b3a343cc38b05affa57957f035da0794d4c074f3c50a666e2c86c89", visibility = "private" }
-packages = ["annotated-types==0.7.0", "editables==0.5", "hatchling==1.28.0", "packaging==26.0", "pathspec==1.0.4", "pluggy==1.6.0", "pydantic==2.13.4", "pydantic-core==2.46.4", "python-dotenv==1.2.2", "setuptools==80.9.0", "trove-classifiers==2026.6.1.19", "typing-extensions==4.15.0", "typing-inspection==0.4.4", "wheel==0.45.1"]
+status = "unknown"
+package_manager = "pip"
+packages = [
+    "annotated-types==0.7.0",
+    "editables==0.5",
+    "hatchling==1.28.0",
+    "packaging==26.0",
+    "pathspec==1.0.4",
+    "pluggy==1.6.0",
+    "pydantic==2.13.4",
+    "pydantic-core==2.46.4",
+    "python-dotenv==1.2.2",
+    "setuptools==80.9.0",
+    "trove-classifiers==2026.6.1.19",
+    "typing-extensions==4.15.0",
+    "typing-inspection==0.4.4",
+    "wheel==0.45.1",
+]
 
 [tests]
-framework = "pytest"
+framework = "custom"
+report_format = "custom-json-v1"
 expected_total = 20
 expected_total_source = "frozen-collection"
-commands = ["bash /tests/test.sh"]
-
-[verifier]
-protocol = "custom-json-v1"
-bundle = { digest = "sha256:780ebc4eba8b4ff608530dff777a4aca692bcd7ceb6b32fc4f1bdbe81a2b0723", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:780ebc4eba8b4ff608530dff777a4aca692bcd7ceb6b32fc4f1bdbe81a2b0723", visibility = "private" }
-entrypoint = "run.py"
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+
+[verifier.bundle]
+digest = "sha256:780ebc4eba8b4ff608530dff777a4aca692bcd7ceb6b32fc4f1bdbe81a2b0723"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:780ebc4eba8b4ff608530dff777a4aca692bcd7ceb6b32fc4f1bdbe81a2b0723"
+visibility = "private"
+
 [harbor]
 description = "Build the core pydantic-settings API from an empty workspace."
-keywords = ["python", "configuration", "pydantic", "repository-generation"]
+keywords = [
+    "python",
+    "configuration",
+    "pydantic",
+    "repository-generation",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 30.0
@@ -70,12 +109,5 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "controls-passed"
-reason = "Fresh production compilation succeeded. A no-network archive-materialized Oracle passed 20/20 with reward=1.0; empty, stub, forged-reward, invalid-workspace, install-timeout, and call-timeout controls each produced a valid verifier-owned 0.0 result. No Harbor model Agent Run was started."
-
-[oracle_bundle]
-digest = "sha256:356386c9450c398697aabed64a487d768914a0db19f9cd14ddf4a4d42acfce4e"
-size_bytes = 10240
-media_type = "application/vnd.nl2repobench.private-bundle+tar"
-uri = "artifact://private/sha256:356386c9450c398697aabed64a487d768914a0db19f9cd14ddf4a4d42acfce4e"
-visibility = "private"
+status = "blocked"
+reason = "Fresh production compilation succeeded. A no-network archive-materialized Oracle passed 20/20 with reward=1.0; empty, stub, forged-reward, invalid-workspace, install-timeout, and call-timeout controls each produced a valid verifier-owned 0.0 result. No Harbor model Agent Run was started. Canonical migration removed legacy dependency closure fields because no exact lock/offline-store/inventory refs were available. Environment/package-manager version evidence is not exact; production release remains blocked."

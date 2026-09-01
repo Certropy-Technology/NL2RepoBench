@@ -3,10 +3,25 @@ task_id = "pyopenssl"
 version = "1.0.0"
 instruction = "instruction.md"
 
+[oracle_bundle]
+digest = "sha256:f43107df083d1d8f3405e0f39503b0a949e9a6f264e306b2a36d9c58532042f7"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:f43107df083d1d8f3405e0f39503b0a949e9a6f264e306b2a36d9c58532042f7"
+visibility = "private"
+
 [metadata]
 difficulty = "hard"
 category = "cryptography-wrapper"
-tags = ["python", "cryptography", "openssl", "x509", "tls", "native-adaptation", "separate-verifier"]
+tags = [
+    "python",
+    "cryptography",
+    "openssl",
+    "x509",
+    "tls",
+    "native-adaptation",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -18,13 +33,11 @@ source_digest = "sha256:2ca6a8d913c3c717f4a4a644f7d6d12feba86906fa687c8dcfa7a069
 submodules = []
 
 [environment]
-status = "known"
-python_version = "3.12.11"
+status = "unknown"
 os_name = "debian-12-amd64"
 base_image = "python"
 base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
 system_packages = []
-network_mode = "no-network"
 build_command = "pip installs hash-locked candidate and verifier dependencies during image build"
 
 [environment.network_policy]
@@ -34,34 +47,54 @@ reference_source_fetch = "forbidden"
 reason = "Dependencies are installed during image build from the private hash lock; Agent and verifier runs are network-isolated. Only the trusted Oracle receives the exact upstream host override."
 
 [dependencies]
-status = "known"
-installer = "pip"
-packages = ["cffi==2.1.1", "cryptography==50.0.0", "pycparser==3.0", "setuptools==75.8.0", "typing-extensions==4.16.0", "wheel==0.45.1"]
-lock_artifact = { digest = "sha256:d79d470276f63bd47c296f4cc7467a883442b4eb85e9863fa4af236d517e3b95", size_bytes = 13574, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:d79d470276f63bd47c296f4cc7467a883442b4eb85e9863fa4af236d517e3b95", visibility = "private" }
+status = "unknown"
+package_manager = "pip"
+packages = [
+    "cffi==2.1.1",
+    "cryptography==50.0.0",
+    "pycparser==3.0",
+    "setuptools==75.8.0",
+    "typing-extensions==4.16.0",
+    "wheel==0.45.1",
+]
 
 [tests]
-framework = "pytest"
+framework = "custom"
+report_format = "custom-json-v1"
 expected_total = 25
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = []
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
-excluded_statuses = []
+passed_statuses = [
+    "passed",
+]
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:51d8c8b721a4f4d660d882bd18c0a119e9aaf18819ca590eb2974e8bc28167d0", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:51d8c8b721a4f4d660d882bd18c0a119e9aaf18819ca590eb2974e8bc28167d0", visibility = "private" }
 entrypoint = "run.py"
-environment = {}
+
+[verifier.bundle]
+digest = "sha256:51d8c8b721a4f4d660d882bd18c0a119e9aaf18819ca590eb2974e8bc28167d0"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:51d8c8b721a4f4d660d882bd18c0a119e9aaf18819ca590eb2974e8bc28167d0"
+visibility = "private"
+
+[verifier.environment]
 
 [harbor]
 description = "Build pyOpenSSL from an empty workspace and implement a deterministic local crypto and TLS-memory compatibility contract."
-keywords = ["python", "cryptography", "openssl", "x509", "tls", "separate-verifier"]
+keywords = [
+    "python",
+    "cryptography",
+    "openssl",
+    "x509",
+    "tls",
+    "separate-verifier",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 900.0
 candidate_install_timeout_sec = 180.0
@@ -73,14 +106,7 @@ memory_mb = 4096
 storage_mb = 8192
 workspace_artifact = "/workspace"
 
-[oracle_bundle]
-digest = "sha256:f43107df083d1d8f3405e0f39503b0a949e9a6f264e306b2a36d9c58532042f7"
-size_bytes = 10240
-media_type = "application/vnd.nl2repobench.private-bundle+tar"
-uri = "artifact://private/sha256:f43107df083d1d8f3405e0f39503b0a949e9a6f264e306b2a36d9c58532042f7"
-visibility = "private"
-
 [lifecycle]
-status = "controls-passed"
 owner = "worker/pyopenssl"
-reason = "Production compile, trusted Harbor Oracle, empty, stub, forgery, install-hang, call-hang, and offline network controls passed with task-local hash-bound evidence. Review, pilot, publication, and the model Agent Run remain integrator stages."
+status = "blocked"
+reason = "Production compile, trusted Harbor Oracle, empty, stub, forgery, install-hang, call-hang, and offline network controls passed with task-local hash-bound evidence. Review, pilot, publication, and the model Agent Run remain integrator stages. Canonical migration removed legacy dependency closure fields because no exact lock/offline-store/inventory refs were available. Environment/package-manager version evidence is not exact; production release remains blocked."
