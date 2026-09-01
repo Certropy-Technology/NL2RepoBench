@@ -1,4 +1,4 @@
-schema_version = "2.0"
+schema_version = "1.0"
 task_id = "fast-string-width"
 version = "2.0.0"
 instruction = "instruction.md"
@@ -6,7 +6,15 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "medium"
 category = "unicode-width-library"
-tags = ["node", "npm", "esm", "unicode", "terminal", "ansi", "emoji"]
+tags = [
+    "node",
+    "npm",
+    "esm",
+    "unicode",
+    "terminal",
+    "ansi",
+    "emoji",
+]
 language = "node"
 
 [source]
@@ -22,7 +30,6 @@ status = "known"
 os_name = "debian-bookworm"
 base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
 base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -36,27 +43,13 @@ runtime = "node"
 version = "24.19.0"
 package_manager = "npm"
 package_manager_version = "11.17.0"
-architecture = "linux/amd64"
-libc = "glibc"
 
 [dependencies]
-status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
+status = "unknown"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
-packages = ["fast-string-truncated-width"]
-
-[dependencies.artifact]
-digest = "sha256:d226befb81d149392c4daeed6a5564a5062df1ae697f10c8d600dc7f464aed41"
-size_bytes = 51200
-media_type = "application/vnd.nl2repobench.npm-bundle+tar"
-uri = "artifact://private/sha256:d226befb81d149392c4daeed6a5564a5062df1ae697f10c8d600dc7f464aed41"
-visibility = "private"
+packages = [
+    "fast-string-truncated-width",
+]
 
 [tests]
 framework = "node:test"
@@ -79,12 +72,20 @@ uri = "artifact://private/sha256:339fb837d96406d0dc60a0f3161731dd1944feaf2232460
 visibility = "private"
 
 [metric]
-contract_id = "node-test-leaf-pass-rate-v1"
+contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [harbor]
 description = "Build the fast-string-width ESM package with deterministic terminal Unicode width behavior."
-keywords = ["node", "npm", "esm", "unicode", "terminal", "ansi", "emoji"]
+keywords = [
+    "node",
+    "npm",
+    "esm",
+    "unicode",
+    "terminal",
+    "ansi",
+    "emoji",
+]
 agent_timeout_sec = 1200.0
 verifier_timeout_sec = 720.0
 candidate_install_timeout_sec = 120.0
@@ -97,9 +98,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "node-author-wave2-20260828"
-reason = "Source validation, task and generated network lint, production compile, trusted Oracle, empty, stub, forgery, install-script, loader-hook, hang, offline, and oversized-output controls passed. Review, pilot, and publication remain integrator-stage gates."
+reason = "Source validation, task and generated network lint, production compile, trusted Oracle, empty, stub, forgery, install-script, loader-hook, hang, offline, and oversized-output controls passed. Review, pilot, and publication remain integrator-stage gates. Canonical dependency lock/offline-store/inventory closure is unavailable; the legacy single artifact reference was not retyped."
 
 [oracle_bundle]
 digest = "sha256:c7b8ef4bb8fe687ada3c71537b7ff9f617fbac64104c381391d9e54aa8c8d05b"

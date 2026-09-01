@@ -1,4 +1,4 @@
-schema_version = "2.0"
+schema_version = "1.0"
 task_id = "jsesc"
 version = "1.0.0"
 instruction = "instruction.md"
@@ -7,7 +7,14 @@ instruction = "instruction.md"
 language = "node"
 difficulty = "medium"
 category = "javascript-escaping"
-tags = ["node", "npm", "commonjs", "unicode", "serialization", "cli"]
+tags = [
+    "node",
+    "npm",
+    "commonjs",
+    "unicode",
+    "serialization",
+    "cli",
+]
 
 [source]
 status = "known"
@@ -22,7 +29,6 @@ status = "known"
 os_name = "debian-bookworm"
 base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
 base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -36,37 +42,46 @@ runtime = "node"
 version = "24.19.0"
 package_manager = "npm"
 package_manager_version = "11.17.0"
-architecture = "linux/amd64"
-libc = "glibc"
 
 [dependencies]
-status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
+status = "unknown"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
 packages = []
-artifact = { digest = "sha256:7ff145bb826a3ae8413d64b8759d4d92a07aad8e5be7e2f5a88966f4e48dca20", size_bytes = 10240, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:7ff145bb826a3ae8413d64b8759d4d92a07aad8e5be7e2f5a88966f4e48dca20", visibility = "private" }
 
 [tests]
 framework = "node:test"
 report_format = "node-test-json-v1"
 expected_total = 48
 expected_total_source = "frozen-collection"
-commands_artifact = { digest = "sha256:8f2e1bc25e31d58b3642be7013cd8659e85f1478be032e9a9c32a248a3900ff9", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:8f2e1bc25e31d58b3642be7013cd8659e85f1478be032e9a9c32a248a3900ff9", visibility = "private" }
-test_bundle = { digest = "sha256:d9be73c85dac92e0ffc271ee07fcff14d2f608af74d361f4913c966c701d622c", size_bytes = 20480, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:d9be73c85dac92e0ffc271ee07fcff14d2f608af74d361f4913c966c701d622c", visibility = "private" }
+
+[tests.commands_artifact]
+digest = "sha256:8f2e1bc25e31d58b3642be7013cd8659e85f1478be032e9a9c32a248a3900ff9"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.node-commands+tar"
+uri = "artifact://private/sha256:8f2e1bc25e31d58b3642be7013cd8659e85f1478be032e9a9c32a248a3900ff9"
+visibility = "private"
+
+[tests.test_bundle]
+digest = "sha256:d9be73c85dac92e0ffc271ee07fcff14d2f608af74d361f4913c966c701d622c"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.node-tests+tar"
+uri = "artifact://private/sha256:d9be73c85dac92e0ffc271ee07fcff14d2f608af74d361f4913c966c701d622c"
+visibility = "private"
 
 [metric]
-contract_id = "node-test-leaf-pass-rate-v1"
+contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [harbor]
 description = "Pinned jsesc CommonJS Unicode escaping, serialization, numeric-format, and CLI contract with 48 deterministic node:test leaves."
-keywords = ["node", "npm", "commonjs", "unicode", "serialization", "cli"]
+keywords = [
+    "node",
+    "npm",
+    "commonjs",
+    "unicode",
+    "serialization",
+    "cli",
+]
 agent_timeout_sec = 900.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 90.0
@@ -79,9 +94,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "node-author-wave2-20260828"
-reason = "The frozen source, locked zero-runtime-dependency npm closure, 48-leaf private node:test verifier, production compile, Oracle, and negative controls passed. Independent review and any model Agent Run remain outside this lane."
+reason = "The frozen source, locked zero-runtime-dependency npm closure, 48-leaf private node:test verifier, production compile, Oracle, and negative controls passed. Independent review and any model Agent Run remain outside this lane. Canonical dependency lock/offline-store/inventory closure is unavailable; the legacy single artifact reference was not retyped."
 
 [oracle_bundle]
 digest = "sha256:bc296bb069f9065c3905539b1060f4e1be7af92d8a00e50be260773704f21e1a"

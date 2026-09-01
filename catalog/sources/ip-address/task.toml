@@ -1,4 +1,4 @@
-schema_version = "2.0"
+schema_version = "1.0"
 task_id = "ip-address"
 version = "2.0.0"
 instruction = "instruction.md"
@@ -6,7 +6,16 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "hard"
 category = "ip-address-library"
-tags = ["node", "npm", "commonjs", "ipv4", "ipv6", "cidr", "subnet", "networking"]
+tags = [
+    "node",
+    "npm",
+    "commonjs",
+    "ipv4",
+    "ipv6",
+    "cidr",
+    "subnet",
+    "networking",
+]
 language = "node"
 
 [source]
@@ -22,7 +31,6 @@ status = "known"
 os_name = "debian-bookworm"
 base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
 base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -36,37 +44,48 @@ runtime = "node"
 version = "24.19.0"
 package_manager = "npm"
 package_manager_version = "11.17.0"
-architecture = "linux/amd64"
-libc = "glibc"
 
 [dependencies]
-status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
+status = "unknown"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
 packages = []
-artifact = { digest = "sha256:19faf94e16d65ac03244727e846df58e9d83a68728f6f70e2d7ed1bab274b828", size_bytes = 415, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:19faf94e16d65ac03244727e846df58e9d83a68728f6f70e2d7ed1bab274b828", visibility = "private" }
 
 [tests]
 framework = "node:test"
 report_format = "node-test-json-v1"
 expected_total = 34
 expected_total_source = "frozen-collection"
-commands_artifact = { digest = "sha256:8f6c05645b4ef96eb1fa5828fef0c244fcb1a24497fac1ccb4acd85993bbee41", size_bytes = 270, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:8f6c05645b4ef96eb1fa5828fef0c244fcb1a24497fac1ccb4acd85993bbee41", visibility = "private" }
-test_bundle = { digest = "sha256:fc91a711f1b8b9214d294434cd417276796e8fa290c308c91a22f067a182a2aa", size_bytes = 4368, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:fc91a711f1b8b9214d294434cd417276796e8fa290c308c91a22f067a182a2aa", visibility = "private" }
+
+[tests.commands_artifact]
+digest = "sha256:8f6c05645b4ef96eb1fa5828fef0c244fcb1a24497fac1ccb4acd85993bbee41"
+size_bytes = 270
+media_type = "application/vnd.nl2repobench.node-commands+tar"
+uri = "artifact://private/sha256:8f6c05645b4ef96eb1fa5828fef0c244fcb1a24497fac1ccb4acd85993bbee41"
+visibility = "private"
+
+[tests.test_bundle]
+digest = "sha256:fc91a711f1b8b9214d294434cd417276796e8fa290c308c91a22f067a182a2aa"
+size_bytes = 4368
+media_type = "application/vnd.nl2repobench.node-tests+tar"
+uri = "artifact://private/sha256:fc91a711f1b8b9214d294434cd417276796e8fa290c308c91a22f067a182a2aa"
+visibility = "private"
 
 [metric]
-contract_id = "node-test-leaf-pass-rate-v1"
+contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [harbor]
 description = "Build the ip-address CommonJS IPv4 and IPv6 address library with CIDR, subnet, conversion, and classification behavior."
-keywords = ["node", "npm", "commonjs", "ipv4", "ipv6", "cidr", "subnet", "networking"]
+keywords = [
+    "node",
+    "npm",
+    "commonjs",
+    "ipv4",
+    "ipv6",
+    "cidr",
+    "subnet",
+    "networking",
+]
 agent_timeout_sec = 1800.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 90.0
@@ -79,9 +98,9 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "node-author-wave2-20260828"
-reason = "Frozen source, private npm closure, custom JSON boundary, production compile, Oracle 34/34, and empty/stub/forgery/install-script/loader-hook/hang/offline controls passed. Independent review, projection, publication, and model Agent Run remain integrator work."
+reason = "Frozen source, private npm closure, custom JSON boundary, production compile, Oracle 34/34, and empty/stub/forgery/install-script/loader-hook/hang/offline controls passed. Independent review, projection, publication, and model Agent Run remain integrator work. Canonical dependency lock/offline-store/inventory closure is unavailable; the legacy single artifact reference was not retyped."
 
 [oracle_bundle]
 digest = "sha256:62b2b8877d3623e6ea0667a54eb91a174d881d1edb94a840e3ba86e337a6219e"

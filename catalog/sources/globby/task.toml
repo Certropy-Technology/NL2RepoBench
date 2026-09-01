@@ -1,4 +1,4 @@
-schema_version = "2.0"
+schema_version = "1.0"
 task_id = "globby"
 version = "2.0.0"
 instruction = "instruction.md"
@@ -6,7 +6,14 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "medium"
 category = "filesystem-glob"
-tags = ["node", "npm", "esm", "filesystem", "glob", "gitignore"]
+tags = [
+    "node",
+    "npm",
+    "esm",
+    "filesystem",
+    "glob",
+    "gitignore",
+]
 language = "node"
 
 [source]
@@ -22,7 +29,6 @@ status = "known"
 os_name = "debian-bookworm"
 base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
 base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -36,37 +42,54 @@ runtime = "node"
 version = "24.19.0"
 package_manager = "npm"
 package_manager_version = "11.17.0"
-architecture = "linux/amd64"
-libc = "glibc"
 
 [dependencies]
-status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
+status = "unknown"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
-artifact = { digest = "sha256:f5765218e36e38ee460758c2cc5850d71f4959691d5dd71dac2a20b8c55ded62", size_bytes = 586024, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:f5765218e36e38ee460758c2cc5850d71f4959691d5dd71dac2a20b8c55ded62", visibility = "private" }
-packages = ["@sindresorhus/merge-streams", "fast-glob", "ignore", "is-path-inside", "micromatch", "slash", "unicorn-magic"]
+packages = [
+    "@sindresorhus/merge-streams",
+    "fast-glob",
+    "ignore",
+    "is-path-inside",
+    "micromatch",
+    "slash",
+    "unicorn-magic",
+]
 
 [tests]
 framework = "node:test"
 report_format = "node-test-json-v1"
 expected_total = 10
 expected_total_source = "frozen-collection"
-commands_artifact = { digest = "sha256:2638d4835f940fed1f9936bbab687e5d8c95b3c4f5dac23f4b308eaacb7f6eda", size_bytes = 242, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:2638d4835f940fed1f9936bbab687e5d8c95b3c4f5dac23f4b308eaacb7f6eda", visibility = "private" }
-test_bundle = { digest = "sha256:b2b49cc0703e07201925d36fd73c61e2c0ddad6ce15c452f9c7d47485139ca2f", size_bytes = 1877, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:b2b49cc0703e07201925d36fd73c61e2c0ddad6ce15c452f9c7d47485139ca2f", visibility = "private" }
+
+[tests.commands_artifact]
+digest = "sha256:2638d4835f940fed1f9936bbab687e5d8c95b3c4f5dac23f4b308eaacb7f6eda"
+size_bytes = 242
+media_type = "application/vnd.nl2repobench.node-commands+tar"
+uri = "artifact://private/sha256:2638d4835f940fed1f9936bbab687e5d8c95b3c4f5dac23f4b308eaacb7f6eda"
+visibility = "private"
+
+[tests.test_bundle]
+digest = "sha256:b2b49cc0703e07201925d36fd73c61e2c0ddad6ce15c452f9c7d47485139ca2f"
+size_bytes = 1877
+media_type = "application/vnd.nl2repobench.node-tests+tar"
+uri = "artifact://private/sha256:b2b49cc0703e07201925d36fd73c61e2c0ddad6ce15c452f9c7d47485139ca2f"
+visibility = "private"
 
 [metric]
-contract_id = "node-test-leaf-pass-rate-v1"
+contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [harbor]
 description = "Build the globby Node.js package from an empty workspace with deterministic filesystem-glob behavior."
-keywords = ["node", "npm", "esm", "filesystem", "glob", "gitignore"]
+keywords = [
+    "node",
+    "npm",
+    "esm",
+    "filesystem",
+    "glob",
+    "gitignore",
+]
 agent_timeout_sec = 1200.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 90.0
@@ -79,9 +102,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "repair/globby"
-reason = "Pinned private npm/test/Oracle artifacts were restored by digest, the task was production-compiled with Node toolchain locks, Harbor 0.21.0 Oracle and offline runs passed 10/10, and empty/stub/forgery/call-hang controls produced bounded low scores with no-network receipts."
+reason = "Pinned private npm/test/Oracle artifacts were restored by digest, the task was production-compiled with Node toolchain locks, Harbor 0.21.0 Oracle and offline runs passed 10/10, and empty/stub/forgery/call-hang controls produced bounded low scores with no-network receipts. Canonical dependency lock/offline-store/inventory closure is unavailable; the legacy single artifact reference was not retyped."
 
 [oracle_bundle]
 digest = "sha256:5c4e45425a5a36c03d4d3a92a515fba066c0ff3ba82c60a8c66cdd25b7e06f77"

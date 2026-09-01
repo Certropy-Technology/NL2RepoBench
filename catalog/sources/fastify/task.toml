@@ -1,4 +1,4 @@
-schema_version = "2.0"
+schema_version = "1.0"
 task_id = "fastify"
 version = "2.0.0"
 instruction = "instruction.md"
@@ -6,7 +6,15 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "hard"
 category = "http-framework"
-tags = ["node", "npm", "commonjs", "http", "routing", "hooks", "json"]
+tags = [
+    "node",
+    "npm",
+    "commonjs",
+    "http",
+    "routing",
+    "hooks",
+    "json",
+]
 language = "node"
 
 [source]
@@ -22,7 +30,6 @@ status = "known"
 os_name = "debian-bookworm"
 base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
 base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -36,37 +43,54 @@ runtime = "node"
 version = "24.19.0"
 package_manager = "npm"
 package_manager_version = "11.17.0"
-architecture = "linux/amd64"
-libc = "glibc"
 
 [dependencies]
-status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
+status = "unknown"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
-artifact = { digest = "sha256:557436dc2e3ee5001af16d553c4edb27173794095259127d08312e85989e9637", size_bytes = 2983541, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:557436dc2e3ee5001af16d553c4edb27173794095259127d08312e85989e9637", visibility = "private" }
-packages = ["@fastify/ajv-compiler", "avvio", "fast-json-stringify", "find-my-way", "light-my-request", "pino"]
+packages = [
+    "@fastify/ajv-compiler",
+    "avvio",
+    "fast-json-stringify",
+    "find-my-way",
+    "light-my-request",
+    "pino",
+]
 
 [tests]
 framework = "node:test"
 report_format = "node-test-json-v1"
 expected_total = 12
 expected_total_source = "frozen-collection"
-commands_artifact = { digest = "sha256:3a0d5d438bfa114938040770c8c288320518bdaec8733dbd7f373f0c5cf0827f", size_bytes = 261, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:3a0d5d438bfa114938040770c8c288320518bdaec8733dbd7f373f0c5cf0827f", visibility = "private" }
-test_bundle = { digest = "sha256:d4c4488b102dfb50e16c4438e8d3fff5ccab970d25fc4aa38f0231bc7c7b0b29", size_bytes = 3034, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:d4c4488b102dfb50e16c4438e8d3fff5ccab970d25fc4aa38f0231bc7c7b0b29", visibility = "private" }
+
+[tests.commands_artifact]
+digest = "sha256:3a0d5d438bfa114938040770c8c288320518bdaec8733dbd7f373f0c5cf0827f"
+size_bytes = 261
+media_type = "application/vnd.nl2repobench.node-commands+tar"
+uri = "artifact://private/sha256:3a0d5d438bfa114938040770c8c288320518bdaec8733dbd7f373f0c5cf0827f"
+visibility = "private"
+
+[tests.test_bundle]
+digest = "sha256:d4c4488b102dfb50e16c4438e8d3fff5ccab970d25fc4aa38f0231bc7c7b0b29"
+size_bytes = 3034
+media_type = "application/vnd.nl2repobench.node-tests+tar"
+uri = "artifact://private/sha256:d4c4488b102dfb50e16c4438e8d3fff5ccab970d25fc4aa38f0231bc7c7b0b29"
+visibility = "private"
 
 [metric]
-contract_id = "node-test-leaf-pass-rate-v1"
+contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [harbor]
 description = "Build a Fastify-compatible CommonJS HTTP framework from an empty workspace, covering deterministic routing, injection, hooks, schemas, errors, and plugin encapsulation."
-keywords = ["node", "npm", "commonjs", "http", "routing", "hooks", "json"]
+keywords = [
+    "node",
+    "npm",
+    "commonjs",
+    "http",
+    "routing",
+    "hooks",
+    "json",
+]
 agent_timeout_sec = 1500.0
 verifier_timeout_sec = 900.0
 candidate_install_timeout_sec = 120.0
@@ -81,7 +105,7 @@ workspace_artifact = "/workspace"
 [lifecycle]
 status = "blocked"
 owner = "repair/fastify"
-reason = "The previous controls-passed claim has no discoverable Harbor Oracle/control/network receipts in this checkout. The invalid runtime is removed; no production status is retained without hash-bound evidence."
+reason = "The previous controls-passed claim has no discoverable Harbor Oracle/control/network receipts in this checkout. The invalid runtime is removed; no production status is retained without hash-bound evidence. Canonical dependency lock/offline-store/inventory closure is unavailable; the legacy single artifact reference was not retyped."
 
 [oracle_bundle]
 digest = "sha256:edfa9071a885908fe71222ec2752c6fc4145a06a622ff175719ec30a75e9840f"

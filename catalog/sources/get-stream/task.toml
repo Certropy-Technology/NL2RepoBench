@@ -1,4 +1,4 @@
-schema_version = "2.0"
+schema_version = "1.0"
 task_id = "get-stream"
 version = "2.0.0"
 instruction = "instruction.md"
@@ -7,7 +7,15 @@ instruction = "instruction.md"
 language = "node"
 difficulty = "medium"
 category = "stream-consumer"
-tags = ["node", "npm", "esm", "streams", "async-iterable", "buffer", "web-stream"]
+tags = [
+    "node",
+    "npm",
+    "esm",
+    "streams",
+    "async-iterable",
+    "buffer",
+    "web-stream",
+]
 
 [source]
 status = "known"
@@ -22,7 +30,6 @@ status = "known"
 os_name = "debian-bookworm"
 base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
 base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -36,38 +43,51 @@ runtime = "node"
 version = "24.19.0"
 package_manager = "npm"
 package_manager_version = "11.17.0"
-architecture = "linux/amd64"
-libc = "glibc"
 
 [dependencies]
-status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
+status = "unknown"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
-packages = ["@sec-ant/readable-stream@0.6.1", "is-stream@4.0.1"]
-artifact = { digest = "sha256:94439dc2a479245c65a6514a327d2308d2b894bf75dc4432555632e185d84ccf", size_bytes = 112640, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:94439dc2a479245c65a6514a327d2308d2b894bf75dc4432555632e185d84ccf", visibility = "private" }
+packages = [
+    "@sec-ant/readable-stream@0.6.1",
+    "is-stream@4.0.1",
+]
 
 [tests]
 framework = "node:test"
 report_format = "node-test-json-v1"
 expected_total = 30
 expected_total_source = "frozen-collection"
-commands_artifact = { digest = "sha256:a832562812d78324c3ac1b16a15a9ab97c6e9e92ad7de119f2da7bb997be8661", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:a832562812d78324c3ac1b16a15a9ab97c6e9e92ad7de119f2da7bb997be8661", visibility = "private" }
-test_bundle = { digest = "sha256:a96d5bd342eab69b5a600c5958bdd7476d9083b9b69a4ca579d4e50712f22c24", size_bytes = 20480, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:a96d5bd342eab69b5a600c5958bdd7476d9083b9b69a4ca579d4e50712f22c24", visibility = "private" }
+
+[tests.commands_artifact]
+digest = "sha256:a832562812d78324c3ac1b16a15a9ab97c6e9e92ad7de119f2da7bb997be8661"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.node-commands+tar"
+uri = "artifact://private/sha256:a832562812d78324c3ac1b16a15a9ab97c6e9e92ad7de119f2da7bb997be8661"
+visibility = "private"
+
+[tests.test_bundle]
+digest = "sha256:a96d5bd342eab69b5a600c5958bdd7476d9083b9b69a4ca579d4e50712f22c24"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.node-tests+tar"
+uri = "artifact://private/sha256:a96d5bd342eab69b5a600c5958bdd7476d9083b9b69a4ca579d4e50712f22c24"
+visibility = "private"
 
 [metric]
-contract_id = "node-test-leaf-pass-rate-v1"
+contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Rebuild the get-stream ESM package with deterministic consumption of Node streams, Web ReadableStreams, async iterables, text, binary, object, error, and maxBuffer data."
-keywords = ["node", "npm", "esm", "streams", "async-iterable", "buffer", "web-stream"]
+keywords = [
+    "node",
+    "npm",
+    "esm",
+    "streams",
+    "async-iterable",
+    "buffer",
+    "web-stream",
+]
 agent_timeout_sec = 1200.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 90.0
@@ -81,9 +101,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "node-author-wave2-20260828/get-stream"
-reason = "Fresh production compile, one official Oracle run (30/30, reward 1.0), and required empty/stub/forgery/offline controls passed against the same immutable bundle. Independent Agent Run, review, pilot, and publication remain outside this lane."
+reason = "Fresh production compile, one official Oracle run (30/30, reward 1.0), and required empty/stub/forgery/offline controls passed against the same immutable bundle. Independent Agent Run, review, pilot, and publication remain outside this lane. Canonical dependency lock/offline-store/inventory closure is unavailable; the legacy single artifact reference was not retyped."
 
 [oracle_bundle]
 digest = "sha256:d197ce113ec9136bd12ccb23c5203b0e7d7c3846780efa462a02f761d6870056"

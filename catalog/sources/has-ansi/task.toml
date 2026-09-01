@@ -1,4 +1,4 @@
-schema_version = "2.0"
+schema_version = "1.0"
 task_id = "has-ansi"
 version = "2.0.0"
 instruction = "instruction.md"
@@ -7,7 +7,14 @@ instruction = "instruction.md"
 language = "node"
 difficulty = "easy"
 category = "ansi-string-detection"
-tags = ["node", "npm", "esm", "ansi", "regex", "string"]
+tags = [
+    "node",
+    "npm",
+    "esm",
+    "ansi",
+    "regex",
+    "string",
+]
 
 [source]
 status = "known"
@@ -22,7 +29,6 @@ status = "known"
 os_name = "debian-bookworm"
 base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
 base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -36,37 +42,48 @@ runtime = "node"
 version = "24.19.0"
 package_manager = "npm"
 package_manager_version = "11.17.0"
-architecture = "linux/amd64"
-libc = "glibc"
 
 [dependencies]
-status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
+status = "unknown"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
-packages = ["ansi-regex"]
-artifact = { digest = "sha256:3def6c27b5cc4bce1975974354d54dcd205e90f89c987a08996939ff809b929c", size_bytes = 19953, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:3def6c27b5cc4bce1975974354d54dcd205e90f89c987a08996939ff809b929c", visibility = "private" }
+packages = [
+    "ansi-regex",
+]
 
 [tests]
 framework = "node:test"
 report_format = "node-test-json-v1"
 expected_total = 24
 expected_total_source = "frozen-collection"
-commands_artifact = { digest = "sha256:cdedd3661d2737aedae2a61cf76d4495d0100aec0f4fb24a8cf55559da48a259", size_bytes = 248, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:cdedd3661d2737aedae2a61cf76d4495d0100aec0f4fb24a8cf55559da48a259", visibility = "private" }
-test_bundle = { digest = "sha256:d26de20ca3bc70d11908d1d204f13cafeb1a3c55b2e0179377a6e630a1df61b3", size_bytes = 1859, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:d26de20ca3bc70d11908d1d204f13cafeb1a3c55b2e0179377a6e630a1df61b3", visibility = "private" }
+
+[tests.commands_artifact]
+digest = "sha256:cdedd3661d2737aedae2a61cf76d4495d0100aec0f4fb24a8cf55559da48a259"
+size_bytes = 248
+media_type = "application/vnd.nl2repobench.node-commands+tar"
+uri = "artifact://private/sha256:cdedd3661d2737aedae2a61cf76d4495d0100aec0f4fb24a8cf55559da48a259"
+visibility = "private"
+
+[tests.test_bundle]
+digest = "sha256:d26de20ca3bc70d11908d1d204f13cafeb1a3c55b2e0179377a6e630a1df61b3"
+size_bytes = 1859
+media_type = "application/vnd.nl2repobench.node-tests+tar"
+uri = "artifact://private/sha256:d26de20ca3bc70d11908d1d204f13cafeb1a3c55b2e0179377a6e630a1df61b3"
+visibility = "private"
 
 [metric]
-contract_id = "node-test-leaf-pass-rate-v1"
+contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [harbor]
 description = "Build the has-ansi ESM package and detect ANSI escape sequences through a JSON-safe subprocess boundary."
-keywords = ["node", "npm", "esm", "ansi", "regex", "string"]
+keywords = [
+    "node",
+    "npm",
+    "esm",
+    "ansi",
+    "regex",
+    "string",
+]
 agent_timeout_sec = 900.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 90.0
@@ -79,9 +96,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "node-author-wave2-20260828/has-ansi"
-reason = "Source validation, network lint, production compile, Harbor 0.21 Oracle, empty/stub/forgery/install-script/loader-hook/hang/offline controls passed. Review, model run, and publication remain integrator-stage gates."
+reason = "Source validation, network lint, production compile, Harbor 0.21 Oracle, empty/stub/forgery/install-script/loader-hook/hang/offline controls passed. Review, model run, and publication remain integrator-stage gates. Canonical dependency lock/offline-store/inventory closure is unavailable; the legacy single artifact reference was not retyped."
 
 [oracle_bundle]
 digest = "sha256:470477eb8d7597cc4529d542f78056d7faae5d2bbcb6a36d395797bd4098f0b2"

@@ -1,4 +1,4 @@
-schema_version = "2.0"
+schema_version = "1.0"
 task_id = "get-east-asian-width"
 version = "1.0.0"
 instruction = "instruction.md"
@@ -6,7 +6,14 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "easy"
 category = "unicode-width"
-tags = ["node", "npm", "esm", "unicode", "east-asian-width", "text-processing"]
+tags = [
+    "node",
+    "npm",
+    "esm",
+    "unicode",
+    "east-asian-width",
+    "text-processing",
+]
 language = "node"
 
 [source]
@@ -22,7 +29,6 @@ status = "known"
 os_name = "debian-bookworm"
 base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
 base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -36,37 +42,46 @@ runtime = "node"
 version = "24.19.0"
 package_manager = "npm"
 package_manager_version = "11.17.0"
-architecture = "linux/amd64"
-libc = "glibc"
 
 [dependencies]
-status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
+status = "unknown"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
 packages = []
-artifact = { digest = "sha256:96670cffb6951bc0de2652cd858a32415d663ac11b5982d6cc0c25902a456d97", size_bytes = 507, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:96670cffb6951bc0de2652cd858a32415d663ac11b5982d6cc0c25902a456d97", visibility = "private" }
 
 [tests]
 framework = "node:test"
 report_format = "node-test-json-v1"
 expected_total = 26
 expected_total_source = "frozen-collection"
-commands_artifact = { digest = "sha256:40cf0d8e1794586a77786f724996b3364f675b5213594b09f3bbc9c1c70d1f68", size_bytes = 197, media_type = "application/vnd.nl2repobench.node-commands+json", uri = "artifact://private/sha256:40cf0d8e1794586a77786f724996b3364f675b5213594b09f3bbc9c1c70d1f68", visibility = "private" }
-test_bundle = { digest = "sha256:6460ecbc24dac6a8b1af38533f761810b927197fed69c35788a0e4e3428accf1", size_bytes = 1607, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:6460ecbc24dac6a8b1af38533f761810b927197fed69c35788a0e4e3428accf1", visibility = "private" }
+
+[tests.commands_artifact]
+digest = "sha256:40cf0d8e1794586a77786f724996b3364f675b5213594b09f3bbc9c1c70d1f68"
+size_bytes = 197
+media_type = "application/vnd.nl2repobench.node-commands+json"
+uri = "artifact://private/sha256:40cf0d8e1794586a77786f724996b3364f675b5213594b09f3bbc9c1c70d1f68"
+visibility = "private"
+
+[tests.test_bundle]
+digest = "sha256:6460ecbc24dac6a8b1af38533f761810b927197fed69c35788a0e4e3428accf1"
+size_bytes = 1607
+media_type = "application/vnd.nl2repobench.node-tests+tar"
+uri = "artifact://private/sha256:6460ecbc24dac6a8b1af38533f761810b927197fed69c35788a0e4e3428accf1"
+visibility = "private"
 
 [metric]
-contract_id = "node-test-leaf-pass-rate-v1"
+contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [harbor]
 description = "Build get-east-asian-width 1.6.0 as a deterministic ESM Unicode East Asian Width classifier."
-keywords = ["node", "npm", "esm", "unicode", "east-asian-width", "text-processing"]
+keywords = [
+    "node",
+    "npm",
+    "esm",
+    "unicode",
+    "east-asian-width",
+    "text-processing",
+]
 agent_timeout_sec = 900.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 90.0
@@ -79,9 +94,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "node-author-wave2-20260828/get-east-asian-width"
-reason = "Production compile, trusted Oracle 26/26, and empty/stub/forgery/offline plus install-script/loader-hook/hang controls passed with verifier-owned grading and no public verifier network. Review, Agent Run, and publication remain integrator-stage gates."
+reason = "Production compile, trusted Oracle 26/26, and empty/stub/forgery/offline plus install-script/loader-hook/hang controls passed with verifier-owned grading and no public verifier network. Review, Agent Run, and publication remain integrator-stage gates. Canonical dependency lock/offline-store/inventory closure is unavailable; the legacy single artifact reference was not retyped."
 
 [oracle_bundle]
 digest = "sha256:8630549657303cc3e001b8d725e30fb4e73e96de43ceb364b7628407d2bf37e0"

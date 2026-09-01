@@ -1,4 +1,4 @@
-schema_version = "2.0"
+schema_version = "1.0"
 task_id = "js-yaml"
 version = "2.0.0"
 instruction = "instruction.md"
@@ -6,7 +6,15 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "hard"
 category = "yaml-parser-serializer"
-tags = ["node", "npm", "esm", "yaml", "parser", "serializer", "deterministic"]
+tags = [
+    "node",
+    "npm",
+    "esm",
+    "yaml",
+    "parser",
+    "serializer",
+    "deterministic",
+]
 language = "node"
 
 [source]
@@ -22,7 +30,6 @@ status = "known"
 os_name = "debian-bookworm"
 base_image = "docker.io/library/node@sha256:a9f5f7c91a432850b2a8a7797adf5eadb6c733ceed61167806cee7ea7fbc29df"
 base_image_digest = "sha256:a9f5f7c91a432850b2a8a7797adf5eadb6c733ceed61167806cee7ea7fbc29df"
-network_mode = "no-network"
 
 [environment.runtime]
 language = "node"
@@ -30,8 +37,6 @@ runtime = "node"
 version = "24.19.0"
 package_manager = "npm"
 package_manager_version = "11.17.0"
-architecture = "linux/amd64"
-libc = "glibc"
 
 [environment.network_policy]
 mode = "no-network"
@@ -40,23 +45,9 @@ reference_source_fetch = "forbidden"
 reason = "The candidate package has no runtime dependencies and installs from a frozen npm v3 lock/cache bundle at build time. Candidate and verifier phases have no egress; only the trusted Oracle receives the private reference bundle and its run-scoped source authorization."
 
 [dependencies]
-status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
+status = "unknown"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
 packages = []
-
-[dependencies.artifact]
-digest = "sha256:c31c6bd8ffa0ea14677f5553b9d1b8c9146af0efb68c5abb51423cb8b647f683"
-size_bytes = 486
-media_type = "application/vnd.nl2repobench.npm-bundle+tar"
-uri = "artifact://private/sha256:c31c6bd8ffa0ea14677f5553b9d1b8c9146af0efb68c5abb51423cb8b647f683"
-visibility = "private"
 
 [tests]
 framework = "node:test"
@@ -79,12 +70,19 @@ uri = "artifact://private/sha256:b7d97a7463b8128e1760299004a71442aaaff0b6d80e15f
 visibility = "private"
 
 [metric]
-contract_id = "node-test-leaf-pass-rate-v1"
+contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [harbor]
 description = "Build the js-yaml ESM YAML 1.2 parser and serializer from an empty Node workspace."
-keywords = ["node", "npm", "esm", "yaml", "parser", "serializer"]
+keywords = [
+    "node",
+    "npm",
+    "esm",
+    "yaml",
+    "parser",
+    "serializer",
+]
 agent_timeout_sec = 1500.0
 verifier_timeout_sec = 720.0
 candidate_install_timeout_sec = 120.0
@@ -97,9 +95,9 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "node-author-wave2-20260828/js-yaml"
-reason = "Production Node bundle compiled; Harbor 0.21.0 Oracle passed 36/36 with reward 1.0, and empty, stub, forgery, hang, install-script, loader-hook, and offline controls passed. Independent model Agent Run and integrator review remain out of scope."
+reason = "Production Node bundle compiled; Harbor 0.21.0 Oracle passed 36/36 with reward 1.0, and empty, stub, forgery, hang, install-script, loader-hook, and offline controls passed. Independent model Agent Run and integrator review remain out of scope. Canonical dependency lock/offline-store/inventory closure is unavailable; the legacy single artifact reference was not retyped."
 
 [oracle_bundle]
 digest = "sha256:194fcf78e706167a7e59becd5407b00809d4359f7a651c1de42d2fb1c268215e"

@@ -1,4 +1,4 @@
-schema_version = "2.0"
+schema_version = "1.0"
 task_id = "is-string"
 version = "1.0.0"
 instruction = "instruction.md"
@@ -6,7 +6,14 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "easy"
 category = "type-predicate"
-tags = ["node", "npm", "commonjs", "strings", "boxed-objects", "symbols"]
+tags = [
+    "node",
+    "npm",
+    "commonjs",
+    "strings",
+    "boxed-objects",
+    "symbols",
+]
 language = "node"
 
 [source]
@@ -22,7 +29,6 @@ status = "known"
 os_name = "debian-bookworm"
 base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
 base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -36,27 +42,11 @@ runtime = "node"
 version = "24.19.0"
 package_manager = "npm"
 package_manager_version = "11.17.0"
-architecture = "linux/amd64"
-libc = "glibc"
 
 [dependencies]
-status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
+status = "unknown"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
 packages = []
-
-[dependencies.artifact]
-digest = "sha256:f98daabce76ffbea100de3b3ab99753fc898b7e2535e8d4ca79f8355223d81ac"
-size_bytes = 10240
-media_type = "application/vnd.nl2repobench.npm-bundle+tar"
-uri = "artifact://private/sha256:f98daabce76ffbea100de3b3ab99753fc898b7e2535e8d4ca79f8355223d81ac"
-visibility = "private"
 
 [tests]
 framework = "node:test"
@@ -79,12 +69,18 @@ uri = "artifact://private/sha256:3e7f11c857759f574612823c8d97b899d03f14dd6c76504
 visibility = "private"
 
 [metric]
-contract_id = "node-test-leaf-pass-rate-v1"
+contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [harbor]
 description = "Build the is-string CommonJS predicate with deterministic primitive and boxed-string behavior."
-keywords = ["node", "npm", "commonjs", "strings", "type-predicate"]
+keywords = [
+    "node",
+    "npm",
+    "commonjs",
+    "strings",
+    "type-predicate",
+]
 agent_timeout_sec = 900.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 90.0
@@ -98,9 +94,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "node-author-wave2-20260828"
-reason = "Frozen Node/npm source, private zero-dependency closure, separate verifier, Oracle 28/28 reward 1.0, and empty/stub/forgery/offline plus bounded timeout controls passed. Review, model Agent Run, pilot, and publication remain integrator stages."
+reason = "Frozen Node/npm source, private zero-dependency closure, separate verifier, Oracle 28/28 reward 1.0, and empty/stub/forgery/offline plus bounded timeout controls passed. Review, model Agent Run, pilot, and publication remain integrator stages. Canonical dependency lock/offline-store/inventory closure is unavailable; the legacy single artifact reference was not retyped."
 
 [oracle_bundle]
 digest = "sha256:08c573eca17367d905336593acfd7015427ccb5e7f1201b89d581f0a901616cd"

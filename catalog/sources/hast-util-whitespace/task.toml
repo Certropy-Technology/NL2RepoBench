@@ -1,4 +1,4 @@
-schema_version = "2.0"
+schema_version = "1.0"
 task_id = "hast-util-whitespace"
 version = "2.0.0"
 instruction = "instruction.md"
@@ -6,7 +6,16 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "easy"
 category = "html-tree-utility"
-tags = ["node", "npm", "esm", "hast", "html", "whitespace", "utility", "repository-generation"]
+tags = [
+    "node",
+    "npm",
+    "esm",
+    "hast",
+    "html",
+    "whitespace",
+    "utility",
+    "repository-generation",
+]
 language = "node"
 
 [source]
@@ -22,7 +31,6 @@ status = "known"
 os_name = "debian-bookworm"
 base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
 base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
-network_mode = "no-network"
 
 [environment.network_policy]
 mode = "no-network"
@@ -36,37 +44,46 @@ runtime = "node"
 version = "24.19.0"
 package_manager = "npm"
 package_manager_version = "11.17.0"
-architecture = "linux/amd64"
-libc = "glibc"
 
 [dependencies]
-status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
+status = "unknown"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
 packages = []
-artifact = { digest = "sha256:2709f7f061b612e134913f158f1fae41e6f5872bfdd887454e599ad4fed17232", size_bytes = 475, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:2709f7f061b612e134913f158f1fae41e6f5872bfdd887454e599ad4fed17232", visibility = "private" }
 
 [tests]
 framework = "node:test"
 report_format = "node-test-json-v1"
 expected_total = 24
 expected_total_source = "frozen-collection"
-commands_artifact = { digest = "sha256:87f9b085c4130b18155b4a202e67376324866cce37c516ebd668ef44c8e25898", size_bytes = 206, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:87f9b085c4130b18155b4a202e67376324866cce37c516ebd668ef44c8e25898", visibility = "private" }
-test_bundle = { digest = "sha256:baa80dde0c7030b7b0258ef7649e614f9ed5043c967142eb9a49fb994f917596", size_bytes = 1493, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:baa80dde0c7030b7b0258ef7649e614f9ed5043c967142eb9a49fb994f917596", visibility = "private" }
+
+[tests.commands_artifact]
+digest = "sha256:87f9b085c4130b18155b4a202e67376324866cce37c516ebd668ef44c8e25898"
+size_bytes = 206
+media_type = "application/vnd.nl2repobench.node-commands+tar"
+uri = "artifact://private/sha256:87f9b085c4130b18155b4a202e67376324866cce37c516ebd668ef44c8e25898"
+visibility = "private"
+
+[tests.test_bundle]
+digest = "sha256:baa80dde0c7030b7b0258ef7649e614f9ed5043c967142eb9a49fb994f917596"
+size_bytes = 1493
+media_type = "application/vnd.nl2repobench.node-tests+tar"
+uri = "artifact://private/sha256:baa80dde0c7030b7b0258ef7649e614f9ed5043c967142eb9a49fb994f917596"
+visibility = "private"
 
 [metric]
-contract_id = "node-test-leaf-pass-rate-v1"
+contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [harbor]
 description = "Build hast-util-whitespace, an ESM utility that recognizes HTML inter-element whitespace in strings and text nodes."
-keywords = ["node", "npm", "esm", "hast", "html", "whitespace"]
+keywords = [
+    "node",
+    "npm",
+    "esm",
+    "hast",
+    "html",
+    "whitespace",
+]
 agent_timeout_sec = 900.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 90.0
@@ -80,9 +97,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "controls-passed"
+status = "blocked"
 owner = "node-author-wave2-20260828-hast-util-whitespace"
-reason = "Frozen source, API/test inventory, private npm closure, production compile, verifier image, trusted Oracle, and empty/stub/forgery/install-script/loader-hook/hang/offline controls passed. No Harbor Agent Run was started in this lane; review, pilot, and publication remain integrator-stage gates."
+reason = "Frozen source, API/test inventory, private npm closure, production compile, verifier image, trusted Oracle, and empty/stub/forgery/install-script/loader-hook/hang/offline controls passed. No Harbor Agent Run was started in this lane; review, pilot, and publication remain integrator-stage gates. Canonical dependency lock/offline-store/inventory closure is unavailable; the legacy single artifact reference was not retyped."
 
 [oracle_bundle]
 digest = "sha256:abcadf37573c3a374fed8ae05497ed84c1d294a6893ba34effa140eca43a74c0"
