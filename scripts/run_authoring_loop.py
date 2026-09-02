@@ -54,7 +54,6 @@ SPARSE_WORKTREE_PATHS = (
     "src",
     "tests",
     "tools",
-    "openhands",
     "verifier",
 )
 SCRIPT_ROOT = Path(__file__).resolve().parent

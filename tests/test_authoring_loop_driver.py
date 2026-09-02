@@ -84,6 +84,7 @@ def test_worktree_enables_sparse_authoring_profile(tmp_path: Path, monkeypatch) 
     assert "catalog/tasks" not in sparse
     assert "src" in sparse
     assert "tests" in sparse
+    assert "openhands" not in sparse
 
 
 def test_driver_launches_direct_pi_and_records_handoff(tmp_path: Path, monkeypatch) -> None:
