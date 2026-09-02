@@ -21,6 +21,7 @@ from nl2repobench.domain.canonical_contract import TestManifest as CanonicalTest
 from nl2repobench.domain.command_plan import CommandPlan
 from nl2repobench.domain.runtime import RuntimeDiscriminator
 from nl2repobench.harbor.java_compiler import JavaHarborCompileError, JavaHarborCompiler
+from nl2repobench.harbor.java_toolchain import load_java_toolchain_lock
 from nl2repobench.harbor.registry import HarborCompilerRegistry
 from nl2repobench.harbor.task_writer import copy_python_verifier_runtime
 from nl2repobench.runtimes.java import JavaRuntimeAdapter
@@ -113,8 +114,19 @@ def test_java_harbor_compiler_is_registered_and_fails_closed_without_toolchain(
     factory = HarborCompilerRegistry.default().resolve(JavaRuntimeAdapter.identity)
     compiler = factory(tmp_path / "toolchain.java.lock.toml", None)
     assert isinstance(compiler, JavaHarborCompiler)
-    with pytest.raises(JavaHarborCompileError, match="toolchain lock is unavailable"):
+    with pytest.raises(JavaHarborCompileError, match="regular file"):
         compiler.compile_task(tmp_path / "source", tmp_path / "output")
+
+
+def test_java_development_toolchain_lock_matches_runtime_probe() -> None:
+    lock = load_java_toolchain_lock(Path(__file__).parents[1] / "toolchain.java.dev.lock.toml")
+    assert lock.jdk_version == "temurin-21.0.12+8"
+    assert lock.maven_version == "3.9.11"
+    assert lock.expected_platform == "linux/amd64"
+    assert lock.runtime_image_id == (
+        "sha256:c1c77dbbe406955c6631459926231d9c07ecfcaab79dbcfcbbb160f5568237f5"
+    )
+    assert lock.production_ready is False
 
 
 def test_java_grader_export_is_lazy_and_strict() -> None:

@@ -13,6 +13,7 @@ from pathlib import Path
 from nl2repobench.authoring.catalog import CatalogCompiler
 from nl2repobench.domain.canonical_contract import PackageManager, RuntimeLanguage
 from nl2repobench.domain.runtime import RuntimeDiscriminator
+from nl2repobench.harbor.java_toolchain import load_java_toolchain_lock
 from nl2repobench.storage.artifacts import LocalArtifactResolver
 
 JAVA_MAVEN = RuntimeDiscriminator(
@@ -46,10 +47,10 @@ class JavaHarborCompiler:
     ) -> Path:
         """Validate Java source identity, then stop before unverifiable packaging."""
 
-        if not self.toolchain_path.is_file():
-            raise JavaHarborCompileError(
-                "Java/Maven toolchain lock is unavailable; compiler remains blocked"
-            )
+        try:
+            toolchain = load_java_toolchain_lock(self.toolchain_path)
+        except ValueError as exc:
+            raise JavaHarborCompileError(str(exc)) from exc
         source = CatalogCompiler.load_task(source_dir)
         runtime = source.environment.runtime
         if (
@@ -58,6 +59,11 @@ class JavaHarborCompiler:
             or runtime.package_manager is not PackageManager.MAVEN
         ):
             raise JavaHarborCompileError("Java compiler requires the java+maven runtime identity")
+        if not toolchain.production_ready:
+            raise JavaHarborCompileError(
+                "Java/Maven toolchain is observed but not production-ready: "
+                "Java Agent image binding and private verifier/Oracle artifacts are unavailable"
+            )
         mode = "development" if allow_incomplete else "production"
         raise JavaHarborCompileError(
             f"Java/Maven {mode} compilation is blocked until an exact JDK 21/Maven "
