@@ -111,8 +111,6 @@ def validate_node_runtime_manifest(root: Path, manifest: NodeRuntimeManifest) ->
         relative = path.relative_to(root).as_posix()
         metadata = path.lstat()
         if stat.S_ISDIR(metadata.st_mode):
-            if metadata.st_nlink != 1:
-                raise ValueError(f"Node runtime directory is a hardlink: {relative}")
             continue
         actual.add(relative)
         if not stat.S_ISREG(metadata.st_mode) or metadata.st_nlink != 1:

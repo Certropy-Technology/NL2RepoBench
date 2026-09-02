@@ -239,6 +239,43 @@ def test_locked_node_toolchain_requires_manifest_identity() -> None:
     assert lock.runtime.node_runtime_tree_sha256
 
 
+def test_node_runtime_manifest_accepts_normal_directory_link_counts(tmp_path: Path) -> None:
+    root = tmp_path / "node-runtime"
+    node = root / "bin/node"
+    npm = root / "lib/npm/bin/npm-cli.js"
+    node.parent.mkdir(parents=True)
+    npm.parent.mkdir(parents=True)
+    node.write_bytes(b"node")
+    npm.write_bytes(b"npm")
+    node.chmod(0o555)
+    npm.chmod(0o444)
+    node_file = node_toolchain.NodeRuntimeFile(
+        path="bin/node",
+        sha256=hashlib.sha256(b"node").hexdigest(),
+        size_bytes=4,
+        mode=0o555,
+    )
+    npm_file = node_toolchain.NodeRuntimeFile(
+        path="lib/npm/bin/npm-cli.js",
+        sha256=hashlib.sha256(b"npm").hexdigest(),
+        size_bytes=3,
+        mode=0o444,
+    )
+    manifest = node_toolchain.NodeRuntimeManifest(
+        source_image="node@sha256:" + "a" * 64,
+        runtime_version="24.19.0",
+        npm_version="11.17.0",
+        files=(node_file, npm_file),
+        executables=(node_toolchain.NodeRuntimeIdentity(name="node", **node_file.model_dump()),),
+        launchers=(node_toolchain.NodeRuntimeIdentity(name="npm", **npm_file.model_dump()),),
+        tree_sha256="sha256:" + "0" * 64,
+    )
+    manifest = manifest.model_copy(
+        update={"tree_sha256": node_toolchain.node_tree_digest(root, manifest.files)}
+    )
+    node_toolchain.validate_node_runtime_manifest(root, manifest)
+
+
 def test_go_lock_covers_full_shared_boundary_and_test_uses_one_interpreter() -> None:
     expected = {f"src/nl2repobench/{path}" for path in _PYTHON_VERIFIER_FILES}
     assert expected <= set(GO_RUNTIME_LOCK_FILES)
