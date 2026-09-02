@@ -653,6 +653,20 @@ class Scheduler:
                 enabled
                 and barrier is not None
                 and barrier["state"] == "prepared"
+                and current is None
+            ):
+                raise ConflictError("prepared cutover requires disabled runtime config")
+            if (
+                enabled
+                and barrier is not None
+                and barrier["state"] == "prepared"
+                and current is None
+            ):
+                raise ConflictError("prepared cutover requires disabled runtime config")
+            if (
+                enabled
+                and barrier is not None
+                and barrier["state"] == "prepared"
                 and current is not None
                 and not bool(current["enabled"])
                 and (
@@ -994,9 +1008,11 @@ class Scheduler:
             ).fetchone()
             if reservation is None:
                 raise ConflictError("controller reservation is unavailable")
-            cfg = db.execute("SELECT enabled FROM current_runtime_config").fetchone()
+            cfg = db.execute("SELECT * FROM current_runtime_config").fetchone()
             if cfg is None or not cfg["enabled"]:
                 raise ConflictError("scheduler is disabled")
+            if slot >= int(cfg["controller_concurrency"]):
+                raise ConflictError("controller slot is outside configured concurrency")
             db.execute(
                 "INSERT INTO controllers VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                 (
@@ -1120,6 +1136,8 @@ class Scheduler:
             cfg = db.execute("SELECT * FROM current_runtime_config").fetchone()
             if cfg is None or not cfg["enabled"]:
                 raise ConflictError("scheduler is disabled")
+            if slot >= int(cfg["controller_concurrency"]):
+                raise ConflictError("controller slot is outside configured concurrency")
             controller_count = db.execute(
                 "SELECT (SELECT count(*) FROM controllers WHERE role='authoring_controller' "
                 "AND state IN ('running','draining')) + (SELECT count(*) FROM "
@@ -1210,9 +1228,11 @@ class Scheduler:
             ).fetchone()
             if row is None:
                 raise ConflictError("reservation is unavailable")
-            cfg = db.execute("SELECT enabled FROM current_runtime_config").fetchone()
+            cfg = db.execute("SELECT * FROM current_runtime_config").fetchone()
             if cfg is None or not cfg["enabled"]:
                 raise ConflictError("scheduler is disabled")
+            if int(row["slot"]) >= int(cfg["controller_concurrency"]):
+                raise ConflictError("controller slot is outside configured concurrency")
             db.execute(
                 "INSERT INTO controllers VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                 (

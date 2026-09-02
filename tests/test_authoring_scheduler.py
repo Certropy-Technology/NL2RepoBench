@@ -200,6 +200,40 @@ def test_scheduler_accepts_eight_controller_and_agent_limits(tmp_path: Path) -> 
         )
 
 
+def test_prepared_cutover_requires_existing_disabled_config(tmp_path: Path) -> None:
+    scheduler = _prepared_cutover_scheduler(tmp_path)
+    with scheduler.connect() as db:
+        db.execute("DELETE FROM runtime_config")
+        db.commit()
+
+    with pytest.raises(ConflictError, match="disabled runtime config"):
+        scheduler.configure(
+            enabled=True,
+            max_total_controllers=1,
+            controller_concurrency=1,
+            max_integrations=0,
+            agent_limit=1,
+            reason="bypass attempt",
+        )
+
+
+def test_controller_reservation_rejects_slot_outside_language_limit(tmp_path: Path) -> None:
+    scheduler = _prepared_cutover_scheduler(tmp_path)
+    scheduler.first_enable()
+    scheduler.configure(
+        enabled=True,
+        max_total_controllers=8,
+        controller_concurrency=1,
+        max_integrations=0,
+        agent_limit=8,
+        reason="slot bound test",
+    )
+    scheduler.add_lane("slot-lane", "slot-batch", "python")
+
+    with pytest.raises(ConflictError, match="outside configured concurrency"):
+        scheduler.reserve_controller("slot-lane", "slot-owner", 99)
+
+
 def test_sealed_disabled_configuration_rejects_reenable_without_file_mutation(
     tmp_path: Path,
 ) -> None:
@@ -730,7 +764,7 @@ def test_controller_registration_requires_reservation_and_stop_releases_usage(tm
 def test_reserved_slots_count_against_controller_configuration(tmp_path: Path) -> None:
     scheduler = _scheduler(tmp_path)
     scheduler.configure(enabled=True, max_total_controllers=1, controller_concurrency=1)
-    with pytest.raises(ConflictError, match="configuration capacity"):
+    with pytest.raises(ConflictError, match="outside configured concurrency"):
         scheduler.reserve_controller("lane", "another-owner", 1)
 
 
