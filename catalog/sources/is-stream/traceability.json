@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "task_id": "is-stream",
+  "instruction": "catalog/sources/is-stream/instruction.md",
+  "expected_total": 32,
+  "groups": [
+    {"leaf_ids": ["adapter-version", "adapter-invalid-operation"], "promise": "bounded adapter metadata and malformed operation rejection", "section": "Bounded Adapter"},
+    {"leaf_ids": ["stream-base", "stream-readable", "stream-writable", "stream-empty-shape", "stream-null", "stream-string", "stream-pipe-shape", "stream-closed-default", "stream-closed-ignored"], "promise": "generic structural stream recognition and checkOpen", "section": "isStream(stream, options?)"},
+    {"leaf_ids": ["writable-native", "writable-duplex", "writable-transform", "writable-readable-false", "writable-closed-default", "writable-closed-ignored"], "promise": "writable capabilities and open-state checks", "section": "isWritableStream(stream, options?)"},
+    {"leaf_ids": ["readable-native", "readable-duplex", "readable-pass-through", "readable-writable-false", "readable-closed-default", "readable-closed-ignored"], "promise": "readable capabilities and open-state checks", "section": "isReadableStream(stream, options?)"},
+    {"leaf_ids": ["duplex-native", "duplex-transform", "duplex-pass-through", "duplex-readable-false", "duplex-writable-false"], "promise": "intersection of readable and writable contracts", "section": "isDuplexStream(stream, options?)"},
+    {"leaf_ids": ["transform-native", "transform-pass-through", "transform-duplex-false", "transform-structural"], "promise": "duplex plus callable _transform requirement", "section": "isTransformStream(stream, options?)"}
+  ],
+  "reverse_mapping": "Every frozen leaf belongs to exactly one documented group; every scored public predicate has positive and negative cases."
+}

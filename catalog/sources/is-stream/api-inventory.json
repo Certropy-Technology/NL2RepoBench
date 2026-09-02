@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0",
+  "task_id": "is-stream",
+  "source_revision": "ab06c4acc9dce4dcadc9dfc6416e1be2c836862d",
+  "package": {
+    "name": "is-stream",
+    "version": "4.0.1",
+    "module_format": "esm",
+    "engines": "node >=18"
+  },
+  "public_surface": {
+    "predicates": [
+      "isStream(stream, options?)",
+      "isWritableStream(stream, options?)",
+      "isReadableStream(stream, options?)",
+      "isDuplexStream(stream, options?)",
+      "isTransformStream(stream, options?)"
+    ],
+    "options": {"checkOpen": {"type": "boolean", "default": true}},
+    "adapter": {
+      "export": "run",
+      "operations": ["version", "check"],
+      "purpose": "Construct allowlisted native or structural stream descriptors inside the candidate subprocess."
+    }
+  },
+  "behavior": {
+    "return_type": "boolean",
+    "deterministic": true,
+    "state_mutation": false,
+    "errors": "Predicates accept any value; the task adapter rejects malformed descriptors."
+  },
+  "upstream_source_files": ["index.js", "index.d.ts"],
+  "excluded_surface": ["filesystem streams", "HTTP messages", "network sockets", "browser streams", "exact TypeScript narrowing"]
+}

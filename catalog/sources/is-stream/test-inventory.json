@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "task_id": "is-stream",
+  "upstream": {
+    "frameworks": ["ava", "xo", "tsd"],
+    "command": "npm install --ignore-scripts --no-audit --no-fund && npm test",
+    "node_version": "24.19.0",
+    "npm_version": "11.17.0",
+    "exit_code": 0,
+    "ava_tests_passed": 29,
+    "ava_tests_failed": 0,
+    "log": ".nl2repo/authoring-work/node-author-batch2/is-stream/logs/upstream-node24.log"
+  },
+  "frozen_private_collection": {
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "expected_total": 32,
+    "boundary": "UID 10001 one-shot subprocess calling the installed package root run export",
+    "groups": {
+      "adapter_validation": 2,
+      "isStream": 9,
+      "isWritableStream": 6,
+      "isReadableStream": 6,
+      "isDuplexStream": 5,
+      "isTransformStream": 4
+    }
+  },
+  "selection": "The fixed denominator covers every public predicate, open-state handling, native stream classes, primitives, and structural stream-like objects without transferring native objects across the verifier boundary."
+}

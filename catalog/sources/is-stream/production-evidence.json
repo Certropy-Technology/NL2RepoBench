@@ -1,0 +1,221 @@
+{
+  "schema_version": "1.0",
+  "task_id": "is-stream",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/sindresorhus/is-stream",
+    "revision": "ab06c4acc9dce4dcadc9dfc6416e1be2c836862d",
+    "source_digest": "sha256:465680c19959fc1c1f85702de085b7118845e584ea797653f90c1130d550e3fd",
+    "license_spdx": "MIT",
+    "license_path": ".nl2repo/authoring-work/node-author-batch2/is-stream/upstream/license",
+    "license_digest": "sha256:5c932d88256b4ab958f64a856fa48e8bd1f55bc1d96b8149c65689e0c61789d3",
+    "source_content_digest": "sha256:38a25831cea1a932e76995f0d771e3b4163e6dd70a86c14340579e8de39b82ab",
+    "submodules": [],
+    "tracked_files": 13,
+    "source_worktree_clean": false
+  },
+  "receipt_binding": {
+    "dependency_artifact": "sha256:2159a90d97d788894302c73870d88e64ae683a3ca65f0a2c555a444d0eba5b7d",
+    "commands_artifact": "sha256:cce70c142560ca3a95bd4c792e6508aabb75be2a1c81993ff02286e71c954bc5",
+    "test_bundle": "sha256:cfad4d23a87d788894302c73870d88e64ae683a3ca65f0a2c555a444d0eba5b7d",
+    "oracle_bundle": "sha256:0d8b9e0c7beed6d0b96d6922f7419f85bce1a275d81b0b2014bfb768feb4eb50",
+    "toolchain_path": "toolchain.node.lock.toml",
+    "toolchain_file_sha256": "sha256:e5ff4d5a5995022c048fbe7242561d2a6be95b908f40973d72104c6b2d30f27c",
+    "harbor_runner_lock_sha256": "sha256:715cb5a02d19b3baae3a2e3879b94ea3e5f39c8ab19232c93466b1cf385d8e42",
+    "harbor_version": "0.21.0",
+    "node_version": "24.19.0",
+    "npm_version": "11.17.0"
+  },
+  "compile": {
+    "command": "uv run nl2repo harbor compile catalog/sources/is-stream --output .nl2repo/compiled-final-r3 --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+    "exit_code": 0,
+    "allow_incomplete": false,
+    "bundle_path": ".nl2repo/compiled-final-r3/is-stream",
+    "bundle_manifest_sha256": "sha256:5a51887b10807a978c7c0816b43c857e5e2e6a69e3f1c1f091ba76c392e4e844",
+    "canonical_manifest_digest": "sha256:05fbc9bfc4f06a93113d9be18552c9e8f751b132816e6f90efbf81ed1f74fb87",
+    "toolchain_lock_digest": "sha256:aac76d5c1a423cd3c5c9c96870198475e0fed151793b60eeb830a7c053692dc8",
+    "file_count": 77,
+    "manifest_mismatches": 0
+  },
+  "environment": {
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "agent_runtime_image": "nl2repobench/openhands-sdk-fork:930e9b1da-bookworm",
+    "agent_runtime_image_id": "sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f",
+    "runtime": {
+      "language": "node",
+      "version": "24.19.0",
+      "package_manager": "npm",
+      "package_manager_version": "11.17.0",
+      "architecture": "linux/amd64",
+      "libc": "glibc"
+    },
+    "network_policy": {
+      "mode": "no-network",
+      "agent_allowed_hosts": [],
+      "offline_dependencies": "preinstalled-image",
+      "reference_source_fetch": "forbidden",
+      "oracle_run_scoped_hosts": ["github.com", "codeload.github.com"]
+    }
+  },
+  "dependencies": {
+    "status": "known",
+    "ecosystem": "npm",
+    "package_manager": "npm",
+    "package_manager_version": "11.17.0",
+    "lockfile_version": "3",
+    "install_mode": "offline",
+    "lifecycle_scripts": "ignore-scripts",
+    "packages": [],
+    "artifact": {
+      "digest": "sha256:2159a90d97d788894302c73870d88e64ae683a3ca65f0a2c555a444d0eba5b7d",
+      "size_bytes": 10240,
+      "media_type": "application/vnd.nl2repobench.npm-bundle+tar",
+      "uri": "artifact://private/sha256:2159a90d97d788894302c73870d88e64ae683a3ca65f0a2c555a444d0eba5b7d",
+      "visibility": "private"
+    }
+  },
+  "frozen_collection": {
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "expected_total": 32,
+    "source": "independent node:test contract over bounded JSON child adapter",
+    "boundary": "UID 10001 one-shot subprocess calling the installed package root run export"
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled-final-r3/is-stream -a oracle --allow-agent-host github.com --allow-agent-host codeload.github.com --job-name is-stream-oracle-r3-final-20260903 -o .nl2repo/authoring-work/node-author-batch2/is-stream/runs-r3/oracle --n-concurrent 1 --max-retries 0 --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "valid": true,
+    "expected_total": 32,
+    "collected": 32,
+    "passed": 32,
+    "failed": 0,
+    "reward": 1.0,
+    "public_network_available": false,
+    "result": ".nl2repo/authoring-work/node-author-batch2/is-stream/runs-r2/oracle/is-stream-oracle-r2-final-20260903/result.json",
+    "grading": {
+      "path": ".nl2repo/authoring-work/node-author-batch2/is-stream/runs-r3/oracle/is-stream-oracle-r3-final-20260903/is-stream__C54FzGv/verifier/grading.json",
+      "sha256": "sha256:cd108d0f67216ff6f9a38c237e7a37756057d991fe17247c2fa942029f679e80"
+    },
+    "network": {
+      "path": ".nl2repo/authoring-work/node-author-batch2/is-stream/runs-r3/oracle/is-stream-oracle-r3-final-20260903/is-stream__C54FzGv/verifier/network.json",
+      "sha256": "sha256:5600ef6f5b9fd001326a259bb38c841a86790ee6febc919da3c545d9755adb51"
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled-final-r3/is-stream -a nop --job-name is-stream-empty-r3-final-20260903 -o .nl2repo/authoring-work/node-author-batch2/is-stream/runs-r3/empty --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_reason": "candidate-installation-failed",
+      "grading": {"path": ".nl2repo/authoring-work/node-author-batch2/is-stream/runs-r3/empty/is-stream-empty-r3-final-20260903/is-stream__8oRNJZv/verifier/grading.json", "sha256": "sha256:e45b0a3c684318f96a78fa8c1f917e2ff1ac9e51e85ff54d47b0089b92583961"},
+      "network": {"path": ".nl2repo/authoring-work/node-author-batch2/is-stream/runs-r3/empty/is-stream-empty-r3-final-20260903/is-stream__8oRNJZv/verifier/network.json", "sha256": "sha256:59b5283e031380f589be790dd5d6af5a8ac237f35b663d948c811baf5d0e75e8"}
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final-r3/is-stream-stub -a oracle --job-name is-stream-stub-r3-final-20260903 -o .nl2repo/authoring-work/node-author-batch2/is-stream/runs-r3/stub --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 32,
+      "passed": 13,
+      "failed": 19,
+      "reward": 0.40625,
+      "grading": {"path": ".nl2repo/authoring-work/node-author-batch2/is-stream/runs-r3/stub/is-stream-stub-r3-final-20260903/is-stream-stub__mRTnPVY/verifier/grading.json", "sha256": "sha256:246726b29d776ac1e1e8b3852182f6effcfa051cbb53adc4dafa7646895287ab"},
+      "network": {"path": ".nl2repo/authoring-work/node-author-batch2/is-stream/runs-r3/stub/is-stream-stub-r3-final-20260903/is-stream-stub__mRTnPVY/verifier/network.json", "sha256": "sha256:b33e0605d8e5444f8dc7139e1f1ba6dfc6103fe231f86901ce13919567299080"}
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final-r3/is-stream-forgery -a oracle --job-name is-stream-forgery-r3-final-20260903 -o .nl2repo/authoring-work/node-author-batch2/is-stream/runs-r3/forgery --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 32,
+      "passed": 13,
+      "failed": 19,
+      "reward": 0.40625,
+      "verifier_owned_reward": true,
+      "grading": {"path": ".nl2repo/authoring-work/node-author-batch2/is-stream/runs-r3/forgery/is-stream-forgery-r3-final-20260903/is-stream-forgery__GZwAQYs/verifier/grading.json", "sha256": "sha256:246726b29d776ac1e1e8b3852182f6effcfa051cbb53adc4dafa7646895287ab"},
+      "network": {"path": ".nl2repo/authoring-work/node-author-batch2/is-stream/runs-r3/forgery/is-stream-forgery-r3-final-20260903/is-stream-forgery__GZwAQYs/verifier/network.json", "sha256": "sha256:b948e8850360ea1740d404dd8749d422d106a4d0c3d4a5554883e32fc2459740"}
+    },
+    "call_hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final-r3/is-stream-call-hang -a oracle --job-name is-stream-hang-r3-final-20260903 -o .nl2repo/authoring-work/node-author-batch2/is-stream/runs-r3/call-hang --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "completed": true,
+      "collected": 32,
+      "passed": 0,
+      "failed": 32,
+      "reward": 0.0,
+      "grading": {"path": ".nl2repo/authoring-work/node-author-batch2/is-stream/runs-r3/call-hang/is-stream-hang-r3-final-20260903/is-stream-call-hang__vjNbnX3/verifier/grading.json", "sha256": "sha256:246726b29d776ac1e1e8b3852182f6effcfa051cbb53adc4dafa7646895287ab"},
+      "network": {"path": ".nl2repo/authoring-work/node-author-batch2/is-stream/runs-r3/call-hang/is-stream-hang-r3-final-20260903/is-stream-call-hang__vjNbnX3/verifier/network.json", "sha256": "sha256:a6f14ffcb200df2a5046d82742ef0af40ca099a2359a528b49682429910fbfcd"}
+    },
+    "offline": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final-r3/is-stream-offline -a oracle --job-name is-stream-offline-r3-final-20260903 -o .nl2repo/authoring-work/node-author-batch2/is-stream/runs-r3/offline --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "completed": true,
+      "collected": 32,
+      "passed": 1,
+      "failed": 31,
+      "reward": 0.03125,
+      "grading": {"path": ".nl2repo/authoring-work/node-author-batch2/is-stream/runs-r3/offline/is-stream-offline-r3-final-20260903/is-stream-offline__iLPzr3m/verifier/grading.json", "sha256": "sha256:ecfd8da39e3ccb658ecfe326ce92e3d88d144ae02f54bb3bd5116b6b49da470d"},
+      "network": {"path": ".nl2repo/authoring-work/node-author-batch2/is-stream/runs-r3/offline/is-stream-offline-r3-final-20260903/is-stream-offline__iLPzr3m/verifier/network.json", "sha256": "sha256:58a53c061a956e586b29e9f6528341c7c0a0bd74b84193551e87895f74648be1"}
+    }
+  },
+  "commands": [
+    {
+      "stage": "source-freeze",
+      "command": "Frozen checkout at ab06c4acc9dce4dcadc9dfc6416e1be2c836862d; prefixed git archive and MIT license digest verified",
+      "exit_code": 0,
+      "result": "13 tracked files; no submodules; archive sha256:465680c19959fc1c1f85702de085b7118845e584ea797653f90c1130d550e3fd"
+    },
+    {
+      "stage": "upstream-baseline",
+      "command": "Node 24.19.0/npm 11.17.0 upstream suite: npm install --ignore-scripts --no-audit --no-fund && npm test",
+      "exit_code": 0,
+      "result": "XO, AVA 29/29, and TSD passed; log .nl2repo/authoring-work/node-author-batch2/is-stream/logs/upstream-node24.log"
+    },
+    {
+      "stage": "source-validation",
+      "command": "uv run nl2repo task validate-source catalog/sources/is-stream",
+      "exit_code": 0,
+      "log": ".nl2repo/authoring-work/node-author-batch2/is-stream/logs/validate-source-current.log"
+    },
+    {
+      "stage": "network-lint",
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "result": "error_count=0; 174 unrelated warnings across the shared source catalog; no is-stream finding",
+      "log": ".nl2repo/authoring-work/node-author-batch2/is-stream/logs/network-lint-current.log"
+    },
+    {
+      "stage": "production-compile",
+      "command": "uv run nl2repo harbor compile catalog/sources/is-stream --output .nl2repo/compiled-final-r3 --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0,
+      "allow_incomplete": false,
+      "log": ".nl2repo/authoring-work/node-author-batch2/is-stream/logs/harbor-compile-r3.log"
+    },
+    {
+      "stage": "local-node-boundary-probe",
+      "command": "Offline npm ci/pack/install, package validation, 32 adapter cases, and 3 malformed-request rejection probes",
+      "exit_code": 0,
+      "result": "32/32 protocol cases and 3/3 rejection probes passed"
+    },
+    {
+      "stage": "final-gates",
+      "command": "Harbor 0.21.0 Oracle plus empty, stub, forgery, call-hang, and offline controls against compiled-final-r3",
+      "exit_code": 0,
+      "result": "Oracle 32/32 reward 1.0; all controls completed with valid=true and public_network_available=false"
+    }
+  ],
+  "residual_risks": [
+    "No model Agent Run was started in this lane by contract.",
+    "Independent blind/spec traceability review, dataset integration, pilot, and publication remain integrator stages.",
+    "The source and evidence are uncommitted in this detached authoring worktree; the integrator must commit the task source and retain the task-local evidence before production catalog validation.",
+    "The first call-hang command used an incorrect generated control path and exited before Harbor startup; the corrected path completed and is the receipt recorded above."
+  ],
+  "blocker": null
+}
