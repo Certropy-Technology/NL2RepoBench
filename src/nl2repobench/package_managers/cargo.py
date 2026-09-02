@@ -650,12 +650,39 @@ class CargoPackageManager:
         *,
         runtime_profile: RuntimeProfile | None = None,
     ) -> StoreSummary:
-        del store_root, lock_summary, inventory, expected_toolchain
         _validate_runtime_profile(runtime_profile, stage="store")
-        raise _error(
-            "Cargo locked-toolchain staging requires a Rust-local adapter boundary",
-            PackageManagerErrorCode.UNSUPPORTED_PROFILE,
-            stage="store",
+        # The generic dependency contract materializes sibling ``lock`` and
+        # ``store`` roots and supplies the inventory, so route it through the
+        # same strict Cargo validator used by the compiler-specific path.
+        if not isinstance(inventory, dict):
+            raise _error(
+                "Cargo external inventory must be an object",
+                PackageManagerErrorCode.INVENTORY_MISMATCH,
+                stage="store",
+            )
+        toolchain_digest = inventory.get("toolchain_digest")
+        if not isinstance(toolchain_digest, str) or not re.fullmatch(
+            r"sha256:[0-9a-f]{64}", toolchain_digest
+        ):
+            raise _error(
+                "Cargo inventory toolchain digest is malformed",
+                PackageManagerErrorCode.INVENTORY_MISMATCH,
+                stage="store",
+            )
+        lock_root = store_root.parent / "lock"
+        if lock_root.resolve() == store_root.resolve():
+            raise _error(
+                "Cargo lock and store roots must be separate",
+                PackageManagerErrorCode.STORE_MALFORMED,
+                stage="store",
+            )
+        return self.validate_frozen_offline_store(
+            store_root,
+            lock_summary,
+            inventory,
+            expected_toolchain,
+            expected_toolchain_digest=toolchain_digest,
+            lock_root=lock_root,
         )
 
     def validate_frozen_offline_store(

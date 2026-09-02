@@ -356,6 +356,10 @@ def test_cargo_store_binds_vendor_and_crate_bytes_to_lock(tmp_path: Path) -> Non
         lock_root=lock_root,
     )
     assert result.offline_smoke is True
+    generic_result = adapter.validate_offline_store(
+        store, summary, inventory, "1.100.0-nightly"
+    )
+    assert generic_result == result
 
     crate.write_bytes(b"tampered")
     entries = tree_entries(store)
@@ -571,18 +575,18 @@ def test_crate_archive_rejects_noncanonical_raw_path_components(
         cargo_module._read_crate_archive(archive, expected_root="demo-1.0.0")
 
 
-def test_generic_cargo_store_staging_fails_closed(tmp_path: Path) -> None:
+def test_generic_cargo_store_staging_requires_canonical_inventory(tmp_path: Path) -> None:
     adapter = CargoPackageManager()
     lock_root = tmp_path / "lock"
     lock_root.mkdir()
     (lock_root / "Cargo.lock").write_text(CARGO_LOCK, encoding="utf-8")
     summary = adapter.validate_lock(lock_root, "1.100.0-nightly")
 
-    with pytest.raises(PackageManagerError, match="Rust-local adapter boundary") as raised:
+    with pytest.raises(PackageManagerError, match="toolchain digest is malformed") as raised:
         adapter.validate_offline_store(
             tmp_path / "store", summary, {}, "1.100.0-nightly"
         )
-    assert raised.value.code is PackageManagerErrorCode.UNSUPPORTED_PROFILE
+    assert raised.value.code is PackageManagerErrorCode.INVENTORY_MISMATCH
 
 
 def _rust_profile() -> RuntimeProfile:
@@ -618,7 +622,7 @@ def test_canonical_cargo_adapter_call_reports_typed_errors(tmp_path: Path) -> No
     summary = adapter.validate_lock(lock_root, "1.100.0-nightly", runtime_profile=profile)
     assert [item.name for item in summary.resolved] == ["demo", "itoa"]
 
-    with pytest.raises(PackageManagerError, match="Rust-local adapter boundary") as raised:
+    with pytest.raises(PackageManagerError, match="toolchain digest is malformed") as raised:
         adapter.validate_offline_store(
             tmp_path / "store",
             summary,
@@ -626,7 +630,7 @@ def test_canonical_cargo_adapter_call_reports_typed_errors(tmp_path: Path) -> No
             "1.100.0-nightly",
             runtime_profile=profile,
         )
-    assert raised.value.code is PackageManagerErrorCode.UNSUPPORTED_PROFILE
+    assert raised.value.code is PackageManagerErrorCode.INVENTORY_MISMATCH
     assert raised.value.stage == "store"
 
     mismatched = RuntimeProfile(
