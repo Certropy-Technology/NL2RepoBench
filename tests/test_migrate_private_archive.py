@@ -82,6 +82,17 @@ def test_helper_accepts_gnu_tar_root_directory_marker() -> None:
     assert [member.entry.path for member in members] == ["_nl2repo.bundle-inventory.json"]
 
 
+def test_helper_rejects_root_directory_marker_with_payload() -> None:
+    output = io.BytesIO()
+    with tarfile.open(fileobj=output, mode="w") as archive:
+        info = tarfile.TarInfo("./")
+        info.type = tarfile.DIRTYPE
+        info.size = 1
+        archive.addfile(info, io.BytesIO(b"x"))
+    with pytest.raises(_MODULE.PrivateArchiveMigrationError, match="payload"):
+        _MODULE.migrate_private_archive(output.getvalue(), "test-bundle")
+
+
 @pytest.mark.parametrize(
     "name",
     ["/absolute", "../parent", "a/../b", "a//b", "a/./b", "././nested", ""],

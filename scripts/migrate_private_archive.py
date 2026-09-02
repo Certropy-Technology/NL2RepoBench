@@ -270,6 +270,10 @@ def migrate_private_archive(
                     # GNU tar commonly emits ``./`` as a container marker.
                     # It has no representable path in the canonical tree.
                     if member_type == "directory" and member.name in {".", "./"}:
+                        if member.size != 0:
+                            raise PrivateArchiveMigrationError(
+                                "directory member has payload bytes"
+                            )
                         member_ends.append(
                             member.offset + 512 + ((member.size + 511) // 512) * 512
                         )
