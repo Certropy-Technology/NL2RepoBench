@@ -1,0 +1,92 @@
+schema_version = "2.0"
+task_id = "validate-npm-package-name"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+language = "node"
+difficulty = "medium"
+category = "package-name-validation"
+tags = ["node", "npm", "commonjs", "validation", "package-name", "url-safety", "separate-verifier"]
+
+[source]
+status = "known"
+upstream_url = "https://github.com/npm/validate-npm-package-name"
+revision = "f63469d58278635630681c2506f05176ff18a7cb"
+license_spdx = "ISC"
+source_digest = "sha256:9661772a73903963953effd89a95902ce3b5b4b82106c839ed3d6e938f4e8a79"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm-amd64"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "Candidate and verifier phases are network-isolated. The exact no-dependency npm lock and empty cache are supplied as a private integrity-checked artifact; only the trusted Oracle receives a run-scoped github.com source-host authorization."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = []
+artifact = { digest = "sha256:1d71330adf5391034d420c616aabae1e0008d9f9f50c91a7403fb2f769621217", size_bytes = 10240, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:1d71330adf5391034d420c616aabae1e0008d9f9f50c91a7403fb2f769621217", visibility = "private" }
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 44
+expected_total_source = "frozen-collection"
+commands_artifact = { digest = "sha256:fda65a1fae7a54d9433921e0c28ac2311ec9dbefc0b8c54efe69c954ad4433f7", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:fda65a1fae7a54d9433921e0c28ac2311ec9dbefc0b8c54efe69c954ad4433f7", visibility = "private" }
+test_bundle = { digest = "sha256:079262c1c81ec96a13033c90f1f91b97b658d68816eb8ca701c35accc69ab818", size_bytes = 20480, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:079262c1c81ec96a13033c90f1f91b97b658d68816eb8ca701c35accc69ab818", visibility = "private" }
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Build validate-npm-package-name 8.0.0 as a deterministic offline CommonJS validator with exact npm legacy warning and error semantics."
+keywords = ["node", "npm", "commonjs", "validation", "package-name", "url-safety"]
+agent_timeout_sec = 1200.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 240.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "node-author-wave2-20260828-validate-npm-package-name"
+reason = "Exact source, API contract, no-dependency npm closure, private verifier, deterministic production compile, Oracle, and required controls passed in this lane. Independent review, model Agent Run, integration, and publication remain parent stages."
+
+[oracle_bundle]
+digest = "sha256:65361c820e72d310220e83b144514de0825fe1e7b5e7e46a41bfc26f941fb94d"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:65361c820e72d310220e83b144514de0825fe1e7b5e7e46a41bfc26f941fb94d"
+visibility = "private"

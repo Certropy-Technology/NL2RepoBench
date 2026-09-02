@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "task_id": "validate-npm-package-name",
+  "source_revision": "f63469d58278635630681c2506f05176ff18a7cb",
+  "package_version": "8.0.0",
+  "module_system": "commonjs",
+  "runtime_dependencies": [],
+  "exports": [
+    {
+      "import_path": "validate-npm-package-name",
+      "export_kind": "module.exports",
+      "name": "validate",
+      "signature": "validate(name: unknown) -> ValidationResult",
+      "synchronous": true,
+      "deterministic": true,
+      "side_effects": [],
+      "throws_for_supported_inputs": false,
+      "return_shape": {
+        "required": ["validForNewPackages", "validForOldPackages"],
+        "optional": ["warnings", "errors"]
+      }
+    }
+  ],
+  "source_files": ["lib/index.js", "lib/builtin-modules.json"],
+  "cli_entries": [],
+  "native_addons": false
+}

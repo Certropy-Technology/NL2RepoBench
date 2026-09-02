@@ -1,0 +1,64 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/validate-npm-package-name"
+version = "1.0.0"
+description = "Build validate-npm-package-name 8.0.0 as a deterministic offline CommonJS validator with exact npm legacy warning and error semantics."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "node",
+    "npm",
+    "commonjs",
+    "validation",
+    "package-name",
+    "url-safety",
+]
+
+[metadata]
+difficulty = "medium"
+category = "package-name-validation"
+tags = [
+    "node",
+    "npm",
+    "commonjs",
+    "validation",
+    "package-name",
+    "url-safety",
+    "separate-verifier",
+]
+language = "node"
+runtime = "node"
+runtime_version = "24.19.0"
+package_manager = "npm"
+test_framework = "node:test"
+metric_contract = "node-test-leaf-pass-rate-v1"
+expected_test_count = 44
+canonical_manifest_digest = "sha256:e31339ad21a53a35fece8fa54f459e7d51ad80bed630db8482f93539c975171c"
+toolchain_lock_digest = "sha256:aac76d5c1a423cd3c5c9c96870198475e0fed151793b60eeb830a7c053692dc8"
+
+[agent]
+timeout_sec = 1200.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 1024
+storage_mb = 8192
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096

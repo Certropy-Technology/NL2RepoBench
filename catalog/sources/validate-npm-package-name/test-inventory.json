@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "task_id": "validate-npm-package-name",
+  "source_revision": "f63469d58278635630681c2506f05176ff18a7cb",
+  "upstream": {
+    "framework": "node:test",
+    "command": "node --test './test/**/*.js'",
+    "files": ["test/index.js"],
+    "collected": 2,
+    "passed_in_pinned_image": 2,
+    "exit_code": 0
+  },
+  "production": {
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "protocol": "custom-json-v1",
+    "frozen_total": 44,
+    "collection_errors": 0,
+    "categories": [
+      "package-shape",
+      "ordinary-and-scoped-validity",
+      "non-string-inputs",
+      "string-errors-and-order",
+      "legacy-warnings-and-order",
+      "length-boundaries",
+      "result-shape",
+      "determinism"
+    ]
+  }
+}

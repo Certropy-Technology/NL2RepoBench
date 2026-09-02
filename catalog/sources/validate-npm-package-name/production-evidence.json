@@ -1,0 +1,323 @@
+{
+  "schema_version": "1.0",
+  "task_id": "validate-npm-package-name",
+  "task_version": "1.0.0",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "expected_total": 44,
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/npm/validate-npm-package-name",
+    "revision": "f63469d58278635630681c2506f05176ff18a7cb",
+    "source_archive_sha256": "sha256:9661772a73903963953effd89a95902ce3b5b4b82106c839ed3d6e938f4e8a79",
+    "source_archive_size_bytes": 112640,
+    "license_spdx": "ISC",
+    "license_path": "LICENSE",
+    "license_sha256": "sha256:f3e1645267f7dd77ee6545283cc1766e5883e8fb3b5088fe2cfb995defbb3dde",
+    "submodules": [],
+    "source_worktree_clean": true
+  },
+  "environment": {
+    "os_name": "debian-bookworm-amd64",
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "verifier_python_base_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "runtime": "node 24.19.0",
+    "package_manager": "npm 11.17.0",
+    "architecture": "linux/amd64",
+    "libc": "glibc 2.36",
+    "network_mode": "no-network",
+    "network_policy": {
+      "mode": "no-network",
+      "agent_allowed_hosts": [],
+      "offline_dependencies": "private-artifact",
+      "reference_source_fetch": "forbidden",
+      "oracle_run_scoped_host": "github.com"
+    },
+    "toolchain_lock_path": "toolchain.node.lock.toml",
+    "toolchain_lock_sha256": "sha256:e5ff4d5a5995022c048fbe7242561d2a6be95b908f40973d72104c6b2d30f27c",
+    "agent_runtime_image": {
+      "tag": "nl2repobench/openhands-sdk-fork:930e9b1da-bookworm",
+      "locked_image_id": "sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f",
+      "observed_local_image_id": "sha256:bb48824b85940a3b6083ce0a1d713af6963ebf92bcba318dfc5838461a4081c3",
+      "locked_image_present": false,
+      "pull_exit_code": 1,
+      "pull_log": ".nl2repo/authoring-work/validate-npm-package-name/logs/locked-agent-image-pull.log",
+      "pull_log_sha256": "sha256:c846376c12abfc6bd1b4a0eb2ddda1424793ac62e600cda9c7105ab75735ddab"
+    }
+  },
+  "dependencies": {
+    "status": "known",
+    "ecosystem": "npm",
+    "package_manager": "npm",
+    "package_manager_version": "11.17.0",
+    "lockfile_name": "package-lock.json",
+    "lockfile_version": 3,
+    "install_mode": "offline",
+    "lifecycle_scripts": "ignore-scripts",
+    "packages": [],
+    "artifact": {
+      "digest": "sha256:1d71330adf5391034d420c616aabae1e0008d9f9f50c91a7403fb2f769621217",
+      "size_bytes": 10240,
+      "media_type": "application/vnd.nl2repobench.npm-bundle+tar",
+      "uri": "artifact://private/sha256:1d71330adf5391034d420c616aabae1e0008d9f9f50c91a7403fb2f769621217",
+      "visibility": "private"
+    }
+  },
+  "tests": {
+    "protocol": "custom-json-v1",
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "upstream_collected": 2,
+    "upstream_passed": 2,
+    "frozen_total": 44,
+    "commands_artifact": "sha256:fda65a1fae7a54d9433921e0c28ac2311ec9dbefc0b8c54efe69c954ad4433f7",
+    "test_bundle": "sha256:079262c1c81ec96a13033c90f1f91b97b658d68816eb8ca701c35accc69ab818",
+    "candidate_boundary": "candidate-boundary.json"
+  },
+  "metric": {
+    "contract_id": "node-test-leaf-pass-rate-v1",
+    "formula": "clamp(passed / frozen_total, 0, 1)",
+    "collection_mismatch": "fail"
+  },
+  "compiled_bundle": {
+    "mode": "production",
+    "path": ".nl2repo/final-compile/validate-npm-package-name",
+    "bundle_manifest_sha256": "sha256:e0f199fb8ba86b09395257d5effb70eaf67a45664f627990dd37bc69c9867551",
+    "canonical_manifest_digest": "sha256:e31339ad21a53a35fece8fa54f459e7d51ad80bed630db8482f93539c975171c",
+    "toolchain_lock_digest": "sha256:aac76d5c1a423cd3c5c9c96870198475e0fed151793b60eeb830a7c053692dc8",
+    "file_count": 75,
+    "manifest_mismatches": 0,
+    "allow_incomplete": false
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/final-compile/validate-npm-package-name -a oracle --allow-agent-host github.com --job-name validate-npm-package-name-oracle-final --jobs-dir .nl2repo/evidence/validate-npm-package-name/oracle-final --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "trial": "validate-npm-package-name__XfJhRoc",
+    "valid": true,
+    "expected_total": 44,
+    "collected": 44,
+    "passed": 44,
+    "failed": 0,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/evidence/validate-npm-package-name/oracle-final/validate-npm-package-name-oracle-final/validate-npm-package-name__XfJhRoc/verifier/grading.json",
+      "sha256": "sha256:19b26f2691f2c574c89a297436318873f74edb44bf4089cbd53e7ab1c4a1d465"
+    },
+    "network": {
+      "path": ".nl2repo/evidence/validate-npm-package-name/oracle-final/validate-npm-package-name-oracle-final/validate-npm-package-name__XfJhRoc/verifier/network.json",
+      "sha256": "sha256:1517eabc67c8c23c917decb2e1054a6edbb9f7dfe2f3aa218a443f6bdaf6060c",
+      "public_network_available": false
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final/validate-npm-package-name/validate-npm-package-name-empty -a oracle --job-name validate-npm-package-name-empty-final --jobs-dir .nl2repo/evidence/validate-npm-package-name/empty-final --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/evidence/validate-npm-package-name/empty-final/validate-npm-package-name-empty-final/validate-npm-package-name-empty__W2wUjKo/verifier/grading.json",
+        "sha256": "sha256:057942984501d7f6c93c45d950f01111fceb078de548b8796330dadbf0cc95ca"
+      },
+      "network": {
+        "path": ".nl2repo/evidence/validate-npm-package-name/empty-final/validate-npm-package-name-empty-final/validate-npm-package-name-empty__W2wUjKo/verifier/network.json",
+        "sha256": "sha256:31d58e31de2c07675f0cf596cd1422585b42019d328292c37425412ab157f31c",
+        "public_network_available": false
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final/validate-npm-package-name/validate-npm-package-name-stub -a oracle --job-name validate-npm-package-name-stub-final --jobs-dir .nl2repo/evidence/validate-npm-package-name/stub-final --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 44,
+      "collected": 44,
+      "passed": 6,
+      "failed": 38,
+      "reward": 0.13636363636363635,
+      "grading": {
+        "path": ".nl2repo/evidence/validate-npm-package-name/stub-final/validate-npm-package-name-stub-final/validate-npm-package-name-stub__rUsdDWm/verifier/grading.json",
+        "sha256": "sha256:c125c3d0f0bc2f482c595be3f6b22c9aff78a2be9c70db15ba9416b3e968fdf2"
+      },
+      "network": {
+        "path": ".nl2repo/evidence/validate-npm-package-name/stub-final/validate-npm-package-name-stub-final/validate-npm-package-name-stub__rUsdDWm/verifier/network.json",
+        "sha256": "sha256:cb41000696c81c7c867a03e1be4de2c7432a3377c8d1a811cd327428cfac0bb0",
+        "public_network_available": false
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final/validate-npm-package-name/validate-npm-package-name-forgery -a oracle --job-name validate-npm-package-name-forgery-final --jobs-dir .nl2repo/evidence/validate-npm-package-name/forgery-final --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 44,
+      "collected": 44,
+      "passed": 6,
+      "failed": 38,
+      "reward": 0.13636363636363635,
+      "verifier_owned_reward": true,
+      "grading": {
+        "path": ".nl2repo/evidence/validate-npm-package-name/forgery-final/validate-npm-package-name-forgery-final/validate-npm-package-name-forger__hjHTGfD/verifier/grading.json",
+        "sha256": "sha256:c125c3d0f0bc2f482c595be3f6b22c9aff78a2be9c70db15ba9416b3e968fdf2"
+      },
+      "network": {
+        "path": ".nl2repo/evidence/validate-npm-package-name/forgery-final/validate-npm-package-name-forgery-final/validate-npm-package-name-forger__hjHTGfD/verifier/network.json",
+        "sha256": "sha256:5bbe9932d602060aaf0e3bee012c4df291c9e498cdd1e15eda91ee7704ae0a5e",
+        "public_network_available": false
+      }
+    },
+    "install-script": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final/validate-npm-package-name/validate-npm-package-name-install-script -a oracle --job-name validate-npm-package-name-install-script-final --jobs-dir .nl2repo/evidence/validate-npm-package-name/install-script-final --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/evidence/validate-npm-package-name/install-script-final/validate-npm-package-name-install-script-final/validate-npm-package-name-instal__pfvgcwR/verifier/grading.json",
+        "sha256": "sha256:057942984501d7f6c93c45d950f01111fceb078de548b8796330dadbf0cc95ca"
+      },
+      "network": {
+        "path": ".nl2repo/evidence/validate-npm-package-name/install-script-final/validate-npm-package-name-install-script-final/validate-npm-package-name-instal__pfvgcwR/verifier/network.json",
+        "sha256": "sha256:98ea9e3ccde4b269a722828a902cefeb5211d7c91a45b558837ef0b8fb93b65f",
+        "public_network_available": false
+      }
+    },
+    "loader-hook": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final/validate-npm-package-name/validate-npm-package-name-loader-hook -a oracle --job-name validate-npm-package-name-loader-hook-final --jobs-dir .nl2repo/evidence/validate-npm-package-name/loader-hook-final --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 44,
+      "collected": 44,
+      "passed": 10,
+      "failed": 34,
+      "reward": 0.22727272727272727,
+      "grading": {
+        "path": ".nl2repo/evidence/validate-npm-package-name/loader-hook-final/validate-npm-package-name-loader-hook-final/validate-npm-package-name-loader__6MWAJ8y/verifier/grading.json",
+        "sha256": "sha256:43fef3950487a18245bb04da58c063e68bd06c84f4d65f98c9dfb9ec6770ec0a"
+      },
+      "network": {
+        "path": ".nl2repo/evidence/validate-npm-package-name/loader-hook-final/validate-npm-package-name-loader-hook-final/validate-npm-package-name-loader__6MWAJ8y/verifier/network.json",
+        "sha256": "sha256:01664ddb3514311cd3f5d58f558f7363680a81687bc88b45e24483c7ebd73517",
+        "public_network_available": false
+      }
+    },
+    "hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final/validate-npm-package-name/validate-npm-package-name-call-hang -a oracle --job-name validate-npm-package-name-hang-final --jobs-dir .nl2repo/evidence/validate-npm-package-name/hang-final --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-call-failed",
+      "bounded": true,
+      "grading": {
+        "path": ".nl2repo/evidence/validate-npm-package-name/hang-final/validate-npm-package-name-hang-final/validate-npm-package-name-call-h__9Vcomd6/verifier/grading.json",
+        "sha256": "sha256:b175f516cebd32bdc2e3f1f82e7d2c83b38b40104d3907a99545c6c16060c059"
+      },
+      "network": {
+        "path": ".nl2repo/evidence/validate-npm-package-name/hang-final/validate-npm-package-name-hang-final/validate-npm-package-name-call-h__9Vcomd6/verifier/network.json",
+        "sha256": "sha256:de5d0b2b2e79f0042be8f94b8cdd6483390774e81d52ee60422898319639abca",
+        "public_network_available": false
+      }
+    },
+    "offline": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final/validate-npm-package-name/validate-npm-package-name-offline -a oracle --job-name validate-npm-package-name-offline-final --jobs-dir .nl2repo/evidence/validate-npm-package-name/offline-final --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 44,
+      "collected": 44,
+      "passed": 1,
+      "failed": 43,
+      "reward": 0.022727272727272728,
+      "completed": true,
+      "grading": {
+        "path": ".nl2repo/evidence/validate-npm-package-name/offline-final/validate-npm-package-name-offline-final/validate-npm-package-name-offlin__BkE5xWb/verifier/grading.json",
+        "sha256": "sha256:bdbf0d0cb3e8f99c3c8ce4c6fd2fb60125de97bf53b16716403e66bc80ef2106"
+      },
+      "network": {
+        "path": ".nl2repo/evidence/validate-npm-package-name/offline-final/validate-npm-package-name-offline-final/validate-npm-package-name-offlin__BkE5xWb/verifier/network.json",
+        "sha256": "sha256:1e05289a5c5281d80660bebf1ec5039b7e3397ed2329a42fb76406f2785216a5",
+        "public_network_available": false
+      }
+    }
+  },
+  "oracle_bundle": {
+    "digest": "sha256:65361c820e72d310220e83b144514de0825fe1e7b5e7e46a41bfc26f941fb94d",
+    "size_bytes": 10240,
+    "media_type": "application/vnd.nl2repobench.oracle+tar",
+    "uri": "artifact://private/sha256:65361c820e72d310220e83b144514de0825fe1e7b5e7e46a41bfc26f941fb94d",
+    "visibility": "private"
+  },
+  "commands": [
+    {
+      "stage": "source-fetch",
+      "command": "git fetch --depth=1 origin f63469d58278635630681c2506f05176ff18a7cb",
+      "exit_code": 0,
+      "log": ".nl2repo/authoring-work/validate-npm-package-name/logs/source-fetch.log",
+      "log_sha256": "sha256:17d706083e83c43b8629b7d6e413d32d6d65d6f818698017551190dc971f31f7"
+    },
+    {
+      "stage": "upstream-tests",
+      "command": "docker run --rm --network none --platform linux/amd64 -v <source>:/src:ro -w /src docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848 node --test './test/**/*.js'",
+      "exit_code": 0,
+      "outcome": "2/2 passed",
+      "log": ".nl2repo/authoring-work/validate-npm-package-name/logs/upstream-node24-tests.log",
+      "log_sha256": "sha256:3c6be2c0a44ea62b5da6e53b4c576e7aca7539a07d23b02b56d190034a70b9d3"
+    },
+    {
+      "stage": "private-contract-probe",
+      "command": "node --test --test-reporter=tap /tests/private/contract.test.mjs in pinned offline Node image against frozen source package",
+      "exit_code": 0,
+      "outcome": "44/44 passed",
+      "log": ".nl2repo/authoring-work/validate-npm-package-name/logs/private-contract-upstream.log",
+      "log_sha256": "sha256:1fdc83498a43572cb7f291c962a8536a8004aedc1d648bc4bb451bf85e6650ec"
+    },
+    {
+      "stage": "source-validation",
+      "command": "uv run nl2repo task validate-source catalog/sources/validate-npm-package-name",
+      "exit_code": 0,
+      "source_digest": "sha256:3c1d4c54307a0fecd4a6497c09a135a877eb56aa24f84aa850db8d7c5c7db9c3"
+    },
+    {
+      "stage": "network-lint",
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "outcome": "0 errors; no findings for validate-npm-package-name",
+      "log": ".nl2repo/authoring-work/validate-npm-package-name/logs/network-lint-final.json",
+      "log_sha256": "sha256:607e351e12e311911f89ac654ed427e8bc5b793b391250a41d7c165296eb7dfb"
+    },
+    {
+      "stage": "production-compile",
+      "command": "uv run nl2repo harbor compile catalog/sources/validate-npm-package-name --output .nl2repo/final-compile --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0,
+      "bundle_manifest_sha256": "sha256:e0f199fb8ba86b09395257d5effb70eaf67a45664f627990dd37bc69c9867551"
+    },
+    {
+      "stage": "production-compile-repeat",
+      "command": "uv run nl2repo harbor compile catalog/sources/validate-npm-package-name --output .nl2repo/repeat-compile --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0,
+      "outcome": "75 files byte-identical; 0 mismatches"
+    },
+    {
+      "stage": "production-gate",
+      "command": "python3 scripts/validate_node_production.py --task catalog/sources/validate-npm-package-name --bundle .nl2repo/final-compile/validate-npm-package-name --toolchain toolchain.node.lock.toml --oracle-root .nl2repo/evidence/validate-npm-package-name/oracle-final --controls .nl2repo/evidence/validate-npm-package-name/control-summary-final.json --output .nl2repo/evidence/validate-npm-package-name/production-gate-final.json",
+      "exit_code": 0,
+      "log": ".nl2repo/evidence/validate-npm-package-name/production-gate-final.json",
+      "log_sha256": "sha256:d3e227ffd0ba8c98b00cf5e0be91419b27c0f69be64dae0dd8967a974cbc0243"
+    }
+  ],
+  "residual_risks": [
+    "The locked OpenHands image ID sha256:c50b3e3c... is absent locally; the available tag resolves to sha256:bb48824b..., and a bounded registry pull failed with access denied. Oracle and controls completed, but the integrator must restore the exact locked image before a model Agent Run.",
+    "The bounded hang control is classified as valid model failure candidate-call-failed with 0/0 collected; stub, forgery, loader-hook, and offline controls all collect the full 44-leaf denominator.",
+    "The host Node/npm are 22.23.1/10.9.8; production compilation and Harbor runtime use the pinned Node 24.19.0/npm 11.17.0 image.",
+    "Independent review, model Agent Run, dataset integration, and publication are outside this lane."
+  ]
+}

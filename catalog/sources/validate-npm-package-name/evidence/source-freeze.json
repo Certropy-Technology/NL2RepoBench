@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0",
+  "task_id": "validate-npm-package-name",
+  "status": "known",
+  "upstream_url": "https://github.com/npm/validate-npm-package-name",
+  "revision": "f63469d58278635630681c2506f05176ff18a7cb",
+  "version": "8.0.0",
+  "source_archive": {
+    "format": "git-archive-tar",
+    "sha256": "9661772a73903963953effd89a95902ce3b5b4b82106c839ed3d6e938f4e8a79",
+    "size_bytes": 112640
+  },
+  "license": {
+    "spdx": "ISC",
+    "path": "LICENSE",
+    "sha256": "f3e1645267f7dd77ee6545283cc1766e5883e8fb3b5088fe2cfb995defbb3dde",
+    "size_bytes": 728
+  },
+  "submodules": [],
+  "source_worktree_clean": true,
+  "upstream_tests": {
+    "command": "docker run --rm --network none --platform linux/amd64 -v <source>:/src:ro -w /src <pinned-node-image> node --test './test/**/*.js'",
+    "node_version": "24.19.0",
+    "npm_version": "11.17.0",
+    "collected": 2,
+    "passed": 2,
+    "failed": 0,
+    "exit_code": 0,
+    "log": ".nl2repo/authoring-work/validate-npm-package-name/logs/upstream-node24-tests.log"
+  }
+}
