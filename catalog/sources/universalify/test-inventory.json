@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "task_id": "universalify",
+  "upstream_framework": "tape",
+  "upstream_files": ["test/from-callback.js", "test/from-promise.js"],
+  "upstream_assertions": 37,
+  "upstream_result": {"passed": 37, "failed": 0},
+  "frozen_framework": "node:test",
+  "report_format": "node-test-json-v1",
+  "frozen_total": 24,
+  "private_entry": "contract.test.mjs",
+  "groups": {
+    "package_and_names": 3,
+    "from_callback": 12,
+    "from_promise": 9
+  },
+  "adapter": "A private allowlisted child-side scenario adapter constructs functions and callbacks inside the candidate UID process; only bounded JSON observations return to trusted tests."
+}

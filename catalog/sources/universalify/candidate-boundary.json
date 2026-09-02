@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "task_id": "universalify",
+  "protocol": "custom-json-scenario-over-node-test-v1",
+  "trusted_imports_candidate": false,
+  "candidate_uid": 10001,
+  "request_limit_bytes": 65536,
+  "response_limit_bytes": 262144,
+  "per_call_wall_timeout_seconds": 8,
+  "per_call_cpu_seconds": 8,
+  "process_limit": 32,
+  "file_descriptor_limit": 128,
+  "executable_input_allowed": false,
+  "network": "none",
+  "notes": "The trusted root client stages the allowlisted child adapter in candidate temporary storage immediately before spawn; assertions stay root-only. Callback and Promise objects are created only in the child, and no function, source text, or executable string crosses JSON."
+}

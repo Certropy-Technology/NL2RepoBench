@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "task_id": "universalify",
+  "revision": "dc17e0e00fb39c8d52e97ce77e494cdadfa8d19c",
+  "module_system": "commonjs",
+  "entrypoint": "index.js",
+  "runtime_dependencies": [],
+  "public_exports": [
+    {
+      "name": "fromCallback",
+      "kind": "function",
+      "signature": "fromCallback(function_) -> dual callback/promise wrapper",
+      "state": "stateless factory; wrapper preserves dynamic receiver",
+      "errors": "callback error is success only for null/undefined; other values reject"
+    },
+    {
+      "name": "fromPromise",
+      "kind": "function",
+      "signature": "fromPromise(function_) -> dual promise/callback wrapper",
+      "state": "stateless factory; wrapper preserves dynamic receiver",
+      "errors": "Promise rejection reason is returned unchanged or forwarded as the sole callback argument"
+    }
+  ],
+  "excluded_surfaces": ["development test runner", "coverage upload", "lint configuration"]
+}
