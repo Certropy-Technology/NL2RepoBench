@@ -37,6 +37,7 @@ CARGO_IDENTITY = RuntimeDiscriminator(
 )
 CARGO_ADAPTER_VERSION = "cargo-package-manager-v1"
 CARGO_TOOLCHAIN_VERSION = "1.100.0-nightly"
+CARGO_TOOLCHAIN_VERSIONS = frozenset({"1.100.0-nightly", "1.97.1"})
 CARGO_OFFLINE_SMOKE_COMMAND_ID = "cargo-metadata-frozen-offline-v1"
 CRATES_IO_SOURCE = "registry+https://github.com/rust-lang/crates.io-index"
 MAX_LOCK_BYTES = 16 * 1024 * 1024
@@ -248,8 +249,8 @@ def _validate_runtime_profile(runtime_profile: RuntimeProfile | None, *, stage: 
         or runtime_profile.language is not RuntimeLanguage.RUST
         or runtime_profile.runtime != "rust"
         or runtime_profile.package_manager is not PackageManager.CARGO
-        or runtime_profile.version != CARGO_TOOLCHAIN_VERSION
-        or runtime_profile.package_manager_version != CARGO_TOOLCHAIN_VERSION
+        or runtime_profile.version not in CARGO_TOOLCHAIN_VERSIONS
+        or runtime_profile.package_manager_version != runtime_profile.version
     ):
         raise _error(
             "Cargo validation requires a rust+cargo runtime profile pinned to "
@@ -625,9 +626,9 @@ class CargoPackageManager:
         runtime_profile: RuntimeProfile | None = None,
     ) -> LockSummary:
         _validate_runtime_profile(runtime_profile, stage="lock")
-        if expected_toolchain != CARGO_TOOLCHAIN_VERSION:
+        if expected_toolchain not in CARGO_TOOLCHAIN_VERSIONS:
             raise _error(
-                f"Cargo toolchain must be exactly {CARGO_TOOLCHAIN_VERSION}",
+                "Cargo toolchain must use a supported exact release profile",
                 PackageManagerErrorCode.TOOLCHAIN_MISMATCH,
             )
         data = _lock_bytes(lock_root)
@@ -670,7 +671,7 @@ class CargoPackageManager:
         if (
             lock_summary.identity != self.identity
             or lock_summary.toolchain_version != expected_toolchain
-            or expected_toolchain != CARGO_TOOLCHAIN_VERSION
+            or expected_toolchain not in CARGO_TOOLCHAIN_VERSIONS
         ):
             raise _error(
                 "Cargo lock and store toolchains do not match",

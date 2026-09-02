@@ -45,6 +45,15 @@ def test_rust_cargo_is_the_only_supported_rust_runtime_pair() -> None:
             package_manager=PackageManager.NONE,
         )
 
+    stable = RuntimeProfile(
+        language="rust",
+        runtime="rust",
+        version="1.97.1",
+        package_manager="cargo",
+        package_manager_version="1.97.1",
+    )
+    assert stable.version == "1.97.1"
+
 
 def test_rust_runtime_and_test_protocol_are_exact() -> None:
     with pytest.raises(ValidationError, match="runtime does not match language"):

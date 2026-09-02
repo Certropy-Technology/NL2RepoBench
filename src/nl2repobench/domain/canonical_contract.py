@@ -54,6 +54,9 @@ class PackageManager(StrEnum):
     NONE = "none"
 
 
+RUST_TOOLCHAIN_VERSIONS = frozenset({"1.100.0-nightly", "1.97.1"})
+
+
 class RuntimeProfile(CanonicalRecord):
     model_config = ConfigDict(
         json_schema_extra=cast(
@@ -82,9 +85,9 @@ class RuntimeProfile(CanonicalRecord):
                         "if": {"properties": {"language": {"const": "rust"}}},
                         "then": {
                             "properties": {
-                                "version": {"const": "1.100.0-nightly"},
+                                "version": {"enum": sorted(RUST_TOOLCHAIN_VERSIONS)},
                                 "package_manager_version": {
-                                    "const": "1.100.0-nightly"
+                                    "enum": sorted(RUST_TOOLCHAIN_VERSIONS)
                                 },
                             }
                         },
@@ -156,10 +159,12 @@ class RuntimeProfile(CanonicalRecord):
         ):
             raise ValueError("Maven version must be an exact supported 3.9.x version")
         if self.language is RuntimeLanguage.RUST and (
-            self.version != "1.100.0-nightly"
-            or self.package_manager_version != "1.100.0-nightly"
+            self.version not in RUST_TOOLCHAIN_VERSIONS
+            or self.package_manager_version != self.version
         ):
-            raise ValueError("Rust and Cargo versions must be exactly 1.100.0-nightly")
+            raise ValueError(
+                "Rust and Cargo versions must be exactly one supported release profile"
+            )
         return self
 
 

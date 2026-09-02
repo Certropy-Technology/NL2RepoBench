@@ -83,3 +83,12 @@ def test_rust_toolchain_tuple_has_no_fallback(tmp_path: Path) -> None:
 
     with pytest.raises(ValidationError):
         load_rust_toolchain_lock(path)
+
+
+def test_stable_rust_release_lock_is_independent_and_exact() -> None:
+    stable = load_rust_toolchain_lock(ROOT / "toolchain.rust.stable.lock.toml")
+    assert stable.release_id == "rust-stable-1.97.1-v1"
+    assert stable.rustc_version == "1.97.1"
+    assert stable.cargo_version == "1.97.1"
+    assert stable.miri_status == "unavailable"
+    assert stable.production_ready is False

@@ -23,7 +23,7 @@ from nl2repobench.verification.rust_profile import (
     validate_rust_profile_api_plan,
 )
 
-RUST_VERSION = "1.100.0-nightly"
+RUST_VERSIONS = frozenset({"1.100.0-nightly", "1.97.1"})
 _JAVA_JDK_VERSION = re.compile(
     r"^[A-Za-z][A-Za-z0-9._-]*-21\.0\.[0-9]+\+[0-9]+(?:\.[0-9]+)?$"
 )
@@ -110,12 +110,12 @@ class RustSourceAssetValidator:
                 "production Rust sources require an explicit rust+cargo runtime profile"
             )
         if runtime is not None and (
-            runtime.runtime,
-            runtime.version,
-            runtime.package_manager_version,
-        ) != ("rust", RUST_VERSION, RUST_VERSION):
+            runtime.runtime != "rust"
+            or runtime.version not in RUST_VERSIONS
+            or runtime.package_manager_version != runtime.version
+        ):
             raise RuntimeSourceAssetError(
-                "Rust sources require the exact rust+cargo 1.100.0-nightly profile"
+                "Rust sources require a supported exact rust+cargo release profile"
             )
 
         profile_assets = tuple(

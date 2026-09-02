@@ -7,7 +7,7 @@ import tomllib
 from pathlib import Path
 from typing import Literal, Self
 
-from pydantic import BaseModel, ConfigDict, model_validator
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 MAX_RUST_TOOLCHAIN_LOCK_BYTES = 64 * 1024
 _HEX_SHA256 = re.compile(r"^[0-9a-f]{64}$")
@@ -143,13 +143,53 @@ class RustToolchainLock(BaseModel):
         return False
 
 
-def load_rust_toolchain_lock(path: Path) -> RustToolchainLock:
+class RustStableToolchainLock(BaseModel):
+    """Independent stable Rust release identity without the nightly Miri gate."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True, strict=True)
+
+    schema_version: Literal["1.0"]
+    release_id: Literal["rust-stable-1.97.1-v1"]
+    status: Literal["locked"]
+    rustc_version: Literal["1.97.1"]
+    cargo_version: Literal["1.97.1"]
+    rustc_commit: Literal["8bab26f4f68e0e26f0bb7960be334d5b520ea452"]
+    cargo_commit: Literal["c980f4866141969fab6254a680546a277789d6f0"]
+    expected_target: Literal["x86_64-unknown-linux-gnu"]
+    expected_host: Literal["x86_64-unknown-linux-gnu"]
+    expected_platform: Literal["linux/amd64"]
+    expected_debian_base: str
+    base_image_digest: str = Field(pattern=r"^sha256:[0-9a-f]{64}$")
+    rustc_executable_sha256: str = Field(pattern=r"^sha256:[0-9a-f]{64}$")
+    cargo_executable_sha256: str = Field(pattern=r"^sha256:[0-9a-f]{64}$")
+    miri_status: Literal["unavailable"]
+
+    @model_validator(mode="after")
+    def validate_identity(self) -> RustStableToolchainLock:
+        if "@sha256:" not in self.expected_debian_base:
+            raise ValueError("stable Rust base image must be digest pinned")
+        if self.expected_debian_base.split("@", 1)[1] != self.base_image_digest:
+            raise ValueError("stable Rust base image digest does not match")
+        if self.rustc_version != self.cargo_version:
+            raise ValueError("stable Rust and Cargo versions must match")
+        return self
+
+    @property
+    def production_ready(self) -> bool:
+        """Stable profile is locked, but still needs verifier/private release gates."""
+
+        return False
+
+
+def load_rust_toolchain_lock(path: Path) -> RustToolchainLock | RustStableToolchainLock:
     if path.is_symlink() or not path.is_file():
         raise ValueError("Rust toolchain lock must be a regular file")
     try:
         if path.stat().st_size > MAX_RUST_TOOLCHAIN_LOCK_BYTES:
             raise ValueError("Rust toolchain lock exceeds the size limit")
         parsed = tomllib.loads(path.read_text(encoding="utf-8"))
+        if parsed.get("release_id") == "rust-stable-1.97.1-v1":
+            return RustStableToolchainLock.model_validate(parsed)
         return RustToolchainLock.model_validate(parsed)
     except (OSError, UnicodeDecodeError, tomllib.TOMLDecodeError) as exc:
         raise ValueError(f"invalid Rust toolchain lock: {exc}") from exc
@@ -158,5 +198,6 @@ def load_rust_toolchain_lock(path: Path) -> RustToolchainLock:
 __all__ = [
     "EXPECTED_RUST_TOOLCHAIN",
     "RustToolchainLock",
+    "RustStableToolchainLock",
     "load_rust_toolchain_lock",
 ]

@@ -54,6 +54,7 @@ class RustHarborCompiler:
         except ValueError as exc:
             raise RustHarborCompileError(str(exc)) from exc
         self.toolchain_path = toolchain_path
+        self.toolchain_version = getattr(self.toolchain, "rustc_version", "1.100.0-nightly")
 
     def compile_task(
         self,
@@ -75,7 +76,7 @@ class RustHarborCompiler:
                 "Rust R0 compiler is development-only until locked toolchain, private closure, "
                 "Oracle, and controls evidence exist"
             )
-        if self.toolchain.status != "provisional-unlocked":
+        if self.toolchain.status not in {"provisional-unlocked", "locked"}:
             raise RustHarborCompileError(
                 "Rust development compilation requires toolchain.rust.dev.lock.toml"
             )
@@ -140,7 +141,7 @@ class RustHarborCompiler:
                 copy_tree(dependencies, temporary / "environment/cargo-bundle")
                 lock_root = temporary / "environment/cargo-bundle"
                 try:
-                    CargoPackageManager().validate_lock(lock_root, "1.100.0-nightly")
+                    CargoPackageManager().validate_lock(lock_root, self.toolchain_version)
                 except Exception as exc:
                     raise RustHarborCompileError(f"invalid Rust Cargo fixture lock: {exc}") from exc
             task_data: dict[str, Any] = {
@@ -159,9 +160,9 @@ class RustHarborCompiler:
                     "tags": list(source.metadata.tags),
                     "language": "rust",
                     "runtime": "rust",
-                    "runtime_version": "1.100.0-nightly",
+                    "runtime_version": self.toolchain_version,
                     "package_manager": "cargo",
-                    "package_manager_version": "1.100.0-nightly",
+                    "package_manager_version": self.toolchain_version,
                     "metric_contract": "fixed-test-pass-rate-v1",
                     "expected_test_count": source.tests.expected_total,
                     "r0_status": "development-only",
@@ -194,7 +195,7 @@ class RustHarborCompiler:
                     "task_id": source.task_id,
                     "task_version": source.version,
                     "mode": "development",
-                    "toolchain_version": "1.100.0-nightly",
+                    "toolchain_version": self.toolchain_version,
                     "canonical_manifest_digest": manifest.content_digest(),
                     "toolchain_lock_digest": self._toolchain_digest(),
                 },

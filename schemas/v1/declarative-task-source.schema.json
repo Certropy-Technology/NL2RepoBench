@@ -839,10 +839,16 @@
           "then": {
             "properties": {
               "package_manager_version": {
-                "const": "1.100.0-nightly"
+                "enum": [
+                  "1.100.0-nightly",
+                  "1.97.1"
+                ]
               },
               "version": {
-                "const": "1.100.0-nightly"
+                "enum": [
+                  "1.100.0-nightly",
+                  "1.97.1"
+                ]
               }
             }
           }
