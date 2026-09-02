@@ -22,7 +22,6 @@ from typing import Any, cast
 
 from nl2repobench.domain.canonical_contract import PackageManager, TaskSource
 from nl2repobench.domain.canonical_models import ArtifactRef, Visibility
-from nl2repobench.storage.artifacts import FileArtifactStore
 from nl2repobench.storage.canonical_ustar import decode_archive, encode_files, tree_digest
 from nl2repobench.storage.materialize import TARGET_MEDIA_TYPES, ArchiveKind
 from nl2repobench.verification.node_command_plan import load_node_command_plan
@@ -41,6 +40,20 @@ SHA256_PREFIX = "sha256:"
 MAX_INPUT_BYTES = 2 * 1024**3
 MAX_METADATA_BYTES = 4 * 1024 * 1024
 VERSION_PATTERN = re.compile(r"^[0-9]+\.[0-9]+\.[0-9]+(?:[-+][0-9A-Za-z.-]+)?$")
+COMMAND_JSON_MEDIA_TYPES = frozenset(
+    {
+        "application/vnd.nl2repobench.command-plan+json",
+        "application/vnd.nl2repobench.node-command-plan+json",
+        "application/vnd.nl2repobench.node-commands+json",
+    }
+)
+COMMAND_ARCHIVE_MEDIA_TYPES = frozenset(
+    {
+        "application/vnd.nl2repobench.command-plan+tar",
+        "application/vnd.nl2repobench.node-command-plan+tar",
+        "application/vnd.nl2repobench.node-commands+tar",
+    }
+)
 
 
 class PrivateReleasePreparationError(ValueError):
@@ -200,6 +213,50 @@ def _write_staging_metadata(path: Path, data: bytes) -> None:
             temporary.unlink()
 
 
+def _write_staging_artifact(store_root: Path, data: bytes, digest: str) -> None:
+    """Write a task-local CAS leaf without replacing a concurrent winner."""
+
+    if not re.fullmatch(r"sha256:[0-9a-f]{64}", digest):
+        raise PrivateReleasePreparationError(f"invalid staging digest: {digest}")
+    root = store_root.resolve()
+    if store_root.is_symlink() or not root.is_dir():
+        raise PrivateReleasePreparationError(
+            f"staging artifact root must be a real directory: {store_root}"
+        )
+    namespace = root / "private" / "sha256"
+    _assert_no_symlink_ancestors(namespace, "staging artifact namespace")
+    target = namespace / digest.removeprefix("sha256:")[:2] / digest.removeprefix("sha256:")
+    target.parent.mkdir(parents=True, exist_ok=True)
+    _assert_no_symlink_ancestors(target, "staging artifact")
+    if target.is_symlink():
+        raise PrivateReleasePreparationError(
+            f"staging artifact leaf must not be a symlink: {target}"
+        )
+    if target.exists():
+        current = _safe_regular(target, max_bytes=MAX_INPUT_BYTES)
+        if len(current) != len(data) or _digest_bytes(current) != digest:
+            raise PrivateReleasePreparationError(f"staging artifact already differs: {digest}")
+        return
+    temporary = target.with_name(f".{target.name}.{os.getpid()}.tmp")
+    try:
+        with temporary.open("xb") as handle:
+            handle.write(data)
+            handle.flush()
+            os.fsync(handle.fileno())
+        try:
+            os.link(temporary, target)
+        except FileExistsError:
+            current = _safe_regular(target, max_bytes=MAX_INPUT_BYTES)
+            if len(current) != len(data) or _digest_bytes(current) != digest:
+                raise PrivateReleasePreparationError(
+                    f"staging artifact race differs: {digest}"
+                ) from None
+        temporary.unlink()
+    finally:
+        if temporary.exists():
+            temporary.unlink()
+
+
 def _source_update_plan(
     source: TaskSource,
     new_version: str,
@@ -232,9 +289,6 @@ def _source_update_plan(
             "new": reference.uri,
         }
         for name, reference in dependency_refs.items()
-    )
-    updates.append(
-        {"op": "replace", "path": "dependencies.status", "old": "unknown", "new": "known"}
     )
     return {
         "source_file": "task.toml",
@@ -274,24 +328,31 @@ def _migrate_command_artifact(
             raise PrivateReleasePreparationError("command-plan.json is invalid") from exc
         return _canonical_json(plan.model_dump(mode="json"))
 
-    if reference.media_type == "application/vnd.nl2repobench.command-plan+json":
+    if reference.media_type in COMMAND_JSON_MEDIA_TYPES:
         return (
             canonicalize(data),
             "application/vnd.nl2repobench.command-plan+json",
             "json",
         )
 
+    if reference.media_type not in COMMAND_ARCHIVE_MEDIA_TYPES:
+        raise PrivateReleasePreparationError(
+            f"unsupported commands artifact media type: {reference.media_type}"
+        )
     try:
         result = migrate_private_archive(data, ArchiveKind.TEST_BUNDLE)
         members = decode_archive(result.archive)
     except (PrivateArchiveMigrationError, TypeError, ValueError) as exc:
         raise PrivateReleasePreparationError("cannot migrate commands artifact") from exc
+    payload_members = [
+        member for member in members if member.entry.path != _MIGRATOR.INTERNAL_INVENTORY
+    ]
     command_members = [
         member
-        for member in members
+        for member in payload_members
         if member.entry.type == "file" and member.entry.path == "command-plan.json"
     ]
-    if len(command_members) != 1 or command_members[0].data is None:
+    if len(payload_members) != 1 or len(command_members) != 1 or command_members[0].data is None:
         raise PrivateReleasePreparationError(
             "legacy commands artifact must contain exactly command-plan.json"
         )
@@ -381,7 +442,13 @@ def prepare_private_release(
         if reference.visibility is not Visibility.PRIVATE:
             raise PrivateReleasePreparationError(f"{role} artifact must remain private")
     _assert_no_symlink_ancestors(staging_root, "staging root")
-    artifact_store = FileArtifactStore(staging_root / "artifacts")
+    artifact_root = staging_root / "artifacts"
+    _assert_no_symlink_ancestors(artifact_root, "staging artifact root")
+    artifact_root.mkdir(parents=True, exist_ok=True)
+    if artifact_root.is_symlink() or not artifact_root.is_dir():
+        raise PrivateReleasePreparationError(
+            f"staging artifact root must be a real directory: {artifact_root}"
+        )
     artifact_records: list[dict[str, object]] = []
     new_refs: dict[str, ArtifactRef] = {}
     for role, reference, kind in refs:
@@ -411,9 +478,13 @@ def prepare_private_release(
             artifact_media_type = result.media_type
             tree = result.tree_digest
             command_data = result.archive
-        new_ref = artifact_store.put_bytes(
-            command_data,
+        new_sha256 = _digest_bytes(command_data)
+        _write_staging_artifact(staging_root / "artifacts", command_data, new_sha256)
+        new_ref = ArtifactRef(
+            digest=new_sha256,
+            size_bytes=len(command_data),
             media_type=artifact_media_type,
+            uri=f"artifact://private/{new_sha256}",
             visibility=Visibility.PRIVATE,
         )
         new_refs[role] = new_ref
@@ -435,14 +506,22 @@ def prepare_private_release(
     lock_data = _canonical_json({"lockfileVersion": 3, "packages": {"": {}}})
     lock_archive = encode_files({"package-lock.json": lock_data})
     store_archive = encode_files({})
-    lock_ref = artifact_store.put_bytes(
-        lock_archive,
+    lock_digest = _digest_bytes(lock_archive)
+    store_digest = _digest_bytes(store_archive)
+    _write_staging_artifact(staging_root / "artifacts", lock_archive, lock_digest)
+    _write_staging_artifact(staging_root / "artifacts", store_archive, store_digest)
+    lock_ref = ArtifactRef(
+        digest=lock_digest,
+        size_bytes=len(lock_archive),
         media_type=TARGET_MEDIA_TYPES[ArchiveKind.DEPENDENCY_LOCK],
+        uri=f"artifact://private/{lock_digest}",
         visibility=Visibility.PRIVATE,
     )
-    store_ref = artifact_store.put_bytes(
-        store_archive,
+    store_ref = ArtifactRef(
+        digest=store_digest,
+        size_bytes=len(store_archive),
         media_type=TARGET_MEDIA_TYPES[ArchiveKind.OFFLINE_STORE],
+        uri=f"artifact://private/{store_digest}",
         visibility=Visibility.PRIVATE,
     )
     inventory_payload = {
@@ -455,9 +534,13 @@ def prepare_private_release(
         "offline_smoke": {"status": "not-run", "command_id": "node-npm-offline-install-v1"},
     }
     inventory_data = _canonical_json(inventory_payload)
-    inventory_ref = artifact_store.put_bytes(
-        inventory_data,
+    inventory_digest = _digest_bytes(inventory_data)
+    _write_staging_artifact(staging_root / "artifacts", inventory_data, inventory_digest)
+    inventory_ref = ArtifactRef(
+        digest=inventory_digest,
+        size_bytes=len(inventory_data),
         media_type="application/vnd.nl2repobench.inventory+json",
+        uri=f"artifact://private/{inventory_digest}",
         visibility=Visibility.PRIVATE,
     )
     dependency_refs = {"lock": lock_ref, "offline_store": store_ref, "inventory": inventory_ref}
@@ -484,14 +567,22 @@ def prepare_private_release(
     }
     old_manifest_data = _canonical_json(old_manifest_payload)
     new_manifest_data = _canonical_json(new_manifest_payload)
-    old_manifest_ref = artifact_store.put_bytes(
-        old_manifest_data,
+    old_manifest_digest = _digest_bytes(old_manifest_data)
+    new_manifest_digest = _digest_bytes(new_manifest_data)
+    _write_staging_artifact(staging_root / "artifacts", old_manifest_data, old_manifest_digest)
+    _write_staging_artifact(staging_root / "artifacts", new_manifest_data, new_manifest_digest)
+    old_manifest_ref = ArtifactRef(
+        digest=old_manifest_digest,
+        size_bytes=len(old_manifest_data),
         media_type="application/vnd.nl2repobench.private-manifest+json",
+        uri=f"artifact://private/{old_manifest_digest}",
         visibility=Visibility.PRIVATE,
     )
-    new_manifest_ref = artifact_store.put_bytes(
-        new_manifest_data,
+    new_manifest_ref = ArtifactRef(
+        digest=new_manifest_digest,
+        size_bytes=len(new_manifest_data),
         media_type="application/vnd.nl2repobench.private-manifest+json",
+        uri=f"artifact://private/{new_manifest_digest}",
         visibility=Visibility.PRIVATE,
     )
     plan = _source_update_plan(source, new_version, artifact_records, dependency_refs)

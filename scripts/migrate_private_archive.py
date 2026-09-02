@@ -21,8 +21,9 @@ from typing import Any, cast
 
 from nl2repobench.storage.canonical_ustar import (
     CanonicalArchiveError,
+    TreeEntry,
     decode_archive,
-    encode_files,
+    encode_entries,
     tree_digest,
 )
 from nl2repobench.storage.materialize import TARGET_MEDIA_TYPES, ArchiveKind
@@ -35,6 +36,7 @@ MAX_PATH_BYTES = 255
 EXECUTABLE_MEMBER_NAMES = frozenset(
     {"test.sh", "solve.sh", "run.py", "contract.sh", "verifier.sh"}
 )
+INTERNAL_INVENTORY = "_nl2repo.bundle-inventory.json"
 
 
 class PrivateArchiveMigrationError(ValueError):
@@ -277,6 +279,10 @@ def migrate_private_archive(
                         directory=member_type == "directory",
                         max_path_bytes=bounded.max_path_bytes,
                     )
+                    if path == INTERNAL_INVENTORY:
+                        raise PrivateArchiveMigrationError(
+                            "archive contains the reserved bundle inventory path"
+                        )
                     _check_path_conflict(path, member_type, entries)
                     entries[path] = member_type
                     member_ends.append(
@@ -330,8 +336,75 @@ def migrate_private_archive(
         source.close()
 
     try:
-        canonical = encode_files(files, frozenset(executable))
-        canonical_members = decode_archive(canonical)
+        # Legacy tar files are allowed to omit parent directory records, but
+        # canonical materialization requires every parent to be explicit.
+        for file_path in tuple(files) + tuple(
+            path for path, member_type in entries.items() if member_type == "directory"
+        ):
+            parent = Path(file_path).parent
+            while parent != Path("."):
+                parent_name = parent.as_posix()
+                if entries.get(parent_name) == "file":
+                    raise PrivateArchiveMigrationError(
+                        f"archive path conflicts with a file: {file_path}"
+                    )
+                entries.setdefault(parent_name, "directory")
+                parent = parent.parent
+        payload_entries = tuple(
+            TreeEntry(
+                path,
+                member_type,
+                0o555 if member_type == "directory" or path in executable else 0o444,
+                0 if member_type == "directory" else len(files[path]),
+                None if member_type == "directory" else hashlib.sha256(files[path]).hexdigest(),
+            )
+            for path, member_type in entries.items()
+        )
+        payload_pairs = tuple(
+            (entry, None if entry.type == "directory" else files[entry.path])
+            for entry in payload_entries
+        )
+        if archive_kind in {
+            ArchiveKind.TEST_BUNDLE,
+            ArchiveKind.VERIFIER_BUNDLE,
+            ArchiveKind.ORACLE_BUNDLE,
+        }:
+            inventory = {
+                "schema_version": "1.0",
+                "archive_kind": archive_kind.value,
+                "tree_digest": tree_digest(payload_entries),
+                "entries": [
+                    {
+                        "path": entry.path,
+                        "type": entry.type,
+                        "mode": entry.mode,
+                        "size": entry.size,
+                        "sha256": entry.sha256,
+                    }
+                    for entry in sorted(
+                        payload_entries, key=lambda item: (item.path.encode(), item.type)
+                    )
+                ],
+                "file_count": sum(entry.type == "file" for entry in payload_entries),
+                "directory_count": sum(entry.type == "directory" for entry in payload_entries),
+                "total_bytes": sum(entry.size for entry in payload_entries),
+            }
+            inventory_data = (
+                json.dumps(inventory, sort_keys=True, separators=(",", ":")).encode()
+                + b"\n"
+            )
+            inventory_entry = TreeEntry(
+                INTERNAL_INVENTORY,
+                "file",
+                0o444,
+                len(inventory_data),
+                hashlib.sha256(inventory_data).hexdigest(),
+            )
+            output_pairs = (*payload_pairs, (inventory_entry, inventory_data))
+        else:
+            output_pairs = payload_pairs
+        canonical = encode_entries(output_pairs)
+        decode_archive(canonical)
     except CanonicalArchiveError as exc:
         raise PrivateArchiveMigrationError(
             "archive cannot be represented as canonical USTAR"
@@ -342,8 +415,8 @@ def migrate_private_archive(
         old_size=len(data),
         new_sha256=f"sha256:{hashlib.sha256(canonical).hexdigest()}",
         new_size=len(canonical),
-        file_count=len(files),
-        tree_digest=tree_digest(tuple(member.entry for member in canonical_members)),
+        file_count=sum(entry.type == "file" for entry in payload_entries),
+        tree_digest=tree_digest(payload_entries),
         media_type=TARGET_MEDIA_TYPES[archive_kind],
     )
 

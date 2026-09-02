@@ -12,7 +12,14 @@ from typing import cast
 import pytest
 import tomli_w
 
+from nl2repobench.domain.canonical_models import ArtifactRef
+from nl2repobench.storage.artifacts import (
+    FileArtifactStore,
+    LocalArtifactResolver,
+    PrivateArtifactAuthorization,
+)
 from nl2repobench.storage.canonical_ustar import decode_archive
+from nl2repobench.storage.materialize import ArchiveKind, materialize_archive
 
 SCRIPT = Path(__file__).parents[1] / "scripts/prepare_private_release.py"
 SPEC = importlib.util.spec_from_file_location("prepare_private_release", SCRIPT)
@@ -240,6 +247,9 @@ def test_empty_npm_closure_has_canonical_archives_and_inventory(tmp_path: Path) 
     assert metadata["status"] == "blocked"
     assert metadata["oracle_receipt"] is None
     assert metadata["controls_receipts"] == {}
+    operations = metadata["source_update_plan"]["operations"]
+    assert isinstance(operations, list)
+    assert not any(operation["path"] == "dependencies.status" for operation in operations)
 
 
 def test_source_update_requires_evidence_even_with_explicit_opt_in(tmp_path: Path) -> None:
@@ -304,6 +314,135 @@ def test_preparer_emits_canonical_command_plan_media(tmp_path: Path) -> None:
     command = cast(dict[str, object], artifacts[0])
     assert command["media_type"] == "application/vnd.nl2repobench.command-plan+json"
     assert command["tree_digest"] is None
+
+
+def test_preparer_materializes_staged_test_and_oracle_with_scoped_resolver(
+    tmp_path: Path,
+) -> None:
+    metadata = _prepare(tmp_path)
+    stage = tmp_path / "stage"
+    store = FileArtifactStore(stage / "artifacts")
+    artifact_records = cast(list[dict[str, object]], metadata["artifacts"])
+    refs = [
+        ArtifactRef.model_validate(
+            {
+                "digest": record["new_sha256"],
+                "size_bytes": record["new_size"],
+                "media_type": record["media_type"],
+                "uri": record["new_ref"],
+                "visibility": "private",
+            }
+        )
+        for record in artifact_records
+    ]
+    dependencies = cast(dict[str, dict[str, object]], metadata["dependencies"])
+    refs.extend(
+        ArtifactRef.model_validate(
+            {
+                "digest": value["digest"],
+                "size_bytes": value["size"],
+                "uri": value["ref"],
+                "media_type": (
+                    "application/vnd.nl2repobench.inventory+json"
+                    if name == "inventory"
+                    else (
+                        "application/vnd.nl2repobench.package-lock.tar"
+                        if name == "lock"
+                        else "application/vnd.nl2repobench.offline-store.tar"
+                    )
+                ),
+                "visibility": "private",
+            }
+        )
+        for name, value in dependencies.items()
+    )
+    authorization = PrivateArtifactAuthorization(
+        task_id="demo",
+        manifest_digest="sha256:" + "a" * 64,
+        purpose="compile",
+        allowed_digests=frozenset(reference.digest for reference in refs),
+        staging_root=stage.resolve(),
+    )
+    resolver = LocalArtifactResolver.scoped_private(
+        store,
+        authorization,
+        task_id="demo",
+        manifest_digest=authorization.manifest_digest,
+        purpose="compile",
+        staging_root=stage,
+    )
+    for record, kind, name in (
+        (artifact_records[1], ArchiveKind.TEST_BUNDLE, "tests"),
+        (artifact_records[2], ArchiveKind.ORACLE_BUNDLE, "oracle"),
+    ):
+        reference = refs[artifact_records.index(record)]
+        result = materialize_archive(
+            reference,
+            kind,
+            stage / name,
+            None,
+            authorization,
+            resolver=resolver,
+        )
+        assert result.file_count == 1
+        assert result.tree_digest == record["tree_digest"]
+
+
+def test_preparer_accepts_legacy_json_command_media_type(tmp_path: Path) -> None:
+    task, cas, toolchain = _source(tmp_path)
+    payload = tomllib.loads((task / "task.toml").read_text(encoding="utf-8"))
+    command_payload = {
+        "schema_version": "2.0",
+        "runner": "node-test-subprocess-boundary-v1",
+        "candidate_install": "npm-pack-offline-v1",
+        "report_format": "node-test-json-v1",
+        "test_root": "/tests/private",
+    }
+    command_data = json.dumps(command_payload, separators=(",", ":")).encode()
+    digest, size = _write_cas(cas, command_data)
+    payload["tests"]["commands_artifact"] = {
+        "digest": digest,
+        "size_bytes": size,
+        "media_type": "application/vnd.nl2repobench.node-command-plan+json",
+        "uri": f"artifact://private/{digest}",
+        "visibility": "private",
+    }
+    (task / "task.toml").write_text(tomli_w.dumps(payload), encoding="utf-8")
+    metadata = MODULE.prepare_private_release(
+        task_root=task,
+        cas_root=cas,
+        staging_root=tmp_path / "stage",
+        toolchain=toolchain,
+        new_version="2.0.0",
+        empty_npm_closure=True,
+    )
+    assert cast(dict[str, object], cast(list[object], metadata["artifacts"])[0])["media_type"] == (
+        "application/vnd.nl2repobench.command-plan+json"
+    )
+
+
+def test_preparer_rejects_conflicting_existing_staging_leaf(tmp_path: Path) -> None:
+    task, cas, toolchain = _source(tmp_path)
+    stage = tmp_path / "stage"
+    MODULE.prepare_private_release(
+        task_root=task,
+        cas_root=cas,
+        staging_root=stage,
+        toolchain=toolchain,
+        new_version="2.0.0",
+        empty_npm_closure=True,
+    )
+    leaf = next(path for path in (stage / "artifacts").rglob("*") if path.is_file())
+    leaf.write_bytes(b"conflict")
+    with pytest.raises(MODULE.PrivateReleasePreparationError, match="already differs"):
+        MODULE.prepare_private_release(
+            task_root=task,
+            cas_root=cas,
+            staging_root=stage,
+            toolchain=toolchain,
+            new_version="2.0.0",
+            empty_npm_closure=True,
+        )
 
 
 def test_empty_npm_closure_requires_unknown_dependency_status(tmp_path: Path) -> None:

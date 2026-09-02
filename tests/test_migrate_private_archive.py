@@ -52,8 +52,17 @@ def test_helper_migrates_gzip_tar_and_preserves_executable_class() -> None:
     members = decode_archive(result.archive)
     assert result.file_count == 2
     assert result.media_type == "application/vnd.nl2repobench.test-bundle.tar"
-    assert result.tree_digest == tree_digest(tuple(member.entry for member in members))
-    assert [(member.entry.path, member.entry.mode, member.data) for member in members] == [
+    payload = tuple(
+        member.entry
+        for member in members
+        if member.entry.path != "_nl2repo.bundle-inventory.json"
+    )
+    assert result.tree_digest == tree_digest(payload)
+    assert [
+        (member.entry.path, member.entry.mode, member.data)
+        for member in members
+        if member.entry.path != "_nl2repo.bundle-inventory.json"
+    ] == [
         ("data", 0o555, None),
         ("data/value.txt", 0o444, b"value"),
         ("solve.sh", 0o555, b"#!/bin/sh\n"),
@@ -69,7 +78,8 @@ def test_helper_rejects_executable_non_entrypoint() -> None:
 def test_helper_accepts_gnu_tar_root_directory_marker() -> None:
     legacy = _legacy_tar(("./", None, 0o755, "directory"))
     result = _MODULE.migrate_private_archive(legacy, "test-bundle")
-    assert decode_archive(result.archive) == ()
+    members = decode_archive(result.archive)
+    assert [member.entry.path for member in members] == ["_nl2repo.bundle-inventory.json"]
 
 
 @pytest.mark.parametrize(
@@ -162,7 +172,37 @@ def test_cli_emits_only_metadata_json_and_writes_canonical_archive(tmp_path: Pat
         "media_type",
     }
     assert b"private payload" not in completed.stdout.encode()
-    assert decode_archive(destination.read_bytes())[0].data == b"private payload"
+    payload = next(
+        member
+        for member in decode_archive(destination.read_bytes())
+        if member.entry.path == "file.txt"
+    )
+    assert payload.data == b"private payload"
+
+
+def test_helper_preserves_explicit_empty_directories_and_adds_parents() -> None:
+    legacy = _legacy_tar(
+        ("empty", None, 0o755, "directory"),
+        ("nested/file.txt", b"payload", 0o644, "file"),
+    )
+    result = _MODULE.migrate_private_archive(legacy, "test-bundle")
+    members = decode_archive(result.archive)
+    payload = [
+        member.entry
+        for member in members
+        if member.entry.path != "_nl2repo.bundle-inventory.json"
+    ]
+    assert [(entry.path, entry.type) for entry in payload] == [
+        ("empty", "directory"),
+        ("nested", "directory"),
+        ("nested/file.txt", "file"),
+    ]
+
+
+def test_helper_rejects_reserved_inventory_member() -> None:
+    legacy = _legacy_tar(("_nl2repo.bundle-inventory.json", b"collision", 0o644, "file"))
+    with pytest.raises(_MODULE.PrivateArchiveMigrationError, match="reserved"):
+        _MODULE.migrate_private_archive(legacy, "test-bundle")
 
 
 def test_cli_refuses_to_overwrite_existing_output(tmp_path: Path) -> None:

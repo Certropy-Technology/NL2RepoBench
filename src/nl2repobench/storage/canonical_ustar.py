@@ -12,6 +12,7 @@ import io
 import os
 import stat
 import unicodedata
+from collections.abc import Iterable
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 
@@ -234,11 +235,48 @@ def encode_tree(root: Path) -> bytes:
     """Encode ``root`` as deterministic ustar bytes, including empty trees."""
 
     entries = tree_entries(root)
+    payloads = {
+        entry.path: (root / entry.path).read_bytes()
+        for entry in entries
+        if entry.type == "file"
+    }
+    return encode_entries((entry, payloads.get(entry.path)) for entry in entries)
+
+
+def encode_entries(
+    entries: Iterable[tuple[TreeEntry, bytes | None]],
+) -> bytes:
+    """Encode validated tree entries and payloads as deterministic USTAR bytes.
+
+    This path is used when the source tree is not materialized on disk, such as
+    private archive migration. Directory entries are retained explicitly and
+    file modes and bytes are represented by the supplied ``TreeEntry`` values.
+    """
+
+    try:
+        ordered = sorted(entries, key=lambda item: (item[0].path.encode("utf-8"), item[0].type))
+    except (TypeError, AttributeError) as exc:
+        raise CanonicalArchiveError("tree entries are malformed") from exc
     output = io.BytesIO()
-    for entry in sorted(entries, key=lambda item: (item.path.encode("utf-8"), item.type)):
+    seen: set[str] = set()
+    for entry, data in ordered:
+        if entry.path in seen:
+            raise CanonicalArchiveError(f"duplicate archive path: {entry.path}")
+        seen.add(entry.path)
+        _path(entry.path)
+        if entry.type not in {"file", "directory"}:
+            raise CanonicalArchiveError(f"unsupported tree entry type: {entry.type}")
+        if entry.type == "directory":
+            if data is not None or entry.size != 0 or entry.sha256 is not None:
+                raise CanonicalArchiveError(f"directory entry has payload: {entry.path}")
+        else:
+            if data is None or len(data) != entry.size:
+                raise CanonicalArchiveError(f"file payload does not match entry: {entry.path}")
+            if entry.sha256 != hashlib.sha256(data).hexdigest():
+                raise CanonicalArchiveError(f"file payload hash does not match entry: {entry.path}")
         output.write(_header(entry))
         if entry.type == "file":
-            data = (root / entry.path).read_bytes()
+            assert data is not None
             output.write(data)
             output.write(b"\0" * ((-len(data)) % 512))
     output.write(b"\0" * 1024)
@@ -270,6 +308,7 @@ __all__ = [
     "EMPTY_TREE_DIGEST",
     "TreeEntry",
     "decode_archive",
+    "encode_entries",
     "encode_files",
     "encode_tree",
     "tree_digest",
