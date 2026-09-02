@@ -102,6 +102,13 @@ class HarborCompilerRegistry:
 
             return JavaHarborCompiler(toolchain, artifact_resolver=resolver)
 
+        def rust_cargo_factory(
+            toolchain: Path, resolver: LocalArtifactResolver | None
+        ) -> HarborRuntimeCompiler:
+            from nl2repobench.harbor.rust_compiler import RustHarborCompiler
+
+            return RustHarborCompiler(toolchain, artifact_resolver=resolver)
+
         python_keys = {
             (RuntimeLanguage.PYTHON, PackageManager.UV),
             (RuntimeLanguage.PYTHON, PackageManager.PIP),
@@ -112,6 +119,7 @@ class HarborCompilerRegistry:
         factories[(RuntimeLanguage.NODE, PackageManager.PNPM)] = node_pnpm_factory
         factories[(RuntimeLanguage.GO, PackageManager.GO_MODULES)] = go_modules_factory
         factories[(RuntimeLanguage.JAVA, PackageManager.MAVEN)] = java_maven_factory
+        factories[(RuntimeLanguage.RUST, PackageManager.CARGO)] = rust_cargo_factory
         return cls(factories=factories)
 
     def resolve(self, identity: RuntimeDiscriminator) -> CompilerFactory:

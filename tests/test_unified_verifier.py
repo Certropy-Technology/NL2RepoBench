@@ -182,5 +182,6 @@ def test_verifier_registry_fails_closed() -> None:
     registry = VerifierRuntimeRegistry.default()
     assert registry.resolve("python") is not None
     assert registry.resolve("node") is not None
-    with pytest.raises(UnknownVerifierRuntimeError, match="registered: go, node, python"):
-        registry.resolve("rust")
+    assert registry.resolve("rust") is not None
+    with pytest.raises(UnknownVerifierRuntimeError, match="registered: go, node, python, rust"):
+        registry.resolve("ruby")

@@ -42,6 +42,8 @@ __all__ = [
     "canonical_metric_contract",
     "write_grading_outputs",
     "write_go_grading_outputs",
+    "grade_rust_report",
+    "write_rust_grading_outputs",
 ]
 
 
@@ -53,4 +55,14 @@ def __getattr__(name: str) -> Any:
 
         globals()[name] = grade_java_report
         return grade_java_report
+    if name == "grade_rust_report":
+        from .rust_grader import grade_rust_report
+
+        globals()[name] = grade_rust_report
+        return grade_rust_report
+    if name == "write_rust_grading_outputs":
+        from .rust_grader import write_rust_grading_outputs
+
+        globals()[name] = write_rust_grading_outputs
+        return write_rust_grading_outputs
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
