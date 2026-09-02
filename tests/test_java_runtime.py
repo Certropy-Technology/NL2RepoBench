@@ -20,7 +20,8 @@ from nl2repobench.domain.canonical_contract import (
 from nl2repobench.domain.canonical_contract import TestManifest as CanonicalTestManifest
 from nl2repobench.domain.command_plan import CommandPlan
 from nl2repobench.domain.runtime import RuntimeDiscriminator
-from nl2repobench.harbor.registry import HarborCompilerRegistry, UnknownRuntimeAdapterError
+from nl2repobench.harbor.java_compiler import JavaHarborCompileError, JavaHarborCompiler
+from nl2repobench.harbor.registry import HarborCompilerRegistry
 from nl2repobench.harbor.task_writer import copy_python_verifier_runtime
 from nl2repobench.runtimes.java import JavaRuntimeAdapter
 from nl2repobench.verification.leaf_report import LeafCase
@@ -106,9 +107,14 @@ def test_java_junit_pair_and_command_report_are_canonical() -> None:
         CanonicalTestManifest(framework="junit-platform", report_format="custom-json-v1")
 
 
-def test_java_harbor_compiler_remains_typed_unavailable() -> None:
-    with pytest.raises(UnknownRuntimeAdapterError, match=r"no Harbor compiler for java\+maven"):
-        HarborCompilerRegistry.default().resolve(JavaRuntimeAdapter.identity)
+def test_java_harbor_compiler_is_registered_and_fails_closed_without_toolchain(
+    tmp_path: Path,
+) -> None:
+    factory = HarborCompilerRegistry.default().resolve(JavaRuntimeAdapter.identity)
+    compiler = factory(tmp_path / "toolchain.java.lock.toml", None)
+    assert isinstance(compiler, JavaHarborCompiler)
+    with pytest.raises(JavaHarborCompileError, match="toolchain lock is unavailable"):
+        compiler.compile_task(tmp_path / "source", tmp_path / "output")
 
 
 def test_java_grader_export_is_lazy_and_strict() -> None:
