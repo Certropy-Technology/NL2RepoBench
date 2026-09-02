@@ -1,0 +1,104 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-multierror",
+  "terminal_kind": "intermediate",
+  "status": "awaiting-agent-run",
+  "source_freeze": {
+    "upstream_url": "https://github.com/hashicorp/go-multierror",
+    "revision": "6d4d48630db25c3c83fa83ecd41dd8438b82963c",
+    "license_spdx": "MPL-2.0",
+    "license_sha256": "sha256:492ebaabb6c6a640018f4dd6364d8c59578b140c25e743c2478afbc05580afd4",
+    "source_digest": "sha256:1baf79ff1d042dda283afc4223d47f28b4684361d0bfb338957e873db53aa773",
+    "source_archive": {
+      "path": ".nl2repo/authoring-work/go-multierror/source/source.tar",
+      "sha256": "sha256:1baf79ff1d042dda283afc4223d47f28b4684361d0bfb338957e873db53aa773",
+      "size_bytes": 71680
+    }
+  },
+  "runtime": {
+    "language": "go",
+    "package_manager": "go-modules",
+    "go_version": "1.26.5",
+    "platform": "linux/amd64",
+    "toolchain_lock": "toolchain.go.lock.toml",
+    "toolchain_lock_sha256": "sha256:baa477549dd86ccfe68422aafd900a2ab76f0b091de9a85f9db883f9d6a551a3",
+    "base_image": "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd",
+    "agent_network_mode": "no-network",
+    "verifier_network_mode": "no-network"
+  },
+  "artifacts": {
+    "module_bundle": {
+      "digest": "sha256:2ca0816da8e279f8f5f504d85d7fe6e676e042817649adb02c821cd974b7ac87",
+      "size_bytes": 10240
+    },
+    "oracle_bundle": {
+      "digest": "sha256:7ba21afe19b788c3740749ac15d3e5200c4e9f0accd191687c99e02961526a03",
+      "size_bytes": 10240
+    },
+    "verifier_bundle": {
+      "digest": "sha256:002d6af5c5cff592f4d579562328243fc1bc2f8a5de1178e9c7eb8af2d5ed518",
+      "size_bytes": 10240,
+      "contents": ["contract.py", "contract.sh"]
+    }
+  },
+  "current_compile": {
+    "path": ".nl2repo/compiled-current/go-multierror/bundle.manifest.json",
+    "sha256": "sha256:bc35f0225b091bf9fab4c6507a911bcdd3d8af1ae65e28d4576c59f20e5e9b2f",
+    "size_bytes": 12574,
+    "file_count": 67,
+    "repeat_compile_sha256": "sha256:bc35f0225b091bf9fab4c6507a911bcdd3d8af1ae65e28d4576c59f20e5e9b2f"
+  },
+  "tests": {
+    "framework": "custom-json-v1 Go bridge",
+    "protocol": "custom-json-v1",
+    "frozen_total": 1,
+    "leaf_id": "contract::public-api",
+    "upstream_collection": "34 passed test events, 0 failed, from 7 upstream test files",
+    "contract_smoke": {
+      "path": ".nl2repo/authoring-work/go-multierror/evidence/contract-current.log",
+      "result": "passed"
+    }
+  },
+  "authoring_gates": {
+    "source_validation": {
+      "command": "uv run nl2repo task validate-source catalog/sources/go-multierror",
+      "exit_code": 0,
+      "log": ".nl2repo/authoring-work/go-multierror/evidence/validate-source-current.log"
+    },
+    "network_lint": {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "go_multierror_errors": 0,
+      "go_multierror_warnings": 0,
+      "log": ".nl2repo/authoring-work/go-multierror/evidence/lint-network-current.json"
+    },
+    "production_compile": {
+      "command": "uv run nl2repo harbor compile catalog/sources/go-multierror --output .nl2repo/compiled-current --toolchain toolchain.go.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0,
+      "manifest_sha256": "sha256:bc35f0225b091bf9fab4c6507a911bcdd3d8af1ae65e28d4576c59f20e5e9b2f"
+    },
+    "control_preparation": {
+      "stub": "prepared",
+      "forgery": "prepared",
+      "manifests_have_67_files": true
+    }
+  },
+  "downstream_gates": {
+    "oracle_current_bundle": "not_run_by_authoring_lane",
+    "controls_current_bundle": "not_run_by_authoring_lane",
+    "prior_receipts": {
+      "note": "Prior receipts were produced against the previous compiled-final bundle before verifier __pycache__ cleanup and are not evidence for the current manifest.",
+      "oracle_reward": 1.0,
+      "stub_reward": 0.0,
+      "forgery_reward": 0.0,
+      "oracle_run": ".nl2repo/runs/go-multierror-oracle-retry-20260903",
+      "stub_run": ".nl2repo/runs/go-multierror-stub-20260903",
+      "forgery_run": ".nl2repo/runs/go-multierror-forgery-20260903"
+    }
+  },
+  "residual_risks": [
+    "The current cleaned bundle requires a fresh Harbor Oracle and empty/stub/forgery/offline control matrix.",
+    "The agent runtime image is private/inaccessible from this authoring environment; no Harbor Agent Run was started here.",
+    "No independent review, model pilot, or publication was performed."
+  ]
+}

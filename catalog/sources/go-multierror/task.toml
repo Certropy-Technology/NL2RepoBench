@@ -1,0 +1,76 @@
+schema_version = "1.0"
+task_id = "go-multierror"
+version = "0.1.0"
+instruction = "instruction.md"
+oracle_bundle = { digest = "sha256:7ba21afe19b788c3740749ac15d3e5200c4e9f0accd191687c99e02961526a03", size_bytes = 10240, uri = "artifact://private/sha256:7ba21afe19b788c3740749ac15d3e5200c4e9f0accd191687c99e02961526a03", visibility = "private" }
+
+[metadata]
+difficulty = "medium"
+category = "go-library"
+tags = ["go", "go-modules", "errors", "aggregation", "typed-bridge", "public-api"]
+language = "go"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/hashicorp/go-multierror"
+revision = "6d4d48630db25c3c83fa83ecd41dd8438b82963c"
+license_spdx = "MPL-2.0"
+source_digest = "sha256:1baf79ff1d042dda283afc4223d47f28b4684361d0bfb338957e873db53aa773"
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+runtime_version = "1.26.5"
+base_image = "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+base_image_digest = "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "The candidate and separate verifier use a private pre-materialized standard-library-only Go module closure and run without network."
+
+[dependencies]
+status = "known"
+installer = "system"
+packages = []
+module_bundle = { digest = "sha256:2ca0816da8e279f8f5f504d85d7fe6e676e042817649adb02c821cd974b7ac87", size_bytes = 10240, uri = "artifact://private/sha256:2ca0816da8e279f8f5f504d85d7fe6e676e042817649adb02c821cd974b7ac87", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 1
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Recreate the deterministic public error aggregation, formatting, flattening, prefixing, sorting, unwrapping, and group APIs of hashicorp/go-multierror through a typed Go subprocess bridge."
+keywords = ["go", "errors", "aggregation", "formatting", "typed-bridge", "public-api"]
+agent_timeout_sec = 1200.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "packaged"
+owner = "authoring-go-batch2-20260903"
+reason = "Frozen Go source, private module/verifier/Oracle bundles, typed bridge contract, production compile, and task-local control preparation are complete; the current cleaned bundle still requires the downstream Harbor Oracle and control runs."
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:002d6af5c5cff592f4d579562328243fc1bc2f8a5de1178e9c7eb8af2d5ed518", size_bytes = 10240, uri = "artifact://private/sha256:002d6af5c5cff592f4d579562328243fc1bc2f8a5de1178e9c7eb8af2d5ed518", visibility = "private" }
+entrypoint = "contract.sh"
+

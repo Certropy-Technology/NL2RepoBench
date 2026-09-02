@@ -1,0 +1,54 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/go-multierror"
+version = "0.1.0"
+description = "Recreate the deterministic public error aggregation, formatting, flattening, prefixing, sorting, unwrapping, and group APIs of hashicorp/go-multierror through a typed Go subprocess bridge."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "go",
+    "errors",
+    "aggregation",
+    "formatting",
+    "typed-bridge",
+    "public-api",
+]
+
+[metadata]
+difficulty = "medium"
+category = "go-library"
+tags = [
+    "go",
+    "go-modules",
+    "errors",
+    "aggregation",
+    "typed-bridge",
+    "public-api",
+]
+language = "go"
+runtime = "go"
+runtime_version = "1.26.5"
+package_manager = "go-modules"
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 1
+canonical_manifest_digest = "sha256:ca2e250fb4fc5495fba191dc531a9291bc4e158368eefbf8937404544e5fc759"
+toolchain_lock_digest = "sha256:baa477549dd86ccfe68422aafd900a2ab76f0b091de9a85f9db883f9d6a551a3"
+
+[agent]
+timeout_sec = 1200.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[environment]
+network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
