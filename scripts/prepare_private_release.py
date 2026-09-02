@@ -42,6 +42,7 @@ MAX_METADATA_BYTES = 4 * 1024 * 1024
 VERSION_PATTERN = re.compile(r"^[0-9]+\.[0-9]+\.[0-9]+(?:[-+][0-9A-Za-z.-]+)?$")
 COMMAND_JSON_MEDIA_TYPES = frozenset(
     {
+        "application/json",
         "application/vnd.nl2repobench.command-plan+json",
         "application/vnd.nl2repobench.node-command-plan+json",
         "application/vnd.nl2repobench.node-commands+json",
@@ -207,7 +208,15 @@ def _write_staging_metadata(path: Path, data: bytes) -> None:
             handle.write(data)
             handle.flush()
             os.fsync(handle.fileno())
-        os.replace(temporary, path)
+        try:
+            os.link(temporary, path)
+        except FileExistsError:
+            current = _safe_regular(path, max_bytes=MAX_METADATA_BYTES)
+            if current != data:
+                raise PrivateReleasePreparationError(
+                    f"staging metadata race differs: {path}"
+                ) from None
+        temporary.unlink()
     finally:
         if temporary.exists():
             temporary.unlink()
@@ -261,7 +270,6 @@ def _source_update_plan(
     source: TaskSource,
     new_version: str,
     artifact_records: list[dict[str, object]],
-    dependency_refs: dict[str, ArtifactRef],
 ) -> dict[str, object]:
     updates: list[dict[str, object]] = [
         {"op": "replace", "path": "version", "old": source.version, "new": new_version},
@@ -281,20 +289,15 @@ def _source_update_plan(
                 "new": record["new_ref"],
             }
         )
-    updates.extend(
-        {
-            "op": "replace",
-            "path": f"dependencies.{name}",
-            "old": None,
-            "new": reference.uri,
-        }
-        for name, reference in dependency_refs.items()
-    )
     return {
         "source_file": "task.toml",
         "apply": False,
         "operations": updates,
-        "reason": "staging-only; Oracle, controls, and reviewer evidence are absent",
+        "reason": (
+            "staging-only; dependencies remain unknown pending exact "
+            "node-npm-offline-install-v1 receipt; Oracle, controls, and "
+            "reviewer evidence are absent"
+        ),
     }
 
 
@@ -382,6 +385,7 @@ def prepare_private_release(
         )
     if not task_root.is_dir() or task_root.is_symlink():
         raise PrivateReleasePreparationError(f"task root must be a real directory: {task_root}")
+    _assert_no_symlink_ancestors(task_root, "task root")
     source_path = task_root / "task.toml"
     if source_path.is_symlink():
         raise PrivateReleasePreparationError("task.toml must not be a symlink")
@@ -585,7 +589,7 @@ def prepare_private_release(
         uri=f"artifact://private/{new_manifest_digest}",
         visibility=Visibility.PRIVATE,
     )
-    plan = _source_update_plan(source, new_version, artifact_records, dependency_refs)
+    plan = _source_update_plan(source, new_version, artifact_records)
     metadata: dict[str, object] = {
         "schema_version": "1.0",
         "status": "blocked",

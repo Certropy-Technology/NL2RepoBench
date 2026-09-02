@@ -247,9 +247,14 @@ def test_empty_npm_closure_has_canonical_archives_and_inventory(tmp_path: Path) 
     assert metadata["status"] == "blocked"
     assert metadata["oracle_receipt"] is None
     assert metadata["controls_receipts"] == {}
-    operations = metadata["source_update_plan"]["operations"]
-    assert isinstance(operations, list)
-    assert not any(operation["path"] == "dependencies.status" for operation in operations)
+    plan = cast(dict[str, object], metadata["source_update_plan"])
+    operations = cast(list[dict[str, object]], plan["operations"])
+    assert not any(
+        cast(str, operation["path"]).startswith("dependencies") for operation in operations
+    )
+    assert "dependencies remain unknown pending exact node-npm-offline-install-v1 receipt" in cast(
+        str, plan["reason"]
+    )
 
 
 def test_source_update_requires_evidence_even_with_explicit_opt_in(tmp_path: Path) -> None:
@@ -301,6 +306,22 @@ def test_preparer_rejects_symlinked_staging_ancestor(tmp_path: Path) -> None:
             task_root=task,
             cas_root=cas,
             staging_root=link / "stage",
+            toolchain=toolchain,
+            new_version="2.0.0",
+            empty_npm_closure=True,
+        )
+
+
+def test_preparer_rejects_symlinked_task_root_ancestor(tmp_path: Path) -> None:
+    real_parent = tmp_path / "real"
+    task, cas, toolchain = _source(real_parent)
+    alias = tmp_path / "alias"
+    alias.symlink_to(real_parent, target_is_directory=True)
+    with pytest.raises(MODULE.PrivateReleasePreparationError, match="symlinks"):
+        MODULE.prepare_private_release(
+            task_root=alias / task.name,
+            cas_root=cas,
+            staging_root=tmp_path / "stage",
             toolchain=toolchain,
             new_version="2.0.0",
             empty_npm_closure=True,
@@ -403,7 +424,7 @@ def test_preparer_accepts_legacy_json_command_media_type(tmp_path: Path) -> None
     payload["tests"]["commands_artifact"] = {
         "digest": digest,
         "size_bytes": size,
-        "media_type": "application/vnd.nl2repobench.node-command-plan+json",
+        "media_type": "application/json",
         "uri": f"artifact://private/{digest}",
         "visibility": "private",
     }
@@ -443,6 +464,22 @@ def test_preparer_rejects_conflicting_existing_staging_leaf(tmp_path: Path) -> N
             new_version="2.0.0",
             empty_npm_closure=True,
         )
+
+
+def test_metadata_publication_rejects_concurrent_conflicting_file(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    path = tmp_path / "release-metadata.json"
+    data = b'{"status":"blocked"}\n'
+
+    def link_with_conflict(source: Path, target: Path) -> None:
+        target.write_bytes(b"conflict\n")
+        raise FileExistsError
+
+    monkeypatch.setattr(MODULE.os, "link", link_with_conflict)
+    with pytest.raises(MODULE.PrivateReleasePreparationError, match="metadata race differs"):
+        MODULE._write_staging_metadata(path, data)
+    assert path.read_bytes() == b"conflict\n"
 
 
 def test_empty_npm_closure_requires_unknown_dependency_status(tmp_path: Path) -> None:
