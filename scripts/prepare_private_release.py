@@ -357,18 +357,46 @@ def _write_exclusive_at(
 def _write_exclusive_staging_file(
     path: Path, data: bytes, *, max_bytes: int, label: str, conflict: str
 ) -> None:
+    if len(data) > max_bytes:
+        raise PrivateReleasePreparationError(f"{label} exceeds size limit")
     parent_descriptor = _open_directory_chain(path.parent, create=True, label=label)
+    temporary_name: str | None = None
     try:
-        _write_exclusive_at(
-            parent_descriptor,
-            path.name,
-            data,
-            max_bytes=max_bytes,
-            label=label,
-            path=path,
-            conflict=conflict,
+        temporary_name, temporary_descriptor = _create_staging_temporary(
+            parent_descriptor, path.name, path
         )
+        try:
+            with os.fdopen(temporary_descriptor, "wb") as handle:
+                handle.write(data)
+                handle.flush()
+                os.fsync(handle.fileno())
+        except BaseException:
+            temporary_descriptor = -1
+            raise
+        try:
+            os.link(
+                temporary_name,
+                path.name,
+                src_dir_fd=parent_descriptor,
+                dst_dir_fd=parent_descriptor,
+                follow_symlinks=False,
+            )
+        except FileExistsError:
+            current = _read_regular_at(
+                parent_descriptor,
+                path.name,
+                max_bytes=max_bytes,
+                label=label,
+                path=path,
+            )
+            if current != data:
+                raise PrivateReleasePreparationError(f"{conflict}: {path}") from None
     finally:
+        if temporary_name is not None:
+            try:
+                os.unlink(temporary_name, dir_fd=parent_descriptor)
+            except FileNotFoundError:
+                pass
         os.close(parent_descriptor)
 
 
@@ -403,17 +431,48 @@ def _write_staging_artifact(store_root: Path, data: bytes, digest: str) -> None:
             )
             os.close(parent_descriptor)
             parent_descriptor = child
+        target = parent_descriptor
         target_name = digest_value
         target_path = store_root / "private" / "sha256" / digest_value[:2] / target_name
-        _write_exclusive_at(
-            parent_descriptor,
-            target_name,
-            data,
-            max_bytes=MAX_INPUT_BYTES,
-            label="staging artifact",
-            path=target_path,
-            conflict=f"staging artifact already differs: {digest}",
-        )
+        temporary_name: str | None = None
+        try:
+            temporary_name, temporary_descriptor = _create_staging_temporary(
+                target, target_name, target_path
+            )
+            try:
+                with os.fdopen(temporary_descriptor, "wb") as handle:
+                    handle.write(data)
+                    handle.flush()
+                    os.fsync(handle.fileno())
+            except BaseException:
+                temporary_descriptor = -1
+                raise
+            try:
+                os.link(
+                    temporary_name,
+                    target_name,
+                    src_dir_fd=target,
+                    dst_dir_fd=target,
+                    follow_symlinks=False,
+                )
+            except FileExistsError:
+                current = _read_regular_at(
+                    target,
+                    target_name,
+                    max_bytes=MAX_INPUT_BYTES,
+                    label="staging artifact",
+                    path=target_path,
+                )
+                if len(current) != len(data) or _digest_bytes(current) != digest:
+                    raise PrivateReleasePreparationError(
+                        f"staging artifact already differs: {digest}"
+                    ) from None
+        finally:
+            if temporary_name is not None:
+                try:
+                    os.unlink(temporary_name, dir_fd=target)
+                except FileNotFoundError:
+                    pass
     finally:
         os.close(parent_descriptor)
 
