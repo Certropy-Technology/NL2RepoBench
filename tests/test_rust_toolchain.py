@@ -90,5 +90,12 @@ def test_stable_rust_release_lock_is_independent_and_exact() -> None:
     assert stable.release_id == "rust-stable-1.97.1-v1"
     assert stable.rustc_version == "1.97.1"
     assert stable.cargo_version == "1.97.1"
+    assert stable.rustc_commit == "8bab26f4f68e0e26f0bb7960be334d5b520ea452"
+    assert stable.cargo_commit == "c980f4866141969fab6254a680546a277789d6f0"
+    assert stable.base_image_digest == (
+        "sha256:2775a09d208ff0d7c1f50490c45b62db929e87ba1dcbc3f2132ac71a704bcdd3"
+    )
+    assert stable.rustc_executable_path == stable.cargo_executable_path
+    assert stable.rustc_executable_sha256 == stable.cargo_executable_sha256
     assert stable.miri_status == "unavailable"
     assert stable.production_ready is False

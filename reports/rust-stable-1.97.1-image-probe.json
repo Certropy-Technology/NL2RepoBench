@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0",
+  "release_id": "rust-stable-1.97.1-v1",
+  "status": "observed-not-production",
+  "image": {
+    "ref": "docker.io/library/rust@sha256:2775a09d208ff0d7c1f50490c45b62db929e87ba1dcbc3f2132ac71a704bcdd3",
+    "digest": "sha256:2775a09d208ff0d7c1f50490c45b62db929e87ba1dcbc3f2132ac71a704bcdd3",
+    "platform": "linux/amd64",
+    "base": "debian:12 bookworm"
+  },
+  "runtime": {
+    "rustc_first_line": "rustc 1.97.1 (8bab26f4f 2026-07-14)",
+    "rustc_commit": "8bab26f4f68e0e26f0bb7960be334d5b520ea452",
+    "cargo_first_line": "cargo 1.97.1 (c980f4866 2026-06-30)",
+    "cargo_commit": "c980f4866141969fab6254a680546a277789d6f0",
+    "target": "x86_64-unknown-linux-gnu",
+    "rustc_executable_path": "/usr/local/cargo/bin/rustup",
+    "cargo_executable_path": "/usr/local/cargo/bin/rustup",
+    "rustc_executable_sha256": "sha256:4acc9acc76d5079515b46346a485974457b5a79893cfb01112423c89aeb5aa10",
+    "cargo_executable_sha256": "sha256:4acc9acc76d5079515b46346a485974457b5a79893cfb01112423c89aeb5aa10",
+    "miri_status": "unavailable"
+  },
+  "commands": [
+    "docker pull docker.io/library/rust:1.97.1-slim-bookworm",
+    "docker run --rm --network none docker.io/library/rust@sha256:2775a09d208ff0d7c1f50490c45b62db929e87ba1dcbc3f2132ac71a704bcdd3 sh -c 'rustc -vV; cargo -vV; cargo miri --version'"
+  ],
+  "blocked_reasons": [
+    "stable image has no available Miri component",
+    "Rust private dependency closure, verifier, Oracle, controls, and pilot are not complete"
+  ]
+}

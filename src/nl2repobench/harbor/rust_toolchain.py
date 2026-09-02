@@ -160,6 +160,8 @@ class RustStableToolchainLock(BaseModel):
     expected_platform: Literal["linux/amd64"]
     expected_debian_base: str
     base_image_digest: str = Field(pattern=r"^sha256:[0-9a-f]{64}$")
+    rustc_executable_path: Literal["/usr/local/cargo/bin/rustup"]
+    cargo_executable_path: Literal["/usr/local/cargo/bin/rustup"]
     rustc_executable_sha256: str = Field(pattern=r"^sha256:[0-9a-f]{64}$")
     cargo_executable_sha256: str = Field(pattern=r"^sha256:[0-9a-f]{64}$")
     miri_status: Literal["unavailable"]
