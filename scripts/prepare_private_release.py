@@ -10,11 +10,13 @@ plan.  It never changes ``catalog/sources`` or the input CAS.
 from __future__ import annotations
 
 import argparse
+import errno
 import hashlib
 import importlib.util
 import json
 import os
 import re
+import secrets
 import stat
 import tomllib
 from pathlib import Path
@@ -190,36 +192,194 @@ def _canonical_json(payload: object) -> bytes:
     return json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8") + b"\n"
 
 
-def _write_staging_metadata(path: Path, data: bytes) -> None:
-    if len(data) > MAX_METADATA_BYTES:
-        raise PrivateReleasePreparationError("staging metadata exceeds size limit")
-    if path.is_symlink():
-        raise PrivateReleasePreparationError(f"staging metadata must not be a symlink: {path}")
-    _assert_no_symlink_ancestors(path, "staging metadata")
-    path.parent.mkdir(parents=True, exist_ok=True)
-    if path.exists():
-        current = _safe_regular(path, max_bytes=MAX_METADATA_BYTES)
-        if current != data:
-            raise PrivateReleasePreparationError(f"staging metadata already differs: {path}")
-        return
-    temporary = path.with_name(f".{path.name}.{os.getpid()}.tmp")
+_DIRECTORY_FLAGS = os.O_RDONLY | getattr(os, "O_DIRECTORY", 0) | getattr(os, "O_NOFOLLOW", 0)
+_NOFOLLOW = getattr(os, "O_NOFOLLOW", 0)
+
+
+def _open_directory_chain(path: Path, *, create: bool, label: str) -> int:
+    """Open each directory component without following a symlink race."""
+
+    absolute = Path(os.path.abspath(path))
+    descriptor = os.open(os.sep, _DIRECTORY_FLAGS)
     try:
-        with temporary.open("xb") as handle:
+        for component in absolute.parts[1:]:
+            child = _open_directory_at(
+                descriptor,
+                component,
+                create=create,
+                label=label,
+                path=path,
+            )
+            os.close(descriptor)
+            descriptor = child
+        return descriptor
+    except BaseException:
+        os.close(descriptor)
+        raise
+
+
+def _open_directory_at(
+    parent_descriptor: int,
+    name: str,
+    *,
+    create: bool,
+    label: str,
+    path: Path,
+) -> int:
+    """Open or create one directory component relative to a safe parent."""
+
+    try:
+        try:
+            return os.open(name, _DIRECTORY_FLAGS, dir_fd=parent_descriptor)
+        except FileNotFoundError:
+            if not create:
+                raise
+            try:
+                os.mkdir(name, 0o700, dir_fd=parent_descriptor)
+            except FileExistsError:
+                pass
+            return os.open(name, _DIRECTORY_FLAGS, dir_fd=parent_descriptor)
+    except OSError as exc:
+        try:
+            is_symlink = stat.S_ISLNK(
+                os.stat(name, dir_fd=parent_descriptor, follow_symlinks=False).st_mode
+            )
+        except OSError:
+            is_symlink = False
+        if exc.errno == errno.ELOOP or is_symlink:
+            raise PrivateReleasePreparationError(
+                f"{label} and its ancestors must not contain symlinks: {path}"
+            ) from exc
+        raise PrivateReleasePreparationError(f"cannot open {label}: {path}") from exc
+
+
+def _read_regular_at(
+    parent_descriptor: int, name: str, *, max_bytes: int, label: str, path: Path
+) -> bytes:
+    """Read a regular file through an already validated parent directory."""
+
+    descriptor = -1
+    try:
+        descriptor = os.open(name, os.O_RDONLY | _NOFOLLOW, dir_fd=parent_descriptor)
+        if not stat.S_ISREG(os.fstat(descriptor).st_mode):
+            raise PrivateReleasePreparationError(f"{label} is not regular: {path}")
+        with os.fdopen(descriptor, "rb") as handle:
+            descriptor = -1
+            data = handle.read(max_bytes + 1)
+    except PrivateReleasePreparationError:
+        raise
+    except OSError as exc:
+        if exc.errno == errno.ELOOP:
+            raise PrivateReleasePreparationError(f"{label} must not be a symlink: {path}") from exc
+        raise PrivateReleasePreparationError(f"cannot read {label}: {path}") from exc
+    finally:
+        if descriptor != -1:
+            os.close(descriptor)
+    if len(data) > max_bytes:
+        raise PrivateReleasePreparationError(f"{label} exceeds size limit: {path}")
+    return data
+
+
+def _create_staging_temporary(
+    parent_descriptor: int, target_name: str, path: Path
+) -> tuple[str, int]:
+    """Create a unique temporary leaf in a validated directory."""
+
+    for _attempt in range(10):
+        name = f".{target_name}.{os.getpid()}.{secrets.token_hex(16)}.tmp"
+        try:
+            descriptor = os.open(
+                name,
+                os.O_WRONLY | os.O_CREAT | os.O_EXCL | _NOFOLLOW,
+                0o600,
+                dir_fd=parent_descriptor,
+            )
+            return name, descriptor
+        except FileExistsError:
+            continue
+    raise PrivateReleasePreparationError(f"cannot create staging temporary: {path}")
+
+
+def _write_exclusive_at(
+    parent_descriptor: int,
+    target_name: str,
+    data: bytes,
+    *,
+    max_bytes: int,
+    label: str,
+    path: Path,
+    conflict: str,
+) -> None:
+    if len(data) > max_bytes:
+        raise PrivateReleasePreparationError(f"{label} exceeds size limit")
+    temporary_name: str | None = None
+    try:
+        temporary_name, temporary_descriptor = _create_staging_temporary(
+            parent_descriptor, target_name, path
+        )
+        try:
+            handle = os.fdopen(temporary_descriptor, "wb")
+        except BaseException:
+            os.close(temporary_descriptor)
+            temporary_descriptor = -1
+            raise
+        temporary_descriptor = -1
+        with handle:
             handle.write(data)
             handle.flush()
             os.fsync(handle.fileno())
         try:
-            os.link(temporary, path)
+            os.link(
+                temporary_name,
+                target_name,
+                src_dir_fd=parent_descriptor,
+                dst_dir_fd=parent_descriptor,
+                follow_symlinks=False,
+            )
         except FileExistsError:
-            current = _safe_regular(path, max_bytes=MAX_METADATA_BYTES)
+            current = _read_regular_at(
+                parent_descriptor,
+                target_name,
+                max_bytes=max_bytes,
+                label=label,
+                path=path,
+            )
             if current != data:
-                raise PrivateReleasePreparationError(
-                    f"staging metadata race differs: {path}"
-                ) from None
-        temporary.unlink()
+                raise PrivateReleasePreparationError(f"{conflict}: {path}") from None
     finally:
-        if temporary.exists():
-            temporary.unlink()
+        if temporary_name is not None:
+            try:
+                os.unlink(temporary_name, dir_fd=parent_descriptor)
+            except FileNotFoundError:
+                pass
+
+
+def _write_exclusive_staging_file(
+    path: Path, data: bytes, *, max_bytes: int, label: str, conflict: str
+) -> None:
+    parent_descriptor = _open_directory_chain(path.parent, create=True, label=label)
+    try:
+        _write_exclusive_at(
+            parent_descriptor,
+            path.name,
+            data,
+            max_bytes=max_bytes,
+            label=label,
+            path=path,
+            conflict=conflict,
+        )
+    finally:
+        os.close(parent_descriptor)
+
+
+def _write_staging_metadata(path: Path, data: bytes) -> None:
+    _write_exclusive_staging_file(
+        path,
+        data,
+        max_bytes=MAX_METADATA_BYTES,
+        label="staging metadata",
+        conflict="staging metadata already differs",
+    )
 
 
 def _write_staging_artifact(store_root: Path, data: bytes, digest: str) -> None:
@@ -227,43 +387,35 @@ def _write_staging_artifact(store_root: Path, data: bytes, digest: str) -> None:
 
     if not re.fullmatch(r"sha256:[0-9a-f]{64}", digest):
         raise PrivateReleasePreparationError(f"invalid staging digest: {digest}")
-    root = store_root.resolve()
-    if store_root.is_symlink() or not root.is_dir():
-        raise PrivateReleasePreparationError(
-            f"staging artifact root must be a real directory: {store_root}"
-        )
-    namespace = root / "private" / "sha256"
-    _assert_no_symlink_ancestors(namespace, "staging artifact namespace")
-    target = namespace / digest.removeprefix("sha256:")[:2] / digest.removeprefix("sha256:")
-    target.parent.mkdir(parents=True, exist_ok=True)
-    _assert_no_symlink_ancestors(target, "staging artifact")
-    if target.is_symlink():
-        raise PrivateReleasePreparationError(
-            f"staging artifact leaf must not be a symlink: {target}"
-        )
-    if target.exists():
-        current = _safe_regular(target, max_bytes=MAX_INPUT_BYTES)
-        if len(current) != len(data) or _digest_bytes(current) != digest:
-            raise PrivateReleasePreparationError(f"staging artifact already differs: {digest}")
-        return
-    temporary = target.with_name(f".{target.name}.{os.getpid()}.tmp")
+    root_descriptor = _open_directory_chain(
+        store_root, create=False, label="staging artifact root"
+    )
+    digest_value = digest.removeprefix("sha256:")
+    parent_descriptor = root_descriptor
     try:
-        with temporary.open("xb") as handle:
-            handle.write(data)
-            handle.flush()
-            os.fsync(handle.fileno())
-        try:
-            os.link(temporary, target)
-        except FileExistsError:
-            current = _safe_regular(target, max_bytes=MAX_INPUT_BYTES)
-            if len(current) != len(data) or _digest_bytes(current) != digest:
-                raise PrivateReleasePreparationError(
-                    f"staging artifact race differs: {digest}"
-                ) from None
-        temporary.unlink()
+        for component in ("private", "sha256", digest_value[:2]):
+            child = _open_directory_at(
+                parent_descriptor,
+                component,
+                create=True,
+                label="staging artifact namespace",
+                path=store_root,
+            )
+            os.close(parent_descriptor)
+            parent_descriptor = child
+        target_name = digest_value
+        target_path = store_root / "private" / "sha256" / digest_value[:2] / target_name
+        _write_exclusive_at(
+            parent_descriptor,
+            target_name,
+            data,
+            max_bytes=MAX_INPUT_BYTES,
+            label="staging artifact",
+            path=target_path,
+            conflict=f"staging artifact already differs: {digest}",
+        )
     finally:
-        if temporary.exists():
-            temporary.unlink()
+        os.close(parent_descriptor)
 
 
 def _source_update_plan(
@@ -445,14 +597,11 @@ def prepare_private_release(
     for role, reference, _kind in refs:
         if reference.visibility is not Visibility.PRIVATE:
             raise PrivateReleasePreparationError(f"{role} artifact must remain private")
-    _assert_no_symlink_ancestors(staging_root, "staging root")
     artifact_root = staging_root / "artifacts"
-    _assert_no_symlink_ancestors(artifact_root, "staging artifact root")
-    artifact_root.mkdir(parents=True, exist_ok=True)
-    if artifact_root.is_symlink() or not artifact_root.is_dir():
-        raise PrivateReleasePreparationError(
-            f"staging artifact root must be a real directory: {artifact_root}"
-        )
+    artifact_descriptor = _open_directory_chain(
+        artifact_root, create=True, label="staging artifact root"
+    )
+    os.close(artifact_descriptor)
     artifact_records: list[dict[str, object]] = []
     new_refs: dict[str, ArtifactRef] = {}
     for role, reference, kind in refs:

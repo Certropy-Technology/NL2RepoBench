@@ -6,6 +6,7 @@ import io
 import json
 import tarfile
 import tomllib
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import cast
 
@@ -472,14 +473,97 @@ def test_metadata_publication_rejects_concurrent_conflicting_file(
     path = tmp_path / "release-metadata.json"
     data = b'{"status":"blocked"}\n'
 
-    def link_with_conflict(source: Path, target: Path) -> None:
-        target.write_bytes(b"conflict\n")
+    def link_with_conflict(
+        source: str,
+        target: str,
+        *,
+        dst_dir_fd: int,
+        **_kwargs: object,
+    ) -> None:
+        descriptor = MODULE.os.open(
+            target,
+            MODULE.os.O_WRONLY | MODULE.os.O_CREAT | MODULE.os.O_EXCL,
+            0o600,
+            dir_fd=dst_dir_fd,
+        )
+        with MODULE.os.fdopen(descriptor, "wb") as handle:
+            handle.write(b"conflict\n")
         raise FileExistsError
 
     monkeypatch.setattr(MODULE.os, "link", link_with_conflict)
-    with pytest.raises(MODULE.PrivateReleasePreparationError, match="metadata race differs"):
+    with pytest.raises(MODULE.PrivateReleasePreparationError, match="metadata already differs"):
         MODULE._write_staging_metadata(path, data)
     assert path.read_bytes() == b"conflict\n"
+
+
+def test_metadata_writers_are_safe_when_run_concurrently(tmp_path: Path) -> None:
+    path = tmp_path / "release-metadata.json"
+    data = b'{"status":"blocked"}\n'
+
+    with ThreadPoolExecutor(max_workers=8) as executor:
+        list(executor.map(lambda _: MODULE._write_staging_metadata(path, data), range(8)))
+
+    assert path.read_bytes() == data
+
+
+def test_metadata_rejects_parent_symlink_created_during_mkdir(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    path = tmp_path / "new-parent" / "release-metadata.json"
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    original_mkdir = MODULE.os.mkdir
+
+    def mkdir_with_symlink(name: str, mode: int = 0o777, *, dir_fd: int | None = None) -> None:
+        if name == "new-parent":
+            MODULE.os.symlink(str(outside), name, dir_fd=dir_fd)
+            raise FileExistsError
+        original_mkdir(name, mode, dir_fd=dir_fd)
+
+    monkeypatch.setattr(MODULE.os, "mkdir", mkdir_with_symlink)
+    with pytest.raises(MODULE.PrivateReleasePreparationError, match="symlinks"):
+        MODULE._write_staging_metadata(path, b"{}\n")
+    assert not (outside / "release-metadata.json").exists()
+
+
+def test_artifact_writers_are_safe_when_run_concurrently(tmp_path: Path) -> None:
+    store = tmp_path / "artifacts"
+    store.mkdir()
+    data = b"staged artifact\n"
+    digest = MODULE._digest_bytes(data)
+
+    with ThreadPoolExecutor(max_workers=8) as executor:
+        list(
+            executor.map(
+                lambda _: MODULE._write_staging_artifact(store, data, digest), range(8)
+            )
+        )
+
+    target = store / "private" / "sha256" / digest[7:9] / digest[7:]
+    assert target.read_bytes() == data
+
+
+def test_artifact_rejects_namespace_symlink_created_during_mkdir(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    store = tmp_path / "artifacts"
+    store.mkdir()
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    data = b"staged artifact\n"
+    digest = MODULE._digest_bytes(data)
+    original_mkdir = MODULE.os.mkdir
+
+    def mkdir_with_symlink(name: str, mode: int = 0o777, *, dir_fd: int | None = None) -> None:
+        if name == "private":
+            MODULE.os.symlink(str(outside), name, dir_fd=dir_fd)
+            raise FileExistsError
+        original_mkdir(name, mode, dir_fd=dir_fd)
+
+    monkeypatch.setattr(MODULE.os, "mkdir", mkdir_with_symlink)
+    with pytest.raises(MODULE.PrivateReleasePreparationError, match="symlinks"):
+        MODULE._write_staging_artifact(store, data, digest)
+    assert not (outside / "sha256").exists()
 
 
 def test_empty_npm_closure_requires_unknown_dependency_status(tmp_path: Path) -> None:
