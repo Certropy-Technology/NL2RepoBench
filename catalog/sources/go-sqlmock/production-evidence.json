@@ -1,0 +1,74 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-sqlmock",
+  "status": "packaged",
+  "terminal_kind": "awaiting-agent-run",
+  "source_freeze": {
+    "upstream_url": "https://github.com/DATA-DOG/go-sqlmock",
+    "revision": "4e29cb9ba9984db4da4003b5c813f3747f450bc7",
+    "source_digest": "sha256:359bb2e809bade7c01d70eb5cb05a4ebef6c2a835a63293f0471c53d12b05734",
+    "license_spdx": "BSD-3-Clause",
+    "license_sha256": "sha256:e3a6ae97f6eef8ce17e44d5f22adba594c4ea2b592c4be7ee9b387c441ef34d6"
+  },
+  "environment": {
+    "runtime": "go1.26.5-X:nodwarf5",
+    "platform": "linux/amd64",
+    "cgo_enabled": false,
+    "base_image_digest": "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd",
+    "agent_network_mode": "no-network",
+    "verifier_network_mode": "no-network"
+  },
+  "artifacts": {
+    "module_bundle": {"digest": "sha256:29e8f7f65b020cd6014fd6ede4761ddb9e8d8f93a8870b4ced96930754a6f8f2", "size_bytes": 5169},
+    "verifier_bundle": {"digest": "sha256:b310acb4a4c95b5640806204f17d151b02a528ed08cfade4fb1db1345b67ba9f", "size_bytes": 1287},
+    "oracle_bundle": {"digest": "sha256:ce2edb98dc8ea4703395bd088015ea9f04d5044b83c2f42052dbf2b961a1a920", "size_bytes": 918},
+    "compiled_bundle_manifest": {
+      "path": ".nl2repo/authoring-work/go-author-batch2-20260902T1456Z/go-sqlmock/compiled/go-sqlmock/bundle.manifest.json",
+      "sha256": "sha256:e274101e6605ec6ffeb5f69a5c2fb29ddf5fd50aa3ada893ebad256b28388d82"
+    }
+  },
+  "inventory": {
+    "tracked_source_files": 55,
+    "public_api_documented_type_headers": 16,
+    "public_api_documented_function_and_method_headers": 60,
+    "upstream_static_test_functions": 131,
+    "root_tests_passed": 137,
+    "task_frozen_total": 1,
+    "task_leaf_id": "contract::public-api",
+    "bridge_cases": 12
+  },
+  "commands": [
+    {"command": "uv run nl2repo task validate-source catalog/sources/go-sqlmock", "exit_code": 0},
+    {"command": "uv run nl2repo task lint-network --tasks-root catalog/sources", "exit_code": 0, "summary": "error_count=0; expected Oracle host warning only"},
+    {"command": "uv run nl2repo harbor compile catalog/sources/go-sqlmock --output .nl2repo/authoring-work/go-author-batch2-20260902T1456Z/go-sqlmock/compiled --toolchain toolchain.go.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "exit_code": 0},
+    {"command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -mod=vendor -vet=off -count=1 -timeout=20s .", "exit_code": 0, "summary": "137 root tests passed"},
+    {"command": "PYTHONPATH=src .venv/bin/python src/nl2repobench/verification/go_contract_runner.py --script harbor/tests/contract.sh", "exit_code": 0, "summary": "12 typed bridge cases passed"}
+  ],
+  "oracle": {"status": "not-run-by-lane-policy", "valid": null, "passed": null, "collected": null, "reward": null},
+  "controls": {"status": "not-run-by-lane-policy", "empty": null, "stub": null, "forgery": null, "timeout": null, "offline": null},
+  "verifier_smoke": {
+    "image": "nl2repobench/go-sqlmock-verifier:authoring",
+    "image_digest": "sha256:5912e4175cc382f4eceab0495b5fc0afd4126436930b584abea7c059c2cdd5da",
+    "command": "docker run --rm --network none -v candidate:/workspace -v logs:/logs nl2repobench/go-sqlmock-verifier:authoring /tests/test.sh",
+    "exit_code": 0,
+    "valid": true,
+    "passed": 1,
+    "collected": 1,
+    "frozen_total": 1,
+    "reward": 1.0,
+    "public_network_available": false,
+    "grading": ".nl2repo/authoring-work/go-author-batch2-20260902T1456Z/go-sqlmock/verifier-smoke-logs/verifier/grading.json",
+    "network": ".nl2repo/authoring-work/go-author-batch2-20260902T1456Z/go-sqlmock/verifier-smoke-logs/verifier/network.json"
+  },
+  "residual_risks": [
+    "Official Harbor Oracle and empty/stub/forgery/timeout/offline controls require integrator orchestration and remain unexecuted.",
+    "Upstream examples/orders has a runtime-sensitive cancellation path and is excluded from the frozen deterministic bridge contract.",
+    "The bridge intentionally excludes callbacks, live external databases, context timing, delayed expectations, and unbounded concurrency."
+  ],
+  "evidence_files": [
+    "evidence/source-freeze.json",
+    "evidence/api-inventory.json",
+    "evidence/traceability.json",
+    "evidence/remediation-validation.txt"
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-sqlmock",
+  "method": "go doc -all at frozen revision plus AST/test inventory",
+  "public_api": {
+    "documented_type_headers": 16,
+    "documented_function_and_method_headers": 60,
+    "documented_variable_headers": 4,
+    "contracted_operations": [
+      "New", "NewWithDSN", "ExpectQuery", "ExpectExec", "ExpectPrepare",
+      "ExpectBegin", "ExpectCommit", "ExpectRollback", "ExpectClose",
+      "ExpectationsWereMet", "MatchExpectationsInOrder", "NewRows",
+      "NewRowsWithColumnDefinition", "NewColumn", "NewResult", "NewErrorResult",
+      "QueryMatcherRegexp", "QueryMatcherEqual", "AnyArg", "ValueConverterOption",
+      "MonitorPingsOption"
+    ]
+  },
+  "tests": {
+    "upstream_static_test_functions": 131,
+    "root_package_tests_run": 137,
+    "root_package_tests_passed": 137,
+    "root_package_tests_failed": 0,
+    "frozen_harbor_leaf_id": "contract::public-api",
+    "frozen_harbor_total": 1,
+    "bridge_contract_cases": 12
+  },
+  "stored_material": {
+    "go_doc": ".nl2repo/authoring-work/go-author-batch2-20260902T1456Z/go-sqlmock/go-doc-all.txt",
+    "root_test_json": ".nl2repo/authoring-work/go-author-batch2-20260902T1456Z/go-sqlmock/root-test.jsonl"
+  }
+}

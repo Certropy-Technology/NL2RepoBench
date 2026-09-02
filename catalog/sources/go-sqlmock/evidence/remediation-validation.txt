@@ -1,0 +1,33 @@
+go-sqlmock authoring remediation record
+
+Source freeze
+- Revision: 4e29cb9ba9984db4da4003b5c813f3747f450bc7
+- Archive: .nl2repo/authoring-work/go-author-batch2-20260902T1456Z/go-sqlmock/upstream-source.tar
+- Archive SHA-256: 359bb2e809bade7c01d70eb5cb05a4ebef6c2a835a63293f0471c53d12b05734
+- License: BSD-3-Clause, SHA-256 e3a6ae97f6eef8ce17e44d5f22adba594c4ea2b592c4be7ee9b387c441ef34d6
+
+Environment and dependencies
+- Go: go1.26.5-X:nodwarf5, linux/amd64, CGO_ENABLED=0
+- Base image: docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd
+- Network: no-network for candidate and verifier; Oracle source fetch remains run-scoped only
+- Module bundle: sha256:29e8f7f65b020cd6014fd6ede4761ddb9e8d8f93a8870b4ced96930754a6f8f2, 5169 bytes
+
+Remediation attempts
+- Go 1.26 vet initially rejected four upstream dynamic fmt.Errorf calls. The task-local candidate probe and Oracle solve script apply fmt.Errorf("%s", msg/err) compatibility rewrites without changing error text.
+- The first module bundle omitted a hidden vendor .gitignore due to shell globbing. It was regenerated from the complete vendor tree and the manifest now validates.
+- The first bridge contract request encoded a literal backslash-n in CSV and used regexp matching for literal question marks. The contract now encodes a JSON newline and selects the documented equal matcher for those cases.
+- Upstream examples/orders cancellation test can hang under the locked runtime. Examples and delayed/context timing are explicitly excluded by the task contract; the frozen root package tests and bridge contract remain deterministic.
+
+Validated commands
+- uv run nl2repo task validate-source catalog/sources/go-sqlmock: exit 0
+- uv run nl2repo task lint-network --tasks-root catalog/sources: error_count 0; go-sqlmock finding is the expected Oracle host authorization warning
+- uv run nl2repo harbor compile catalog/sources/go-sqlmock --output .nl2repo/authoring-work/go-author-batch2-20260902T1456Z/go-sqlmock/compiled --toolchain toolchain.go.lock.toml --artifact-root .nl2repo/artifacts --allow-private: exit 0
+- Same compile to compiled-repro: exit 0; bundle manifest SHA-256 e274101e6605ec6ffeb5f69a5c2fb29ddf5fd50aa3ada893ebad256b28388d82, byte-identical
+- GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -mod=vendor -vet=off -count=1 -timeout=20s .: exit 0; 137/137 root tests passed
+- PYTHONPATH=src .venv/bin/python src/nl2repobench/verification/go_contract_runner.py ...: exit 0; 12 bridge cases passed
+- bash -n harbor tests, solution, and controls: exit 0
+- docker build compiled/go-sqlmock/tests/Dockerfile: exit 0; image digest sha256:5912e4175cc382f4eceab0495b5fc0afd4126436930b584abea7c059c2cdd5da
+- docker run --network none ... /tests/test.sh: exit 0; valid=true, passed=1, collected=1, reward=1.0, public_network_available=false
+
+Not run by lane policy
+- No Harbor Agent Run, Oracle run, or Harbor negative-control run was started. These require integrator orchestration and are not represented as passed receipts here.

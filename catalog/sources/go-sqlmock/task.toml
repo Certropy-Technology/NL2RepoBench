@@ -1,0 +1,76 @@
+schema_version = "1.0"
+task_id = "go-sqlmock"
+version = "0.1.0"
+instruction = "instruction.md"
+oracle_bundle = { digest = "sha256:ce2edb98dc8ea4703395bd088015ea9f04d5044b83c2f42052dbf2b961a1a920", size_bytes = 918, media_type = "application/vnd.nl2repobench.go-oracle+tar", uri = "artifact://private/sha256:ce2edb98dc8ea4703395bd088015ea9f04d5044b83c2f42052dbf2b961a1a920", visibility = "private" }
+
+[metadata]
+difficulty = "hard"
+category = "go-database-testing"
+tags = ["go", "go-modules", "sqlmock", "database-sql", "typed-bridge", "public-api"]
+language = "go"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/DATA-DOG/go-sqlmock"
+revision = "4e29cb9ba9984db4da4003b5c813f3747f450bc7"
+license_spdx = "BSD-3-Clause"
+source_digest = "sha256:359bb2e809bade7c01d70eb5cb05a4ebef6c2a835a63293f0471c53d12b05734"
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+network_mode = "no-network"
+runtime_version = "1.26.5"
+base_image = "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+base_image_digest = "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+build_command = "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -mod=vendor ./..."
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "Candidate and separate verifier execution is offline; only the trusted Oracle receives a run-scoped github.com authorization for the frozen source."
+
+[dependencies]
+status = "known"
+installer = "system"
+packages = []
+module_bundle = { digest = "sha256:29e8f7f65b020cd6014fd6ede4761ddb9e8d8f93a8870b4ced96930754a6f8f2", size_bytes = 5169, media_type = "application/vnd.nl2repobench.go-module-bundle+tar", uri = "artifact://private/sha256:29e8f7f65b020cd6014fd6ede4761ddb9e8d8f93a8870b4ced96930754a6f8f2", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 1
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Recreate the deterministic database/sql mock behavior of DATA-DOG/go-sqlmock through a typed JSON subprocess bridge."
+keywords = ["go", "go-modules", "sqlmock", "database-sql", "typed-bridge", "public-api"]
+agent_timeout_sec = 1200.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "packaged"
+owner = "authoring-go-batch2-20260902T1456Z-go-sqlmock"
+reason = "Frozen source, reviewed typed bridge, private offline module closure, production compile inputs, and task-local contract probes are complete; Oracle, Harbor controls, independent review, and model Agent Run remain integrator responsibilities."
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:b310acb4a4c95b5640806204f17d151b02a528ed08cfade4fb1db1345b67ba9f", size_bytes = 1287, media_type = "application/vnd.nl2repobench.go-verifier+tar", uri = "artifact://private/sha256:b310acb4a4c95b5640806204f17d151b02a528ed08cfade4fb1db1345b67ba9f", visibility = "private" }
+entrypoint = "contract.sh"

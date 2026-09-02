@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-sqlmock",
+  "leaf_id": "contract::public-api",
+  "instruction_sections": [
+    "instruction.md#project-description",
+    "instruction.md#supports",
+    "instruction.md#api-usage-guide",
+    "instruction.md#implementation-notes"
+  ],
+  "behavior_groups": [
+    {
+      "group": "database/sql driver lifecycle",
+      "apis": ["New", "NewWithDSN", "ExpectBegin", "ExpectCommit", "ExpectRollback", "ExpectClose"],
+      "bridge_cases": ["transaction"],
+      "assertion_scope": "isolated mock state, ordered expectations, commit path"
+    },
+    {
+      "group": "query and exec matching",
+      "apis": ["ExpectQuery", "ExpectExec", "WithArgs", "WithoutArgs", "QueryMatcherRegexp", "QueryMatcherEqual"],
+      "bridge_cases": ["query-regexp-rows", "query-equal-whitespace", "exec-result", "regexp-matcher", "matcher-rejects"],
+      "assertion_scope": "SQL whitespace normalization, argument arity/value matching, structured errors"
+    },
+    {
+      "group": "rows and prepared statements",
+      "apis": ["NewRows", "AddRow", "FromCSVString", "ExpectPrepare", "ExpectedPrepare.ExpectQuery"],
+      "bridge_cases": ["query-csv", "prepared-query"],
+      "assertion_scope": "column/row order, CSV NULL conversion, prepared query snapshot"
+    },
+    {
+      "group": "results, columns, and arguments",
+      "apis": ["NewResult", "NewErrorResult", "NewColumn", "AnyArg"],
+      "bridge_cases": ["result-builders", "column-metadata", "any-argument"],
+      "assertion_scope": "driver result values/errors, metadata flags, scalar argument acceptance"
+    }
+  ],
+  "adaptations": [
+    "Callbacks, live database connections, context timing, delayed expectations, and example applications are excluded from the serializable deterministic boundary.",
+    "The bridge accepts JSON scalar driver values and snapshots returned rows; pointers, callbacks, filesystem handles, and live connections do not cross the boundary.",
+    "The frozen Go 1.15 source is adapted at Oracle/candidate runtime to the locked Go 1.26.5 directive; four legacy dynamic fmt.Errorf calls are rewritten to preserve their error text under Go 1.26 vet."
+  ]
+}
