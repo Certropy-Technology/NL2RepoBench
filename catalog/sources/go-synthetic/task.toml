@@ -20,6 +20,13 @@ status = "unknown"
 status = "unknown"
 os_name = "debian-bookworm"
 
+[environment.runtime]
+language = "go"
+runtime = "go"
+version = "1.26.5"
+package_manager = "go-modules"
+package_manager_version = "1.26.5"
+
 
 [environment.network_policy]
 mode = "no-network"
