@@ -27,6 +27,7 @@ ID_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:-]{0,199}$")
 HEX64_RE = re.compile(r"^[0-9a-f]{64}$")
 HEX40_RE = re.compile(r"^[0-9a-f]{40}$")
 LANGUAGES = ("python", "node", "go")
+MAX_TOTAL_CONTROLLERS = 8
 # Schema v4 adds ``legacy_archive_evidence``.  No pre-v4 database is deployed, so
 # v4 is the only accepted version and there is no in-place upgrade path.
 SCHEMA_VERSION = "4"
@@ -628,10 +629,10 @@ class Scheduler:
         _id(changed_by, "changed_by")
         if not reason or len(reason) > 500:
             raise ValidationError("reason is required and bounded")
-        if not 0 <= max_total_controllers <= 6 or not 0 <= controller_concurrency <= 4:
+        if not 0 <= max_total_controllers <= MAX_TOTAL_CONTROLLERS or not 0 <= controller_concurrency <= 4:
             raise ValidationError("controller limits out of bounds")
         if not 0 <= max_integrations <= 3 or (
-            agent_limit is not None and not 0 <= agent_limit <= 6
+            agent_limit is not None and not 0 <= agent_limit <= MAX_TOTAL_CONTROLLERS
         ):
             raise ValidationError("operation limits out of bounds")
         with self._db() as db, _transaction(db):

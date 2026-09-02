@@ -170,6 +170,36 @@ def test_sealed_enabled_configuration_can_change_bounded_limits(tmp_path: Path) 
     ) == (1, 2, 2, 0, 2)
 
 
+def test_scheduler_accepts_eight_controller_and_agent_limits(tmp_path: Path) -> None:
+    scheduler = _prepared_cutover_scheduler(tmp_path)
+    scheduler.first_enable()
+
+    version = scheduler.configure(
+        enabled=True,
+        max_total_controllers=8,
+        controller_concurrency=4,
+        max_integrations=0,
+        agent_limit=8,
+        reason="eight-controller capacity test",
+    )
+
+    config = scheduler.runtime_config()
+    assert config["config_version"] == version
+    assert config["max_total_controllers"] == 8
+    assert config["controller_concurrency"] == 4
+    assert config["agent_limit"] == 8
+
+    with pytest.raises(ValidationError, match="controller limits"):
+        scheduler.configure(
+            enabled=True,
+            max_total_controllers=9,
+            controller_concurrency=4,
+            max_integrations=0,
+            agent_limit=8,
+            reason="over-limit test",
+        )
+
+
 def test_sealed_disabled_configuration_rejects_reenable_without_file_mutation(
     tmp_path: Path,
 ) -> None:

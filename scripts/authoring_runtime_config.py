@@ -10,7 +10,7 @@ import tempfile
 from pathlib import Path
 from typing import Any
 
-MAX_CONTROLLERS = 6
+MAX_CONTROLLERS = 8
 MAX_CONCURRENCY = 4
 MAX_INTEGRATIONS = 3
 DEFAULTS: dict[str, Any] = {

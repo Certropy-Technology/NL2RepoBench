@@ -159,10 +159,10 @@ CREATE TABLE fairness_state (
 );
 CREATE TABLE runtime_config (
   config_version INTEGER PRIMARY KEY AUTOINCREMENT, enabled INTEGER NOT NULL CHECK(enabled IN (0,1)),
-  max_total_controllers INTEGER NOT NULL DEFAULT 0 CHECK(max_total_controllers BETWEEN 0 AND 6),
+  max_total_controllers INTEGER NOT NULL DEFAULT 0 CHECK(max_total_controllers BETWEEN 0 AND 8),
   controller_concurrency INTEGER NOT NULL DEFAULT 0 CHECK(controller_concurrency BETWEEN 0 AND 4),
   max_integrations INTEGER NOT NULL DEFAULT 0 CHECK(max_integrations BETWEEN 0 AND 3),
-  agent_limit INTEGER CHECK(agent_limit IS NULL OR agent_limit BETWEEN 0 AND 6),
+  agent_limit INTEGER CHECK(agent_limit IS NULL OR agent_limit BETWEEN 0 AND 8),
   lease_seconds INTEGER NOT NULL CHECK(lease_seconds BETWEEN 5 AND 86400),
   heartbeat_interval_seconds INTEGER NOT NULL CHECK(heartbeat_interval_seconds BETWEEN 5 AND 86400),
   changed_by TEXT NOT NULL, changed_at TEXT NOT NULL, reason TEXT NOT NULL CHECK(length(reason) BETWEEN 1 AND 500),

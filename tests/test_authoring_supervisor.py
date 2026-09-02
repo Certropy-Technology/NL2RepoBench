@@ -438,6 +438,26 @@ def test_runtime_config_is_bounded_and_operator_owned(tmp_path: Path) -> None:
         supervisor._runtime_config(config, args)
 
 
+def test_runtime_config_accepts_eight_controller_cap(tmp_path: Path) -> None:
+    config = tmp_path / "runtime-config.json"
+    config.write_text(
+        json.dumps(
+            {
+                "schema_version": "1.0",
+                "enabled": True,
+                "max_total_controllers": 8,
+                "controller_concurrency": 4,
+                "max_integrations": 3,
+                "agent_limit": 8,
+            }
+        ),
+        encoding="utf-8",
+    )
+    args = type("Args", (), {"max_total_controllers": 8, "max_integrations": 3})()
+    assert supervisor._runtime_config(config, args)["max_total_controllers"] == 8
+    assert supervisor._runtime_config(config, args)["agent_limit"] == 8
+
+
 def test_worker_disk_capacity_requires_repository_and_docker_space() -> None:
     gib = 1024**3
 

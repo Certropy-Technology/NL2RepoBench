@@ -97,7 +97,7 @@ GO_DISCOVERY_REPOSITORIES = {
 }
 DEFAULT_WORKERS = 3
 DEFAULT_MAX_TOTAL_CONTROLLERS = 3
-MAX_RUNTIME_CONTROLLERS = 6
+MAX_RUNTIME_CONTROLLERS = 8
 MAX_RUNTIME_CONCURRENCY = 4
 DEFAULT_MIN_FREE_BYTES = 12 * 1024**3
 DEFAULT_DOCKER_MIN_FREE_BYTES = 20 * 1024**3
@@ -473,7 +473,7 @@ Return exactly one JSON object and no Markdown:
   "reason": "short reason"
 }}
 
-Rules: limits are integers 0..6; discover_packages has at most 8 names;
+Rules: limits are integers 0..8; discover_packages has at most 8 names;
 discover package names must come from discovery_pool; pause uses zero limits;
 do not invent commands, paths, credentials, or package names. Prefer safe
 integration/archive work. Pause when disk is low, checkout is dirty, or
@@ -512,7 +512,7 @@ def _parse_director_response(text: str) -> dict[str, Any]:
     ):
         raise ValueError("Director discover_packages is invalid")
     for field in ("integrate_limit", "worker_limit"):
-        if not isinstance(value[field], int) or not 0 <= value[field] <= 6:
+        if not isinstance(value[field], int) or not 0 <= value[field] <= 8:
             raise ValueError(f"Director {field} is invalid")
     if not isinstance(value["reason"], str) or not value["reason"].strip():
         raise ValueError("Director reason is required")
