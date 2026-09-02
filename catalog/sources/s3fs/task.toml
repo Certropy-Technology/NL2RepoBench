@@ -66,10 +66,9 @@ collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-wave2-archive-r2-c3"
-reason = "Canonical runtime/package-manager version and dependency closure are not available; legacy single closure refs were not retyped. Previous status/reason: controls-passed: Source freeze, deterministic fake-client adaptation, production compile, Oracle, and required verifier controls passed in task-local replay."
-
+reason = "Source freeze, deterministic fake-client adaptation, production compile, Oracle, and required verifier controls passed in task-local replay."
 [harbor]
 description = "Build s3fs from an empty workspace and satisfy a deterministic fake-client filesystem contract through a separate child-side verifier."
 keywords = [

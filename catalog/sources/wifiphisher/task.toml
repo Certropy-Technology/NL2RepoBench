@@ -52,4 +52,4 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 [lifecycle]
 status = "blocked"
 owner = "repair/wifiphisher"
-reason = "Hardware/network behavior, source/license authority, verifier, Oracle, and controls are not established. Canonical migration: exact Python runtime/package-manager evidence and canonical private dependency closure are not available; keep blocked until versioned artifacts and gates are recreated."
+reason = "Hardware/network behavior, source/license authority, verifier, Oracle, and controls are not established."

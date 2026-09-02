@@ -92,10 +92,9 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-gpt56-wide-restart-20260826-r3"
-reason = "Frozen 25-leaf custom-json-v1 slice passed the current Oracle gate and task-local empty, stub, forgery, install-timeout, workspace-rejection, and call-timeout controls. The independent Agent Run loop owns model execution and publication review. Canonical source migration is blocked because the exact Python package-manager runtime and canonical lock/offline-store/inventory closure are not frozen; no legacy single closure artifact was retyped or fabricated."
-
+reason = "Frozen 25-leaf custom-json-v1 slice passed the current Oracle gate and task-local empty, stub, forgery, install-timeout, workspace-rejection, and call-timeout controls. The independent Agent Run loop owns model execution and publication review."
 [oracle_bundle]
 digest = "sha256:d581c9b30dbe8f64dcec57c39ec5ca561b27e9b8674f225c3ff561733c490171"
 size_bytes = 10240

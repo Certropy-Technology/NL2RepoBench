@@ -94,10 +94,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wave2-20260828/get-east-asian-width"
-reason = "Production compile, trusted Oracle 26/26, and empty/stub/forgery/offline plus install-script/loader-hook/hang controls passed with verifier-owned grading and no public verifier network. Review, Agent Run, and publication remain integrator-stage gates. Canonical dependency lock/offline-store/inventory closure is unavailable; the legacy single artifact reference was not retyped."
-
+reason = "Production compile, trusted Oracle 26/26, and empty/stub/forgery/offline plus install-script/loader-hook/hang controls passed with verifier-owned grading and no public verifier network. Review, Agent Run, and publication remain integrator-stage gates."
 [oracle_bundle]
 digest = "sha256:8630549657303cc3e001b8d725e30fb4e73e96de43ceb364b7628407d2bf37e0"
 size_bytes = 59073

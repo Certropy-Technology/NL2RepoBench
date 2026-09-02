@@ -111,10 +111,9 @@ uri = "artifact://private/sha256:ead33af9b7228551170d691933f39a9aa146afa1e07be51
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-wave2-20260828-c3"
-reason = "Canonical migration completed; production remains blocked pending canonical dependency closure and current release evidence. Previous lifecycle reason: Production compile, Harbor Oracle, empty, stub, forgery, bounded timeout, and offline controls passed. Review, pilot, and publication remain separate integrator stages."
-
+reason = "Production compile, Harbor Oracle, empty, stub, forgery, bounded timeout, and offline controls passed. Review, pilot, and publication remain separate integrator stages."
 [oracle_bundle]
 digest = "sha256:9662cc24bf31908462722c478afac87da804f2c0456b55eb7de126bb198893c3"
 size_bytes = 10240

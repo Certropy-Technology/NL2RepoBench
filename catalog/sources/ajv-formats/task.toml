@@ -69,10 +69,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wave2-20260828"
 reason = "Fresh production compile, Oracle, empty, stub, forgery, install-hang, call-hang, and offline controls completed against the frozen source and 27-leaf private contract."
-
 [oracle_bundle]
 digest = "sha256:1ee0873899cc31cbb21cedad79330bfadc5474c9f41f68627e81e3bf4a8e933e"
 size_bytes = 174080

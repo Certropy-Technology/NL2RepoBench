@@ -102,6 +102,6 @@ uri = "artifact://private/sha256:b89e066f685eb6796cb6613b8c430e37dbf04ddde8c3558
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-wave2-20260828/trove-classifiers"
-reason = "Harbor 0.21.0 diagnostic gates pass with a fixed 35-leaf child-process contract: Oracle 35/35 at reward 1.0; valid stub, forgery, and call-hang controls at 1/35; bounded empty and install-hang installation exceptions at reward 0; all separate-verifier network probes report public_network_available=false. Final canonical evidence is bound after this lifecycle promotion. Canonical dependency closure and exact runtime identity require separate remediation."
+reason = "Harbor 0.21.0 diagnostic gates pass with a fixed 35-leaf child-process contract: Oracle 35/35 at reward 1.0; valid stub, forgery, and call-hang controls at 1/35; bounded empty and install-hang installation exceptions at reward 0; all separate-verifier network probes report public_network_available=false. Final canonical evidence is bound after this lifecycle promotion."

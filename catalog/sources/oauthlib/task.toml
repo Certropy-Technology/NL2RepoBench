@@ -75,10 +75,9 @@ uri = "artifact://private/sha256:e1ceac0c33ca06aa7f6b2f9e30abd72e13e4eb120eaa351
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-wave2-20260828-c2"
-reason = "Canonical source migration is blocked: exact Python runtime/package-manager version and canonical dependency closure evidence are unavailable. Previous status/reason: controls-passed: The production bundle passed the 42/42 Oracle gate plus empty, stub, forgery, install-hang, call-hang, and offline controls; independent review and model pilot remain separate stages."
-
+reason = "The production bundle passed the 42/42 Oracle gate plus empty, stub, forgery, install-hang, call-hang, and offline controls; independent review and model pilot remain separate stages."
 [environment]
 status = "unknown"
 os_name = "debian-12-amd64"

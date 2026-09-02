@@ -69,10 +69,9 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wave2-20260828-c3/basic-ftp"
 reason = "Source validation, network lint, production compile, verifier image build, direct offline replay, Harbor Oracle, empty, stub, forgery, offline, and bounded call-hang controls passed. Integrator review, pilot, and publication remain separate gates."
-
 [oracle_bundle]
 digest = "sha256:dcbdc8666b78b25a61568f9030850abf6a17bfeaa5380244d1ae2528b409701c"
 size_bytes = 35423

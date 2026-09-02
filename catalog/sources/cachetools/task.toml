@@ -102,6 +102,6 @@ collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "worker"
-reason = "Official Harbor Oracle passed 18/18 with reward 1.0; empty, stub, and forgery controls each scored 0.0 under the no-network separate verifier. Canonical dependency closure and exact Python package-manager runtime identity are unavailable; create lock/offline-store/inventory artifacts and a versioned release before production use."
+reason = "Official Harbor Oracle passed 18/18 with reward 1.0; empty, stub, and forgery controls each scored 0.0 under the no-network separate verifier."

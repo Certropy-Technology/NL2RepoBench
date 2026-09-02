@@ -103,6 +103,6 @@ collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-gpt56-wide-20260826-r2"
-reason = "Task-local production bundle passed direct no-network Oracle-equivalent grading and empty, stub, forgery, and install-timeout controls; independent review and Harbor trial execution remain pending. Canonical dependency closure and exact Python package-manager runtime identity are unavailable; create lock/offline-store/inventory artifacts and a versioned release before production use."
+reason = "Task-local production bundle passed direct no-network Oracle-equivalent grading and empty, stub, forgery, and install-timeout controls; independent review and Harbor trial execution remain pending."

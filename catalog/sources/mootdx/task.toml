@@ -75,8 +75,7 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
 status = "blocked"
-reason = "The exact upstream source and legacy image are recorded, but the final test contract cannot produce a deterministic no-network evaluation because it exercises mutable finance services and current-date/cache behavior. The final test-tree collection is not frozen, and no separate verifier, Oracle, controls, or catalog/tasks/mootdx runtime exists. Canonical dependency lock/offline-store/inventory closure is not represented by the legacy dependency field; a versioned private-artifact migration is required."
-
+reason = "The exact upstream source and legacy image are recorded, but the final test contract cannot produce a deterministic no-network evaluation because it exercises mutable finance services and current-date/cache behavior. The final test-tree collection is not frozen, and no separate verifier, Oracle, controls, or catalog/tasks/mootdx runtime exists."
 [harbor]
 description = "Blocked candidate: live financial services, an unfrozen final test tree, and no separate verifier prevent a deterministic production bundle."
 keywords = [

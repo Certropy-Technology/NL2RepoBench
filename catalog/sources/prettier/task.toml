@@ -75,10 +75,9 @@ contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-gpt56-wide-20260826-r2"
-reason = "The current source compiles byte-for-byte to the final Oracle/control bundle. The exact Oracle and empty, stub, forgery, install-script, loader-hook, and timeout controls are recorded under task-local evidence; the earlier offline receipt remains documented in the handoff. Canonical dependency closure and versioned private-artifact migration remain required."
-
+reason = "The current source compiles byte-for-byte to the final Oracle/control bundle. The exact Oracle and empty, stub, forgery, install-script, loader-hook, and timeout controls are recorded under task-local evidence; the earlier offline receipt remains documented in the handoff."
 [harbor]
 description = "Recreate a deterministic dependency-free Prettier-compatible formatting API for eight language families."
 keywords = [

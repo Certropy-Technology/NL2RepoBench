@@ -79,10 +79,9 @@ contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-gpt56-wide-20260826-r2"
-reason = "Frozen source, private Node 24/npm 11 offline closure, JSON subprocess verifier, Oracle archive, and no-network Oracle/empty/stub/forgery/timeout controls passed. Reviews and Agent Run Loop pilots remain pending. Canonical dependency closure and versioned private-artifact migration remain required."
-
+reason = "Frozen source, private Node 24/npm 11 offline closure, JSON subprocess verifier, Oracle archive, and no-network Oracle/empty/stub/forgery/timeout controls passed. Reviews and Agent Run Loop pilots remain pending."
 [harbor]
 description = "Pinned node-fetch ESM task covering a no-network JSON-safe Fetch API subset with 23 deterministic node:test leaves."
 keywords = [

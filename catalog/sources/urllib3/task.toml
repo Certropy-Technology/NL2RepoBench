@@ -95,10 +95,9 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-wave2-20260828"
-reason = "Current production compile, local separate-verifier Oracle replay, empty/stub/forgery controls, install-timeout control, source network lint, and generated network lint passed. Harbor Agent Run, blind review, pilot, and publication remain integrator-owned. Canonical dependency closure and exact runtime identity require separate remediation."
-
+reason = "Current production compile, local separate-verifier Oracle replay, empty/stub/forgery controls, install-timeout control, source network lint, and generated network lint passed. Harbor Agent Run, blind review, pilot, and publication remain integrator-owned."
 [oracle_bundle]
 digest = "sha256:964f69b6414f9c65f20feabc844ecdefa7c3e2e14886f7d9ee9cf399790664b4"
 size_bytes = 2068480

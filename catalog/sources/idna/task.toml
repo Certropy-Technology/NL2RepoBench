@@ -75,6 +75,6 @@ uri = "artifact://private/sha256:521add0689c5575295f3018cdd46e18b5ff30f7cfb5dfb9
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-wave2-20260828-c2"
-reason = "Canonical migration is blocked because the legacy pip closure reference was removed and no canonical lock/offline-store/inventory triple is available. Historical evidence: production Harbor compile passed; Oracle was valid at 25/25 reward 1.0, and stub, forgery, install-hang, call-hang, and offline controls completed with bounded low scores. Review and model Agent Run remain separate stages."
+reason = "Production Harbor compile passed; Oracle was valid at 25/25 reward 1.0, and stub, forgery, install-hang, call-hang, and offline controls completed with bounded low scores. Review and model Agent Run remain separate stages."

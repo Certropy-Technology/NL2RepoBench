@@ -63,8 +63,7 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 [lifecycle]
 status = "blocked"
 owner = "repair/mashumaro"
-reason = "The exact post-v3.22 source and Apache-2.0 archive/license evidence are known, but registry release artifacts differ, no hash-locked closure/final image or frozen collection exists, and generated class/type/callable behavior lacks a reviewed child-side verifier. No runtime task is generated. Canonical dependency lock/offline-store/inventory closure is not represented by the legacy dependency field; a versioned private-artifact migration is required."
-
+reason = "The exact post-v3.22 source and Apache-2.0 archive/license evidence are known, but registry release artifacts differ, no hash-locked closure/final image or frozen collection exists, and generated class/type/callable behavior lacks a reviewed child-side verifier. No runtime task is generated."
 [harbor]
 description = "Blocked candidate: stateful generated dataclass serialization lacks a reviewed bounded verifier and offline dependency closure."
 keywords = [

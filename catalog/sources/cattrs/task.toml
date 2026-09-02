@@ -94,4 +94,4 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 [lifecycle]
 status = "blocked"
 owner = "repair/cattrs"
-reason = "Immutable cattrs revision and MIT license/archive evidence are available, but the broad modern and legacy API surface, optional serialization backends, dependency closure, frozen collection, separate verifier, Oracle, and controls were not completed. No catalog/tasks/cattrs runtime exists. Canonical dependency closure and exact Python package-manager runtime identity are unavailable; create lock/offline-store/inventory artifacts and a versioned release before production use."
+reason = "Immutable cattrs revision and MIT license/archive evidence are available, but the broad modern and legacy API surface, optional serialization backends, dependency closure, frozen collection, separate verifier, Oracle, and controls were not completed. No catalog/tasks/cattrs runtime exists."

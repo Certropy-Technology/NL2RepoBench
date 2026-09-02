@@ -76,6 +76,6 @@ uri = "artifact://private/sha256:d22e6816f133b771600a58feb26e4904f7b9103f75779f3
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-wave2-20260828-c2"
-reason = "Canonical migration is blocked because the legacy pip closure reference was removed and no canonical lock/offline-store/inventory triple is available. Historical evidence: current production compile, Oracle receipt, and empty/stub/forgery/install-hang/call-hang/offline controls are recorded in production-evidence.json; handoff remains awaiting-agent-run."
+reason = "Current production compile, Oracle receipt, and empty/stub/forgery/install-hang/call-hang/offline controls are recorded in production-evidence.json; handoff remains awaiting-agent-run."

@@ -102,6 +102,6 @@ uri = "artifact://private/sha256:66a74ea0527fdc8e7cf96fb7854cbc45e0f8ad3e019061e
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wave2-20260828/leven"
-reason = "Source validation, network lint, production compile, official Harbor Oracle, empty, stub, forgery, and offline controls passed. Independent review, pilot, publication, and model Agent Run remain integrator-stage gates. Canonical dependency closure requires lock, offline_store, and inventory refs; legacy single closure data is retained only as historical handoff evidence."
+reason = "Source validation, network lint, production compile, official Harbor Oracle, empty, stub, forgery, and offline controls passed. Independent review, pilot, publication, and model Agent Run remain integrator-stage gates."

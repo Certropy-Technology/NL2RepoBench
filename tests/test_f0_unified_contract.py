@@ -686,7 +686,6 @@ def _canonical_source_payload() -> dict[str, object]:
             },
             tests={"framework": "node:test", "report_format": "node-test-json-v1"},
         ),
-        lambda data: data.update(lifecycle={"status": "packaged"}),
         lambda data: data.update(tests={"framework": "custom", "report_format": "custom-json-v1"}),
     ],
 )
@@ -697,6 +696,54 @@ def test_task_source_model_and_schema_reject_same_cross_field_gaps(mutate) -> No
         TaskSource.model_validate(payload)
     with pytest.raises(JsonSchemaValidationError):
         validate_json_schema(payload, TaskSource.model_json_schema())
+
+
+def test_authoring_lifecycle_can_retain_status_while_publication_has_gaps() -> None:
+    payload = deepcopy(_canonical_source_payload())
+    payload["source"] = {
+        "status": "known",
+        "upstream_url": "https://example.com/schema-parity",
+        "revision": "a" * 40,
+        "license_spdx": "MIT",
+        "source_digest": "sha256:" + "b" * 64,
+    }
+    payload["lifecycle"] = {"status": "packaged"}
+    payload["environment"] = {"status": "unknown"}
+    payload["dependencies"] = {"status": "unknown", "package_manager": "uv"}
+    payload["tests"] = {
+        "framework": "pytest",
+        "report_format": "pytest-junit-xml-v1",
+        "expected_total": 1,
+        "expected_total_source": "frozen-collection",
+        "commands_artifact": {
+            "digest": "sha256:" + "c" * 64,
+            "size_bytes": 1,
+            "uri": "artifact://private/sha256:" + "c" * 64,
+            "visibility": "private",
+        },
+        "test_bundle": {
+            "digest": "sha256:" + "d" * 64,
+            "size_bytes": 1,
+            "uri": "artifact://private/sha256:" + "d" * 64,
+            "visibility": "private",
+        },
+    }
+
+    source = TaskSource.model_validate(payload)
+    assert source.lifecycle.status.value == "packaged"
+    manifest = source.to_manifest(
+        ArtifactRef.model_validate(
+            {
+                "digest": "sha256:" + "1" * 64,
+                "size_bytes": 1,
+                "media_type": "text/markdown",
+                "uri": "artifact://public/sha256:" + "1" * 64,
+                "visibility": "public",
+            }
+        )
+    )
+    assert "environment_lock.status=known" in manifest.publication_gaps()
+    assert "dependency_bundle.status=known" in manifest.publication_gaps()
 
 
 def test_task_manifest_mirrors_source_production_invariants() -> None:
@@ -710,13 +757,12 @@ def test_task_manifest_mirrors_source_production_invariants() -> None:
     }
     manifest = source.to_manifest(ArtifactRef.model_validate(instruction)).model_dump(mode="json")
     manifest["lifecycle"] = {"status": "packaged"}
-    with pytest.raises(PydanticValidationError):
-        TaskManifest.model_validate(manifest)
-    with pytest.raises(JsonSchemaValidationError):
-        validate_json_schema(manifest, TaskManifest.model_json_schema())
+    parsed = TaskManifest.model_validate(manifest)
+    assert parsed.lifecycle.status.value == "packaged"
+    assert "source_lock.status=known" in parsed.publication_gaps()
 
 
-def test_production_lifecycle_requires_known_immutable_source_provenance() -> None:
+def test_authoring_lifecycle_does_not_promote_publication_gaps() -> None:
     payload = _canonical_source_payload()
     payload["lifecycle"] = {"status": "packaged"}
     payload["environment"] = {
@@ -759,8 +805,9 @@ def test_production_lifecycle_requires_known_immutable_source_provenance() -> No
         "commands_artifact": private,
         "test_bundle": private,
     }
-    with pytest.raises(PydanticValidationError, match="source provenance"):
-        TaskSource.model_validate(payload)
+    source = TaskSource.model_validate(payload)
+    assert source.lifecycle.status.value == "packaged"
+    assert source.source.status.value == "unknown"
 
 
 def test_known_source_rejects_mutable_url_shape() -> None:

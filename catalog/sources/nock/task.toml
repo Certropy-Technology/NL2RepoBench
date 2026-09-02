@@ -83,10 +83,9 @@ collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-discovery-20260826-r1/nock"
-reason = "Frozen 37-leaf subprocess verifier passed Harbor Oracle 37/37 with reward 1.0; empty, stub, forgery, install-script, loader-hook, hang, oversized-output, and offline controls passed without public verifier egress. Canonical dependency closure and versioned private-artifact migration remain required."
-
+reason = "Frozen 37-leaf subprocess verifier passed Harbor Oracle 37/37 with reward 1.0; empty, stub, forgery, install-script, loader-hook, hang, oversized-output, and offline controls passed without public verifier egress."
 [harbor]
 description = "Build a Nock-compatible CommonJS HTTP mocking and interception package from an empty Node workspace."
 keywords = [

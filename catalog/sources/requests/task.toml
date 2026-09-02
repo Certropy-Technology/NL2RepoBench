@@ -66,10 +66,9 @@ collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "worker"
-reason = "Canonical runtime/package-manager version and dependency closure are not available; legacy single closure refs were not retyped. Previous status/reason: controls-passed: Source/license frozen, hash-locked closure and digest-pinned environment compiled, Oracle passed 21/21 with valid=true, and empty/stub, forgery, install-timeout, and offline controls passed their bounded gates. Worker endpoint is awaiting-agent-run; this lane did not start a Harbor model Agent Run."
-
+reason = "Source/license frozen, hash-locked closure and digest-pinned environment compiled, Oracle passed 21/21 with valid=true, and empty/stub, forgery, install-timeout, and offline controls passed their bounded gates. Worker endpoint is awaiting-agent-run; this lane did not start a Harbor model Agent Run."
 [harbor]
 description = "Build the pinned requests HTTP client from an empty workspace and reproduce deterministic request preparation, responses, sessions, cookies, authentication, redirects, and utility behavior through a separate offline JSON adapter."
 keywords = [

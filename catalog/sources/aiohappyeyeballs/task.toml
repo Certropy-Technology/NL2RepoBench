@@ -102,6 +102,6 @@ uri = "artifact://private/sha256:a05d5c48cd83e52e8b27b38c99bf797ebb3016c5f6a0887
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-wave2-20260828-c2"
-reason = "Canonical dependency lock/offline-store/inventory closure is unavailable; legacy single dependency artifact was not retyped. Previous status/reason: controls-passed: Harbor 0.21 Oracle passed the frozen 17-leaf contract at reward 1.0; empty, stub, forgery, install-timeout, call-timeout, and offline controls completed under the separate no-network verifier."
+reason = "Harbor 0.21 Oracle passed the frozen 17-leaf contract at reward 1.0; empty, stub, forgery, install-timeout, call-timeout, and offline controls completed under the separate no-network verifier."

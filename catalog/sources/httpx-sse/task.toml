@@ -88,6 +88,6 @@ uri = "artifact://private/sha256:c52c9b1ff5d137611d0b4cdc84cae61f4e466120b7619e2
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-wave2-20260828-c2"
-reason = "Canonical migration is blocked because the legacy pip closure reference was removed and no canonical lock/offline-store/inventory triple is available. Historical evidence: the exact source archive, hash-locked dependency closure, separate 26-leaf verifier, and production bundle passed Harbor Oracle, empty, stub, forgery, install-timeout, call-timeout, and offline controls. Independent review, immutable agent-image restoration, model Agent Run, and publication remain outside this lane."
+reason = "The exact source archive, hash-locked dependency closure, separate 26-leaf verifier, and production bundle passed Harbor Oracle, empty, stub, forgery, install-timeout, call-timeout, and offline controls. Independent review, immutable agent-image restoration, model Agent Run, and publication remain outside this lane."

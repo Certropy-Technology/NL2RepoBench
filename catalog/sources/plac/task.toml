@@ -47,8 +47,7 @@ workspace_artifact = "/workspace"
 
 [lifecycle]
 status = "blocked"
-reason = "Canonical source migration is blocked: exact Python runtime/package-manager version and canonical dependency closure evidence are unavailable. Previous status/reason: blocked: Two frozen legacy test files contain Windows skip overlays absent from every upstream revision checked, and no owner-approved immutable overlay artifact identifies their provenance."
-
+reason = "Two frozen legacy test files contain Windows skip overlays absent from every upstream revision checked, and no owner-approved immutable overlay artifact identifies their provenance."
 [environment]
 status = "unknown"
 

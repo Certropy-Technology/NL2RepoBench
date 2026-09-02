@@ -103,6 +103,6 @@ uri = "artifact://private/sha256:3d2ff9790b3049f39f3f93621a45bd79cef6ec3f8948561
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "jsonc-parser-repair"
-reason = "Fresh production compile and Harbor gates passed: Oracle 37/37 reward 1.0; empty 0 collected; stub 37 collected with verifier reward 1/37; forgery 37 collected with verifier reward 1/37 despite forged workspace reward; all verifier network.json probes report public_network_available=false. Canonical dependency closure requires lock, offline_store, and inventory refs; the legacy single closure artifact is retained only as historical handoff evidence."
+reason = "Fresh production compile and Harbor gates passed: Oracle 37/37 reward 1.0; empty 0 collected; stub 37 collected with verifier reward 1/37; forgery 37 collected with verifier reward 1/37 despite forged workspace reward; all verifier network.json probes report public_network_available=false."

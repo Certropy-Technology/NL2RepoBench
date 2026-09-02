@@ -310,6 +310,13 @@ build/install/test behavior, and create instruction, environment, verifier,
 solution, controls, and traceability evidence. Missing image digests,
 dependency pins, hash-locked closures, build backends, or complete closure
 are remediation work: try to repair and prove them before deciding status.
+The authoring lifecycle is separate from publication readiness. Preserve the
+current lifecycle status while recording environment, artifact, or publication
+gaps in the handoff; never change lifecycle status to ``blocked`` for those
+gaps. ``blocked`` is reserved for an explicit LLM/authoring conclusion that
+the Package cannot be produced from the stated contract, with the attempted
+implementation and reason recorded. A provider, image, dependency, or tool
+failure is a retry/remediation outcome, not an LLM impossibility judgment.
 Risky cloud, database, native, browser, or network behavior needs a bounded
 deterministic adaptation when the contract permits it; do not mechanically
 translate a README and do not lower tests to hide failures.
@@ -346,7 +353,11 @@ finding:
 - a production `uv run nl2repo harbor compile` using the language toolchain,
   `.nl2repo/artifacts`, `--authorize-task-private-artifacts`, and a task-local output directory
 The Loop repeats source validation, network lint, and a production compile
-before it records the claim as complete. Git source acquisition is allowed only
+before it records the claim as complete. Run the trusted Oracle and record its
+fixed-denominator reward; Oracle reward greater than 0.85 is the passing
+threshold for this authoring gate. Nop/empty, stub, forgery, timeout, and
+offline checks are supporting evidence and must not be confused with the LLM
+impossibility decision. Git source acquisition is allowed only
 inside the Oracle solution, which is uploaded exclusively to the trusted Oracle
 run and receives a run-scoped source-host override.
 
@@ -354,10 +365,12 @@ Shared verifier/compiler remediation is allowed only when it is a minimal
 generic change needed by this task; keep that change in this worktree for
 integrator review and never modify the parent/shared checkout directly.
 Run the strongest available syntax, build, collection, Oracle, empty/stub,
-forgery, timeout, and offline controls. A hard blocked/excluded result must
-include attempted commands, tool versions, exit codes, failure logs, failure
-class, and next_unblock_action. Do not classify missing environment material
-or this tool boundary as Block.
+forgery, timeout, and offline controls. A hard blocked/excluded result is
+allowed only when the LLM explicitly concludes that the Package cannot be
+implemented; it must include attempted commands, tool versions, exit codes,
+failure logs, failure class, and next_unblock_action. Do not classify missing
+environment material, private artifact migration, publication review, or this
+tool boundary as an LLM Block.
 
 Before finishing, write a concise machine-readable handoff to:
 {handoff_path}

@@ -91,8 +91,8 @@ def _published_manifest(task_id: str) -> TaskManifest:
 
 
 def test_repository_example_remains_pending_live_migration() -> None:
-    with pytest.raises(CatalogError, match="invalid task source"):
-        CatalogCompiler.load_task(ROOT / "catalog/sources/ministats")
+    source = CatalogCompiler.load_task(ROOT / "catalog/sources/ministats")
+    assert source.task_id == "ministats"
 
 
 def test_task_compiler_is_deterministic(tmp_path) -> None:

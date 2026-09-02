@@ -98,10 +98,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-discovery-restart-20260826-r3"
-reason = "Production Node 24/npm 11.17 compilation passed. The final Oracle collected and passed 24/24 with reward 1.0; empty, stub, forgery, install-script, loader-hook, bounded hang, and offline controls passed, and every verifier network receipt reported public_network_available=false. Blind/spec review, projection, and model pilot remain integrator work. Canonical dependency closure is not represented; versioned private-artifact migration is required."
-
+reason = "Production Node 24/npm 11.17 compilation passed. The final Oracle collected and passed 24/24 with reward 1.0; empty, stub, forgery, install-script, loader-hook, bounded hang, and offline controls passed, and every verifier network receipt reported public_network_available=false. Blind/spec review, projection, and model pilot remain integrator work."
 [oracle_bundle]
 digest = "sha256:f9498afac8df8ccf36debd67aa6a884f8c3e6a11739607eab627471013a9e455"
 size_bytes = 40960

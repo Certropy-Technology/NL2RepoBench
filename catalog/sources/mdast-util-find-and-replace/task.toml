@@ -126,6 +126,6 @@ uri = "artifact://private/sha256:729739e81da7f099ce0ed2170fe184deb56f4bae2a8114f
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wave2-20260828/mdast-util-find-and-replace"
-reason = "The exact source, environment, npm closure, UID-separated 48-leaf verifier, production Oracle, and empty/stub/forgery/hang/install-script/loader-hook/offline controls passed. Integrator review and model Agent Run remain outside this lane. Canonical dependency closure requires lock, offline_store, and inventory refs; legacy single closure data is retained only as historical handoff evidence."
+reason = "The exact source, environment, npm closure, UID-separated 48-leaf verifier, production Oracle, and empty/stub/forgery/hang/install-script/loader-hook/offline controls passed. Integrator review and model Agent Run remain outside this lane."

@@ -109,10 +109,9 @@ collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-wave2-archive-r2-c2"
-reason = "The frozen langchain 1.3.17 Oracle passed 88/88 with reward 1.0. Empty, stub, forgery, install-timeout, call-timeout, and offline network controls completed with verifier-owned low scores and bounded behavior. Canonical final-bundle receipts are recorded in production-evidence.json; no model Harbor Agent Run was started. Canonical dependency lock/offline-store/inventory closure is not represented by the legacy dependency field; a versioned private-artifact migration is required."
-
+reason = "The frozen langchain 1.3.17 Oracle passed 88/88 with reward 1.0. Empty, stub, forgery, install-timeout, call-timeout, and offline network controls completed with verifier-owned low scores and bounded behavior. Canonical final-bundle receipts are recorded in production-evidence.json; no model Harbor Agent Run was started."
 [harbor]
 description = "Build LangChain's deterministic structured-output, PII, and call-limit middleware APIs from an empty workspace."
 keywords = [

@@ -107,6 +107,6 @@ uri = "artifact://private/sha256:8c6377db8fa23e9bd5b5d727277d44fea5284482f836bf1
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-wave2-20260828-uvicorn"
-reason = "Frozen source, hash-locked closure, production compile, trusted Oracle, fixed-denominator controls, bounded timeout probes, and offline network checks passed. Model Agent Run, review, pilot, dataset integration, and publication remain separate stages. Canonical dependency closure and exact runtime identity require separate remediation."
+reason = "Frozen source, hash-locked closure, production compile, trusted Oracle, fixed-denominator controls, bounded timeout probes, and offline network checks passed. Model Agent Run, review, pilot, dataset integration, and publication remain separate stages."

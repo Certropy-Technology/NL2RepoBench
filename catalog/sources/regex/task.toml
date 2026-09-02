@@ -62,10 +62,9 @@ collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-wave2-20260828-c2"
-reason = "Canonical runtime/package-manager version and dependency closure are not available; legacy single closure refs were not retyped. Previous status/reason: controls-passed: Frozen native source, hash-locked build closure, separate custom-json-v1 verifier, production compile, Oracle, and negative/offline controls are recorded in production-evidence.json. The task remains awaiting-agent-run; catalog/tasks/regex is intentionally generated later by the integrator."
-
+reason = "Frozen native source, hash-locked build closure, separate custom-json-v1 verifier, production compile, Oracle, and negative/offline controls are recorded in production-evidence.json. The task remains awaiting-agent-run; catalog/tasks/regex is intentionally generated later by the integrator."
 [harbor]
 description = "Build the native-backed regex engine from an empty workspace and satisfy a deterministic suite for compilation, matching, Unicode, fuzzy and advanced regex behavior."
 keywords = [

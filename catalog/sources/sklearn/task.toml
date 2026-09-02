@@ -52,4 +52,4 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 [lifecycle]
 status = "blocked"
 owner = "repair/sklearn"
-reason = "Canonical runtime/package-manager version and dependency closure are not available; legacy single closure refs were not retyped. Previous status/reason: blocked: The candidate report has unresolved license metadata; the frozen image/source boundary has no hash-locked offline closure, final collection, separate verifier, Oracle, or controls. No runtime task exists."
+reason = "The candidate report has unresolved license metadata; the frozen image/source boundary has no hash-locked offline closure, final collection, separate verifier, Oracle, or controls. No runtime task exists."

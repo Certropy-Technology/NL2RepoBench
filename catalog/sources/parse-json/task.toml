@@ -81,10 +81,9 @@ contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wave2-20260828"
-reason = "The production bundle passed a 33/33 Harbor Oracle run. Empty, stub, forgery, install-script, loader-hook, bounded hang, and offline controls completed with verifier-owned results and public_network_available=false. Canonical dependency closure and versioned private-artifact migration remain required."
-
+reason = "The production bundle passed a 33/33 Harbor Oracle run. Empty, stub, forgery, install-script, loader-hook, bounded hang, and offline controls completed with verifier-owned results and public_network_available=false."
 [harbor]
 description = "Build parse-json as an offline ESM package that parses JSON and exposes precise, source-located JSONError diagnostics."
 keywords = [

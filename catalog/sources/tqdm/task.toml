@@ -91,7 +91,6 @@ workspace_artifact = "/workspace"
 status = "blocked"
 owner = "worker/tqdm"
 reason = "A bounded deterministic contract, hash lock, verifier bundle, and local Oracle bundle were authored, but official Harbor Oracle and controls were not completed before the tool budget ended. No production runtime or score is authorized."
-
 [oracle_bundle]
 digest = "sha256:d2dd532d871cf7f557bd94c75da7e809806651e12c8128f82ff644eb0a2d91a3"
 size_bytes = 532480

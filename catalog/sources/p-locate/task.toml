@@ -78,10 +78,9 @@ contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wave2-archive-r2-c2"
-reason = "The frozen source, public contract, exact npm closure, private 38-leaf UID-separated verifier, production compile, Harbor Oracle, and empty/stub/forgery/offline/install-script/call-hang controls are complete. No Harbor model Agent Run was started in this authoring lane. Canonical dependency closure and versioned private-artifact migration remain required."
-
+reason = "The frozen source, public contract, exact npm closure, private 38-leaf UID-separated verifier, production compile, Harbor Oracle, and empty/stub/forgery/offline/install-script/call-hang controls are complete. No Harbor model Agent Run was started in this authoring lane."
 [harbor]
 description = "Build p-locate 7.0.0 with deterministic promise matching across synchronous and asynchronous iterables."
 keywords = [

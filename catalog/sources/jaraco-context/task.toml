@@ -82,6 +82,6 @@ uri = "artifact://private/sha256:5598fb77a774b71db5517b6d89a26a26ca4661dcd313dca
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "packaged"
 owner = "python-author-wave2-20260828"
-reason = "Canonical migration is blocked because the legacy pip closure reference was removed and no canonical lock/offline-store/inventory triple is available. Historical evidence: the frozen source, hash-locked build closure, private custom verifier, digest-checked Oracle, and controls are authored; direct reference and image probes passed. Harbor Oracle and controls remain for the separate Agent Run loop."
+reason = "The frozen source, hash-locked build closure, private custom verifier, digest-checked Oracle, and controls are authored; direct reference and image probes passed. Harbor Oracle and controls remain for the separate Agent Run loop."

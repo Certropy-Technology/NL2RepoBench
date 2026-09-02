@@ -54,10 +54,9 @@ contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "repair/better-sqlite3"
 reason = "Fresh Harbor 0.21 Node 24 remediation gates passed: source freeze and native upstream baseline are recorded; production compile resolves all private artifacts; Oracle collected 12/12 with reward 1.0; empty/stub/forgery controls each collected 12 leaves with reward 0; verifier network receipts prove public_network_available=false."
-
 [harbor]
 description = "Recreate a deterministic better-sqlite3 API subset with a bounded Node 24 SQLite adaptation."
 keywords = ["node", "npm", "sqlite", "transactions", "database"]

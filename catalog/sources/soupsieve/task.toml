@@ -51,4 +51,4 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 [lifecycle]
 status = "blocked"
 owner = "repair/soupsieve"
-reason = "Static audit remains blocked: license and source freeze, dependency closure, collection, verifier, Oracle, and controls are incomplete. Canonical source migration is blocked because the exact Python package-manager runtime and canonical lock/offline-store/inventory closure are not frozen; no legacy single closure artifact was retyped or fabricated."
+reason = "Static audit remains blocked: license and source freeze, dependency closure, collection, verifier, Oracle, and controls are incomplete."

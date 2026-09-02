@@ -110,6 +110,6 @@ uri = "artifact://private/sha256:24eddf2b30290557b4cbe0408595fc9e1083c948bf97fbf
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "integrator"
-reason = "Canonical dependency lock/offline-store/inventory closure is unavailable; legacy single dependency artifact was not retyped. Previous status/reason: controls-passed: Production bundle passed the required Oracle gate and empty, stub, and forgery controls; review and pilot remain separate publication stages."
+reason = "Production bundle passed the required Oracle gate and empty, stub, and forgery controls; review and pilot remain separate publication stages."

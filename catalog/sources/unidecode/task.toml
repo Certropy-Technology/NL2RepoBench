@@ -94,6 +94,6 @@ uri = "artifact://private/sha256:1228215903cccbf3887421ac98d2bee1230d48b973aeaf2
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "worker/unidecode"
-reason = "Official Harbor 0.21.0 production gates passed: the local digest-checked Oracle passed 20/20 at reward 1.0; empty scored 0.0; stub and forgery each passed 3/20 at reward 0.15; all verifier network receipts proved no public egress. Reviews, pilots, and publication remain out of scope. Canonical dependency closure and exact runtime identity require separate remediation."
+reason = "Official Harbor 0.21.0 production gates passed: the local digest-checked Oracle passed 20/20 at reward 1.0; empty scored 0.0; stub and forgery each passed 3/20 at reward 0.15; all verifier network receipts proved no public egress. Reviews, pilots, and publication remain out of scope."

@@ -69,10 +69,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wave2-20260828-c2"
 reason = "Source validation, zero-error network lint, production compile, Harbor 0.21 Oracle 24/24, and empty/stub/forgery/install-script/loader-hook/hang/offline controls passed. Blind review, model pilot, dataset integration, and publication remain integrator stages."
-
 [oracle_bundle]
 digest = "sha256:3b241247341e442768d120fc8cee3b81a4205b80790a5fe7810b66b368193f56"
 size_bytes = 9664

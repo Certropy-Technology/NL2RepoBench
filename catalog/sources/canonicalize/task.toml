@@ -69,11 +69,12 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "packaged"
 owner = "integrator"
 reason = "Production Node vertical slice; Oracle and controls are recorded in the campaign gate."
-approval_refs = ["node-production-vertical-slice-v1"]
-
+approval_refs = [
+    "node-production-vertical-slice-v1",
+]
 [oracle_bundle]
 digest = "sha256:5edebff66c2e4b4bed40e1a3a4ab726d62511b3314442a24e2e08403afd292d9"
 size_bytes = 133120

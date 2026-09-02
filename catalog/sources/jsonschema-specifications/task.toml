@@ -83,10 +83,9 @@ collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-wave2-20260828-c2"
-reason = "Production Harbor bundle passed the Oracle gate at 35/35 and the empty, stub, forgery, install-timeout, and offline controls; model Agent Run, review, and publication remain separate stages. Canonical dependency lock/offline-store/inventory closure is not represented by the legacy dependency field; a versioned private-artifact migration is required."
-
+reason = "Production Harbor bundle passed the Oracle gate at 35/35 and the empty, stub, forgery, install-timeout, and offline controls; model Agent Run, review, and publication remain separate stages."
 [harbor]
 description = "Build jsonschema-specifications from an empty workspace with a deterministic package-data registry for JSON Schema metaschemas and vocabularies."
 keywords = [

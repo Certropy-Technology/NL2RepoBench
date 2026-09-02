@@ -68,10 +68,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wave2-20260828/async"
 reason = "Production Node bundle compiled with locked artifacts; the trusted Oracle passed 27/27 and the complete negative-control matrix passed with offline verifier receipts. Model Agent Run, review, and publication remain outside this lane."
-
 [oracle_bundle]
 digest = "sha256:3073578f0de8a2633cc224d6de267082776ccd7368317f870a23a4c5bf5a0929"
 size_bytes = 24104960

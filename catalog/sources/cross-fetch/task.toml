@@ -69,10 +69,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wave2-20260828/cross-fetch"
 reason = "Source validation, network lint, production compile, trusted Oracle, and empty/stub/forgery/offline controls passed. No Harbor Agent Run was started by this lane; review, pilot, and publication remain integrator gates."
-
 [oracle_bundle]
 digest = "sha256:fcd0d99646f0e2f19395ab23673035d37c9e8b87913b3df37fa64c61eb4e18e9"
 size_bytes = 1487

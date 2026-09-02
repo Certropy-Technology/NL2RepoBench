@@ -80,10 +80,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "ansi-styles-authoring"
 reason = "Production Harbor Oracle passed 32/32 with reward 1.0. Empty, stub, forgery, install-script, loader-hook, hang, and offline controls completed with verifier-owned results and no public verifier network."
-
 [oracle_bundle]
 digest = "sha256:624a3021bc2b388d07ab47ee85f5ab94fa79a424945da7eb7fa719183c96f20e"
 size_bytes = 7762

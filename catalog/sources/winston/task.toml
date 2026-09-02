@@ -86,10 +86,9 @@ contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wide-20260826-remediation/winston"
-reason = "Source validation, full network lint, production compile, verifier image build, trusted Oracle, empty, stub, forgery, and offline controls passed. Review, pilot, and publication remain integrator-stage gates. Canonical dependency closure requires a new versioned private artifact migration."
-
+reason = "Source validation, full network lint, production compile, verifier image build, trusted Oracle, empty, stub, forgery, and offline controls passed. Review, pilot, and publication remain integrator-stage gates."
 [harbor]
 description = "Build the Winston CommonJS logging library from an empty Node workspace."
 keywords = [

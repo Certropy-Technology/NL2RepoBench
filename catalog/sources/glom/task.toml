@@ -93,10 +93,9 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "worker/glom"
-reason = "Canonical dependency lock/offline-store/inventory closure is unavailable; legacy single lock_artifact was not retyped. Previous status/reason: controls-passed: Frozen glom revision and license, hash-locked dependency closure, production compile, Oracle, empty, stub, forgery, install-timeout, and offline verifier controls all passed. Review, model Agent Run, and publication remain integrator-owned stages."
-
+reason = "Frozen glom revision and license, hash-locked dependency closure, production compile, Oracle, empty, stub, forgery, install-timeout, and offline verifier controls all passed. Review, model Agent Run, and publication remain integrator-owned stages."
 [verifier]
 protocol = "custom-json-v1"
 entrypoint = "run.py"

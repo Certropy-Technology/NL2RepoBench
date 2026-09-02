@@ -72,4 +72,4 @@ workspace_artifact = "/workspace"
 [lifecycle]
 status = "blocked"
 owner = "repair/frontmatter"
-reason = "Canonical migration completed; production remains blocked pending immutable source authority, image lock, dependency closure and verifier evidence. Previous lifecycle reason: The conversion-loop state and immutable verifier image lock are absent, the legacy denominator 55 is not a frozen collection, and the candidate revision/license/archive cannot be tied to the missing image."
+reason = "The conversion-loop state and immutable verifier image lock are absent, the legacy denominator 55 is not a frozen collection, and the candidate revision/license/archive cannot be tied to the missing image. No catalog/tasks/frontmatter runtime exists."

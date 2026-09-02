@@ -112,9 +112,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "oracle-passed"
 owner = "integrator"
-reason = "Canonical dependency lock/offline-store/inventory closure is unavailable; legacy single lock_artifact was not retyped. Previous status/reason: oracle-passed: Generic private-bundle compiled Oracle passed 24/24 with reward 1.0; controls and review remain pending."
+reason = "Generic private-bundle compiled Oracle passed 24/24 with reward 1.0; controls and review remain pending."
 
 [[lifecycle.evidence]]
 digest = "sha256:433ae625493a17ad9326e42bd56f1431f8fe3e14bc5cf26e88e38d69aec34983"
@@ -129,7 +129,6 @@ size_bytes = 20480
 media_type = "application/x-tar"
 uri = "artifact://private/sha256:39755ebfc0216fd6a10e24c59a29fab33c8fa539f920730e4e0da29fa9ab51af"
 visibility = "private"
-
 [verifier]
 protocol = "custom-json-v1"
 entrypoint = "run.py"

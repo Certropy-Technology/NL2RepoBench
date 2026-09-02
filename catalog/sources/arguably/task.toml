@@ -95,8 +95,7 @@ workspace_artifact = "/workspace"
 
 [lifecycle]
 status = "blocked"
-reason = "Canonical dependency lock/offline-store/inventory closure is unavailable; legacy single dependency artifact was not retyped. Previous status/reason: blocked: Production compile is blocked because the registered private Oracle bundle does not contain the required solve.sh entrypoint. The 70-test denominator and subprocess verifier therefore remain unvalidated in Harbor. Rebuild the Oracle bundle from the frozen source with solve.sh at its root, update the artifact reference, compile without --allow-incomplete, and run Oracle plus controls before promotion."
-
+reason = "Production compile is blocked because the registered private Oracle bundle does not contain the required solve.sh entrypoint. The 70-test denominator and subprocess verifier therefore remain unvalidated in Harbor. Rebuild the Oracle bundle from the frozen source with solve.sh at its root, update the artifact reference, compile without --allow-incomplete, and run Oracle plus controls before promotion."
 [oracle_bundle]
 digest = "sha256:01012df1d872f76ad260d17138c5e56062c9a1d347720318c9138a8ccaba6843"
 size_bytes = 532480

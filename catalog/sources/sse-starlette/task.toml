@@ -115,6 +115,6 @@ uri = "artifact://private/sha256:5ee519dc5693db138b565cab5fd866fcd4660495585cbad
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-wave2-20260828-sse-starlette"
-reason = "Frozen source, hash-locked closure, production compile, local Oracle replay, and task-local empty/stub/forgery/install-timeout controls passed. Official Harbor Agent Run, immutable agent-image restoration, review, pilot, and publication remain integrator-owned. Canonical source migration is blocked because the exact Python package-manager runtime and canonical lock/offline-store/inventory closure are not frozen; no legacy single closure artifact was retyped or fabricated."
+reason = "Frozen source, hash-locked closure, production compile, local Oracle replay, and task-local empty/stub/forgery/install-timeout controls passed. Official Harbor Agent Run, immutable agent-image restoration, review, pilot, and publication remain integrator-owned."

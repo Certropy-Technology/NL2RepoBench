@@ -96,10 +96,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wave2-20260828/has-ansi"
-reason = "Source validation, network lint, production compile, Harbor 0.21 Oracle, empty/stub/forgery/install-script/loader-hook/hang/offline controls passed. Review, model run, and publication remain integrator-stage gates. Canonical dependency lock/offline-store/inventory closure is unavailable; the legacy single artifact reference was not retyped."
-
+reason = "Source validation, network lint, production compile, Harbor 0.21 Oracle, empty/stub/forgery/install-script/loader-hook/hang/offline controls passed. Review, model run, and publication remain integrator-stage gates."
 [oracle_bundle]
 digest = "sha256:470477eb8d7597cc4529d542f78056d7faae5d2bbcb6a36d395797bd4098f0b2"
 size_bytes = 784

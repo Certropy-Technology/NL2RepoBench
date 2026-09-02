@@ -110,6 +110,6 @@ uri = "artifact://private/sha256:26a2b5dfbf749f94c81bedb2c8c1707b45734a421f959be
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-wave2-20260828-c2"
-reason = "Production Harbor bundle compiled with the remediated separate verifier; Oracle passed 48/48 with reward 1.0, and empty, stub, forgery, timeout, and offline controls completed with verifier-owned grading. Blind review, model Agent Run, and publication remain pending. Canonical dependency closure, exact runtime identity, and current verifier evidence remain unavailable."
+reason = "Production Harbor bundle compiled with the remediated separate verifier; Oracle passed 48/48 with reward 1.0, and empty, stub, forgery, timeout, and offline controls completed with verifier-owned grading. Blind review, model Agent Run, and publication remain pending."

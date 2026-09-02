@@ -139,6 +139,6 @@ uri = "artifact://private/sha256:aef8a655ae3c67a6352f3a7642f4542b8e973dcc40694f1
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-gpt5-koa-remediation-20260827"
-reason = "Exact source and license are frozen; the Node 24/npm 11 closure installs from a coherent private lock/cache offline; the separate verifier collects 16 subprocess-isolated behaviors; Oracle scores 1.0; and empty, stub, forgery, lifecycle, offline, candidate-hang, and outer-timeout controls are bounded and cannot produce a high score. Canonical dependency closure requires lock, offline_store, and inventory refs; the legacy single closure artifact is retained only as historical handoff evidence."
+reason = "Exact source and license are frozen; the Node 24/npm 11 closure installs from a coherent private lock/cache offline; the separate verifier collects 16 subprocess-isolated behaviors; Oracle scores 1.0; and empty, stub, forgery, lifecycle, offline, candidate-hang, and outer-timeout controls are bounded and cannot produce a high score."

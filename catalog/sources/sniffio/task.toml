@@ -107,6 +107,6 @@ uri = "artifact://private/sha256:d0fd65f71de1ff4ae2b30a8d264023a6f59e14b734271da
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-wave2-20260828/sniffio"
-reason = "The final production Harbor bundle passed the 21/21 Oracle gate plus empty, stub, forgery, install-timeout, call-timeout, and offline controls. Review, model Agent Run, and publication remain separate integrator stages. Canonical source migration is blocked because the exact Python package-manager runtime and canonical lock/offline-store/inventory closure are not frozen; no legacy single closure artifact was retyped or fabricated."
+reason = "The final production Harbor bundle passed the 21/21 Oracle gate plus empty, stub, forgery, install-timeout, call-timeout, and offline controls. Review, model Agent Run, and publication remain separate integrator stages."

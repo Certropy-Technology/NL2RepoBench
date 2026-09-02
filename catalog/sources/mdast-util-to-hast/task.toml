@@ -116,6 +116,6 @@ uri = "artifact://private/sha256:7e8b6372ce2341d6f55a2b9644623b7d0643c0964063683
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wave2-20260828"
-reason = "Frozen source, public contract, private JSON child verifier, hash-bound npm closure, production compile, Oracle, and empty/stub/forgery/install-script/loader-hook/hang/timeout/offline controls passed; awaiting integrator review and model Agent Run. Canonical dependency closure requires lock, offline_store, and inventory refs; legacy single closure data is retained only as historical handoff evidence."
+reason = "Frozen source, public contract, private JSON child verifier, hash-bound npm closure, production compile, Oracle, and empty/stub/forgery/install-script/loader-hook/hang/timeout/offline controls passed; awaiting integrator review and model Agent Run."

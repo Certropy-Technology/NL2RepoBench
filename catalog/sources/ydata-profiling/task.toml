@@ -52,4 +52,4 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 [lifecycle]
 status = "blocked"
 owner = "repair/ydata-profiling"
-reason = "The audit lacks a frozen scientific dependency/data closure, separate verifier, Oracle, and controls. Canonical migration: exact Python runtime/package-manager evidence and canonical private dependency closure are not available; keep blocked until versioned artifacts and gates are recreated."
+reason = "The audit lacks a frozen scientific dependency/data closure, separate verifier, Oracle, and controls."

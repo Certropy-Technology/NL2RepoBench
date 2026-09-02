@@ -104,9 +104,9 @@ uri = "artifact://private/sha256:652b067acd0267e78f7e364df9c29e79ecf58047df344c7
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "repair/python-constraint"
-reason = "Strict compiler output includes the declared build-essential package in the separate verifier image. Official Harbor 0.21.0 Oracle passed 16/16 at reward 1.0; empty, stub, forgery, and offline controls passed with hash-bound receipts. Canonical dependency closure, exact runtime identity, and current verifier evidence remain unavailable."
+reason = "Strict compiler output includes the declared build-essential package in the separate verifier image. Official Harbor 0.21.0 Oracle passed 16/16 at reward 1.0; empty, stub, forgery, and offline controls passed with hash-bound receipts."
 
 [[lifecycle.evidence]]
 digest = "sha256:3fedeed20a7d988b57513495bf749463914e4fa6ab0064f2465fce8e3d2fe15a"

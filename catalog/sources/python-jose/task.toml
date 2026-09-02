@@ -57,4 +57,4 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 [lifecycle]
 status = "blocked"
 owner = "repair/python-jose"
-reason = "The exact source and MIT archive/license evidence are known, but the immutable image contains 18 changed paths without an approved overlay manifest, the legacy denominator is not a structured collection, and no hash-locked crypto closure, separate verifier, Oracle, or controls exist. Canonical dependency closure, exact runtime identity, and current verifier evidence remain unavailable."
+reason = "The exact source and MIT archive/license evidence are known, but the immutable image contains 18 changed paths without an approved overlay manifest, the legacy denominator is not a structured collection, and no hash-locked crypto closure, separate verifier, Oracle, or controls exist."

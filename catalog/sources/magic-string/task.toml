@@ -106,6 +106,6 @@ uri = "artifact://private/sha256:bc15583f4cde2e49f31ee5e80ef669ff44b87da059f2b10
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wave2-20260828"
-reason = "Frozen source, locked Node/npm closure, production compiler output, Oracle, and required controls have passed in this lane; review, pilot, publication, and generated runtime projection remain integrator-owned. Canonical dependency closure requires lock, offline_store, and inventory refs; legacy single closure data is retained only as historical handoff evidence."
+reason = "Frozen source, locked Node/npm closure, production compiler output, Oracle, and required controls have passed in this lane; review, pilot, publication, and generated runtime projection remain integrator-owned."

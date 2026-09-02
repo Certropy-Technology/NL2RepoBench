@@ -97,10 +97,9 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "worker/python-author-wave2-20260828/httptools"
-reason = "Canonical dependency lock/offline-store/inventory closure is unavailable; legacy single lock_artifact was not retyped. Previous status/reason: controls-passed: The exact recursive source snapshot, native build closure, 20-leaf custom verifier, production bundle, one-run Oracle, and empty/stub/forgery/call-hang/offline controls are proven in task-local evidence; review, model pilot, and publication remain pending."
-
+reason = "The exact recursive source snapshot, native build closure, 20-leaf custom verifier, production bundle, one-run Oracle, and empty/stub/forgery/call-hang/offline controls are proven in task-local evidence; review, model pilot, and publication remain pending."
 [verifier]
 protocol = "custom-json-v1"
 entrypoint = "run.py"

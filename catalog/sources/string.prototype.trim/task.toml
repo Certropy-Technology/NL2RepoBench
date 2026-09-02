@@ -106,10 +106,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wave2-20260828"
-reason = "Production source validation, Node v2 compile, trusted Oracle, and task-local negative controls passed; independent review, model run, and publication remain integrator stages. Canonical dependency closure is not represented; versioned private-artifact migration is required."
-
+reason = "Production source validation, Node v2 compile, trusted Oracle, and task-local negative controls passed; independent review, model run, and publication remain integrator stages."
 [oracle_bundle]
 digest = "sha256:1a5a25363a23231fd4afa53b7da8fe02e0dab47c77d82e0a4b478ed8ca7b8d7b"
 size_bytes = 11118

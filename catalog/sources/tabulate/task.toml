@@ -55,4 +55,4 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
 status = "blocked"
-reason = "Audit-only candidate. Exact archive and license evidence, source-only LOC, official pytest/doctest collection, base-lane dependency closure, locale/Unicode probes, and the JSON/text subprocess boundary are not verified in this isolated task-local checkout. No hidden tests, Oracle, Harbor assets, or publication artifacts are present. Canonical source migration is blocked because the exact Python package-manager runtime and canonical lock/offline-store/inventory closure are not frozen; no legacy single closure artifact was retyped or fabricated."
+reason = "Audit-only candidate. Exact archive and license evidence, source-only LOC, official pytest/doctest collection, base-lane dependency closure, locale/Unicode probes, and the JSON/text subprocess boundary are not verified in this isolated task-local checkout. No hidden tests, Oracle, Harbor assets, or publication artifacts are present."

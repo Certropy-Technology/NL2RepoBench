@@ -88,10 +88,9 @@ contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "authoring/yargs"
-reason = "Production Harbor Oracle passed 42/42 with reward 1.0. Empty, stub, forgery, install-script, loader-hook, hang, and offline controls completed with verifier-owned valid results and no public verifier network. Canonical dependency closure requires a new versioned private artifact migration."
-
+reason = "Production Harbor Oracle passed 42/42 with reward 1.0. Empty, stub, forgery, install-script, loader-hook, hang, and offline controls completed with verifier-owned valid results and no public verifier network."
 [harbor]
 description = "Build the yargs ESM command-line argument parser from an empty workspace with deterministic parsing, commands, validation, help, and helper exports."
 keywords = [

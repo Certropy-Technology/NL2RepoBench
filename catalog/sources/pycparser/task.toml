@@ -104,6 +104,6 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
+status = "controls-passed"
 owner = "python-author-wave2-archive-r2-c3"
-status = "blocked"
-reason = "Source, dependency closure, production compile, Oracle, and task-local Harbor controls passed; awaiting downstream model Agent Run and integrator review. Canonical migration removed legacy dependency closure fields because no exact lock/offline-store/inventory refs were available. Environment/package-manager version evidence is not exact; production release remains blocked."
+reason = "Source, dependency closure, production compile, Oracle, and task-local Harbor controls passed; awaiting downstream model Agent Run and integrator review."

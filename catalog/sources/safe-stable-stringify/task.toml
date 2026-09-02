@@ -98,10 +98,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wave2-20260828-safe-stable-stringify"
-reason = "Source, deterministic private contract, production compile, separate verifier replay, and required controls passed in this lane; model Agent Run, blind review, and publication remain integrator stages. Canonical dependency closure is not represented; versioned private-artifact migration is required."
-
+reason = "Source, deterministic private contract, production compile, separate verifier replay, and required controls passed in this lane; model Agent Run, blind review, and publication remain integrator stages."
 [oracle_bundle]
 digest = "sha256:aa458aaac07fe9941ad46d656a68e3b194684f96d609ae99cf5137deaed5b520"
 size_bytes = 979

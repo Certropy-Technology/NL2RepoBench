@@ -96,10 +96,9 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-wave2-20260828"
-reason = "Canonical dependency lock/offline-store/inventory closure is unavailable; legacy single dependency artifact was not retyped. Previous status/reason: controls-passed: Frozen source, private hash-locked closure, custom verifier, and Oracle bundle passed a 20/20 Oracle run plus empty, stub, forgery, call-timeout, installation-timeout, workspace-rejection, and offline verifier controls. The handoff status is awaiting-agent-run; this lane has not started a model Agent Run."
-
+reason = "Frozen source, private hash-locked closure, custom verifier, and Oracle bundle passed a 20/20 Oracle run plus empty, stub, forgery, call-timeout, installation-timeout, workspace-rejection, and offline verifier controls. The handoff status is awaiting-agent-run; this lane has not started a model Agent Run."
 [oracle_bundle]
 digest = "sha256:4b64c90e1a6b9daaaa5abc0726de8fb5c497aee7820bb6ec56271188491afa80"
 size_bytes = 10240

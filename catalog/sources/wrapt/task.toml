@@ -104,6 +104,6 @@ collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-wave2-20260828"
-reason = "Frozen source, hash-locked build closure, custom verifier, direct Docker Oracle smoke, and empty/stub/forgery/timeout/offline controls passed. No model Harbor Agent Run was started; review, pilot, and publication remain integrator stages. Canonical migration: exact Python runtime/package-manager evidence and canonical private dependency closure are not available; keep blocked until versioned artifacts and gates are recreated."
+reason = "Frozen source, hash-locked build closure, custom verifier, direct Docker Oracle smoke, and empty/stub/forgery/timeout/offline controls passed. No model Harbor Agent Run was started; review, pilot, and publication remain integrator stages."

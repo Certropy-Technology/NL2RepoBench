@@ -93,10 +93,16 @@ uri = "artifact://private/sha256:df387818cbee7d7f9558b80af8a6b974ba3180a2728ea33
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "oracle-passed"
 owner = "integrator"
-reason = "Canonical migration completed; production remains blocked pending canonical dependency closure and current release evidence. Previous lifecycle reason: Generic private-bundle compiled Oracle passed 20/20 with reward 1.0; controls and review remain pending."
+reason = "Generic private-bundle compiled Oracle passed 20/20 with reward 1.0; controls and review remain pending."
 
+[[lifecycle.evidence]]
+digest = "sha256:88481b4202fa7481ee4a1257646c170f986aeacb2fa6fee91284dba036e6ca40"
+size_bytes = 1035
+media_type = "application/json"
+uri = "artifact://private/sha256:88481b4202fa7481ee4a1257646c170f986aeacb2fa6fee91284dba036e6ca40"
+visibility = "private"
 [verifier.environment]
 
 [oracle_bundle]

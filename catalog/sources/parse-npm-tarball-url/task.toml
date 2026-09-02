@@ -76,10 +76,9 @@ contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "parse-npm-tarball-url-repair"
-reason = "Fresh Harbor 0.21 Node 24 remediation gates passed: Oracle collected 14/14 with reward 0.9285714285714286; empty reward 0.0; stub and forgery each collected 14/14 with reward 0.0; every verifier emitted a network.json proving public_network_available=false. Runtime was regenerated from this source with the corrected 14-leaf bundle. Canonical dependency closure and versioned private-artifact migration remain required."
-
+reason = "Fresh Harbor 0.21 Node 24 remediation gates passed: Oracle collected 14/14 with reward 0.9285714285714286; empty reward 0.0; stub and forgery each collected 14/14 with reward 0.0; every verifier emitted a network.json proving public_network_available=false. Runtime was regenerated from this source with the corrected 14-leaf bundle."
 [harbor]
 description = "Build the parse-npm-tarball-url ESM package with a deterministic URL and SemVer JSON contract."
 keywords = [

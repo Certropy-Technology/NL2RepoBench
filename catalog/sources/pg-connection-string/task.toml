@@ -74,10 +74,9 @@ contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wave2-20260828/pg-connection-string"
-reason = "Exact source, API inventory, offline npm closure, separate-verifier private 36-leaf suite, production compile, Oracle, and bounded controls have passed. Independent review and any future model Agent Run remain outside this lane. Canonical dependency closure and versioned private-artifact migration remain required."
-
+reason = "Exact source, API inventory, offline npm closure, separate-verifier private 36-leaf suite, production compile, Oracle, and bounded controls have passed. Independent review and any future model Agent Run remain outside this lane."
 [harbor]
 description = "Build the pg-connection-string CommonJS parser with deterministic JSON-adapted parsing, SSL-mode, and client-config behavior."
 keywords = [

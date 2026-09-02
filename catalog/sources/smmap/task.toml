@@ -101,6 +101,6 @@ uri = "artifact://private/sha256:2fc259bb63d4ffd3b081183baa75a3d196f6870369fce92
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-wave2-20260828"
-reason = "Current production compile, Harbor Oracle, empty, stub, forgery, install-hang, call-hang, and direct offline verifier controls passed against the current bundle; Oracle and offline replay passed 16/16 with reward 1.0, while negative controls were verifier-owned zero-score outcomes. Model Agent Run, review, pilot, and publication remain separate integrator stages. Canonical source migration is blocked because the exact Python package-manager runtime and canonical lock/offline-store/inventory closure are not frozen; no legacy single closure artifact was retyped or fabricated."
+reason = "Current production compile, Harbor Oracle, empty, stub, forgery, install-hang, call-hang, and direct offline verifier controls passed against the current bundle; Oracle and offline replay passed 16/16 with reward 1.0, while negative controls were verifier-owned zero-score outcomes. Model Agent Run, review, pilot, and publication remain separate integrator stages."

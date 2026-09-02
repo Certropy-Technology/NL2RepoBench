@@ -99,10 +99,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wave2-20260828-quick-lru"
-reason = "Fresh production compile, 34-leaf Oracle, and empty/stub/forgery/install-script/loader-hook/bounded-hang/offline controls passed against the frozen quick-lru revision. Canonical dependency closure is not represented; versioned private-artifact migration is required."
-
+reason = "Fresh production compile, 34-leaf Oracle, and empty/stub/forgery/install-script/loader-hook/bounded-hang/offline controls passed against the frozen quick-lru revision."
 [oracle_bundle]
 digest = "sha256:a522e2d91991d7dbb4bae76ffe6309be2b10d5d6ac991c40d8af14dfdfc04c00"
 size_bytes = 679

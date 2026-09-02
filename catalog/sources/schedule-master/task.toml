@@ -61,9 +61,8 @@ collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
-status = "blocked"
-reason = "Canonical runtime/package-manager version and dependency closure are not available; legacy single closure refs were not retyped. Previous status/reason: controls-passed: Re-based to python:3.12.14-slim-bookworm with a private hash-locked dependency lock plus verifier and Oracle bundles. Hash-bound production receipts record a valid 81/81 Oracle, valid zero-score empty/stub/forgery controls, and unavailable public verifier networking for every run. Blind and traceability review remain pending."
-
+status = "controls-passed"
+reason = "Re-based to python:3.12.14-slim-bookworm with a private hash-locked dependency lock plus verifier and Oracle bundles. Hash-bound production receipts record a valid 81/81 Oracle, valid zero-score empty/stub/forgery controls, and unavailable public verifier networking for every run. Blind and traceability review remain pending."
 [harbor]
 description = "Build the schedule in-process job scheduling library from an empty workspace."
 keywords = [

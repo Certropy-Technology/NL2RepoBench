@@ -82,6 +82,6 @@ uri = "artifact://private/sha256:110395e4297e5d14316a5cc0a37792386261d4bf5905674
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-wave2-20260828-c2"
-reason = "Canonical migration is blocked because the legacy pip closure reference was removed and no canonical lock/offline-store/inventory triple is available. Historical evidence: frozen source, private hash-locked closure, production compile, Oracle 33/33, empty, stub, forgery, and offline controls passed. Model Agent Run, review, pilot, and publication remain separate stages; the current compiler does not expose a formal hang control kind."
+reason = "Frozen source, private hash-locked closure, production compile, Oracle 33/33, empty, stub, forgery, and offline controls passed. Model Agent Run, review, pilot, and publication remain separate stages; the current compiler does not expose a formal hang control kind."

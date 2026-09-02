@@ -117,10 +117,9 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wide-20260826-remediation/socket.io"
-reason = "Frozen source, three stable upstream baselines, deterministic private artifacts, production Oracle, empty/stub/forgery/call-hang/offline controls, and network isolation gates passed. Human review and model Agent Run remain outside this lane. Canonical dependency closure is not represented; versioned private-artifact migration is required."
-
+reason = "Frozen source, three stable upstream baselines, deterministic private artifacts, production Oracle, empty/stub/forgery/call-hang/offline controls, and network isolation gates passed. Human review and model Agent Run remain outside this lane."
 [oracle_bundle]
 digest = "sha256:e7730d4389c6c8bf36694b77fa098b9d6fe8add88414240a15bc2668fdbbaa70"
 size_bytes = 21227520

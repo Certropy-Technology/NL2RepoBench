@@ -82,10 +82,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wave2-20260828-camelcase-keys"
 reason = "The frozen source, private npm closure, production Node bundle, 24-leaf Oracle, empty, stub, forgery, install-script, loader-hook, bounded hang, and offline controls passed in Harbor 0.21.0. Review, model Agent Run, pilot, and publication remain integrator stages."
-
 [oracle_bundle]
 digest = "sha256:b402beb2e3734ae399b2805897bbc8f6cc9d7117d8cf29136dc190ce8e4d3a93"
 size_bytes = 921600

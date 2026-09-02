@@ -80,4 +80,4 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
 status = "blocked"
-reason = "Exact source, MIT license, LOC, package metadata, optional dependency behavior, and source-only collection/baseline probes are recorded. Publication is blocked because the final environment and hash-locked offline dependency closure, private test and command artifacts, Oracle bundle, and Lark-specific child-side adapter are absent; no Harbor, Docker, hidden-test, or shared catalog assets are authorized in this lane. Canonical dependency lock/offline-store/inventory closure is not represented by the legacy dependency field; a versioned private-artifact migration is required."
+reason = "Exact source, MIT license, LOC, package metadata, optional dependency behavior, and source-only collection/baseline probes are recorded. Publication is blocked because the final environment and hash-locked offline dependency closure, private test and command artifacts, Oracle bundle, and Lark-specific child-side adapter are absent; no Harbor, Docker, hidden-test, or shared catalog assets are authorized in this lane."

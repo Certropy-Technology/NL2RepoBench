@@ -76,6 +76,6 @@ uri = "artifact://private/sha256:019efb1b405ef966bcac507279b3c3532d439c62301a828
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "packaged"
 owner = "python-author-wave2-20260828-jiter"
-reason = "Canonical migration is blocked because the legacy pip closure reference was removed and no canonical lock/offline-store/inventory triple is available. Historical evidence: source freeze, private verifier, dependency closure, and Oracle bundle are prepared; production compile and Harbor gates remain task-local authoring work."
+reason = "Source freeze, private verifier, dependency closure, and Oracle bundle are prepared; production compile and Harbor gates remain task-local authoring work."

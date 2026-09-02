@@ -82,9 +82,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
-reason = "Legacy module_bundle is not a canonical lock/offline-store/inventory closure; prepare canonical dependency and command-plan artifacts before release."
-
+status = "packaged"
+owner = "go-author-wave2-20260828"
+reason = "Frozen MIT Go module with a deterministic typed bridge, private offline closure, verifier, Oracle, and controls; final Oracle/control receipts remain subject to integrator review."
 [verifier]
 protocol = "custom-json-v1"
 entrypoint = "contract.sh"

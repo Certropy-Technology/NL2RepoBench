@@ -84,9 +84,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
-reason = "Canonical source manifest is migrated, but the canonical dependency closure and command-plan artifacts are unavailable; the reviewed Go Harbor fixture is also incomplete (missing contract.sh and solution/solve.sh). Prepare canonical lock, offline-store, inventory, command plan, and fixture evidence before release."
-
+status = "packaged"
+owner = "go-author-wave2-20260828"
+reason = "Frozen source, private module closure, typed bridge, separate verifier, and production compilation are complete; official Oracle and model Agent Run remain for the parent loop."
 [verifier]
 protocol = "custom-json-v1"
 entrypoint = "contract.sh"

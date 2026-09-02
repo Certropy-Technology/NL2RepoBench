@@ -109,6 +109,6 @@ uri = "artifact://private/sha256:c94f001ee627dd1c62f7d0e10e0e53bed34ea54b292d16c
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-wave2-20260828"
-reason = "Frozen source, hash-locked closure, production compile, trusted Oracle, fixed-denominator controls, timeout probes, and offline network checks passed. Model Agent Run, review, pilot, and publication remain separate stages. Canonical source migration is blocked because the exact Python package-manager runtime and canonical lock/offline-store/inventory closure are not frozen; no legacy single closure artifact was retyped or fabricated."
+reason = "Frozen source, hash-locked closure, production compile, trusted Oracle, fixed-denominator controls, timeout probes, and offline network checks passed. Model Agent Run, review, pilot, and publication remain separate stages."

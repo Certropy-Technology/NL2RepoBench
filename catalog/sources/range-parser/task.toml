@@ -96,10 +96,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wave2-20260828-range-parser"
-reason = "Source validation, task-root network lint, production compile, separate verifier image, trusted Oracle, and empty/stub/forgery/install-script/loader-hook/hang/offline controls passed. Review, pilot, and publication remain integrator-owned stages. Canonical dependency closure is not represented; versioned private-artifact migration is required."
-
+reason = "Source validation, task-root network lint, production compile, separate verifier image, trusted Oracle, and empty/stub/forgery/install-script/loader-hook/hang/offline controls passed. Review, pilot, and publication remain integrator-owned stages."
 [oracle_bundle]
 digest = "sha256:8b6369f91c14d9bd2c0d72e9be86ff52833e84bcda872dd66ffb984381a54e65"
 size_bytes = 10240

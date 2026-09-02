@@ -42,4 +42,4 @@ contract_id = "fixed-test-pass-rate-v1"
 
 [lifecycle]
 status = "blocked"
-reason = "The npm 10.9.8 offline development/test closure attempt failed because its disposable lock did not match the resolved manifest; no reviewed offline dependency bundle exists. Canonical dependency closure is not represented; versioned private-artifact migration is required."
+reason = "The npm 10.9.8 offline development/test closure attempt failed because its disposable lock did not match the resolved manifest; no reviewed offline dependency bundle exists."

@@ -99,10 +99,9 @@ storage_mb = 6144
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-discovery-20260826-r1"
-reason = "Production Node 24 compile, one Harbor Oracle run, empty/nop, stub, forgery, offline, syntax, dependency, and network controls passed. Review, pilot, and publication remain integrator stages. Canonical dependency lock/offline-store/inventory closure is unavailable; the legacy single artifact reference was not retyped."
-
+reason = "Production Node 24 compile, one Harbor Oracle run, empty/nop, stub, forgery, offline, syntax, dependency, and network controls passed. Review, pilot, and publication remain integrator stages."
 [oracle_bundle]
 digest = "sha256:99389a0a007dcc3895bc453cfbc1c291880497cf35b9f8eeb8200f80d212cc24"
 size_bytes = 17405

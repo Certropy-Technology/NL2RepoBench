@@ -36,8 +36,7 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
 status = "blocked"
-reason = "Canonical source migration is blocked: exact Python runtime/package-manager version and canonical dependency closure evidence are unavailable. Previous status/reason: blocked: Audit candidate only. Exact archive digest and LICENSE evidence, source-only LOC, stable pytest/Hypothesis collection, offline dependency closure, locale/Unicode repeatability, and JSON-safe scope evidence are missing. expected_total=1 is a schema sentinel and must not be used as a denominator. No Harbor, Oracle, or private test artifact is present."
-
+reason = "Audit candidate only. Exact archive digest and LICENSE evidence, source-only LOC, stable pytest/Hypothesis collection, offline dependency closure, locale/Unicode repeatability, and JSON-safe scope evidence are missing. expected_total=1 is a schema sentinel and must not be used as a denominator. No Harbor, Oracle, or private test artifact is present."
 [environment]
 status = "unknown"
 os_name = "unknown"

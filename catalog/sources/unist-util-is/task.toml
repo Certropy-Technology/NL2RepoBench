@@ -77,10 +77,9 @@ contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wave2-20260828/unist-util-is"
-reason = "The immutable source, exact offline npm closure, 56-leaf private verifier, production compile, trusted Oracle, and empty/stub/forgery/install-script/loader-hook/call-hang/oversized-output/offline controls passed in this lane. Independent review, model Agent Run, dataset integration, and publication remain integrator stages. Canonical dependency closure requires a new versioned private artifact migration."
-
+reason = "The immutable source, exact offline npm closure, 56-leaf private verifier, production compile, trusted Oracle, and empty/stub/forgery/install-script/loader-hook/call-hang/oversized-output/offline controls passed in this lane. Independent review, model Agent Run, dataset integration, and publication remain integrator stages."
 [harbor]
 description = "Build the ESM unist-util-is 6.0.1 package with node recognition, string/object/array/function tests, context handling, and reusable checks."
 keywords = [

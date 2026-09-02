@@ -109,6 +109,6 @@ uri = "artifact://private/sha256:99c67b3b14645de6820b12ae620535504fd7a4c29d9cfb8
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "packaged"
 owner = "python-author-wave2-20260828-c3"
-reason = "Canonical dependency lock/offline-store/inventory closure is unavailable; legacy single dependency artifact was not retyped. Previous status/reason: packaged: Source, dependency closure, custom verifier, controls, and digest-checked Oracle bundle are prepared. Production compile and local behavior smokes passed; Harbor Oracle and control runs are intentionally deferred to the separate Agent Run loop."
+reason = "Source, dependency closure, custom verifier, controls, and digest-checked Oracle bundle are prepared. Production compile and local behavior smokes passed; Harbor Oracle and control runs are intentionally deferred to the separate Agent Run loop."

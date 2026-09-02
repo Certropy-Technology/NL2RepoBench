@@ -68,10 +68,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "go-author-remediation-20260826-r1"
-reason = "Canonical source migration preserved the frozen source, typed bridge, instruction, Harbor fixture, Oracle, and verifier references, but no canonical private dependency closure or frozen command-plan artifact is declared. Mint and validate those canonical artifacts before compile, Oracle, controls, and release."
-
+reason = "Three stable Oracle runs and the required separate-verifier controls passed; awaiting independent review and pilot."
 [verifier]
 protocol = "custom-json-v1"
 bundle = { digest = "sha256:d55dc65ce99a7d706ba1ad135ec9e1d571ae6d9ff1b62a2488074a52c1f09999", size_bytes = 585, uri = "artifact://private/sha256:d55dc65ce99a7d706ba1ad135ec9e1d571ae6d9ff1b62a2488074a52c1f09999", visibility = "private" }

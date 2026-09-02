@@ -78,10 +78,9 @@ contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wave2-20260828/unist-util-visit-parents"
-reason = "The exact source, environment, offline npm closure, UID-separated 50-leaf verifier, current production Oracle, and empty/stub/forgery/install-script/loader-hook/hang/offline controls passed. Integrator review and model Agent Run remain outside this lane. Canonical dependency closure requires a new versioned private artifact migration."
-
+reason = "The exact source, environment, offline npm closure, UID-separated 50-leaf verifier, current production Oracle, and empty/stub/forgery/install-script/loader-hook/hang/offline controls passed. Integrator review and model Agent Run remain outside this lane."
 [harbor]
 description = "Build the ESM unist tree visitor with ancestor stacks, filters, traversal controls, and mutation-aware sibling indexes."
 keywords = [

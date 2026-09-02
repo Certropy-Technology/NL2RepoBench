@@ -96,10 +96,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "packaged"
 owner = "python-author-wave2-20260828-c3"
-reason = "Canonical dependency lock/offline-store/inventory closure is unavailable; legacy single dependency artifact was not retyped. Previous status/reason: packaged: The source, private verifier bundle, Oracle bundle, dependency lock, and deterministic compile are prepared. Oracle and negative controls remain for the separate Harbor gate; no Agent Run was started in this authoring lane."
-
+reason = "The source, private verifier bundle, Oracle bundle, dependency lock, and deterministic compile are prepared. Oracle and negative controls remain for the separate Harbor gate; no Agent Run was started in this authoring lane."
 [oracle_bundle]
 digest = "sha256:56364ebe9c520f03c53ed1c699d0f29dd4d901677a5702f84dce1d08a3f3d092"
 size_bytes = 427

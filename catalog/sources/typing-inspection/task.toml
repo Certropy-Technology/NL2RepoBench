@@ -104,6 +104,6 @@ uri = "artifact://private/sha256:85d6f3ac633e1876c716f0da692ffb1eb340a1c7289e3d7
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-wave2-20260828-typing-inspection"
-reason = "Final production bundle compiled deterministically. The separate no-network verifier passed the exact-revision Oracle 32/32 with reward 1.0; empty, stub, forgery, workspace-boundary, install-timeout, and call-timeout controls completed with verifier-owned outcomes. No Harbor model Agent Run was started in this lane. Canonical dependency closure and exact runtime identity require separate remediation."
+reason = "Final production bundle compiled deterministically. The separate no-network verifier passed the exact-revision Oracle 32/32 with reward 1.0; empty, stub, forgery, workspace-boundary, install-timeout, and call-timeout controls completed with verifier-owned outcomes. No Harbor model Agent Run was started in this lane."

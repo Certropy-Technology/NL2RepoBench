@@ -98,10 +98,9 @@ uri = "artifact://private/sha256:bc630e7ae0c9272d9293c6f36227385c90e1060535b177e
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-wave2-20260828"
-reason = "Canonical migration completed; production remains blocked pending canonical dependency closure and current release evidence. Previous lifecycle reason: Production compile, one direct Oracle verifier run, and empty, stub, forgery, install-timeout, and offline controls passed. Independent review, model-agent run, and publication remain pending."
-
+reason = "Production compile, one direct Oracle verifier run, and empty, stub, forgery, install-timeout, and offline controls passed. Independent review, model-agent run, and publication remain pending."
 [verifier.environment]
 
 [oracle_bundle]

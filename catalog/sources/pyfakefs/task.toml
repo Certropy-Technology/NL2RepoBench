@@ -84,12 +84,12 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
+status = "blocked"
 owner = "repair/pyfakefs"
+reason = "The upstream unittest and pytest suites are present, but tests are unavailable as a frozen production collection and denominator. The environment remains unapproved because no final image or hash-locked offline dependency closure exists; no production verifier, Oracle, controls, or runtime is authorized. No catalog/tasks/pyfakefs runtime exists."
 approval_refs = [
     "catalog/sources/pyfakefs/production-evidence.json",
 ]
-status = "blocked"
-reason = "The upstream unittest and pytest suites are present, but tests are unavailable as a frozen production collection and denominator. The environment remains unapproved because no final image or hash-locked offline dependency closure exists; no production verifier, Oracle, controls, or runtime is authorized. No catalog/tasks/pyfakefs runtime exists."
 
 [[lifecycle.evidence]]
 digest = "sha256:fefa1be509786ea1a2988915d2595da336ecabfa21b6fa64103223e15a21fcd9"

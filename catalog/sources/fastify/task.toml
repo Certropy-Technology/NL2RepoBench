@@ -105,8 +105,7 @@ workspace_artifact = "/workspace"
 [lifecycle]
 status = "blocked"
 owner = "repair/fastify"
-reason = "The previous controls-passed claim has no discoverable Harbor Oracle/control/network receipts in this checkout. The invalid runtime is removed; no production status is retained without hash-bound evidence. Canonical dependency lock/offline-store/inventory closure is unavailable; the legacy single artifact reference was not retyped."
-
+reason = "The previous controls-passed claim has no discoverable Harbor Oracle/control/network receipts in this checkout. The invalid runtime is removed; no production status is retained without hash-bound evidence."
 [oracle_bundle]
 digest = "sha256:edfa9071a885908fe71222ec2752c6fc4145a06a622ff175719ec30a75e9840f"
 size_bytes = 532419

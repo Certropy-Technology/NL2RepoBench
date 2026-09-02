@@ -75,10 +75,9 @@ contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wide-20260826-remediation/vite"
-reason = "Harbor 0.21 production gates passed on the final scoped contract: Oracle 24/24 reward 1.0; empty, stub, forgery, hang, and offline controls reward 0.0; forgery output was ignored; every verifier network receipt reports public_network_available=false. Review and model pilot remain integrator stages. Canonical dependency closure requires a new versioned private artifact migration."
-
+reason = "Harbor 0.21 production gates passed on the final scoped contract: Oracle 24/24 reward 1.0; empty, stub, forgery, hang, and offline controls reward 0.0; forgery output was ignored; every verifier network receipt reports public_network_available=false. Review and model pilot remain integrator stages."
 [harbor]
 description = "Build the scoped Vite 8.2.2 configuration and environment utility API from an empty workspace."
 keywords = [

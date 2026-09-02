@@ -76,6 +76,6 @@ uri = "artifact://private/sha256:67ab4eb9524177fbc30e3008e87727c339d9640ae6454f8
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "worker/jsonpointer"
-reason = "Canonical migration is blocked because the legacy pip closure reference was removed and no canonical lock/offline-store/inventory triple is available. Historical evidence: Harbor 0.21.0 production gates passed with an exact 28-leaf separate-process contract: Oracle 28/28 reward 1.0, empty 0, stub and forgery 1/28, and install-timeout 0; verifier-owned network receipts show no public egress. Reviews and pilot remain pending."
+reason = "Harbor 0.21.0 production gates passed with an exact 28-leaf separate-process contract: Oracle 28/28 reward 1.0, empty 0, stub and forgery 1/28, and install-timeout 0; verifier-owned network receipts show no public egress. Reviews and pilot remain pending."

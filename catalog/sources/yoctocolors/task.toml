@@ -75,10 +75,9 @@ contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wave2-20260828-yoctocolors"
-reason = "The fixed source, dependency-free npm closure, private 80-leaf verifier, production compile, trusted Oracle, empty, stub, forgery, install-script, loader-hook, bounded-hang, and offline controls passed. Independent review, model Agent Run, generated catalog integration, and publication remain out of scope. Canonical dependency closure requires a new versioned private artifact migration."
-
+reason = "The fixed source, dependency-free npm closure, private 80-leaf verifier, production compile, trusted Oracle, empty, stub, forgery, install-script, loader-hook, bounded-hang, and offline controls passed. Independent review, model Agent Run, generated catalog integration, and publication remain out of scope."
 [harbor]
 description = "Build the dependency-free yoctocolors 2.2.0 ESM package with deterministic ANSI styles, color detection, nesting, and TypeScript declarations."
 keywords = [

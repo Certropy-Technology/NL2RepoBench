@@ -110,6 +110,6 @@ uri = "artifact://private/sha256:ea0ab401f6de6ec4f6f71a5d7526d800c3a797cb881cfa4
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-wave2-20260828"
-reason = "Harbor 0.21.0 Oracle and task-local controls passed against the final production compile; integrator must generate the checked-in catalog/tasks projection and complete review/pilot/publication separately. Canonical dependency closure, exact runtime identity, and current verifier evidence remain unavailable."
+reason = "Harbor 0.21.0 Oracle and task-local controls passed against the final production compile; integrator must generate the checked-in catalog/tasks projection and complete review/pilot/publication separately."

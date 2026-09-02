@@ -63,4 +63,4 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
 status = "blocked"
-reason = "Canonical runtime/package-manager version and dependency closure are not available; legacy single closure refs were not retyped. Previous status/reason: blocked: Source and public collection were revalidated, but a hash-locked offline dependency closure and frozen verifier environment are absent; deterministic behavior is not proven because the suite contains unseeded random draws and scientific floating-point assertions, and callable/array/pandas/multiprocessing/CLI coverage requires a task-specific separate-verifier adapter. Do not publish or run Oracle."
+reason = "Source and public collection were revalidated, but a hash-locked offline dependency closure and frozen verifier environment are absent; deterministic behavior is not proven because the suite contains unseeded random draws and scientific floating-point assertions, and callable/array/pandas/multiprocessing/CLI coverage requires a task-specific separate-verifier adapter. Do not publish or run Oracle."

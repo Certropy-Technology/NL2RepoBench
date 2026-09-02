@@ -53,4 +53,4 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 [lifecycle]
 status = "blocked"
 owner = "repair/responses"
-reason = "Canonical runtime/package-manager version and dependency closure are not available; legacy single closure refs were not retyped. Previous status/reason: blocked: The exact commit and project-level Apache-2.0 claim are known, but archive/license bytes, packaging/dependency closure, collection, loopback-only separate verifier, Oracle, and controls are not established. No runtime task exists."
+reason = "The exact commit and project-level Apache-2.0 claim are known, but archive/license bytes, packaging/dependency closure, collection, loopback-only separate verifier, Oracle, and controls are not established. No runtime task exists."

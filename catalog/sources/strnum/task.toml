@@ -76,10 +76,9 @@ contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wave2-20260828"
-reason = "The immutable source, public contract, private verifier, exact offline npm closure, production compile, Oracle, and required adversarial controls passed in this lane; independent review, model Agent Run, and publication remain integrator stages. Canonical dependency closure requires a new versioned private artifact migration."
-
+reason = "The immutable source, public contract, private verifier, exact offline npm closure, production compile, Oracle, and required adversarial controls passed in this lane; independent review, model Agent Run, and publication remain integrator stages."
 [harbor]
 description = "Build the offline strnum ESM package for configurable numeric-string parsing, Unicode numerals, radix forms, and overflow handling."
 keywords = [

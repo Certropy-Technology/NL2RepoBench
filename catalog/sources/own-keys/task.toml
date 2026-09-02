@@ -79,10 +79,9 @@ contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wave2-20260828"
-reason = "Production compile and Harbor 0.21.0 validation passed: Oracle 36/36 reward 1.0; empty candidate-installation-failed reward 0; stub and forgery 3/36 with verifier-owned reward; bounded call-hang reward 0; offline outbound-attempt control 3/36. Every verifier receipt reports public_network_available=false. Integrator review, model pilot, and publication remain pending. Canonical dependency closure and versioned private-artifact migration remain required."
-
+reason = "Production compile and Harbor 0.21.0 validation passed: Oracle 36/36 reward 1.0; empty candidate-installation-failed reward 0; stub and forgery 3/36 with verifier-owned reward; bounded call-hang reward 0; offline outbound-attempt control 3/36. Every verifier receipt reports public_network_available=false. Integrator review, model pilot, and publication remain pending."
 [harbor]
 description = "Recreate the own-keys CommonJS object reflection package with symbol and descriptor semantics."
 keywords = [

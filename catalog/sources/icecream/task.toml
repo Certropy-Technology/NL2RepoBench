@@ -69,6 +69,6 @@ entrypoint = "run.py"
 environment = {}
 
 [lifecycle]
-status = "blocked"
+status = "oracle-passed"
 owner = "integrator"
-reason = "Canonical migration is blocked because the legacy pip closure reference was removed and no canonical lock/offline-store/inventory triple is available. Historical evidence: generic private-bundle compiled Oracle passed 20/20 with reward 1.0; controls and review remain pending."
+reason = "Generic private-bundle compiled Oracle passed 20/20 with reward 1.0; controls and review remain pending."

@@ -101,10 +101,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wave2-20260828-c2"
-reason = "The production Node 24/npm 11.17 bundle passed the 39/39 Oracle, empty, stub, forgery, install-script, loader-hook, bounded hang, oversized-output, and active offline controls. The separate verifier reported no public network access. Independent review, projection, and model Agent Run remain integrator work. Canonical dependency lock/offline-store/inventory closure is unavailable; the legacy single artifact reference was not retyped."
-
+reason = "The production Node 24/npm 11.17 bundle passed the 39/39 Oracle, empty, stub, forgery, install-script, loader-hook, bounded hang, oversized-output, and active offline controls. The separate verifier reported no public network access. Independent review, projection, and model Agent Run remain integrator work."
 [oracle_bundle]
 digest = "sha256:2988312115f70e5f8b7adb941b18eaa55bff738964057cf0edf9d7006ae595da"
 size_bytes = 10240

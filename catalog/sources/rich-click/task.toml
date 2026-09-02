@@ -51,9 +51,8 @@ collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
-status = "blocked"
-reason = "Canonical runtime/package-manager version and dependency closure are not available; legacy single closure refs were not retyped. Previous status/reason: discovered: Imported legacy task; source, dependency and collection locks still require freeze."
-
+status = "discovered"
+reason = "Imported legacy task; source, dependency and collection locks still require freeze."
 [harbor]
 description = "Build the rich-click package from an empty workspace."
 keywords = [

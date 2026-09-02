@@ -98,6 +98,6 @@ uri = "artifact://private/sha256:c08e1b7633c41eb1fb95fa5c93127c686edb66716f27c64
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "packaged"
 owner = "python-author-wave2-20260828-tomli"
-reason = "Frozen tomli source, hash-locked Flit build dependency, task-local custom verifier, and digest-checked Oracle bundle are prepared. Production compile and Oracle/control gates are recorded in production-evidence.json; model Agent Run and integrator review remain separate. Canonical dependency closure and exact runtime identity require separate remediation."
+reason = "Frozen tomli source, hash-locked Flit build dependency, task-local custom verifier, and digest-checked Oracle bundle are prepared. Production compile and Oracle/control gates are recorded in production-evidence.json; model Agent Run and integrator review remain separate."

@@ -74,10 +74,9 @@ contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-discovery-postrestart-20260827-r1"
-reason = "Final Node-toolchain production compilation passed. Harbor 0.21.0 Oracle scored 28/28 with reward 1.0; empty, stub, forgery, hang, offline, install-script, and loader-hook controls remained at or near zero, and every verifier run proved public network unavailable. Canonical dependency closure and versioned private-artifact migration remain required."
-
+reason = "Final Node-toolchain production compilation passed. Harbor 0.21.0 Oracle scored 28/28 with reward 1.0; empty, stub, forgery, hang, offline, install-script, and loader-hook controls remained at or near zero, and every verifier run proved public network unavailable."
 [harbor]
 description = "Build the nanoid ESM secure and non-secure URL-friendly identifier package, including its CLI, from an empty workspace."
 keywords = [

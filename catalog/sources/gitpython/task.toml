@@ -94,10 +94,9 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-wave2-20260828-c2"
-reason = "Canonical dependency lock/offline-store/inventory closure is unavailable; legacy single lock_artifact was not retyped. Previous status/reason: controls-passed: Production compile, separate-verifier Oracle, empty, stub, forgery, bounded install/call timeout, and offline network controls passed on Harbor 0.21.0; no model Agent Run was started in this authoring lane."
-
+reason = "Production compile, separate-verifier Oracle, empty, stub, forgery, bounded install/call timeout, and offline network controls passed on Harbor 0.21.0; no model Agent Run was started in this authoring lane."
 [verifier]
 protocol = "custom-json-v1"
 entrypoint = "run.py"

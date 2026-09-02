@@ -103,10 +103,9 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-wave2-20260828-c3"
-reason = "Canonical dependency lock/offline-store/inventory closure is unavailable; legacy single lock_artifact was not retyped. Previous status/reason: controls-passed: Frozen source, hash-locked closure, production compile, Oracle, stub, forgery, and no-network receipts passed. Model Agent Run, review, pilot, and publication remain separate stages."
-
+reason = "Frozen source, hash-locked closure, production compile, Oracle, stub, forgery, and no-network receipts passed. Model Agent Run, review, pilot, and publication remain separate stages."
 [verifier]
 protocol = "custom-json-v1"
 entrypoint = "run.py"

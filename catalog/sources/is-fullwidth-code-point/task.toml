@@ -96,10 +96,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wave2-20260828-c2"
-reason = "Source, API contract, private tests, dependency closure, current production compile, Oracle, and all required controls passed in this lane; independent review, Agent Run, and publication remain integrator stages. Canonical dependency lock/offline-store/inventory closure is unavailable; the legacy single artifact reference was not retyped."
-
+reason = "Source, API contract, private tests, dependency closure, current production compile, Oracle, and all required controls passed in this lane; independent review, Agent Run, and publication remain integrator stages."
 [oracle_bundle]
 digest = "sha256:baf58342b89db76dee1cc13b94f19f8dfeae3b883975ce40f401ec8f31b828ea"
 size_bytes = 10240

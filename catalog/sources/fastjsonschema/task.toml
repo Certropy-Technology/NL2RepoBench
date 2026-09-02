@@ -97,10 +97,9 @@ uri = "artifact://private/sha256:03355c1dca9c063d8e5b55be9dbeeb0dfdbac6d1f734f71
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-gpt56-wide-20260826-r2"
-reason = "Canonical migration completed; production remains blocked pending canonical dependency closure and current release evidence. Previous lifecycle reason: Release 0.3.1 has a frozen 2,899-leaf contract, digest-verified Oracle bundle, separate verifier bundle, and passing task-local controls."
-
+reason = "Release 0.3.1 has a frozen 2,899-leaf contract, digest-verified Oracle bundle, separate verifier bundle, and passing task-local controls. The independent Agent Run loop owns all model execution."
 [oracle_bundle]
 digest = "sha256:21ac1473fd0093f61613e6d6f545beacc845c6fd779d692cc4d338a01bab7afd"
 size_bytes = 10240

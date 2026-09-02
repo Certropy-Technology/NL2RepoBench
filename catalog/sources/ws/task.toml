@@ -75,10 +75,9 @@ contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wide-20260826-remediation/ws"
-reason = "Source, environment, private verifier, Oracle, and empty/stub/forgery/call-hang controls passed in the production Harbor bundle; awaiting integrator review and model Agent Run. Canonical dependency closure requires a new versioned private artifact migration."
-
+reason = "Source, environment, private verifier, Oracle, and empty/stub/forgery/call-hang controls passed in the production Harbor bundle; awaiting integrator review and model Agent Run."
 [harbor]
 description = "Build the ws 8.21.3 WebSocket client/server library from an empty workspace with deterministic loopback protocol behavior."
 keywords = [

@@ -30,8 +30,7 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
 status = "blocked"
-reason = "Canonical source migration is blocked: exact Python runtime/package-manager version and canonical dependency closure evidence are unavailable. Previous status/reason: blocked: The audit records 127 static test definitions, not a frozen collection. Upstream access did not yield a detached archive or license-byte hash, and no immutable environment, dependency lock, private Pluggy-specific verifier/test bundle, Oracle, controls, or catalog/tasks/pluggy runtime exists."
-
+reason = "The audit records 127 static test definitions, not a frozen collection. Upstream access did not yield a detached archive or license-byte hash, and no immutable environment, dependency lock, private Pluggy-specific verifier/test bundle, Oracle, controls, or catalog/tasks/pluggy runtime exists."
 [environment]
 status = "unknown"
 

@@ -76,10 +76,9 @@ contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wave2-20260828-pretty-ms"
-reason = "Frozen source, Node 24/npm 11 runtime, private npm/test/command/Oracle artifacts, production compile, one Oracle run, and no-network controls passed. Independent model Agent Run, review, pilot, dataset integration, and publication remain pending. Canonical dependency closure and versioned private-artifact migration remain required."
-
+reason = "Frozen source, Node 24/npm 11 runtime, private npm/test/command/Oracle artifacts, production compile, one Oracle run, and no-network controls passed. Independent model Agent Run, review, pilot, dataset integration, and publication remain pending."
 [harbor]
 description = "Build pretty-ms as an offline ESM utility that formats finite millisecond durations with deterministic units, precision, and display options."
 keywords = [

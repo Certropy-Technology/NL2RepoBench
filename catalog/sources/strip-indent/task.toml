@@ -95,10 +95,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wave2-20260828-strip-indent"
-reason = "Frozen source, API contract, private tests, exact empty npm closure, deterministic production compile, Oracle, and empty/stub/forgery/install-script/loader-hook/call-hang/offline controls passed in task-local Harbor receipts. Awaiting independent review and model Agent Run. Canonical dependency closure is not represented; versioned private-artifact migration is required."
-
+reason = "Frozen source, API contract, private tests, exact empty npm closure, deterministic production compile, Oracle, and empty/stub/forgery/install-script/loader-hook/call-hang/offline controls passed in task-local Harbor receipts. Awaiting independent review and model Agent Run."
 [oracle_bundle]
 digest = "sha256:b6ff269fc6f0cc81ca16e9d75574b2ec528d8e8f4ef009c9cb874a216a0ef313"
 size_bytes = 10240

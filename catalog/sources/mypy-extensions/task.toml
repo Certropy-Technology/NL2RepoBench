@@ -67,10 +67,9 @@ collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-wave2-worker"
-reason = "Official Harbor 0.21.0 Oracle passed 69/69 with reward 1.0; empty, stub, forgery, install-hang, call-hang, and offline controls completed under the separate no-network verifier. Canonical dependency lock/offline-store/inventory closure is not represented by the legacy dependency field; a versioned private-artifact migration is required."
-
+reason = "Official Harbor 0.21.0 Oracle passed 69/69 with reward 1.0; empty, stub, forgery, install-hang, call-hang, and offline controls completed under the separate no-network verifier."
 [harbor]
 description = "Build mypy_extensions 1.2.0.dev0 from an empty workspace and reproduce callable markers, deprecated TypedDict/NoReturn compatibility, mypyc identity decorators, FlexibleAlias, and native integer runtime behavior through a UID-separated child adapter."
 keywords = [

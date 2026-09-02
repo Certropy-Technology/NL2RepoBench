@@ -68,4 +68,4 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
 status = "blocked"
-reason = "Canonical runtime/package-manager version and dependency closure are not available; legacy single closure refs were not retyped. Previous status/reason: blocked: Source, license, package metadata, and API inventory are revalidated, but the pytest 8.3.4 configuration and 1,375-item observation require an exact replay; xfail/xpass metric semantics, immutable environment, dependency artifacts, separate-verifier adapter, private tests/commands, and Oracle/control evidence are absent."
+reason = "Source, license, package metadata, and API inventory are revalidated, but the pytest 8.3.4 configuration and 1,375-item observation require an exact replay; xfail/xpass metric semantics, immutable environment, dependency artifacts, separate-verifier adapter, private tests/commands, and Oracle/control evidence are absent."

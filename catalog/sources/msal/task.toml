@@ -79,10 +79,9 @@ collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-wave2-20260828"
-reason = "Production compile, one Harbor Oracle gate, and required empty/stub/forgery/offline controls passed. The independent Agent Run loop owns model execution, review, and publication. Canonical dependency lock/offline-store/inventory closure is not represented by the legacy dependency field; a versioned private-artifact migration is required."
-
+reason = "Production compile, one Harbor Oracle gate, and required empty/stub/forgery/offline controls passed. The independent Agent Run loop owns model execution, review, and publication."
 [harbor]
 description = "Build a bounded, deterministic MSAL Python OAuth/OIDC and token-cache library from an empty workspace; grading uses a separate offline JSON adapter."
 keywords = [

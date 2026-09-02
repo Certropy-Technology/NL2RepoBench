@@ -102,10 +102,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "repair/globby"
-reason = "Pinned private npm/test/Oracle artifacts were restored by digest, the task was production-compiled with Node toolchain locks, Harbor 0.21.0 Oracle and offline runs passed 10/10, and empty/stub/forgery/call-hang controls produced bounded low scores with no-network receipts. Canonical dependency lock/offline-store/inventory closure is unavailable; the legacy single artifact reference was not retyped."
-
+reason = "Pinned private npm/test/Oracle artifacts were restored by digest, the task was production-compiled with Node toolchain locks, Harbor 0.21.0 Oracle and offline runs passed 10/10, and empty/stub/forgery/call-hang controls produced bounded low scores with no-network receipts."
 [oracle_bundle]
 digest = "sha256:5c4e45425a5a36c03d4d3a92a515fba066c0ff3ba82c60a8c66cdd25b7e06f77"
 size_bytes = 78728

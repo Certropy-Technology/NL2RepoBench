@@ -68,10 +68,9 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "axios-remediation"
 reason = "Frozen source archive, exact npm 11.17 cache closure, private 16-leaf node:test bundle, production compile, Oracle 16/16 reward 1.0, verifier network proof, and empty/stub/forgery/install-script/loader-hook/hang/offline controls are recorded in task-local evidence. Review, pilot, and publication remain out of scope."
-
 [oracle_bundle]
 digest = "sha256:efc01647e414352871bf2a73ca4adb15ac43e9e0c515c74829fbea27a3613ad7"
 size_bytes = 4044800

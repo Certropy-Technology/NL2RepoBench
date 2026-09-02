@@ -76,4 +76,4 @@ workspace_artifact = "/workspace"
 
 [lifecycle]
 status = "blocked"
-reason = "The upstream revision, archive digest, BSD-3-Clause license, and immutable image identity are known, but the image carries packaging and test overlays, the historical cache records 1491 nodes without a valid effective denominator, dependencies are not hash-locked, and the pytest object interactions cannot cross a separate candidate verifier boundary. No Oracle, controls, or catalog/tasks/python-pytest-cases runtime exists. Canonical dependency closure, exact runtime identity, and current verifier evidence remain unavailable."
+reason = "The upstream revision, archive digest, BSD-3-Clause license, and immutable image identity are known, but the image carries packaging and test overlays, the historical cache records 1491 nodes without a valid effective denominator, dependencies are not hash-locked, and the pytest object interactions cannot cross a separate candidate verifier boundary. No Oracle, controls, or catalog/tasks/python-pytest-cases runtime exists."

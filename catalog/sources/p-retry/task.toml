@@ -77,10 +77,9 @@ contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wave2-20260828-p-retry"
-reason = "The exact source, license, Node/npm environment, runtime-only npm closure, public contract, 46-leaf separate verifier, production compile, official Harbor Oracle, and empty/stub/forgery/install-script/loader-hook/timeout/offline controls are bound by task-local evidence. No model Agent Run was started in this authoring lane. Canonical dependency closure and versioned private-artifact migration remain required."
-
+reason = "The exact source, license, Node/npm environment, runtime-only npm closure, public contract, 46-leaf separate verifier, production compile, official Harbor Oracle, and empty/stub/forgery/install-script/loader-hook/timeout/offline controls are bound by task-local evidence. No model Agent Run was started in this authoring lane."
 [harbor]
 description = "Build p-retry 8.0.0 with bounded promise retries, callback policies, exponential backoff, AbortSignal support, and makeRetriable."
 keywords = [

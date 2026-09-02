@@ -45,7 +45,6 @@ collection_mismatch = "fail"
 [lifecycle]
 status = "discovered"
 reason = "Synthetic adapter fixture; production lock/store evidence is not yet frozen."
-
 [harbor]
 description = "Build a zero-dependency ESM utility through the Node/pnpm adapter."
 keywords = ["node", "pnpm", "adapter", "node-test"]

@@ -77,4 +77,4 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 [lifecycle]
 status = "blocked"
 owner = "repair/cherry"
-reason = "The exact upstream source and MIT license are frozen, but the immutable legacy image contains an unapproved six-file overlay, directly imports candidate code, and lacks a hash-locked dependency closure, structured collection, separate verifier, Oracle, and controls. No catalog/tasks/cherry runtime exists. Canonical dependency closure and exact Python package-manager runtime identity are unavailable; create lock/offline-store/inventory artifacts and a versioned release before production use."
+reason = "The exact upstream source and MIT license are frozen, but the immutable legacy image contains an unapproved six-file overlay, directly imports candidate code, and lacks a hash-locked dependency closure, structured collection, separate verifier, Oracle, and controls. No catalog/tasks/cherry runtime exists."

@@ -69,10 +69,9 @@ collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-wave2-20260828"
-reason = "Production Harbor 0.21.0 compile passed; final Oracle passed 24/24 with reward 1.0; empty, stub, forgery, install-timeout, and offline network controls are recorded in hash-bound evidence. Review, pilot, and publication remain integrator-owned. Canonical dependency lock/offline-store/inventory closure is not represented by the legacy dependency field; a versioned private-artifact migration is required."
-
+reason = "Production Harbor 0.21.0 compile passed; final Oracle passed 24/24 with reward 1.0; empty, stub, forgery, install-timeout, and offline network controls are recorded in hash-bound evidence. Review, pilot, and publication remain integrator-owned."
 [harbor]
 description = "Build markdown-it-py 4.2.0 from an empty workspace and satisfy a deterministic Markdown parsing, rendering, token, tree, ruler, URL, and CLI argument contract through a separate child adapter."
 keywords = [

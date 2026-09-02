@@ -108,6 +108,6 @@ uri = "artifact://private/sha256:08b8fb942831b48c3054eebee9a6198ef1a744728562085
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-discovery-20260826-r1"
-reason = "Canonical dependency lock/offline-store/inventory closure is unavailable; legacy single dependency artifact was not retyped. Previous status/reason: controls-passed: Source, dependency closure, production compile, Oracle, empty, stub, forgery, and offline controls passed. Awaiting independent Agent Run; no Agent Run was started from this lane."
+reason = "Source, dependency closure, production compile, Oracle, empty, stub, forgery, and offline controls passed. Awaiting independent Agent Run; no Agent Run was started from this lane."

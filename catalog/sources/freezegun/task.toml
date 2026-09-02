@@ -93,10 +93,9 @@ uri = "artifact://private/sha256:253bbf64c2964cad8a0f06e51dcd1a212da4bb62bbb68ac
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "worker/freezegun"
-reason = "Canonical migration completed; production remains blocked pending canonical dependency closure and current release evidence. Previous lifecycle reason: Harbor 0.21.0 production gates passed: the local digest-checked Oracle was valid at 24/24 and reward 1.0; empty, stub, and forgery were valid at reward 0.0; every verifier network receipt proved no public egress."
-
+reason = "Harbor 0.21.0 production gates passed: the local digest-checked Oracle was valid at 24/24 and reward 1.0; empty, stub, and forgery were valid at reward 0.0; every verifier network receipt proved no public egress."
 [verifier.environment]
 
 [oracle_bundle]

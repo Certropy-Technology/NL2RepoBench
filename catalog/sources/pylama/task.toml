@@ -54,6 +54,6 @@ collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
-owner = "repair/pylama"
 status = "blocked"
+owner = "repair/pylama"
 reason = "The exact source and MIT archive/license evidence are known, but the image has two unapproved overlays, the legacy denominator 34 conflicts with 35 static test items, and no approved dependency closure, structured collection, separate verifier, Oracle, or controls exist."

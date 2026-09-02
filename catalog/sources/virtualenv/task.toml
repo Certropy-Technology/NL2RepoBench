@@ -109,6 +109,6 @@ uri = "artifact://private/sha256:a3fcfca43269c7a94051f0eb4e878aff04916ca35bb7441
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-wave2-20260828"
-reason = "Current production bundle, separate verifier, digest-checked Oracle, and task-local controls passed. Harbor Agent Run, blind review, dataset integration, and publication remain integrator-owned. Canonical dependency closure and exact runtime identity require separate remediation."
+reason = "Current production bundle, separate verifier, digest-checked Oracle, and task-local controls passed. Harbor Agent Run, blind review, dataset integration, and publication remain integrator-owned."

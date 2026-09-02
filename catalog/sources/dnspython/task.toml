@@ -95,10 +95,9 @@ uri = "artifact://private/sha256:18cd6998c3c28e48867eacda73787a11b1356f1cf1d2486
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "packaged"
 owner = "python-author-wave2-20260828"
-reason = "Canonical migration completed; production remains blocked pending canonical dependency closure and current release evidence. Previous lifecycle reason: Source, specification, private verifier, dependency lock, and Oracle bundle are authored; Harbor Agent/Oracle and negative controls are intentionally left for the integrator lane."
-
+reason = "Source, specification, private verifier, dependency lock, and Oracle bundle are authored; Harbor Agent/Oracle and negative controls are intentionally left for the integrator lane."
 [verifier.environment]
 
 [oracle_bundle]

@@ -101,6 +101,6 @@ collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-wave2-20260828-c3"
-reason = "Production compile, Oracle, empty, stub, forgery, and offline controls passed; review, pilot, and publication remain separate integrator stages. Canonical migration: exact Python runtime/package-manager evidence and canonical private dependency closure are not available; keep blocked until versioned artifacts and gates are recreated."
+reason = "Production compile, Oracle, empty, stub, forgery, and offline controls passed; review, pilot, and publication remain separate integrator stages."

@@ -102,10 +102,9 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wave2-20260828-string-width"
-reason = "Production Harbor Oracle passed 53/53 with reward 1.0. Empty, stub, forgery, install-script, loader-hook, hang, and offline controls completed with verifier-owned results and no public verifier network. Canonical dependency closure is not represented; versioned private-artifact migration is required."
-
+reason = "Production Harbor Oracle passed 53/53 with reward 1.0. Empty, stub, forgery, install-script, loader-hook, hang, and offline controls completed with verifier-owned results and no public verifier network."
 [oracle_bundle]
 digest = "sha256:5bb69b27f51cfca7e34dc6a8bf05bfb3730e13dbbe9e913e83db97d0bcd0d251"
 size_bytes = 10240

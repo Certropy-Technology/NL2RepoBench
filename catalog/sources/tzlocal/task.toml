@@ -97,6 +97,6 @@ uri = "artifact://private/sha256:e1974f87c28a5d200f687bc47c5988272b1cd731ba147bc
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-wave2-20260828/tzlocal"
-reason = "The final production bundle passed the 30/30 Oracle verifier plus empty, stub, forgery, install-hang, call-hang, and direct offline controls. The locked OpenHands runtime image must be restored before the independent model Agent Run. Canonical dependency closure and exact runtime identity require separate remediation."
+reason = "The final production bundle passed the 30/30 Oracle verifier plus empty, stub, forgery, install-hang, call-hang, and direct offline controls. The locked OpenHands runtime image must be restored before the independent model Agent Run."

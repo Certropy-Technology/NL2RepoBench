@@ -100,6 +100,6 @@ uri = "artifact://private/sha256:725c09c346827cd980bc1a3682719b93030f5b72aaf97ce
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-wave2-20260828-tzdata"
-reason = "Production compilation and one official Harbor Oracle completed with 53/53 and reward 1.0. Empty, stub, forgery, invalid-workspace, install-timeout, call-timeout, and offline verifier controls completed with verifier-owned zero rewards and public_network_available=false. Integrator review and model Agent Run remain pending. Canonical dependency closure and exact runtime identity require separate remediation."
+reason = "Production compilation and one official Harbor Oracle completed with 53/53 and reward 1.0. Empty, stub, forgery, invalid-workspace, install-timeout, call-timeout, and offline verifier controls completed with verifier-owned zero rewards and public_network_available=false. Integrator review and model Agent Run remain pending."

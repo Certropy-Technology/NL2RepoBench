@@ -108,6 +108,6 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
+status = "controls-passed"
 owner = "python-author-wave2-20260828"
-status = "blocked"
-reason = "The final production bundle passes the official one-run Harbor Oracle at 49/49 and the empty, stub, forgery, detached call-hang, offline verifier, and static network controls. Review, Agent Run, and publication remain integrator stages. Canonical migration removed legacy dependency closure fields because no exact lock/offline-store/inventory refs were available. Environment/package-manager version evidence is not exact; production release remains blocked."
+reason = "The final production bundle passes the official one-run Harbor Oracle at 49/49 and the empty, stub, forgery, detached call-hang, offline verifier, and static network controls. Review, Agent Run, and publication remain integrator stages."

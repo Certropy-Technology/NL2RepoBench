@@ -102,6 +102,6 @@ collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-wave2-pilot-20260827-r1"
-reason = "The production bundle passed the 45/45 Oracle gate plus empty, stub, forgery, install-timeout, call-timeout, and offline controls; review and model pilot remain separate stages. Canonical dependency closure and exact Python package-manager runtime identity are unavailable; create lock/offline-store/inventory artifacts and a versioned release before production use."
+reason = "The production bundle passed the 45/45 Oracle gate plus empty, stub, forgery, install-timeout, call-timeout, and offline controls; review and model pilot remain separate stages."

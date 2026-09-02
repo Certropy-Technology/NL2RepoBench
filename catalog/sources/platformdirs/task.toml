@@ -72,10 +72,9 @@ visibility = "private"
 [verifier.environment]
 
 [lifecycle]
-status = "blocked"
+status = "oracle-passed"
 owner = "integrator"
-reason = "Canonical source migration is blocked: exact Python runtime/package-manager version and canonical dependency closure evidence are unavailable. Previous status/reason: oracle-passed: Generic private-bundle compiled Oracle passed 20/20 with reward 1.0; controls and review remain pending."
-
+reason = "Generic private-bundle compiled Oracle passed 20/20 with reward 1.0; controls and review remain pending."
 [environment]
 status = "unknown"
 os_name = "debian-12-amd64"

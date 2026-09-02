@@ -81,4 +81,4 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 [lifecycle]
 status = "blocked"
 owner = "repair/click"
-reason = "Immutable Click source and BSD-3-Clause archive evidence are known, but Flit build/test dependencies are not closed offline, collection denominator is not frozen, and the upstream callback/stream/subprocess surface lacks a separate JSON-safe verifier. No catalog/tasks/click runtime exists. Canonical dependency closure and exact Python package-manager runtime identity are unavailable; create lock/offline-store/inventory artifacts and a versioned release before production use."
+reason = "Immutable Click source and BSD-3-Clause archive evidence are known, but Flit build/test dependencies are not closed offline, collection denominator is not frozen, and the upstream callback/stream/subprocess surface lacks a separate JSON-safe verifier. No catalog/tasks/click runtime exists."

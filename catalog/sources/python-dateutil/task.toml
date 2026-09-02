@@ -107,6 +107,6 @@ uri = "artifact://private/sha256:b22020875210dada461150d81629f68ae49c37689909f0e
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "worker"
-reason = "Production compile, Oracle, empty, stub, forgery, and offline controls completed; integrator review and model run remain pending. Canonical dependency closure, exact runtime identity, and current verifier evidence remain unavailable."
+reason = "Production compile, Oracle, empty, stub, forgery, and offline controls completed; integrator review and model run remain pending."

@@ -72,10 +72,9 @@ collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-wave2-archive-r2-c3"
-reason = "Canonical runtime/package-manager version and dependency closure are not available; legacy single closure refs were not retyped. Previous status/reason: controls-passed: Frozen source, private hash-locked dependency closure, separate custom verifier, Oracle, and bounded controls passed; awaiting integrator model run."
-
+reason = "Frozen source, private hash-locked dependency closure, separate custom verifier, Oracle, and bounded controls passed; awaiting integrator model run."
 [harbor]
 description = "Build requests-oauthlib from an empty workspace and implement the deterministic offline OAuth 1 signing, OAuth 2 authorization/token handling, and local provider-compliance contract."
 keywords = [

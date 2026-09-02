@@ -64,4 +64,4 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 [lifecycle]
 status = "blocked"
 owner = "repair/remarshal"
-reason = "Canonical runtime/package-manager version and dependency closure are not available; legacy single closure refs were not retyped. Previous status/reason: blocked: The exact upstream revision, archive digest, and MIT license are known, but no reviewed binary-safe CLI adapter, approved offline dependency artifact, private test bundle, separate verifier, Harbor Oracle, controls, or production runtime exists. Keep the candidate blocked until the adapter and immutable dependency closure are approved and gated."
+reason = "The exact upstream revision, archive digest, and MIT license are known, but no reviewed binary-safe CLI adapter, approved offline dependency artifact, private test bundle, separate verifier, Harbor Oracle, controls, or production runtime exists. Keep the candidate blocked until the adapter and immutable dependency closure are approved and gated."

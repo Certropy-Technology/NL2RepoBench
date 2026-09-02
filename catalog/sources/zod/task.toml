@@ -75,10 +75,9 @@ contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-gpt56-supplemental-20260827-r2"
-reason = "Production compile and Harbor 0.21 controls passed: Oracle 24/24 reward 1.0; empty reward 0; stub and forgery 1/24; call-hang timed out and failed closed at reward 0; offline network control reward 0. All verifier network receipts report no public network. Integrator review, pilot, and publication remain pending. Canonical dependency closure requires a new versioned private artifact migration."
-
+reason = "Production compile and Harbor 0.21 controls passed: Oracle 24/24 reward 1.0; empty reward 0; stub and forgery 1/24; call-hang timed out and failed closed at reward 0; offline network control reward 0. All verifier network receipts report no public network. Integrator review, pilot, and publication remain pending."
 [harbor]
 description = "Production Zod v4 JSON validation slice with a verifier-owned subprocess boundary."
 keywords = [

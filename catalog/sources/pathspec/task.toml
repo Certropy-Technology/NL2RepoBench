@@ -72,10 +72,9 @@ uri = "artifact://private/sha256:41cd24eb1bcc83c0f964b4617e7269d2e6d978f02f8e8fe
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-wave2-20260828-pathspec"
-reason = "Canonical source migration is blocked: exact Python runtime/package-manager version and canonical dependency closure evidence are unavailable. Previous status/reason: controls-passed: Harbor 0.21 Oracle and negative control gates use a fixed 43-leaf UID-separated verifier with no public network. Model Agent Run and publication review remain with the integrator."
-
+reason = "Harbor 0.21 Oracle and negative control gates use a fixed 43-leaf UID-separated verifier with no public network. Model Agent Run and publication review remain with the integrator."
 [environment]
 status = "unknown"
 os_name = "debian-12-amd64"

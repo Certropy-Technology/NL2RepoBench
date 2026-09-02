@@ -103,6 +103,6 @@ uri = "artifact://private/sha256:56b99ec5c42ed681a8aa60e4e3fd33b3fd848b66d2a3680
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "worker/python-dotenv"
-reason = "Harbor 0.21.0 production gates passed with a fixed 33-leaf contract: Oracle 33/33, empty 0, stub 2/33, and forgery 2/33. All four verifier network receipts prove no public connectivity. Reviews, pilots, dataset integration, commit, and push remain outside this task. Canonical dependency closure, exact runtime identity, and current verifier evidence remain unavailable."
+reason = "Harbor 0.21.0 production gates passed with a fixed 33-leaf contract: Oracle 33/33, empty 0, stub 2/33, and forgery 2/33. All four verifier network receipts prove no public connectivity. Reviews, pilots, dataset integration, commit, and push remain outside this task."

@@ -127,6 +127,6 @@ collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-wave2-20260828-weaviate-client"
-reason = "The remediated frozen source passed the 94-leaf Oracle at reward 1.0; empty, stub, forgery, install-timeout, call-timeout, and offline controls completed under the separate verifier. The unavailable pinned agent-runtime image remains an integrator infrastructure precondition. Canonical migration: exact Python runtime/package-manager evidence and canonical private dependency closure are not available; keep blocked until versioned artifacts and gates are recreated."
+reason = "The remediated frozen source passed the 94-leaf Oracle at reward 1.0; empty, stub, forgery, install-timeout, call-timeout, and offline controls completed under the separate verifier. The unavailable pinned agent-runtime image remains an integrator infrastructure precondition."

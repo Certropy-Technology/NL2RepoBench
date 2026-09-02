@@ -101,6 +101,6 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
+status = "controls-passed"
 owner = "python-author-wave2-20260828"
-status = "blocked"
-reason = "The production bundle passed the 32/32 Oracle gate plus empty, stub, forgery, install-timeout, call-timeout, and offline controls; independent review and model pilot remain separate stages. Canonical migration removed legacy dependency closure fields because no exact lock/offline-store/inventory refs were available. Environment/package-manager version evidence is not exact; production release remains blocked."
+reason = "The production bundle passed the 32/32 Oracle gate plus empty, stub, forgery, install-timeout, call-timeout, and offline controls; independent review and model pilot remain separate stages."

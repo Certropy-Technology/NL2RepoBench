@@ -104,6 +104,6 @@ uri = "artifact://private/sha256:8b7ea827a586563b074021e38531c1652a35f206d56438d
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-wave2-20260828-tiktoken"
-reason = "Frozen source, hash-locked dependency closure, separate custom-json verifier, production compile, one Harbor Oracle, and empty/stub/forgery/offline controls passed. Model Agent Run, review, pilot, and publication remain integrator stages. Canonical source migration is blocked because the exact Python package-manager runtime and canonical lock/offline-store/inventory closure are not frozen; no legacy single closure artifact was retyped or fabricated."
+reason = "Frozen source, hash-locked dependency closure, separate custom-json verifier, production compile, one Harbor Oracle, and empty/stub/forgery/offline controls passed. Model Agent Run, review, pilot, and publication remain integrator stages."

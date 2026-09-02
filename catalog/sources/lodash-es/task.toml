@@ -103,6 +103,6 @@ uri = "artifact://private/sha256:d7b00b1e68ee5e4d19e3e333f9472460702c167667bdf7f
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-discovery-20260826-r1"
-reason = "The exact source archive and 308-value root API inventory are frozen; three Node 24 no-network upstream baselines each passed 6831/6831. The private 30-leaf node:test bundle, production compiler, direct offline verifier, and Harbor 0.21 Oracle all pass with reward 1.0. Empty, executable stub, forgery, and bounded call-timeout controls are verifier-valid with reward 0 and public_network_available=false. Review, pilot, and publication remain out of scope. Canonical dependency closure requires lock, offline_store, and inventory refs; legacy single closure data is retained only as historical handoff evidence."
+reason = "The exact source archive and 308-value root API inventory are frozen; three Node 24 no-network upstream baselines each passed 6831/6831. The private 30-leaf node:test bundle, production compiler, direct offline verifier, and Harbor 0.21 Oracle all pass with reward 1.0. Empty, executable stub, forgery, and bounded call-timeout controls are verifier-valid with reward 0 and public_network_available=false. Review, pilot, and publication remain out of scope."

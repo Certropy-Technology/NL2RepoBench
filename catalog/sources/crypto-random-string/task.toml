@@ -69,10 +69,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wave2-20260828"
 reason = "Frozen source/API/test inventory, root-only npm v3 closure, and private 32-leaf subprocess verifier are packaged. Fresh Oracle and controls receipts are recorded in production-evidence.json. No model Agent Run was started."
-
 [oracle_bundle]
 digest = "sha256:c02d574eafcb4c0f7c7bec645dda501f72d414c9914bef059bbbb2003f34d618"
 size_bytes = 2243

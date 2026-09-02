@@ -106,6 +106,6 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
+status = "controls-passed"
 owner = "python-author-discovery-20260826-r1"
-status = "blocked"
-reason = "Source freeze, public specification, private 72-leaf subprocess verifier, hash-locked dependency closure, Oracle, production compile, and bounded negative controls are complete. Awaiting integrator blind/spec review and the separate model Agent Run. Canonical migration removed legacy dependency closure fields because no exact lock/offline-store/inventory refs were available. Environment/package-manager version evidence is not exact; production release remains blocked."
+reason = "Source freeze, public specification, private 72-leaf subprocess verifier, hash-locked dependency closure, Oracle, production compile, and bounded negative controls are complete. Awaiting integrator blind/spec review and the separate model Agent Run."

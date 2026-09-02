@@ -115,6 +115,6 @@ uri = "artifact://private/sha256:7c63571a5382d1000a5f9ff136d7d7e2f441e1520114197
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wave2-archive-r2-c2"
-reason = "The final 72-leaf separate verifier passed the frozen reference at 72/72 with reward 1.0. Empty, stub, forgery, install-script, bounded call-hang, and offline-network controls completed with verifier-owned low scores and public_network_available=false. Independent review, model pilot, projection, and publication remain integrator stages. Canonical dependency closure requires lock, offline_store, and inventory refs; legacy single closure data is retained only as historical handoff evidence."
+reason = "The final 72-leaf separate verifier passed the frozen reference at 72/72 with reward 1.0. Empty, stub, forgery, install-script, bounded call-hang, and offline-network controls completed with verifier-owned low scores and public_network_available=false. Independent review, model pilot, projection, and publication remain integrator stages."

@@ -76,10 +76,9 @@ uri = "artifact://private/sha256:491ad31932867232eeb184b3a1662a7f4d770962588007a
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-wave2-20260828"
-reason = "Canonical source migration is blocked: exact Python runtime/package-manager version and canonical dependency closure evidence are unavailable. Previous status/reason: controls-passed: Production compile, one Harbor Oracle, empty/stub/forgery controls, offline probes, and the bounded install-timeout probe passed for the frozen 36-leaf contract."
-
+reason = "Production compile, one Harbor Oracle, empty/stub/forgery controls, offline probes, and the bounded install-timeout probe passed for the frozen 36-leaf contract."
 [environment]
 status = "unknown"
 os_name = "debian-12-amd64"

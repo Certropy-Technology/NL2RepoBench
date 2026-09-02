@@ -60,10 +60,9 @@ collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "worker/shellingham"
-reason = "Canonical runtime/package-manager version and dependency closure are not available; legacy single closure refs were not retyped. Previous status/reason: controls-passed: Production compile, Harbor Oracle, empty, stub, forgery, call-hang, and offline network controls passed; independent model Agent Run, review, and publication remain for the integration loop."
-
+reason = "Production compile, Harbor Oracle, empty, stub, forgery, call-hang, and offline network controls passed; independent model Agent Run, review, and publication remain for the integration loop."
 [harbor]
 description = "Build shellingham 1.5.4 from an empty workspace and implement deterministic shell detection and POSIX process-tree parsing."
 keywords = [

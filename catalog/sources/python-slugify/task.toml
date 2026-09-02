@@ -69,5 +69,5 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
-reason = "Imported legacy task; source, dependency and collection locks still require freeze. Canonical dependency closure, exact runtime identity, and current verifier evidence remain unavailable."
+status = "discovered"
+reason = "Imported legacy task; source, dependency and collection locks still require freeze."

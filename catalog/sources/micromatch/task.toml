@@ -77,10 +77,9 @@ contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-discovery-20260826-r1"
-reason = "The 67-leaf private contract closes traceability gaps for documented aliases, syntax, ignore arrays, and onIgnore behavior. The production Node bundle passed Oracle at 67/67 with reward 1.0; empty scored 0.0, stub 8/67, forgery 3/67, timeout 8/67, and the network-dependent offline control 7/67. Every run produced a verifier-owned receipt proving public network access was unavailable. Review and pilot remain publication-stage work. Canonical dependency closure and versioned private-artifact migration remain required."
-
+reason = "The 67-leaf private contract closes traceability gaps for documented aliases, syntax, ignore arrays, and onIgnore behavior. The production Node bundle passed Oracle at 67/67 with reward 1.0; empty scored 0.0, stub 8/67, forgery 3/67, timeout 8/67, and the network-dependent offline control 7/67. Every run produced a verifier-owned receipt proving public network access was unavailable. Review and pilot remain publication-stage work."
 [harbor]
 description = "Build the micromatch 4.0.8 CommonJS glob-matching library from an empty workspace."
 keywords = [

@@ -74,10 +74,9 @@ contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "uuid-repair"
-reason = "After the shared Node verifier network-proof change, production compilation with the Node lock succeeded without --allow-incomplete; fresh official Harbor 0.21.0 runs passed Oracle 11/11 at reward 1.0 and empty, stub, and forgery controls at reward 0.0, with every verifier run emitting network.json that proves no public egress. Review, pilot, and publication remain out of scope. Canonical dependency closure requires a new versioned private artifact migration."
-
+reason = "After the shared Node verifier network-proof change, production compilation with the Node lock succeeded without --allow-incomplete; fresh official Harbor 0.21.0 runs passed Oracle 11/11 at reward 1.0 and empty, stub, and forgery controls at reward 0.0, with every verifier run emitting network.json that proves no public egress. Review, pilot, and publication remain out of scope."
 [harbor]
 description = "Build the real uuidjs/uuid v14.0.2 Node ESM package for a deterministic RFC 9562 API slice."
 keywords = [

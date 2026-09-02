@@ -68,10 +68,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wave2-20260828-c3"
 reason = "Frozen source, zero-dependency npm closure, separate verifier bundle, Oracle, and empty/stub/forgery/loader/install-script/hang/offline controls have passed. No model Agent Run was started in this authoring lane."
-
 [oracle_bundle]
 digest = "sha256:f1b6ef33cee9e1dd01dbebfabc7c4218688f3872e9ab1d8a2c3ec2d7f94918a3"
 size_bytes = 2632

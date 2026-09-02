@@ -69,5 +69,5 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
-reason = "Imported legacy task; source, dependency and collection locks still require freeze. Canonical source migration is blocked because the exact Python package-manager runtime and canonical lock/offline-store/inventory closure are not frozen; no legacy single closure artifact was retyped or fabricated."
+status = "discovered"
+reason = "Imported legacy task; source, dependency and collection locks still require freeze."

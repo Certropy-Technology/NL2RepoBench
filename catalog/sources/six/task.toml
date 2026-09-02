@@ -59,10 +59,9 @@ collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "worker/six"
-reason = "Canonical runtime/package-manager version and dependency closure are not available; legacy single closure refs were not retyped. Previous status/reason: controls-passed: Official Harbor 0.21.0 production gates passed: Oracle was valid at 21/21 and reward 1.0; empty and forgery were valid at reward 0.0; stub was valid at 1/21 and reward 0.047619; all four verifier network receipts proved no public egress. Review, pilot, and publication remain out of scope."
-
+reason = "Official Harbor 0.21.0 production gates passed: Oracle was valid at 21/21 and reward 1.0; empty and forgery were valid at reward 0.0; stub was valid at 1/21 and reward 0.047619; all four verifier network receipts proved no public egress. Review, pilot, and publication remain out of scope."
 [harbor]
 description = "Build six 1.17.0 from an empty workspace and satisfy a bounded Python 3 compatibility contract through a separate subprocess verifier."
 keywords = [

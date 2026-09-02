@@ -68,10 +68,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wave2-20260828/dot-prop"
 reason = "Frozen source, private npm v3 closure, 36-leaf separate node:test verifier, production compile, trusted Oracle, empty/stub/forgery/hang/offline controls, and no-network receipts passed. Review, pilot, and publication remain integrator-stage gates."
-
 [oracle_bundle]
 digest = "sha256:020d3838568380c53e8e4c071289b05a3bdc13bd588733733068c506afcbfa00"
 size_bytes = 40960

@@ -67,10 +67,9 @@ collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-wave2-20260828-mdurl"
-reason = "Harbor 0.21.0 Oracle, empty, stub, forgery, install-timeout, and offline controls passed on the final compiled bundle. Harbor Agent Run, review, and publication remain separate integrator stages. Canonical dependency lock/offline-store/inventory closure is not represented by the legacy dependency field; a versioned private-artifact migration is required."
-
+reason = "Harbor 0.21.0 Oracle, empty, stub, forgery, install-timeout, and offline controls passed on the final compiled bundle. Harbor Agent Run, review, and publication remain separate integrator stages."
 [harbor]
 description = "Build mdurl 0.1.2 from an empty workspace and satisfy a deterministic URL parse, format, percent-encode, and percent-decode contract through a separate subprocess verifier."
 keywords = [

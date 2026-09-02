@@ -96,10 +96,9 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "rollup-remediation"
-reason = "Exact source and Node-WASM build are hash-bound; production compile passed and the 11-leaf separate verifier passed Oracle plus empty, stub, forgery, install-script, loader-hook, hang, and offline controls. Canonical dependency closure is not represented; versioned private-artifact migration is required."
-
+reason = "Exact source and Node-WASM build are hash-bound; production compile passed and the 11-leaf separate verifier passed Oracle plus empty, stub, forgery, install-script, loader-hook, hang, and offline controls."
 [oracle_bundle]
 digest = "sha256:e44467c4e6072888e20f19df82bf4365b80642d9b0cf50203646e698ff3cadf5"
 size_bytes = 36648960

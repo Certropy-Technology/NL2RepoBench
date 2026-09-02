@@ -87,6 +87,6 @@ media_type = "application/vnd.nl2repobench.oracle+tar"
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-wave2-20260828"
-reason = "Canonical migration is blocked because the legacy pip closure reference was removed and no canonical lock/offline-store/inventory triple is available. Historical evidence: production compile passed; Harbor 0.21.0 Oracle is valid at 40/40 reward 1.0; empty, stub, forgery, install-hang, call-hang, and offline controls completed. Awaiting the independent Agent Run; no model Agent Run was started from this lane."
+reason = "Production compile passed; Harbor 0.21.0 Oracle is valid at 40/40 reward 1.0; empty, stub, forgery, install-hang, call-hang, and offline controls completed. Awaiting the independent Agent Run; no model Agent Run was started from this lane."

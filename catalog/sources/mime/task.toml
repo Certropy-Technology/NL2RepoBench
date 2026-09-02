@@ -74,10 +74,9 @@ contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "mime-authoring"
-reason = "Production Node bundle compiled reproducibly; current Harbor 0.21.0 Oracle passed 32/32, and empty, stub, forgery, install-script, loader-hook, hang, and offline controls passed their bounded gates. Independent model Agent Run and review/pilot stages remain pending. Canonical dependency closure and versioned private-artifact migration remain required."
-
+reason = "Production Node bundle compiled reproducibly; current Harbor 0.21.0 Oracle passed 32/32, and empty, stub, forgery, install-script, loader-hook, hang, and offline controls passed their bounded gates. Independent model Agent Run and review/pilot stages remain pending."
 [harbor]
 description = "Build the mime ESM package with a deterministic MIME lookup and CLI contract."
 keywords = [

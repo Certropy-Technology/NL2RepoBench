@@ -37,8 +37,7 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 [lifecycle]
 status = "blocked"
 owner = "authoring-worker"
-reason = "Canonical source migration is blocked: exact Python runtime/package-manager version and canonical dependency closure evidence are unavailable. Previous status/reason: blocked: Exact source, MIT license, package metadata, tracked LOC, full and restricted test collection, optional integration risks, and an offline runtime/build probe are recorded. Publication is blocked because the final immutable environment and hash-locked build closure are absent, source JUnit leaves do not equal pytest collection items, no private adapted test/command artifact or petl-specific child-side table protocol exists, and no Oracle, controls, review, or Harbor bundle is authorized."
-
+reason = "Exact source, MIT license, package metadata, tracked LOC, full and restricted test collection, optional integration risks, and an offline runtime/build probe are recorded. Publication is blocked because the final immutable environment and hash-locked build closure are absent, source JUnit leaves do not equal pytest collection items, no private adapted test/command artifact or petl-specific child-side table protocol exists, and no Oracle, controls, review, or Harbor bundle is authorized."
 [environment]
 status = "unknown"
 os_name = "linux-amd64"

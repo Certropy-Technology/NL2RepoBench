@@ -82,6 +82,6 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-owner = "repair/pyautogui"
 status = "blocked"
+owner = "repair/pyautogui"
 reason = "Failure class: environment. Seven frozen keyboard tests call input() from worker threads and require a focused terminal; xvfb-run supplies only an X display, so a separate verifier cannot execute the legacy contract deterministically. No catalog/tasks/pyautogui runtime exists."

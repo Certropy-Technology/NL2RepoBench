@@ -74,10 +74,9 @@ contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wave2-20260828-normalize-url"
-reason = "Frozen source, 45-leaf separate verifier, private npm closure, production compile, Oracle, empty/stub/forgery/hang/offline controls, and no-network receipts passed. Integrator review, model Agent Run, pilot, and publication remain outside this lane. Canonical dependency closure and versioned private-artifact migration remain required."
-
+reason = "Frozen source, 45-leaf separate verifier, private npm closure, production compile, Oracle, empty/stub/forgery/hang/offline controls, and no-network receipts passed. Integrator review, model Agent Run, pilot, and publication remain outside this lane."
 [harbor]
 description = "Build normalize-url as an offline ESM URL normalization package with deterministic protocol, host, path, query, fragment, and data URL behavior."
 keywords = [

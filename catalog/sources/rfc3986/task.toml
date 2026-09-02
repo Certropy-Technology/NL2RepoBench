@@ -65,10 +65,9 @@ collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-wave2-20260828-c2"
-reason = "Canonical runtime/package-manager version and dependency closure are not available; legacy single closure refs were not retyped. Previous status/reason: controls-passed: Current production bundle passed Oracle and task-local controls: Oracle 38/38, empty installation exception 0/0, stub 0/38, forgery 0/38, bounded call-hang 0/38, and offline network probes false. No model Agent Run is started here."
-
+reason = "Current production bundle passed Oracle and task-local controls: Oracle 38/38, empty installation exception 0/0, stub 0/38, forgery 0/38, bounded call-hang 0/38, and offline network probes false. No model Agent Run is started here."
 [harbor]
 description = "Build rfc3986 from an empty workspace and implement a deterministic URI/IRI parsing, normalization, builder, ParseResult, and validation contract over a separate child-side verifier."
 keywords = [

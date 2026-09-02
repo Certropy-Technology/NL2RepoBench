@@ -68,10 +68,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "cookie-repair"
 reason = "Hash-bound Harbor 0.21 evidence is complete for the current source and locked Node toolchain: Oracle passed 32/32; empty failed closed at reward 0; the isolated committed-dispatch stub collected 32 and scored 1/32; forgery collected 32 and scored 1/32 despite a forged workspace reward; and every gate has a verifier-owned no-egress network receipt. Reviews and pilots remain pending."
-
 [oracle_bundle]
 digest = "sha256:6880843c56fbb2812265e32874ede71387f6a1559c240c785c25344fac2cc0fc"
 size_bytes = 40960

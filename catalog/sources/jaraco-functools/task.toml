@@ -75,10 +75,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-wave2-archive-r2-c3"
-reason = "Canonical migration is blocked because the legacy pip closure reference was removed and no canonical lock/offline-store/inventory triple is available. Historical evidence: the production bundle passed Harbor Oracle 35/35 with reward 1.0; empty, stub, forgery, call-timeout, and offline controls produced verifier-owned reports. No Harbor model Agent Run was started."
-
+reason = "The production bundle passed Harbor Oracle 35/35 with reward 1.0; empty, stub, forgery, call-timeout, and offline controls produced verifier-owned reports. No Harbor model Agent Run was started."
 [oracle_bundle]
 digest = "sha256:eadd678e5d943a3fbe5125f7d440daff211268b78e8053590917da36e8afa4c8"
 size_bytes = 92160

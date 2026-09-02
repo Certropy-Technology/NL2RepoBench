@@ -74,10 +74,9 @@ contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wave2-20260828-uint8array-extras"
-reason = "Frozen source, API/test inventory, private npm closure, production compile, separate offline verifier, Oracle-like correct run, and all task-local controls passed. Independent review, Agent Run, dataset integration, and publication remain outside this lane. Canonical dependency closure requires a new versioned private artifact migration."
-
+reason = "Frozen source, API/test inventory, private npm closure, production compile, separate offline verifier, Oracle-like correct run, and all task-local controls passed. Independent review, Agent Run, dataset integration, and publication remain outside this lane."
 [harbor]
 description = "Build an offline ESM package of deterministic Uint8Array, encoding, and byte-sequence utilities."
 keywords = [

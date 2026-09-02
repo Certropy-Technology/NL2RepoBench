@@ -70,10 +70,9 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-discovery-20260826-r1"
-reason = "Canonical migration is blocked because the legacy pip closure reference was removed and no canonical lock/offline-store/inventory triple is available. Historical evidence: Harbor 0.21 Oracle passed 31/31 with reward 1.0 on version 0.1.1; existing empty/stub/forgery/install-hang/call-hang controls remain applicable because verifier and control bytes are unchanged, and all verifier network probes are offline. Review and pilot remain separate stages."
-
+reason = "Harbor 0.21 Oracle passed 31/31 with reward 1.0 on version 0.1.1; existing empty/stub/forgery/install-hang/call-hang controls remain applicable because verifier and control bytes are unchanged, and all verifier network probes are offline. Review and pilot remain separate stages."
 [oracle_bundle]
 digest = "sha256:44fdda4299350e28f2aa2d45347bcf405437c197fe197b978d3481d37760e157"
 size_bytes = 10240

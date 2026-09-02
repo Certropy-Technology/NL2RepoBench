@@ -76,4 +76,4 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
 status = "blocked"
-reason = "No authorized private dependency/verifier artifacts or local Oracle/control evidence is available; do not publish or run this task until the strict gates pass. Canonical migration: exact Python runtime/package-manager evidence and canonical private dependency closure are not available; keep blocked until versioned artifacts and gates are recreated."
+reason = "No authorized private dependency/verifier artifacts or local Oracle/control evidence is available; do not publish or run this task until the strict gates pass."

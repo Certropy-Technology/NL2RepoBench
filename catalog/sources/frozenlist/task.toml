@@ -103,10 +103,9 @@ uri = "artifact://private/sha256:8b00cb2ab3fab7ed88ecc2c642c635f3ba395541010b206
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "packaged"
 owner = "python-author-wave2-20260828"
-reason = "Canonical migration completed; production remains blocked pending canonical dependency closure and current release evidence. Previous lifecycle reason: The exact source, hash-locked build closure, custom child-side verifier, digest-checking Oracle, controls, and deterministic production compile are prepared; the official Harbor Oracle and controls remain deferred to the integration loop."
-
+reason = "The exact source, hash-locked build closure, custom child-side verifier, digest-checking Oracle, controls, and deterministic production compile are prepared; the official Harbor Oracle and controls remain deferred to the integration loop."
 [verifier.environment]
 
 [oracle_bundle]

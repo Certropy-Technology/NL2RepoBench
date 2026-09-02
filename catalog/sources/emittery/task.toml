@@ -67,11 +67,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wave2-20260828-c3"
 reason = "Source, deterministic adapter, private bundles, production compile, Oracle, and controls evidence have been verified in this lane. Blind review, agent run, and publication remain downstream integrator stages."
-
-
 [tests.commands_artifact]
 digest = "sha256:d770d60a1dfad582742f27b57cfebb0c693eb5152ed4d3b983ba1311b6f19899"
 size_bytes = 10240

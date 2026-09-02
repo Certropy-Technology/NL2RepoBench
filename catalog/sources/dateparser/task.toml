@@ -69,4 +69,4 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 [lifecycle]
 status = "blocked"
 owner = "repair/dateparser"
-reason = "Source-freeze remediation stopped at discovery: catalog/sources/dateparser/audit.md records unresolved upstream identity, full revision, license/archive, locale/time-zone closure, deterministic test collection, offline dependency closure, and separate-verifier design. No catalog/tasks/dateparser runtime is present. Canonical dependency closure and exact Python package-manager runtime identity are unavailable; create lock/offline-store/inventory artifacts and a versioned release before production use."
+reason = "Source-freeze remediation stopped at discovery: catalog/sources/dateparser/audit.md records unresolved upstream identity, full revision, license/archive, locale/time-zone closure, deterministic test collection, offline dependency closure, and separate-verifier design. No catalog/tasks/dateparser runtime is present."

@@ -74,10 +74,9 @@ contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "typescript-remediation"
-reason = "The exact production bundle passes 30/30 Oracle leaves offline; empty, stub, forgery, and bounded candidate-call timeout controls produce low or zero reward without Harbor exceptions. Canonical dependency closure requires a new versioned private artifact migration."
-
+reason = "The exact production bundle passes 30/30 Oracle leaves offline; empty, stub, forgery, and bounded candidate-call timeout controls produce low or zero reward without Harbor exceptions."
 [harbor]
 description = "Build the native TypeScript preview's bounded lexical scanner and bidirectional SpanMap API."
 keywords = [

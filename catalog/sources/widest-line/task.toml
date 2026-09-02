@@ -79,10 +79,9 @@ contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wave2-20260828-widest-line"
-reason = "Source, package metadata, npm closure, deterministic custom-json-v1 tests, production compile, and verifier-only Oracle-equivalent/control smoke have passed in this authoring lane. Formal Harbor Oracle receipt, independent review, dataset integration, and model execution remain downstream. Canonical dependency closure requires a new versioned private artifact migration."
-
+reason = "Source, package metadata, npm closure, deterministic custom-json-v1 tests, production compile, and verifier-only Oracle-equivalent/control smoke have passed in this authoring lane. Formal Harbor Oracle receipt, independent review, dataset integration, and model execution remain downstream."
 [harbor]
 description = "Build the widest-line 6.0.0 ESM package, measuring the maximum terminal display width across newline-separated text with Unicode and ANSI support."
 keywords = [

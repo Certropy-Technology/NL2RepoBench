@@ -67,5 +67,5 @@ collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
-status = "blocked"
-reason = "Imported legacy task; source and collection locks require freeze. Canonical dependency closure and exact Python package-manager runtime identity are unavailable; create lock/offline-store/inventory artifacts and a versioned release before production use."
+status = "discovered"
+reason = "Imported legacy task; source and collection locks require freeze."

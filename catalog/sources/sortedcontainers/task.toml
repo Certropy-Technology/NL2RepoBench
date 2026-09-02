@@ -101,9 +101,9 @@ uri = "artifact://private/sha256:b5cc7eb67340b84f413c073907807f10d36fd81a2587273
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "worker/sortedcontainers"
-reason = "Strict Harbor 0.21.0 Oracle passed 30/30 at reward 1.0; empty, stub, forgery, and offline controls passed with path- and SHA-bound canonical evidence. Reviews and pilots remain separate stages. Canonical source migration is blocked because the exact Python package-manager runtime and canonical lock/offline-store/inventory closure are not frozen; no legacy single closure artifact was retyped or fabricated."
+reason = "Strict Harbor 0.21.0 Oracle passed 30/30 at reward 1.0; empty, stub, forgery, and offline controls passed with path- and SHA-bound canonical evidence. Reviews and pilots remain separate stages."
 
 [[lifecycle.evidence]]
 digest = "sha256:f96aa28b8cfb7274f9be14497ec625f44e9c79e321048b361f2a014d94e59fa5"

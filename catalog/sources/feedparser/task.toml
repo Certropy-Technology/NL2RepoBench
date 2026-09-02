@@ -81,4 +81,4 @@ workspace_artifact = "/workspace"
 [lifecycle]
 status = "blocked"
 owner = "feedparser-remediation"
-reason = "Canonical migration completed; production remains blocked pending immutable source authority, dependency closure, verifier evidence and Oracle. Previous lifecycle reason: Static audit and bounded remediation recorded the candidate revision and declared BSD-2-Clause license, but no detached archive digest, immutable image lock, hash-locked dependency closure, private adapted verifier/test bundle, or Oracle bundle is available."
+reason = "Static audit and bounded remediation recorded the candidate revision and declared BSD-2-Clause license, but no detached archive digest, immutable image lock, hash-locked dependency closure, private adapted verifier/test bundle, or Oracle bundle is available. No catalog/tasks/feedparser runtime exists. Failure class: environment. Next step: freeze the detached archive and license bytes, build the approved dependency lock and child-side verifier, then rerun production compile and Harbor Oracle/controls."

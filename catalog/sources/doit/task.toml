@@ -68,4 +68,4 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 [lifecycle]
 status = "blocked"
 owner = "authoring-worker"
-reason = "Canonical migration completed; production remains blocked pending exact runtime, dependency closure, verifier adapter and frozen collection. Previous lifecycle reason: The exact source, repeatable archive, MIT license, package/API inventory, provisional collection, dependency declarations, CLI/task-runner tests, and timestamp/subprocess/plugin risks are audited."
+reason = "The exact source, repeatable archive, MIT license, package/API inventory, provisional collection, dependency declarations, CLI/task-runner tests, and timestamp/subprocess/plugin risks are audited. Publication is blocked because no final environment or hash-locked offline dependency bundle exists, the source suite directly imports candidate internals and has platform-dependent skips, and no reviewed doit-specific subprocess scenario adapter, private verifier artifacts, frozen denominator, or Oracle/control evidence exists; this static lane creates no Harbor assets."

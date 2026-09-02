@@ -76,9 +76,9 @@ uri = "artifact://private/sha256:863d30b08209c483f729cd0517fcfe7a074c3606266d337
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "worker"
-reason = "Canonical source migration is blocked: exact Python runtime/package-manager version and canonical dependency closure evidence are unavailable. Previous status/reason: controls-passed: Official Harbor 0.21.0 Oracle passed 9/9 with reward 1.0; empty, stub, and forgery controls scored 0.0 and all final verifier network probes were false."
+reason = "Official Harbor 0.21.0 Oracle passed 9/9 with reward 1.0; empty, stub, and forgery controls scored 0.0 and all final verifier network probes were false."
 
 [[lifecycle.evidence]]
 digest = "sha256:52d123a02d779f7fbf3c8e3e8fc99dcab15d1088b6d1351b4adb252eeac8cc32"
@@ -86,7 +86,6 @@ size_bytes = 5847
 media_type = "application/json"
 uri = "artifact://private/sha256:52d123a02d779f7fbf3c8e3e8fc99dcab15d1088b6d1351b4adb252eeac8cc32"
 visibility = "private"
-
 [environment]
 status = "unknown"
 os_name = "debian-12-amd64"

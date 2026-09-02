@@ -92,10 +92,9 @@ uri = "artifact://private/sha256:798b5a042589df48257aeb0bbbfdc5ab8d6a57671097433
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-wave2-20260828-c3"
-reason = "Canonical migration completed; production remains blocked pending canonical dependency closure and current release evidence. Previous lifecycle reason: Production Harbor 0.21.0 bundle passed the final Oracle at 24/24 and reward 1.0; empty, stub, forgery, and offline verifier controls completed with valid low scores and no public egress."
-
+reason = "Production Harbor 0.21.0 bundle passed the final Oracle at 24/24 and reward 1.0; empty, stub, forgery, and offline verifier controls completed with valid low scores and no public egress. Review and model Agent Run remain separate integrator stages."
 [verifier.environment]
 
 [oracle_bundle]

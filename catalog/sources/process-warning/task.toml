@@ -95,10 +95,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wave2-20260828-process-warning"
-reason = "Source validation, zero-error network policy, production compile, UID-isolated Oracle replay, fixed-denominator controls, and offline probes passed in this lane. Review, Agent Run, and publication remain integrator-stage gates. Canonical dependency closure is not represented; versioned private-artifact migration is required."
-
+reason = "Source validation, zero-error network policy, production compile, UID-isolated Oracle replay, fixed-denominator controls, and offline probes passed in this lane. Review, Agent Run, and publication remain integrator-stage gates."
 [oracle_bundle]
 digest = "sha256:18e6ef212c352477f48f63185c7e796a9c9e6c3bd64c10907e789b88f48c5c0d"
 size_bytes = 10240

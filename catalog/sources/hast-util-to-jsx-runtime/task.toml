@@ -114,10 +114,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wave2-20260828"
-reason = "Frozen source, public API contract, integrity-checked npm v3 closure, separate subprocess verifier, production compile, Oracle 24/24 reward 1.0, and bounded controls are complete. Independent review, model Agent Run, and publication remain outside this lane. Canonical dependency lock/offline-store/inventory closure is unavailable; the legacy single artifact reference was not retyped."
-
+reason = "Frozen source, public API contract, integrity-checked npm v3 closure, separate subprocess verifier, production compile, Oracle 24/24 reward 1.0, and bounded controls are complete. Independent review, model Agent Run, and publication remain outside this lane."
 [oracle_bundle]
 digest = "sha256:5b553eda78f197668dc3342e746d6a420ab3f25f53436189c310040e08032f56"
 size_bytes = 194560

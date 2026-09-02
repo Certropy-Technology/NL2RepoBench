@@ -97,10 +97,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wave2-20260828-hast-util-whitespace"
-reason = "Frozen source, API/test inventory, private npm closure, production compile, verifier image, trusted Oracle, and empty/stub/forgery/install-script/loader-hook/hang/offline controls passed. No Harbor Agent Run was started in this lane; review, pilot, and publication remain integrator-stage gates. Canonical dependency lock/offline-store/inventory closure is unavailable; the legacy single artifact reference was not retyped."
-
+reason = "Frozen source, API/test inventory, private npm closure, production compile, verifier image, trusted Oracle, and empty/stub/forgery/install-script/loader-hook/hang/offline controls passed. No Harbor Agent Run was started in this lane; review, pilot, and publication remain integrator-stage gates."
 [oracle_bundle]
 digest = "sha256:abcadf37573c3a374fed8ae05497ed84c1d294a6893ba34effa140eca43a74c0"
 size_bytes = 5930

@@ -71,7 +71,6 @@ workspace_artifact = "/workspace"
 [lifecycle]
 status = "blocked"
 reason = "The production bundle compiled and emitted valid Oracle/control/network receipts, but the Oracle Harbor process remained active beyond the supervisor's 601-second orchestration bound after grading. The campaign was declared non-promotable, no retry was authorized, and no generated runtime is retained."
-
 [oracle_bundle]
 digest = "sha256:b55ef9fb5bc477e120ac1353bf4c7a093bed59e58f54b063714269ed9af81fba"
 size_bytes = 20480

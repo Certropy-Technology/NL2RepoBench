@@ -102,6 +102,6 @@ collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-wave2-20260828"
-reason = "Production compile, Harbor Oracle, empty, stub, forgery, offline, and bounded install-timeout controls passed. Review, pilot, and publication remain separate integrator stages. Canonical dependency closure and exact Python package-manager runtime identity are unavailable; create lock/offline-store/inventory artifacts and a versioned release before production use."
+reason = "Production compile, Harbor Oracle, empty, stub, forgery, offline, and bounded install-timeout controls passed. Review, pilot, and publication remain separate integrator stages."

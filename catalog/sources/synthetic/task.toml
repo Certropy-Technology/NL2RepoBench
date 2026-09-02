@@ -51,4 +51,4 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 [lifecycle]
 status = "blocked"
 owner = "repair/synthetic"
-reason = "Model/data/network, dependency, collection, verifier, Oracle, and controls gates are not established. Canonical source migration is blocked because the exact Python package-manager runtime and canonical lock/offline-store/inventory closure are not frozen; no legacy single closure artifact was retyped or fabricated."
+reason = "Model/data/network, dependency, collection, verifier, Oracle, and controls gates are not established."

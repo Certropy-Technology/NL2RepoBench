@@ -103,10 +103,9 @@ uri = "artifact://private/sha256:2753e3495ef38c4bc928596760201ca170a2d9bae1acfd5
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-wave2-20260828-c2"
-reason = "Canonical migration completed; production remains blocked pending canonical dependency closure and current release evidence. Previous lifecycle reason: The production Harbor bundle passed the 34/34 Oracle gate plus empty, stub, forgery, install-timeout, call-timeout, and offline controls. Review, model Agent Run, and publication remain separate stages."
-
+reason = "The production Harbor bundle passed the 34/34 Oracle gate plus empty, stub, forgery, install-timeout, call-timeout, and offline controls. Review, model Agent Run, and publication remain separate stages."
 [verifier.environment]
 SETUPTOOLS_SCM_PRETEND_VERSION_FOR_EXCEPTIONGROUP = "1.3.1.post6"
 

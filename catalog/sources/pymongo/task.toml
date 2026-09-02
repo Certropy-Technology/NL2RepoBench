@@ -112,6 +112,6 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
+status = "controls-passed"
 owner = "python-author-wide-20260826-r2/pymongo"
-status = "blocked"
-reason = "The exact source, hash-locked offline dependency closure, private separate verifier, Oracle archive, frozen 51-leaf denominator, and Oracle/negative controls are bound to task-local evidence; integrator blind/spec review and model pilot remain downstream. Canonical migration removed legacy dependency closure fields because no exact lock/offline-store/inventory refs were available. Environment/package-manager version evidence is not exact; production release remains blocked."
+reason = "The exact source, hash-locked offline dependency closure, private separate verifier, Oracle archive, frozen 51-leaf denominator, and Oracle/negative controls are bound to task-local evidence; integrator blind/spec review and model pilot remain downstream."

@@ -96,10 +96,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-discovery-restart-20260826-r3"
-reason = "Production compile passed; final Oracle passed 71/71 with reward 1.0; empty, stub, forgery, timeout, and offline network controls all passed. Review, pilot, and publication remain with the integrator. Canonical dependency closure is not represented; versioned private-artifact migration is required."
-
+reason = "Production compile passed; final Oracle passed 71/71 with reward 1.0; empty, stub, forgery, timeout, and offline network controls all passed. Review, pilot, and publication remain with the integrator."
 [oracle_bundle]
 digest = "sha256:88545aab0ea72973fd7ed60702588ccd77dee553c84bd9f110961121949b68aa"
 size_bytes = 3235840

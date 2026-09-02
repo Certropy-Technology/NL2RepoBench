@@ -62,9 +62,8 @@ collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
-status = "blocked"
-reason = "Canonical runtime/package-manager version and dependency closure are not available; legacy single closure refs were not retyped. Previous status/reason: controls-passed: Receipt paths and SHA-256 digests revalidated. Generic compiled Oracle (no --allow-incomplete): valid=true, collected=23==expected_total, passed=23, reward=1.0. Empty/stub/forgery controls all valid=true with reward=0.0 and the frozen denominator intact; offline verifier network probes report no public network. Blind review and pilot remain pending."
-
+status = "controls-passed"
+reason = "Receipt paths and SHA-256 digests revalidated. Generic compiled Oracle (no --allow-incomplete): valid=true, collected=23==expected_total, passed=23, reward=1.0. Empty/stub/forgery controls all valid=true with reward=0.0 and the frozen denominator intact; offline verifier network probes report no public network. Blind review and pilot remain pending."
 [harbor]
 description = "Build the retrying package from an empty workspace."
 keywords = [

@@ -91,10 +91,9 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-wave2-20260828"
-reason = "Canonical dependency lock/offline-store/inventory closure is unavailable; legacy single lock_artifact was not retyped. Previous status/reason: controls-passed: Current production bundle and task-local separate-verifier replay passed the frozen 24-leaf Oracle, empty, stub, forgery, and offline controls; Harbor Agent Run remains integrator-owned."
-
+reason = "Current production bundle and task-local separate-verifier replay passed the frozen 24-leaf Oracle, empty, stub, forgery, and offline controls; Harbor Agent Run remains integrator-owned."
 [verifier]
 protocol = "custom-json-v1"
 entrypoint = "run.py"

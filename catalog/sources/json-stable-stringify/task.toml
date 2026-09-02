@@ -107,6 +107,6 @@ uri = "artifact://private/sha256:7bc11961cf63932550d75f7f4db7c5294175ddd2e92e1dc
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wave2-20260828/json-stable-stringify"
-reason = "Frozen Node/npm source, private test collection, production bundle, Oracle, empty/stub/forgery/install-script/loader-hook/hang/offline controls, and no-network receipts are recorded in production-evidence.json; model Agent Run and integrator review remain outstanding. Canonical dependency closure requires lock, offline_store, and inventory refs; the legacy single closure artifact is retained only as historical handoff evidence."
+reason = "Frozen Node/npm source, private test collection, production bundle, Oracle, empty/stub/forgery/install-script/loader-hook/hang/offline controls, and no-network receipts are recorded in production-evidence.json; model Agent Run and integrator review remain outstanding."

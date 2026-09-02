@@ -78,10 +78,9 @@ contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-discovery-restart-20260826-r3"
-reason = "The exact revision, MIT license, reproducible TypeScript output, Node 24/npm 11 runtime, exact two-package offline closure, 46-leaf separate verifier, Oracle, and negative controls are bound by task-local evidence. Blind review and model pilot remain publication-stage work. Canonical dependency closure and versioned private-artifact migration remain required."
-
+reason = "The exact revision, MIT license, reproducible TypeScript output, Node 24/npm 11 runtime, exact two-package offline closure, 46-leaf separate verifier, Oracle, and negative controls are bound by task-local evidence. Blind review and model pilot remain publication-stage work."
 [harbor]
 description = "Build the p-queue 9.3.3 ESM promise queue with concurrency, priority, timeout, abort, and interval controls."
 keywords = [

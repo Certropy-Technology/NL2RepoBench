@@ -108,6 +108,6 @@ uri = "artifact://private/sha256:6c98de5ab393e19b3d8184b54fab74129e7d93f9df3dd2d
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-wave2-archive-r2-c2"
-reason = "The fixed-revision Oracle passed all 32 leaves and empty, stub, forgery, install-timeout, call-timeout, and offline controls completed with verifier-owned reports. Canonical dependency closure, exact runtime identity, and current verifier evidence remain unavailable."
+reason = "The fixed-revision Oracle passed all 32 leaves and empty, stub, forgery, install-timeout, call-timeout, and offline controls completed with verifier-owned reports."

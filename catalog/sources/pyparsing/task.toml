@@ -68,6 +68,6 @@ collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
-owner = "authoring-worker"
 status = "blocked"
+owner = "authoring-worker"
 reason = "The exact commit, repeatable source archive, MIT license evidence, tracked LOC, public API inventory, dependency/native-risk review, and repeatable source-only pytest collection plus one passing source baseline are recorded. Publication is blocked because no final immutable environment or hash-locked offline dependency bundle exists; pytest item count and JUnit subtest count differ; no private adapted test/command artifacts, Oracle bundle, pyparsing-specific child-side scenario adapter, traceability approval, three Oracle runs, or negative controls exist. No Harbor or production bundle is created."

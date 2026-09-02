@@ -56,8 +56,7 @@ workspace_artifact = "/workspace"
 
 [lifecycle]
 status = "blocked"
-reason = "Canonical source migration is blocked: exact Python runtime/package-manager version and canonical dependency closure evidence are unavailable. Previous status/reason: blocked: Production compilation is blocked: the packaged direct-import pytest verifier does not satisfy the candidate subprocess boundary, and the replacement 217-case custom adapter plus Python 3.12 hash lock have not completed runtime validation. No official Oracle or controls were run."
-
+reason = "Production compilation is blocked: the packaged direct-import pytest verifier does not satisfy the candidate subprocess boundary, and the replacement 217-case custom adapter plus Python 3.12 hash lock have not completed runtime validation. No official Oracle or controls were run."
 [environment]
 status = "unknown"
 os_name = "debian-trixie"

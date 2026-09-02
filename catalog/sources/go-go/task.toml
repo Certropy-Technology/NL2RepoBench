@@ -70,10 +70,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "go-author-wave2-20260828"
-reason = "Canonical source migration preserved the frozen source, typed bridge, instruction, Harbor fixture, Oracle, and verifier references, but no canonical private dependency closure or frozen command-plan artifact is declared. Mint and validate those canonical artifacts before compile, Oracle, controls, and release."
-
+reason = "Frozen source, typed bridge, private zero-dependency closure, production compile, Oracle, denominator-preserving controls, and positive offline verifier replay passed; awaiting integrator review and model Agent Run."
 [verifier]
 protocol = "custom-json-v1"
 bundle = { digest = "sha256:aaf6dc6ed64ba5703cd8ead1d06fc030f55acdfb25f926f204f1b4ee09ddeed1", size_bytes = 10240, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:aaf6dc6ed64ba5703cd8ead1d06fc030f55acdfb25f926f204f1b4ee09ddeed1", visibility = "private" }

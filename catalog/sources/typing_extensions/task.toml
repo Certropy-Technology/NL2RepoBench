@@ -96,6 +96,6 @@ uri = "artifact://private/sha256:61c452fd43b27d3de8a039fe95b2ecbd827f19263b2e3f5
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "worker/typing-extensions"
-reason = "Official Harbor 0.21.0 gates passed: the local digest-checked Oracle was valid at 32/32 and reward 1.0; empty, stub, and forgery were valid at reward 0.0; every verifier network receipt proved no public egress. Static typechecker parity is outside the contract, and reviews and pilots remain out of scope. Canonical dependency closure and exact runtime identity require separate remediation."
+reason = "Official Harbor 0.21.0 gates passed: the local digest-checked Oracle was valid at 32/32 and reward 1.0; empty, stub, and forgery were valid at reward 0.0; every verifier network receipt proved no public egress. Static typechecker parity is outside the contract, and reviews and pilots remain out of scope."

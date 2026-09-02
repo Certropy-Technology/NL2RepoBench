@@ -110,6 +110,6 @@ uri = "artifact://private/sha256:e80f7a51ddf561aa6f531e7a591274ee783b627f0b52aea
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wave2-20260828/mdast-util-phrasing"
-reason = "Exact source, environment, npm lock/cache closure, private 36-leaf separate verifier, trusted Oracle, and empty/stub/forgery/hang/offline controls passed in this lane. Integrator review, model Agent Run, pilot, and publication remain pending. Canonical dependency closure requires lock, offline_store, and inventory refs; legacy single closure data is retained only as historical handoff evidence."
+reason = "Exact source, environment, npm lock/cache closure, private 36-leaf separate verifier, trusted Oracle, and empty/stub/forgery/hang/offline controls passed in this lane. Integrator review, model Agent Run, pilot, and publication remain pending."

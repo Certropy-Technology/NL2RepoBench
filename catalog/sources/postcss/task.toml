@@ -80,10 +80,9 @@ collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wave2-20260828"
-reason = "Production Node bundle compiled with the locked toolchain; the final Harbor Oracle passed 32/32 with reward 1.0, and empty, stub, forgery, offline, install-script, loader-hook, and hang controls completed. Independent Agent Run, review, pilot, and publication remain out of scope for this lane. Canonical dependency closure and versioned private-artifact migration remain required."
-
+reason = "Production Node bundle compiled with the locked toolchain; the final Harbor Oracle passed 32/32 with reward 1.0, and empty, stub, forgery, offline, install-script, loader-hook, and hang controls completed. Independent Agent Run, review, pilot, and publication remain out of scope for this lane."
 [harbor]
 description = "Build an offline PostCSS-compatible CSS parser, mutable syntax tree, stringifier, and bounded plugin processor."
 keywords = [

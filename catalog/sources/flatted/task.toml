@@ -97,10 +97,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wave2-20260828-c3"
-reason = "The exact source, public contract, private 35-leaf graph-aware node:test collection, npm v3 offline closure, digest-checking Oracle, production compile, and bounded controls have passed. Independent review and any future model Agent Run remain outside this lane. Canonical dependency lock/offline-store/inventory closure is unavailable; the legacy single artifact reference was not retyped."
-
+reason = "The exact source, public contract, private 35-leaf graph-aware node:test collection, npm v3 offline closure, digest-checking Oracle, production compile, and bounded controls have passed. Independent review and any future model Agent Run remain outside this lane."
 [oracle_bundle]
 digest = "sha256:f33902a997285622fa7db94a835017d776403b784fc2ee1829d8205ee201ece8"
 size_bytes = 10240

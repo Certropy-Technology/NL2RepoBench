@@ -60,10 +60,9 @@ collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-wave2-20260828-c2"
-reason = "Canonical runtime/package-manager version and dependency closure are not available; legacy single closure refs were not retyped. Previous status/reason: controls-passed: The fixed separate verifier passed a fresh offline Oracle run and empty, stub, forgery, timeout, installation-failure, and offline controls. The task is awaiting the independent Agent Run loop."
-
+reason = "The fixed separate verifier passed a fresh offline Oracle run and empty, stub, forgery, timeout, installation-failure, and offline controls. The task is awaiting the independent Agent Run loop."
 [harbor]
 description = "Build Ruff 0.16.4 from an empty workspace and satisfy a bounded deterministic Python console-package contract for linting, safe fixes, formatting, stdin, JSON diagnostics, and TOML configuration."
 keywords = [

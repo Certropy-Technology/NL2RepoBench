@@ -29,8 +29,7 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
 status = "blocked"
-reason = "Canonical source migration is blocked: exact Python runtime/package-manager version and canonical dependency closure evidence are unavailable. Previous status/reason: blocked: The audit establishes neither an immutable upstream revision nor license/archive, package metadata, test collection, dependency, verifier, Oracle, or control evidence. This source-only candidate must not produce a catalog/tasks/packaging runtime."
-
+reason = "The audit establishes neither an immutable upstream revision nor license/archive, package metadata, test collection, dependency, verifier, Oracle, or control evidence. This source-only candidate must not produce a catalog/tasks/packaging runtime."
 [environment]
 status = "unknown"
 

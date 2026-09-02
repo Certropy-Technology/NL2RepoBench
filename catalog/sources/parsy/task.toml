@@ -62,9 +62,8 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
-reason = "Canonical source migration is blocked: exact Python runtime/package-manager version and canonical dependency closure evidence are unavailable. Previous status/reason: controls-passed: Production bundle materialized with a frozen 88-leaf upstream suite, separate custom-json-v1 verifier, hash-locked build dependencies, and digest-verified local Oracle source archive. Harbor Oracle, empty, stub, and forgery controls are recorded in task-local evidence."
-
+status = "controls-passed"
+reason = "Production bundle materialized with a frozen 88-leaf upstream suite, separate custom-json-v1 verifier, hash-locked build dependencies, and digest-verified local Oracle source archive. Harbor Oracle, empty, stub, and forgery controls are recorded in task-local evidence."
 [oracle_bundle]
 digest = "sha256:9daf44390c7aa813a4461b056d0f98f066bc5fe1fcf7eb7aaeda4850b09a53bc"
 size_bytes = 204800

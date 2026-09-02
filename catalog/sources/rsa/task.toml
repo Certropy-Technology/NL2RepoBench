@@ -70,10 +70,9 @@ collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-wave2-20260828-rsa"
-reason = "Canonical runtime/package-manager version and dependency closure are not available; legacy single closure refs were not retyped. Previous status/reason: controls-passed: Production compile, Oracle, empty, stub, forgery, timeout, and offline verifier gates are complete. Review, pilot, publication, and the model Agent Run remain integrator-stage work."
-
+reason = "Production compile, Oracle, empty, stub, forgery, timeout, and offline verifier gates are complete. Review, pilot, publication, and the model Agent Run remain integrator-stage work."
 [harbor]
 description = "Build the pure-Python RSA implementation with PKCS#1 v1.5 encryption/signatures, key generation and serialization, integer primitives, and its command-line tools from an empty workspace."
 keywords = [

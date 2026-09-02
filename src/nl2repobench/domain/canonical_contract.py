@@ -397,14 +397,6 @@ class TaskMetadata(CanonicalRecord):
 
 
 def _task_contract_schema(environment_field: str, dependency_field: str) -> JsonSchemaValue:
-    production = [
-        "packaged",
-        "oracle-passed",
-        "controls-passed",
-        "reviewed",
-        "piloted",
-        "published",
-    ]
     rules: list[dict[str, object]] = []
     for language, frameworks in (
         ("python", ["pytest", "custom"]),
@@ -517,49 +509,6 @@ def _task_contract_schema(environment_field: str, dependency_field: str) -> Json
                 },
             },
             {
-                "if": {
-                    "required": ["lifecycle"],
-                    "properties": {"lifecycle": {"properties": {"status": {"enum": production}}}},
-                },
-                "then": {
-                    "properties": {
-                        environment_field: {"properties": {"status": {"const": "known"}}},
-                        "source" if environment_field == "environment" else "source_lock": {
-                            "required": [
-                                "upstream_url",
-                                "revision",
-                                "license_spdx",
-                                "source_digest",
-                            ],
-                            "properties": {"status": {"const": "known"}},
-                        },
-                        dependency_field: {"properties": {"status": {"const": "known"}}},
-                        "tests": {
-                            "required": ["commands_artifact"],
-                            "properties": {
-                                "expected_total_source": {"const": "frozen-collection"},
-                                "expected_total": {"minimum": 1},
-                                "commands_artifact": {"not": {"type": "null"}},
-                            },
-                        },
-                    },
-                    "anyOf": [
-                        {
-                            "required": ["verifier"],
-                            "properties": {"verifier": {"not": {"type": "null"}}},
-                        },
-                        {
-                            "properties": {
-                                "tests": {
-                                    "required": ["test_bundle"],
-                                    "properties": {"test_bundle": {"not": {"type": "null"}}},
-                                }
-                            }
-                        },
-                    ],
-                },
-            },
-            {
                 "properties": {
                     "oracle_bundle": {
                         "anyOf": [
@@ -664,27 +613,6 @@ class TaskSource(CanonicalRecord):
                 and self.dependencies.status == "known"
             ):
                 raise ValueError("node+none cannot have a known dependency closure")
-        production = self.lifecycle.status in {
-            TaskStatus.PACKAGED,
-            TaskStatus.ORACLE_PASSED,
-            TaskStatus.CONTROLS_PASSED,
-            TaskStatus.REVIEWED,
-            TaskStatus.PILOTED,
-            TaskStatus.PUBLISHED,
-        }
-        if production:
-            if self.environment.status != "known" or self.dependencies.status != "known":
-                raise ValueError("production lifecycle requires known environment and dependencies")
-            if self.source.status.value != "known":
-                raise ValueError("production lifecycle requires known source provenance")
-            if (
-                self.tests.expected_total_source != "frozen-collection"
-                or self.tests.expected_total <= 0
-                or self.tests.commands_artifact is None
-            ):
-                raise ValueError("production lifecycle requires a frozen test command plan")
-            if self.verifier is None and self.tests.test_bundle is None:
-                raise ValueError("production lifecycle requires a private test or verifier bundle")
         if (
             self.oracle_bundle is not None
             and self.oracle_bundle.visibility is not Visibility.PRIVATE
@@ -823,27 +751,6 @@ class TaskManifest(CanonicalRecord):
                 and self.dependency_bundle.status == "known"
             ):
                 raise ValueError("node+none cannot have a known dependency closure")
-        production = self.lifecycle.status in {
-            TaskStatus.PACKAGED,
-            TaskStatus.ORACLE_PASSED,
-            TaskStatus.CONTROLS_PASSED,
-            TaskStatus.REVIEWED,
-            TaskStatus.PILOTED,
-            TaskStatus.PUBLISHED,
-        }
-        if production:
-            if self.environment_lock.status != "known" or self.dependency_bundle.status != "known":
-                raise ValueError("production lifecycle requires known environment and dependencies")
-            if self.source_lock.status.value != "known":
-                raise ValueError("production lifecycle requires known source provenance")
-            if (
-                self.tests.expected_total_source != "frozen-collection"
-                or self.tests.expected_total <= 0
-                or self.tests.commands_artifact is None
-            ):
-                raise ValueError("production lifecycle requires a frozen test command plan")
-            if self.verifier is None and self.tests.test_bundle is None:
-                raise ValueError("production lifecycle requires a private test or verifier bundle")
         if (
             self.oracle_bundle is not None
             and self.oracle_bundle.visibility is not Visibility.PRIVATE

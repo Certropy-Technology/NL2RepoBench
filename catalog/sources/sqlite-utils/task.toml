@@ -51,4 +51,4 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 [lifecycle]
 status = "blocked"
 owner = "repair/sqlite-utils"
-reason = "Static audit records unresolved native/environment and verifier gates; no runtime is authorized. Canonical source migration is blocked because the exact Python package-manager runtime and canonical lock/offline-store/inventory closure are not frozen; no legacy single closure artifact was retyped or fabricated."
+reason = "Static audit records unresolved native/environment and verifier gates; no runtime is authorized."

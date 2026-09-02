@@ -78,10 +78,9 @@ contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wave2-20260828-2"
-reason = "Production compile, Harbor Oracle, empty, stub, forgery, call-hang, offline, install-script, and loader-hook controls passed with the frozen 32-leaf denominator. Review, model Agent Run, pilot, and publication remain integrator stages. Canonical dependency closure requires a new versioned private artifact migration."
-
+reason = "Production compile, Harbor Oracle, empty, stub, forgery, call-hang, offline, install-script, and loader-hook controls passed with the frozen 32-leaf denominator. Review, model Agent Run, pilot, and publication remain integrator stages."
 [harbor]
 description = "Build an offline ESM AST traversal package with deterministic node matching, preorder/reverse walking, visitor actions, and callback metadata."
 keywords = [

@@ -53,7 +53,7 @@ workspace_artifact = "/workspace"
 [lifecycle]
 status = "blocked"
 owner = "repair/prettytable"
-reason = "Canonical source migration is blocked: exact Python runtime/package-manager version and canonical dependency closure evidence are unavailable. Previous status/reason: blocked: Exact upstream provenance is known. Tests are unavailable in a frozen production verifier, and publication remains blocked because the generated version file, hash-locked offline dependency closure, final environment, separate verifier, Oracle, and controls are absent. No catalog/tasks/prettytable runtime exists."
+reason = "Exact upstream provenance is known. Tests are unavailable in a frozen production verifier, and publication remains blocked because the generated version file, hash-locked offline dependency closure, final environment, separate verifier, Oracle, and controls are absent. No catalog/tasks/prettytable runtime exists."
 approval_refs = [
     "catalog/sources/prettytable/production-evidence.json",
 ]
@@ -64,7 +64,6 @@ size_bytes = 2760
 media_type = "application/json"
 uri = "artifact://public/sha256:28519e3d6bf0dbf1d211d11c9a15a88ee945849d55f0648dea2d29440a884f36"
 visibility = "public"
-
 [environment]
 status = "unknown"
 

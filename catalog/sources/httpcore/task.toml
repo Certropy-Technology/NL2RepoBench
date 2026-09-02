@@ -105,10 +105,9 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-wave2-20260828-httpcore"
-reason = "Canonical dependency lock/offline-store/inventory closure is unavailable; legacy single lock_artifact was not retyped. Previous status/reason: controls-passed: Production compile, Oracle 24/24 reward 1.0, empty/stub/forgery/timeout/workspace-invalid controls, and offline network evidence passed; model Agent Run, review, and publication remain outside this lane."
-
+reason = "Production compile, Oracle 24/24 reward 1.0, empty/stub/forgery/timeout/workspace-invalid controls, and offline network evidence passed; model Agent Run, review, and publication remain outside this lane."
 [verifier]
 protocol = "custom-json-v1"
 entrypoint = "run.py"

@@ -81,9 +81,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
-reason = "Canonical source manifest is migrated, but the reviewed Go Harbor fixture is incomplete: missing contract.sh; missing solution/solve.sh; canonical dependency closure and command-plan artifacts must be prepared before release."
-
+status = "packaged"
+owner = "go-author-discover-20260829T173503Z"
+reason = "Source, public contract, typed bridge, private verifier, Oracle bundle, offline module closure, and control fixtures are prepared; Harbor Oracle and controls are executed before handoff."
 [verifier]
 protocol = "custom-json-v1"
 entrypoint = "contract.sh"

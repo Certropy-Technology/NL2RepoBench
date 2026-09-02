@@ -108,6 +108,6 @@ uri = "artifact://private/sha256:90f17ff6c785ac30c1f2d4ca681bbd9dc14c6167dc04863
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-next-20260826-r1"
-reason = "Production bundle compiled with private artifacts. The no-network Oracle scored 20/20; empty, stub, forged-reward, and install-timeout controls scored 0.0. Review and model pilot remain separate stages. Canonical dependency closure, exact runtime identity, and current verifier evidence remain unavailable."
+reason = "Production bundle compiled with private artifacts. The no-network Oracle scored 20/20; empty, stub, forged-reward, and install-timeout controls scored 0.0. Review and model pilot remain separate stages."

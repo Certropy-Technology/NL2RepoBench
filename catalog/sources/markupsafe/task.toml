@@ -58,9 +58,8 @@ collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
-status = "blocked"
-reason = "Imported legacy task; source, dependency and collection locks still require freeze. Canonical dependency lock/offline-store/inventory closure is not represented by the legacy dependency field; a versioned private-artifact migration is required."
-
+status = "discovered"
+reason = "Imported legacy task; source, dependency and collection locks still require freeze."
 [harbor]
 description = "Build the markupsafe package from an empty workspace."
 keywords = [

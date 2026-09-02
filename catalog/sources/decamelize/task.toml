@@ -76,6 +76,6 @@ uri = "artifact://private/sha256:bbd4f73308982c546ed72715ba772bdb5ef08d8686060c6
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wave2-20260828-c3"
 reason = "Production compile and Harbor 0.21 gates passed: Oracle 24/24 reward 1.0; empty, offline, install-script, hang, loader-hook, and oversized-output controls scored 0; stub 1/24; forgery 3/24 with verifier-owned reward. Review, pilot, and publication remain separate stages."

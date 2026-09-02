@@ -68,10 +68,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "repair/fast-deep-equal"
 reason = "After the shared Node network-proof and toolchain digest change, official Harbor 0.21.0 revalidation passed Oracle 20/20 with reward 1.0 and fresh empty, stub, and forgery controls with reward 0.0; every verifier run generated network.json proving no public egress. Review, pilot, and publication remain out of scope."
-
 [oracle_bundle]
 digest = "sha256:0a878d3dc5bac73a18378cada7fcf709f586053183b0209afa73efd4e69d0a12"
 size_bytes = 10240

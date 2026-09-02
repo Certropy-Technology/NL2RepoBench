@@ -77,9 +77,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
-reason = "Canonical source manifest is migrated, but the reviewed Go Harbor fixture is incomplete: missing contract.sh; missing solution/solve.sh; canonical dependency closure and command-plan artifacts must be prepared before release."
-
+status = "controls-passed"
+owner = "go-author-wave2-20260828-c2"
+reason = "Frozen source, production compile, one successful Oracle run, and all required negative controls passed; awaiting integrator review and model pilot."
 [oracle_bundle]
 digest = "sha256:7b59ac69ba057ecd1669a47381d2cc195bc6da1f89952ac44213fcb39b82f4e2"
 size_bytes = 1023

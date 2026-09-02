@@ -109,6 +109,6 @@ uri = "artifact://private/sha256:59f6317dbeda7cb869a2de5051f07894ded80449ad3f8ff
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-next-20260826-r1"
-reason = "Canonical dependency lock/offline-store/inventory closure is unavailable; legacy single dependency artifact was not retyped. Previous status/reason: controls-passed: Source, dependency closure, verifier, and bounded controls are recorded in task-local evidence; agent run and blind review remain separate publication stages."
+reason = "Source, dependency closure, verifier, and bounded controls are recorded in task-local evidence; agent run and blind review remain separate publication stages."

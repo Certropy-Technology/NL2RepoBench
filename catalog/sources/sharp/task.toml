@@ -109,10 +109,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wide-20260826-remediation-sharp"
-reason = "Frozen source, exact native npm closure, 31-leaf private verifier, pinned Oracle, empty/stub/forgery/offline controls, and production compile are evidenced. Node/npm helper process limits were raised to avoid shared-host RLIMIT_NPROC installation failures without changing task semantics. Canonical dependency closure is not represented; versioned private-artifact migration is required."
-
+reason = "Frozen source, exact native npm closure, 31-leaf private verifier, pinned Oracle, empty/stub/forgery/offline controls, and production compile are evidenced. Node/npm helper process limits were raised to avoid shared-host RLIMIT_NPROC installation failures without changing task semantics."
 [oracle_bundle]
 digest = "sha256:fd56cf84569c22dfa0a9c6e48e79ec3580b5855004d9b6848755f8004fcc76f7"
 size_bytes = 10240

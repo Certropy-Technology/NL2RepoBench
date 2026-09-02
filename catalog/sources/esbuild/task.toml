@@ -71,7 +71,6 @@ workspace_artifact = "/workspace"
 status = "blocked"
 owner = "repair/esbuild"
 reason = "The previous controls-passed claim is not reproducible in this checkout: production compile fails because the referenced private npm bundle is missing, and no task-specific Harbor Oracle/control/network receipts are discoverable. The invalid runtime is removed."
-
 [oracle_bundle]
 digest = "sha256:8531700a15c8bdd44a9ee283b89d1efcd64c60d6fe166a0b8bd16bb1434e03b3"
 size_bytes = 4740525

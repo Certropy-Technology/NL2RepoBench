@@ -59,4 +59,4 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 [lifecycle]
 status = "blocked"
 owner = "repair/loguru"
-reason = "Blocked before source freeze: catalog/sources/loguru/audit.md records that immutable revision, license/archive hashes, dependency closure, official collection, separate verifier, Oracle, and controls were not established. The source tree SHA1 is only a historical inventory key and is not a revision substitute. No catalog/tasks/loguru runtime exists. Canonical dependency lock/offline-store/inventory closure is not represented by the legacy dependency field; a versioned private-artifact migration is required."
+reason = "Blocked before source freeze: catalog/sources/loguru/audit.md records that immutable revision, license/archive hashes, dependency closure, official collection, separate verifier, Oracle, and controls were not established. The source tree SHA1 is only a historical inventory key and is not a revision substitute. No catalog/tasks/loguru runtime exists."

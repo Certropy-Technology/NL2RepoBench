@@ -76,10 +76,9 @@ collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-discovery-20260826-r1"
-reason = "Production compile, Oracle 8/8, empty, stub, forgery, background-process, and timeout controls passed. Review, pilot, and publication remain integrator stages. Canonical dependency lock/offline-store/inventory closure is not represented by the legacy dependency field; a versioned private-artifact migration is required."
-
+reason = "Production compile, Oracle 8/8, empty, stub, forgery, background-process, and timeout controls passed. Review, pilot, and publication remain integrator stages."
 [harbor]
 description = "Build the deterministic XML, HTML, XPath, and serialization core of lxml from an empty workspace."
 keywords = [

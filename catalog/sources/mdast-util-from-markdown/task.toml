@@ -119,6 +119,6 @@ uri = "artifact://private/sha256:1d9e66196b40bfd3c3a4a139e76b7d68a0765ea57a75272
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wave2-archive-r2-c2"
-reason = "Frozen source, Node 24/npm 11 offline closure, isolated private node:test contract, final production compile, Oracle, and task-local controls have passed. Blind review, Agent Run, dataset integration, and publication remain downstream integrator work. Canonical dependency closure requires lock, offline_store, and inventory refs; legacy single closure data is retained only as historical handoff evidence."
+reason = "Frozen source, Node 24/npm 11 offline closure, isolated private node:test contract, final production compile, Oracle, and task-local controls have passed. Blind review, Agent Run, dataset integration, and publication remain downstream integrator work."

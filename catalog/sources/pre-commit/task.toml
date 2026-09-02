@@ -54,8 +54,7 @@ workspace_artifact = "/workspace"
 [lifecycle]
 status = "blocked"
 owner = "repair/pre-commit"
-reason = "Canonical source migration is blocked: exact Python runtime/package-manager version and canonical dependency closure evidence are unavailable. Previous status/reason: blocked: The pinned source and archive/license evidence are known, but no immutable verifier image, hash-locked dependency closure, final collection denominator, private test bundle, task-specific persistent adapter, Oracle, controls, or catalog/tasks/pre-commit runtime exists."
-
+reason = "The pinned source and archive/license evidence are known, but no immutable verifier image, hash-locked dependency closure, final collection denominator, private test bundle, task-specific persistent adapter, Oracle, controls, or catalog/tasks/pre-commit runtime exists."
 [environment]
 status = "unknown"
 

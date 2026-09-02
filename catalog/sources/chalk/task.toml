@@ -72,10 +72,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "chalk-repair"
 reason = "Production revalidation after the verifier network-proof and Node toolchain digest change passed: the Harbor Oracle scored 24/24 with reward 1.0; empty, stub, and forgery scored 0.0; and every run emitted a fresh verifier-owned network receipt proving no public egress. Review and pilot remain publication-stage work."
-
 [oracle_bundle]
 digest = "sha256:d1f8c09e29ccc43c1ffbf316b54ab285c00dd7b66ef6ce0ca73278858cbd9b24"
 size_bytes = 81920

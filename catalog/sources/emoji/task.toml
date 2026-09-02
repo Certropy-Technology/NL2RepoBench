@@ -92,10 +92,16 @@ uri = "artifact://private/sha256:105436531e84163bd64fcb6ceb78ed61f58bd278773dafb
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "worker/emoji"
-reason = "Canonical migration completed; production remains blocked pending canonical dependency closure and current release evidence. Previous lifecycle reason: Official Harbor 0.21.0 gates passed: the local digest-checked Oracle was valid at 25/25 and reward 1.0; empty, stub, and forgery were valid at reward 0.0; every verifier network receipt proved no public egress."
+reason = "Official Harbor 0.21.0 gates passed: the local digest-checked Oracle was valid at 25/25 and reward 1.0; empty, stub, and forgery were valid at reward 0.0; every verifier network receipt proved no public egress. Reviews and pilots remain out of scope."
 
+[[lifecycle.evidence]]
+digest = "sha256:680a0d08619f6dc1440d18048be4ef1c0e471807046cbf3324b798c22cc10e18"
+size_bytes = 2671
+media_type = "application/json"
+uri = "artifact://private/sha256:680a0d08619f6dc1440d18048be4ef1c0e471807046cbf3324b798c22cc10e18"
+visibility = "private"
 [verifier.environment]
 
 [oracle_bundle]

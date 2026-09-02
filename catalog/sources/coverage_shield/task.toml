@@ -80,4 +80,4 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
 status = "blocked"
-reason = "Static migration only: the pinned verifier image corroborates 11 cached pytest node IDs, but no fresh collection or Oracle/control run was executed; its legacy direct-import verifier also lacks the Phase 2 candidate subprocess boundary. Canonical dependency closure and exact Python package-manager runtime identity are unavailable; create lock/offline-store/inventory artifacts and a versioned release before production use."
+reason = "Static migration only: the pinned verifier image corroborates 11 cached pytest node IDs, but no fresh collection or Oracle/control run was executed; its legacy direct-import verifier also lacks the Phase 2 candidate subprocess boundary."

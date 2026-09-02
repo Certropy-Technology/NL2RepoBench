@@ -65,8 +65,7 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 [lifecycle]
 status = "blocked"
 owner = "repair/justext"
-reason = "The exact upstream archive is reproducible, but the immutable verifier image changes STOPWORDS_LOW_DEFAULT, STOPWORDS_HIGH_DEFAULT, and PARAGRAPH_TAGS without an approved patch manifest. The legacy count 61 is only a static function count, and no locked dependencies, separate verifier, Oracle, controls, or runtime task exist. Canonical dependency lock/offline-store/inventory closure is not represented by the legacy dependency field; a versioned private-artifact migration is required."
-
+reason = "The exact upstream archive is reproducible, but the immutable verifier image changes STOPWORDS_LOW_DEFAULT, STOPWORDS_HIGH_DEFAULT, and PARAGRAPH_TAGS without an approved patch manifest. The legacy count 61 is only a static function count, and no locked dependencies, separate verifier, Oracle, controls, or runtime task exist."
 [harbor]
 description = "Blocked legacy jusText candidate: the immutable verifier image changes extraction thresholds and paragraph boundaries without an approved source patch manifest."
 keywords = [

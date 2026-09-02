@@ -83,6 +83,6 @@ uri = "artifact://private/sha256:aad21b20fc483f75ef5d1fcd3773a822e66ee87043c950c
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-wave2-20260828-c2"
-reason = "Canonical migration is blocked because the legacy pip closure reference was removed and no canonical lock/offline-store/inventory triple is available. Historical evidence: final production Harbor 0.21.0 bundle passed the Oracle at 30/30 with reward 1.0; empty, stub, forgery, timeout, workspace, call-timeout, and explicit offline controls completed with verifier-owned reports and no public egress. Review, pilot, publication, and model Agent Run remain separate integrator stages."
+reason = "Final production Harbor 0.21.0 bundle passed the Oracle at 30/30 with reward 1.0; empty, stub, forgery, timeout, workspace, call-timeout, and explicit offline controls completed with verifier-owned reports and no public egress. Review, pilot, publication, and model Agent Run remain separate integrator stages."

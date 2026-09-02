@@ -69,10 +69,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wave2-20260828-c2"
 reason = "The final production Node 24/npm 11.17 bundle passes a 33/33 Harbor Oracle. Empty, stub, forgery, install-script, loader-hook, bounded hang, oversized-output, and offline controls produce valid low scores with verifier-owned reports and public_network_available=false. Independent review, projection, and model Agent Run remain integrator work."
-
 [oracle_bundle]
 digest = "sha256:2baa630953d8f9411021a7c5ef57a2f93c3e16586a076f00d3ac4ce9eaa79783"
 size_bytes = 20480

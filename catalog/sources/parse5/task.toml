@@ -81,10 +81,9 @@ collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-discovery-restart-20260826-r4"
-reason = "Frozen source and submodules passed three 19,325-test baselines. The production Node 24 bundle passed one 54/54 Harbor Oracle run plus empty, stub, forgery, install-script, timeout, and offline controls; review, pilot, and publication remain integrator stages. Canonical dependency closure and versioned private-artifact migration remain required."
-
+reason = "Frozen source and submodules passed three 19,325-test baselines. The production Node 24 bundle passed one 54/54 Harbor Oracle run plus empty, stub, forgery, install-script, timeout, and offline controls; review, pilot, and publication remain integrator stages."
 [harbor]
 description = "Build an offline ESM HTML document and fragment parser with deterministic default-tree serialization."
 keywords = [

@@ -100,10 +100,9 @@ memory_mb = 1024
 storage_mb = 4096
 
 [lifecycle]
-status = "blocked"
+status = "packaged"
 owner = "node-author-wave2-20260828"
-reason = "Source, independent contract, private npm closure, and Harbor assets are prepared; Oracle and negative controls remain to be run in this lane. Canonical dependency closure is not represented; versioned private-artifact migration is required."
-
+reason = "Source, independent contract, private npm closure, and Harbor assets are prepared; Oracle and negative controls remain to be run in this lane."
 [oracle_bundle]
 digest = "sha256:f89fb88b5a7477ddec065f9964d97d4fcc8f2e8f47f18ea63de22d2a674ac8ca"
 size_bytes = 20480

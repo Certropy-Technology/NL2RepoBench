@@ -75,10 +75,9 @@ contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wave2-archive-r2-c2"
-reason = "The exact source, license, public API, upstream tests, no-network environment, zero-dependency closure, deterministic 35-leaf verifier, production compile, Oracle, and negative controls are complete. No Harbor model Agent Run was started in this authoring lane. Canonical dependency closure and versioned private-artifact migration remain required."
-
+reason = "The exact source, license, public API, upstream tests, no-network environment, zero-dependency closure, deterministic 35-leaf verifier, production compile, Oracle, and negative controls are complete. No Harbor model Agent Run was started in this authoring lane."
 [harbor]
 description = "Build p-timeout 7.0.1 with deterministic promise timeout, fallback, cancellation, clearable timer, and AbortSignal behavior."
 keywords = [

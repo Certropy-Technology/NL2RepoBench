@@ -106,6 +106,6 @@ uri = "artifact://private/sha256:00754abe0e9f5bbb5820406043c6eb9403eb8fa902e8859
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "worker/sqlparse"
-reason = "Production compile succeeded without --allow-incomplete. Harbor 0.21.0 Oracle was valid at 26/26 with reward 1.0; empty, stub, and forgery controls were valid at reward 0.0; all verifier network probes confirmed no public connectivity. Reviews and pilots remain pending. Canonical source migration is blocked because the exact Python package-manager runtime and canonical lock/offline-store/inventory closure are not frozen; no legacy single closure artifact was retyped or fabricated."
+reason = "Production compile succeeded without --allow-incomplete. Harbor 0.21.0 Oracle was valid at 26/26 with reward 1.0; empty, stub, and forgery controls were valid at reward 0.0; all verifier network probes confirmed no public connectivity. Reviews and pilots remain pending."

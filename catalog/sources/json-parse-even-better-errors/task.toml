@@ -95,10 +95,9 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wave2-20260828"
-reason = "Frozen Node/npm source, private zero-dependency closure, separate verifier, Oracle 60/60 reward 1.0, and empty/stub/forgery/install-script/loader-hook/hang/offline controls passed. Review, model Agent Run, pilot, and publication remain integrator stages. Canonical dependency lock/offline-store/inventory closure is unavailable; the legacy single artifact reference was not retyped."
-
+reason = "Frozen Node/npm source, private zero-dependency closure, separate verifier, Oracle 60/60 reward 1.0, and empty/stub/forgery/install-script/loader-hook/hang/offline controls passed. Review, model Agent Run, pilot, and publication remain integrator stages."
 [oracle_bundle]
 digest = "sha256:6bc2c1ad1727b16baabc2d7984ab5dbf28321d69dc506a45b6810bd664fb6e94"
 size_bytes = 737

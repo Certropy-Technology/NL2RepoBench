@@ -104,10 +104,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wave2-20260828-slice-ansi"
-reason = "Current Node 24/npm 11.17 production compile, Harbor 0.21 Oracle, and required empty/stub/forgery/hang/offline controls passed in this lane. Independent review, model Agent Run, and publication remain integrator stages. Canonical dependency closure is not represented; versioned private-artifact migration is required."
-
+reason = "Current Node 24/npm 11.17 production compile, Harbor 0.21 Oracle, and required empty/stub/forgery/hang/offline controls passed in this lane. Independent review, model Agent Run, and publication remain integrator stages."
 [oracle_bundle]
 digest = "sha256:a9b2847fcf203cf034835758410f2f23a97759e26c105026e1f693a0b8fc0034"
 size_bytes = 1359

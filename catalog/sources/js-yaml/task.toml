@@ -95,10 +95,9 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wave2-20260828/js-yaml"
-reason = "Production Node bundle compiled; Harbor 0.21.0 Oracle passed 36/36 with reward 1.0, and empty, stub, forgery, hang, install-script, loader-hook, and offline controls passed. Independent model Agent Run and integrator review remain out of scope. Canonical dependency lock/offline-store/inventory closure is unavailable; the legacy single artifact reference was not retyped."
-
+reason = "Production Node bundle compiled; Harbor 0.21.0 Oracle passed 36/36 with reward 1.0, and empty, stub, forgery, hang, install-script, loader-hook, and offline controls passed. Independent model Agent Run and integrator review remain out of scope."
 [oracle_bundle]
 digest = "sha256:194fcf78e706167a7e59becd5407b00809d4359f7a651c1de42d2fb1c268215e"
 size_bytes = 28532

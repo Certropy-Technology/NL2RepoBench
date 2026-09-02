@@ -109,6 +109,6 @@ uri = "artifact://private/sha256:8e2a036e842d8db9e12a4db670f28c1a9a5430c96407db1
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wave2-20260828/micromark-util-character"
-reason = "Fresh Harbor 0.21.0 Node 24 production compile, Oracle, empty, stub, forgery, hang, and offline controls passed. Independent review, model Agent Run, and publication remain integrator work. Canonical dependency closure requires lock, offline_store, and inventory refs; legacy single closure data is retained only as historical handoff evidence."
+reason = "Fresh Harbor 0.21.0 Node 24 production compile, Oracle, empty, stub, forgery, hang, and offline controls passed. Independent review, model Agent Run, and publication remain integrator work."

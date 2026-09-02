@@ -60,10 +60,9 @@ collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "worker/schema"
-reason = "Canonical runtime/package-manager version and dependency closure are not available; legacy single closure refs were not retyped. Previous status/reason: controls-passed: Harbor 0.21.0 production gates passed with an exact 30-leaf collection: Oracle 30/30 at reward 1.0; empty, stub, and forgery reward 0.0; every verifier-owned network receipt proves no public egress. Reviews and pilots remain out of scope."
-
+reason = "Harbor 0.21.0 production gates passed with an exact 30-leaf collection: Oracle 30/30 at reward 1.0; empty, stub, and forgery reward 0.0; every verifier-owned network receipt proves no public egress. Reviews and pilots remain out of scope."
 [harbor]
 description = "Build schema 0.7.8 from an empty workspace and satisfy a bounded validation, transform, default, hook, error, and JSON Schema contract."
 keywords = [

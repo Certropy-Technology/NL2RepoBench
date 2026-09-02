@@ -56,8 +56,7 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
 status = "blocked"
-reason = "Canonical runtime/package-manager version and dependency closure are not available; legacy single closure refs were not retyped. Previous status/reason: blocked: The exact upstream source archive and license are known, but publication is blocked by an undocumented functional source/test overlay, live-network assertions incompatible with the required no-network verifier, an unclosed Python/Chromium dependency lock, and the absence of a reviewed separate candidate boundary. No Harbor runtime exists."
-
+reason = "The exact upstream source archive and license are known, but publication is blocked by an undocumented functional source/test overlay, live-network assertions incompatible with the required no-network verifier, an unclosed Python/Chromium dependency lock, and the absence of a reviewed separate candidate boundary. No Harbor runtime exists."
 [harbor]
 description = "Blocked requests-html candidate: the available legacy image and tests do not yet define a reproducible production verifier."
 keywords = [

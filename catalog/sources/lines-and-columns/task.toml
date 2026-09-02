@@ -102,6 +102,6 @@ uri = "artifact://private/sha256:476c73cd585be59118622ae3b44707e58de11161c312d86
 visibility = "private"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wave2-20260828-lines-and-columns"
-reason = "Frozen source, private npm v3 closure, separate 34-leaf verifier, production compile, Oracle 34/34, and bounded controls passed. Review, pilot, and publication remain integrator-stage work. Canonical dependency closure requires lock, offline_store, and inventory refs; legacy single closure data is retained only as historical handoff evidence."
+reason = "Frozen source, private npm v3 closure, separate 34-leaf verifier, production compile, Oracle 34/34, and bounded controls passed. Review, pilot, and publication remain integrator-stage work."

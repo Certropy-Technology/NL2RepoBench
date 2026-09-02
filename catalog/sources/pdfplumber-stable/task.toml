@@ -46,9 +46,8 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "blocked"
-reason = "Canonical source migration is blocked: exact Python runtime/package-manager version and canonical dependency closure evidence are unavailable. Previous status/reason: discovered: Imported legacy task; source, dependency and collection locks still require freeze."
-
+status = "discovered"
+reason = "Imported legacy task; source, dependency and collection locks still require freeze."
 [environment]
 status = "unknown"
 os_name = "debian-12"

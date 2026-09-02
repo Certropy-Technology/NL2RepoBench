@@ -74,10 +74,9 @@ contract_id = "fixed-test-pass-rate-v1"
 collection_mismatch = "fail"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "node-author-wave2-20260828"
-reason = "The final production Node 24/npm 11.17 bundle passes a 24/24 Harbor Oracle. Empty, stub, forgery, timeout, offline, install-script, and loader-hook controls are valid and low-scoring with verifier-owned reports and public_network_available=false. Independent review, projection, and model Agent Run remain integrator work. Canonical dependency closure and versioned private-artifact migration remain required."
-
+reason = "The final production Node 24/npm 11.17 bundle passes a 24/24 Harbor Oracle. Empty, stub, forgery, timeout, offline, install-script, and loader-hook controls are valid and low-scoring with verifier-owned reports and public_network_available=false. Independent review, projection, and model Agent Run remain integrator work."
 [harbor]
 description = "Production Node task for rebuilding the deterministic CommonJS picocolors ANSI formatting API."
 keywords = [

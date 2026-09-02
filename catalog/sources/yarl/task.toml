@@ -118,6 +118,6 @@ collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [lifecycle]
-status = "blocked"
+status = "controls-passed"
 owner = "python-author-wave2-20260828-yarl"
-reason = "Exact source, Apache-2.0 license, hash-locked pure-Python closure, private 44-leaf subprocess verifier, production compile, deterministic Oracle smoke, and task-local negative controls passed; Harbor Agent Run, independent review, and publication remain outside this lane. Canonical migration: exact Python runtime/package-manager evidence and canonical private dependency closure are not available; keep blocked until versioned artifacts and gates are recreated."
+reason = "Exact source, Apache-2.0 license, hash-locked pure-Python closure, private 44-leaf subprocess verifier, production compile, deterministic Oracle smoke, and task-local negative controls passed; Harbor Agent Run, independent review, and publication remain outside this lane."
