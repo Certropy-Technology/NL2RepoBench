@@ -143,6 +143,7 @@ _PYTHON_VERIFIER_FILES = (
     "verification/java_candidate.py",
     "verification/java_bridge.py",
     "verification/java_grader.py",
+    "verification/java_process.py",
     "verification/go_supervisor.py",
     "verification/grader.py",
     "verification/integrity.py",

@@ -81,6 +81,7 @@ JAVA_DISCOVERY_REPOSITORIES = {
     "java-diff-utils": "java-diff-utils/java-diff-utils",
     "java-semver4j": "vdurmont/semver4j",
 }
+JAVA_PILOT_GATE = "reports/java-production-pilot.json"
 DEFAULT_WORKERS = 3
 DEFAULT_MAX_TOTAL_CONTROLLERS = 3
 MAX_RUNTIME_CONTROLLERS = 6
@@ -507,6 +508,26 @@ def _discovery_pool(path: Path) -> dict[str, list[str]]:
     return pool
 
 
+def _java_pilot_ready(root: Path) -> bool:
+    """Require an evidence-backed pilot before enabling Java discovery."""
+
+    marker = root / JAVA_PILOT_GATE
+    if not marker.is_file() or marker.is_symlink():
+        return False
+    try:
+        payload = _json(marker)
+    except (OSError, ValueError, json.JSONDecodeError):
+        return False
+    return (
+        payload.get("status") == "passed"
+        and payload.get("runtime") == "java+maven"
+        and isinstance(payload.get("tasks"), int)
+        and not isinstance(payload.get("tasks"), bool)
+        and 3 <= payload["tasks"] <= 5
+        and payload.get("controls") is True
+    )
+
+
 def _run_discovery(
     args: argparse.Namespace,
     root: Path,
@@ -517,6 +538,12 @@ def _run_discovery(
     language = decision.get("language")
     if language not in {"python", "node", "go", "java"}:
         return {"status": "discovery-rejected", "reason": "Director chose no single language"}
+    if language == "java" and not _java_pilot_ready(root):
+        return {
+            "status": "discovery-blocked",
+            "language": language,
+            "reason": f"Java discovery requires the completed pilot gate {JAVA_PILOT_GATE}",
+        }
     pool = _discovery_pool(args.discovery_pool)
     known = {
         record.get("package")

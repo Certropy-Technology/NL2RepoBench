@@ -150,11 +150,26 @@ class FileArtifactStore:
 class LocalArtifactResolver:
     """Resolve local refs while enforcing the public/private boundary."""
 
-    def __init__(self, store: FileArtifactStore, *, allow_private: bool = False) -> None:
+    def __init__(
+        self,
+        store: FileArtifactStore,
+        *,
+        allow_private: bool = False,
+        allowed_private_digests: frozenset[str] | None = None,
+    ) -> None:
         self.store = store
         self.allow_private = allow_private
+        self.allowed_private_digests = allowed_private_digests
 
     def resolve(self, reference: ArtifactRef) -> Path:
         if reference.visibility is Visibility.PRIVATE and not self.allow_private:
             raise ArtifactStoreError("private artifact resolution is not authorized")
+        if (
+            reference.visibility is Visibility.PRIVATE
+            and self.allowed_private_digests is not None
+            and reference.digest not in self.allowed_private_digests
+        ):
+            raise ArtifactStoreError(
+                f"private artifact is outside the task scope: {reference.digest}"
+            )
         return self.store.path_for(reference, allow_private=self.allow_private)

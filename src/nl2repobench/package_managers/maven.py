@@ -40,18 +40,103 @@ MUTABLE_STORE_FILES = frozenset(
     {"_remote.repositories", "resolver-status.properties", "maven-metadata-local.xml"}
 )
 NATIVE_SUFFIXES = frozenset({".so", ".dll", ".dylib", ".a", ".o", ".exe", ".bat", ".cmd", ".sh"})
+INVENTORY_KEYS = frozenset(
+    {
+        "schema_version",
+        "package_manager",
+        "adapter",
+        "toolchain",
+        "lock_sha256",
+        "store_tree_sha256",
+        "file_count",
+        "total_bytes",
+        "files",
+        "offline_smoke",
+    }
+)
+LOCK_KEYS = frozenset(
+    {
+        "schema_version",
+        "maven_version",
+        "jdk_version",
+        "effective_project",
+        "artifacts",
+        "plugins",
+        "repositories",
+        "offline_smoke",
+    }
+)
+PROJECT_KEYS = frozenset({"group_id", "artifact_id", "version", "packaging", "release"})
+ARTIFACT_KEYS = frozenset(
+    {"group_id", "artifact_id", "version", "type", "classifier", "scope", "sha256", "size"}
+)
+PLUGIN_KEYS = frozenset({"group_id", "artifact_id", "version", "dependencies"})
+REPOSITORY_KEYS = frozenset({"id", "url", "releases_enabled", "snapshots_enabled"})
 
 
 @dataclass(frozen=True)
 class MavenLockSummary:
     maven_version: str
     jdk_version: str
+    release: int
     digest: str
     artifacts: tuple[dict[str, Any], ...]
 
 
 def _fail(message: str) -> PackageManagerError:
     return PackageManagerError(message)
+
+
+def _canonical_json(value: Mapping[str, Any]) -> bytes:
+    return (
+        json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode()
+        + b"\n"
+    )
+
+
+def _inventory_entries(bundle_root: Path, files: list[Path]) -> list[dict[str, Any]]:
+    entries: list[dict[str, Any]] = []
+    for path in files:
+        relative = PurePosixPath(path.relative_to(bundle_root).as_posix())
+        if relative.is_absolute() or not relative.parts or ".." in relative.parts:
+            raise _fail(f"Maven store inventory path is unsafe: {relative}")
+        data = path.read_bytes()
+        entries.append(
+            {
+                "path": relative.as_posix(),
+                "size_bytes": len(data),
+                "sha256": hashlib.sha256(data).hexdigest(),
+            }
+        )
+    return sorted(entries, key=lambda item: str(item["path"]))
+
+
+def _inventory_tree_digest(entries: list[dict[str, Any]]) -> str:
+    return hashlib.sha256(_canonical_json({"files": entries})).hexdigest()
+
+
+def _store_files(bundle_root: Path, manifest: Path, lockfile: Path) -> list[Path]:
+    files = [
+        path
+        for path in bundle_root.rglob("*")
+        if path.is_file() and path != manifest and path != lockfile
+    ]
+    if len(files) > MAX_STORE_FILES:
+        raise _fail("Maven store contains too many files")
+    for path in bundle_root.rglob("*"):
+        mode = path.lstat().st_mode
+        if stat.S_ISLNK(mode) or not (stat.S_ISDIR(mode) or stat.S_ISREG(mode)):
+            raise _fail(f"Maven store contains unsafe path: {path}")
+    for path in files:
+        relative = PurePosixPath(path.relative_to(bundle_root).as_posix())
+        if (
+            path.name in MUTABLE_STORE_FILES
+            or path.suffix.lower() in NATIVE_SUFFIXES
+            or relative.is_absolute()
+            or ".." in relative.parts
+        ):
+            raise _fail(f"Maven store contains unsafe payload: {relative}")
+    return files
 
 
 def _coordinate(group_id: str, artifact_id: str, version: str) -> None:
@@ -94,7 +179,11 @@ def load_maven_lock(data: bytes) -> dict[str, Any]:
         payload = json.loads(data)
     except (UnicodeDecodeError, json.JSONDecodeError) as exc:
         raise _fail(f"invalid Maven lock JSON: {exc}") from exc
-    if not isinstance(payload, dict) or payload.get("schema_version") != "1.0":
+    if (
+        not isinstance(payload, dict)
+        or set(payload) != LOCK_KEYS
+        or payload.get("schema_version") != "1.0"
+    ):
         raise _fail("Maven lock schema_version must be 1.0")
     if not isinstance(payload.get("maven_version"), str) or not MAVEN_VERSION.fullmatch(
         payload["maven_version"]
@@ -105,7 +194,7 @@ def load_maven_lock(data: bytes) -> dict[str, Any]:
     ):
         raise _fail("Maven lock requires an exact JDK 21 identity")
     project = payload.get("effective_project")
-    if not isinstance(project, dict):
+    if not isinstance(project, dict) or set(project) != PROJECT_KEYS:
         raise _fail("Maven lock effective_project is missing")
     _coordinate(
         str(project.get("group_id", "")),
@@ -127,7 +216,7 @@ def load_maven_lock(data: bytes) -> dict[str, Any]:
         raise _fail("Maven lock closure exceeds the entry limit")
     keys: list[str] = []
     for artifact in artifacts:
-        if not isinstance(artifact, dict):
+        if not isinstance(artifact, dict) or set(artifact) != ARTIFACT_KEYS:
             raise _fail("Maven artifact entry must be an object")
         _coordinate(
             str(artifact.get("group_id", "")),
@@ -145,15 +234,21 @@ def load_maven_lock(data: bytes) -> dict[str, Any]:
     if keys != sorted(keys) or len(keys) != len(set(keys)):
         raise _fail("Maven artifacts must be sorted and unique")
     for plugin in plugins:
-        if not isinstance(plugin, dict):
+        if not isinstance(plugin, dict) or set(plugin) != PLUGIN_KEYS:
             raise _fail("Maven plugin entry must be an object")
         _coordinate(
             str(plugin.get("group_id", "")),
             str(plugin.get("artifact_id", "")),
             str(plugin.get("version", "")),
         )
+        if not isinstance(plugin["dependencies"], list):
+            raise _fail("Maven plugin dependencies must be an array")
     for repository in repositories:
-        if not isinstance(repository, dict) or repository.get("url") != ALLOWED_REPOSITORY:
+        if (
+            not isinstance(repository, dict)
+            or set(repository) != REPOSITORY_KEYS
+            or repository.get("url") != ALLOWED_REPOSITORY
+        ):
             raise _fail("Maven repository is not approved")
         if repository.get("snapshots_enabled", False) is not False:
             raise _fail("Maven snapshots must be disabled")
@@ -208,7 +303,12 @@ def validate_candidate_pom(data: bytes | None) -> dict[str, Any] | None:
     }
     if forbidden.intersection(children):
         raise _fail("candidate POM contains forbidden build or dependency configuration")
+    allowed = {"modelVersion", "groupId", "artifactId", "version", "packaging", "properties"}
+    if set(children) - allowed:
+        raise _fail("candidate POM contains unsupported metadata")
     values = {name: (node.text or "").strip() for name, node in children.items()}
+    if values.get("modelVersion") not in {None, "", "4.0.0"}:
+        raise _fail("candidate POM modelVersion must be 4.0.0")
     artifact_id = values.get("artifactId", "")
     if not artifact_id:
         raise _fail("candidate POM artifactId is required")
@@ -256,9 +356,40 @@ class MavenPackageManager:
         return MavenLockSummary(
             maven_version=payload["maven_version"],
             jdk_version=payload["jdk_version"],
+            release=int(payload["effective_project"]["release"]),
             digest=f"sha256:{hashlib.sha256(path.read_bytes()).hexdigest()}",
             artifacts=tuple(payload["artifacts"]),
         )
+
+    def build_inventory(
+        self,
+        bundle_root: Path,
+        *,
+        lockfile: Path,
+        manifest: Path,
+        expected_version: str,
+    ) -> dict[str, Any]:
+        """Build the canonical verifier-owned inventory for a Maven store."""
+
+        summary = self.validate_lock(lockfile, expected_version=expected_version)
+        files = _store_files(bundle_root, manifest, lockfile)
+        entries = _inventory_entries(bundle_root, files)
+        return {
+            "schema_version": "1.0",
+            "package_manager": "maven",
+            "adapter": "maven-offline-v1",
+            "toolchain": {
+                "jdk_version": summary.jdk_version,
+                "maven_version": summary.maven_version,
+                "release": summary.release,
+            },
+            "lock_sha256": summary.digest,
+            "store_tree_sha256": _inventory_tree_digest(entries),
+            "file_count": len(entries),
+            "total_bytes": sum(int(entry["size_bytes"]) for entry in entries),
+            "files": entries,
+            "offline_smoke": {"status": "passed"},
+        }
 
     def validate_offline_store(
         self,
@@ -279,30 +410,63 @@ class MavenPackageManager:
             inventory = json.loads(manifest.read_text(encoding="utf-8"))
         except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
             raise _fail(f"invalid Maven store inventory: {exc}") from exc
-        if not isinstance(inventory, dict) or inventory.get("lock_sha256") != summary.digest:
+        if not isinstance(inventory, dict) or set(inventory) != INVENTORY_KEYS:
+            raise _fail("Maven store inventory schema is invalid")
+        if (
+            inventory.get("schema_version") != "1.0"
+            or inventory.get("package_manager") != "maven"
+            or inventory.get("adapter") != "maven-offline-v1"
+            or inventory.get("lock_sha256") != summary.digest
+        ):
             raise _fail("Maven store inventory does not match the lock")
-        files = [
-            path
-            for path in bundle_root.rglob("*")
-            if path.is_file() and path != manifest and path != lockfile
-        ]
-        if len(files) > MAX_STORE_FILES:
-            raise _fail("Maven store contains too many files")
+        if inventory.get("toolchain") != {
+            "jdk_version": summary.jdk_version,
+            "maven_version": summary.maven_version,
+            "release": summary.release,
+        }:
+            raise _fail("Maven store inventory toolchain does not match the lock")
+        files = _store_files(bundle_root, manifest, lockfile)
         expected = {maven_repository_path(artifact): artifact for artifact in summary.artifacts}
-        actual: set[PurePosixPath] = set()
-        for path in files:
-            mode = path.lstat().st_mode
-            relative = PurePosixPath(path.relative_to(bundle_root).as_posix())
-            if (
-                stat.S_ISLNK(mode)
-                or not stat.S_ISREG(mode)
-                or path.name in MUTABLE_STORE_FILES
-                or path.suffix.lower() in NATIVE_SUFFIXES
-            ):
-                raise _fail(f"Maven store contains unsafe payload: {relative}")
-            actual.add(relative)
+        actual = {PurePosixPath(path.relative_to(bundle_root).as_posix()) for path in files}
         if actual != set(expected):
             raise _fail("Maven store payload paths do not match the lock")
+        entries = inventory.get("files")
+        if not isinstance(entries, list):
+            raise _fail("Maven store inventory files must be an array")
+        if any(
+            not isinstance(entry, dict)
+            or set(entry) != {"path", "size_bytes", "sha256"}
+            or not isinstance(entry["path"], str)
+            or not isinstance(entry["size_bytes"], int)
+            or isinstance(entry["size_bytes"], bool)
+            or entry["size_bytes"] < 0
+            or not isinstance(entry["sha256"], str)
+            or not re.fullmatch(r"[0-9a-f]{64}", entry["sha256"])
+            for entry in entries
+        ):
+            raise _fail("Maven store inventory file entries are malformed")
+        for entry in entries:
+            relative = PurePosixPath(entry["path"])
+            if relative.is_absolute() or not relative.parts or ".." in relative.parts:
+                raise _fail("Maven store inventory contains an unsafe path")
+        normalized_entries = sorted(entries, key=lambda item: str(item["path"]))
+        if entries != normalized_entries or len({item["path"] for item in entries}) != len(entries):
+            raise _fail("Maven store inventory files must be sorted and unique")
+        actual_entries = _inventory_entries(bundle_root, files)
+        if entries != actual_entries:
+            raise _fail("Maven store inventory file entries do not match the store")
+        if inventory.get("file_count") != len(entries):
+            raise _fail("Maven store inventory file_count does not match the store")
+        total_bytes = sum(int(entry["size_bytes"]) for entry in entries)
+        if inventory.get("total_bytes") != total_bytes:
+            raise _fail("Maven store inventory total_bytes does not match the store")
+        if inventory.get("store_tree_sha256") != _inventory_tree_digest(entries):
+            raise _fail("Maven store inventory tree digest does not match the store")
+        smoke = inventory.get("offline_smoke")
+        if smoke != {"status": "passed"}:
+            raise _fail("Maven store offline smoke is not recorded as passed")
+        if manifest.read_bytes() != _canonical_json(inventory):
+            raise _fail("Maven store inventory JSON is not canonical")
         for relative, artifact in expected.items():
             data = (bundle_root / relative).read_bytes()
             if (

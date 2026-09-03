@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 
 from nl2repobench.domain.models import MetricContract as LegacyMetricContract
-from nl2repobench.verification.evaluator import evaluate_leaf_report
+from nl2repobench.verification.evaluator import evaluate_leaf_report, failure_result_for_reason
 from nl2repobench.verification.leaf_report import (
     LeafCase,
     LeafReport,
@@ -107,6 +107,18 @@ def test_evaluator_rejects_runner_status_mismatch() -> None:
     result = evaluate_leaf_report(_report("passed", exit_code=1), MetricContract())
     assert result.valid is False
     assert result.failure_reason is VerificationReason.REPORT_EXIT_MISMATCH
+
+
+def test_candidate_timeout_is_a_valid_model_failure() -> None:
+    result = failure_result_for_reason(
+        contract=MetricContract(),
+        expected_total=3,
+        reason=VerificationReason.CANDIDATE_TIMEOUT,
+    )
+
+    assert result.valid is True
+    assert result.failure_class.value == "model"
+    assert result.reward == 0.0
 
 
 def test_leaf_report_rejects_duplicate_ids() -> None:

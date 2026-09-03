@@ -40,3 +40,14 @@ def test_java_workspace_rejects_build_and_test_assets(tmp_path: Path, relative: 
 
     with pytest.raises(JavaWorkspaceRejected):
         validate_java_workspace(root)
+
+
+@pytest.mark.parametrize("relative", ["src/main/resources/native.so", "src/main/resources/tool.sh"])
+def test_java_workspace_rejects_native_and_script_resources(tmp_path: Path, relative: str) -> None:
+    root = _workspace(tmp_path)
+    path = root / relative
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("unsafe", encoding="utf-8")
+
+    with pytest.raises(JavaWorkspaceRejected, match="resource type"):
+        validate_java_workspace(root)

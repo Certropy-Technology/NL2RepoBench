@@ -556,6 +556,19 @@ def _run_network_policy_check(worktree: Path, task_root: Path) -> dict[str, Any]
     }
 
 
+def _toolchain_path(worktree: Path, language: str) -> Path:
+    names = {
+        "python": "toolchain.lock.toml",
+        "node": "toolchain.node.lock.toml",
+        "go": "toolchain.go.lock.toml",
+        "java": "toolchain.java.lock.toml",
+    }
+    try:
+        return worktree / names[language]
+    except KeyError as exc:
+        raise ValueError(f"unsupported authoring language: {language}") from exc
+
+
 def _run_authoring_task_lint(worktree: Path, task_root: Path) -> dict[str, Any]:
     report = worktree / ".nl2repo/evidence/authoring-task-lint.json"
     report.parent.mkdir(parents=True, exist_ok=True)
@@ -580,19 +593,7 @@ def _run_authoring_task_lint(worktree: Path, task_root: Path) -> dict[str, Any]:
         source = tomllib.loads((task_root / "task.toml").read_text(encoding="utf-8"))
         metadata = source.get("metadata")
         language = metadata.get("language") if isinstance(metadata, dict) else None
-        toolchain = (
-            worktree / "toolchain.node.lock.toml"
-            if language == "node"
-            else (
-                worktree / "toolchain.go.lock.toml"
-                if language == "go"
-                else (
-                    worktree / "toolchain.java.lock.toml"
-                    if language == "java"
-                    else worktree / "toolchain.lock.toml"
-                )
-            )
-        )
+        toolchain = _toolchain_path(worktree, language)
         compile_parent = worktree / ".nl2repo/authoring-gate"
         compile_parent.mkdir(parents=True, exist_ok=True)
         compile_output = Path(tempfile.mkdtemp(prefix=f"{task_root.name}-", dir=compile_parent))

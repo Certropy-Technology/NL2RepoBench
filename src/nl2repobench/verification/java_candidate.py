@@ -11,6 +11,9 @@ MAX_JAVA_FILES = 10_000
 MAX_JAVA_SOURCE_BYTES = 64 * 1024 * 1024
 MAX_JAVA_TOTAL_BYTES = 256 * 1024 * 1024
 ALLOWED_ROOT_FILES = frozenset({"pom.xml"})
+FORBIDDEN_RESOURCE_SUFFIXES = frozenset(
+    {".a", ".bat", ".class", ".cmd", ".dll", ".dylib", ".exe", ".jar", ".o", ".sh", ".so"}
+)
 
 
 class JavaWorkspaceRejected(ValueError):
@@ -67,6 +70,10 @@ def validate_java_workspace(root: Path) -> dict[str, int | bool]:
             data = _regular(path)
             java_files += 1
         elif len(relative.parts) >= 4 and relative.parts[:3] == ("src", "main", "resources"):
+            if path.suffix.lower() in FORBIDDEN_RESOURCE_SUFFIXES:
+                raise JavaWorkspaceRejected(
+                    f"Java candidate resource type is not allowed: {relative}"
+                )
             data = _regular(path)
         else:
             raise JavaWorkspaceRejected(f"Java candidate file is not allowed: {relative}")

@@ -81,6 +81,19 @@ def canonical_sha256(value: JsonObject) -> str:
     return "sha256:" + hashlib.sha256(payload.encode()).hexdigest()
 
 
+def _private_artifact_digests(value: Any) -> frozenset[str]:
+    found: set[str] = set()
+    if isinstance(value, dict):
+        if value.get("visibility") == "private" and isinstance(value.get("digest"), str):
+            found.add(value["digest"])
+        for child in value.values():
+            found.update(_private_artifact_digests(child))
+    elif isinstance(value, list):
+        for child in value:
+            found.update(_private_artifact_digests(child))
+    return frozenset(found)
+
+
 def directory_sha256(root: Path) -> str:
     digest = hashlib.sha256()
     for path in sorted(item for item in root.rglob("*") if item.is_file()):
@@ -410,7 +423,6 @@ def validate_catalog(
     valid_ids: set[str] = set()
     blocked_ids: set[str] = set()
     excluded_ids: set[str] = set()
-    resolver = LocalArtifactResolver(FileArtifactStore(artifact_root), allow_private=True)
     registry = HarborCompilerRegistry.default()
     compile_parent = tempfile.TemporaryDirectory(prefix="nl2repo-production-gate-")
     try:
@@ -424,6 +436,11 @@ def validate_catalog(
             try:
                 source_data = read_toml_object(source_root / "task.toml")
                 source = CatalogCompiler.load_task(source_root)
+                resolver = LocalArtifactResolver(
+                    FileArtifactStore(artifact_root),
+                    allow_private=True,
+                    allowed_private_digests=_private_artifact_digests(source_data),
+                )
                 if source.task_id != task_id:
                     raise ProductionGateError(
                         f"descriptor task_id {source.task_id!r} differs from directory"

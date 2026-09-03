@@ -45,6 +45,21 @@ def test_private_artifact_requires_explicit_authorization(tmp_path) -> None:
     assert LocalArtifactResolver(store, allow_private=True).resolve(reference).is_file()
 
 
+def test_private_artifact_resolver_can_be_scoped_to_declared_digests(tmp_path) -> None:
+    store = FileArtifactStore(tmp_path / "artifacts")
+    allowed = store.put_bytes(b"allowed", visibility=Visibility.PRIVATE)
+    denied = store.put_bytes(b"denied", visibility=Visibility.PRIVATE)
+    resolver = LocalArtifactResolver(
+        store,
+        allow_private=True,
+        allowed_private_digests=frozenset({allowed.digest}),
+    )
+
+    assert resolver.resolve(allowed).is_file()
+    with pytest.raises(ArtifactStoreError, match="outside the task scope"):
+        resolver.resolve(denied)
+
+
 def test_artifact_store_rejects_symlinked_visibility_namespace(tmp_path) -> None:
     root = tmp_path / "artifacts"
     outside = tmp_path / "outside"

@@ -431,7 +431,9 @@ class DependencyBundle(RecordModel):
     def validate_known_bundle(self) -> DependencyBundle:
         references = (self.lock_artifact, self.module_bundle, self.maven_bundle)
         if self.status is ProvenanceStatus.KNOWN and all(item is None for item in references):
-            raise ValueError("known dependency bundle requires lock_artifact or module_bundle")
+            raise ValueError(
+                "known dependency bundle requires lock_artifact, module_bundle, or maven_bundle"
+            )
         if self.lock_artifact is not None and self.module_bundle is not None:
             raise ValueError("dependency bundle cannot mix Python and Go locks")
         if self.lock_artifact is not None and self.maven_bundle is not None:

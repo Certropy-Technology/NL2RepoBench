@@ -5,6 +5,8 @@ import json
 import sys
 from pathlib import Path
 
+import pytest
+
 
 def _load():
     path = Path(__file__).parents[1] / "scripts/run_authoring_loop.py"
@@ -85,6 +87,12 @@ def test_worktree_enables_sparse_authoring_profile(tmp_path: Path, monkeypatch) 
     assert "src" in sparse
     assert "tests" in sparse
     assert "openhands" not in sparse
+
+
+def test_toolchain_path_is_explicit_per_runtime(tmp_path: Path) -> None:
+    assert driver._toolchain_path(tmp_path, "java") == tmp_path / "toolchain.java.lock.toml"
+    with pytest.raises(ValueError, match="unsupported authoring language"):
+        driver._toolchain_path(tmp_path, "rust")
 
 
 def test_driver_launches_direct_pi_and_records_handoff(tmp_path: Path, monkeypatch) -> None:

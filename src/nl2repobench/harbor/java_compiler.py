@@ -47,6 +47,7 @@ JAVA_RUNTIME_LOCK_FILES = (
     "src/nl2repobench/verification/java_candidate.py",
     "src/nl2repobench/verification/java_bridge.py",
     "src/nl2repobench/verification/java_grader.py",
+    "src/nl2repobench/verification/java_process.py",
     "src/nl2repobench/verification/normalize/junit_open_test_report.py",
 )
 
@@ -144,8 +145,8 @@ class JavaHarborCompiler:
         try:
             write_instruction(source_dir, source.instruction, temporary)
             self._write_environment(temporary)
-            self._write_dependencies(source, fixture, temporary, allow_incomplete)
-            self._write_verifier(source, fixture, temporary, allow_incomplete)
+            maven_release = self._write_dependencies(source, fixture, temporary, allow_incomplete)
+            self._write_verifier(source, fixture, temporary, allow_incomplete, maven_release)
             self._write_solution(source, fixture, temporary, allow_incomplete)
             self._write_controls(fixture, temporary)
             self._write_task_toml(manifest, temporary)
@@ -202,10 +203,10 @@ class JavaHarborCompiler:
         return target
 
     def _write_environment(self, task_root: Path) -> None:
-        image = self.toolchain.agent_runtime_build_ref
+        image = self.toolchain.agent_runtime_base_ref
         atomic_write(
             task_root / "environment/Dockerfile",
-            f"""FROM --platform=linux/amd64 {self.toolchain.runtime_build_ref} AS java-runtime
+            f"""FROM --platform=linux/amd64 {self.toolchain.runtime_base_ref} AS java-runtime
 
 FROM --platform=linux/amd64 {image}
 
@@ -230,7 +231,7 @@ WORKDIR /workspace
         fixture: Path,
         task_root: Path,
         allow_incomplete: bool,
-    ) -> None:
+    ) -> int:
         destination = task_root / "tests/dependencies"
         if allow_incomplete:
             copy_tree(fixture / "dependencies", destination)
@@ -247,7 +248,9 @@ WORKDIR /workspace
         if not repository.exists():
             repository.mkdir(parents=True)
         try:
-            MavenPackageManager().validate_lock(lock, expected_version=self.toolchain.maven_version)
+            summary = MavenPackageManager().validate_lock(
+                lock, expected_version=self.toolchain.maven_version
+            )
             MavenPackageManager().validate_offline_store(
                 repository,
                 lockfile=lock,
@@ -256,6 +259,7 @@ WORKDIR /workspace
             )
         except ValueError as exc:
             raise JavaHarborCompileError(f"invalid Maven offline closure: {exc}") from exc
+        return summary.release
 
     def _write_verifier(
         self,
@@ -263,6 +267,7 @@ WORKDIR /workspace
         fixture: Path,
         task_root: Path,
         allow_incomplete: bool,
+        maven_release: int,
     ) -> None:
         tests_root = task_root / "tests"
         tests_root.mkdir(parents=True, exist_ok=True)
@@ -291,20 +296,26 @@ WORKDIR /workspace
         if (
             not (private / "harness/pom.xml").is_file()
             or not (private / "harness/src/main/java").is_dir()
+            or not (
+                private
+                / "harness/src/main/java/nl2repobench/harness/CandidateMain.java"
+            ).is_file()
         ):
-            raise JavaHarborCompileError("Java verifier requires a harness POM and Java contract")
+            raise JavaHarborCompileError(
+                "Java verifier requires a harness POM, trusted contract, and CandidateMain"
+            )
         profile = source.harbor
         assert profile is not None
         atomic_write(
             tests_root / "test.sh",
-            self._test_script(source.tests.expected_total, profile).encode(),
+            self._test_script(source.tests.expected_total, profile, maven_release).encode(),
         )
         os.chmod(tests_root / "test.sh", 0o755)
-        base = self.toolchain.agent_runtime_build_ref
+        base = self.toolchain.agent_runtime_base_ref
         atomic_write(
             tests_root / "Dockerfile",
             f"""FROM --platform=linux/amd64 {base} AS python-runtime
-FROM --platform=linux/amd64 {self.toolchain.runtime_build_ref} AS java-runtime
+FROM --platform=linux/amd64 {self.toolchain.runtime_base_ref} AS java-runtime
 FROM python-runtime
 COPY --from=java-runtime /opt/java/openjdk /opt/java/openjdk
 COPY --from=java-runtime /opt/maven /opt/maven
@@ -427,7 +438,9 @@ WORKDIR /tests
         return f"sha256:{hashlib.sha256(self.toolchain_path.read_bytes()).hexdigest()}"
 
     @staticmethod
-    def _test_script(expected: int, profile: HarborExecutionProfile) -> str:
+    def _test_script(
+        expected: int, profile: HarborExecutionProfile, maven_release: int = 21
+    ) -> str:
         return f"""#!/usr/bin/env bash
 set -uo pipefail
 mkdir -p /logs/verifier
@@ -447,7 +460,7 @@ if ! python3 -I -c "$PYTHON_ROOT from nl2repobench.verification.workspace_copy i
   grade --reason candidate-workspace-rejected
   exit 0
 fi
-if ! runuser -u candidate -- python3 -I -c "$PYTHON_ROOT from nl2repobench.verification.java_candidate import main; main()" \\
+if ! python3 -I -c "$PYTHON_ROOT from nl2repobench.verification.java_candidate import main; main()" \\
   --root /tmp/java-candidate; then
   grade --reason candidate-installation-failed
   exit 0
@@ -458,39 +471,68 @@ cp -a /tmp/java-candidate/src/main/java/. /tmp/java-harness/src/main/java/
 mkdir -p /tmp/maven-repository /tmp/java-harness/classes
 chmod -R u+rwX /tmp/java-harness /tmp/maven-repository
 chown -R candidate:candidate /tmp/java-harness /tmp/java-candidate /tmp/maven-repository
-if ! runuser -u candidate -- env MAVEN_OPTS='-Djava.awt.headless=true' \\
+set +e
+python3 -I -m nl2repobench.verification.java_process \\
+  --report /logs/verifier/maven-process.json \\
+  --stderr-path /logs/verifier/maven-stderr.txt \\
+  --cwd /tmp/java-harness --uid 10001 \\
+  --timeout-sec {int(profile.candidate_install_timeout_sec)} \\
+  --env MAVEN_OPTS="-Xmx256m -XX:MaxMetaspaceSize=128m -XX:CompressedClassSpaceSize=64m -Djava.awt.headless=true" -- \\
   /opt/maven/bin/mvn --offline --batch-mode --no-transfer-progress --strict-checksums \\
-  -Dmaven.repo.local=/tmp/maven-repository -f /tmp/java-harness/pom.xml validate; then
-  cat > /tmp/java-report.xml <<'XML'
-<e:events xmlns:e="https://schemas.opentest4j.org/reporting/events/0.1.0"
- xmlns:j="https://schemas.junit.org/open-test-reporting">
-<e:started id="c" name="Java contract" time="2026-01-01T00:00:00Z"
- uniqueId="[engine:nl2repobench]" type="CONTAINER"/>
-<e:started id="t" parentId="c" name="public API" time="2026-01-01T00:00:00Z"
- uniqueId="[engine:nl2repobench]/[test:public-api]" type="TEST"/>
-<e:finished id="t" time="2026-01-01T00:00:00.010Z"><j:result status="FAILED"/></e:finished>
-<e:finished id="c" time="2026-01-01T00:00:00.020Z"><j:result status="SUCCESSFUL"/></e:finished>
-</e:events>
-XML
-  grade --report /tmp/java-report.xml --runner-exit-code 1
+  -Dmaven.repo.local=/tmp/maven-repository -f /tmp/java-harness/pom.xml validate
+maven_process_exit=$?
+set -e
+if [ "$maven_process_exit" -eq 2 ]; then
+  grade --reason candidate-timeout
   exit 0
-fi
-if ! timeout --signal=KILL {int(profile.candidate_install_timeout_sec)}s \
-  runuser -u candidate -- sh -c 'find /tmp/java-harness/src/main/java -name "*.java" -print0 | xargs -0 /opt/java/openjdk/bin/javac -encoding UTF-8 -d /tmp/java-harness/classes'; then
+elif [ "$maven_process_exit" -eq 3 ]; then
+  grade --reason verifier-internal-error
+  exit 0
+elif [ "$maven_process_exit" -ne 0 ]; then
   grade --reason candidate-installation-failed
   exit 0
 fi
 set +e
-timeout --signal=KILL {int(profile.candidate_total_timeout_sec)}s \
-  runuser -u candidate -- /opt/java/openjdk/bin/java \
-  -cp /tmp/java-harness/classes nl2repobench.harness.ContractMain > /tmp/java-report.xml
-runner_exit=$?
+python3 -I -m nl2repobench.verification.java_process \
+  --report /logs/verifier/javac-process.json \
+  --stderr-path /logs/verifier/javac-stderr.txt \
+  --cwd /tmp/java-harness --uid 10001 \
+  --timeout-sec {int(profile.candidate_install_timeout_sec)} \
+  --release {maven_release} \
+  --source-root /tmp/java-harness/src/main/java \
+  --classes-dir /tmp/java-harness/classes
+javac_process_exit=$?
 set -e
-if [ "$runner_exit" -eq 124 ] || [ "$runner_exit" -eq 137 ]; then
-  python3 -I -c "$PYTHON_ROOT from nl2repobench.verification.process_cleanup import main; main()" \
-    --uid 10001 || true
-  grade --reason verifier-timeout --runner-exit-code "$runner_exit"
-elif [ "$runner_exit" -gt 1 ]; then
+if [ "$javac_process_exit" -eq 2 ]; then
+  grade --reason candidate-timeout
+  exit 0
+elif [ "$javac_process_exit" -eq 3 ]; then
+  grade --reason verifier-internal-error
+  exit 0
+elif [ "$javac_process_exit" -ne 0 ]; then
+  grade --reason candidate-installation-failed
+  exit 0
+fi
+chown -R root:root /tmp/java-harness
+find /tmp/java-harness -type d -exec chmod 0555 {{}} +
+find /tmp/java-harness -type f -exec chmod 0444 {{}} +
+set +e
+python3 -I -m nl2repobench.verification.java_process \
+  --report /logs/verifier/java-process.json \
+  --stdout-path /tmp/java-report.xml \
+  --stderr-path /logs/verifier/java-stderr.txt \
+  --cwd /tmp/java-harness --uid 0 \
+  --timeout-sec {int(profile.candidate_total_timeout_sec)} -- \
+  /opt/java/openjdk/bin/java -Xmx256m -XX:MaxMetaspaceSize=128m \
+  -XX:CompressedClassSpaceSize=64m -Djava.awt.headless=true \
+  -cp /tmp/java-harness/classes \
+  nl2repobench.harness.ContractMain
+runner_process_exit=$?
+set -e
+runner_exit=$(python3 -I -c 'import json, sys; value=json.load(open(sys.argv[1]))["return_code"]; print(value if value is not None else 2)' /logs/verifier/java-process.json)
+if [ "$runner_process_exit" -eq 2 ]; then
+  grade --reason candidate-timeout
+elif [ "$runner_process_exit" -eq 3 ] || [ "$runner_exit" -gt 1 ]; then
   grade --reason verifier-internal-error --runner-exit-code "$runner_exit"
 else
   grade --report /tmp/java-report.xml --runner-exit-code "$runner_exit"

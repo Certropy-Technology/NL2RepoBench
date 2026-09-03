@@ -30,6 +30,25 @@ def test_source_path_accepts_scoped_package_and_rejects_escape(tmp_path: Path) -
         supervisor._source_path(root, "../outside")
 
 
+def test_java_discovery_requires_a_completed_pilot_gate(tmp_path: Path) -> None:
+    assert supervisor._java_pilot_ready(tmp_path) is False
+    marker = tmp_path / supervisor.JAVA_PILOT_GATE
+    marker.parent.mkdir(parents=True)
+    marker.write_text(
+        json.dumps(
+            {
+                "status": "passed",
+                "runtime": "java+maven",
+                "tasks": 3,
+                "controls": True,
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    assert supervisor._java_pilot_ready(tmp_path) is True
+
+
 def test_copy_if_new_scans_secrets_and_refuses_collisions(tmp_path: Path) -> None:
     source = tmp_path / "source"
     target = tmp_path / "target"

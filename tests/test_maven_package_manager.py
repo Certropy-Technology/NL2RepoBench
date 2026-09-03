@@ -62,9 +62,16 @@ def test_maven_lock_and_store_require_the_exact_locked_closure(tmp_path: Path) -
     payload = bundle / maven_repository_path(lock["artifacts"][0])
     payload.parent.mkdir(parents=True)
     payload.write_bytes(b"jar")
-    summary = MavenPackageManager().validate_lock(lock_path, expected_version="3.9.11")
     manifest = bundle / "maven-store.manifest.json"
-    manifest.write_text(json.dumps({"lock_sha256": summary.digest}), encoding="utf-8")
+    inventory = MavenPackageManager().build_inventory(
+        bundle,
+        lockfile=lock_path,
+        manifest=manifest,
+        expected_version="3.9.11",
+    )
+    manifest.write_bytes(
+        json.dumps(inventory, sort_keys=True, separators=(",", ":")).encode() + b"\n"
+    )
 
     MavenPackageManager().validate_offline_store(
         bundle,
@@ -83,6 +90,31 @@ def test_maven_lock_and_store_require_the_exact_locked_closure(tmp_path: Path) -
         )
 
 
+def test_maven_inventory_rejects_lock_only_manifest(tmp_path: Path) -> None:
+    bundle = tmp_path / "bundle"
+    bundle.mkdir()
+    lock_path = bundle / "maven-lock-v1.json"
+    lock_path.write_bytes(_lock_bytes())
+    lock = load_maven_lock(lock_path.read_bytes())
+    payload = bundle / maven_repository_path(lock["artifacts"][0])
+    payload.parent.mkdir(parents=True)
+    payload.write_bytes(b"jar")
+    summary = MavenPackageManager().validate_lock(lock_path, expected_version="3.9.11")
+    manifest = bundle / "maven-store.manifest.json"
+    manifest.write_text(
+        json.dumps({"lock_sha256": summary.digest}, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(PackageManagerError, match="inventory schema"):
+        MavenPackageManager().validate_offline_store(
+            bundle,
+            lockfile=lock_path,
+            manifest=manifest,
+            expected_version="3.9.11",
+        )
+
+
 @pytest.mark.parametrize("version", ["1.0-SNAPSHOT", "[1,2)", "LATEST", "RELEASE"])
 def test_maven_lock_rejects_mutable_versions(version: str) -> None:
     lock = json.loads(_lock_bytes())
@@ -90,6 +122,15 @@ def test_maven_lock_rejects_mutable_versions(version: str) -> None:
     data = json.dumps(lock, sort_keys=True, separators=(",", ":")).encode() + b"\n"
 
     with pytest.raises(PackageManagerError, match="dynamic version"):
+        load_maven_lock(data)
+
+
+def test_maven_lock_rejects_unrecognized_fields() -> None:
+    lock = json.loads(_lock_bytes())
+    lock["unreviewed"] = True
+    data = json.dumps(lock, sort_keys=True, separators=(",", ":")).encode() + b"\n"
+
+    with pytest.raises(PackageManagerError, match="schema_version"):
         load_maven_lock(data)
 
 

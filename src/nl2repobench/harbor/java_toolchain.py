@@ -79,6 +79,10 @@ class JavaToolchainLock(BaseModel):
             raise ValueError(
                 "agent_runtime_build_ref must be a valid local image tag or digest reference"
             )
+        if self.status == "locked" and self.runtime_build_ref != self.runtime_image:
+            raise ValueError("locked Java toolchain runtime_build_ref must be digest pinned")
+        if self.status == "locked" and self.agent_runtime_build_ref != self.agent_runtime_image:
+            raise ValueError("locked Java toolchain agent_runtime_build_ref must be digest pinned")
         return self
 
     @property
@@ -87,6 +91,22 @@ class JavaToolchainLock(BaseModel):
             self.status == "locked"
             and self.private_artifacts_status == "available"
             and self.agent_image_status == "java-bound"
+        )
+
+    @property
+    def runtime_base_ref(self) -> str:
+        """Return the immutable production ref or the explicit dev ref."""
+
+        return self.runtime_image if self.status == "locked" else self.runtime_build_ref
+
+    @property
+    def agent_runtime_base_ref(self) -> str:
+        """Return the immutable production ref or the explicit dev ref."""
+
+        return (
+            self.agent_runtime_image
+            if self.status == "locked"
+            else self.agent_runtime_build_ref
         )
 
 

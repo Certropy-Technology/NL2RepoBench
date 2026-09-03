@@ -307,9 +307,9 @@ def validate_java_value(value: object, value_type: JavaValueType, depth: int = 1
     elif kind in {"array", "list", "set"}:
         if not isinstance(value, list) or len(value) > MAX_COLLECTION_ITEMS:
             raise ValueError(f"Java bridge {kind} value is invalid")
-        if kind == "set":
-            valid = len({json.dumps(item, sort_keys=True) for item in value}) == len(value)
-        if not valid:
+        if kind == "set" and len({json.dumps(item, sort_keys=True) for item in value}) != len(
+            value
+        ):
             raise ValueError(f"Java bridge {kind} value is invalid")
         assert value_type.element is not None
         for item in value:
