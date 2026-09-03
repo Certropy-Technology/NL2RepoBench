@@ -2,8 +2,8 @@
   "schema_version": "1.0",
   "task_id": "go-errgroup",
   "task_version": "0.1.0",
-  "terminal_kind": "awaiting-agent-run",
-  "status": "packaged",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
   "source_freeze": {
     "upstream_url": "https://github.com/golang/sync",
     "revision": "f75267d8412fc1dfd12b343644a7ea46e4d9c85d",
@@ -18,15 +18,16 @@
     "base_image_digest": "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd",
     "toolchain_lock": "toolchain.go.lock.toml",
     "agent_network_mode": "no-network",
-    "verifier_network_mode": "no-network"
+    "verifier_network_mode": "no-network",
+    "memory_mb": 4096,
+    "harbor_version": "0.21.0"
   },
   "dependency_closure": {
     "kind": "go-module-bundle",
     "digest": "sha256:257538bcb3027c2b476fc8a0d575175e1aeab0dbc1695d2de9d5a05ce31636b5",
     "size_bytes": 635,
     "direct_dependencies": [],
-    "offline": true,
-    "manifest": ".nl2repo/authoring-work/go-author-auto-20260903T035119Z/go-errgroup/module/module.manifest.json"
+    "offline": true
   },
   "frozen_collection": {
     "framework": "go bridge contract",
@@ -38,49 +39,107 @@
   "artifacts": {
     "oracle_bundle": {"digest": "sha256:6ded7dd6601d887f20aba3e19b1db2602a69970ecb69f67801a9a6a98041268b", "size_bytes": 586},
     "verifier_bundle": {"digest": "sha256:574fba567af36436084260a9d6a48d567f3104ba75af69b23d9bde0aa744e4bf", "size_bytes": 933},
-    "module_bundle": {"digest": "sha256:257538bcb3027c2b476fc8a0d575175e1aeab0dbc1695d2de9d5a05ce31636b5", "size_bytes": 635}
+    "module_bundle": {"digest": "sha256:257538bcb3027c2b476fc8a0d575175e1aeab0dbc1695d2de9d5a05ce31636b5", "size_bytes": 635},
+    "compiled_bundle_manifest": {
+      "path": ".nl2repo/compiled/go-errgroup-final-20260904T0235Z/go-errgroup/bundle.manifest.json",
+      "sha256": "sha256:136301aaf1135c62e0a5be5bb9f8a626b6b75b43f3239ed3b4d8f93ce15999d9",
+      "size_bytes": 12564
+    }
   },
-  "commands": [
-    {"command": "git clone --filter=blob:none --no-checkout https://github.com/golang/sync .../source", "exit_code": 0},
-    {"command": "git -C .../source checkout --detach f75267d8412fc1dfd12b343644a7ea46e4d9c85d", "exit_code": 0},
-    {"command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -count=1 -json ./...", "exit_code": 0, "summary": "Frozen upstream repository tests passed."},
-    {"command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go vet ./errgroup", "exit_code": 0, "summary": "Frozen errgroup package vet passed."},
-    {"command": "deterministic private module/verifier/oracle archives and CAS ingestion", "exit_code": 0, "summary": "All three private refs exist with recorded SHA-256 and sizes."},
-    {"command": "uv run nl2repo task validate-source catalog/sources/go-errgroup", "exit_code": 0, "summary": "Source descriptor accepted."},
-    {"command": "uv run nl2repo task lint-network --tasks-root catalog/sources", "exit_code": 0, "summary": "0 errors; 178 catalog-wide warnings, including the expected Oracle host-authorization warning for this task."},
-    {"command": "uv run nl2repo harbor compile catalog/sources/go-errgroup --output .nl2repo/compiled/go-errgroup-handoff-final --toolchain toolchain.go.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "exit_code": 0, "summary": "Closed-world production bundle compiled."}
-  ],
-  "authoring_smoke": {
-    "bundle_manifest_path": ".nl2repo/compiled/go-errgroup-handoff-final/go-errgroup/bundle.manifest.json",
-    "bundle_manifest_sha256": "sha256:6a429f4ce39fbc93cbe1e1ae0ea3f3883c51cbccc75914e4a1ea5920904b215f",
-    "canonical_manifest_digest": "sha256:fc12e3ade700fd0d9fda052b7aff12b17b40f9c0f16f98ec5101e8ed5eb1fc4c",
-    "verifier_image_digest": "sha256:8ea871c12be64dc1a9f40222964e8bc2e96412b2c902b1e0b6c9b0639e9a57a4",
-    "oracle_reference": {
-      "solve_exit_code": 0,
-      "build_exit_code": 0,
-      "contract_exit_code": 0,
-      "revision": "f75267d8412fc1dfd12b343644a7ea46e4d9c85d",
-      "archive_digest_asserted": "sha256:22414d7297aba3d45f32f30a1f58564a680efbf6cbfe89d30b6e3aa87c38ce09",
-      "log_root": ".nl2repo/authoring-work/go-author-auto-20260903T035119Z/go-errgroup/final-gates-v4"
-    },
-    "controls": {
-      "log_root": ".nl2repo/authoring-work/go-author-auto-20260903T035119Z/go-errgroup/final-gates-v4",
-      "empty": {"valid": true, "collected": 0, "passed": 0, "reward": 0.0, "failure_reason": "candidate-installation-failed", "public_network_available": false},
-      "stub": {"valid": true, "collected": 1, "passed": 0, "reward": 0.0, "public_network_available": false},
-      "forgery": {"valid": true, "collected": 1, "passed": 0, "reward": 0.0, "public_network_available": false},
-      "install-failure": {"valid": true, "collected": 0, "passed": 0, "reward": 0.0, "failure_reason": "candidate-installation-failed", "public_network_available": false},
-      "panic": {"valid": true, "collected": 1, "passed": 0, "reward": 0.0, "public_network_available": false},
-      "hang": {"valid": true, "collected": 1, "passed": 0, "reward": 0.0, "public_network_available": false}
-    },
-    "supervisor": {"timeout_returncode": 124, "output_limit_returncode": 125, "combined_output_limit_returncode": 125}
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/go-errgroup-final-20260904T0235Z/go-errgroup -a oracle --allow-agent-host github.com --job-name go-errgroup-final-20260904T0235Z-oracle -o .nl2repo/runs/go-errgroup-final-20260904T0235Z/oracle --n-concurrent 1 --yes",
+    "harbor_version": "0.21.0",
+    "exit_code": 0,
+    "valid": true,
+    "passed": 1,
+    "collected": 1,
+    "frozen_total": 1,
+    "reward": 1.0,
+    "result": {"path": ".nl2repo/runs/go-errgroup-final-20260904T0235Z/oracle/go-errgroup-final-20260904T0235Z-oracle/result.json", "sha256": "sha256:f3f521470754a52ea8054b8b81ed4a9477d999a754ff842c5dac6cfa9f0a1ef5"},
+    "grading": {"path": ".nl2repo/runs/go-errgroup-final-20260904T0235Z/oracle/go-errgroup-final-20260904T0235Z-oracle/go-errgroup__2sCMicy/verifier/grading.json", "sha256": "sha256:6995f8930668a2e4d4a863d3fdb1b4cb4e1506c2e38a097f23bd48100b314673"},
+    "network": {"path": ".nl2repo/runs/go-errgroup-final-20260904T0235Z/oracle/go-errgroup-final-20260904T0235Z-oracle/go-errgroup__2sCMicy/verifier/network.json", "sha256": "sha256:793024e1de4b27c52f032f2e2f2c92f35d416e303148ea21dec74afede000bae"},
+    "reward_artifact": {"path": ".nl2repo/runs/go-errgroup-final-20260904T0235Z/oracle/go-errgroup-final-20260904T0235Z-oracle/go-errgroup__2sCMicy/verifier/reward.json", "sha256": "sha256:f5ff2ade8b6b6ea4ef812375e5c71684d7655fb98854aac64a6bf629a3dfac06"}
   },
-  "oracle": {"status": "not-run-by-lane-policy", "valid": null, "passed": null, "frozen_total": null, "reward": null},
-  "controls": {"status": "not-run-by-lane-policy", "empty": null, "stub": null, "forgery": null, "timeout": null, "offline": null},
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/go-errgroup-final-20260904T0235Z/go-errgroup -a nop --job-name go-errgroup-final-20260904T0235Z-empty -o .nl2repo/runs/go-errgroup-final-20260904T0235Z/empty --n-concurrent 1 --yes",
+      "exit_code": 0, "valid": true, "passed": 0, "collected": 0, "frozen_total": 0, "reward": 0.0,
+      "failure_class": "model", "failure_reason": "candidate-installation-failed",
+      "result": {"path": ".nl2repo/runs/go-errgroup-final-20260904T0235Z/empty/go-errgroup-final-20260904T0235Z-empty/result.json", "sha256": "sha256:4f5a5a44c45a0947a5b5cbb3d0b92713190a0b09d57b116bbd495b6bf12ff2d9"},
+      "grading": {"path": ".nl2repo/runs/go-errgroup-final-20260904T0235Z/empty/go-errgroup-final-20260904T0235Z-empty/go-errgroup__gvEAfyc/verifier/grading.json", "sha256": "sha256:48b72a16f51e933e5ccae956e22a0c1974e8c05b29c03acb8c0a11580c409540"},
+      "network": {"path": ".nl2repo/runs/go-errgroup-final-20260904T0235Z/empty/go-errgroup-final-20260904T0235Z-empty/go-errgroup__gvEAfyc/verifier/network.json", "sha256": "sha256:bf97fdf040569c59c31c2e95149980dc169165bc2e3164066bd9c4b7cc1a25cb"},
+      "reward_artifact": {"path": ".nl2repo/runs/go-errgroup-final-20260904T0235Z/empty/go-errgroup-final-20260904T0235Z-empty/go-errgroup__gvEAfyc/verifier/reward.json", "sha256": "sha256:8ab285dd6836d028aa2dc600258716be1474a462a4ebd95b7072e5f32750fad6"}
+    },
+    "stub": {
+      "command": "uv run nl2repo harbor prepare-control .nl2repo/compiled/go-errgroup-final-20260904T0235Z/go-errgroup stub --output .nl2repo/controls/go-errgroup-final-20260904T0235Z/stub --toolchain toolchain.go.lock.toml; uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/go-errgroup-final-20260904T0235Z/stub/go-errgroup-stub -a oracle --job-name go-errgroup-final-20260904T0235Z-stub -o .nl2repo/runs/go-errgroup-final-20260904T0235Z/stub --n-concurrent 1 --yes",
+      "exit_code": 0, "valid": true, "passed": 0, "collected": 1, "frozen_total": 1, "reward": 0.0,
+      "result": {"path": ".nl2repo/runs/go-errgroup-final-20260904T0235Z/stub/go-errgroup-final-20260904T0235Z-stub/result.json", "sha256": "sha256:b27762ee28d3e99309bfbd03daec2c53d875cc4259b940ba08d99920360dc38c"},
+      "grading": {"path": ".nl2repo/runs/go-errgroup-final-20260904T0235Z/stub/go-errgroup-final-20260904T0235Z-stub/go-errgroup-stub__cDAizDx/verifier/grading.json", "sha256": "sha256:200088d3204bf1a0e9a2b286d4e90def264fa4ed644cf1702e70e827dbd9d669"},
+      "network": {"path": ".nl2repo/runs/go-errgroup-final-20260904T0235Z/stub/go-errgroup-final-20260904T0235Z-stub/go-errgroup-stub__cDAizDx/verifier/network.json", "sha256": "sha256:70ead51042dcc2a03564b3330969546dee9d427ceb8b48db27577ca262f8597c"},
+      "reward_artifact": {"path": ".nl2repo/runs/go-errgroup-final-20260904T0235Z/stub/go-errgroup-final-20260904T0235Z-stub/go-errgroup-stub__cDAizDx/verifier/reward.json", "sha256": "sha256:8ab285dd6836d028aa2dc600258716be1474a462a4ebd95b7072e5f32750fad6"}
+    },
+    "forgery": {
+      "command": "uv run nl2repo harbor prepare-control .nl2repo/compiled/go-errgroup-final-20260904T0235Z/go-errgroup forgery --output .nl2repo/controls/go-errgroup-final-20260904T0235Z/forgery --toolchain toolchain.go.lock.toml; uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/go-errgroup-final-20260904T0235Z/forgery/go-errgroup-forgery -a oracle --job-name go-errgroup-final-20260904T0235Z-forgery -o .nl2repo/runs/go-errgroup-final-20260904T0235Z/forgery --n-concurrent 1 --yes",
+      "exit_code": 0, "valid": true, "passed": 0, "collected": 1, "frozen_total": 1, "reward": 0.0, "verifier_owned_reward": true,
+      "result": {"path": ".nl2repo/runs/go-errgroup-final-20260904T0235Z/forgery/go-errgroup-final-20260904T0235Z-forgery/result.json", "sha256": "sha256:461e5fc2a19988a114d801fbc02459451e0df60e21c6c3d6fe6104da5f8b8e80"},
+      "grading": {"path": ".nl2repo/runs/go-errgroup-final-20260904T0235Z/forgery/go-errgroup-final-20260904T0235Z-forgery/go-errgroup-forgery__V23Uozp/verifier/grading.json", "sha256": "sha256:200088d3204bf1a0e9a2b286d4e90def264fa4ed644cf1702e70e827dbd9d669"},
+      "network": {"path": ".nl2repo/runs/go-errgroup-final-20260904T0235Z/forgery/go-errgroup-final-20260904T0235Z-forgery/go-errgroup-forgery__V23Uozp/verifier/network.json", "sha256": "sha256:1b9fc20fcf782fcb03e14459275216ba7dc12153f52ca129945c25220fb69cc1"},
+      "reward_artifact": {"path": ".nl2repo/runs/go-errgroup-final-20260904T0235Z/forgery/go-errgroup-final-20260904T0235Z-forgery/go-errgroup-forgery__V23Uozp/verifier/reward.json", "sha256": "sha256:8ab285dd6836d028aa2dc600258716be1474a462a4ebd95b7072e5f32750fad6"}
+    },
+    "install-failure": {
+      "command": "uv run nl2repo harbor prepare-control .nl2repo/compiled/go-errgroup-final-20260904T0235Z/go-errgroup install-failure --output .nl2repo/controls/go-errgroup-final-20260904T0235Z/install-failure --toolchain toolchain.go.lock.toml; uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/go-errgroup-final-20260904T0235Z/install-failure/go-errgroup-install-failure -a oracle --job-name go-errgroup-final-20260904T0235Z-install-failure -o .nl2repo/runs/go-errgroup-final-20260904T0235Z/install-failure --n-concurrent 1 --yes",
+      "exit_code": 0, "valid": true, "passed": 0, "collected": 0, "frozen_total": 0, "reward": 0.0,
+      "failure_class": "model", "failure_reason": "candidate-installation-failed",
+      "result": {"path": ".nl2repo/runs/go-errgroup-final-20260904T0235Z/install-failure/go-errgroup-final-20260904T0235Z-install-failure/result.json", "sha256": "sha256:e0aaf1318a19a72551ea3c4ab2ac34c7d75df78595113afc0d033e2bc10ec0e7"},
+      "grading": {"path": ".nl2repo/runs/go-errgroup-final-20260904T0235Z/install-failure/go-errgroup-final-20260904T0235Z-install-failure/go-errgroup-install-failure__4p83zu7/verifier/grading.json", "sha256": "sha256:48b72a16f51e933e5ccae956e22a0c1974e8c05b29c03acb8c0a11580c409540"},
+      "network": {"path": ".nl2repo/runs/go-errgroup-final-20260904T0235Z/install-failure/go-errgroup-final-20260904T0235Z-install-failure/go-errgroup-install-failure__4p83zu7/verifier/network.json", "sha256": "sha256:ad969770ed502f5038753907b4b4558893341ccca30fffcdcff2fb2679079485"},
+      "reward_artifact": {"path": ".nl2repo/runs/go-errgroup-final-20260904T0235Z/install-failure/go-errgroup-final-20260904T0235Z-install-failure/go-errgroup-install-failure__4p83zu7/verifier/reward.json", "sha256": "sha256:8ab285dd6836d028aa2dc600258716be1474a462a4ebd95b7072e5f32750fad6"}
+    },
+    "panic": {
+      "command": "uv run nl2repo harbor prepare-control .nl2repo/compiled/go-errgroup-final-20260904T0235Z/go-errgroup panic --output .nl2repo/controls/go-errgroup-final-20260904T0235Z/panic --toolchain toolchain.go.lock.toml; uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/go-errgroup-final-20260904T0235Z/panic/go-errgroup-panic -a oracle --job-name go-errgroup-final-20260904T0235Z-panic -o .nl2repo/runs/go-errgroup-final-20260904T0235Z/panic --n-concurrent 1 --yes",
+      "exit_code": 0, "valid": true, "passed": 0, "collected": 1, "frozen_total": 1, "reward": 0.0,
+      "result": {"path": ".nl2repo/runs/go-errgroup-final-20260904T0235Z/panic/go-errgroup-final-20260904T0235Z-panic/result.json", "sha256": "sha256:8c850f6028cc95d725a04d0b86f975631167c097864b9a4ec4217c8c3949c09b"},
+      "grading": {"path": ".nl2repo/runs/go-errgroup-final-20260904T0235Z/panic/go-errgroup-final-20260904T0235Z-panic/go-errgroup-panic__ZECFn23/verifier/grading.json", "sha256": "sha256:200088d3204bf1a0e9a2b286d4e90def264fa4ed644cf1702e70e827dbd9d669"},
+      "network": {"path": ".nl2repo/runs/go-errgroup-final-20260904T0235Z/panic/go-errgroup-final-20260904T0235Z-panic/go-errgroup-panic__ZECFn23/verifier/network.json", "sha256": "sha256:e81b64a757cc8ab9d8f2582432d794febdff9c0bddc2678df5021e4a4ff65af2"},
+      "reward_artifact": {"path": ".nl2repo/runs/go-errgroup-final-20260904T0235Z/panic/go-errgroup-final-20260904T0235Z-panic/go-errgroup-panic__ZECFn23/verifier/reward.json", "sha256": "sha256:8ab285dd6836d028aa2dc600258716be1474a462a4ebd95b7072e5f32750fad6"}
+    },
+    "hang": {
+      "command": "uv run nl2repo harbor prepare-control .nl2repo/compiled/go-errgroup-final-20260904T0235Z/go-errgroup hang --output .nl2repo/controls/go-errgroup-final-20260904T0235Z/hang --toolchain toolchain.go.lock.toml; uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/go-errgroup-final-20260904T0235Z/hang/go-errgroup-hang -a oracle --job-name go-errgroup-final-20260904T0235Z-hang -o .nl2repo/runs/go-errgroup-final-20260904T0235Z/hang --n-concurrent 1 --yes",
+      "exit_code": 0, "valid": true, "passed": 0, "collected": 1, "frozen_total": 1, "reward": 0.0,
+      "result": {"path": ".nl2repo/runs/go-errgroup-final-20260904T0235Z/hang/go-errgroup-final-20260904T0235Z-hang/result.json", "sha256": "sha256:6fc350faf36be6b80fd4860638ac81014ebcaaaf7b09fe5c27460b2a8a23702f"},
+      "grading": {"path": ".nl2repo/runs/go-errgroup-final-20260904T0235Z/hang/go-errgroup-final-20260904T0235Z-hang/go-errgroup-hang__ndHv37p/verifier/grading.json", "sha256": "sha256:200088d3204bf1a0e9a2b286d4e90def264fa4ed644cf1702e70e827dbd9d669"},
+      "network": {"path": ".nl2repo/runs/go-errgroup-final-20260904T0235Z/hang/go-errgroup-final-20260904T0235Z-hang/go-errgroup-hang__ndHv37p/verifier/network.json", "sha256": "sha256:4be25741638e4b6bf8b84e61ab989b40ce4facaa9e4cf00fa67180e5de27ebdc"},
+      "reward_artifact": {"path": ".nl2repo/runs/go-errgroup-final-20260904T0235Z/hang/go-errgroup-final-20260904T0235Z-hang/go-errgroup-hang__ndHv37p/verifier/reward.json", "sha256": "sha256:8ab285dd6836d028aa2dc600258716be1474a462a4ebd95b7072e5f32750fad6"}
+    },
+    "oversized-output": {
+      "command": "uv run nl2repo harbor prepare-control .nl2repo/compiled/go-errgroup-final-20260904T0235Z/go-errgroup oversized-output --output .nl2repo/controls/go-errgroup-final-20260904T0235Z/oversized-output --toolchain toolchain.go.lock.toml; uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/go-errgroup-final-20260904T0235Z/oversized-output/go-errgroup-oversized-output -a oracle --job-name go-errgroup-final-20260904T0235Z-oversized-output -o .nl2repo/runs/go-errgroup-final-20260904T0235Z/oversized-output --n-concurrent 1 --yes",
+      "exit_code": 0, "valid": true, "passed": 0, "collected": 1, "frozen_total": 1, "reward": 0.0,
+      "result": {"path": ".nl2repo/runs/go-errgroup-final-20260904T0235Z/oversized-output/go-errgroup-final-20260904T0235Z-oversized-output/result.json", "sha256": "sha256:37db0637214ce03728d38d9c91b4ed40862257160519965f9fa71e13d12873a5"},
+      "grading": {"path": ".nl2repo/runs/go-errgroup-final-20260904T0235Z/oversized-output/go-errgroup-final-20260904T0235Z-oversized-output/go-errgroup-oversized-output__3brn2Ko/verifier/grading.json", "sha256": "sha256:200088d3204bf1a0e9a2b286d4e90def264fa4ed644cf1702e70e827dbd9d669"},
+      "network": {"path": ".nl2repo/runs/go-errgroup-final-20260904T0235Z/oversized-output/go-errgroup-final-20260904T0235Z-oversized-output/go-errgroup-oversized-output__3brn2Ko/verifier/network.json", "sha256": "sha256:10f428adfb4b9dd9df42d1b943c811ffc69f06a7ce850aace4470926cabf1af2"},
+      "reward_artifact": {"path": ".nl2repo/runs/go-errgroup-final-20260904T0235Z/oversized-output/go-errgroup-final-20260904T0235Z-oversized-output/go-errgroup-oversized-output__3brn2Ko/verifier/reward.json", "sha256": "sha256:8ab285dd6836d028aa2dc600258716be1474a462a4ebd95b7072e5f32750fad6"}
+    },
+    "background-process": {
+      "command": "uv run nl2repo harbor prepare-control .nl2repo/compiled/go-errgroup-final-20260904T0235Z/go-errgroup background-process --output .nl2repo/controls/go-errgroup-final-20260904T0235Z/background-process --toolchain toolchain.go.lock.toml; uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/go-errgroup-final-20260904T0235Z/background-process/go-errgroup-background-process -a oracle --job-name go-errgroup-final-20260904T0235Z-background-process -o .nl2repo/runs/go-errgroup-final-20260904T0235Z/background-process --n-concurrent 1 --yes",
+      "exit_code": 0, "valid": true, "passed": 0, "collected": 1, "frozen_total": 1, "reward": 0.0,
+      "result": {"path": ".nl2repo/runs/go-errgroup-final-20260904T0235Z/background-process/go-errgroup-final-20260904T0235Z-background-process/result.json", "sha256": "sha256:e9f5b319d9d939286b64ec0eaf4f10f1eb39a56ce9ab1b76758569478c6f34f4"},
+      "grading": {"path": ".nl2repo/runs/go-errgroup-final-20260904T0235Z/background-process/go-errgroup-final-20260904T0235Z-background-process/go-errgroup-background-process__kvRtCX6/verifier/grading.json", "sha256": "sha256:200088d3204bf1a0e9a2b286d4e90def264fa4ed644cf1702e70e827dbd9d669"},
+      "network": {"path": ".nl2repo/runs/go-errgroup-final-20260904T0235Z/background-process/go-errgroup-final-20260904T0235Z-background-process/go-errgroup-background-process__kvRtCX6/verifier/network.json", "sha256": "sha256:de5d0b2b2e79f0042be8f94b8cdd6483390774e81d52ee60422898319639abca"},
+      "reward_artifact": {"path": ".nl2repo/runs/go-errgroup-final-20260904T0235Z/background-process/go-errgroup-final-20260904T0235Z-background-process/go-errgroup-background-process__kvRtCX6/verifier/reward.json", "sha256": "sha256:8ab285dd6836d028aa2dc600258716be1474a462a4ebd95b7072e5f32750fad6"}
+    },
+    "offline": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/go-errgroup-final-20260904T0235Z/go-errgroup -a nop --job-name go-errgroup-final-20260904T0235Z-offline -o .nl2repo/runs/go-errgroup-final-20260904T0235Z/offline --n-concurrent 1 --yes",
+      "exit_code": 0, "valid": true, "completed": true, "passed": 0, "collected": 0, "frozen_total": 0, "reward": 0.0, "public_network_available": false,
+      "failure_class": "model", "failure_reason": "candidate-installation-failed",
+      "result": {"path": ".nl2repo/runs/go-errgroup-final-20260904T0235Z/offline/go-errgroup-final-20260904T0235Z-offline/result.json", "sha256": "sha256:402dbdb882b5cfd507a6fb7d29cb02068cef3173265f8fc8d6f1b3ad726146c5"},
+      "grading": {"path": ".nl2repo/runs/go-errgroup-final-20260904T0235Z/offline/go-errgroup-final-20260904T0235Z-offline/go-errgroup__MhokV6Q/verifier/grading.json", "sha256": "sha256:48b72a16f51e933e5ccae956e22a0c1974e8c05b29c03acb8c0a11580c409540"},
+      "network": {"path": ".nl2repo/runs/go-errgroup-final-20260904T0235Z/offline/go-errgroup-final-20260904T0235Z-offline/go-errgroup__MhokV6Q/verifier/network.json", "sha256": "sha256:8b4a33a34913ff0b64f0a811f62d57ff30efb1b537ce07c09a1a370c708f46ed"},
+      "reward_artifact": {"path": ".nl2repo/runs/go-errgroup-final-20260904T0235Z/offline/go-errgroup-final-20260904T0235Z-offline/go-errgroup__MhokV6Q/verifier/reward.json", "sha256": "sha256:8ab285dd6836d028aa2dc600258716be1474a462a4ebd95b7072e5f32750fad6"}
+    }
+  },
   "residual_risks": [
-    "Official Harbor Oracle and compiled controls remain integrator-owned and are intentionally not run in this lane.",
-    "The Oracle solve fetches only the exact frozen commit and asserts FETCH_HEAD before checkout; it adapts only the Go directive and creates an empty go.sum.",
-    "The bridge covers bounded deterministic context and concurrency behavior; panic stack details and network/filesystem examples are excluded.",
-    "The upstream repository source digest covers all packages, while the task contract scopes implementation and hidden assertions to errgroup."
-  ],
-  "evidence_files": ["evidence/source-freeze.json", "evidence/api-inventory.json", "evidence/test-inventory.json", "evidence/traceability.json", "evidence/remediation-validation.txt"]
+    "Independent review, model Agent evaluation, dataset integration, and publication remain integrator stages.",
+    "The Oracle fetches only the exact frozen revision with run-scoped github.com authorization; model-agent runs remain no-network with no source host authorization.",
+    "The fixed contract leaf covers ten bounded typed-bridge cases and excludes network-dependent examples, benchmarks, and other x/sync packages."
+  ]
 }
