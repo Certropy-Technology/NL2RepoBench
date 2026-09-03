@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "task_id": "figures",
+  "source_revision": "3da3d1713e9a09dbfcfc99eac86af8f4377597b6",
+  "upstream_tests": {
+    "ava_file": "test.js",
+    "ava_leaf_calls": 10,
+    "typescript_file": "index.test-d.ts",
+    "typescript_check_lines": 12,
+    "runner": "npm test (xo && ava && tsd)"
+  },
+  "adapted_contract": {
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "frozen_total": 24,
+    "collection_source": "private contract.test.mjs collection",
+    "boundary": "tests call named replaceSymbols through a UID-isolated JSON subprocess; no candidate import occurs in the trusted verifier",
+    "coverage": [
+      "special-symbol fallback mappings",
+      "common and line-drawing symbols",
+      "repetition and multiline text",
+      "explicit true and false options",
+      "empty and ordinary input",
+      "literal replacement behavior"
+    ]
+  }
+}

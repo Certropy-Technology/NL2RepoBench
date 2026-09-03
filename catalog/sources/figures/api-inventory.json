@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0",
+  "task_id": "figures",
+  "source_revision": "3da3d1713e9a09dbfcfc99eac86af8f4377597b6",
+  "entrypoint": "index.js",
+  "declarations": "index.d.ts",
+  "named_exports": ["fallbackSymbols", "mainSymbols", "replaceSymbols"],
+  "default_export": "terminal-selected symbol object with the same property names as mainSymbols and fallbackSymbols",
+  "symbol_table": {
+    "main_symbol_count": 228,
+    "fallback_symbol_count": 228,
+    "value_type": "non-empty string"
+  },
+  "replaceSymbols": {
+    "signature": "replaceSymbols(string, options?) -> string",
+    "options": {"useFallback": "boolean, default derived from terminal Unicode support"},
+    "side_effects": "none",
+    "determinism": "stable literal replacement after module evaluation",
+    "dependency": "is-unicode-supported@2.1.0"
+  },
+  "source_files": [
+    "index.js",
+    "index.d.ts",
+    "package.json",
+    "test.js",
+    "index.test-d.ts",
+    "license"
+  ],
+  "risk_review": {
+    "filesystem": false,
+    "network": false,
+    "native_addon": false,
+    "subprocess": false,
+    "tty_detection": true,
+    "adaptation": "force fallback explicitly in the isolated JSON test boundary"
+  }
+}

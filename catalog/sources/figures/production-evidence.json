@@ -1,0 +1,151 @@
+{
+  "schema_version": "1.0",
+  "task_id": "figures",
+  "task_version": "1.0.0",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/sindresorhus/figures",
+    "revision": "3da3d1713e9a09dbfcfc99eac86af8f4377597b6",
+    "source_digest": "sha256:c1b1db9dd7ff5771b6301e85ade19184e7bf46990b95008240729c39287b3258",
+    "license_spdx": "MIT",
+    "license_file": "figures/license",
+    "license_file_sha256": "sha256:5c932d88256b4ab958f64a856fa48e8bd1f55bc1d96b8149c65689e0c61789d3"
+  },
+  "runtime": {
+    "language": "node",
+    "runtime": "node",
+    "version": "24.19.0",
+    "package_manager": "npm",
+    "package_manager_version": "11.17.0",
+    "platform": "linux/amd64",
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "toolchain_lock": "toolchain.node.lock.toml",
+    "toolchain_content_digest": "sha256:aac76d5c1a423cd3c5c9c96870198475e0fed151793b60eeb830a7c053692dc8",
+    "toolchain_file_sha256": "sha256:e5ff4d5a5995022c048fbe7242561d2a6be95b908f40973d72104c6b2d30f27c",
+    "verifier_image": "nl2repobench/figures-verifier:authoring-release2",
+    "verifier_image_digest": "sha256:50398159da1ea9960957e3eb312d42eb86c12db5f12f7301ccb23ac84d872887"
+  },
+  "dependencies": {
+    "lockfile": "package-lock.json",
+    "lockfile_version": 3,
+    "packages": ["is-unicode-supported@2.1.0"],
+    "offline_smoke": "passed",
+    "offline_smoke_image_digest": "sha256:0680f6b87db6de6fe0518bfcf177456cef9f2babe2c0615802591492dac85614",
+    "offline_smoke_log": ".nl2repo/authoring-work/node-author-auto-20260903T035117Z/figures/evidence/current-attempt/offline-install.log",
+    "artifact": "artifact://private/sha256:1cdce374091ed7c2da8a08d31e3db22747693308e6b138505e26dacbf75c7173"
+  },
+  "tests": {
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "frozen_total": 24,
+    "test_bundle": "artifact://private/sha256:6b7303a7bc9da39c009efc675b85e389310e96df18dc3632aa288898b09e17eb",
+    "commands_bundle": "artifact://private/sha256:cab621dcaf7260f80d7c66f04c60ed005c26aa2b0a374856ead7c4cd08bf995e"
+  },
+  "compile": {
+    "status": "passed",
+    "output": ".nl2repo/authoring-work/node-author-auto-20260903T035117Z/figures/compiled-final/figures",
+    "manifest_sha256": "sha256:a6963c1f392e03f587d3f13129f0df30d5d2f29231a0e860f9a892d26fe898f1",
+    "canonical_manifest_digest": "sha256:39a2530db9db42b7863d9032507f21894e39502e56c8edbb24ba6b7fa9259d40"
+  },
+  "oracle": {
+    "status": "passed",
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-auto-20260903T035117Z/figures/compiled-production-release2/figures -a oracle --job-name figures-oracle-release2-20260903 -o .nl2repo/authoring-work/node-author-auto-20260903T035117Z/figures/runs/oracle-release2 --n-concurrent 1 --yes --allow-agent-host github.com",
+    "exit_code": 0,
+    "valid": true,
+    "passed": 24,
+    "collected": 24,
+    "reward": 1.0,
+    "grading": ".nl2repo/authoring-work/node-author-auto-20260903T035117Z/figures/runs/oracle-release2/figures-oracle-release2-20260903/figures__5V7WhdR/verifier/grading.json",
+    "grading_sha256": "sha256:93b9621a6e1fea4ec5769abb9f14045a69c9ab2cb831f34e346f8bd2237f18bf",
+    "network": ".nl2repo/authoring-work/node-author-auto-20260903T035117Z/figures/runs/oracle-release2/figures-oracle-release2-20260903/figures__5V7WhdR/verifier/network.json",
+    "network_sha256": "sha256:8dd6160752583c90ce24ac6c19375e084303d9dd616154fafd592077c6c1135e",
+    "public_network_available": false
+  },
+  "direct_verifier_recheck": {
+    "status": "passed",
+    "recorded_at": "2026-09-03T07:59:08Z",
+    "harbor_agent_run_started": false,
+    "image": "nl2repobench/figures-verifier:current-attempt",
+    "image_digest": "sha256:654e18c99104a376fffbea611b2e1ddda8f04c7013aada6f6e18b2096363f185",
+    "network_mode": "none",
+    "valid": true,
+    "passed": 24,
+    "collected": 24,
+    "reward": 1.0,
+    "grading": ".nl2repo/authoring-work/node-author-auto-20260903T035117Z/figures/evidence/current-attempt/oracle/logs/verifier/grading.json",
+    "grading_sha256": "sha256:93b9621a6e1fea4ec5769abb9f14045a69c9ab2cb831f34e346f8bd2237f18bf",
+    "network": ".nl2repo/authoring-work/node-author-auto-20260903T035117Z/figures/evidence/current-attempt/oracle/logs/verifier/network.json",
+    "network_sha256": "sha256:763aab3ff9ca44060b7d70800d8c8731187e02c77ae4c3515bb1580ec5025eb4",
+    "public_network_available": false
+  },
+  "controls": {
+    "status": "passed",
+    "root": ".nl2repo/authoring-work/node-author-auto-20260903T035117Z/figures/evidence/current-attempt/controls",
+    "empty": {
+      "exit_code": 0, "valid": true, "collected": 0, "reward": 0.0,
+      "failure_reason": "candidate-installation-failed", "public_network_available": false,
+      "grading": ".nl2repo/authoring-work/node-author-auto-20260903T035117Z/figures/evidence/current-attempt/controls/empty/logs/verifier/grading.json",
+      "grading_sha256": "sha256:857fc7d0ca5d79f20c569b663734dd31e8f8f994491149d216d10baec3f54d2b",
+      "network": ".nl2repo/authoring-work/node-author-auto-20260903T035117Z/figures/evidence/current-attempt/controls/empty/logs/verifier/network.json",
+      "network_sha256": "sha256:b5bae354fc2401fc988463c537d741eefccbe4947c56bb59c9dc3a4cca891331"
+    },
+    "stub": {
+      "exit_code": 0, "valid": true, "collected": 24, "passed": 6, "reward": 0.25,
+      "public_network_available": false,
+      "grading": ".nl2repo/authoring-work/node-author-auto-20260903T035117Z/figures/evidence/current-attempt/controls/stub/logs/verifier/grading.json",
+      "grading_sha256": "sha256:3613fd2c939b7ddc90fff05ad436624b2cc6ae4c75fe9e396f0140c8861cf8fb",
+      "network": ".nl2repo/authoring-work/node-author-auto-20260903T035117Z/figures/evidence/current-attempt/controls/stub/logs/verifier/network.json",
+      "network_sha256": "sha256:b5bae354fc2401fc988463c537d741eefccbe4947c56bb59c9dc3a4cca891331"
+    },
+    "forgery": {
+      "exit_code": 0, "valid": true, "collected": 24, "passed": 6, "reward": 0.25,
+      "verifier_owned_reward": true, "public_network_available": false,
+      "grading": ".nl2repo/authoring-work/node-author-auto-20260903T035117Z/figures/evidence/current-attempt/controls/forgery/logs/verifier/grading.json",
+      "grading_sha256": "sha256:3613fd2c939b7ddc90fff05ad436624b2cc6ae4c75fe9e396f0140c8861cf8fb",
+      "network": ".nl2repo/authoring-work/node-author-auto-20260903T035117Z/figures/evidence/current-attempt/controls/forgery/logs/verifier/network.json",
+      "network_sha256": "sha256:b5bae354fc2401fc988463c537d741eefccbe4947c56bb59c9dc3a4cca891331"
+    },
+    "install-hang": {
+      "exit_code": 0, "valid": true, "collected": 0, "reward": 0.0,
+      "failure_reason": "candidate-installation-failed", "public_network_available": false,
+      "grading": ".nl2repo/authoring-work/node-author-auto-20260903T035117Z/figures/evidence/current-attempt/controls/install-hang/logs/verifier/grading.json",
+      "grading_sha256": "sha256:857fc7d0ca5d79f20c569b663734dd31e8f8f994491149d216d10baec3f54d2b",
+      "network": ".nl2repo/authoring-work/node-author-auto-20260903T035117Z/figures/evidence/current-attempt/controls/install-hang/logs/verifier/network.json",
+      "network_sha256": "sha256:8d2c1f36c7f74bc46d18906ab19415ef4f6abca195406fecd12fbdece6210901"
+    },
+    "offline": {
+      "exit_code": 0, "valid": true, "collected": 24, "passed": 0, "reward": 0.0,
+      "public_network_available": false,
+      "grading": ".nl2repo/authoring-work/node-author-auto-20260903T035117Z/figures/evidence/current-attempt/controls/offline/logs/verifier/grading.json",
+      "grading_sha256": "sha256:4d09f1306ab3db1682d64b05673627528c3548cffc4f8637742076d4e4b22c53",
+      "network": ".nl2repo/authoring-work/node-author-auto-20260903T035117Z/figures/evidence/current-attempt/controls/offline/logs/verifier/network.json",
+      "network_sha256": "sha256:8d2c1f36c7f74bc46d18906ab19415ef4f6abca195406fecd12fbdece6210901"
+    },
+    "call-hang": {
+      "exit_code": 0, "valid": true, "collected": 0, "reward": 0.0,
+      "failure_reason": "candidate-call-failed", "public_network_available": false,
+      "grading": ".nl2repo/authoring-work/node-author-auto-20260903T035117Z/figures/evidence/current-attempt/controls/call-hang/logs/verifier/grading.json",
+      "grading_sha256": "sha256:da7a16f0510b00800c9f64653bdbf071d554d9c30ff969f69f7987c5c22d09a5",
+      "network": ".nl2repo/authoring-work/node-author-auto-20260903T035117Z/figures/evidence/current-attempt/controls/call-hang/logs/verifier/network.json",
+      "network_sha256": "sha256:8d2c1f36c7f74bc46d18906ab19415ef4f6abca195406fecd12fbdece6210901"
+    }
+  },
+  "commands": [
+    {"command": "uv run nl2repo task validate-source catalog/sources/figures", "exit_code": 0},
+    {"command": "uv run nl2repo task lint-network --tasks-root catalog/sources", "exit_code": 0, "summary": "0 errors; 177 repository warnings, none for figures"},
+    {"command": "uv run nl2repo harbor compile catalog/sources/figures --output .nl2repo/authoring-work/node-author-auto-20260903T035117Z/figures/compiled-current --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "exit_code": 0},
+    {"command": "uv run nl2repo harbor compile catalog/sources/figures --output .nl2repo/authoring-work/node-author-auto-20260903T035117Z/figures/compiled-current-repeat --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "exit_code": 0, "summary": "bundle manifests are byte-identical"},
+    {"command": "uv run nl2repo harbor compile catalog/sources/figures --output .nl2repo/authoring-work/node-author-auto-20260903T035117Z/figures/compiled-final --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "exit_code": 0, "summary": "final bundle manifest remains byte-identical"},
+    {"command": "docker build --platform linux/amd64 -f .nl2repo/authoring-work/node-author-auto-20260903T035117Z/figures/compiled-current/figures/tests/Dockerfile -t nl2repobench/figures-verifier:current-attempt .nl2repo/authoring-work/node-author-auto-20260903T035117Z/figures/compiled-current/figures/tests", "exit_code": 0, "image_digest": "sha256:654e18c99104a376fffbea611b2e1ddda8f04c7013aada6f6e18b2096363f185"},
+    {"command": "docker run --rm --network none --cpus 1 --memory 1024m --pids-limit 64 --read-only --tmpfs /tmp:rw,noexec,nosuid,size=256m ... nl2repobench/figures-verifier:current-attempt /tests/test.sh", "exit_code": 0, "summary": "fresh direct Oracle and six control workspaces completed; no Harbor Agent Run was started"}
+  ],
+  "residual_risks": [
+    "No model Agent Run was started from this lane; independent Agent Run, catalog integration, dataset release, and publication remain integrator stages.",
+    "Docker emitted FromPlatformFlagConstDisallowed for the constant linux/amd64 FROM selectors; the base image and platform are explicitly pinned.",
+    "The contract adapts the upstream AVA/tsd suite to 24 deterministic node:test leaves across a JSON subprocess boundary; upstream test dependencies are not installed in the candidate runtime.",
+    "A first upstream baseline probe ran from the source clone and XO traversed task-local authoring artifacts. That probe was discarded. A clean git archive was then extracted into an isolated directory and the complete upstream xo, AVA, and tsd command passed."
+  ],
+  "blocker": null
+}
