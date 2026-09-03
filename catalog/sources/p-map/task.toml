@@ -1,0 +1,93 @@
+schema_version = "2.0"
+task_id = "p-map"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "async-concurrency"
+tags = ["node", "npm", "esm", "promise", "async-iterable", "concurrency", "repository-generation"]
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/sindresorhus/p-map"
+revision = "22dda61ea29037ba85af25e84bc5efba77e62f44"
+license_spdx = "MIT"
+source_digest = "sha256:ef544534472632d1bf174753ad75c21496119ff54bef8dedca45bb14cfe90ea2"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "p-map has no runtime dependencies. Candidate and verifier phases are offline; the trusted Oracle alone receives a run-scoped authorization for the frozen source host."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = []
+artifact = { digest = "sha256:f18da9c5e7e42e47a8e09b036908c6d2928c4b22ac0caca69c1e3fcd3c867312", size_bytes = 10240, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:f18da9c5e7e42e47a8e09b036908c6d2928c4b22ac0caca69c1e3fcd3c867312", visibility = "private" }
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 30
+expected_total_source = "frozen-collection"
+commands_artifact = { digest = "sha256:10e70a89b271a2cd71d8dbaa6848530c6550ac4d87e65ae87d7332265e5eedd9", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:10e70a89b271a2cd71d8dbaa6848530c6550ac4d87e65ae87d7332265e5eedd9", visibility = "private" }
+test_bundle = { digest = "sha256:b2963fc16f32a1030bdc97a3965f7cdd7d564c2f596b82332cf93711e3c6d6e1", size_bytes = 20480, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:b2963fc16f32a1030bdc97a3965f7cdd7d564c2f596b82332cf93711e3c6d6e1", visibility = "private" }
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Recreate the p-map ESM package with deterministic promise mapping, bounded concurrency, async iterables, streaming backpressure, skip values, and error handling."
+keywords = ["node", "npm", "esm", "promise", "async-iterable", "concurrency", "node-test"]
+agent_timeout_sec = 1200.0
+verifier_timeout_sec = 900.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 420.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "packaged"
+owner = "node-author-expansion-20260902T1446Z/p-map"
+reason = "Source, deterministic private verifier, npm closure, Oracle solution, and controls are authored. Manual Docker verification passed Oracle 30/30 and all negative controls; official Harbor Oracle/control receipts remain required before controls-passed."
+
+[oracle_bundle]
+digest = "sha256:e4c9423e54cbadf1d7eb474c063d49607c2b927e2a0d3ce1bc745afed4052276"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:e4c9423e54cbadf1d7eb474c063d49607c2b927e2a0d3ce1bc745afed4052276"
+visibility = "private"

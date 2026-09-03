@@ -1,0 +1,70 @@
+{
+  "schema_version": "1.0",
+  "task_id": "p-map",
+  "status": "packaged",
+  "handoff_status": "awaiting-agent-run",
+  "agent_run_started": false,
+  "source": {
+    "upstream_url": "https://github.com/sindresorhus/p-map",
+    "revision": "22dda61ea29037ba85af25e84bc5efba77e62f44",
+    "tree": "aec86b1edba6c63c8d1a9bc22e9e4f64b6ae990a",
+    "archive_sha256": "sha256:ef544534472632d1bf174753ad75c21496119ff54bef8dedca45bb14cfe90ea2",
+    "archive_size_bytes": 71680,
+    "license_spdx": "MIT",
+    "license_sha256": "sha256:5c932d88256b4ab958f64a856fa48e8bd1f55bc1d96b8149c65689e0c61789d3",
+    "checkout_clean": true
+  },
+  "environment": {
+    "platform": "linux/amd64",
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "node": "24.19.0",
+    "npm": "11.17.0",
+    "harbor": "0.21.0",
+    "network_policy": {
+      "mode": "no-network",
+      "agent_allowed_hosts": [],
+      "reference_source_fetch": "forbidden",
+      "agent_compose_network_override_present": false
+    }
+  },
+  "private_artifacts": {
+    "dependencies": {"digest": "sha256:f18da9c5e7e42e47a8e09b036908c6d2928c4b22ac0caca69c1e3fcd3c867312", "size_bytes": 10240},
+    "commands": {"digest": "sha256:10e70a89b271a2cd71d8dbaa6848530c6550ac4d87e65ae87d7332265e5eedd9", "size_bytes": 10240},
+    "tests": {"digest": "sha256:b2963fc16f32a1030bdc97a3965f7cdd7d564c2f596b82332cf93711e3c6d6e1", "size_bytes": 20480},
+    "oracle": {"digest": "sha256:e4c9423e54cbadf1d7eb474c063d49607c2b927e2a0d3ce1bc745afed4052276", "size_bytes": 10240}
+  },
+  "production_compile": {
+    "path": ".nl2repo/authoring-work/node-author-expansion-20260902T1446Z/p-map/final-compile-c/p-map",
+    "bundle_manifest_sha256": "sha256:f8ce6481a21ab06ef96bfcb4fa0901d02e6c77897ca6cc6f4d2852cc330ca257",
+    "canonical_manifest_digest": "sha256:a31fc596cd7879dcdd3cae8c2cb452819685644cb96c632911607f3077871b13",
+    "manifest_file_count": 72,
+    "repeat_compile_byte_identical": true
+  },
+  "validation": {
+    "validate_source_exit_code": 0,
+    "network_lint_exit_code": 0,
+    "network_lint_errors": 0,
+    "p_map_network_findings": [],
+    "npm_bundle_validation_exit_code": 0,
+    "node_and_bash_syntax_exit_code": 0,
+    "git_diff_check_exit_code": 0
+  },
+  "manual_verifier": {
+    "scope": "Generated verifier image and Docker workspaces; not an official Harbor run receipt.",
+    "image_id": "sha256:28a4272dad48df8f14f8797fdc256a1ae1a0e2e4a96d6335aeebe3c63723b731",
+    "oracle": {"valid": true, "passed": 30, "collected": 30, "reward": 1.0, "public_network_available": false},
+    "empty": {"valid": true, "collected": 0, "reward": 0.0, "failure_reason": "candidate-installation-failed"},
+    "stub": {"valid": true, "passed": 2, "failed": 28, "collected": 30, "reward": 0.06666666666666667},
+    "forgery": {"valid": true, "passed": 2, "failed": 28, "collected": 30, "reward": 0.06666666666666667, "forged_reports_ignored": true},
+    "timeout": {"valid": true, "collected": 0, "reward": 0.0, "failure_reason": "candidate-call-failed", "bounded_wall_seconds": 123},
+    "offline": {"valid": true, "passed": 4, "failed": 26, "collected": 30, "reward": 0.13333333333333333, "public_network_available": false}
+  },
+  "residual_risks": [
+    "The 30-leaf child-side JSON contract is a deterministic public API slice, not direct parity with all 50 timing-dependent AVA registrations or compile-time tsd assertions.",
+    "The locked OpenHands agent base tag was absent from this host; its expected image ID is sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f. The task-local verifier image and all manual controls built successfully, but an official Harbor Oracle/control run requires the integrator to restore that exact shared runtime image.",
+    "A remediation build attempt is recorded at .nl2repo/runtime/logs/openhands-fork-runtime-build.log; it failed at uv export because this detached worktree has an unmaterialized openhands submodule and no pyproject.toml in the Docker build context.",
+    "Independent blind/spec review and downstream model execution remain outside this authoring lane."
+  ],
+  "blocker": null,
+  "next_action": "Restore the exact locked shared OpenHands agent image, then run official Harbor Oracle and control receipts before advancing lifecycle to controls-passed."
+}

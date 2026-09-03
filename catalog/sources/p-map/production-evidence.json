@@ -1,0 +1,248 @@
+{
+  "bundle": {
+    "handoff_artifacts": {
+      "artifact_root": ".nl2repo/artifacts",
+      "bundle_manifest_digest": "sha256:f8ce6481a21ab06ef96bfcb4fa0901d02e6c77897ca6cc6f4d2852cc330ca257",
+      "canonical_manifest_digest": "sha256:a31fc596cd7879dcdd3cae8c2cb452819685644cb96c632911607f3077871b13",
+      "commands_bundle": {
+        "digest": "sha256:10e70a89b271a2cd71d8dbaa6848530c6550ac4d87e65ae87d7332265e5eedd9",
+        "size_bytes": 10240
+      },
+      "dependency_bundle": {
+        "digest": "sha256:f18da9c5e7e42e47a8e09b036908c6d2928c4b22ac0caca69c1e3fcd3c867312",
+        "size_bytes": 10240
+      },
+      "oracle_bundle": {
+        "digest": "sha256:e4c9423e54cbadf1d7eb474c063d49607c2b927e2a0d3ce1bc745afed4052276",
+        "size_bytes": 10240
+      },
+      "production_bundle": ".nl2repo/authoring-work/node-author-expansion-20260902T1446Z/p-map/final-compile-c/p-map",
+      "test_bundle": {
+        "digest": "sha256:b2963fc16f32a1030bdc97a3965f7cdd7d564c2f596b82332cf93711e3c6d6e1",
+        "size_bytes": 20480
+      },
+      "verifier_image_id": "sha256:28a4272dad48df8f14f8797fdc256a1ae1a0e2e4a96d6335aeebe3c63723b731"
+    },
+    "handoff_compiled_bundle": null
+  },
+  "commands": [
+    {
+      "exit_code": 0,
+      "name": "clone_and_verify_revision"
+    },
+    {
+      "exit_code": 0,
+      "name": "node_and_bash_syntax"
+    },
+    {
+      "exit_code": 1,
+      "name": "initial_contract_probe",
+      "reason": "data URL adapter incorrectly called fileURLToPath; fixed before artifact freeze"
+    },
+    {
+      "exit_code": 0,
+      "name": "corrected_contract_probe",
+      "summary": "30/30 on locked Node image"
+    },
+    {
+      "exit_code": 0,
+      "name": "npm_bundle_validation"
+    },
+    {
+      "exit_code": 0,
+      "name": "uv run nl2repo task validate-source catalog/sources/p-map"
+    },
+    {
+      "exit_code": 0,
+      "name": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "summary": "0 errors; 174 unrelated catalog warnings; no p-map findings"
+    },
+    {
+      "exit_code": 0,
+      "name": "production_compile"
+    },
+    {
+      "exit_code": 0,
+      "name": "repeat_production_compile_cmp",
+      "summary": "byte-identical bundle manifests"
+    },
+    {
+      "exit_code": 0,
+      "name": "generated_verifier_image_build"
+    },
+    {
+      "exit_code": 1,
+      "name": "locked_agent_image_inspect",
+      "reason": "exact shared OpenHands image tag absent on host"
+    },
+    {
+      "exit_code": 1,
+      "log": ".nl2repo/runtime/logs/openhands-fork-runtime-build.log",
+      "name": "exact_openhands_runtime_build",
+      "reason": "Docker build failed in uv export with 'No pyproject.toml found in current directory or any parent directory' because the current worktree's openhands submodule is not materialized"
+    },
+    {
+      "exit_code": 127,
+      "name": "oracle_workspace_first_attempt",
+      "reason": "local orchestration used a post-cd relative path; solve.sh did not start"
+    },
+    {
+      "exit_code": 0,
+      "name": "oracle_workspace_corrected",
+      "summary": "fetched exact revision, verified archive digest, offline npm ci/pack and syntax passed"
+    },
+    {
+      "exit_code": 0,
+      "name": "manual_oracle_verifier"
+    },
+    {
+      "exit_code": 0,
+      "name": "manual_empty_stub_forgery_offline_verifiers"
+    },
+    {
+      "exit_code": 0,
+      "name": "initial_timeout_control",
+      "reason": "promise had no active handle and did not exercise wall timeout; replaced"
+    },
+    {
+      "exit_code": 0,
+      "name": "corrected_timeout_control",
+      "summary": "bounded at 123 seconds with candidate-call-failed"
+    },
+    {
+      "exit_code": 1,
+      "name": "prepare_control_default_toolchain",
+      "reason": "CLI default selected Python toolchain"
+    },
+    {
+      "exit_code": 0,
+      "name": "prepare_control_node_toolchain",
+      "summary": "empty, stub, forgery, timeout, offline generated"
+    },
+    {
+      "exit_code": 1,
+      "name": "focused_pytest_with_default_coverage",
+      "reason": "51 tests passed; repository-wide coverage gate reported 38.52% for the narrow selection"
+    },
+    {
+      "exit_code": 0,
+      "name": "focused_pytest_no_cov",
+      "summary": "51 passed in 5.88s"
+    },
+    {
+      "exit_code": 1,
+      "name": "bundle_integrity_first_check",
+      "reason": "checker accidentally excluded nested bundle.manifest.json files; corrected checker passed"
+    },
+    {
+      "exit_code": 0,
+      "name": "bundle_integrity_corrected",
+      "summary": "72 generated files match manifest digests and sizes"
+    },
+    {
+      "exit_code": 0,
+      "name": "git diff --check -- catalog/sources/p-map"
+    }
+  ],
+  "controls": {
+    "status": "pending-integrator-runtime"
+  },
+  "dependency_closure": {
+    "artifact": {
+      "digest": "sha256:f18da9c5e7e42e47a8e09b036908c6d2928c4b22ac0caca69c1e3fcd3c867312",
+      "media_type": "application/vnd.nl2repobench.npm-bundle+tar",
+      "size_bytes": 10240,
+      "uri": "artifact://private/sha256:f18da9c5e7e42e47a8e09b036908c6d2928c4b22ac0caca69c1e3fcd3c867312",
+      "visibility": "private"
+    },
+    "consumer": "candidate-runtime",
+    "ecosystem": "npm",
+    "install_mode": "offline",
+    "lifecycle_scripts": "ignore-scripts",
+    "lockfile_name": "package-lock.json",
+    "lockfile_version": "3",
+    "package_manager": "npm",
+    "package_manager_version": "11.17.0",
+    "packages": [],
+    "status": "known"
+  },
+  "environment": {
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "network_mode": "no-network",
+    "network_policy": {
+      "mode": "no-network",
+      "offline_dependencies": "preinstalled-image",
+      "reason": "p-map has no runtime dependencies. Candidate and verifier phases are offline; the trusted Oracle alone receives a run-scoped authorization for the frozen source host.",
+      "reference_source_fetch": "forbidden"
+    },
+    "os_name": "debian-bookworm",
+    "runtime": {
+      "architecture": "linux/amd64",
+      "language": "node",
+      "libc": "glibc",
+      "package_manager": "npm",
+      "package_manager_version": "11.17.0",
+      "runtime": "node",
+      "version": "24.19.0"
+    },
+    "status": "known"
+  },
+  "frozen_collection": {
+    "handoff_collection": null,
+    "handoff_frozen_tests": null,
+    "handoff_inventory": null,
+    "tests": {
+      "commands_artifact": {
+        "digest": "sha256:10e70a89b271a2cd71d8dbaa6848530c6550ac4d87e65ae87d7332265e5eedd9",
+        "media_type": "application/vnd.nl2repobench.node-commands+tar",
+        "size_bytes": 10240,
+        "uri": "artifact://private/sha256:10e70a89b271a2cd71d8dbaa6848530c6550ac4d87e65ae87d7332265e5eedd9",
+        "visibility": "private"
+      },
+      "expected_total": 30,
+      "expected_total_source": "frozen-collection",
+      "framework": "node:test",
+      "report_format": "node-test-json-v1",
+      "test_bundle": {
+        "digest": "sha256:b2963fc16f32a1030bdc97a3965f7cdd7d564c2f596b82332cf93711e3c6d6e1",
+        "media_type": "application/vnd.nl2repobench.node-tests+tar",
+        "size_bytes": 20480,
+        "uri": "artifact://private/sha256:b2963fc16f32a1030bdc97a3965f7cdd7d564c2f596b82332cf93711e3c6d6e1",
+        "visibility": "private"
+      }
+    }
+  },
+  "integrator_repair": {
+    "input_handoff": ".nl2repo/authoring-live/worktrees/node-author-expansion-20260902T1446Z/p-map/.nl2repo/authoring-handoff.json",
+    "kind": "production-evidence-from-authored-handoff",
+    "official_controls_created": false,
+    "official_oracle_created": false,
+    "recorded_at": "2026-09-03T04:43:47.884931+00:00"
+  },
+  "lifecycle": {
+    "owner": "node-author-expansion-20260902T1446Z/p-map",
+    "reason": "Source, deterministic private verifier, npm closure, Oracle solution, and controls are authored. Manual Docker verification passed Oracle 30/30 and all negative controls; official Harbor Oracle/control receipts remain required before controls-passed.",
+    "status": "packaged"
+  },
+  "oracle": {
+    "reason": "No official Harbor Oracle was run in the authoring lane.",
+    "status": "not-run"
+  },
+  "residual_risks": [
+    "The deterministic 30-leaf adapter is not direct parity with all 50 timing-dependent upstream AVA registrations or tsd compile-time assertions.",
+    "Official Harbor Oracle/control receipts require restoration of nl2repobench/openhands-sdk-fork:930e9b1da-bookworm at image ID sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f.",
+    "Independent blind/spec review and downstream model execution remain outside this lane."
+  ],
+  "schema_version": "1.0",
+  "source_freeze": {
+    "license_spdx": "MIT",
+    "revision": "22dda61ea29037ba85af25e84bc5efba77e62f44",
+    "source_digest": "sha256:ef544534472632d1bf174753ad75c21496119ff54bef8dedca45bb14cfe90ea2",
+    "upstream_url": "https://github.com/sindresorhus/p-map"
+  },
+  "status": "awaiting-agent-run",
+  "task_id": "p-map",
+  "task_version": "1.0.0",
+  "terminal_kind": "awaiting-agent-run"
+}

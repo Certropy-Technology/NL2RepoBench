@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "task_id": "p-map",
+  "framework": "node:test",
+  "expected_total": 30,
+  "adapter": "bounded declarative async-iterable scenarios in an unprivileged candidate child",
+  "coverage": [
+    {"area": "package identity, ESM exports, declarations", "leaves": 1},
+    {"area": "pMap values, order, indices, promise inputs, and async inputs", "leaves": 6},
+    {"area": "concurrency and asynchronous start", "leaves": 3},
+    {"area": "validation and mapper/source errors", "leaves": 5},
+    {"area": "stopOnError, AggregateError, abort, and skip sentinel", "leaves": 5},
+    {"area": "pMapIterable ordering, errors, backpressure, and skip", "leaves": 8},
+    {"area": "infinite concurrency and source continuation", "leaves": 2}
+  ],
+  "excluded_upstream_checks": [
+    "randomized delay durations",
+    "wall-clock throughput ranges",
+    "AVA runner and lint configuration",
+    "benchmark script",
+    "compile-time tsd inference beyond declaration/export presence",
+    "unbounded callback and native object cases"
+  ],
+  "determinism": "Deferred promises, setImmediate turns, and fixed async generators replace timing and randomness."
+}

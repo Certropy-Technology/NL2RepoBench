@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "task_id": "p-map",
+  "source_revision": "22dda61ea29037ba85af25e84bc5efba77e62f44",
+  "package": {
+    "name": "p-map",
+    "version": "7.0.7",
+    "module_system": "esm",
+    "runtime_entry": "index.js",
+    "types_entry": "index.d.ts",
+    "node_engine": ">=18",
+    "runtime_dependencies": {}
+  },
+  "public_exports": [
+    {"export": "default", "name": "pMap", "signature": "pMap(input, mapper, options?): Promise<Array<value>>"},
+    {"export": "named", "name": "pMapIterable", "signature": "pMapIterable(input, mapper, options?): AsyncIterable<value>"},
+    {"export": "named", "name": "pMapSkip", "signature": "unique symbol"}
+  ],
+  "options": ["concurrency", "stopOnError", "signal", "backpressure"],
+  "source_metrics": {
+    "tracked_files": 15,
+    "runtime_loc": 288,
+    "declaration_loc": 205,
+    "upstream_test_loc": 748,
+    "upstream_ava_test_calls": 50
+  },
+  "inventory_notes": [
+    "The frozen commit is p-map 7.0.7 and has no runtime dependency.",
+    "The upstream suite uses AVA, random delays, wall-clock assertions, callbacks, and native AbortSignal behavior; only deterministic behavior is retained in the private verifier.",
+    "Function-valued APIs are exercised by a child-side declarative adapter; raw callbacks and symbols never cross the verifier boundary."
+  ]
+}
