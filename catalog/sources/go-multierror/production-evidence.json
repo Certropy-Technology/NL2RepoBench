@@ -1,104 +1,295 @@
 {
-  "schema_version": "1.0",
-  "task_id": "go-multierror",
-  "terminal_kind": "intermediate",
-  "status": "awaiting-agent-run",
-  "source_freeze": {
-    "upstream_url": "https://github.com/hashicorp/go-multierror",
-    "revision": "6d4d48630db25c3c83fa83ecd41dd8438b82963c",
-    "license_spdx": "MPL-2.0",
-    "license_sha256": "sha256:492ebaabb6c6a640018f4dd6364d8c59578b140c25e743c2478afbc05580afd4",
-    "source_digest": "sha256:1baf79ff1d042dda283afc4223d47f28b4684361d0bfb338957e873db53aa773",
-    "source_archive": {
-      "path": ".nl2repo/authoring-work/go-multierror/source/source.tar",
-      "sha256": "sha256:1baf79ff1d042dda283afc4223d47f28b4684361d0bfb338957e873db53aa773",
-      "size_bytes": 71680
-    }
-  },
-  "runtime": {
-    "language": "go",
-    "package_manager": "go-modules",
-    "go_version": "1.26.5",
-    "platform": "linux/amd64",
-    "toolchain_lock": "toolchain.go.lock.toml",
-    "toolchain_lock_sha256": "sha256:baa477549dd86ccfe68422aafd900a2ab76f0b091de9a85f9db883f9d6a551a3",
-    "base_image": "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd",
-    "agent_network_mode": "no-network",
-    "verifier_network_mode": "no-network"
-  },
-  "artifacts": {
-    "module_bundle": {
-      "digest": "sha256:2ca0816da8e279f8f5f504d85d7fe6e676e042817649adb02c821cd974b7ac87",
-      "size_bytes": 10240
+  "bundle": {
+    "handoff_artifacts": {
+      "bundle_file_count": 68,
+      "bundle_manifest": ".nl2repo/compiled-attempt-3/go-multierror/bundle.manifest.json",
+      "bundle_manifest_sha256": "sha256:7bfe1392e40ce4c3342b632bbf3a216e26d374a7523dc5195c764b3ffad9759a",
+      "canonical_manifest_digest": "sha256:8d217f6fb0193bb10957968f92f16836d68f5c2a6fd4c4c650262cc888cc3918",
+      "compiled_task": ".nl2repo/compiled-attempt-3/go-multierror",
+      "oracle_bundle": "artifact://private/sha256:7ba21afe19b788c3740749ac15d3e5200c4e9f0accd191687c99e02961526a03",
+      "production_gates": ".nl2repo/authoring-production-gates.json",
+      "runs_root": ".nl2repo/runs-attempt-3",
+      "verifier_bundle": "artifact://private/sha256:002d6af5c5cff592f4d579562328243fc1bc2f8a5de1178e9c7eb8af2d5ed518"
     },
-    "oracle_bundle": {
-      "digest": "sha256:7ba21afe19b788c3740749ac15d3e5200c4e9f0accd191687c99e02961526a03",
-      "size_bytes": 10240
+    "handoff_compiled_bundle": null
+  },
+  "commands": [
+    {
+      "command": "uv run --frozen --project harbor-runner harbor --version",
+      "exit_code": 0,
+      "log": ".nl2repo/authoring-work/go-multierror/attempt-3/evidence/tool-versions.log",
+      "version": "0.21.0"
     },
-    "verifier_bundle": {
-      "digest": "sha256:002d6af5c5cff592f4d579562328243fc1bc2f8a5de1178e9c7eb8af2d5ed518",
-      "size_bytes": 10240,
-      "contents": ["contract.py", "contract.sh"]
-    }
-  },
-  "current_compile": {
-    "path": ".nl2repo/compiled-current/go-multierror/bundle.manifest.json",
-    "sha256": "sha256:bc35f0225b091bf9fab4c6507a911bcdd3d8af1ae65e28d4576c59f20e5e9b2f",
-    "size_bytes": 12574,
-    "file_count": 67,
-    "repeat_compile_sha256": "sha256:bc35f0225b091bf9fab4c6507a911bcdd3d8af1ae65e28d4576c59f20e5e9b2f"
-  },
-  "tests": {
-    "framework": "custom-json-v1 Go bridge",
-    "protocol": "custom-json-v1",
-    "frozen_total": 1,
-    "leaf_id": "contract::public-api",
-    "upstream_collection": "34 passed test events, 0 failed, from 7 upstream test files",
-    "contract_smoke": {
-      "path": ".nl2repo/authoring-work/go-multierror/evidence/contract-current.log",
-      "result": "passed"
-    }
-  },
-  "authoring_gates": {
-    "source_validation": {
+    {
+      "command": "go version",
+      "exit_code": 0,
+      "log": ".nl2repo/authoring-work/go-multierror/attempt-3/evidence/tool-versions.log",
+      "version": "go1.26.5-X:nodwarf5 linux/amd64"
+    },
+    {
       "command": "uv run nl2repo task validate-source catalog/sources/go-multierror",
       "exit_code": 0,
-      "log": ".nl2repo/authoring-work/go-multierror/evidence/validate-source-current.log"
+      "log": ".nl2repo/authoring-work/go-multierror/attempt-3/evidence/validate-source.log"
     },
-    "network_lint": {
+    {
       "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
       "exit_code": 0,
-      "go_multierror_errors": 0,
-      "go_multierror_warnings": 0,
-      "log": ".nl2repo/authoring-work/go-multierror/evidence/lint-network-current.json"
+      "log": ".nl2repo/authoring-work/go-multierror/attempt-3/evidence/lint-network.log",
+      "summary": "go-multierror error_count=0; full catalog warning_count=178"
     },
-    "production_compile": {
-      "command": "uv run nl2repo harbor compile catalog/sources/go-multierror --output .nl2repo/compiled-current --toolchain toolchain.go.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+    {
+      "command": "bash -n catalog/sources/go-multierror/harbor/controls/*.sh",
       "exit_code": 0,
-      "manifest_sha256": "sha256:bc35f0225b091bf9fab4c6507a911bcdd3d8af1ae65e28d4576c59f20e5e9b2f"
+      "log": ".nl2repo/authoring-work/go-multierror/attempt-3/evidence/shell-syntax.log"
     },
-    "control_preparation": {
-      "stub": "prepared",
-      "forgery": "prepared",
-      "manifests_have_67_files": true
+    {
+      "command": "sha256sum private artifact CAS files",
+      "exit_code": 0,
+      "log": ".nl2repo/authoring-work/go-multierror/attempt-3/evidence/artifact-sha256.log",
+      "summary": "oracle/module/verifier CAS digests match declared values"
+    },
+    {
+      "command": "uv run nl2repo harbor compile catalog/sources/go-multierror --output .nl2repo/compiled-attempt-3 --toolchain toolchain.go.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0,
+      "log": ".nl2repo/authoring-work/go-multierror/attempt-3/evidence/compile.log"
+    },
+    {
+      "command": "receipt-level JSON audit over .nl2repo/runs-attempt-3",
+      "exit_code": 0,
+      "log": ".nl2repo/authoring-work/go-multierror/attempt-3/evidence/receipt-audit.log",
+      "summary": "10 real trials; all verifier grading/network/reward receipts present"
+    }
+  ],
+  "controls": {
+    "background-process": {
+      "collected": 1,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-attempt-3/go-multierror-background-process/go-multierror-background-process -a oracle --job-name go-multierror-background-process-attempt-3 -o .nl2repo/runs-attempt-3/background-process --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "frozen_total": 1,
+      "grading": ".nl2repo/runs-attempt-3/background-process/go-multierror-background-process-attempt-3/go-multierror-background-process__22h3Bm6/verifier/grading.json",
+      "network": ".nl2repo/runs-attempt-3/background-process/go-multierror-background-process-attempt-3/go-multierror-background-process__22h3Bm6/verifier/network.json",
+      "passed": 0,
+      "result": ".nl2repo/runs-attempt-3/background-process/go-multierror-background-process-attempt-3/go-multierror-background-process__22h3Bm6/result.json",
+      "reward": 0.0,
+      "reward_receipt": ".nl2repo/runs-attempt-3/background-process/go-multierror-background-process-attempt-3/go-multierror-background-process__22h3Bm6/verifier/reward.json",
+      "valid": true,
+      "verifier_owned_reward": true
+    },
+    "empty": {
+      "allowed_install_failure": true,
+      "collected": 0,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled-attempt-3/go-multierror -a nop --job-name go-multierror-empty-attempt-3 -o .nl2repo/runs-attempt-3/empty --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "frozen_total": 1,
+      "grading": ".nl2repo/runs-attempt-3/empty/go-multierror-empty-attempt-3/go-multierror__zQ27qdJ/verifier/grading.json",
+      "network": ".nl2repo/runs-attempt-3/empty/go-multierror-empty-attempt-3/go-multierror__zQ27qdJ/verifier/network.json",
+      "passed": 0,
+      "result": ".nl2repo/runs-attempt-3/empty/go-multierror-empty-attempt-3/go-multierror__zQ27qdJ/result.json",
+      "reward": 0.0,
+      "reward_receipt": ".nl2repo/runs-attempt-3/empty/go-multierror-empty-attempt-3/go-multierror__zQ27qdJ/verifier/reward.json",
+      "valid": true
+    },
+    "forgery": {
+      "collected": 1,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-attempt-3/go-multierror-forgery/go-multierror-forgery -a oracle --job-name go-multierror-forgery-attempt-3 -o .nl2repo/runs-attempt-3/forgery --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "frozen_total": 1,
+      "grading": ".nl2repo/runs-attempt-3/forgery/go-multierror-forgery-attempt-3/go-multierror-forgery__jcxt4ZE/verifier/grading.json",
+      "network": ".nl2repo/runs-attempt-3/forgery/go-multierror-forgery-attempt-3/go-multierror-forgery__jcxt4ZE/verifier/network.json",
+      "passed": 0,
+      "result": ".nl2repo/runs-attempt-3/forgery/go-multierror-forgery-attempt-3/go-multierror-forgery__jcxt4ZE/result.json",
+      "reward": 0.0,
+      "reward_receipt": ".nl2repo/runs-attempt-3/forgery/go-multierror-forgery-attempt-3/go-multierror-forgery__jcxt4ZE/verifier/reward.json",
+      "valid": true,
+      "verifier_owned_reward": true
+    },
+    "hang": {
+      "collected": 1,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-attempt-3/go-multierror-hang/go-multierror-hang -a oracle --job-name go-multierror-hang-attempt-3 -o .nl2repo/runs-attempt-3/hang --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "frozen_total": 1,
+      "grading": ".nl2repo/runs-attempt-3/hang/go-multierror-hang-attempt-3/go-multierror-hang__pN9nCPt/verifier/grading.json",
+      "network": ".nl2repo/runs-attempt-3/hang/go-multierror-hang-attempt-3/go-multierror-hang__pN9nCPt/verifier/network.json",
+      "passed": 0,
+      "result": ".nl2repo/runs-attempt-3/hang/go-multierror-hang-attempt-3/go-multierror-hang__pN9nCPt/result.json",
+      "reward": 0.0,
+      "reward_receipt": ".nl2repo/runs-attempt-3/hang/go-multierror-hang-attempt-3/go-multierror-hang__pN9nCPt/verifier/reward.json",
+      "valid": true,
+      "verifier_owned_reward": true
+    },
+    "install-failure": {
+      "allowed_install_failure": true,
+      "collected": 0,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-attempt-3/go-multierror-install-failure/go-multierror-install-failure -a oracle --job-name go-multierror-install-failure-attempt-3 -o .nl2repo/runs-attempt-3/install-failure --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "frozen_total": 1,
+      "grading": ".nl2repo/runs-attempt-3/install-failure/go-multierror-install-failure-attempt-3/go-multierror-install-failure__VPbg4pu/verifier/grading.json",
+      "network": ".nl2repo/runs-attempt-3/install-failure/go-multierror-install-failure-attempt-3/go-multierror-install-failure__VPbg4pu/verifier/network.json",
+      "passed": 0,
+      "result": ".nl2repo/runs-attempt-3/install-failure/go-multierror-install-failure-attempt-3/go-multierror-install-failure__VPbg4pu/result.json",
+      "reward": 0.0,
+      "reward_receipt": ".nl2repo/runs-attempt-3/install-failure/go-multierror-install-failure-attempt-3/go-multierror-install-failure__VPbg4pu/verifier/reward.json",
+      "valid": true
+    },
+    "offline": {
+      "collected": 1,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled-attempt-3/go-multierror -a oracle --allow-agent-host github.com --job-name go-multierror-offline-attempt-3 -o .nl2repo/runs-attempt-3/offline --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "frozen_total": 1,
+      "grading": ".nl2repo/runs-attempt-3/offline/go-multierror-offline-attempt-3/go-multierror__Hks4wJP/verifier/grading.json",
+      "network": ".nl2repo/runs-attempt-3/offline/go-multierror-offline-attempt-3/go-multierror__Hks4wJP/verifier/network.json",
+      "passed": 1,
+      "public_network_available": false,
+      "result": ".nl2repo/runs-attempt-3/offline/go-multierror-offline-attempt-3/go-multierror__Hks4wJP/result.json",
+      "reward": 1.0,
+      "reward_receipt": ".nl2repo/runs-attempt-3/offline/go-multierror-offline-attempt-3/go-multierror__Hks4wJP/verifier/reward.json",
+      "valid": true,
+      "verifier_owned_reward": true
+    },
+    "oversized-output": {
+      "collected": 1,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-attempt-3/go-multierror-oversized-output/go-multierror-oversized-output -a oracle --job-name go-multierror-oversized-output-attempt-3 -o .nl2repo/runs-attempt-3/oversized-output --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "frozen_total": 1,
+      "grading": ".nl2repo/runs-attempt-3/oversized-output/go-multierror-oversized-output-attempt-3/go-multierror-oversized-output__Bv2Q3SJ/verifier/grading.json",
+      "network": ".nl2repo/runs-attempt-3/oversized-output/go-multierror-oversized-output-attempt-3/go-multierror-oversized-output__Bv2Q3SJ/verifier/network.json",
+      "passed": 0,
+      "result": ".nl2repo/runs-attempt-3/oversized-output/go-multierror-oversized-output-attempt-3/go-multierror-oversized-output__Bv2Q3SJ/result.json",
+      "reward": 0.0,
+      "reward_receipt": ".nl2repo/runs-attempt-3/oversized-output/go-multierror-oversized-output-attempt-3/go-multierror-oversized-output__Bv2Q3SJ/verifier/reward.json",
+      "valid": true,
+      "verifier_owned_reward": true
+    },
+    "panic": {
+      "collected": 1,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-attempt-3/go-multierror-panic/go-multierror-panic -a oracle --job-name go-multierror-panic-attempt-3 -o .nl2repo/runs-attempt-3/panic --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "frozen_total": 1,
+      "grading": ".nl2repo/runs-attempt-3/panic/go-multierror-panic-attempt-3/go-multierror-panic__roVRy7z/verifier/grading.json",
+      "network": ".nl2repo/runs-attempt-3/panic/go-multierror-panic-attempt-3/go-multierror-panic__roVRy7z/verifier/network.json",
+      "passed": 0,
+      "result": ".nl2repo/runs-attempt-3/panic/go-multierror-panic-attempt-3/go-multierror-panic__roVRy7z/result.json",
+      "reward": 0.0,
+      "reward_receipt": ".nl2repo/runs-attempt-3/panic/go-multierror-panic-attempt-3/go-multierror-panic__roVRy7z/verifier/reward.json",
+      "valid": true,
+      "verifier_owned_reward": true
+    },
+    "stub": {
+      "collected": 1,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-attempt-3/go-multierror-stub/go-multierror-stub -a oracle --job-name go-multierror-stub-attempt-3 -o .nl2repo/runs-attempt-3/stub --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "frozen_total": 1,
+      "grading": ".nl2repo/runs-attempt-3/stub/go-multierror-stub-attempt-3/go-multierror-stub__rLjUeXM/verifier/grading.json",
+      "network": ".nl2repo/runs-attempt-3/stub/go-multierror-stub-attempt-3/go-multierror-stub__rLjUeXM/verifier/network.json",
+      "passed": 0,
+      "result": ".nl2repo/runs-attempt-3/stub/go-multierror-stub-attempt-3/go-multierror-stub__rLjUeXM/result.json",
+      "reward": 0.0,
+      "reward_receipt": ".nl2repo/runs-attempt-3/stub/go-multierror-stub-attempt-3/go-multierror-stub__rLjUeXM/verifier/reward.json",
+      "valid": true,
+      "verifier_owned_reward": true
     }
   },
-  "downstream_gates": {
-    "oracle_current_bundle": "not_run_by_authoring_lane",
-    "controls_current_bundle": "not_run_by_authoring_lane",
-    "prior_receipts": {
-      "note": "Prior receipts were produced against the previous compiled-final bundle before verifier __pycache__ cleanup and are not evidence for the current manifest.",
-      "oracle_reward": 1.0,
-      "stub_reward": 0.0,
-      "forgery_reward": 0.0,
-      "oracle_run": ".nl2repo/runs/go-multierror-oracle-retry-20260903",
-      "stub_run": ".nl2repo/runs/go-multierror-stub-20260903",
-      "forgery_run": ".nl2repo/runs/go-multierror-forgery-20260903"
+  "dependency_closure": {
+    "installer": "system",
+    "module_bundle": {
+      "digest": "sha256:2ca0816da8e279f8f5f504d85d7fe6e676e042817649adb02c821cd974b7ac87",
+      "size_bytes": 10240,
+      "uri": "artifact://private/sha256:2ca0816da8e279f8f5f504d85d7fe6e676e042817649adb02c821cd974b7ac87",
+      "visibility": "private"
+    },
+    "packages": [],
+    "status": "known"
+  },
+  "environment": {
+    "base_image": "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd",
+    "base_image_digest": "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd",
+    "network_mode": "no-network",
+    "network_policy": {
+      "mode": "no-network",
+      "offline_dependencies": "private-artifact",
+      "reason": "The candidate and separate verifier use a private pre-materialized standard-library-only Go module closure and run without network.",
+      "reference_source_fetch": "forbidden"
+    },
+    "os_name": "debian-bookworm",
+    "runtime_version": "1.26.5",
+    "status": "known"
+  },
+  "frozen_collection": {
+    "handoff_collection": null,
+    "handoff_frozen_tests": null,
+    "handoff_inventory": {
+      "bridge_operations": 10,
+      "frozen_total": 1,
+      "leaf_ids": [
+        "contract::public-api"
+      ],
+      "protocol": "custom-json-v1",
+      "public_api": [
+        "Error",
+        "ErrorFormatFunc",
+        "ListFormatFunc",
+        "Append",
+        "Flatten",
+        "Prefix",
+        "Group"
+      ],
+      "upstream_baseline_failed": 0,
+      "upstream_baseline_passed": 34,
+      "upstream_test_files": 7
+    },
+    "tests": {
+      "commands": [
+        "custom-json-v1"
+      ],
+      "expected_total": 1,
+      "expected_total_source": "frozen-collection",
+      "framework": "pytest"
     }
+  },
+  "integrator_repair": {
+    "input_handoff": ".nl2repo/authoring-handoff.json",
+    "kind": "production-evidence-from-authored-handoff",
+    "official_controls_created": false,
+    "official_oracle_created": false,
+    "recorded_at": "2026-09-03T17:06:35.694068+00:00",
+    "source": "agent-production-gate-receipt"
+  },
+  "lifecycle": {
+    "owner": "authoring-go-batch2-20260903",
+    "reason": "Frozen Go source, private module/verifier/Oracle bundles, typed bridge contract, production compile, trusted Harbor Oracle, and all required negative/offline controls passed; awaiting integrator review and model pilot.",
+    "status": "controls-passed"
+  },
+  "oracle": {
+    "collected": 1,
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled-attempt-3/go-multierror -a oracle --allow-agent-host github.com --job-name go-multierror-oracle-attempt-3 -o .nl2repo/runs-attempt-3/oracle --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "frozen_total": 1,
+    "grading": ".nl2repo/runs-attempt-3/oracle/go-multierror-oracle-attempt-3/go-multierror__SSm82PT/verifier/grading.json",
+    "network": ".nl2repo/runs-attempt-3/oracle/go-multierror-oracle-attempt-3/go-multierror__SSm82PT/verifier/network.json",
+    "passed": 1,
+    "result": ".nl2repo/runs-attempt-3/oracle/go-multierror-oracle-attempt-3/go-multierror__SSm82PT/result.json",
+    "reward": 1.0,
+    "reward_receipt": ".nl2repo/runs-attempt-3/oracle/go-multierror-oracle-attempt-3/go-multierror__SSm82PT/verifier/reward.json",
+    "valid": true,
+    "verifier_owned_reward": true
   },
   "residual_risks": [
-    "The current cleaned bundle requires a fresh Harbor Oracle and empty/stub/forgery/offline control matrix.",
-    "The agent runtime image is private/inaccessible from this authoring environment; no Harbor Agent Run was started here.",
-    "No independent review, model pilot, or publication was performed."
-  ]
+    "The one-leaf typed bridge is narrower than the 34-leaf upstream baseline and excludes non-serializable transformer/internal APIs.",
+    "The current task is controls-passed only; integrator review, dataset projection, model evaluation, publication, and OSS upload remain outside this lane."
+  ],
+  "schema_version": "1.0",
+  "source_freeze": {
+    "license_spdx": "MPL-2.0",
+    "revision": "6d4d48630db25c3c83fa83ecd41dd8438b82963c",
+    "source_digest": "sha256:1baf79ff1d042dda283afc4223d47f28b4684361d0bfb338957e873db53aa773",
+    "upstream_url": "https://github.com/hashicorp/go-multierror"
+  },
+  "status": "controls-passed",
+  "task_id": "go-multierror",
+  "task_version": "0.1.0",
+  "terminal_kind": "controls-passed"
 }

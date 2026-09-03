@@ -65,9 +65,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "packaged"
+status = "controls-passed"
 owner = "authoring-go-batch2-20260903"
-reason = "Frozen Go source, private module/verifier/Oracle bundles, typed bridge contract, production compile, and task-local control preparation are complete; the current cleaned bundle still requires the downstream Harbor Oracle and control runs."
+reason = "Frozen Go source, private module/verifier/Oracle bundles, typed bridge contract, production compile, trusted Harbor Oracle, and all required negative/offline controls passed; awaiting integrator review and model pilot."
 
 [verifier]
 protocol = "custom-json-v1"

@@ -1,5 +1,5 @@
 {
-  "canonical_manifest_digest": "sha256:ca2e250fb4fc5495fba191dc531a9291bc4e158368eefbf8937404544e5fc759",
+  "canonical_manifest_digest": "sha256:8d217f6fb0193bb10957968f92f16836d68f5c2a6fd4c4c650262cc888cc3918",
   "files": [
     {
       "path": "README.md",
@@ -30,6 +30,11 @@
       "path": "controls/oversized-output.sh",
       "sha256": "32e03426a274df0b207ee40c08210378164323a18bfdba65ad1ce52737ab49e6",
       "size_bytes": 900
+    },
+    {
+      "path": "controls/panic.sh",
+      "sha256": "19f327f143dbc18491ecde157c030bef55e2142d24b2ea086c6ba071b770b15d",
+      "size_bytes": 1005
     },
     {
       "path": "controls/stub.sh",
@@ -73,7 +78,7 @@
     },
     {
       "path": "task.toml",
-      "sha256": "c58f30704ef3a420c10f91a7a1ce6881f64b9e57d66c90018069e39b4709816e",
+      "sha256": "3d38059af59fcd6e32ec85422cd1230edafb650335079e0c163fcc51ff0c8357",
       "size_bytes": 1215
     },
     {
