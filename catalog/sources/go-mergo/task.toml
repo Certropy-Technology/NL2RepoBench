@@ -1,0 +1,77 @@
+schema_version = "1.0"
+task_id = "go-mergo"
+version = "0.1.0"
+instruction = "instruction.md"
+oracle_bundle = { digest = "sha256:b7d5336c64a943af75234debe79fd55609ffc80340ff6abc420bd1e6710cc4b5", size_bytes = 734, uri = "artifact://private/sha256:b7d5336c64a943af75234debe79fd55609ffc80340ff6abc420bd1e6710cc4b5", visibility = "private" }
+
+[metadata]
+difficulty = "medium"
+category = "go-reflection"
+tags = ["go", "go-modules", "reflection", "merge", "configuration", "typed-bridge", "public-api"]
+language = "go"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/darccio/mergo"
+revision = "a50922d8566636f636c4ff8892d725f244c49f44"
+license_spdx = "BSD-3-Clause"
+source_digest = "sha256:1c66e6ededb811969590605ef8049f3686a031adb552376c5771a474e57f1512"
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+network_mode = "no-network"
+runtime_version = "1.26.5"
+base_image = "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+base_image_digest = "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+build_command = "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go build -mod=vendor -o bridge ./cmd/bridge"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "Candidate and separate verifier execution use a private pre-materialized zero-dependency Go module closure; only the trusted Oracle receives a run-scoped authorization for the pinned source host."
+
+[dependencies]
+status = "known"
+installer = "system"
+packages = []
+module_bundle = { digest = "sha256:569c0a6c8b65dfc21cfd74567407b278d9e105d2ea02acf4e8edceda52f63978", size_bytes = 525, uri = "artifact://private/sha256:569c0a6c8b65dfc21cfd74567407b278d9e105d2ea02acf4e8edceda52f63978", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 1
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Recreate the deterministic struct, map, slice, pointer, and error-handling behavior of dario.cat/mergo through a bounded typed Go bridge."
+keywords = ["go", "reflection", "merge", "maps", "configuration", "go-modules", "typed-bridge"]
+agent_timeout_sec = 1200.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "packaged"
+owner = "authoring-go-batch2-20260903"
+reason = "Frozen source, private module closure, typed bridge, verifier contract, environment, Oracle script, and task-local controls compile successfully. Harbor Oracle and runtime control receipts remain an integrator step because this lane cannot start Harbor Agent Runs."
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:732a6a20a7c48efca4154afc5159af5eacf37f880c85b98927e23ffcc9910f00", size_bytes = 1408, uri = "artifact://private/sha256:732a6a20a7c48efca4154afc5159af5eacf37f880c85b98927e23ffcc9910f00", visibility = "private" }
+entrypoint = "contract.sh"

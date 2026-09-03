@@ -1,0 +1,180 @@
+{
+  "bundle": {
+    "handoff_artifacts": {
+      "compiled_bundle_manifest": {
+        "canonical_manifest_digest": "sha256:738a7429835f0f12fdaf9e29f38358a8c1556eda02bf09da06065c6886c6f45b",
+        "path": ".nl2repo/authoring-gate/final-compile/go-mergo/bundle.manifest.json",
+        "sha256": "sha256:1d0bd7f075713a9260f64a9d8282e5634d3e2751e5a87ce2054ef758fa41625f"
+      },
+      "module_bundle": {
+        "digest": "sha256:569c0a6c8b65dfc21cfd74567407b278d9e105d2ea02acf4e8edceda52f63978",
+        "path": ".nl2repo/artifacts/private/sha256/56/569c0a6c8b65dfc21cfd74567407b278d9e105d2ea02acf4e8edceda52f63978",
+        "size_bytes": 525
+      },
+      "oracle_bundle": {
+        "digest": "sha256:b7d5336c64a943af75234debe79fd55609ffc80340ff6abc420bd1e6710cc4b5",
+        "path": ".nl2repo/artifacts/private/sha256/b7/b7d5336c64a943af75234debe79fd55609ffc80340ff6abc420bd1e6710cc4b5",
+        "size_bytes": 734
+      },
+      "prepared_controls_root": ".nl2repo/authoring-work/go-mergo/final-controls",
+      "verifier_bundle": {
+        "digest": "sha256:732a6a20a7c48efca4154afc5159af5eacf37f880c85b98927e23ffcc9910f00",
+        "path": ".nl2repo/artifacts/private/sha256/73/732a6a20a7c48efca4154afc5159af5eacf37f880c85b98927e23ffcc9910f00",
+        "size_bytes": 1408
+      }
+    },
+    "handoff_compiled_bundle": null
+  },
+  "commands": [
+    {
+      "command": "go version",
+      "exit_code": 0,
+      "version": "go1.26.5-X:nodwarf5 linux/amd64"
+    },
+    {
+      "command": "uv run --frozen --project harbor-runner harbor --version",
+      "exit_code": 0,
+      "version": "0.21.0"
+    },
+    {
+      "artifact": ".nl2repo/authoring-work/go-mergo/probe/go-test.json",
+      "command": "go -C .nl2repo/authoring-work/go-mergo/source test -count=1 ./...",
+      "exit_code": 0,
+      "summary": "2 packages, 127 passed, 0 failed, 0 skipped"
+    },
+    {
+      "command": "go -C .nl2repo/authoring-work/go-mergo/source vet ./...",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run nl2repo task validate-source catalog/sources/go-mergo",
+      "exit_code": 0,
+      "summary": "source_digest=sha256:a487f1a5d1e21e0d40c276c2df5ffae9cfdd3ab7d6a3f79a32c45df3951c4bc2"
+    },
+    {
+      "artifact": ".nl2repo/authoring-work/go-mergo/probe/lint-network-go-mergo.json",
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "summary": "0 errors; repository-wide warnings are unrelated to go-mergo"
+    },
+    {
+      "artifact": ".nl2repo/authoring-gate/current-compile/go-mergo/bundle.manifest.json",
+      "command": "uv run nl2repo harbor compile catalog/sources/go-mergo --output .nl2repo/authoring-gate/current-compile --toolchain toolchain.go.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0
+    },
+    {
+      "command": "PYTHONPATH=src python3 src/nl2repobench/verification/go_contract_runner.py --script .nl2repo/authoring-work/go-mergo/private/verifier/contract.sh --bridge .nl2repo/authoring-work/go-mergo/probe/bridge-current --proxy src/nl2repobench/verification/go_bridge_proxy.py",
+      "exit_code": 0,
+      "summary": "all 15 contract cases passed"
+    },
+    {
+      "command": "bash -n task-local scripts; python3 -m py_compile Go verifier runtime files",
+      "exit_code": 0,
+      "summary": "shell and Python syntax checks passed"
+    },
+    {
+      "command": "uv run nl2repo harbor prepare-control <compiled-go-mergo> <kind> --output .nl2repo/authoring-work/go-mergo/final-controls",
+      "exit_code": 0,
+      "summary": "stub, forgery, install-failure, panic, hang, oversized-output, and background-process bundles prepared"
+    }
+  ],
+  "controls": {
+    "prepared": [
+      "stub",
+      "forgery",
+      "install-failure",
+      "panic",
+      "hang",
+      "oversized-output",
+      "background-process"
+    ],
+    "runtime_receipts": "pending-integrator",
+    "status": "prepared-pending-integrator-runtime"
+  },
+  "dependency_closure": {
+    "installer": "system",
+    "module_bundle": {
+      "digest": "sha256:569c0a6c8b65dfc21cfd74567407b278d9e105d2ea02acf4e8edceda52f63978",
+      "size_bytes": 525,
+      "uri": "artifact://private/sha256:569c0a6c8b65dfc21cfd74567407b278d9e105d2ea02acf4e8edceda52f63978",
+      "visibility": "private"
+    },
+    "packages": [],
+    "status": "known"
+  },
+  "environment": {
+    "base_image": "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd",
+    "base_image_digest": "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd",
+    "build_command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go build -mod=vendor -o bridge ./cmd/bridge",
+    "network_mode": "no-network",
+    "network_policy": {
+      "mode": "no-network",
+      "offline_dependencies": "private-artifact",
+      "reason": "Candidate and separate verifier execution use a private pre-materialized zero-dependency Go module closure; only the trusted Oracle receives a run-scoped authorization for the pinned source host.",
+      "reference_source_fetch": "forbidden"
+    },
+    "os_name": "debian-bookworm",
+    "runtime_version": "1.26.5",
+    "status": "known"
+  },
+  "frozen_collection": {
+    "handoff_collection": {
+      "framework": "custom-json-v1",
+      "frozen_total": 1,
+      "leaf_ids": [
+        "contract::public-api"
+      ],
+      "upstream_baseline": {
+        "command": "go -C .nl2repo/authoring-work/go-mergo/source test -count=1 ./...",
+        "exit_code": 0,
+        "failed": 0,
+        "packages": 2,
+        "passed": 127,
+        "skipped": 0
+      }
+    },
+    "handoff_frozen_tests": null,
+    "handoff_inventory": null,
+    "tests": {
+      "commands": [
+        "custom-json-v1"
+      ],
+      "expected_total": 1,
+      "expected_total_source": "frozen-collection",
+      "framework": "pytest"
+    }
+  },
+  "integrator_repair": {
+    "input_handoff": ".nl2repo/authoring-live/worktrees/go-author-batch2-20260902T1456Z/go-mergo/.nl2repo/authoring-handoff.json",
+    "kind": "production-evidence-from-authored-handoff",
+    "official_controls_created": false,
+    "official_oracle_created": false,
+    "recorded_at": "2026-09-03T04:43:47.819727+00:00"
+  },
+  "lifecycle": {
+    "owner": "authoring-go-batch2-20260903",
+    "reason": "Frozen source, private module closure, typed bridge, verifier contract, environment, Oracle script, and task-local controls compile successfully. Harbor Oracle and runtime control receipts remain an integrator step because this lane cannot start Harbor Agent Runs.",
+    "status": "packaged"
+  },
+  "oracle": {
+    "reason": "This lane is prohibited from starting Harbor Agent Runs. No current Oracle receipt is claimed.",
+    "status": "pending-integrator"
+  },
+  "residual_risks": [
+    "The published denominator is one verifier-owned aggregate leaf; 127 upstream passing tests are baseline evidence, not the scoring denominator.",
+    "Transformers callbacks and internal/ng are documented exclusions because reflect.Value callbacks and private packages do not cross the typed JSON boundary.",
+    "Oracle, empty, stub, forgery, timeout, process, output, and offline Harbor runtime receipts must be run and recorded by the integrator on the current compiled bundle.",
+    "No model pilot, blind review, or publish approval was performed in this lane."
+  ],
+  "schema_version": "1.0",
+  "source_freeze": {
+    "license_spdx": "BSD-3-Clause",
+    "revision": "a50922d8566636f636c4ff8892d725f244c49f44",
+    "source_digest": "sha256:dc06aebebc5208e644804622d4a1c9a42ca055abcf923d6a4967eb3f97fc4bab",
+    "upstream_url": "https://github.com/darccio/mergo"
+  },
+  "status": "awaiting-agent-run",
+  "task_id": "go-mergo",
+  "task_version": "0.1.0",
+  "terminal_kind": "awaiting-agent-run"
+}

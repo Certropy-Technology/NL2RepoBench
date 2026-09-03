@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-mergo",
+  "method": "go doc -all plus go/parser/go/ast inventory at the frozen revision",
+  "package": "dario.cat/mergo",
+  "public_api": {
+    "functions": ["Merge", "MergeWithOverwrite", "Map", "MapWithOverwrite", "WithTransformers", "WithOverride", "WithOverwriteWithEmptyValue", "WithOverrideEmptySlice", "WithoutDereference", "WithAppendSlice", "WithTypeCheck", "WithSliceDeepCopy"],
+    "types": ["Config", "Transformers"],
+    "errors": ["ErrNilArguments", "ErrDifferentArgumentsTypes", "ErrNotSupported", "ErrExpectedMapAsDestination", "ErrExpectedStructAsDestination", "ErrNonPointerArgument"]
+  },
+  "internal_package": "internal/ng is excluded from the public bridge; upstream tests still run in the source baseline",
+  "stored_probe": ".nl2repo/authoring-work/go-mergo/probe/go-test.json"
+}

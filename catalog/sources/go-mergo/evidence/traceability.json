@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-mergo",
+  "contract_leaf": {
+    "id": "contract::public-api",
+    "frozen_total": 1,
+    "public_contract": "instruction.md#api-usage-guide",
+    "private_assertion_classes": [
+      "default recursive merge preserves non-zero destination fields",
+      "WithOverride and MergeWithOverwrite replace non-empty values",
+      "empty-source overwrite and append-slice options",
+      "nested pointer allocation and unexported field protection",
+      "map[string]interface{} recursive merge and struct mapping",
+      "invalid argument error values and structured bridge responses"
+    ]
+  },
+  "boundary": {
+    "protocol": "custom-json-v1",
+    "candidate_imported_by_trusted_process": false,
+    "candidate_execution": "bounded subprocess through typed bridge proxy",
+    "candidate_uid": 10001,
+    "network": "no-network",
+    "transformer_boundary": "not serialized; callback behavior is documented but not scored by the bridge"
+  },
+  "dependency_scope": "Frozen module has no external dependencies; private closure contains exact go.mod, go.sum, vendor/modules.txt, and module manifest."
+}

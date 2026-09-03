@@ -1,0 +1,23 @@
+go-mergo authoring remediation record
+
+1. Source freeze
+   - git rev-parse HEAD -> a50922d8566636f636c4ff8892d725f244c49f44 (exit 0)
+   - git archive --format=tar HEAD -> sha256:1c66e6ededb811969590605ef8049f3686a031adb552376c5771a474e57f1512
+   - LICENSE -> BSD-3-Clause, 1536 bytes, sha256:cb7684632b729955293cab8a0bbf4134d53d9532a30761c33c8a4878302a7bd3
+
+2. Dependency closure
+   - go.mod declares module dario.cat/mergo and go 1.18; runtime-normalized copy uses go 1.26.5
+   - go mod graph with GOPROXY=off/GOSUMDB=off -> main module only (exit 0)
+   - go mod verify with GOPROXY=off/GOSUMDB=off -> no external modules (exit 0)
+   - private module bundle -> go.mod, go.sum, vendor/modules.txt, module.manifest.json
+
+3. Environment
+   - locked Go runtime -> 1.26.5-X:nodwarf5, linux/amd64, CGO_ENABLED=0
+   - base image -> docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd
+   - agent network -> no-network; static agent hosts -> empty
+
+4. Boundary and verifier
+   - typed newline-delimited JSON bridge uses only public root-package APIs and bounded request sizes
+   - transformer callbacks and internal/ng are explicitly outside the serializable contract
+   - local contract is verifier-owned and remains in the private artifact bundle
+   - Harbor Agent Run is not run by lane policy

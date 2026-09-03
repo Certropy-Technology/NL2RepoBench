@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-mergo",
+  "upstream_collection": {
+    "command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -count=1 -json ./...",
+    "passed": 127,
+    "failed": 0,
+    "skipped": 0,
+    "exit_code": 0
+  },
+  "framework": "custom-json-v1",
+  "frozen_total": 1,
+  "leaf_id": "contract::public-api",
+  "adaptation": {
+    "included": ["zero-value and overwrite struct merge", "nested pointers and exported-field protection", "map and struct mapping", "map and slice merge options", "stable error contracts", "bounded malformed-operation behavior"],
+    "excluded_with_reason": ["Transformers callback: reflect.Type and reflect.Value cannot cross the child JSON boundary", "private internal/ng package: not part of the root public API"],
+    "collection_policy": "one verifier-owned aggregate leaf; expected values remain private"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-mergo",
+  "candidate_uid": 10001,
+  "module_path": "dario.cat/mergo",
+  "protocol": "custom-json-v1",
+  "bridge_visibility": "public-api-mapping-only",
+  "trusted_assertions_visibility": "private-artifact",
+  "candidate_imported_by_trusted_process": false,
+  "candidate_execution": "bounded subprocess through typed bridge proxy",
+  "network": "no-network",
+  "limits": {
+    "request_bytes": 65536,
+    "bridge_response_bytes": 262144,
+    "workspace_copy": "bounded verifier-owned copy",
+    "candidate_process_group_cleanup": true
+  }
+}

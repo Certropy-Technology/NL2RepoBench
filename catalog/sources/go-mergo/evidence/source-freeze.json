@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-mergo",
+  "upstream_url": "https://github.com/darccio/mergo",
+  "revision": "a50922d8566636f636c4ff8892d725f244c49f44",
+  "source_archive": {
+    "command": "git archive --format=tar HEAD",
+    "sha256": "sha256:1c66e6ededb811969590605ef8049f3686a031adb552376c5771a474e57f1512"
+  },
+  "license": {
+    "spdx": "BSD-3-Clause",
+    "path": "LICENSE",
+    "sha256": "sha256:cb7684632b729955293cab8a0bbf4134d53d9532a30761c33c8a4878302a7bd3",
+    "bytes": 1536
+  },
+  "inventory": {
+    "tracked_files": 69,
+    "go_files": 45,
+    "test_files": 40,
+    "go_packages": 2,
+    "static_test_function_count": 103,
+    "baseline_passed": 127,
+    "baseline_failed": 0,
+    "baseline_skipped": 0
+  },
+  "risk_flags": {
+    "cgo_import": false,
+    "unsafe_import": false,
+    "go_generate": false,
+    "replace_directive": false,
+    "non_git_symlink": false,
+    "external_runtime_dependency": false,
+    "callback_transformer": true
+  },
+  "toolchain": {
+    "go": "1.26.5-X:nodwarf5",
+    "platform": "linux/amd64",
+    "cgo_enabled": false,
+    "network": "no-network"
+  },
+  "source_authority": "known"
+}
