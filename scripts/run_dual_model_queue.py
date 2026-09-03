@@ -126,7 +126,7 @@ def build_plan(
     lock_root: Path,
     models_file: Path,
     existing_inventory: Path | None = None,
-    per_model_concurrency: int = 2,
+    per_model_concurrency: int = 1,
     harbor_task_root: Path | None = None,
     model_specs: tuple[ModelSpec, ...] = MODEL_SPECS,
     agent_timeout_seconds: int = 18000,
@@ -232,7 +232,7 @@ def _run_queue(queue: dict[str, Any], models_file: Path) -> dict[str, Any]:
         "--lock-root",
         queue["lock_root"],
         "--concurrency",
-        str(queue.get("concurrency", 2)),
+        str(queue.get("concurrency", 1)),
         "--agent-timeout-seconds",
         str(queue.get("agent_timeout_seconds", 18000)),
         "--models-file",
@@ -275,7 +275,7 @@ def main() -> int:
         type=Path,
         help="Trusted JSON inventory of OSS runs to skip; entries must declare source=oss.",
     )
-    parser.add_argument("--per-model-concurrency", type=int, default=2)
+    parser.add_argument("--per-model-concurrency", type=int, default=1)
     parser.add_argument("--agent-timeout-seconds", type=int, default=14400)
     parser.add_argument("--harbor-task-root", type=Path)
     parser.add_argument(

@@ -82,8 +82,8 @@ def test_dual_plan_resolves_both_pi_providers_without_serializing_keys(
         "gpt-5.6-sol",
         "claude-fable-5",
     }
-    assert all(item["concurrency"] == 2 for item in plan["models"])
-    assert plan["max_total_concurrency"] == 4
+    assert all(item["concurrency"] == 1 for item in plan["models"])
+    assert plan["max_total_concurrency"] == 2
     assert plan["agent_timeout_seconds"] == 18000
     by_model = {item["model_id"]: item for item in plan["models"]}
     assert by_model["claude-fable-5"]["provider"] == "z-open-api-fabel5"

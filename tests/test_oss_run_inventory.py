@@ -86,3 +86,22 @@ def test_oss_inventory_normalizes_historical_task_prefixes() -> None:
         ("claude-fable-5", "arguably"),
         ("gpt-5.6-sol", "boto"),
     }
+
+
+def test_oss_inventory_reads_current_harbor_runs_layout() -> None:
+    keys = [
+        "nl2repobench/harbor-runs/openai%2Fgpt-5.6-sol/demo/run-1/2026-09-03__12-00-00/result.json",
+        "nl2repobench/harbor-runs/openai%2Fgpt-5.6-sol/demo/run-1/2026-09-03__12-00-00/trial/verifier/grading.json",
+    ]
+    original = inventory_module._objects
+    inventory_module._objects = lambda bucket, prefix: (_Object(key) for key in bucket.keys)
+    try:
+        report = inventory_module.inventory(_Bucket(keys), known_tasks={"demo"})
+    finally:
+        inventory_module._objects = original
+
+    assert report["run_count"] == 1
+    row = report["runs"][0]
+    assert row["model"] == "gpt-5.6-sol"
+    assert row["task_id"] == "demo"
+    assert row["result_key"].endswith("/2026-09-03__12-00-00/result.json")

@@ -9,7 +9,7 @@ set -uo pipefail
 
 RUN_ROOT="${RUN_ROOT:-.nl2repo/runs/model-queue}"
 RUN_PREFIX="${RUN_PREFIX:-model}"
-MAX_CONCURRENCY="${MAX_CONCURRENCY:-2}"
+MAX_CONCURRENCY="${MAX_CONCURRENCY:-1}"
 if [[ ! "$MAX_CONCURRENCY" =~ ^[1-9][0-9]*$ ]]; then
     echo "MAX_CONCURRENCY must be a positive integer" >&2
     exit 2
@@ -53,7 +53,8 @@ run_task() {
         scripts/run_harbor_model.sh \
         >"$RUN_ROOT/${task}.log" 2>&1
     rc=$?
-    python3 scripts/cleanup_harbor_trials.py \
+    PYTHONPATH="${PYTHONPATH:-}:$PWD/src" "$PWD/.venv/bin/python3" \
+        scripts/cleanup_harbor_trials.py \
         --jobs-dir "$RUN_ROOT/${RUN_PREFIX}-${task}" \
         >>"$RUN_ROOT/cleanup.log" 2>&1 || true
     log "done[$task] rc=$rc $(date -Is)"

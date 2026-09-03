@@ -11,11 +11,17 @@ import sys
 from collections.abc import Iterable
 from pathlib import Path
 from typing import Any
+from urllib.parse import unquote
 
 BUCKET = "dingshang-sg"
 ENDPOINT = "https://oss-ap-southeast-1.aliyuncs.com"
-ROOT_PREFIX = "nl2repobench/runs/"
-RUN_KINDS = frozenset({"gpt-5.6-sol", "claude-fable-5", "oracle"})
+LEGACY_RUN_PREFIX = "nl2repobench/runs/"
+ROOT_PREFIX = "nl2repobench/harbor-runs/"
+RUN_KINDS = frozenset({"gpt-5.6-sol", "claude-fable-5", "claude-opus-5", "oracle"})
+
+
+def canonical_model_id(raw: str) -> str:
+    return raw.split("/", 1)[-1]
 
 
 def _build_bucket() -> Any:
@@ -66,9 +72,22 @@ def inventory(
         key = str(getattr(obj, "key", ""))
         object_count += 1
         parts = key.split("/")
-        if len(parts) < 5 or parts[:2] != ["nl2repobench", "runs"]:
+        if parts[:2] == ["nl2repobench", "runs"] and len(parts) >= 5:
+            model, raw_task, trial = parts[2:5]
+            prefix_parts = parts[:5]
+            result_suffix = ("result.json",)
+        elif parts[:2] == ["nl2repobench", "harbor-runs"] and len(parts) >= 7:
+            # Current archive layout is
+            # harbor-runs/<encoded-model>/<task>/<run-id>/<timestamp>/...
+            model, raw_task, trial = (
+                canonical_model_id(unquote(parts[2])),
+                unquote(parts[3]),
+                unquote(parts[4]),
+            )
+            prefix_parts = parts[:6]
+            result_suffix = ("result.json",)
+        else:
             continue
-        model, raw_task, trial = parts[2:5]
         if model not in RUN_KINDS or not raw_task or not trial or trial.endswith(".log"):
             continue
         task = canonical_task_id(raw_task, known_tasks)
@@ -82,7 +101,7 @@ def inventory(
                 "task_id": task,
                 "trial": trial,
                 "source": "oss",
-                "prefix": "/".join(parts[:5]) + "/",
+                "prefix": "/".join(prefix_parts) + "/",
                 "object_keys": [],
             },
         )
@@ -91,7 +110,7 @@ def inventory(
     for record in runs.values():
         object_keys = set(record.pop("object_keys", []))
         prefix_key = record["prefix"]
-        result_key = prefix_key + "result.json"
+        result_key = prefix_key + "/".join(result_suffix)
         if result_key not in object_keys:
             continue
         try:

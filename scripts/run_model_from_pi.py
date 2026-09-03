@@ -171,8 +171,8 @@ def main() -> int:
     parser.add_argument(
         "--concurrency",
         type=int,
-        default=2,
-        help="Bounded concurrent Harbor trials (default: 2).",
+        default=1,
+        help="Bounded concurrent Harbor trials (default: 1).",
     )
     parser.add_argument(
         "--agent-timeout-seconds",
