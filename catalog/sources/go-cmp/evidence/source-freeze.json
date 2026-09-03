@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-cmp",
+  "upstream_url": "https://github.com/google/go-cmp",
+  "revision": "b133f1f1932e48f466f597a3346ce6f5a49a0dc1",
+  "source_digest": "sha256:0db58f99e9ff0c467df202b87cd72b97b8518b01ada824b8d9259e6a09b017fe",
+  "license_spdx": "BSD-3-Clause",
+  "license_sha256": "sha256:17b5d209ba8f9684257ecfcff87df6ceda6194143a8fbd074f29727cff6f0c40",
+  "checkout": ".nl2repo/authoring-work/go-author-discover-20260902T142804Z/go-cmp/src",
+  "archive_command": "git -C .nl2repo/authoring-work/go-author-discover-20260902T142804Z/go-cmp/src archive --format=tar HEAD | sha256sum",
+  "archive_exit_code": 0,
+  "source_authority": "known"
+}

@@ -1,0 +1,18 @@
+go-cmp remediation record
+
+Source freeze:
+- `git fetch --depth=1 origin b133f1f1932e48f466f597a3346ce6f5a49a0dc1` exit 0.
+- Resolved HEAD equals b133f1f1932e48f466f597a3346ce6f5a49a0dc1.
+- `git archive --format=tar HEAD | sha256sum` exit 0; source digest is sha256:0db58f99e9ff0c467df202b87cd72b97b8518b01ada824b8d9259e6a09b017fe.
+- LICENSE is BSD-3-Clause; license SHA-256 is sha256:17b5d209ba8f9684257ecfcff87df6ceda6194143a8fbd074f29727cff6f0c40.
+
+Dependency/environment remediation:
+- Frozen module has no `require` directives. A private module bundle was created with go.mod, empty go.sum, vendor/modules.txt, and module.manifest.json.
+- First production compile failed because the archive omitted module.manifest.json (exit 1, invalid Go module closure). The manifest was added, the archive was rehashed as sha256:1c4723da7fcbb24a329f7fbe98a320a462a0228b28e3845ed00bcfd78f091d69, and production compile then succeeded.
+- Runtime is toolchain.go.lock.toml, Go 1.26.5, linux/amd64, base image digest sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd, CGO disabled, and no-network at candidate/verifier runtime.
+
+Verification:
+- `go test -count=1 ./...` under the frozen offline environment exited 0.
+- Public bridge compiled under the same offline flags and private verifier contract passed 10 cases against the frozen source.
+- Production Harbor compile exited 0 and produced the closed-world bundle under `.nl2repo/compiled/go-cmp-handoff/go-cmp`.
+- Official Harbor Oracle, empty, stub, forgery, timeout, background-process, oversized-output, and offline controls were not started by this lane because the lane contract forbids Harbor Agent Runs. Integrator must run them against the compiled bundle; no result is claimed here.

@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-cmp",
+  "package": "github.com/google/go-cmp",
+  "public_packages": [
+    "github.com/google/go-cmp/cmp",
+    "github.com/google/go-cmp/cmp/cmpopts"
+  ],
+  "public_api_surface": {
+    "cmp": ["Equal", "Diff", "Option", "Path", "PathStep", "Ignore", "FilterPath", "FilterValues", "Transformer", "Comparer", "Exporter", "AllowUnexported"],
+    "cmpopts": ["EquateEmpty", "EquateApprox", "EquateNaNs", "EquateApproxTime", "EquateErrors", "EquateComparable", "SortSlices", "SortMaps"]
+  },
+  "tracked_source_files": 49,
+  "go_source_files": 42,
+  "public_bridge_operations": ["equal_profiles", "equal_floats", "equal_strings_sorted", "equal_maps_sorted", "diff_values", "equal_exported"],
+  "bridge_scope": "JSON-serializable deterministic values only; callbacks, reporter implementations, unsafe byte/string helpers, and runtime timing are outside the adapter boundary.",
+  "source_revision": "b133f1f1932e48f466f597a3346ce6f5a49a0dc1"
+}

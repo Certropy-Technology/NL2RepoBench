@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-cmp",
+  "source_revision": "b133f1f1932e48f466f597a3346ce6f5a49a0dc1",
+  "leaf_id": "contract::public-api",
+  "frozen_total": 1,
+  "public_contract": "instruction.md#api-usage-guide",
+  "traceability": [
+    {"assertion_class": "recursive and scalar equality", "bridge_operation": "equal_profiles", "instruction_section": "API Usage Guide"},
+    {"assertion_class": "nil and empty collection option", "bridge_operation": "equal_profiles", "instruction_section": "API Usage Guide"},
+    {"assertion_class": "finite float tolerance and NaN option", "bridge_operation": "equal_floats", "instruction_section": "API Usage Guide"},
+    {"assertion_class": "stable slice and map sorting", "bridge_operation": "equal_strings_sorted / equal_maps_sorted", "instruction_section": "API Usage Guide"},
+    {"assertion_class": "Diff reports a non-equal change", "bridge_operation": "diff_values", "instruction_section": "API Usage Guide"},
+    {"assertion_class": "unexported-field policy", "bridge_operation": "equal_exported", "instruction_section": "API Usage Guide"},
+    {"assertion_class": "newline-delimited structured errors", "bridge_operation": "invalid-operation", "instruction_section": "Implementation Notes"}
+  ],
+  "excluded_upstream_behavior": ["reporter callback implementations", "unsafe internals", "timing-sensitive examples", "benchmark performance"],
+  "exclusion_reason": "These behaviors are not expressible as bounded JSON through the reviewed child-side bridge and are not needed for the deterministic package contract."
+}

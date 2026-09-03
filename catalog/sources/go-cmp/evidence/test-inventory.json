@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-cmp",
+  "source_revision": "b133f1f1932e48f466f597a3346ce6f5a49a0dc1",
+  "upstream_test_files": 10,
+  "upstream_static_test_functions": 22,
+  "upstream_packages": 5,
+  "upstream_command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -count=1 -json ./...",
+  "upstream_exit_code": 0,
+  "upstream_test_json": ".nl2repo/authoring-work/go-author-discover-20260902T142804Z/go-cmp/upstream-go-test.json",
+  "frozen_leaf": {
+    "id": "contract::public-api",
+    "frozen_total": 1,
+    "framework": "go bridge contract",
+    "private_case_count": 10,
+    "collection_source": "fixed verifier-owned contract",
+    "cases": ["default recursive equality", "nil versus empty with EquateEmpty", "different map value", "EquateApprox", "EquateNaNs", "SortSlices", "SortMaps", "Diff semantic markers", "AllowUnexported", "structured invalid-operation error"]
+  }
+}

@@ -1,0 +1,75 @@
+schema_version = "1.0"
+task_id = "go-cmp"
+version = "0.1.0"
+instruction = "instruction.md"
+oracle_bundle = { digest = "sha256:e73bfabf457d91d81a4648c7a2a28eb673f1b8226ffb3078ca42f3aa3f43e7eb", size_bytes = 774, uri = "artifact://private/sha256:e73bfabf457d91d81a4648c7a2a28eb673f1b8226ffb3078ca42f3aa3f43e7eb", visibility = "private" }
+
+[metadata]
+difficulty = "hard"
+category = "go-library"
+tags = ["go", "go-modules", "comparison", "reflection", "typed-bridge", "public-api"]
+language = "go"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/google/go-cmp"
+revision = "b133f1f1932e48f466f597a3346ce6f5a49a0dc1"
+license_spdx = "BSD-3-Clause"
+source_digest = "sha256:0db58f99e9ff0c467df202b87cd72b97b8518b01ada824b8d9259e6a09b017fe"
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+runtime_version = "1.26.5"
+base_image = "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+base_image_digest = "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "Candidate and verifier execution use the private pre-materialized Go module closure and run without network; only the trusted Oracle receives a run-scoped source-host authorization."
+
+[dependencies]
+status = "known"
+installer = "system"
+packages = []
+module_bundle = { digest = "sha256:1c4723da7fcbb24a329f7fbe98a320a462a0228b28e3845ed00bcfd78f091d69", size_bytes = 461, uri = "artifact://private/sha256:1c4723da7fcbb24a329f7fbe98a320a462a0228b28e3845ed00bcfd78f091d69", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 1
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Recreate a deterministic, typed slice of the pure-Go go-cmp comparison and cmpopts helper APIs."
+keywords = ["go", "go-cmp", "comparison", "reflection", "typed-bridge", "public-api"]
+agent_timeout_sec = 900.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "packaged"
+owner = "go-author-discover-20260903"
+reason = "Frozen source, API inventory, typed bridge, private verifier/Oracle bundles, and offline Go runtime contract are packaged; official Oracle and Harbor controls remain integrator-owned."
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:0933670d42b915888ab6b716db25fddfc5eafc76fb4c58a3a2239042c4e2d7b6", size_bytes = 952, uri = "artifact://private/sha256:0933670d42b915888ab6b716db25fddfc5eafc76fb4c58a3a2239042c4e2d7b6", visibility = "private" }
+entrypoint = "contract.sh"
