@@ -387,8 +387,9 @@ Write `.nl2repo/authoring-production-gates.json` with schema_version `1.0`,
 the matching task_id, status `controls-passed`, a compile bundle manifest, the
 Oracle passed/collected/frozen_total/reward values and result/grading/network
 paths, and one result/grading/network record for every required control kind.
-Every negative control must have reward 0. The offline record must contain
-public_network_available=false. Do not use a hand-written local substitute as
+Every negative control except offline must have reward 0. The offline record
+must contain public_network_available=false; its reward is not used as the
+network proof. Do not use a hand-written local substitute as
 the official receipt.
 
 Use this execution pattern, adapting only task-local paths and the exact
@@ -854,8 +855,6 @@ def _run_production_gate_check(worktree: Path, package: str) -> dict[str, Any]:
             reward = record.get("reward")
             if not isinstance(reward, (int, float)) or isinstance(reward, bool):
                 failures.append(f"control {kind} reward is invalid")
-            elif kind == "offline" and reward < 0.8:
-                failures.append("offline control reward is below 0.80")
             elif kind != "offline" and reward != 0:
                 failures.append(f"control {kind} reward is not zero")
             for key in ("result", "grading", "network"):

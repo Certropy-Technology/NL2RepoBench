@@ -113,8 +113,6 @@ def _require_agent_production_gate(worktree: Path, package: str) -> dict[str, An
         control_reward = record.get("reward")
         if not isinstance(control_reward, (int, float)) or isinstance(control_reward, bool):
             raise ValueError(f"agent control {kind} reward is invalid")
-        if kind == "offline" and control_reward < 0.8:
-            raise ValueError("agent offline control reward is below 0.8")
         if kind != "offline" and control_reward != 0:
             raise ValueError(f"agent control {kind} reward is not zero")
         for key in ("result", "grading", "network"):
