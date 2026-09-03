@@ -1,0 +1,62 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/msgspec"
+version = "1.0.0"
+description = "Build the msgspec serialization and validation library from an empty Python workspace and reproduce its deterministic Struct, JSON, MessagePack, schema, conversion, TOML, and YAML contracts through a separate child-side verifier."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "serialization",
+    "json",
+    "msgpack",
+    "structs",
+    "validation",
+    "native-extension",
+    "separate-verifier",
+]
+
+[metadata]
+difficulty = "hard"
+category = "serialization-and-validation"
+tags = [
+    "python",
+    "serialization",
+    "json",
+    "msgpack",
+    "structs",
+    "validation",
+    "native-extension",
+    "separate-verifier",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 37
+canonical_manifest_digest = "sha256:49de89b949d3769c8b9ca593332a3d19935dbd0660cafd9e0748fb0356a74090"
+toolchain_lock_digest = "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366"
+
+[agent]
+timeout_sec = 3600.0
+
+[verifier]
+timeout_sec = 720.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 24576
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 12288

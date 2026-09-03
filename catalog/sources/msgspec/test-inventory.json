@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "task_id": "msgspec",
+  "source_revision": "f51f378335b01dc0026dc6553a0b9e1915a8edae",
+  "upstream_test_files": 30,
+  "upstream_named_test_functions": 1431,
+  "frozen_total": 37,
+  "frozen_total_source": "custom-json-v1 deterministic adaptation",
+  "leaf_ids": [
+    "exports", "version", "struct-basics", "struct-options", "field-metadata", "defstruct", "raw", "meta", "to-builtins", "convert-valid", "convert-invalid", "struct-helpers",
+    "json-encode", "json-decode", "json-typed-struct", "json-deterministic", "json-encoder", "json-decoder-lines", "json-format", "json-schema", "json-components", "json-hook", "json-invalid",
+    "msgpack-roundtrip", "msgpack-typed-struct", "msgpack-ext", "msgpack-deterministic", "msgpack-hook", "msgpack-invalid",
+    "toml-roundtrip", "yaml-roundtrip", "unknown-field", "missing-field", "frozen-mutation", "strict-type", "buffer-input", "repr-determinism"
+  ],
+  "excluded_upstream_categories": [
+    "benchmark and profiling suites",
+    "typing checker integration",
+    "CPython test.support and platform-specific extension probes",
+    "large JSONTestSuite corpus",
+    "performance thresholds and external comparison packages"
+  ]
+}

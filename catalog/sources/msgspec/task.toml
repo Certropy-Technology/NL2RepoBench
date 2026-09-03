@@ -1,0 +1,87 @@
+schema_version = "1.0"
+task_id = "msgspec"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "serialization-and-validation"
+tags = ["python", "serialization", "json", "msgpack", "structs", "validation", "native-extension", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/jcrist/msgspec"
+revision = "f51f378335b01dc0026dc6553a0b9e1915a8edae"
+license_spdx = "BSD-3-Clause"
+source_digest = "sha256:0583e9ecf3d8f3f233722ba02361894e01f4bdc470e8fbe74d797ae758004390"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.14"
+os_name = "debian-12-amd64"
+base_image = "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = ["ca-certificates", "gcc", "git", "libc6-dev"]
+network_mode = "no-network"
+build_command = "install the hash-locked build and test closure during image build; compile the candidate C extension with pip --no-build-isolation and no candidate runtime dependencies"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The setuptools build backend and deterministic optional-format test dependencies are installed during the image build from a private hash-locked requirements artifact. Agent and verifier phases have no egress; only the trusted Oracle receives a run-scoped github.com authorization for the frozen revision."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = ["setuptools==80.9.0", "setuptools-scm==8.3.1", "wheel==0.45.1", "packaging==26.3", "msgpack==1.1.2", "PyYAML==6.0.3", "tomli-w==1.2.0"]
+lock_artifact = { digest = "sha256:a45d0ec949fc360bc40c48cb1f6f1dc371feb5b9335a46fb9aa4d004066ecc3b", size_bytes = 13079, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:a45d0ec949fc360bc40c48cb1f6f1dc371feb5b9335a46fb9aa4d004066ecc3b", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 37
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py"]
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+bundle = { digest = "sha256:adb7aecbd46fe672addae4664bd5c68b1804fe3f0e9eef71af9825b0b77f84e0", size_bytes = 2785, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:adb7aecbd46fe672addae4664bd5c68b1804fe3f0e9eef71af9825b0b77f84e0", visibility = "private" }
+environment = {}
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build the msgspec serialization and validation library from an empty Python workspace and reproduce its deterministic Struct, JSON, MessagePack, schema, conversion, TOML, and YAML contracts through a separate child-side verifier."
+keywords = ["python", "serialization", "json", "msgpack", "structs", "validation", "native-extension", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 720.0
+candidate_install_timeout_sec = 180.0
+candidate_total_timeout_sec = 360.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 12288
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:a3250a439e62ba3cda3b830cb2469245f9052d3f00338cf7cddf666f970a15d4"
+size_bytes = 408
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:a3250a439e62ba3cda3b830cb2469245f9052d3f00338cf7cddf666f970a15d4"
+visibility = "private"
+
+[lifecycle]
+status = "packaged"
+owner = "python-author-batch2-20260902T1456Z-msgspec"
+reason = "Frozen source, native build remediation, private hash lock, separate custom verifier, deterministic controls, and a digest-checked Oracle bundle are prepared. Official Harbor Oracle/control runs are intentionally not started from this lane; handoff is awaiting-agent-run."

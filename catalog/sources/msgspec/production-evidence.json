@@ -1,0 +1,228 @@
+{
+  "bundle": {
+    "handoff_artifacts": null,
+    "handoff_compiled_bundle": {
+      "catalog_tasks_runtime_present": false,
+      "file_count": 58,
+      "manifest": ".nl2repo/authoring-work/msgspec/compiled-production-final/msgspec/bundle.manifest.json",
+      "manifest_sha256": "sha256:8e78dade1ac0edc14c66073ac01d4a28ee1cf613d9dbdecd336d2516d8529e5d",
+      "mode": "production"
+    }
+  },
+  "commands": [
+    {
+      "command": "git -C .nl2repo/authoring-work/msgspec/upstream rev-parse HEAD",
+      "exit_code": 0,
+      "result": "f51f378335b01dc0026dc6553a0b9e1915a8edae"
+    },
+    {
+      "command": "git -C .nl2repo/authoring-work/msgspec/upstream archive --format=tar HEAD | sha256sum",
+      "exit_code": 0,
+      "result": "0583e9ecf3d8f3f233722ba02361894e01f4bdc470e8fbe74d797ae758004390"
+    },
+    {
+      "command": "python3 -m pip install --no-deps -e .nl2repo/authoring-work/msgspec/upstream",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run --python 3.12 --with pip python -m pip install --no-deps -e .nl2repo/authoring-work/msgspec/upstream",
+      "exit_code": 0
+    },
+    {
+      "command": "python3 -m pytest -q tests/unit",
+      "exit_code": 0,
+      "result": "6410 passed, 113 skipped"
+    },
+    {
+      "command": "python3 -m py_compile catalog/sources/msgspec/harbor/verifier/run.py && bash -n catalog/sources/msgspec/harbor/solution/solve.sh catalog/sources/msgspec/harbor/controls/*.sh && git diff --check",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run nl2repo task validate-source catalog/sources/msgspec",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "result": "msgspec errors=0; intentional Oracle-only host warning"
+    },
+    {
+      "command": "uv run nl2repo harbor compile catalog/sources/msgspec --output .nl2repo/authoring-work/msgspec/compiled-production-final --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0
+    },
+    {
+      "command": "docker build --pull=false --platform linux/amd64 -t nl2repo-msgspec-agent:authoring-final2 .nl2repo/authoring-work/msgspec/compiled-final2/msgspec/environment",
+      "exit_code": 0,
+      "image_id": "sha256:cf07b7162098fd87252b9c61519cd0ea9f68de86df27833daf6bbe6f5dddc500"
+    },
+    {
+      "command": "docker build --pull=false --platform linux/amd64 -t nl2repo-msgspec-verifier:authoring-final2 .nl2repo/authoring-work/msgspec/compiled-final2/msgspec/tests",
+      "exit_code": 0,
+      "image_id": "sha256:be4fb44de27b5f705d65835a7db6a4d5f8aed23b0f488a5468c644cb3e37c1b8"
+    },
+    {
+      "artifact": ".nl2repo/authoring-work/msgspec/verifier-smoke",
+      "command": "docker run --rm --network none ... /tests/test.sh",
+      "exit_code": 0
+    },
+    {
+      "artifact": ".nl2repo/authoring-work/msgspec/control-logs",
+      "command": "docker run --rm --network none ... controls",
+      "exit_code": 0
+    }
+  ],
+  "controls": {
+    "call_hang": {
+      "collected": 37,
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "empty": {
+      "collected": 0,
+      "passed": 0,
+      "reason": "candidate-installation-failed",
+      "reward": 0.0,
+      "valid": true
+    },
+    "evidence": ".nl2repo/authoring-work/msgspec/evidence/controls-final.json",
+    "forgery": {
+      "collected": 37,
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "install_hang": {
+      "bounded_duration_seconds": 182,
+      "collected": 0,
+      "passed": 0,
+      "reason": "candidate-installation-failed",
+      "reward": 0.0,
+      "valid": true
+    },
+    "offline": {
+      "collected": 0,
+      "passed": 0,
+      "public_network_available": false,
+      "reason": "candidate-installation-failed",
+      "reward": 0.0,
+      "valid": true
+    },
+    "receipt_root": ".nl2repo/authoring-work/msgspec/control-logs",
+    "status": "passed",
+    "stub": {
+      "collected": 37,
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    }
+  },
+  "dependency_closure": {
+    "installer": "pip",
+    "lock_artifact": {
+      "digest": "sha256:a45d0ec949fc360bc40c48cb1f6f1dc371feb5b9335a46fb9aa4d004066ecc3b",
+      "media_type": "text/plain; charset=utf-8",
+      "size_bytes": 13079,
+      "uri": "artifact://private/sha256:a45d0ec949fc360bc40c48cb1f6f1dc371feb5b9335a46fb9aa4d004066ecc3b",
+      "visibility": "private"
+    },
+    "packages": [
+      "setuptools==80.9.0",
+      "setuptools-scm==8.3.1",
+      "wheel==0.45.1",
+      "packaging==26.3",
+      "msgpack==1.1.2",
+      "PyYAML==6.0.3",
+      "tomli-w==1.2.0"
+    ],
+    "status": "known"
+  },
+  "environment": {
+    "base_image": "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "build_command": "install the hash-locked build and test closure during image build; compile the candidate C extension with pip --no-build-isolation and no candidate runtime dependencies",
+    "network_mode": "no-network",
+    "network_policy": {
+      "mode": "no-network",
+      "offline_dependencies": "preinstalled-image",
+      "reason": "The setuptools build backend and deterministic optional-format test dependencies are installed during the image build from a private hash-locked requirements artifact. Agent and verifier phases have no egress; only the trusted Oracle receives a run-scoped github.com authorization for the frozen revision.",
+      "reference_source_fetch": "forbidden"
+    },
+    "os_name": "debian-12-amd64",
+    "python_version": "3.12.14",
+    "status": "known",
+    "system_packages": [
+      "ca-certificates",
+      "gcc",
+      "git",
+      "libc6-dev"
+    ]
+  },
+  "frozen_collection": {
+    "handoff_collection": null,
+    "handoff_frozen_tests": null,
+    "handoff_inventory": {
+      "api_inventory": "catalog/sources/msgspec/api-inventory.json",
+      "frozen_total": 37,
+      "implementation_files": 33,
+      "implementation_loc": 3676,
+      "risk_flags": [
+        "native-extension",
+        "dynamic-execution",
+        "generated-code",
+        "external-service"
+      ],
+      "test_inventory": "catalog/sources/msgspec/test-inventory.json",
+      "upstream_named_tests": 1431,
+      "upstream_test_files": 30
+    },
+    "tests": {
+      "commands": [
+        "custom-json-v1 verifier entrypoint"
+      ],
+      "expected_total": 37,
+      "expected_total_source": "frozen-collection",
+      "framework": "pytest",
+      "protected_paths": [
+        "/tests/verifier/run.py"
+      ]
+    }
+  },
+  "integrator_repair": {
+    "input_handoff": ".nl2repo/authoring-live/worktrees/python-author-batch2-20260902T1456Z/msgspec/.nl2repo/authoring-handoff.json",
+    "kind": "production-evidence-from-authored-handoff",
+    "official_controls_created": false,
+    "official_oracle_created": false,
+    "recorded_at": "2026-09-03T04:43:47.752337+00:00"
+  },
+  "lifecycle": {
+    "owner": "python-author-batch2-20260902T1456Z-msgspec",
+    "reason": "Frozen source, native build remediation, private hash lock, separate custom verifier, deterministic controls, and a digest-checked Oracle bundle are prepared. Official Harbor Oracle/control runs are intentionally not started from this lane; handoff is awaiting-agent-run.",
+    "status": "packaged"
+  },
+  "oracle": {
+    "bundle": {
+      "sha256": "sha256:a3250a439e62ba3cda3b830cb2469245f9052d3f00338cf7cddf666f970a15d4",
+      "size_bytes": 408,
+      "uri": "artifact://private/sha256:a3250a439e62ba3cda3b830cb2469245f9052d3f00338cf7cddf666f970a15d4"
+    },
+    "collected": null,
+    "passed": null,
+    "reason": "Official Harbor Oracle is prohibited in this authoring lane; trusted integrator must authorize the exact upstream source host.",
+    "reward": null,
+    "status": "not-run",
+    "valid": null
+  },
+  "residual_risks": [],
+  "schema_version": "1.0",
+  "source_freeze": {
+    "license_spdx": "BSD-3-Clause",
+    "revision": "f51f378335b01dc0026dc6553a0b9e1915a8edae",
+    "source_digest": "sha256:0583e9ecf3d8f3f233722ba02361894e01f4bdc470e8fbe74d797ae758004390",
+    "upstream_url": "https://github.com/jcrist/msgspec"
+  },
+  "status": "awaiting-agent-run",
+  "task_id": "msgspec",
+  "task_version": "1.0.0",
+  "terminal_kind": "awaiting-agent-run"
+}

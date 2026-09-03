@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "task_id": "msgspec",
+  "protocol": "custom-json-v1",
+  "candidate_entrypoint": "python package installed into a UID-10001 target site",
+  "adaptation_boundaries": [
+    "C extension compilation occurs during bounded candidate installation",
+    "The verifier executes one bounded JSON-safe scenario in an unprivileged child process; the candidate cannot enter the trusted verifier process",
+    "Struct instances, hooks, dates, enums, and extension payloads are reduced to JSON-safe scalars by child-side scenarios",
+    "No direct trusted-process import of candidate code; no filesystem, network, service, or CLI behavior is graded"
+  ]
+}
