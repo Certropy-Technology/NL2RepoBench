@@ -91,6 +91,16 @@ def test_active_workers_only_counts_matching_authoring_roots(tmp_path: Path, mon
     assert coordinator._active_workers(root, live) == [(11, good)]
 
 
+def test_active_agent_slots_count_controller_concurrency() -> None:
+    active = [
+        (11, "python run_authoring_loop.py --max-concurrency 8"),
+        (12, "python run_authoring_loop.py --max-concurrency=3"),
+        (13, "python run_authoring_loop.py"),
+    ]
+
+    assert coordinator._active_agent_slots(active) == 12
+
+
 def test_register_lane_preserves_registry_list(tmp_path: Path) -> None:
     live = tmp_path / "live"
     registry = live / "supervisor/generated-lanes.json"

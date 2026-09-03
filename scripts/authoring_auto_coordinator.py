@@ -600,6 +600,17 @@ def _active_workers(root: Path, live: Path) -> list[tuple[int, str]]:
     ]
 
 
+def _worker_slots(command: str) -> int:
+    match = re.search(r"(?:^|\s)--max-concurrency(?:=|\s+)(\d+)(?:\s|$)", command)
+    if match is None:
+        return 1
+    return max(1, int(match.group(1)))
+
+
+def _active_agent_slots(active: list[tuple[int, str]]) -> int:
+    return sum(_worker_slots(command) for _pid, command in active)
+
+
 def _candidate_key(record: dict[str, Any]) -> str | None:
     package = record.get("package")
     if isinstance(package, str) and package:
@@ -635,7 +646,7 @@ def _start_workers(
     root: Path, live: Path, args: argparse.Namespace
 ) -> list[dict[str, Any]]:
     active = _active_workers(root, live)
-    available = max(0, args.max_agents - len(active))
+    available = max(0, args.max_agents - _active_agent_slots(active))
     if available == 0:
         return []
     lanes = _lane_registry(live)
@@ -760,11 +771,13 @@ def _cycle(
     for lane in lanes:
         counts[lane.language] += len(_claimable(_state_records(lane.state)))
     pending_total = sum(counts.values())
+    active_before = _active_workers(root, live)
     event: dict[str, Any] = {
         "event": "cycle",
         "pending_by_language": counts,
         "pending_total": pending_total,
-        "active_workers_before": len(_active_workers(root, live)),
+        "active_workers_before": len(active_before),
+        "active_agent_slots_before": _active_agent_slots(active_before),
         "threshold": args.pending_threshold,
     }
     discovery_events: list[dict[str, Any]] = []
@@ -804,7 +817,9 @@ def _cycle(
     started = [] if args.dry_run else _start_workers(root, live, args)
     event["discoveries"] = discovery_events
     event["workers_started"] = started
-    event["active_workers_after"] = len(_active_workers(root, live))
+    active_after = _active_workers(root, live)
+    event["active_workers_after"] = len(active_after)
+    event["active_agent_slots_after"] = _active_agent_slots(active_after)
     return event
 
 
