@@ -415,7 +415,15 @@ def _discover_language(
         "node": "discover_npm_candidates.py",
         "go": "discover_go_candidates.py",
     }[language]
-    command = [_python_bin(root), script, "--output", report_path, "--workers", "4"]
+    discovery_workers = 1 if language == "python" else 4
+    command = [
+        _python_bin(root),
+        script,
+        "--output",
+        report_path,
+        "--workers",
+        str(discovery_workers),
+    ]
     if language == "go":
         repositories = _go_repositories(root)
         missing = [package for package in packages if package not in repositories]
@@ -729,10 +737,22 @@ def _cycle(
                 )
                 runtime_state["last_discovery_epoch"][language] = time.time()
                 continue
-            discovery_events.append(
-                _discover_language(root, live, args, language, packages, history)
+            discovery_event = _discover_language(
+                root, live, args, language, packages, history
             )
-            runtime_state["last_discovery_epoch"][language] = time.time()
+            discovery_events.append(discovery_event)
+            if discovery_event.get("status") in {
+                "discovery-failed",
+                "queue-build-failed",
+                "state-init-failed",
+            }:
+                runtime_state["last_discovery_epoch"][language] = (
+                    time.time()
+                    - args.discovery_cooldown_seconds
+                    + min(args.discovery_cooldown_seconds, 300)
+                )
+            else:
+                runtime_state["last_discovery_epoch"][language] = time.time()
     started = [] if args.dry_run else _start_workers(root, live, args)
     event["discoveries"] = discovery_events
     event["workers_started"] = started
