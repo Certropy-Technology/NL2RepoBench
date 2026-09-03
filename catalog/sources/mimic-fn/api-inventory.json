@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0",
+  "task_id": "mimic-fn",
+  "source_revision": "3ee1e62d926ac0a5cf631815734d8e06a9381d72",
+  "package": {
+    "name": "mimic-function",
+    "version": "5.0.1",
+    "module_system": "esm",
+    "runtime_entry": "index.js",
+    "types_entry": "index.d.ts",
+    "node_engine": ">=18",
+    "runtime_dependencies": {}
+  },
+  "public_exports": [
+    {
+      "export": "default",
+      "name": "mimicFunction",
+      "signature": "mimicFunction(to, from, options?): FunctionType"
+    }
+  ],
+  "options": ["ignoreNonConfigurable"],
+  "source_metrics": {
+    "tracked_files": 15,
+    "runtime_loc": 77,
+    "declaration_loc": 52,
+    "upstream_test_loc": 218,
+    "upstream_ava_test_calls": 31,
+    "upstream_tsd_assertions": 4
+  },
+  "inventory_notes": [
+    "The frozen commit is mimic-function 5.0.1 and has no runtime dependency.",
+    "The upstream suite uses AVA and tsd; the deterministic private contract covers all runtime registrations plus package identity.",
+    "Function-valued behavior is exercised by a child-side declarative adapter; raw callbacks and symbols never cross the verifier boundary."
+  ]
+}

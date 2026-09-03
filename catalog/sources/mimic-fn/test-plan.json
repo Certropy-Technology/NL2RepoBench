@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "framework": "node:test",
+  "report_format": "node-test-json-v1",
+  "frozen_total": 32,
+  "collection_basis": "one package identity leaf plus 31 deterministic runtime behavior leaves",
+  "coverage": [
+    "package identity and export map",
+    "return value, name, string and symbol properties, descriptors, inheritance, extra properties, prototype and classes",
+    "ordinary, arrow, bound, constructor and repeated toString wrapping",
+    "Function.prototype.toString, String coercion, method name and patched source toString",
+    "identical and conflicting non-configurable descriptors with and without ignoreNonConfigurable"
+  ],
+  "excluded_upstream_behaviors": [
+    "compile-time tsd assertions are represented by the public declaration requirement and package identity leaf",
+    "wall-clock or platform-specific AVA behavior is excluded from the deterministic score"
+  ]
+}

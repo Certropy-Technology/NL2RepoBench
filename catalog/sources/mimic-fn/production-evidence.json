@@ -1,0 +1,148 @@
+{
+  "schema_version": "1.0",
+  "task_id": "mimic-fn",
+  "terminal_kind": "awaiting-agent-run",
+  "status": "packaged",
+  "source_freeze": {
+    "upstream_url": "https://github.com/sindresorhus/mimic-fn",
+    "revision": "3ee1e62d926ac0a5cf631815734d8e06a9381d72",
+    "tree": "1d6c6d35d5179f04690ee3ce5c60be120d826811",
+    "archive_sha256": "sha256:52b0b045635fe457322cea36d04dcaa0b4944d4ac21d07448bb44f93dc3e8101",
+    "license_spdx": "MIT",
+    "license_sha256": "sha256:5c932d88256b4ab958f64a856fa48e8bd1f55bc1d96b8149c65689e0c61789d3",
+    "checkout_clean": true,
+    "source_checkout": ".nl2repo/authoring-work/node-author-auto-20260903T035117Z/mimic-fn/source/repo"
+  },
+  "environment": {
+    "platform": "linux/amd64",
+    "os_name": "debian-bookworm",
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "node": "24.19.0",
+    "npm": "11.17.0",
+    "harbor": "0.21.0",
+    "toolchain": "toolchain.node.lock.toml",
+    "network_policy": {
+      "mode": "no-network",
+      "agent_allowed_hosts": [],
+      "reference_source_fetch": "forbidden",
+      "agent_compose_network_override_present": false
+    }
+  },
+  "private_artifacts": {
+    "dependencies": {
+      "digest": "sha256:f8634a4808d9e4d5271b571f9cb8a78aadac348b8b095674c11feabc6825c96f",
+      "size_bytes": 10240,
+      "media_type": "application/vnd.nl2repobench.npm-bundle+tar"
+    },
+    "commands": {
+      "digest": "sha256:10e70a89b271a2cd71d8dbaa6848530c6550ac4d87e65ae87d7332265e5eedd9",
+      "size_bytes": 10240,
+      "media_type": "application/vnd.nl2repobench.node-commands+tar"
+    },
+    "tests": {
+      "digest": "sha256:487e8230ccaf181078561c8e5344a7358b2936af597933109439cfe9e27283b6",
+      "size_bytes": 20480,
+      "media_type": "application/vnd.nl2repobench.node-tests+tar"
+    },
+    "oracle": {
+      "digest": "sha256:cd717f7e4a44f91cedbe7bf26d077113d4df8ec45e6af0a79efe79cb209e8951",
+      "size_bytes": 10240,
+      "media_type": "application/vnd.nl2repobench.oracle+tar"
+    }
+  },
+  "frozen_collection": {
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "expected_total": 32,
+    "expected_total_source": "frozen-collection",
+    "basis": "one package identity leaf plus 31 deterministic runtime behavior leaves"
+  },
+  "production_compile": {
+    "command": "uv run nl2repo harbor compile catalog/sources/mimic-fn --output .nl2repo/authoring-work/node-author-auto-20260903T035117Z/mimic-fn/compiled --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+    "exit_code": 0,
+    "path": ".nl2repo/authoring-work/node-author-auto-20260903T035117Z/mimic-fn/compiled/mimic-fn",
+    "bundle_manifest_sha256": "sha256:87bc5d27b1034b93c5d1abf204db780109aa5befaa82e6bd76142e6f523dfc77",
+    "canonical_manifest_digest": "sha256:d27f09d059fd5675b3643f8d02c592edd13338f76ae659ec8e48830cf77a1612",
+    "verifier_image_id": "sha256:f0621b6e014b1cac6f7c8f7210a09a9348bfdf58f2466a5c11f6e01115fe0429"
+  },
+  "validation": {
+    "source_validate_command": "uv run nl2repo task validate-source catalog/sources/mimic-fn",
+    "source_validate_exit_code": 0,
+    "network_lint_command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+    "network_lint_exit_code": 0,
+    "mimic_fn_network_errors": 0,
+    "node_bash_syntax_exit_code": 0,
+    "git_diff_check_exit_code": 0
+  },
+  "manual_verifier": {
+    "scope": "Generated verifier image and Docker workspaces; not an official Harbor run receipt.",
+    "oracle": {
+      "valid": true,
+      "passed": 32,
+      "failed": 0,
+      "collected": 32,
+      "reward": 1.0,
+      "network": ".nl2repo/authoring-work/node-author-auto-20260903T035117Z/mimic-fn/control-logs/oracle/verifier/network.json"
+    },
+    "empty": {
+      "valid": true,
+      "collected": 0,
+      "reward": 0.0,
+      "failure_reason": "candidate-installation-failed",
+      "network": ".nl2repo/authoring-work/node-author-auto-20260903T035117Z/mimic-fn/control-logs/empty/verifier/network.json"
+    },
+    "stub": {
+      "valid": true,
+      "passed": 12,
+      "failed": 20,
+      "collected": 32,
+      "reward": 0.375
+    },
+    "forgery": {
+      "valid": true,
+      "passed": 11,
+      "failed": 21,
+      "collected": 32,
+      "reward": 0.34375,
+      "forged_reports_ignored": true
+    },
+    "timeout": {
+      "valid": true,
+      "passed": 11,
+      "failed": 21,
+      "collected": 32,
+      "reward": 0.34375,
+      "bounded": true
+    },
+    "offline": {
+      "valid": true,
+      "passed": 11,
+      "failed": 21,
+      "collected": 32,
+      "reward": 0.34375,
+      "public_network_available": false
+    }
+  },
+  "attempted_remediation": [
+    {
+      "command": "uv run nl2repo harbor compile ... --toolchain toolchain.lock.toml",
+      "exit_code": 1,
+      "failure_class": "environment",
+      "reason": "The generic toolchain.lock.toml is schema 1.0 and is not a Node v2 toolchain lock. Remediated by using the existing locked toolchain.node.lock.toml."
+    },
+    {
+      "command": "uv run nl2repo harbor compile ... --toolchain toolchain.node.lock.toml",
+      "exit_code": 1,
+      "failure_class": "dependency-closure",
+      "reason": "Initial empty npm bundle omitted npm-cache directory. Remediated by adding the required empty cache directory and freezing digest sha256:f8634a4808d9e4d5271b571f9cb8a78aadac348b8b095674c11feabc6825c96f."
+    }
+  ],
+  "residual_risks": [
+    "The deterministic 32-leaf adapter is a public behavior slice; it does not execute upstream AVA or compile-time tsd assertions directly.",
+    "The official Harbor Agent, Oracle, and control receipts remain outside this lane and require the integrator's shared runtime scheduling.",
+    "The local Docker verifier image was built with two constant-platform warnings; the pinned runtime and image digest are recorded above."
+  ],
+  "blocker": null,
+  "next_action": "Integrator runs official Harbor Oracle and controls using the compiled bundle; do not advance to controls-passed without those receipts."
+}
