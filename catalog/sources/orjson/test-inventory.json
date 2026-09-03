@@ -1,0 +1,15 @@
+{
+  "task_id": "orjson",
+  "upstream_test_files": 32,
+  "upstream_test_functions": 1262,
+  "frozen_private_collection": 26,
+  "collection_source": "private custom-json-v1 verifier scenarios derived from the frozen public binding API and deterministic upstream assertions",
+  "groups": {
+    "packaging": ["packaging-surface", "metadata-dependencies"],
+    "core": ["simple-dumps", "simple-loads", "round-trip", "unicode", "buffer-input", "nested-values"],
+    "options": ["indent", "sort-keys", "append-newline", "non-finite-floats", "strict-integer", "option-validation", "non-str-keys"],
+    "types": ["datetime", "date", "uuid", "dataclass", "default-callback", "fragment"],
+    "errors": ["decode-errors", "encode-errors", "signature-contract", "positional-only", "recursion-error"]
+  },
+  "excluded": ["NumPy integration", "network/platform integration", "large compressed fixtures", "Rust ABI and SIMD performance", "full upstream 1262-leaf collection"]
+}

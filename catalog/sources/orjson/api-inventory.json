@@ -1,0 +1,23 @@
+{
+  "language": "python",
+  "package": "orjson",
+  "upstream_revision": "6737895a1a4e3e26df0569a40147893a786f9a58",
+  "source_archive_sha256": "sha256:d576d84f7005c9e4b624e3f990c8fd3c07748370290eb94fb5fb7f4e1339cb61",
+  "source_files": 620,
+  "source_lines": 105493,
+  "rust_files": 82,
+  "rust_nonblank_lines": 8732,
+  "python_binding_files": 3,
+  "public_api": {
+    "functions": ["dumps", "loads"],
+    "classes": ["Fragment", "JSONDecodeError", "JSONEncodeError"],
+    "constants": ["OPT_APPEND_NEWLINE", "OPT_INDENT_2", "OPT_NAIVE_UTC", "OPT_NON_STR_KEYS", "OPT_OMIT_MICROSECONDS", "OPT_PASSTHROUGH_DATACLASS", "OPT_PASSTHROUGH_DATETIME", "OPT_PASSTHROUGH_SUBCLASS", "OPT_SERIALIZE_DATACLASS", "OPT_SERIALIZE_NUMPY", "OPT_SERIALIZE_UUID", "OPT_SORT_KEYS", "OPT_STRICT_INTEGER", "OPT_UTC_Z"]
+  },
+  "build": {
+    "backend": "maturin",
+    "rust_version_requirement": ">=1.95",
+    "pyo3": "0.28",
+    "reference_probe": "Rust 1.97.1 / cargo 1.97.1 built the CPython 3.12 wheel successfully"
+  },
+  "adaptation": "The public task contract is a bounded JSON-safe compatibility slice; native ABI, SIMD performance, optional NumPy, and large fixture suites are outside the fixed denominator."
+}

@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "task_id": "orjson",
+  "instruction_to_tests": {
+    "Supports": ["packaging-surface", "metadata-dependencies", "buffer-input"],
+  "dumps": ["simple-dumps", "round-trip", "unicode", "nested-values", "indent", "sort-keys", "append-newline", "non-finite-floats", "strict-integer", "option-validation", "datetime", "date", "uuid", "dataclass", "default-callback", "fragment", "encode-errors", "positional-only", "non-str-keys"],
+  "loads": ["simple-loads", "round-trip", "unicode", "buffer-input", "decode-errors", "signature-contract", "positional-only", "recursion-error"],
+    "Fragment": ["fragment"],
+    "exception-contract": ["decode-errors", "encode-errors", "option-validation"]
+  },
+  "test_to_instruction": "Every frozen leaf ID is named by the public instruction sections and maps to an observable API behavior.",
+  "excluded_surfaces": "Optional NumPy, native ABI/performance, live network, platform integration, and large upstream fixture suites are explicit boundaries and have no frozen private leaf."
+}

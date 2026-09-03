@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0",
+  "task_id": "orjson",
+  "terminal_kind": "authoring-local",
+  "status": "packaged",
+  "source": {
+    "upstream_url": "https://github.com/ijl/orjson",
+    "revision": "6737895a1a4e3e26df0569a40147893a786f9a58",
+    "archive_sha256": "sha256:d576d84f7005c9e4b624e3f990c8fd3c07748370290eb94fb5fb7f4e1339cb61",
+    "license": "MPL-2.0 AND (Apache-2.0 OR MIT)"
+  },
+  "environment": {
+    "python": "3.12.14",
+    "base_image_digest": "sha256:782412e85d0f0984994c290652577d4018aff08145c85b262bb63dc0c7522254",
+    "network_mode": "no-network"
+  },
+  "private_artifacts": {
+    "verifier_bundle": "sha256:a1dd8736c53ada9217f9fe1f6b32c020b4b2362266fbb236796501ac707b0449",
+    "oracle_bundle": "sha256:eaef2e408ae249021f4bb30e8cf39f1c745771b31b309468652f897ac66670ef",
+    "candidate_requirements_lock": "sha256:d978dd32c7d5c8bb3a1f40f9b05fe68f34fb24bef1ae4bd9b3c60af6fb1f87fd"
+  },
+  "local_verifier": {
+    "kind": "direct-separate-verifier-docker-replay",
+    "not_an_official_harbor_run": true,
+    "compiled_bundle": {
+      "path": ".nl2repo/authoring-work/python-author-discover-20260902T142741Z/orjson/compile-final/orjson/bundle.manifest.json",
+      "sha256": "sha256:9fb03543f14fd5839904cf3457787636b1e693989f8e5f72be900732a91c0926"
+    },
+    "oracle": {
+      "exit_code": 0,
+      "collected": 26,
+      "passed": 26,
+      "reward": 1.0,
+      "grading": {
+        "path": ".nl2repo/authoring-work/python-author-discover-20260902T142741Z/orjson/direct-runs/oracle-final/logs/verifier/grading.json",
+        "sha256": "sha256:99f170a53da2730342fd6699baf8d235a72ec156450e58c4bcab53afeaf23726"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/python-author-discover-20260902T142741Z/orjson/direct-runs/oracle-final/logs/verifier/network.json",
+        "sha256": "sha256:9baf1277c43bc3b314fdff1eb4848e07b8694e3b703bbe43d0b7623c391a5b4a"
+      }
+    },
+    "controls": {
+      "empty": {"exit_code": 0, "collected": 0, "passed": 0, "reward": 0.0, "failure_reason": "candidate-installation-failed"},
+      "stub": {"exit_code": 0, "collected": 26, "passed": 1, "reward": 0.038461538461538464},
+      "forgery": {"exit_code": 0, "collected": 26, "passed": 1, "reward": 0.038461538461538464, "verifier_owned_reward": true},
+      "offline": {"exit_code": 0, "collected": 26, "passed": 1, "reward": 0.038461538461538464, "public_network_available": false},
+      "call_hang": {"exit_code": 0, "collected": 26, "passed": 1, "reward": 0.038461538461538464, "bounded_by_candidate_total_timeout_sec": 360}
+    }
+  },
+  "official_harbor": {
+    "started": false,
+    "reason": "This authoring lane is explicitly prohibited from starting a Harbor Agent Run."
+  }
+}

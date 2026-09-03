@@ -1,0 +1,86 @@
+schema_version = "1.0"
+task_id = "orjson"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "json-serialization"
+tags = ["python", "json", "serialization", "deserialization", "native-upstream", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/ijl/orjson"
+revision = "6737895a1a4e3e26df0569a40147893a786f9a58"
+license_spdx = "MPL-2.0 AND (Apache-2.0 OR MIT)"
+source_digest = "sha256:d576d84f7005c9e4b624e3f990c8fd3c07748370290eb94fb5fb7f4e1339cb61"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.14"
+os_name = "debian-13-amd64"
+base_image = "python:3.12.14-slim-bookworm"
+base_image_digest = "sha256:782412e85d0f0984994c290652577d4018aff08145c85b262bb63dc0c7522254"
+system_packages = []
+network_mode = "no-network"
+build_command = "python -m pip install --no-deps --no-build-isolation"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The candidate build backend is installed during image construction from a private hash lock. Agent and verifier execution are network-isolated; only the trusted Oracle receives the digest-verified reference wheel and the exact upstream source-host exception is run-scoped."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = ["setuptools==80.9.0"]
+lock_artifact = { digest = "sha256:d978dd32c7d5c8bb3a1f40f9b05fe68f34fb24bef1ae4bd9b3c60af6fb1f87fd", size_bytes = 189, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:d978dd32c7d5c8bb3a1f40f9b05fe68f34fb24bef1ae4bd9b3c60af6fb1f87fd", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 26
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:a1dd8736c53ada9217f9fe1f6b32c020b4b2362266fbb236796501ac707b0449", size_bytes = 10240, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:a1dd8736c53ada9217f9fe1f6b32c020b4b2362266fbb236796501ac707b0449", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
+
+[harbor]
+description = "Build the frozen orjson Python package from an empty workspace and implement a deterministic JSON serialization and deserialization contract through a separate offline verifier."
+keywords = ["python", "json", "serialization", "deserialization", "datetime", "dataclass", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 720.0
+candidate_install_timeout_sec = 180.0
+candidate_total_timeout_sec = 360.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:eaef2e408ae249021f4bb30e8cf39f1c745771b31b309468652f897ac66670ef"
+size_bytes = 307200
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:eaef2e408ae249021f4bb30e8cf39f1c745771b31b309468652f897ac66670ef"
+visibility = "private"
+
+[lifecycle]
+status = "packaged"
+owner = "python-author-discover-20260902T142741Z-orjson"
+reason = "Frozen native source, verified reference wheel, hash-locked build backend, separate JSON verifier, and task-local controls are authored. Production compile and trusted Harbor Oracle/control receipts remain for the integrator because this lane cannot start Harbor runs."
