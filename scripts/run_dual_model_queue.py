@@ -155,9 +155,13 @@ def build_plan(
         )
         existing_for_model = existing_by_model.get(spec.model_id, set())
         missing_tasks = [task for task in tasks if task not in existing_for_model]
+        campaign_run_prefix = f"{spec.run_prefix}-{campaign_id}"
+        if SAFE_NAME.fullmatch(campaign_run_prefix) is None:
+            raise ValueError("campaign-specific run prefix is unsafe")
         queues.append(
             {
                 **asdict(spec),
+                "run_prefix": campaign_run_prefix,
                 "api": runtime_api,
                 "base_url": runtime_base_url,
                 "harbor_model": runtime_model,

@@ -90,6 +90,8 @@ def test_dual_plan_resolves_both_pi_providers_without_serializing_keys(
     assert by_model["claude-fable-5"]["api"] == "openai-completions"
     assert by_model["claude-fable-5"]["base_url"].endswith("/v1")
     assert by_model["claude-fable-5"]["harbor_model"] == "openai/claude-fable-5"
+    assert by_model["gpt-5.6-sol"]["run_prefix"] == "gpt56-pilot"
+    assert by_model["claude-fable-5"]["run_prefix"] == "fable-pilot"
     assert "test-key-not-written-to-plan" not in json.dumps(plan)
 
 
