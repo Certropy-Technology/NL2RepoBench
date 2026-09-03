@@ -1,0 +1,119 @@
+{
+  "schema_version": "1.0",
+  "task_id": "is-unicode-supported",
+  "task_version": "2.1.0",
+  "terminal_kind": "awaiting-agent-run",
+  "lifecycle_status": "controls-passed",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/sindresorhus/is-unicode-supported",
+    "revision": "e0373335038856c63034c8eef6ac43ee3827a601",
+    "tree": "cc51631d242a2da7ecfd5968ba6451323e7ed38a",
+    "source_digest": "sha256:f15b5aac5c7f5e331c91310d01ac6c73efb36686bd9ae87c47847dbf6978bc38",
+    "license_spdx": "MIT",
+    "license_sha256": "sha256:5c932d88256b4ab958f64a856fa48e8bd1f55bc1d96b8149c65689e0c61789d3",
+    "submodules": [],
+    "worktree_clean": true
+  },
+  "artifacts": {
+    "dependency_closure": "sha256:35899cb523c2a7a07e0639c5df87900c354a16eb0a9f53ddb74808ee18411fdd",
+    "command_plan": "sha256:005ffae244839bfaceab5ce2c04af99127726c472e30db90c1af6243617c7f82",
+    "test_bundle": "sha256:1b49cf389301637da257db381c87879340d19af8eeca5946b334bc8185322da3",
+    "oracle_bundle": "sha256:d010d8d5808855f7cb599615abb9cf4f8ae483eb25a1d0167bef1a4c4d693105"
+  },
+  "toolchain": {
+    "harbor_version": "0.21.0",
+    "task_schema": "1.4",
+    "toolchain_lock": "toolchain.node.lock.toml",
+    "toolchain_lock_digest": "sha256:aac76d5c1a423cd3c5c9c96870198475e0fed151793b60eeb830a7c053692dc8",
+    "node_version": "24.19.0",
+    "npm_version": "11.17.0",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "system_packages": ["ca-certificates=20250419~deb12u1", "git=1:2.39.5-0+deb12u3"],
+    "network_policy": "no-network",
+    "locked_agent_image": "nl2repobench/openhands-sdk-fork:930e9b1da-bookworm",
+    "locked_agent_image_id": "sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f",
+    "observed_agent_image_id": "sha256:3b9288ec42f69da761f0aedb9a72c6888376e9395f9122192aca67e81d913c79"
+  },
+  "compiled_bundle": {
+    "path": ".nl2repo/compiled/is-unicode-supported/bundle.manifest.json",
+    "canonical_manifest_digest": "sha256:7d4b34471803fee37b9375308d86c1ecc53dca19f788c20db21f4b9c06f4ca85",
+    "mode": "production",
+    "file_count": 74
+  },
+  "commands": [
+    {
+      "stage": "source-freeze",
+      "command": "git clone; git checkout --detach e0373335038856c63034c8eef6ac43ee3827a601; git archive --format=tar | sha256sum",
+      "exit_code": 0
+    },
+    {
+      "stage": "source-validation",
+      "command": "uv run nl2repo task validate-source catalog/sources/is-unicode-supported",
+      "exit_code": 0
+    },
+    {
+      "stage": "network-lint",
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "task_local_error_count": 0,
+      "task_local_warning": "oracle-requires-host-authorization"
+    },
+    {
+      "stage": "production-compile",
+      "command": "uv run nl2repo harbor compile catalog/sources/is-unicode-supported --output .nl2repo/compiled --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0
+    },
+    {
+      "stage": "verifier-build",
+      "command": "docker build -f .nl2repo/compiled/is-unicode-supported/tests/Dockerfile .nl2repo/compiled/is-unicode-supported/tests",
+      "exit_code": 0
+    },
+    {
+      "stage": "agent-image-digest-check",
+      "command": "docker image inspect nl2repobench/openhands-sdk-fork:930e9b1da-bookworm",
+      "exit_code": 0,
+      "result": "observed sha256:3b9288ec42f69da761f0aedb9a72c6888376e9395f9122192aca67e81d913c79; toolchain expects sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f",
+      "failure_class": "infrastructure"
+    }
+  ],
+  "oracle": {
+    "kind": "local-separate-verifier-smoke; not an official Harbor Agent Run",
+    "source_fetch": {
+      "command": "trusted Oracle solve.sh fetches the pinned Git revision and verifies the archive SHA-256",
+      "exit_code": 0,
+      "stdout": {
+        "path": ".nl2repo/authoring-work/node-author-discover-20260903T025741Z/is-unicode-supported/oracle-script-logs/solve.stdout",
+        "sha256": "sha256:90eb49c129cf9b52f2d3a3b33e158a68efdb27b0a7cf7133fbd9890fe0841fae"
+      }
+    },
+    "valid": true,
+    "passed": 20,
+    "collected": 20,
+    "expected_total": 20,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/authoring-work/node-author-discover-20260903T025741Z/is-unicode-supported/oracle-script-logs-final/grading.json",
+      "sha256": "sha256:ef138b212c38a8ebc69ecba8a1ea28ecdaa8cc265df5bcc115aba39bf30ef13a"
+    },
+    "network": {
+      "path": ".nl2repo/authoring-work/node-author-discover-20260903T025741Z/is-unicode-supported/oracle-script-logs-final/network.json",
+      "sha256": "sha256:94ff4860a0c2b708c8be918dc859dff136922becee62273dec265c30db63c0b0",
+      "public_network_available": false
+    }
+  },
+  "controls": {
+    "empty": {"exit_code": 0, "passed": 0, "collected": 0, "reward": 0.0, "reason": "candidate-installation-failed", "grading_path": ".nl2repo/authoring-work/node-author-discover-20260903T025741Z/is-unicode-supported/control-results-release/empty/grading.json", "grading_sha256": "sha256:642163a1190627ca92041434cff26a1f71a6f2cb7890ec92a12a159cf107047b", "network_path": ".nl2repo/authoring-work/node-author-discover-20260903T025741Z/is-unicode-supported/control-results-release/empty/network.json", "network_sha256": "sha256:ba99be1bb2809f082562a8efeef101a27d94bedcdc687841aed2582a2c670070"},
+    "stub": {"exit_code": 0, "passed": 0, "collected": 20, "reward": 0.0, "grading_path": ".nl2repo/authoring-work/node-author-discover-20260903T025741Z/is-unicode-supported/control-results-release/stub/grading.json", "grading_sha256": "sha256:f2fa3b8b21866aa4e782178c0cd07fa716d36f1a9f013947dc0db7fbcc1d4ca6", "network_path": ".nl2repo/authoring-work/node-author-discover-20260903T025741Z/is-unicode-supported/control-results-release/stub/network.json", "network_sha256": "sha256:ba99be1bb2809f082562a8efeef101a27d94bedcdc687841aed2582a2c670070"},
+    "forgery": {"exit_code": 0, "passed": 0, "collected": 20, "reward": 0.0, "verifier_owned_reward": true, "grading_path": ".nl2repo/authoring-work/node-author-discover-20260903T025741Z/is-unicode-supported/control-results-release/forgery/grading.json", "grading_sha256": "sha256:f2fa3b8b21866aa4e782178c0cd07fa716d36f1a9f013947dc0db7fbcc1d4ca6", "network_path": ".nl2repo/authoring-work/node-author-discover-20260903T025741Z/is-unicode-supported/control-results-release/forgery/network.json", "network_sha256": "sha256:ba99be1bb2809f082562a8efeef101a27d94bedcdc687841aed2582a2c670070"},
+    "install-script": {"exit_code": 0, "passed": 0, "collected": 0, "reward": 0.0, "reason": "candidate-installation-failed", "grading_path": ".nl2repo/authoring-work/node-author-discover-20260903T025741Z/is-unicode-supported/control-results-release/install-script/grading.json", "grading_sha256": "sha256:642163a1190627ca92041434cff26a1f71a6f2cb7890ec92a12a159cf107047b", "network_path": ".nl2repo/authoring-work/node-author-discover-20260903T025741Z/is-unicode-supported/control-results-release/install-script/network.json", "network_sha256": "sha256:ba99be1bb2809f082562a8efeef101a27d94bedcdc687841aed2582a2c670070"},
+    "loader-hook": {"exit_code": 0, "passed": 0, "collected": 20, "reward": 0.0, "grading_path": ".nl2repo/authoring-work/node-author-discover-20260903T025741Z/is-unicode-supported/control-results-release/loader-hook/grading.json", "grading_sha256": "sha256:f2fa3b8b21866aa4e782178c0cd07fa716d36f1a9f013947dc0db7fbcc1d4ca6", "network_path": ".nl2repo/authoring-work/node-author-discover-20260903T025741Z/is-unicode-supported/control-results-release/loader-hook/network.json", "network_sha256": "sha256:ba99be1bb2809f082562a8efeef101a27d94bedcdc687841aed2582a2c670070"},
+    "offline": {"exit_code": 0, "passed": 0, "collected": 20, "reward": 0.0, "public_network_available": false, "grading_path": ".nl2repo/authoring-work/node-author-discover-20260903T025741Z/is-unicode-supported/control-results-release/offline/grading.json", "grading_sha256": "sha256:f2fa3b8b21866aa4e782178c0cd07fa716d36f1a9f013947dc0db7fbcc1d4ca6", "network_path": ".nl2repo/authoring-work/node-author-discover-20260903T025741Z/is-unicode-supported/control-results-release/offline/network.json", "network_sha256": "sha256:ba99be1bb2809f082562a8efeef101a27d94bedcdc687841aed2582a2c670070"},
+    "call-hang": {"exit_code": 0, "passed": 0, "collected": 0, "reward": 0.0, "reason": "candidate-call-failed", "grading_path": ".nl2repo/authoring-work/node-author-discover-20260903T025741Z/is-unicode-supported/control-results-release/call-hang/grading.json", "grading_sha256": "sha256:e15c0d82fe59e8b5d933a970615d69acc703db07cf04594c3e2e7c815479b555", "network_path": ".nl2repo/authoring-work/node-author-discover-20260903T025741Z/is-unicode-supported/control-results-release/call-hang/network.json", "network_sha256": "sha256:ba99be1bb2809f082562a8efeef101a27d94bedcdc687841aed2582a2c670070"}
+  },
+  "residual_risks": [
+    "No official Harbor Oracle job or model Agent Run was started in this lane by instruction; the recorded Oracle and controls are local separate-verifier evidence.",
+    "The local OpenHands agent tag is present but resolves to sha256:3b9288ec42f69da761f0aedb9a72c6888376e9395f9122192aca67e81d913c79 instead of the shared toolchain lock sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f; integrator must restore or verify the locked immutable image before a model Agent Run.",
+    "Independent review, model evaluation, and publication remain pending."
+  ]
+}

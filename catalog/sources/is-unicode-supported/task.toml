@@ -1,0 +1,92 @@
+schema_version = "2.0"
+task_id = "is-unicode-supported"
+version = "2.1.0"
+instruction = "instruction.md"
+
+[metadata]
+language = "node"
+difficulty = "easy"
+category = "terminal-capability"
+tags = ["node", "npm", "esm", "terminal", "unicode", "environment"]
+
+[source]
+status = "known"
+upstream_url = "https://github.com/sindresorhus/is-unicode-supported"
+revision = "e0373335038856c63034c8eef6ac43ee3827a601"
+license_spdx = "MIT"
+source_digest = "sha256:f15b5aac5c7f5e331c91310d01ac6c73efb36686bd9ae87c47847dbf6978bc38"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+system_packages = ["ca-certificates=20250419~deb12u1", "git=1:2.39.5-0+deb12u3"]
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "The candidate and separate verifier run without egress. The exact zero-dependency npm v3 closure is installed from a private immutable cache; only the trusted Oracle receives a run-scoped authorization for the pinned upstream source host."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = []
+artifact = { digest = "sha256:35899cb523c2a7a07e0639c5df87900c354a16eb0a9f53ddb74808ee18411fdd", size_bytes = 10240, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:35899cb523c2a7a07e0639c5df87900c354a16eb0a9f53ddb74808ee18411fdd", visibility = "private" }
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 20
+expected_total_source = "frozen-collection"
+commands_artifact = { digest = "sha256:005ffae244839bfaceab5ce2c04af99127726c472e30db90c1af6243617c7f82", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:005ffae244839bfaceab5ce2c04af99127726c472e30db90c1af6243617c7f82", visibility = "private" }
+test_bundle = { digest = "sha256:1b49cf389301637da257db381c87879340d19af8eeca5946b334bc8185322da3", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:1b49cf389301637da257db381c87879340d19af8eeca5946b334bc8185322da3", visibility = "private" }
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Build an offline ESM package that detects whether a terminal supports Unicode from its platform and terminal environment markers."
+keywords = ["node", "npm", "esm", "terminal", "unicode", "environment"]
+agent_timeout_sec = 900.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "authoring-node-discover-b-r3-20260903"
+reason = "Frozen source, private Node test boundary, exact zero-dependency npm closure, Oracle verification, and the empty, stub, forgery, install-script, loader-hook, offline, and call-hang controls passed in this authoring attempt. No model Agent Run was started."
+
+[oracle_bundle]
+digest = "sha256:d010d8d5808855f7cb599615abb9cf4f8ae483eb25a1d0167bef1a4c4d693105"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:d010d8d5808855f7cb599615abb9cf4f8ae483eb25a1d0167bef1a4c4d693105"
+visibility = "private"
