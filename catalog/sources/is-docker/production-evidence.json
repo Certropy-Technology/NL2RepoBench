@@ -1,0 +1,78 @@
+{
+  "schema_version": "1.0",
+  "task_id": "is-docker",
+  "task_version": "1.0.0",
+  "terminal_kind": "intermediate",
+  "status": "awaiting-agent-run",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/sindresorhus/is-docker",
+    "revision": "59379f14b6dda26a0167fce55d80bf546857f92d",
+    "tree": "373bf4a1759c6c2e56b1f1755689e8c9b526e3f1",
+    "source_archive_sha256": "sha256:4b0b0b2f7949858e2c44da8b3dd2224ccc95eb8545674c867147ae93e6381cb5",
+    "license_spdx": "MIT",
+    "license_sha256": "sha256:5c932d88256b4ab958f64a856fa48e8bd1f55bc1d96b8149c65689e0c61789d3",
+    "tracked_files": 13,
+    "submodules": []
+  },
+  "environment": {
+    "runtime": "node 24.19.0",
+    "package_manager": "npm 11.17.0",
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "architecture": "linux/amd64",
+    "libc": "glibc",
+    "network_policy": "no-network",
+    "agent_allowed_hosts": []
+  },
+  "dependencies": {
+    "ecosystem": "npm",
+    "package_manager": "npm",
+    "lockfile_version": 3,
+    "install_mode": "offline",
+    "lifecycle_scripts": "ignore-scripts",
+    "packages": [],
+    "artifact": {
+      "digest": "sha256:934424095c625306be9dae55af83595b3eddb72cde5ece77ebe699b5693c560c",
+      "size_bytes": 389
+    }
+  },
+  "tests": {
+    "protocol": "custom-json-v1",
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "frozen_total": 15,
+    "groups": {"adapter_validation": 3, "marker_decision": 8, "cache": 4},
+    "candidate_boundary": "UID 10001 one-shot subprocess calling installed package root run export",
+    "local_candidate_smoke": {"status": "passed", "assertions": 5, "log": ".nl2repo/authoring-work/node-author-discover-20260903T025741Z/is-docker/logs/local-adapter-smoke.log"},
+    "private_contract_smoke": {"status": "passed", "collected": 15, "passed": 15, "log": ".nl2repo/authoring-work/node-author-discover-20260903T025741Z/is-docker/logs/private-contract-local-r3.log"}
+  },
+  "compiled_bundle": {
+    "mode": "production",
+    "path": ".nl2repo/compiled-is-docker/is-docker",
+    "manifest_sha256": "sha256:55db11a45bef16ec8893d7e3d04151e486ff5058a8729f4c2773b296de106553",
+    "canonical_manifest_digest": "sha256:3973be85f32523d01304c60c4e3770bbc1b79b8c98390c83972acf21657fbbd4",
+    "file_count": 72,
+    "allow_incomplete": false
+  },
+  "private_artifacts": {
+    "dependency_bundle": {"digest": "sha256:934424095c625306be9dae55af83595b3eddb72cde5ece77ebe699b5693c560c", "size_bytes": 389},
+    "commands_bundle": {"digest": "sha256:cd8c474b07f9d98b9707e628c834b6b047a4eef01ab0bb444dd02dc9d0ba64b6", "size_bytes": 207},
+    "test_bundle": {"digest": "sha256:9dc50873a7bd7e5e3678fef19b9de19fa02ae4e57f4fee360105563406bff5bf", "size_bytes": 1273},
+    "oracle_bundle": {"digest": "sha256:ebbbdaa2082144969dff0c23bd5e23205fdccf026afeb41747f2d0ebbfcacd99", "size_bytes": 1357}
+  },
+  "commands": [
+    {"stage": "source-freeze", "command": "git clone --no-checkout https://github.com/sindresorhus/is-docker.git; git checkout --detach 59379f14b6dda26a0167fce55d80bf546857f92d; git archive --format=tar --prefix=is-docker/ HEAD | sha256sum; sha256sum license", "exit_code": 0, "log": ".nl2repo/authoring-work/node-author-discover-20260903T025741Z/is-docker/logs/git-clone.log"},
+    {"stage": "upstream-baseline", "command": "Node 24.19.0/npm 11.17.0 image: npm test", "exit_code": 0, "result": "XO and 5 node:test leaves passed", "log": ".nl2repo/authoring-work/node-author-discover-20260903T025741Z/is-docker/logs/upstream-node24-test.log"},
+    {"stage": "source-validation", "command": "uv run nl2repo task validate-source catalog/sources/is-docker", "exit_code": 0, "log": ".nl2repo/authoring-work/node-author-discover-20260903T025741Z/is-docker/logs/validate-source.log"},
+    {"stage": "network-lint", "command": "uv run nl2repo task lint-network --tasks-root catalog/sources", "exit_code": 0, "result": "0 errors; task-local warnings absent; unrelated catalog warnings remain", "log": ".nl2repo/authoring-work/node-author-discover-20260903T025741Z/is-docker/logs/network-lint.log"},
+    {"stage": "production-compile", "command": "rm -rf .nl2repo/compiled-is-docker && uv run nl2repo harbor compile catalog/sources/is-docker --output .nl2repo/compiled-is-docker --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "exit_code": 0, "allow_incomplete": false, "manifest_sha256": "sha256:55db11a45bef16ec8893d7e3d04151e486ff5058a8729f4c2773b296de106553", "log": ".nl2repo/authoring-work/node-author-discover-20260903T025741Z/is-docker/logs/harbor-compile-r3.log"},
+    {"stage": "local-smoke", "command": "npm ci --offline --ignore-scripts --no-audit --no-fund && npm pack --ignore-scripts; node adapter smoke; node:test private contract", "exit_code": 0, "result": "package pack and 15/15 private contract leaves passed", "log": ".nl2repo/authoring-work/node-author-discover-20260903T025741Z/is-docker/logs/private-contract-local-r3.log"}
+  ],
+  "deferred_gates": {
+    "oracle": {"status": "not-run", "reason": "This lane is prohibited from starting a Harbor Agent Run; the trusted Oracle loop must consume the private oracle bundle with explicit github.com authorization."},
+    "controls": {"status": "not-run", "reason": "Harbor controls belong to the independent Agent Run loop; no reward or control result is claimed."}
+  },
+  "residual_risks": [
+    "Independent Harbor Oracle, empty/stub/forgery/timeout/offline controls, review, Agent Run, dataset integration, and publication remain pending outside this lane."
+  ]
+}

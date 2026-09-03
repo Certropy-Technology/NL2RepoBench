@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "task_id": "is-docker",
+  "source_revision": "59379f14b6dda26a0167fce55d80bf546857f92d",
+  "package": {
+    "name": "is-docker",
+    "version": "4.0.0",
+    "module_format": "esm",
+    "engines": "node >=20"
+  },
+  "public_surface": {
+    "default_export": "isDocker(): boolean",
+    "upstream_cli": "is-docker exits 0 inside Docker and 2 otherwise",
+    "adapter": {
+      "export": "run(request: unknown): unknown",
+      "operations": ["version", "detect", "cache"],
+      "purpose": "Represent the three fixed Docker marker observations as bounded JSON inside the candidate process."
+    }
+  },
+  "behavior": {
+    "marker_order": ["/.dockerenv", "/proc/self/cgroup contains docker", "/proc/self/mountinfo contains /docker/containers/"],
+    "return_type": "boolean",
+    "deterministic_after_first_call": true,
+    "state": "The default export caches its first decision per module instance; the cache adapter models two calls in one fresh bounded session.",
+    "errors": "Filesystem failures are false markers. The adapter rejects malformed JSON-compatible requests."
+  },
+  "upstream_source_files": ["index.js", "index.d.ts", "cli.js", "test.js"],
+  "excluded_surface": ["Docker daemon access", "other container runtimes", "arbitrary filesystem probing", "network access", "exact CLI output"]
+}

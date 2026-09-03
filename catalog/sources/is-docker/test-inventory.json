@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0",
+  "task_id": "is-docker",
+  "upstream": {
+    "frameworks": ["xo", "node:test"],
+    "command": "npm install --ignore-scripts --no-audit --no-fund && npm test",
+    "node_version": "24.19.0",
+    "npm_version": "11.17.0",
+    "exit_code": 0,
+    "node_tests_passed": 5,
+    "node_tests_failed": 0,
+    "log": ".nl2repo/authoring-work/node-author-discover-20260903T025741Z/is-docker/logs/upstream-node24-test.log"
+  },
+  "frozen_private_collection": {
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "expected_total": 15,
+    "boundary": "UID 10001 one-shot subprocess calling only the installed package root run export",
+    "groups": {
+      "adapter_validation": 3,
+      "marker_decision": 8,
+      "cache": 4
+    }
+  },
+  "selection": "The fixed denominator covers all three documented Docker markers, negative and combined cases, first-result caching, and bounded adapter validation without transferring filesystem paths into the candidate boundary."
+}

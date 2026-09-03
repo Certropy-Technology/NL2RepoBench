@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0",
+  "task_id": "is-docker",
+  "instruction": "catalog/sources/is-docker/instruction.md",
+  "expected_total": 15,
+  "groups": [
+    {
+      "leaf_ids": ["adapter-version", "adapter-rejects-operation", "adapter-rejects-malformed-signals"],
+      "promise": "bounded adapter metadata and strict request validation",
+      "section": "Named adapter run(request)"
+    },
+    {
+      "leaf_ids": ["detect-dockerenv", "detect-cgroup", "detect-mountinfo", "detect-none", "detect-all", "detect-dockerenv-with-negative-rest", "detect-cgroup-with-negative-rest", "detect-mountinfo-with-negative-rest"],
+      "promise": "all documented Docker markers and ordinary negative observations",
+      "section": "Default export isDocker()"
+    },
+    {
+      "leaf_ids": ["cache-true-stays-true", "cache-false-stays-false", "cache-first-marker-priority", "cache-second-markers-ignored"],
+      "promise": "first decision is preserved for a second observation in the same bounded session",
+      "section": "Default export isDocker()"
+    }
+  ],
+  "reverse_mapping": "Every frozen leaf belongs to one documented behavior group; the default export and adapter validation each have positive and negative coverage."
+}
