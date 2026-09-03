@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
-# Wrong-but-compiling candidate: every option becomes a no-op, Equal is always
-# false and Diff is a fixed string, so the frozen leaf must be collected and
-# reported as failed rather than skipped.
+# Panic control: the candidate panics on every call, so the bridge must
+# report a structured failure and the leaf must be collected as failed.
 cat > go.mod <<'MOD'
 module github.com/google/go-cmp
 
@@ -11,7 +10,7 @@ MOD
 : > go.sum
 mkdir -p cmp/cmpopts vendor
 : > vendor/modules.txt
-cat > cmp/stub.go <<'GO'
+cat > cmp/panic.go <<'GO'
 package cmp
 
 import "reflect"
@@ -20,21 +19,22 @@ type Option interface{}
 type Path []PathStep
 type PathStep interface{}
 
-func Equal(any, any, ...Option) bool           { return false }
-func Diff(any, any, ...Option) string          { return "forged" }
-func Ignore() Option                           { return struct{}{} }
+func Equal(any, any, ...Option) bool            { panic("control panic") }
+func Diff(any, any, ...Option) string           { panic("control panic") }
+func Ignore() Option                            { return struct{}{} }
 func FilterPath(func(Path) bool, Option) Option { return struct{}{} }
-func FilterValues(any, Option) Option          { return struct{}{} }
-func Transformer(string, any) Option           { return struct{}{} }
-func Comparer(any) Option                      { return struct{}{} }
-func Exporter(func(reflect.Type) bool) Option  { return struct{}{} }
-func AllowUnexported(...any) Option            { return struct{}{} }
+func FilterValues(any, Option) Option           { return struct{}{} }
+func Transformer(string, any) Option            { return struct{}{} }
+func Comparer(any) Option                       { return struct{}{} }
+func Exporter(func(reflect.Type) bool) Option   { return struct{}{} }
+func AllowUnexported(...any) Option             { return struct{}{} }
 GO
-cat > cmp/cmpopts/stub.go <<'GO'
+cat > cmp/cmpopts/panic.go <<'GO'
 package cmpopts
 
 import (
 	"time"
+
 
 	"github.com/google/go-cmp/cmp"
 )

@@ -1,73 +1,465 @@
 {
-  "schema_version": "1.0",
-  "task_id": "go-cmp",
-  "task_version": "0.1.0",
-  "terminal_kind": "awaiting-agent-run",
-  "status": "packaged",
-  "source_freeze": {
-    "upstream_url": "https://github.com/google/go-cmp",
-    "revision": "b133f1f1932e48f466f597a3346ce6f5a49a0dc1",
-    "source_digest": "sha256:0db58f99e9ff0c467df202b87cd72b97b8518b01ada824b8d9259e6a09b017fe",
-    "license_spdx": "BSD-3-Clause",
-    "license_sha256": "sha256:17b5d209ba8f9684257ecfcff87df6ceda6194143a8fbd074f29727cff6f0c40"
-  },
-  "environment": {
-    "runtime": "go1.26.5-X:nodwarf5",
-    "platform": "linux/amd64",
-    "cgo_enabled": false,
-    "base_image_digest": "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd",
-    "toolchain_lock": "toolchain.go.lock.toml",
-    "agent_network_mode": "no-network",
-    "verifier_network_mode": "no-network"
-  },
-  "dependency_closure": {
-    "kind": "go-module-bundle",
-    "digest": "sha256:1c4723da7fcbb24a329f7fbe98a320a462a0228b28e3845ed00bcfd78f091d69",
-    "size_bytes": 461,
-    "direct_dependencies": [],
-    "offline": true,
-    "remediation": "Added module.manifest.json and an empty go.sum to the dependency-free frozen module."
-  },
-  "frozen_collection": {
-    "framework": "go bridge contract",
-    "protocol": "custom-json-v1",
-    "leaf_ids": ["contract::public-api"],
-    "frozen_total": 1,
-    "private_bridge_cases": 10,
-    "upstream_baseline": {"go_test_exit_code": 0, "test_files": 10, "static_test_functions": 22}
+  "artifacts": {
+    "cas_root": ".nl2repo/artifacts/private",
+    "module_bundle": {
+      "digest": "sha256:1c4723da7fcbb24a329f7fbe98a320a462a0228b28e3845ed00bcfd78f091d69",
+      "size_bytes": 461,
+      "uri": "artifact://private/sha256:1c4723da7fcbb24a329f7fbe98a320a462a0228b28e3845ed00bcfd78f091d69",
+      "visibility": "private"
+    },
+    "oracle_bundle": {
+      "digest": "sha256:e73bfabf457d91d81a4648c7a2a28eb673f1b8226ffb3078ca42f3aa3f43e7eb",
+      "size_bytes": 774,
+      "uri": "artifact://private/sha256:e73bfabf457d91d81a4648c7a2a28eb673f1b8226ffb3078ca42f3aa3f43e7eb",
+      "visibility": "private"
+    },
+    "oracle_solve": ".nl2repo/authoring-final-20260904c/go-cmp/solution/solve.sh",
+    "verifier_bundle": {
+      "digest": "sha256:adea29f45f13e3ea4ec9370b3758f733dbf0e374c1710f278943f58b8fc3fcc4",
+      "size_bytes": 2590,
+      "uri": "artifact://private/sha256:adea29f45f13e3ea4ec9370b3758f733dbf0e374c1710f278943f58b8fc3fcc4",
+      "visibility": "private"
+    }
   },
   "bundle": {
-    "manifest_path": ".nl2repo/compiled/go-cmp-handoff/go-cmp/bundle.manifest.json",
-    "manifest_sha256": "sha256:e6744d87aef9cd468f338ecee60d6f4e4404412025b9c7cea0618e2b56630a9f",
-    "canonical_manifest_digest": "sha256:5df9d0e350ffb15045494c47457cf5c4fb45c587e59dd40119ee0c9c13df054b",
-    "toolchain_lock_digest": "sha256:baa477549dd86ccfe68422aafd900a2ab76f0b091de9a85f9db883f9d6a551a3"
-  },
-  "artifacts": {
-    "oracle_bundle": {"digest": "sha256:e73bfabf457d91d81a4648c7a2a28eb673f1b8226ffb3078ca42f3aa3f43e7eb", "size_bytes": 774},
-    "verifier_bundle": {"digest": "sha256:0933670d42b915888ab6b716db25fddfc5eafc76fb4c58a3a2239042c4e2d7b6", "size_bytes": 952},
-    "module_bundle": {"digest": "sha256:1c4723da7fcbb24a329f7fbe98a320a462a0228b28e3845ed00bcfd78f091d69", "size_bytes": 461}
+    "canonical_manifest_digest": "sha256:4f670a3f8d029bcee3bde28ce12049aff1775b00dcf72b6782ef9334d75b7b7e",
+    "closed_world_check": "every manifest file hash verified against disk; no extra, missing, or symlinked files",
+    "compile_command": "uv run nl2repo harbor compile catalog/sources/go-cmp --output .nl2repo/authoring-final-20260904c --toolchain toolchain.go.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+    "file_count": 67,
+    "manifest_path": ".nl2repo/authoring-final-20260904c/go-cmp/bundle.manifest.json",
+    "manifest_sha256": "sha256:3aad2e0e3a52d15cab520d3c029b577c4ad732d33ce0f5cef7646d47ec403bfb",
+    "mode": "production",
+    "toolchain_lock": "toolchain.go.lock.toml",
+    "toolchain_lock_digest": "sha256:3cf46e06953bf06e9d287ed8683391c0608f1409278095a638bb6226f8ab3336"
   },
   "commands": [
-    {"command": "git fetch --depth=1 origin b133f1f1932e48f466f597a3346ce6f5a49a0dc1", "exit_code": 0},
-    {"command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -count=1 -json ./...", "exit_code": 0, "summary": "Frozen upstream tests passed."},
-    {"command": "uv run nl2repo task validate-source catalog/sources/go-cmp", "exit_code": 0},
-    {"command": "uv run nl2repo task lint-network --tasks-root catalog/sources", "exit_code": 0, "summary": "0 errors; 175 pre-existing warnings across other tasks."},
-    {"command": "uv run nl2repo harbor compile catalog/sources/go-cmp --output .nl2repo/compiled/go-cmp-handoff --toolchain toolchain.go.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "exit_code": 0},
-    {"command": "gofmt -d catalog/sources/go-cmp/harbor/tests/bridge.go", "exit_code": 0},
-    {"command": "bash -n compiled test, solution, and control scripts; python3 -m py_compile compiled verifier runtime", "exit_code": 0},
-    {"command": "typed bridge contract against frozen source", "exit_code": 0, "summary": "10 cases passed."},
-    {"command": "docker build --platform linux/amd64 -f .nl2repo/compiled/go-cmp-handoff/go-cmp/tests/Dockerfile -t nl2repobench/go-cmp-verifier:authoring-final2 .nl2repo/compiled/go-cmp-handoff/go-cmp/tests", "exit_code": 0, "image_digest": "sha256:e3cf51ea496e549dbb965715333c75c01a42291f475b66371b733dc9c7501459"},
-    {"command": "docker run --rm --network none ... nl2repobench/go-cmp-verifier:authoring-final2 /tests/test.sh", "exit_code": 0, "summary": "valid=true, collected=1, passed=1, reward=1.0, public_network_available=false", "grading": ".nl2repo/authoring-work/go-author-discover-20260902T142804Z/go-cmp/verifier-smoke-logs-final3/verifier/grading.json", "network": ".nl2repo/authoring-work/go-author-discover-20260902T142804Z/go-cmp/verifier-smoke-logs-final3/verifier/network.json"},
-    {"command": "bounded go supervisor timeout and output probes", "exit_code": 0, "summary": "timeout returncode=124; output limit returncode=125 with 1024 bytes captured."},
-    {"command": "go vet ./...", "exit_code": 1, "failure_class": "upstream-test-warning", "summary": "Legacy test-only malformed struct tags and unkeyed literals; go test remains green."}
+    {
+      "command": "git init <checkout> && git remote add origin https://github.com/google/go-cmp && git fetch --depth 1 origin <revision> && git checkout --detach FETCH_HEAD && git rev-parse HEAD",
+      "exit_code": 0,
+      "log": "catalog/sources/go-cmp/evidence/source-freeze.json"
+    },
+    {
+      "command": "git archive --format=tar HEAD | sha256sum",
+      "exit_code": 0,
+      "expected": "0db58f99e9ff0c467df202b87cd72b97b8518b01ada824b8d9259e6a09b017fe"
+    },
+    {
+      "command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -count=1 ./...",
+      "exit_code": 0,
+      "log": ".nl2repo/authoring-work/go-packaged-repair-20260903T2118Z/go-cmp/upstream-go-test.log",
+      "summary": "upstream source-health baseline; not the task denominator"
+    },
+    {
+      "command": "uv run nl2repo task validate-source catalog/sources/go-cmp",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "log": ".nl2repo/evidence/network-policy-final3.log",
+      "summary": "433 tasks scanned, error_count 0, warning_count 178, no go-cmp findings"
+    },
+    {
+      "command": "uv run nl2repo harbor compile catalog/sources/go-cmp --output .nl2repo/authoring-final-20260904c --toolchain toolchain.go.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0,
+      "summary": "production closed-world compile"
+    },
+    {
+      "command": "uv run nl2repo harbor prepare-control <compiled-task> <kind> --output <control-root> --toolchain toolchain.go.lock.toml",
+      "exit_code": 0,
+      "kinds": [
+        "stub",
+        "forgery",
+        "install-failure",
+        "panic",
+        "hang",
+        "oversized-output",
+        "background-process"
+      ]
+    },
+    {
+      "command": "python3 .nl2repo/authoring-work/probe-go-cmp-controls.py",
+      "exit_code": 0,
+      "summary": "authoring-side debug probe only: reference passes all frozen assertions, each negative control compiles and fails the leaf, hang is bounded by the supervisor; never used as an official receipt"
+    },
+    {
+      "command": "bash .nl2repo/authoring-work/run-matrix-go-cmp-final3.sh",
+      "exit_code": 0,
+      "log": ".nl2repo/authoring-work/run-matrix-go-cmp-final3.status.log",
+      "summary": "official Harbor Oracle, empty, offline and 7 negative controls, one run directory per kind"
+    },
+    {
+      "command": "uv run pytest -q -p no:cacheprovider --no-cov tests/test_go_adapter.py",
+      "exit_code": 0,
+      "summary": "9 passed after re-pinning go_runtime_sha256 for the shared supervisor process-group fix"
+    },
+    {
+      "command": "uv run ruff check src/nl2repobench/verification/go_supervisor.py",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run mypy src/nl2repobench/verification/go_supervisor.py",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run pytest -q -p no:cacheprovider --no-cov tests",
+      "exit_code": 1,
+      "log": ".nl2repo/evidence/pytest-tests-final3.log",
+      "summary": "445 passed, 2 failed: the go-adapter toolchain-lock failure was resolved by re-pinning go_runtime_sha256 in this lane, and the two remaining failures are schemas/v1 regeneration drift caused by the shared install-failure expected_total ge=0 change synced into this worktree, not by go-cmp"
+    },
+    {
+      "command": "scripts/run_authoring_loop.py::_run_production_gate_check(worktree, 'go-cmp')",
+      "exit_code": 0,
+      "log": ".nl2repo/evidence/production-gates-check.json",
+      "summary": "status passed"
+    }
   ],
-  "oracle": {"status": "not-run-by-lane-policy", "valid": null, "passed": null, "frozen_total": null, "reward": null},
-  "controls": {"status": "not-run-by-lane-policy", "empty": null, "stub": null, "forgery": null, "timeout": "supervisor probe passed", "offline": "verifier smoke network receipt passed"},
+  "controls": {
+    "background-process": {
+      "bundle_manifest_sha256": "sha256:8d3fb4f8aeed2fc2bab34b8fcbd6e3c7d336ac265934162110ef873ca8577eca",
+      "collected": 1,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final3-20260904/go-cmp-background-process -a oracle --job-name go-cmp-background-process-final3-20260904 -o .nl2repo/runs/go-cmp-background-process-final3-20260904 --n-concurrent 1 --yes",
+      "denominator_collected": true,
+      "exit_code": 0,
+      "failed": 1,
+      "frozen_total": 1,
+      "grading": ".nl2repo/runs/go-cmp-background-process-final3-20260904/go-cmp-background-process-final3-20260904/go-cmp-background-process__6nbnyZc/verifier/grading.json",
+      "grading_sha256": "sha256:770db3ca92e7856ca2aafafc513a44b9f7287cc614932077530145c6ab4ec74d",
+      "harbor_version": "0.21.0",
+      "job_result": ".nl2repo/runs/go-cmp-background-process-final3-20260904/go-cmp-background-process-final3-20260904/result.json",
+      "network": ".nl2repo/runs/go-cmp-background-process-final3-20260904/go-cmp-background-process-final3-20260904/go-cmp-background-process__6nbnyZc/verifier/network.json",
+      "network_sha256": "sha256:00c8857e1533a7e3a8bbbfd5ce4244699b0af00ca2d8c874c68bc655c08848c0",
+      "passed": 0,
+      "public_network_available": false,
+      "result": ".nl2repo/runs/go-cmp-background-process-final3-20260904/go-cmp-background-process-final3-20260904/go-cmp-background-process__6nbnyZc/result.json",
+      "reward": 0.0,
+      "reward_file": ".nl2repo/runs/go-cmp-background-process-final3-20260904/go-cmp-background-process-final3-20260904/go-cmp-background-process__6nbnyZc/verifier/reward.json",
+      "trial_dir": ".nl2repo/runs/go-cmp-background-process-final3-20260904/go-cmp-background-process-final3-20260904/go-cmp-background-process__6nbnyZc",
+      "valid": true
+    },
+    "empty": {
+      "allowed_zero_zero": true,
+      "bundle_manifest_sha256": "sha256:3aad2e0e3a52d15cab520d3c029b577c4ad732d33ce0f5cef7646d47ec403bfb",
+      "collected": 0,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-final-20260904c/go-cmp -a nop --job-name go-cmp-empty-final3-20260904 -o .nl2repo/runs/go-cmp-empty-final3-20260904 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "failed": 0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "frozen_total": 0,
+      "grading": ".nl2repo/runs/go-cmp-empty-final3-20260904/go-cmp-empty-final3-20260904/go-cmp__deapBNC/verifier/grading.json",
+      "grading_sha256": "sha256:77e86e68966384f3907b8e4c7d8a0e3fb4892de201dca2e6239603060861e416",
+      "harbor_version": "0.21.0",
+      "job_result": ".nl2repo/runs/go-cmp-empty-final3-20260904/go-cmp-empty-final3-20260904/result.json",
+      "network": ".nl2repo/runs/go-cmp-empty-final3-20260904/go-cmp-empty-final3-20260904/go-cmp__deapBNC/verifier/network.json",
+      "network_sha256": "sha256:d9e31f0e87295e4cf7625c75e6b51395f92367d1c325edfb2ec6537c66d72a61",
+      "passed": 0,
+      "public_network_available": false,
+      "result": ".nl2repo/runs/go-cmp-empty-final3-20260904/go-cmp-empty-final3-20260904/go-cmp__deapBNC/result.json",
+      "reward": 0.0,
+      "reward_file": ".nl2repo/runs/go-cmp-empty-final3-20260904/go-cmp-empty-final3-20260904/go-cmp__deapBNC/verifier/reward.json",
+      "trial_dir": ".nl2repo/runs/go-cmp-empty-final3-20260904/go-cmp-empty-final3-20260904/go-cmp__deapBNC",
+      "valid": true
+    },
+    "forgery": {
+      "bundle_manifest_sha256": "sha256:3b8d596481c8baab1135aaf15c9fc2230843ec3c8ce802ae64a8368a1142d478",
+      "collected": 1,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final3-20260904/go-cmp-forgery -a oracle --job-name go-cmp-forgery-final3-20260904 -o .nl2repo/runs/go-cmp-forgery-final3-20260904 --n-concurrent 1 --yes",
+      "denominator_collected": true,
+      "exit_code": 0,
+      "failed": 1,
+      "frozen_total": 1,
+      "grading": ".nl2repo/runs/go-cmp-forgery-final3-20260904/go-cmp-forgery-final3-20260904/go-cmp-forgery__uHVT8Jy/verifier/grading.json",
+      "grading_sha256": "sha256:770db3ca92e7856ca2aafafc513a44b9f7287cc614932077530145c6ab4ec74d",
+      "harbor_version": "0.21.0",
+      "job_result": ".nl2repo/runs/go-cmp-forgery-final3-20260904/go-cmp-forgery-final3-20260904/result.json",
+      "network": ".nl2repo/runs/go-cmp-forgery-final3-20260904/go-cmp-forgery-final3-20260904/go-cmp-forgery__uHVT8Jy/verifier/network.json",
+      "network_sha256": "sha256:8b4a33a34913ff0b64f0a811f62d57ff30efb1b537ce07c09a1a370c708f46ed",
+      "passed": 0,
+      "public_network_available": false,
+      "result": ".nl2repo/runs/go-cmp-forgery-final3-20260904/go-cmp-forgery-final3-20260904/go-cmp-forgery__uHVT8Jy/result.json",
+      "reward": 0.0,
+      "reward_file": ".nl2repo/runs/go-cmp-forgery-final3-20260904/go-cmp-forgery-final3-20260904/go-cmp-forgery__uHVT8Jy/verifier/reward.json",
+      "trial_dir": ".nl2repo/runs/go-cmp-forgery-final3-20260904/go-cmp-forgery-final3-20260904/go-cmp-forgery__uHVT8Jy",
+      "valid": true
+    },
+    "hang": {
+      "bundle_manifest_sha256": "sha256:41673c37f3b9e1ed98baebbbbd812df40ece2bc4aa806a89f15ec4ffd2289bf6",
+      "collected": 1,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final3-20260904/go-cmp-hang -a oracle --job-name go-cmp-hang-final3-20260904 -o .nl2repo/runs/go-cmp-hang-final3-20260904 --n-concurrent 1 --yes",
+      "denominator_collected": true,
+      "exit_code": 0,
+      "failed": 1,
+      "frozen_total": 1,
+      "grading": ".nl2repo/runs/go-cmp-hang-final3-20260904/go-cmp-hang-final3-20260904/go-cmp-hang__FgiSc88/verifier/grading.json",
+      "grading_sha256": "sha256:770db3ca92e7856ca2aafafc513a44b9f7287cc614932077530145c6ab4ec74d",
+      "harbor_version": "0.21.0",
+      "job_result": ".nl2repo/runs/go-cmp-hang-final3-20260904/go-cmp-hang-final3-20260904/result.json",
+      "network": ".nl2repo/runs/go-cmp-hang-final3-20260904/go-cmp-hang-final3-20260904/go-cmp-hang__FgiSc88/verifier/network.json",
+      "network_sha256": "sha256:de5d0b2b2e79f0042be8f94b8cdd6483390774e81d52ee60422898319639abca",
+      "passed": 0,
+      "public_network_available": false,
+      "result": ".nl2repo/runs/go-cmp-hang-final3-20260904/go-cmp-hang-final3-20260904/go-cmp-hang__FgiSc88/result.json",
+      "reward": 0.0,
+      "reward_file": ".nl2repo/runs/go-cmp-hang-final3-20260904/go-cmp-hang-final3-20260904/go-cmp-hang__FgiSc88/verifier/reward.json",
+      "trial_dir": ".nl2repo/runs/go-cmp-hang-final3-20260904/go-cmp-hang-final3-20260904/go-cmp-hang__FgiSc88",
+      "valid": true
+    },
+    "install-failure": {
+      "allowed_zero_zero": true,
+      "bundle_manifest_sha256": "sha256:807a70efc2a4e6522ccf7b8640eaac36e4c463e4d150ab7850a29b1b3b340a97",
+      "collected": 0,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final3-20260904/go-cmp-install-failure -a oracle --job-name go-cmp-install-failure-final3-20260904 -o .nl2repo/runs/go-cmp-install-failure-final3-20260904 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "failed": 0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "frozen_total": 0,
+      "grading": ".nl2repo/runs/go-cmp-install-failure-final3-20260904/go-cmp-install-failure-final3-20260904/go-cmp-install-failure__UY4rbft/verifier/grading.json",
+      "grading_sha256": "sha256:77e86e68966384f3907b8e4c7d8a0e3fb4892de201dca2e6239603060861e416",
+      "harbor_version": "0.21.0",
+      "job_result": ".nl2repo/runs/go-cmp-install-failure-final3-20260904/go-cmp-install-failure-final3-20260904/result.json",
+      "network": ".nl2repo/runs/go-cmp-install-failure-final3-20260904/go-cmp-install-failure-final3-20260904/go-cmp-install-failure__UY4rbft/verifier/network.json",
+      "network_sha256": "sha256:b39691f5f499ca4fbe6bfb39d405542c04323b3e4736db4f219e5e23e8e9576e",
+      "passed": 0,
+      "public_network_available": false,
+      "result": ".nl2repo/runs/go-cmp-install-failure-final3-20260904/go-cmp-install-failure-final3-20260904/go-cmp-install-failure__UY4rbft/result.json",
+      "reward": 0.0,
+      "reward_file": ".nl2repo/runs/go-cmp-install-failure-final3-20260904/go-cmp-install-failure-final3-20260904/go-cmp-install-failure__UY4rbft/verifier/reward.json",
+      "trial_dir": ".nl2repo/runs/go-cmp-install-failure-final3-20260904/go-cmp-install-failure-final3-20260904/go-cmp-install-failure__UY4rbft",
+      "valid": true
+    },
+    "offline": {
+      "bundle_manifest_sha256": "sha256:3aad2e0e3a52d15cab520d3c029b577c4ad732d33ce0f5cef7646d47ec403bfb",
+      "collected": 1,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-final-20260904c/go-cmp -a oracle --allow-agent-host github.com --job-name go-cmp-offline-final3-20260904 -o .nl2repo/runs/go-cmp-offline-final3-20260904 --n-concurrent 1 --yes",
+      "denominator_collected": true,
+      "exit_code": 0,
+      "failed": 0,
+      "frozen_total": 1,
+      "grading": ".nl2repo/runs/go-cmp-offline-final3-20260904/go-cmp-offline-final3-20260904/go-cmp__56oEdCr/verifier/grading.json",
+      "grading_sha256": "sha256:b00d7a553a2fddacea6fa04621bafef45310450fbfe030c859f754ad2e6f6933",
+      "harbor_version": "0.21.0",
+      "job_result": ".nl2repo/runs/go-cmp-offline-final3-20260904/go-cmp-offline-final3-20260904/result.json",
+      "network": ".nl2repo/runs/go-cmp-offline-final3-20260904/go-cmp-offline-final3-20260904/go-cmp__56oEdCr/verifier/network.json",
+      "network_sha256": "sha256:a5fe15ed64dfd09f507732ad6c297c97bcfea40712138630b8e6533b18923dda",
+      "passed": 1,
+      "public_network_available": false,
+      "result": ".nl2repo/runs/go-cmp-offline-final3-20260904/go-cmp-offline-final3-20260904/go-cmp__56oEdCr/result.json",
+      "reward": 1.0,
+      "reward_file": ".nl2repo/runs/go-cmp-offline-final3-20260904/go-cmp-offline-final3-20260904/go-cmp__56oEdCr/verifier/reward.json",
+      "trial_dir": ".nl2repo/runs/go-cmp-offline-final3-20260904/go-cmp-offline-final3-20260904/go-cmp__56oEdCr",
+      "valid": true
+    },
+    "oversized-output": {
+      "bundle_manifest_sha256": "sha256:1942d83ae40372c628f056aa5f93476f00c98513fee46ae33d4a92b22db3b09a",
+      "collected": 1,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final3-20260904/go-cmp-oversized-output -a oracle --job-name go-cmp-oversized-output-final3-20260904 -o .nl2repo/runs/go-cmp-oversized-output-final3-20260904 --n-concurrent 1 --yes",
+      "denominator_collected": true,
+      "exit_code": 0,
+      "failed": 1,
+      "frozen_total": 1,
+      "grading": ".nl2repo/runs/go-cmp-oversized-output-final3-20260904/go-cmp-oversized-output-final3-20260904/go-cmp-oversized-output__MnVVwuK/verifier/grading.json",
+      "grading_sha256": "sha256:770db3ca92e7856ca2aafafc513a44b9f7287cc614932077530145c6ab4ec74d",
+      "harbor_version": "0.21.0",
+      "job_result": ".nl2repo/runs/go-cmp-oversized-output-final3-20260904/go-cmp-oversized-output-final3-20260904/result.json",
+      "network": ".nl2repo/runs/go-cmp-oversized-output-final3-20260904/go-cmp-oversized-output-final3-20260904/go-cmp-oversized-output__MnVVwuK/verifier/network.json",
+      "network_sha256": "sha256:00c8857e1533a7e3a8bbbfd5ce4244699b0af00ca2d8c874c68bc655c08848c0",
+      "passed": 0,
+      "public_network_available": false,
+      "result": ".nl2repo/runs/go-cmp-oversized-output-final3-20260904/go-cmp-oversized-output-final3-20260904/go-cmp-oversized-output__MnVVwuK/result.json",
+      "reward": 0.0,
+      "reward_file": ".nl2repo/runs/go-cmp-oversized-output-final3-20260904/go-cmp-oversized-output-final3-20260904/go-cmp-oversized-output__MnVVwuK/verifier/reward.json",
+      "trial_dir": ".nl2repo/runs/go-cmp-oversized-output-final3-20260904/go-cmp-oversized-output-final3-20260904/go-cmp-oversized-output__MnVVwuK",
+      "valid": true
+    },
+    "panic": {
+      "bundle_manifest_sha256": "sha256:95ad42110e7d98b8493ff41a8887c51a06e25f6ccf99276ee3933c8b7236a072",
+      "collected": 1,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final3-20260904/go-cmp-panic -a oracle --job-name go-cmp-panic-final3-20260904 -o .nl2repo/runs/go-cmp-panic-final3-20260904 --n-concurrent 1 --yes",
+      "denominator_collected": true,
+      "exit_code": 0,
+      "failed": 1,
+      "frozen_total": 1,
+      "grading": ".nl2repo/runs/go-cmp-panic-final3-20260904/go-cmp-panic-final3-20260904/go-cmp-panic__fEbcrKK/verifier/grading.json",
+      "grading_sha256": "sha256:770db3ca92e7856ca2aafafc513a44b9f7287cc614932077530145c6ab4ec74d",
+      "harbor_version": "0.21.0",
+      "job_result": ".nl2repo/runs/go-cmp-panic-final3-20260904/go-cmp-panic-final3-20260904/result.json",
+      "network": ".nl2repo/runs/go-cmp-panic-final3-20260904/go-cmp-panic-final3-20260904/go-cmp-panic__fEbcrKK/verifier/network.json",
+      "network_sha256": "sha256:92064b04b730b28bb5fc3d457da60ea3031656ecce76bacd887fb9ff49019522",
+      "passed": 0,
+      "public_network_available": false,
+      "result": ".nl2repo/runs/go-cmp-panic-final3-20260904/go-cmp-panic-final3-20260904/go-cmp-panic__fEbcrKK/result.json",
+      "reward": 0.0,
+      "reward_file": ".nl2repo/runs/go-cmp-panic-final3-20260904/go-cmp-panic-final3-20260904/go-cmp-panic__fEbcrKK/verifier/reward.json",
+      "trial_dir": ".nl2repo/runs/go-cmp-panic-final3-20260904/go-cmp-panic-final3-20260904/go-cmp-panic__fEbcrKK",
+      "valid": true
+    },
+    "stub": {
+      "bundle_manifest_sha256": "sha256:37b289d0e4b3f507840cc4a5f02c753957c750bd68522056432f366d53502528",
+      "collected": 1,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final3-20260904/go-cmp-stub -a oracle --job-name go-cmp-stub-final3-20260904 -o .nl2repo/runs/go-cmp-stub-final3-20260904 --n-concurrent 1 --yes",
+      "denominator_collected": true,
+      "exit_code": 0,
+      "failed": 1,
+      "frozen_total": 1,
+      "grading": ".nl2repo/runs/go-cmp-stub-final3-20260904/go-cmp-stub-final3-20260904/go-cmp-stub__amchNUH/verifier/grading.json",
+      "grading_sha256": "sha256:770db3ca92e7856ca2aafafc513a44b9f7287cc614932077530145c6ab4ec74d",
+      "harbor_version": "0.21.0",
+      "job_result": ".nl2repo/runs/go-cmp-stub-final3-20260904/go-cmp-stub-final3-20260904/result.json",
+      "network": ".nl2repo/runs/go-cmp-stub-final3-20260904/go-cmp-stub-final3-20260904/go-cmp-stub__amchNUH/verifier/network.json",
+      "network_sha256": "sha256:a5fe15ed64dfd09f507732ad6c297c97bcfea40712138630b8e6533b18923dda",
+      "passed": 0,
+      "public_network_available": false,
+      "result": ".nl2repo/runs/go-cmp-stub-final3-20260904/go-cmp-stub-final3-20260904/go-cmp-stub__amchNUH/result.json",
+      "reward": 0.0,
+      "reward_file": ".nl2repo/runs/go-cmp-stub-final3-20260904/go-cmp-stub-final3-20260904/go-cmp-stub__amchNUH/verifier/reward.json",
+      "trial_dir": ".nl2repo/runs/go-cmp-stub-final3-20260904/go-cmp-stub-final3-20260904/go-cmp-stub__amchNUH",
+      "valid": true
+    }
+  },
+  "dependency_closure": {
+    "contract": "Locked Go module bundle (go.mod, empty go.sum, module.manifest.json, vendor/modules.txt) is copied into the image at /opt/go-module-bundle and materialized into the candidate workspace by the verifier, which builds the candidate with -mod=vendor and GOPROXY=off.",
+    "digest": "sha256:1c4723da7fcbb24a329f7fbe98a320a462a0228b28e3845ed00bcfd78f091d69",
+    "direct_dependencies": [],
+    "kind": "go-module-bundle",
+    "offline": true,
+    "size_bytes": 461
+  },
+  "environment": {
+    "agent_runtime_image": "nl2repobench/openhands-sdk-fork:930e9b1da-bookworm",
+    "agent_runtime_image_id": "sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f",
+    "agent_timeout_sec": 900.0,
+    "base_image": "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd",
+    "base_image_digest": "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd",
+    "candidate_total_timeout_sec": 300.0,
+    "cgo_enabled": false,
+    "contract_source_status": "known",
+    "cpus": 1,
+    "dependencies_status": "known",
+    "go_version": "1.26.5",
+    "language": "go",
+    "memory_mb": 4096,
+    "os_name": "debian-bookworm",
+    "platform": "linux/amd64",
+    "runtime_identity": "go/go-modules",
+    "toolchain_lock": "toolchain.go.lock.toml",
+    "toolchain_lock_digest": "sha256:3cf46e06953bf06e9d287ed8683391c0608f1409278095a638bb6226f8ab3336",
+    "verifier_timeout_sec": 600.0
+  },
+  "evidence_files": [
+    "evidence/source-freeze.json",
+    "evidence/api-inventory.json",
+    "evidence/test-inventory.json",
+    "evidence/traceability.json",
+    "evidence/remediation-validation.txt"
+  ],
+  "frozen_collection": {
+    "bridge_operations": 16,
+    "expected_total_source": "frozen-collection",
+    "frozen_total": 1,
+    "leaf_ids": [
+      "contract::public-api"
+    ],
+    "lifecycle_status": "controls-passed",
+    "metric_contract": "fixed-test-pass-rate-v1",
+    "policy": "single all-or-nothing contract leaf; every negative control must still collect the frozen leaf except the allowed install-failure 0/0 exception",
+    "private_bridge_assertions": 38
+  },
+  "gates_receipt": ".nl2repo/authoring-production-gates.json",
+  "gates_receipt_sha256": "sha256:8c4dc0bc9af6c162723f8070a6fc275174cbbc325db4cb381bc6050e0c67baf4",
+  "generated_at": "2026-09-03T20:25:39Z",
+  "harbor_version": "0.21.0",
+  "network_policy": {
+    "agent_allowed_hosts": [],
+    "agent_network_mode": "no-network",
+    "lint_network": {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "error_count": 0,
+      "exit_code": 0,
+      "go_cmp_findings": 0,
+      "log": ".nl2repo/evidence/network-policy-final3.log",
+      "tasks_scanned": 433,
+      "tasks_with_explicit_policy": 433,
+      "warning_count": 178
+    },
+    "mode": "no-network",
+    "offline_dependencies": "private-artifact",
+    "oracle_only_source_host_authorization": "github.com",
+    "reason": "Candidate and verifier execution use the private pre-materialized Go module closure and run without network; only the trusted Oracle receives a run-scoped source-host authorization.",
+    "reference_source_fetch": "forbidden",
+    "verifier_network_mode": "no-network"
+  },
+  "not_claimed": [
+    "model Agent evaluation",
+    "blind/spec review",
+    "traceability review sign-off",
+    "pilot",
+    "publish",
+    "legacy-harness or cross-version parity",
+    "OSS upload"
+  ],
+  "oracle": {
+    "bundle_manifest_sha256": "sha256:3aad2e0e3a52d15cab520d3c029b577c4ad732d33ce0f5cef7646d47ec403bfb",
+    "collected": 1,
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-final-20260904c/go-cmp -a oracle --allow-agent-host github.com --job-name go-cmp-oracle-final3-20260904 -o .nl2repo/runs/go-cmp-oracle-final3-20260904 --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "failed": null,
+    "frozen_total": 1,
+    "grading": ".nl2repo/runs/go-cmp-oracle-final3-20260904/go-cmp-oracle-final3-20260904/go-cmp__bXNdYnf/verifier/grading.json",
+    "grading_sha256": "sha256:b00d7a553a2fddacea6fa04621bafef45310450fbfe030c859f754ad2e6f6933",
+    "harbor_version": "0.21.0",
+    "job_result": ".nl2repo/runs/go-cmp-oracle-final3-20260904/go-cmp-oracle-final3-20260904/result.json",
+    "network": ".nl2repo/runs/go-cmp-oracle-final3-20260904/go-cmp-oracle-final3-20260904/go-cmp__bXNdYnf/verifier/network.json",
+    "network_sha256": "sha256:de5d0b2b2e79f0042be8f94b8cdd6483390774e81d52ee60422898319639abca",
+    "passed": 1,
+    "public_network_available": false,
+    "result": ".nl2repo/runs/go-cmp-oracle-final3-20260904/go-cmp-oracle-final3-20260904/go-cmp__bXNdYnf/result.json",
+    "reward": 1.0,
+    "reward_file": ".nl2repo/runs/go-cmp-oracle-final3-20260904/go-cmp-oracle-final3-20260904/go-cmp__bXNdYnf/verifier/reward.json",
+    "trial_dir": ".nl2repo/runs/go-cmp-oracle-final3-20260904/go-cmp-oracle-final3-20260904/go-cmp__bXNdYnf",
+    "valid": true
+  },
+  "oracle_solve_contract": {
+    "run_scoped_host_authorization": "github.com (Oracle and offline runs only)",
+    "script": ".nl2repo/authoring-final-20260904c/go-cmp/solution/solve.sh",
+    "steps": [
+      "fetch the exact frozen revision with --depth 1",
+      "assert git rev-parse HEAD equals the source revision",
+      "git archive --format=tar and verify sha256 against source_digest",
+      "replace the workspace, then apply only the documented go directive adaptation"
+    ]
+  },
   "residual_risks": [
-    "Official Harbor Oracle and compiled empty/stub/forgery controls require integrator orchestration and are intentionally unexecuted in this lane.",
-    "Oracle solve applies a directive-only go.mod adaptation and creates an empty go.sum because the frozen revision declares Go 1.21 and omits go.sum.",
-    "The public bridge covers bounded JSON-serializable behavior; callbacks, custom reporters, unsafe internals, and timing-sensitive examples are excluded.",
-    "Docker emits the non-blocking FromPlatformFlagConstDisallowed warning for the digest-pinned linux/amd64 base image."
+    "One all-or-nothing frozen leaf keeps task_score binary; finer partial credit needs a contract version bump rather than a silent change.",
+    "Oracle solve applies the documented directive-only go.mod adaptation and writes an empty go.sum after strict archive digest verification.",
+    "Bridge-visible behaviour only: reporter callbacks, unsafe helpers, AcyclicTransformer and Ignore* helpers, monotonic-clock timing and performance are out of scope per evidence/traceability.json.",
+    "Two pre-existing shared schema-export test failures remain for the integrator (regenerate schemas/v1 after the synced expected_total ge=0 change).",
+    "Docker prints the non-blocking FromPlatformFlagConstDisallowed warning for the digest-pinned linux/amd64 base image."
   ],
-  "evidence_files": ["evidence/source-freeze.json", "evidence/api-inventory.json", "evidence/test-inventory.json", "evidence/traceability.json", "evidence/remediation-validation.txt"]
+  "schema_version": "1.0",
+  "source_freeze": {
+    "license_sha256": "sha256:17b5d209ba8f9684257ecfcff87df6ceda6194143a8fbd074f29727cff6f0c40",
+    "license_spdx": "BSD-3-Clause",
+    "revision": "b133f1f1932e48f466f597a3346ce6f5a49a0dc1",
+    "source_digest": "sha256:0db58f99e9ff0c467df202b87cd72b97b8518b01ada824b8d9259e6a09b017fe",
+    "status": "known",
+    "upstream_url": "https://github.com/google/go-cmp",
+    "verification": "git fetch --depth 1 of the exact revision, rev-parse HEAD assertion, and 'git archive --format=tar HEAD | sha256sum' recomputed in this attempt"
+  },
+  "status": "controls-passed",
+  "task_id": "go-cmp",
+  "task_version": "0.1.0",
+  "terminal_kind": "valid",
+  "verifier": {
+    "boundary": "The verifier installs a read-only copy of the typed bridge into the candidate module, builds it as a candidate-owned subprocess under UID, CPU, wall-time, output and process-group limits, and never imports candidate packages into the trusted Python process.",
+    "bundle_digest": "sha256:adea29f45f13e3ea4ec9370b3758f733dbf0e374c1710f278943f58b8fc3fcc4",
+    "candidate_cannot_write_trusted_reports": "proved by the forgery control, which overwrites /logs/verifier/{reward,grading,junit,collection} and still receives the verifier-owned reward 0.0",
+    "entrypoint": "contract.sh",
+    "leaf_ids": [
+      "contract::public-api"
+    ],
+    "protocol": "custom-json-v1",
+    "separate": true
+  }
 }

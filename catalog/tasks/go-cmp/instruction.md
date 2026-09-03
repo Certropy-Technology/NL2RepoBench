@@ -3,10 +3,11 @@
 ## Project Description
 
 Create the pure-Go `github.com/google/go-cmp/cmp` and
-`github.com/google/go-cmp/cmp/cmpopts` packages at repository root. The
-library compares Go values recursively and provides options for semantic
-comparison. The task exercises deterministic equality, human-readable diffs,
-reflection-safe handling of unexported fields, and common `cmpopts` options
+`github.com/google/go-cmp/cmp/cmpopts` packages at the repository root. The
+library compares Go values recursively and provides options that change the
+meaning of equality. The task exercises deterministic equality, human-readable
+diffs, reflection-safe handling of unexported fields, path and value filtering,
+transformations, custom comparers, and the common `cmpopts` helpers, all
 through a typed subprocess bridge.
 
 ## Supports
@@ -15,8 +16,7 @@ through a typed subprocess bridge.
   whose module path is `github.com/google/go-cmp`.
 - Offline builds with `GOOS=linux GOARCH=amd64 GOWORK=off GOPROXY=off
   GOSUMDB=off GOTOOLCHAIN=local` and `-mod=vendor`. There are no external
-  modules in this frozen revision, but include `go.sum` and a valid vendor
-  closure.
+  modules in this frozen revision, but keep `go.sum` and a valid vendor closure.
 - Pure Go only. Do not use network services, cgo, plugins, generated code, or
   global mutable state to answer bridge requests.
 - The bridge invokes only bounded JSON values and uses one request per line.
@@ -39,19 +39,37 @@ func Exporter(f func(reflect.Type) bool) Option
 func AllowUnexported(types ...any) Option
 ```
 
-`Equal` recursively compares values and returns whether they are semantically
-equal. `Diff` returns a pseudo-Go textual difference (`-` for values removed
-from the first input and `+` for values added to the second); equal values
-produce an empty string. Options are immutable comparison configuration. A
-comparer or transformer must be deterministic and type-compatible. An
-ambiguous set of applicable options, invalid callbacks, or an attempt to
-compare unexported fields without an `Ignore`/`Exporter` policy may panic, as
-documented by the upstream package.
+`Equal` reports whether two values are semantically equal and `Diff` returns a
+pseudo-Go textual difference (`-` marks a value removed from the first input,
+`+` marks a value added by the second). Equal values produce an empty `Diff`.
+A non-empty `Diff` names the path of every difference, so a struct field named
+`Name`, a map key such as `"env"`, and a slice element all appear in the
+rendered text together with their enclosing field names.
+
+Options are immutable comparison configuration. The signature of each
+option constructor is part of the contract:
+
+- `Comparer(f)` accepts `func(T, T) bool` and defines equality for values
+  assignable to `T`. The function must be symmetric, deterministic, and pure.
+- `Transformer(name, f)` accepts `func(T) R`, converts values of type `T` to
+  type `R`, and compares the results. It must not mutate `T`. `name` labels the
+  transformation step in the path and diff output.
+- `FilterPath(f, opt)` applies `opt` only at paths where `f` returns true for
+  the current `Path`. `FilterValues(f, opt)` applies `opt` only to value pairs
+  where `f`, a `func(T, T) bool`, returns true. In both cases `opt` may be
+  `Ignore`, `Transformer`, `Comparer`, `Options`, or an already filtered option.
+- `Ignore` causes every comparison it is applied to to report equality. It is
+  only meaningful combined with `FilterPath` or `FilterValues`; passing an
+  unfiltered `Ignore()` to `Equal` or `Diff` is a programming error and panics.
+- `AllowUnexported(types...)` permits comparison of unexported fields for the
+  given struct types only. `Exporter(f)` permits unexported-field introspection
+  for every type `t` where `f(t)` returns true. Without such a policy,
+  comparing a value that contains unexported fields panics.
 
 `Path` is a read-only sequence of `PathStep` values. `PathStep` implementations
 include `StructField`, `SliceIndex`, `MapIndex`, `Indirect`, `TypeAssertion`,
-and `Transform`. Their `String`, `Type`, and `Values` methods expose the
-current traversal location to a path filter or reporter.
+and `Transform`; their `String`, `Type`, and `Values` methods expose the current
+traversal location to a path filter.
 
 The helper package is imported as
 `github.com/google/go-cmp/cmp/cmpopts` and must provide these constructors:
@@ -67,24 +85,43 @@ func SortSlices(lessOrCompareFunc any) cmp.Option
 func SortMaps(lessOrCompareFunc any) cmp.Option
 ```
 
-`EquateEmpty` equates nil and empty maps/slices of the same type.
-`EquateApprox` accepts non-negative fraction and margin and compares finite
-float32/float64 values within `max(fraction*min(abs(x),abs(y)), margin)`.
-`EquateNaNs` treats two NaN values as equal. `SortSlices` and `SortMaps` copy
-and stably sort values using a deterministic less or three-way compare
-function before recursive comparison. Invalid option arguments must preserve
-the package's documented panic behavior.
+- `EquateEmpty` equates nil and empty maps and slices of the same type.
+- `EquateApprox` accepts non-negative `fraction` and `margin` and reports
+  finite `float32`/`float64` values equal when
+  `|x-y| <= max(fraction*min(|x|,|y|), margin)`. It is not used when either
+  value is NaN or infinite.
+- `EquateNaNs` reports two NaN values as equal. It combines with `EquateApprox`.
+- `EquateApproxTime` accepts a non-negative margin and reports two non-zero
+  `time.Time` values equal when they are within that margin of each other.
+- `EquateErrors` reports two non-nil errors equal when `errors.Is` matches them
+  in either direction, so a wrapped error equals its target; two unrelated
+  error values stay unequal. A nil error never equals a non-nil error.
+- `EquateComparable(types...)` reports values of the given comparable types
+  equal using the `==` operator instead of recursing into their fields.
+- `SortSlices` and `SortMaps` copy and stably sort the elements or entries with
+  a deterministic less or three-way compare function before comparing.
 
-The evaluator uses these bridge operations: `equal_profiles`, `equal_floats`,
-`equal_strings_sorted`, `equal_maps_sorted`, `diff_values`, and
-`equal_exported`. Their JSON argument and result shapes are private test
-details; implement the public Go APIs rather than matching example strings.
+Invalid option arguments (negative fraction, margin, or a malformed comparer)
+must preserve the package's documented panic behavior.
+
+The evaluator drives these bridge operations: `equal_profiles`,
+`equal_floats`, `equal_strings_sorted`, `equal_maps_sorted`, `diff_values`,
+`diff_profile_paths`, `equal_exported`, `equal_exporter`,
+`equal_ignore_unfiltered`, `equal_comparable`, `equal_filter_path`,
+`equal_filter_values`, `equal_transformer`, `equal_comparer`, `equal_errors`,
+and `equal_times`. Only the public Go APIs above determine their results; do
+not match example strings or hard-code evaluator fixtures.
 
 ## Implementation Notes
 
 Preserve recursive behavior for structs, arrays, slices, maps, pointers,
-interfaces, and scalar values. Keep map and slice nil-ness meaningful unless
-an option changes it. Do not hard-code evaluator fixtures or emit a trusted
-reward/report from candidate code. The bridge is the only adapter boundary:
-the verifier runs it as a separate candidate-owned subprocess and does not
-import candidate packages into the trusted Python process.
+interfaces, and scalar values. Keep map and slice nil-ness meaningful unless an
+option changes it. The option set applied to a value pair must be
+unambiguous: an applicable `Comparer` or `Transformer` for the concrete type is
+used, and conflicting options for the same type panic as documented. Do not
+hard-code evaluator fixtures or emit a trusted reward/report from candidate
+code. The bridge is the only adapter boundary: the verifier installs its own
+read-only copy of the bridge, builds it as `cmd/bridge` inside the candidate
+module, and runs it as a separate candidate-owned subprocess with bounded CPU,
+wall time, output, and process-group cleanup. The verifier never imports
+candidate packages into the trusted Python process.

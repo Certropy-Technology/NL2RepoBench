@@ -1,18 +1,144 @@
-go-cmp remediation record
+go-cmp remediation record (attempt: go-packaged-repair-20260903T2118Z / final3-20260904)
 
-Source freeze:
-- `git fetch --depth=1 origin b133f1f1932e48f466f597a3346ce6f5a49a0dc1` exit 0.
-- Resolved HEAD equals b133f1f1932e48f466f597a3346ce6f5a49a0dc1.
-- `git archive --format=tar HEAD | sha256sum` exit 0; source digest is sha256:0db58f99e9ff0c467df202b87cd72b97b8518b01ada824b8d9259e6a09b017fe.
-- LICENSE is BSD-3-Clause; license SHA-256 is sha256:17b5d209ba8f9684257ecfcff87df6ceda6194143a8fbd074f29727cff6f0c40.
+Lane mode: author-one repair of an existing packaged candidate. This lane owns the
+official Harbor Oracle and every required negative/offline control. No model Agent
+evaluation was run and nothing was uploaded to OSS.
 
-Dependency/environment remediation:
-- Frozen module has no `require` directives. A private module bundle was created with go.mod, empty go.sum, vendor/modules.txt, and module.manifest.json.
-- First production compile failed because the archive omitted module.manifest.json (exit 1, invalid Go module closure). The manifest was added, the archive was rehashed as sha256:1c4723da7fcbb24a329f7fbe98a320a462a0228b28e3845ed00bcfd78f091d69, and production compile then succeeded.
-- Runtime is toolchain.go.lock.toml, Go 1.26.5, linux/amd64, base image digest sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd, CGO disabled, and no-network at candidate/verifier runtime.
+1. Source freeze (re-verified in this attempt, not inherited)
+- `git init` + `git remote add origin https://github.com/google/go-cmp` +
+  `git fetch --depth 1 origin b133f1f1932e48f466f597a3346ce6f5a49a0dc1` +
+  `git checkout --detach FETCH_HEAD` -> `git rev-parse HEAD` exit 0, equals the frozen revision.
+- `git archive --format=tar HEAD | sha256sum` exit 0:
+  0db58f99e9ff0c467df202b87cd72b97b8518b01ada824b8d9259e6a09b017fe == [source].source_digest.
+- `git show HEAD:LICENSE | sha256sum` exit 0:
+  17b5d209ba8f9684257ecfcff87df6ceda6194143a8fbd074f29727cff6f0c40 (BSD-3-Clause).
+- Upstream health baseline, offline flags with the directive-only `go 1.21` -> `go 1.26.5`
+  adaptation on a scratch copy: `go test -count=1 ./...` exit 0 (cmp 0.792s, cmpopts,
+  internal/diff, internal/function, internal/value all ok).
+- Public API surface re-read from the frozen tree (cmp/*.go, cmp/cmpopts/*.go excluding
+  _test.go), which confirmed `cmp.Ignore` really exists at cmp/options.go:198 and that
+  `EquateApprox`/`EquateApproxTime` panic on negative arguments.
 
-Verification:
-- `go test -count=1 ./...` under the frozen offline environment exited 0.
-- Public bridge compiled under the same offline flags and private verifier contract passed 10 cases against the frozen source.
-- Production Harbor compile exited 0 and produced the closed-world bundle under `.nl2repo/compiled/go-cmp-handoff/go-cmp`.
-- Official Harbor Oracle, empty, stub, forgery, timeout, background-process, oversized-output, and offline controls were not started by this lane because the lane contract forbids Harbor Agent Runs. Integrator must run them against the compiled bundle; no result is claimed here.
+2. Dependency and environment closure
+- Frozen module has no `require` directives; the private module bundle
+  (go.mod, empty go.sum, module.manifest.json, vendor/modules.txt) stays
+  sha256:1c4723da7fcbb24a329f7fbe98a320a462a0228b28e3845ed00bcfd78f091d69 (461 bytes).
+- Runtime: toolchain.go.lock.toml, Go 1.26.5, linux/amd64, CGO disabled, base image
+  docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd,
+  agent runtime nl2repobench/openhands-sdk-fork:930e9b1da-bookworm
+  (image id sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f).
+- `memory_mb = 4096` retained: 1 GiB and 2 GiB compiles OOM'd in earlier attempts.
+- Network policy stays `mode = "no-network"`, `agent_network_mode = "no-network"`,
+  empty agent allowed hosts; the only source-host authorization is the run-scoped
+  `--allow-agent-host github.com` passed to the trusted Oracle/offline runs.
+  The bundle ships no agent compose file; the separate verifier keeps
+  `network_mode: none`.
+
+3. Verifier-strength remediation (why the bundle changed)
+- The previous contract covered 11 assertions over 6 bridge operations, so a candidate
+  could no-op `Ignore`, `FilterPath`, `FilterValues`, `Transformer`, `Comparer`,
+  `Exporter`, `EquateErrors`, `EquateApproxTime`, and `EquateComparable` and still earn
+  reward 1.0. That is a one-directional instruction/test gap, so the private contract and
+  the typed bridge were extended to 38 assertions over 16 operations covering every
+  documented API, including the unfiltered-`Ignore` panic policy and the negative-margin
+  panic policy of `EquateApprox`/`EquateApproxTime`.
+- New private verifier bundle: sha256:adea29f45f13e3ea4ec9370b3758f733dbf0e374c1710f278943f58b8fc3fcc4
+  (2590 bytes, single member contract.sh, mode 0755, deterministic tar/gzip header).
+- `instruction.md` was rewritten to match: the `Ignore`/`Exporter`/`AllowUnexported`
+  descriptions are now upstream-accurate (previously `Ignore` was described as the
+  unexported-field policy), the option semantics of every covered API are stated, Diff is
+  documented to name the differing path, and the bridge operation list is the new 16 ops.
+  `evidence/traceability.json` maps every documented symbol to its asserting cases and
+  every assertion back to its operation.
+- Controls were strengthened in the same pass:
+  * `background-process.sh` previously produced an empty workspace, so it graded as an
+    install failure (0/0) and never proved anything about stray processes. It now builds a
+    compiling candidate whose `Equal` leaks a detached `sleep 600` child on every call, plus
+    a leaked process from the solve step, so the frozen leaf is collected and failed while
+    the verifier must survive and clean up.
+  * `forgery.sh` now also overwrites grading.json, junit.xml, and collection.json in
+    /logs/verifier on top of reward.json.
+  * `hang.sh` uses a real `time.Sleep`, which exercises the supervisor timeout instead of
+    tripping Go's deadlock detector.
+  * every control shim was extended to declare the enlarged bridge-visible API surface so it
+    compiles (a control that fails to build would hide behind the install-failure exception).
+- Shared verifier fix (kept in this worktree for integrator review):
+  `src/nl2repobench/verification/go_supervisor.py` now always `killpg` the candidate process
+  group after the bridge exits, not only on timeout/output-limit. A local probe showed the
+  old code left orphaned `sleep 600` children after a clean bridge exit. Because that file is
+  inside `GO_RUNTIME_LOCK_FILES`, `toolchain.go.lock.toml` was re-pinned to
+  go_runtime_sha256 = sha256:9e4bd0759ce0b95138b7ca0b86aac1c82c33a7509af8fbbfdfc9b0a1fab7cb1f
+  and `tests/test_go_adapter.py` passes again (9 passed).
+
+4. Local gates before the official matrix
+- `uv run nl2repo task validate-source catalog/sources/go-cmp` exit 0
+  (source_digest sha256:a19cdb0ffe53baa3102e0c897470b70bf94280709c30b25b010dfce825ca25e5).
+- `uv run nl2repo task lint-network --tasks-root catalog/sources` exit 0, re-run after the final
+  source state: 433 tasks scanned, error_count 0, warning_count 178, zero go-cmp findings
+  (.nl2repo/evidence/network-policy-final3.log).
+- Production compile (no `--allow-incomplete`) into `.nl2repo/authoring-final-20260904c`:
+  exit 0, 67-file closed-world manifest, every file hash re-verified against disk, no extra
+  or missing files, no symlinks, canonical digest
+  sha256:4f670a3f8d029bcee3bde28ce12049aff1775b00dcf72b6782ef9334d75b7b7e,
+  toolchain lock digest sha256:3cf46e06953bf06e9d287ed8683391c0608f1409278095a638bb6226f8ab3336.
+  An identical pre-lifecycle compile into `.nl2repo/authoring-final-20260904b` (canonical
+  sha256:24d5872d...) showed that only the `[lifecycle]` declaration, and therefore the canonical
+  digest embedded in the generated `task.toml`, differed between the two compiles, so the gated
+  bundle is the current source projection rather than an older one.
+- All seven control bundles rebuilt from that same task tree with
+  `uv run nl2repo harbor prepare-control ... --toolchain toolchain.go.lock.toml` into
+  `.nl2repo/controls-final3-20260904`; each `solution/solve.sh` is byte-identical to its
+  `controls/<kind>.sh` source and each manifest records `control_kind`.
+- `gofmt -l` clean on the bridge, `go vet ./cmd/bridge` clean, `bash -n` clean on all control
+  and contract scripts.
+- Authoring-side probe `.nl2repo/authoring-work/probe-go-cmp-controls.py` (exit 0) against the
+  frozen reference implementation with the pinned Go flags: all 38 assertions pass in 12.9s
+  (contract runner budget is 35s); stub/forgery/panic/oversized-output/background-process each
+  compile and fail the single leaf with the denominator collected (rc 1); hang returns rc 124
+  from the bounded supervisor at ~30.3s with no orphan left behind; install-failure yields no
+  compilable module (the only allowed 0/0 case).
+
+5. Official Harbor matrix (Harbor 0.21.0, one run directory per kind)
+- The lifecycle status flip into the source changed the canonical digest, so the gated bundle is the
+  current production compile: .nl2repo/authoring-final-20260904c/go-cmp, manifest sha256 sha256:3aad2e0e3a52d15cab520d3c029b577c4ad732d33ce0f5cef7646d47ec403bfb, canonical sha256:4f670a3f8d029bcee3bde28ce12049aff1775b00dcf72b6782ef9334d75b7b7e,
+  67 files, closed-world verified, toolchain lock sha256:3cf46e06953bf06e9d287ed8683391c0608f1409278095a638bb6226f8ab3336.
+- Control bundles were regenerated from that same task tree into .nl2repo/controls-final3-20260904 and
+  each solve.sh is byte-identical to its source control script.
+- Runs: .nl2repo/runs/go-cmp-<kind>-final3-20260904; Oracle and offline used -a oracle with
+  --allow-agent-host github.com, empty used -a nop, every negative control used -a oracle against its
+  prepared bundle with no host authorization.
+- oracle: valid True, passed 1/1 (frozen_total 1), reward 1.0, verifier network false.
+- offline: valid True, reward 1.0, public_network_available False (independent Oracle run, own grading/network/reward files).
+- empty: allowed candidate-installation-failed 0/0, reward 0.0.
+- install-failure: allowed candidate-installation-failed 0/0, reward 0.0.
+- stub: valid True, collected 1/1, failed 1, reward 0.0, verifier network False.
+- forgery: valid True, collected 1/1, failed 1, reward 0.0, verifier network False.
+- panic: valid True, collected 1/1, failed 1, reward 0.0, verifier network False.
+- hang: valid True, collected 1/1, failed 1, reward 0.0, verifier network False.
+- oversized-output: valid True, collected 1/1, failed 1, reward 0.0, verifier network False.
+- background-process: valid True, collected 1/1, failed 1, reward 0.0, verifier network False.
+- forgery detail: the control overwrites /logs/verifier/{reward,grading,junit,collection}.json and the
+  verifier still wrote its own grading (collected 1, failed 1) and reward.json 0.0, so trusted reports are
+  not candidate-writable.
+- background-process detail: after the supervisor killpg fix the control compiles, leaks a detached child
+  per call, still collects the frozen leaf, fails it, and leaves no orphan process behind.
+- Receipt: .nl2repo/authoring-production-gates.json; the Loop checker
+  scripts/run_authoring_loop.py::_run_production_gate_check reports status passed
+  (.nl2repo/evidence/production-gates-check.json).
+- Aborted earlier run trees under .nl2repo/runs/*-attempt4-20260904 and *-20260903 belong to pre-repair
+  attempts; they are kept for audit and are not referenced by this receipt.
+- Workspace cleanup: the superseded pre-repair compiles .nl2repo/authoring-final-20260904,
+  .nl2repo/authoring-final-20260904b and their control roots .nl2repo/controls-final-20260904,
+  .nl2repo/controls-final2-20260904 were deleted after the final3 receipts were written.
+
+6. Known shared-workspace findings that are not caused by this task
+- Two test failures predate this lane's edits in this worktree:
+  `tests/test_cli.py::test_schema_export_command` and
+  `tests/test_node_foundation.py::test_v1_schema_export_is_byte_compatible`.
+  The only schema drift is `schemas/v1/grading-result.schema.json` reporting
+  `expected_total` as `exclusiveMinimum: 0` while the currently installed
+  `src/nl2repobench/verification/models.py` uses `ge=0` (the install-failure 0/0 fix that the
+  loop synced into this worktree). Regenerating `schemas/v1` is a catalog-wide action owned by
+  the integrator, so it was deliberately not done here.
+- The shared `src/nl2repobench/verification/{evaluator,models,node_models}.py` and three test
+  files are dirty in this worktree from that same sync; this lane did not modify them.

@@ -60,16 +60,16 @@ candidate_total_timeout_sec = 300.0
 agent_network_mode = "no-network"
 verifier_network_mode = "no-network"
 cpus = 1
-memory_mb = 1024
+memory_mb = 4096
 storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "packaged"
-owner = "go-author-discover-20260903"
-reason = "Frozen source, API inventory, typed bridge, private verifier/Oracle bundles, and offline Go runtime contract are packaged; official Oracle and Harbor controls remain integrator-owned."
+status = "controls-passed"
+owner = "go-packaged-repair-20260903T2118Z"
+reason = "Official Harbor 0.21.0 Oracle (valid, 1/1, reward 1.0) plus empty, stub, forgery, install-failure, panic, hang, oversized-output, background-process and offline controls pass against the current compiled bundle; receipts are bound to its bundle digest."
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:0933670d42b915888ab6b716db25fddfc5eafc76fb4c58a3a2239042c4e2d7b6", size_bytes = 952, uri = "artifact://private/sha256:0933670d42b915888ab6b716db25fddfc5eafc76fb4c58a3a2239042c4e2d7b6", visibility = "private" }
+bundle = { digest = "sha256:adea29f45f13e3ea4ec9370b3758f733dbf0e374c1710f278943f58b8fc3fcc4", size_bytes = 2590, uri = "artifact://private/sha256:adea29f45f13e3ea4ec9370b3758f733dbf0e374c1710f278943f58b8fc3fcc4", visibility = "private" }
 entrypoint = "contract.sh"

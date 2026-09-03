@@ -6,8 +6,33 @@
   "source_digest": "sha256:0db58f99e9ff0c467df202b87cd72b97b8518b01ada824b8d9259e6a09b017fe",
   "license_spdx": "BSD-3-Clause",
   "license_sha256": "sha256:17b5d209ba8f9684257ecfcff87df6ceda6194143a8fbd074f29727cff6f0c40",
-  "checkout": ".nl2repo/authoring-work/go-author-discover-20260902T142804Z/go-cmp/src",
-  "archive_command": "git -C .nl2repo/authoring-work/go-author-discover-20260902T142804Z/go-cmp/src archive --format=tar HEAD | sha256sum",
-  "archive_exit_code": 0,
-  "source_authority": "known"
+  "checkout": ".nl2repo/authoring-work/go-packaged-repair-20260903T2118Z/go-cmp/src",
+  "commands": [
+    {
+      "command": "git init <checkout> && git remote add origin https://github.com/google/go-cmp && git fetch -q --depth 1 origin b133f1f1932e48f466f597a3346ce6f5a49a0dc1 && git checkout -q --detach FETCH_HEAD && git rev-parse HEAD",
+      "exit_code": 0,
+      "stdout": "b133f1f1932e48f466f597a3346ce6f5a49a0dc1"
+    },
+    {
+      "command": "git archive --format=tar HEAD | sha256sum",
+      "exit_code": 0,
+      "stdout": "0db58f99e9ff0c467df202b87cd72b97b8518b01ada824b8d9259e6a09b017fe  -"
+    },
+    {
+      "command": "git show HEAD:LICENSE | sha256sum",
+      "exit_code": 0,
+      "stdout": "17b5d209ba8f9684257ecfcff87df6ceda6194143a8fbd074f29727cff6f0c40  -"
+    },
+    {
+      "command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -count=1 ./...",
+      "exit_code": 0,
+      "stdout": "ok github.com/google/go-cmp/cmp 0.792s; ok .../cmpopts 0.020s; ok .../internal/diff 0.102s; ok .../internal/function 0.005s; ok .../internal/value 0.006s"
+    }
+  ],
+  "reverified_at": "2026-09-04T03:25:43+08:00",
+  "source_authority": "known",
+  "notes": [
+    "go.mod at this revision declares 'go 1.21' and the module has no require directives, so the Oracle solve applies a directive-only adaptation to 1.26.5 and writes an empty go.sum; the archived source bytes are digest-verified before that adaptation.",
+    "Upstream baseline test run used the same directive-only adaptation on a scratch copy; no task-visible file was modified."
+  ]
 }

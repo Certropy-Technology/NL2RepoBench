@@ -7,12 +7,34 @@
     "github.com/google/go-cmp/cmp/cmpopts"
   ],
   "public_api_surface": {
-    "cmp": ["Equal", "Diff", "Option", "Path", "PathStep", "Ignore", "FilterPath", "FilterValues", "Transformer", "Comparer", "Exporter", "AllowUnexported"],
+    "cmp": ["Equal", "Diff", "Option", "Options", "Path", "PathStep", "StructField", "SliceIndex", "MapIndex", "Indirect", "TypeAssertion", "Transform", "Ignore", "FilterPath", "FilterValues", "Transformer", "Comparer", "Exporter", "AllowUnexported"],
     "cmpopts": ["EquateEmpty", "EquateApprox", "EquateNaNs", "EquateApproxTime", "EquateErrors", "EquateComparable", "SortSlices", "SortMaps"]
   },
+  "declared_to_candidate_surface": {
+    "note": "instruction.md declares exactly the cmp functions and cmpopts constructors in public_api_surface minus cmp.Options and the concrete PathStep types, which are exercised indirectly through FilterPath callbacks and Diff path rendering",
+    "out_of_scope_upstream_symbols": ["Reporter", "DiffReporter", "Value", "Type", "AnyError", "AcyclicTransformer", "Options", "IgnoreFields", "IgnoreTypes", "IgnoreInterfaces", "IgnoreUnexported", "IgnoreSliceElements", "IgnoreMapEntries", "Stringer"]
+  },
+  "upstream_api_verification": "exported symbols listed above were read from the frozen revision (cmp/*.go, cmp/cmpopts/*.go excluding _test.go) with 'git show' on commit b133f1f1932e48f466f597a3346ce6f5a49a0dc1; cmp.Ignore is defined at cmp/options.go:198",
   "tracked_source_files": 49,
   "go_source_files": 42,
-  "public_bridge_operations": ["equal_profiles", "equal_floats", "equal_strings_sorted", "equal_maps_sorted", "diff_values", "equal_exported"],
-  "bridge_scope": "JSON-serializable deterministic values only; callbacks, reporter implementations, unsafe byte/string helpers, and runtime timing are outside the adapter boundary.",
+  "public_bridge_operations": [
+    "equal_profiles",
+    "equal_floats",
+    "equal_strings_sorted",
+    "equal_maps_sorted",
+    "diff_values",
+    "diff_profile_paths",
+    "equal_exported",
+    "equal_exporter",
+    "equal_ignore_unfiltered",
+    "equal_comparable",
+    "equal_filter_path",
+    "equal_filter_values",
+    "equal_transformer",
+    "equal_comparer",
+    "equal_errors",
+    "equal_times"
+  ],
+  "bridge_scope": "JSON-serializable deterministic values only; callbacks, reporter implementations, unsafe byte/string helpers, and wall-clock timing are outside the adapter boundary. The bridge is verifier-supplied (read-only copy installed into the candidate module) so the candidate can only affect it through the public cmp/cmpopts API.",
   "source_revision": "b133f1f1932e48f466f597a3346ce6f5a49a0dc1"
 }

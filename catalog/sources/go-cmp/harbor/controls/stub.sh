@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
+# Wrong-but-compiling candidate: every option becomes a no-op, Equal is always
+# false and Diff is a fixed string, so the frozen leaf must be collected and
+# reported as failed rather than skipped.
 cat > go.mod <<'MOD'
 module github.com/google/go-cmp
 
@@ -10,25 +13,38 @@ mkdir -p cmp/cmpopts vendor
 : > vendor/modules.txt
 cat > cmp/stub.go <<'GO'
 package cmp
+
 import "reflect"
+
 type Option interface{}
 type Path []PathStep
 type PathStep interface{}
-func Equal(any, any, ...Option) bool { return false }
-func Diff(any, any, ...Option) string { return "forged" }
-func AllowUnexported(...any) Option { return struct{}{} }
+
+func Equal(any, any, ...Option) bool           { return false }
+func Diff(any, any, ...Option) string          { return "forged" }
+func Ignore() Option                           { return struct{}{} }
 func FilterPath(func(Path) bool, Option) Option { return struct{}{} }
-func FilterValues(any, Option) Option { return struct{}{} }
-func Transformer(string, any) Option { return struct{}{} }
-func Comparer(any) Option { return struct{}{} }
-func Exporter(func(reflect.Type) bool) Option { return struct{}{} }
+func FilterValues(any, Option) Option          { return struct{}{} }
+func Transformer(string, any) Option           { return struct{}{} }
+func Comparer(any) Option                      { return struct{}{} }
+func Exporter(func(reflect.Type) bool) Option  { return struct{}{} }
+func AllowUnexported(...any) Option            { return struct{}{} }
 GO
 cat > cmp/cmpopts/stub.go <<'GO'
 package cmpopts
-import "github.com/google/go-cmp/cmp"
-func EquateEmpty() cmp.Option { return struct{}{} }
+
+import (
+	"time"
+
+	"github.com/google/go-cmp/cmp"
+)
+
+func EquateEmpty() cmp.Option                  { return struct{}{} }
 func EquateApprox(float64, float64) cmp.Option { return struct{}{} }
-func EquateNaNs() cmp.Option { return struct{}{} }
-func SortSlices(any) cmp.Option { return struct{}{} }
-func SortMaps(any) cmp.Option { return struct{}{} }
+func EquateNaNs() cmp.Option                   { return struct{}{} }
+func EquateApproxTime(time.Duration) cmp.Option { return struct{}{} }
+func EquateErrors() cmp.Option                 { return struct{}{} }
+func EquateComparable(...any) cmp.Option       { return struct{}{} }
+func SortSlices(any) cmp.Option                { return struct{}{} }
+func SortMaps(any) cmp.Option                  { return struct{}{} }
 GO

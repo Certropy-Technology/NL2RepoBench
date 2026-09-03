@@ -1,5 +1,5 @@
 {
-  "canonical_manifest_digest": "sha256:5df9d0e350ffb15045494c47457cf5c4fb45c587e59dd40119ee0c9c13df054b",
+  "canonical_manifest_digest": "sha256:4f670a3f8d029bcee3bde28ce12049aff1775b00dcf72b6782ef9334d75b7b7e",
   "files": [
     {
       "path": "README.md",
@@ -8,33 +8,38 @@
     },
     {
       "path": "controls/background-process.sh",
-      "sha256": "96c2d03fa37b0f40500a8a3cda21299fb86d01484cca46958a37b000d3c84f86",
-      "size_bytes": 57
+      "sha256": "5a0a3a9d4c5a045207bb851b3284cd6dfaf79833583fb875758096d869ceb6d9",
+      "size_bytes": 2182
     },
     {
       "path": "controls/forgery.sh",
-      "sha256": "afffd29e834bd63ba93d742a3b3a07b8db0178c342c59d0553bc936f44f5acf2",
-      "size_bytes": 1239
+      "sha256": "5d0f946ce4b9fe5e5b74e37f629e80d075503bfa62eeef184ead4e1deb6c1cd0",
+      "size_bytes": 2172
     },
     {
       "path": "controls/hang.sh",
-      "sha256": "46505f4dacc21265084c9232e6085482c7af1b32c09d41020e20acd5352296d3",
-      "size_bytes": 1130
+      "sha256": "522f35585b03ff14277262041232cc602688c09d36665de87e0da6672f856dab",
+      "size_bytes": 1826
     },
     {
       "path": "controls/install-failure.sh",
-      "sha256": "df210085f49dc160dd38598f65d39b17e0b2f74f5779e0c908e252bba50be87e",
-      "size_bytes": 107
+      "sha256": "c2bb6f354bd2535d4e8627ba35fc040862d8b3c9b5add35a19d79167ecd3c09f",
+      "size_bytes": 241
     },
     {
       "path": "controls/oversized-output.sh",
-      "sha256": "9901d87b48d08344b1fd5ae6abcbd03d0938dfc706600cd95a7d276fee60ca9c",
-      "size_bytes": 1168
+      "sha256": "e6a3432d4c8427c4b7671a4b337b99993c8d20d75c168c8c31170651d86bd137",
+      "size_bytes": 1758
+    },
+    {
+      "path": "controls/panic.sh",
+      "sha256": "e197576279449d9d09cc61936c30b81a84ff7dfeba03feb689767aa156babec3",
+      "size_bytes": 1745
     },
     {
       "path": "controls/stub.sh",
-      "sha256": "69506316d7c4617099b88bd249219453ef59dde533b7845ebf8e23919ffd34c7",
-      "size_bytes": 1139
+      "sha256": "18669f51df6604acc306c02d583f71c6ee136d65f310a63642b5a6c38d8d84e9",
+      "size_bytes": 1771
     },
     {
       "path": "environment/Dockerfile",
@@ -63,8 +68,8 @@
     },
     {
       "path": "instruction.md",
-      "sha256": "9707d92e0b874cdc3d718a1d9c98eade121c7d715ed91969b767e214d124c5ac",
-      "size_bytes": 4161
+      "sha256": "391bd7dadadb50480cab4d4cc012517ed95bcb7843f3ef41f7a62cae1f948ac0",
+      "size_bytes": 6690
     },
     {
       "path": "solution/solve.sh",
@@ -73,7 +78,7 @@
     },
     {
       "path": "task.toml",
-      "sha256": "3375563f25fa1ba920358a0905336ca1dc56b188b8cc5f3b79a99c2fd2cdd738",
+      "sha256": "d73fe194bdd71cf34f99974ab340420fc76f53e18e555448f95982b3ec8a0c26",
       "size_bytes": 1114
     },
     {
@@ -108,13 +113,13 @@
     },
     {
       "path": "tests/private/bridge.go",
-      "sha256": "88fb5601d091046d25aaae277db51821c839b17e98c3822b782ecfb4d92ed331",
-      "size_bytes": 4110
+      "sha256": "2817c6a2cf259c83b641b6ba3412ff736a72de4ac37d9bded0493c29039ae913",
+      "size_bytes": 9100
     },
     {
       "path": "tests/private/contract.sh",
-      "sha256": "c48e75d615fe0a22247b50c93bcb05d051768f8465ffd76bdab401f654687aa2",
-      "size_bytes": 2459
+      "sha256": "4b56ba6fbbf966e297d6e00c1a91a0c78da7c46a84aef3f3b3fcb315e28d733c",
+      "size_bytes": 9687
     },
     {
       "path": "tests/runtime/nl2repobench/__init__.py",
