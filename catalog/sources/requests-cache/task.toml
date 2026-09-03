@@ -1,0 +1,110 @@
+schema_version = "1.0"
+task_id = "requests-cache"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "python-http-library"
+tags = ["python", "http-cache", "requests", "serialization", "cache-keys", "expiration", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/requests-cache/requests-cache"
+revision = "8da22ce1963788a066b65c15e6efe17ea8b4ac82"
+license_spdx = "BSD-2-Clause"
+source_digest = "sha256:aba1dbfa17ed1083567035edf760ad4264e738e7fe2f7364c7bffcb41bce89ef"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.11"
+os_name = "debian-12-amd64"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
+network_mode = "no-network"
+build_command = "install the hash-locked candidate and verifier closures during image build; candidate installs from the staged workspace with a fixed hatchling build backend"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The requests, cache, serialization, and test closures are installed during Docker image construction. Agent and verifier execution have no egress; only the trusted Oracle receives a run-scoped exact upstream host override."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = [
+  "attrs==25.3.0",
+  "cattrs==25.2.0",
+  "certifi==2026.7.22",
+  "charset-normalizer==3.5.1",
+  "hatchling==1.27.0",
+  "idna==3.19",
+  "iniconfig==2.3.0",
+  "packaging==26.3",
+  "pathspec==1.1.1",
+  "platformdirs==4.4.0",
+  "pluggy==1.6.0",
+  "pygments==2.21.0",
+  "pytest==9.1.1",
+  "python-dateutil==2.9.0.post0",
+  "pyyaml==6.0.3",
+  "requests==2.32.5",
+  "requests-mock==1.12.1",
+  "responses==0.26.0",
+  "six==1.17.0",
+  "time-machine==2.19.0",
+  "url-normalize==2.2.1",
+  "urllib3==2.5.0",
+]
+lock_artifact = { digest = "sha256:57c041091534bbfa2ce4909c20da5cfc6f5d462042582132de1b0878dcfd4534", size_bytes = 33840, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:57c041091534bbfa2ce4909c20da5cfc6f5d462042582132de1b0878dcfd4534", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 30
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py", "/tests/command-plan.json"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:d8958b591c1a2b4eb5a9656f932c203bbcde89482be6c29137be7370f153b81d", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:d8958b591c1a2b4eb5a9656f932c203bbcde89482be6c29137be7370f153b81d", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
+
+[harbor]
+description = "Build requests-cache from an empty workspace and reproduce deterministic local behavior for request normalization, cache keys, expiration policy, serialization, in-memory caching, response models, and patched sessions."
+keywords = ["python", "http-cache", "requests", "serialization", "cache-keys", "expiration", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 360.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:abec87905c3528852e5c5e9c4495442141c8a03c25276dae1046b90fb0a8d3a6"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:abec87905c3528852e5c5e9c4495442141c8a03c25276dae1046b90fb0a8d3a6"
+visibility = "private"
+
+[lifecycle]
+status = "packaged"
+owner = "python-author-discover-20260903-requests-cache"
+reason = "Frozen source, deterministic child-side verifier, hash-locked dependency closure, digest-checking Oracle solution, and production source contract are authored. Official Harbor Agent Run and integration-owned controls remain pending."

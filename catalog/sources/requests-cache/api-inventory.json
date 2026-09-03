@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "task_id": "requests-cache",
+  "source_revision": "8da22ce1963788a066b65c15e6efe17ea8b4ac82",
+  "package_version": "1.3.4",
+  "public_modules": [
+    "requests_cache", "requests_cache.cache_keys", "requests_cache.backends.base",
+    "requests_cache.models.response", "requests_cache.models.request", "requests_cache.policy",
+    "requests_cache.policy.expiration", "requests_cache.serializers", "requests_cache.session",
+    "requests_cache.patcher"
+  ],
+  "scored_symbols": {
+    "requests_cache.cache_keys": ["create_key", "normalize_request", "normalize_headers", "normalize_url", "normalize_body", "normalize_json_body", "normalize_params", "filter_sort_dict", "filter_sort_multidict", "filter_sort_list", "filter_url", "get_matched_headers"],
+    "requests_cache.policy.expiration": ["get_expiration_datetime", "get_expiration_seconds", "get_url_expiration", "add_tzinfo"],
+    "requests_cache.backends.base": ["BaseCache", "BaseStorage", "DictStorage"],
+    "requests_cache.models.response": ["CachedResponse", "OriginalResponse", "format_datetime", "format_file_size"],
+    "requests_cache.serializers": ["init_serializer", "SerializerPipeline", "Stage"],
+    "requests_cache.session": ["CachedSession", "CacheMixin", "get_504_response"],
+    "requests_cache.patcher": ["install_cache", "uninstall_cache", "enabled", "disabled", "get_cache", "is_installed", "clear", "delete"]
+  },
+  "excluded_integrations": ["requests_cache.backends.redis", "requests_cache.backends.mongodb", "requests_cache.backends.dynamodb", "requests_cache.backends.gridfs", "live HTTP and external service integration"],
+  "candidate_boundary": "custom-json-v1 child subprocess; scenario code constructs local adapters and only JSON-safe observations cross into the trusted grader"
+}

@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "task_id": "requests-cache",
+  "source_revision": "8da22ce1963788a066b65c15e6efe17ea8b4ac82",
+  "upstream_collection": {
+    "command": "python -m pytest --collect-only -q -c /dev/null tests",
+    "collected": 1288,
+    "collection_errors": ["integration/test_mongodb.py: missing pymongo", "integration/test_redis.py: missing redis"],
+    "exit_code": 2
+  },
+  "deterministic_probe": {
+    "framework": "custom-json-v1",
+    "frozen_total": 30,
+    "collection_policy": "Every named scenario emits exactly one unique leaf; collection mismatch is fatal.",
+    "scenarios": [
+      "exports", "normalize-params", "normalize-url", "normalize-headers", "normalize-json-body",
+      "normalize-request-copy", "cache-key-equivalence", "cache-key-distinguishes-method",
+      "expiration-relative", "expiration-httpdate", "url-expiration", "request-directives",
+      "settings-defaults", "dict-storage", "base-cache-filter", "cached-response-model",
+      "response-formatting", "json-serializer", "serializer-copy", "cached-session-hit",
+      "only-if-cached-miss", "cache-disabled", "patcher-install", "patcher-context",
+      "session-methods", "response-history", "request-model", "utility-encoding",
+      "optional-backend-placeholder", "deterministic-repeat"
+    ]
+  },
+  "excluded_upstream_surface": ["Redis/MongoDB/DynamoDB/GridFS services", "httpbin and live network", "filesystem cache integration", "benchmark and concurrency timing", "optional serializer libraries not in the locked core"],
+  "traceability": "Each deterministic scenario is named in instruction.md and its expected observations are stored only in the private verifier bundle."
+}

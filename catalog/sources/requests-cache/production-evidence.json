@@ -1,0 +1,82 @@
+{
+  "schema_version": "1.0",
+  "task_id": "requests-cache",
+  "task_version": "1.0.0",
+  "terminal_kind": "awaiting-agent-run",
+  "status": "awaiting-agent-run",
+  "source_freeze": {
+    "upstream_url": "https://github.com/requests-cache/requests-cache",
+    "revision": "8da22ce1963788a066b65c15e6efe17ea8b4ac82",
+    "license_spdx": "BSD-2-Clause",
+    "license_sha256": "sha256:1aedf075663a232d425816b8b6c6c852e7e7976b5f98b968643162ec593d0b69",
+    "source_digest": "sha256:aba1dbfa17ed1083567035edf760ad4264e738e7fe2f7364c7bffcb41bce89ef",
+    "source_archive_bytes": 3809280,
+    "submodules": []
+  },
+  "environment": {
+    "python": "3.12.11",
+    "os": "debian-12-amd64",
+    "base_image": "python:3.12-slim@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "harbor": "0.21.0",
+    "docker": "29.7.2",
+    "network_mode": "no-network",
+    "agent_allowed_hosts": []
+  },
+  "artifacts": {
+    "dependency_lock": {"digest": "sha256:57c041091534bbfa2ce4909c20da5cfc6f5d462042582132de1b0878dcfd4534", "size_bytes": 33840, "path": ".nl2repo/artifacts/private/sha256/57/57c041091534bbfa2ce4909c20da5cfc6f5d462042582132de1b0878dcfd4534"},
+    "verifier_bundle": {"digest": "sha256:d8958b591c1a2b4eb5a9656f932c203bbcde89482be6c29137be7370f153b81d", "size_bytes": 20480, "path": ".nl2repo/artifacts/private/sha256/d8/d8958b591c1a2b4eb5a9656f932c203bbcde89482be6c29137be7370f153b81d"},
+    "oracle_bundle": {"digest": "sha256:abec87905c3528852e5c5e9c4495442141c8a03c25276dae1046b90fb0a8d3a6", "size_bytes": 10240, "path": ".nl2repo/artifacts/private/sha256/ab/abec87905c3528852e5c5e9c4495442141c8a03c25276dae1046b90fb0a8d3a6"},
+    "compiled_bundle_manifest": {"digest": "sha256:16a864b07276339ca049e94184d3fc3b8dd348b609e47aab208dbfd8be46a5aa", "path": ".nl2repo/compiled-production/requests-cache/bundle.manifest.json", "files": 59},
+    "verifier_image": "sha256:925361391ca87431658e981195532d6f8340dd3f5e21cbe0a2f4a70f71ed05f0"
+  },
+  "tests": {
+    "framework": "custom-json-v1",
+    "frozen_total": 30,
+    "upstream_collected": 1288,
+    "upstream_collection_errors": 2,
+    "upstream_probe_log": ".nl2repo/authoring-work/requests-cache/logs/upstream-collect.log",
+    "scenario_inventory": "catalog/sources/requests-cache/test-inventory.json"
+  },
+  "commands": [
+    {"command": "git clone https://github.com/requests-cache/requests-cache && git checkout --detach 8da22ce1963788a066b65c15e6efe17ea8b4ac82", "exit_code": 0, "log": ".nl2repo/authoring-work/requests-cache/logs/clone.log"},
+    {"command": "uv pip compile --python-version 3.12 --generate-hashes requirements.in -o requirements.lock.txt", "exit_code": 0, "log": ".nl2repo/authoring-work/requests-cache/logs/dependency-lock.log"},
+    {"command": "python -m pytest --collect-only -q -c /dev/null tests", "exit_code": 2, "log": ".nl2repo/authoring-work/requests-cache/logs/upstream-collect.log", "result": "1288 collected; pymongo and redis optional integration collection errors"},
+    {"command": "python -m pytest -q -c /dev/null tests/unit tests/integration/test_memory.py", "exit_code": 1, "log": ".nl2repo/authoring-work/requests-cache/logs/deterministic-upstream-tests.log", "result": "466 passed, 88 failed, 3 skipped, 1 xfailed, 20 warnings; fixture transport assumptions"},
+    {"command": "python3 -m py_compile .nl2repo/authoring-work/requests-cache/verifier/run.py", "exit_code": 0, "log": ".nl2repo/authoring-work/requests-cache/logs/verifier-pycompile.log"},
+    {"command": "bash -n oracle and control scripts", "exit_code": 0, "log": ".nl2repo/authoring-work/requests-cache/logs/scripts-syntax.log"},
+    {"command": "uv run nl2repo task validate-source catalog/sources/requests-cache", "exit_code": 0, "log": ".nl2repo/authoring-work/requests-cache/logs/validate-source.log"},
+    {"command": "uv run nl2repo task lint-network --tasks-root catalog/sources", "exit_code": 0, "log": ".nl2repo/authoring-work/requests-cache/logs/network-lint.log", "result": "requests-cache produced no finding; catalog warning_count is from unrelated legacy tasks"},
+    {"command": "uv run nl2repo harbor compile catalog/sources/requests-cache --output .nl2repo/compiled-production --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "exit_code": 0, "log": ".nl2repo/authoring-work/requests-cache/logs/production-compile-final.log", "result": "production bundle compiled; manifest digest recorded below"},
+    {"command": "docker build --platform linux/amd64 -t nl2repo/requests-cache-verifier:authoring compiled tests", "exit_code": 0, "log": ".nl2repo/authoring-work/requests-cache/logs/verifier-image-build-final.log", "result": "image sha256:925361391ca87431658e981195532d6f8340dd3f5e21cbe0a2f4a70f71ed05f0"}
+  ],
+  "local_oracle_smoke": {
+    "kind": "verifier-only-reference-workspace",
+    "command": "docker run --rm --network none -v reference:/workspace -v logs:/logs nl2repo/requests-cache-verifier:authoring /tests/test.sh",
+    "exit_code": 0,
+    "valid": true,
+    "collected": 30,
+    "passed": 30,
+    "failed": 0,
+    "reward": 1.0,
+    "public_network_available": false,
+    "grading": ".nl2repo/authoring-work/requests-cache/local-verifier-run/verifier/grading.json",
+    "network": ".nl2repo/authoring-work/requests-cache/local-verifier-run/verifier/network.json",
+    "log": ".nl2repo/authoring-work/requests-cache/logs/reference-verifier-smoke-after-fix.log"
+  },
+  "controls": {
+    "stub": {"valid": true, "collected": 30, "passed": 0, "reward": 0.0, "grading": ".nl2repo/authoring-work/requests-cache/control-stub-logs/verifier/grading.json", "log": ".nl2repo/authoring-work/requests-cache/logs/control-stub.log"},
+    "forgery": {"valid": true, "collected": 30, "passed": 0, "reward": 0.0, "forged_reports_ignored": true, "grading": ".nl2repo/authoring-work/requests-cache/control-forgery-logs/verifier/grading.json", "log": ".nl2repo/authoring-work/requests-cache/logs/control-forgery.log"},
+    "workspace-invalid": {"valid": true, "failure_class": "model", "failure_reason": "candidate-workspace-rejected", "reward": 0.0, "grading": ".nl2repo/authoring-work/requests-cache/control-workspace-invalid-logs/verifier/grading.json", "log": ".nl2repo/authoring-work/requests-cache/logs/control-workspace-invalid.log"},
+    "install-timeout": {"host_wrapper_exit_code": 124, "candidate_install_outcome": "candidate-failure", "grading": ".nl2repo/authoring-work/requests-cache/control-install-hang-logs/verifier/grading.json", "log": ".nl2repo/authoring-work/requests-cache/logs/control-install-hang.log", "residual": "Docker cleanup extended beyond the 35-second wrapper; no container remained."}
+  },
+  "official_gates": {
+    "harbor_oracle": "not_run_by_lane_policy",
+    "harbor_agent_run": "not_run_by_lane_policy",
+    "independent_review": "not_run"
+  },
+  "residual_risks": [
+    "The full upstream suite depends on optional Redis/MongoDB services and live/mock transport assumptions; only the documented deterministic local contract is scored.",
+    "Official Harbor Oracle and Agent/control receipts remain integration-owned.",
+    "The Oracle solution requires exact source-host authorization for its Git fetch; model Agent remains no-network with no static allowed hosts."
+  ]
+}

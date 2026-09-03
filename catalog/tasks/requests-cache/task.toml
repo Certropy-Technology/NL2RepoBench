@@ -1,0 +1,60 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/requests-cache"
+version = "1.0.0"
+description = "Build requests-cache from an empty workspace and reproduce deterministic local behavior for request normalization, cache keys, expiration policy, serialization, in-memory caching, response models, and patched sessions."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "http-cache",
+    "requests",
+    "serialization",
+    "cache-keys",
+    "expiration",
+    "separate-verifier",
+]
+
+[metadata]
+difficulty = "hard"
+category = "python-http-library"
+tags = [
+    "python",
+    "http-cache",
+    "requests",
+    "serialization",
+    "cache-keys",
+    "expiration",
+    "separate-verifier",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 30
+canonical_manifest_digest = "sha256:f576c2d597103cc07e9522bf7603bfae03a92fca2c69d5c8f579e90a7fe8279f"
+toolchain_lock_digest = "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366"
+
+[agent]
+timeout_sec = 3600.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 16384
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
