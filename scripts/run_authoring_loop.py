@@ -1033,6 +1033,13 @@ def _prepare_task(
     }
 
 
+def _task_source_ready(task_root: Path) -> bool:
+    return all(
+        (task_root / name).is_file()
+        for name in ("task.toml", "instruction.md", "production-evidence.json")
+    )
+
+
 def _run_claimed(args: argparse.Namespace, context: dict[str, Any]) -> dict[str, Any]:
     agent = _launch_agent(
         args,
@@ -1075,11 +1082,7 @@ def _run_claimed(args: argparse.Namespace, context: dict[str, Any]) -> dict[str,
         and handoff_status == "controls-passed"
         and (handoff_task_id is None or handoff_task_id == context["package"])
     )
-    ready = (
-        (task_root / "task.toml").is_file()
-        and (task_root / "instruction.md").is_file()
-        and valid_handoff
-    )
+    ready = _task_source_ready(task_root) and valid_handoff
     network = _run_network_policy_check(Path(context["worktree"]), task_root)
     artifacts.append(network["report"])
     lint = _run_authoring_task_lint(Path(context["worktree"]), task_root)
@@ -1122,7 +1125,10 @@ def _run_claimed(args: argparse.Namespace, context: dict[str, Any]) -> dict[str,
             if lint["status"] != "passed"
             else "production Oracle/control gate failed: " + production_gates["output"]
             if production_gates["status"] != "passed"
-            else "Pi Agent exited without a fresh valid task.toml/instruction/handoff"
+            else (
+                "Pi Agent exited without a fresh valid task source, "
+                "production evidence, and handoff"
+            )
         )
     )
     transition = _queue_transition(

@@ -127,6 +127,7 @@ def test_driver_launches_direct_pi_and_records_handoff(tmp_path: Path, monkeypat
         task_root.mkdir(parents=True)
         (task_root / "task.toml").write_text("task_id = 'one'\n", encoding="utf-8")
         (task_root / "instruction.md").write_text("# one\n", encoding="utf-8")
+        (task_root / "production-evidence.json").write_text("{}\n", encoding="utf-8")
         handoff = Path(kwargs["handoff_path"])
         handoff.write_text('{"status":"controls-passed"}\n', encoding="utf-8")
         return {
@@ -410,6 +411,7 @@ def test_driver_refills_from_pending_queue_after_plan_is_exhausted(
         task_root.mkdir(parents=True)
         (task_root / "task.toml").write_text("task_id = 'demo'\n", encoding="utf-8")
         (task_root / "instruction.md").write_text("# task\n", encoding="utf-8")
+        (task_root / "production-evidence.json").write_text("{}\n", encoding="utf-8")
         handoff = Path(kwargs["handoff_path"])
         handoff.write_text('{"status":"controls-passed"}\n', encoding="utf-8")
         return {
@@ -428,6 +430,18 @@ def test_driver_refills_from_pending_queue_after_plan_is_exhausted(
     assert output["queue_refill"] is True
     assert [item["package"] for item in output["results"]] == ["one", "two"]
     assert all(item["status"] == "complete" for item in output["results"])
+
+
+def test_task_source_ready_requires_production_evidence(tmp_path: Path) -> None:
+    task_root = tmp_path / "catalog/sources/demo"
+    task_root.mkdir(parents=True)
+    (task_root / "task.toml").write_text("task_id = 'demo'\n", encoding="utf-8")
+    (task_root / "instruction.md").write_text("# demo\n", encoding="utf-8")
+
+    assert driver._task_source_ready(task_root) is False
+
+    (task_root / "production-evidence.json").write_text("{}\n", encoding="utf-8")
+    assert driver._task_source_ready(task_root) is True
 
 
 def test_driver_can_disable_queue_refill(tmp_path: Path, monkeypatch) -> None:
