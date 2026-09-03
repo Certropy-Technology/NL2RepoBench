@@ -64,7 +64,7 @@ def _sha256(path: Path) -> str:
 
 def _parse_lane(raw: str) -> Lane:
     parts = raw.split(":", 2)
-    if len(parts) != 3 or parts[0] not in {"python", "node", "go"}:
+    if len(parts) != 3 or parts[0] not in {"python", "node", "go", "java"}:
         raise ValueError("lane must be language:batch-id:queue-state")
     return Lane(parts[0], parts[1], Path(parts[2]).resolve())
 

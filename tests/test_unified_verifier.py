@@ -49,9 +49,7 @@ def test_slice_provenance_binds_required_inputs(tmp_path: Path) -> None:
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(content, encoding="utf-8")
     bundle = tmp_path / "bundle.manifest.json"
-    bundle.write_text(
-        json.dumps({"canonical_manifest_digest": "sha256:test"}), encoding="utf-8"
-    )
+    bundle.write_text(json.dumps({"canonical_manifest_digest": "sha256:test"}), encoding="utf-8")
     result = slice_provenance(
         tmp_path,
         runtime="node",
@@ -172,5 +170,5 @@ def test_verifier_registry_fails_closed() -> None:
     registry = VerifierRuntimeRegistry.default()
     assert registry.resolve("python") is not None
     assert registry.resolve("node") is not None
-    with pytest.raises(UnknownVerifierRuntimeError, match="registered: go, node, python"):
+    with pytest.raises(UnknownVerifierRuntimeError, match="registered: go, java, node, python"):
         registry.resolve("rust")

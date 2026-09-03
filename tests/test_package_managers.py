@@ -92,7 +92,7 @@ def test_pnpm_rejects_non_registry_sources(tmp_path, marker: str) -> None:
 def test_package_manager_registry_fails_closed() -> None:
     registry = PackageManagerRegistry.default()
     assert isinstance(registry.resolve("pnpm"), PnpmPackageManager)
-    with pytest.raises(UnknownPackageManagerError, match="registered: go-modules, pnpm"):
+    with pytest.raises(UnknownPackageManagerError, match="registered: go-modules, maven, pnpm"):
         registry.resolve("npm")
 
 

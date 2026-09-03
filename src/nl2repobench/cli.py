@@ -25,7 +25,12 @@ from nl2repobench.authoring.catalog import (
     scaffold_task,
     validate_compiled_dataset,
 )
-from nl2repobench.authoring.inventory import InventoryError, scan_python_source, write_inventory
+from nl2repobench.authoring.inventory import (
+    InventoryError,
+    scan_java_source,
+    scan_python_source,
+    write_inventory,
+)
 from nl2repobench.authoring.network_lint import lint_catalog_roots
 from nl2repobench.domain.canonical import canonical_file_payload, canonical_json
 from nl2repobench.domain.models import (
@@ -77,19 +82,21 @@ def scan_authoring_source(
     ] = Path("authoring/api-inventory.json"),
     language: Annotated[
         str,
-        typer.Option("--language", help="Scanner language currently implemented: python."),
+        typer.Option("--language", help="Registered scanner language: python or java."),
     ] = "python",
 ) -> None:
     """Create a deterministic static API/test inventory for one source root."""
 
-    if language != "python":
+    scanners = {"python": scan_python_source, "java": scan_java_source}
+    scanner = scanners.get(language)
+    if scanner is None:
         typer.echo(
             "no local scanner is registered for this language; use the language adapter tool",
             err=True,
         )
         raise typer.Exit(code=2)
     try:
-        inventory = scan_python_source(source)
+        inventory = scanner(source)
         write_inventory(inventory, output)
     except (InventoryError, OSError) as exc:
         typer.echo(f"source scan failed: {exc}", err=True)
@@ -116,11 +123,19 @@ def scan_authoring_tests(
         Path,
         typer.Option("--output", help="Inventory JSON output path."),
     ] = Path("authoring/test-inventory.json"),
+    language: Annotated[
+        str,
+        typer.Option("--language", help="Scanner language: python or java."),
+    ] = "python",
 ) -> None:
     """Write the static test portion of the source inventory."""
 
     try:
-        inventory = scan_python_source(source)
+        scanner = {"python": scan_python_source, "java": scan_java_source}.get(language)
+        if scanner is None:
+            typer.echo("no local scanner is registered for this language", err=True)
+            raise typer.Exit(code=2)
+        inventory = scanner(source)
         write_inventory(inventory, output)
     except (InventoryError, OSError) as exc:
         typer.echo(f"test scan failed: {exc}", err=True)

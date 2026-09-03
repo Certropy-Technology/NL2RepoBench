@@ -83,6 +83,18 @@
                 "required": [
                   "module_bundle"
                 ]
+              },
+              {
+                "properties": {
+                  "maven_bundle": {
+                    "not": {
+                      "type": "null"
+                    }
+                  }
+                },
+                "required": [
+                  "maven_bundle"
+                ]
               }
             ]
           }
@@ -106,6 +118,7 @@
           "enum": [
             "uv",
             "pip",
+            "maven",
             "system",
             "unknown"
           ],
@@ -113,6 +126,17 @@
           "type": "string"
         },
         "lock_artifact": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "maven_bundle": {
           "anyOf": [
             {
               "$ref": "#/$defs/ArtifactRef"
@@ -182,6 +206,11 @@
               {
                 "required": [
                   "runtime_version"
+                ]
+              },
+              {
+                "required": [
+                  "runtime"
                 ]
               }
             ],
@@ -305,6 +334,17 @@
           ],
           "default": null,
           "title": "Python Version"
+        },
+        "runtime": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/JavaRuntimeProfile"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         },
         "runtime_version": {
           "anyOf": [
@@ -444,6 +484,64 @@
       "title": "HarborExecutionProfile",
       "type": "object",
       "x-nl2repobench-model": "HarborExecutionProfile",
+      "x-nl2repobench-runtime-validation": true
+    },
+    "JavaRuntimeProfile": {
+      "additionalProperties": false,
+      "description": "Exact JDK/Maven identity used by the Java authoring lane.",
+      "properties": {
+        "architecture": {
+          "const": "linux/amd64",
+          "default": "linux/amd64",
+          "title": "Architecture",
+          "type": "string"
+        },
+        "language": {
+          "const": "java",
+          "default": "java",
+          "title": "Language",
+          "type": "string"
+        },
+        "libc": {
+          "const": "glibc",
+          "default": "glibc",
+          "title": "Libc",
+          "type": "string"
+        },
+        "package_manager": {
+          "const": "maven",
+          "default": "maven",
+          "title": "Package Manager",
+          "type": "string"
+        },
+        "package_manager_version": {
+          "title": "Package Manager Version",
+          "type": "string"
+        },
+        "runtime": {
+          "const": "jdk",
+          "default": "jdk",
+          "title": "Runtime",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "version": {
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "version",
+        "package_manager_version"
+      ],
+      "title": "JavaRuntimeProfile",
+      "type": "object",
+      "x-nl2repobench-model": "JavaRuntimeProfile",
       "x-nl2repobench-runtime-validation": true
     },
     "MetricContract": {
@@ -1068,8 +1166,11 @@
           "type": "string"
         },
         "framework": {
-          "const": "pytest",
           "default": "pytest",
+          "enum": [
+            "pytest",
+            "junit-platform"
+          ],
           "title": "Framework",
           "type": "string"
         },
@@ -1091,6 +1192,18 @@
             }
           ],
           "default": null
+        },
+        "report_format": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Report Format"
         },
         "schema_version": {
           "const": "1.0",

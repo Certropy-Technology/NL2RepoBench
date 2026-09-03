@@ -25,7 +25,7 @@ from nl2repobench.storage.artifacts import FileArtifactStore, LocalArtifactResol
 
 JsonObject = dict[str, Any]
 BundleManifestSchema = Literal["1.0", "2.0"]
-RuntimeLanguage = Literal["python", "node"]
+RuntimeLanguage = Literal["python", "node", "go", "java"]
 
 VALID_STATUSES = frozenset({"controls-passed", "reviewed", "piloted", "published"})
 BLOCKED_STATUSES = frozenset({"blocked", "excluded"})
@@ -232,12 +232,12 @@ def _bundle_manifest_schema_for_source(
     if not isinstance(metadata, dict):
         raise ProductionGateError(f"{task_id}: source metadata must be an object")
     language = metadata.get("language")
-    if language == "python":
+    if language in {"python", "go", "java"}:
         return "python", "1.0"
     if language == "node":
         return "node", "2.0"
     raise ProductionGateError(
-        f"{task_id}: source metadata.language must be python or node, got {language!r}"
+        f"{task_id}: source metadata.language must be python, node, go, or java, got {language!r}"
     )
 
 
@@ -289,9 +289,7 @@ def _validate_bundle_manifest(
 
 def _validate_runtime_shape(task_id: str, source_data: JsonObject, task_root: Path) -> JsonObject:
     actual_files = {
-        path.relative_to(task_root).as_posix()
-        for path in task_root.rglob("*")
-        if path.is_file()
+        path.relative_to(task_root).as_posix() for path in task_root.rglob("*") if path.is_file()
     }
     missing = sorted(REQUIRED_RUNTIME_FILES - actual_files)
     if missing:
@@ -377,6 +375,8 @@ def validate_catalog(
     artifact_root: Path,
     python_toolchain: Path,
     node_toolchain: Path,
+    go_toolchain: Path,
+    java_toolchain: Path,
     verify_git: bool = True,
     compile_tasks: bool = True,
     require_evidence: bool = True,
@@ -401,7 +401,8 @@ def validate_catalog(
             _task_issue(
                 "<catalog>",
                 "current source IDs differ from frozen input; "
-                f"missing={sorted(frozen_ids-current_ids)}, extra={sorted(current_ids-frozen_ids)}",
+                f"missing={sorted(frozen_ids - current_ids)}, "
+                f"extra={sorted(current_ids - frozen_ids)}",
             )
         )
 
@@ -475,11 +476,17 @@ def validate_catalog(
                     )
                     if compile_tasks:
                         output_root = Path(compile_parent.name) / task_id
-                        toolchain = (
-                            node_toolchain
-                            if source_data.get("schema_version") == "2.0"
-                            else python_toolchain
-                        )
+                        language = str((source_data.get("metadata") or {}).get("language"))
+                        toolchain = {
+                            "python": python_toolchain,
+                            "node": node_toolchain,
+                            "go": go_toolchain,
+                            "java": java_toolchain,
+                        }.get(language)
+                        if toolchain is None:
+                            raise ProductionGateError(
+                                f"unsupported source language for recompile: {language!r}"
+                            )
                         compiled = registry.compile_task(
                             source_root,
                             output_root,
@@ -508,7 +515,8 @@ def validate_catalog(
             _task_issue(
                 "<catalog>",
                 "catalog/tasks does not equal valid task IDs; "
-                f"missing={sorted(valid_ids-runtime_ids)}, extra={sorted(runtime_ids-valid_ids)}",
+                f"missing={sorted(valid_ids - runtime_ids)}, "
+                f"extra={sorted(runtime_ids - valid_ids)}",
             )
         )
     counts = {
@@ -756,9 +764,7 @@ def _validate_blocked_row(row: JsonObject, repository_root: Path) -> None:
         version = raw.get("tool_version")
         if not isinstance(version, str) or not version:
             raise ProductionGateError(f"{task_id}: blocked command {index} lacks tool_version")
-        log = _file_from_record(
-            raw, "log", repository_root=repository_root, task_id=task_id
-        )
+        log = _file_from_record(raw, "log", repository_root=repository_root, task_id=task_id)
         if log.stat().st_size == 0:
             raise ProductionGateError(f"{task_id}: blocked command {index} log is empty")
     source = blocked.get("source_freeze")

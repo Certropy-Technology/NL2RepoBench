@@ -84,6 +84,7 @@ def test_worktree_enables_sparse_authoring_profile(tmp_path: Path, monkeypatch) 
     assert "catalog/tasks" not in sparse
     assert "src" in sparse
     assert "tests" in sparse
+    assert "openhands" not in sparse
 
 
 def test_driver_launches_direct_pi_and_records_handoff(tmp_path: Path, monkeypatch) -> None:
@@ -230,6 +231,10 @@ def test_pi_command_can_explicitly_allow_internal_subagent(tmp_path: Path) -> No
         session_id="batch-one-attempt-1",
     )
     assert command[command.index("--exclude-tools") + 1] == "subagent_wait"
+
+
+def test_sparse_profile_excludes_gitlink_submodules() -> None:
+    assert "openhands" not in driver.SPARSE_WORKTREE_PATHS
 
 
 def test_driver_refills_from_pending_queue_after_plan_is_exhausted(

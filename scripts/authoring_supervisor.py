@@ -75,6 +75,12 @@ GO_DISCOVERY_REPOSITORIES = {
     "go-xxhash": "cespare/xxhash",
     "go-zap": "uber-go/zap",
 }
+JAVA_DISCOVERY_REPOSITORIES = {
+    "java-commons-codec": "apache/commons-codec",
+    "java-commons-csv": "apache/commons-csv",
+    "java-diff-utils": "java-diff-utils/java-diff-utils",
+    "java-semver4j": "vdurmont/semver4j",
+}
 DEFAULT_WORKERS = 3
 DEFAULT_MAX_TOTAL_CONTROLLERS = 3
 MAX_RUNTIME_CONTROLLERS = 6
@@ -104,9 +110,7 @@ def _lane_key(lane: Lane) -> str:
 def _controller_counts(lanes: list[Lane], procs: list[Proc]) -> dict[str, int]:
     counts: dict[str, int] = {}
     for lane in lanes:
-        counts[lane.language] = counts.get(lane.language, 0) + len(
-            _controller_slots(lane, procs)
-        )
+        counts[lane.language] = counts.get(lane.language, 0) + len(_controller_slots(lane, procs))
     return counts
 
 
@@ -229,9 +233,7 @@ def _sync_private_cas(root: Path, worktree: Path, source: Path) -> list[str]:
             shutil.copyfile(source_file, temporary)
             if _sha256(temporary) != digest.removeprefix("sha256:"):
                 temporary.unlink(missing_ok=True)
-                raise ValueError(
-                    f"private artifact copy failed hash: {digest}"
-                ) from None
+                raise ValueError(f"private artifact copy failed hash: {digest}") from None
             os.replace(temporary, target)
         copied.append(digest)
     return copied
@@ -246,9 +248,13 @@ def _proc_table() -> list[Proc]:
             stat = (entry / "stat").read_text(encoding="utf-8")
             state = stat.rsplit(")", 1)[1].split()[0]
             cwd = os.path.realpath(entry / "cwd")
-            command = (entry / "cmdline").read_bytes().replace(b"\0", b" ").decode(
-                errors="replace"
-            ).strip()
+            command = (
+                (entry / "cmdline")
+                .read_bytes()
+                .replace(b"\0", b" ")
+                .decode(errors="replace")
+                .strip()
+            )
         except (OSError, UnicodeDecodeError):
             continue
         if state != "Z":
@@ -261,16 +267,12 @@ def _worktree_processes(worktree: Path, procs: list[Proc]) -> list[Proc]:
     return [
         proc
         for proc in procs
-        if proc.cwd == target
-        or proc.cwd.startswith(target + os.sep)
-        or target in proc.command
+        if proc.cwd == target or proc.cwd.startswith(target + os.sep) or target in proc.command
     ]
 
 
 def _docker_uses(worktree: Path) -> bool:
-    listed = subprocess.run(
-        ["docker", "ps", "-q"], capture_output=True, text=True, check=False
-    )
+    listed = subprocess.run(["docker", "ps", "-q"], capture_output=True, text=True, check=False)
     if listed.returncode != 0:
         return True
     ids = listed.stdout.split()
@@ -343,7 +345,7 @@ You only choose an operational action. A deterministic pipeline executes it.
 Return exactly one JSON object and no Markdown:
 {{
   "action": "continue|discover|integrate|pause",
-  "language": "python|node|go|all|none",
+  "language": "python|node|go|java|all|none",
   "discover_packages": [],
   "integrate_limit": 0,
   "worker_limit": 0,
@@ -377,12 +379,15 @@ def _parse_director_response(text: str) -> dict[str, Any]:
     }
     if set(value) != required or value["action"] not in DIRECTOR_ACTIONS:
         raise ValueError("Director response schema is invalid")
-    if value["language"] not in {"python", "node", "go", "all", "none"}:
+    if value["language"] not in {"python", "node", "go", "java", "all", "none"}:
         raise ValueError("Director language is invalid")
     packages = value["discover_packages"]
-    if not isinstance(packages, list) or len(packages) > 8 or not all(
-        isinstance(package, str) and SAFE_PACKAGE.fullmatch(package)
-        for package in packages
+    if (
+        not isinstance(packages, list)
+        or len(packages) > 8
+        or not all(
+            isinstance(package, str) and SAFE_PACKAGE.fullmatch(package) for package in packages
+        )
     ):
         raise ValueError("Director discover_packages is invalid")
     for field in ("integrate_limit", "worker_limit"):
@@ -390,9 +395,7 @@ def _parse_director_response(text: str) -> dict[str, Any]:
             raise ValueError(f"Director {field} is invalid")
     if not isinstance(value["reason"], str) or not value["reason"].strip():
         raise ValueError("Director reason is required")
-    if value["action"] == "pause" and (
-        value["integrate_limit"] or value["worker_limit"]
-    ):
+    if value["action"] == "pause" and (value["integrate_limit"] or value["worker_limit"]):
         raise ValueError("pause must use zero limits")
     return value
 
@@ -406,17 +409,15 @@ def _director_decision(
     cache_path = live / "supervisor/director-decision.json"
     runtime_path = live / "supervisor/runtime-config.json"
     runtime_changed = runtime_path.is_file() and (
-        not cache_path.is_file()
-        or runtime_path.stat().st_mtime > cache_path.stat().st_mtime
+        not cache_path.is_file() or runtime_path.stat().st_mtime > cache_path.stat().st_mtime
     )
     if not args.refresh_director and not runtime_changed and cache_path.is_file():
         try:
             cached = _json(cache_path)
             age = time.time() - cache_path.stat().st_mtime
             cached_clean = cached.get("integration_clean")
-            safety_state_matches = (
-                isinstance(cached_clean, bool)
-                and cached_clean == snapshot.get("integration_clean")
+            safety_state_matches = isinstance(cached_clean, bool) and cached_clean == snapshot.get(
+                "integration_clean"
             )
             if age < args.director_interval_sec and safety_state_matches:
                 decision = _parse_director_response(str(cached["response"]))
@@ -490,9 +491,9 @@ def _director_decision(
 
 def _discovery_pool(path: Path) -> dict[str, list[str]]:
     if not path.is_file():
-        return {"python": [], "node": [], "go": []}
+        return {"python": [], "node": [], "go": [], "java": []}
     value = _json(path)
-    pool: dict[str, list[str]] = {"python": [], "node": [], "go": []}
+    pool: dict[str, list[str]] = {"python": [], "node": [], "go": [], "java": []}
     for language in pool:
         entries = value.get(language, [])
         if isinstance(entries, list):
@@ -514,7 +515,7 @@ def _run_discovery(
     lanes: list[Lane],
 ) -> dict[str, Any]:
     language = decision.get("language")
-    if language not in {"python", "node", "go"}:
+    if language not in {"python", "node", "go", "java"}:
         return {"status": "discovery-rejected", "reason": "Director chose no single language"}
     pool = _discovery_pool(args.discovery_pool)
     known = {
@@ -525,9 +526,7 @@ def _run_discovery(
     }
     requested = decision.get("discover_packages") or pool[language]
     packages = [
-        package
-        for package in requested
-        if package in pool[language] and package not in known
+        package for package in requested if package in pool[language] and package not in known
     ][:8]
     if not packages:
         return {"status": "discovery-rejected", "reason": "discovery pool has no new packages"}
@@ -535,23 +534,27 @@ def _run_discovery(
         "python": root / "scripts/discover_python_candidates.py",
         "node": root / "scripts/discover_npm_candidates.py",
         "go": root / "scripts/discover_go_candidates.py",
+        "java": root / "scripts/discover_java_candidates.py",
     }[language]
     if not script.is_file():
         return {"status": "discovery-rejected", "reason": f"missing {script.name}"}
     stamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
     output = live / "supervisor/discovery" / f"{language}-{stamp}.json"
     command = [sys.executable, str(script)]
-    if language == "go":
-        missing = [package for package in packages if package not in GO_DISCOVERY_REPOSITORIES]
+    repository_maps = {
+        "go": GO_DISCOVERY_REPOSITORIES,
+        "java": JAVA_DISCOVERY_REPOSITORIES,
+    }
+    if language in repository_maps:
+        repositories = repository_maps[language]
+        missing = [package for package in packages if package not in repositories]
         if missing:
             return {
                 "status": "discovery-rejected",
-                "reason": f"Go discovery pool lacks repository mapping: {missing[0]}",
+                "reason": f"{language} discovery pool lacks repository mapping: {missing[0]}",
             }
         for package in packages:
-            command.extend(
-                ("--repository", f"{package}={GO_DISCOVERY_REPOSITORIES[package]}")
-            )
+            command.extend(("--repository", f"{package}={repositories[package]}"))
     else:
         for package in packages:
             command.extend(("--package", package))
@@ -600,12 +603,8 @@ def _run_discovery(
         and record.get("status") in {"candidate", "needs-evidence"}
     ]
     queue["counts"] = {
-        "candidate": sum(
-            r.get("status") == "candidate" for r in queue["queue"]
-        ),
-        "needs-evidence": sum(
-            r.get("status") == "needs-evidence" for r in queue["queue"]
-        ),
+        "candidate": sum(r.get("status") == "candidate" for r in queue["queue"]),
+        "needs-evidence": sum(r.get("status") == "needs-evidence" for r in queue["queue"]),
     }
     _atomic_write(queue_path, queue)
     if not queue["queue"]:
@@ -619,9 +618,40 @@ def _run_discovery(
     batch_id = f"{language}-author-discover-{stamp}"
     state_path = live / "queues" / f"{batch_id}.json"
     plan_path = live / "plans" / f"{batch_id}.json"
-    base_plan = _json(live / "plans" / DEFAULT_PLAN_FILES[language])
-    base_plan.update({"batch_id": batch_id, "tasks": [], "status": "planned"})
-    _atomic_write(plan_path, base_plan)
+    if language == "java":
+        planned = _run(
+            [
+                sys.executable,
+                str(root / "scripts/author_package_loop.py"),
+                "--candidates",
+                str(queue_path),
+                "--language",
+                language,
+                "--catalog-root",
+                str(root / "catalog/sources"),
+                "--limit",
+                str(len(packages)),
+                "--batch-id",
+                batch_id,
+                "--output",
+                str(plan_path),
+            ],
+            cwd=root,
+            timeout=args.command_timeout,
+        )
+        if planned["exit_code"] != 0:
+            return {
+                "status": "discovery-plan-failed",
+                "language": language,
+                "packages": packages,
+                "output": str(output),
+                "queue": str(queue_path),
+                "output_tail": planned["output"],
+            }
+    else:
+        base_plan = _json(live / "plans" / DEFAULT_PLAN_FILES[language])
+        base_plan.update({"batch_id": batch_id, "tasks": [], "status": "planned"})
+        _atomic_write(plan_path, base_plan)
     state_result = _run(
         [
             sys.executable,
@@ -730,18 +760,14 @@ def _queue_summary(lane: Lane) -> dict[str, Any]:
         "exhausted": sum(
             1
             for record in records
-            if record.get("status") == "pending"
-            and int(record.get("attempts", 0)) >= 3
+            if record.get("status") == "pending" and int(record.get("attempts", 0)) >= 3
         ),
     }
 
 
-def _lane_has_claimable_work(
-    records: list[dict[str, Any]], *, max_attempts: int
-) -> bool:
+def _lane_has_claimable_work(records: list[dict[str, Any]], *, max_attempts: int) -> bool:
     return any(
-        record.get("status") == "pending"
-        and int(record.get("attempts", 0)) < max_attempts
+        record.get("status") == "pending" and int(record.get("attempts", 0)) < max_attempts
         for record in records
     )
 
@@ -819,9 +845,7 @@ def _release_stale_claims(
                 "language": lane.language,
                 "package": package,
                 "status": (
-                    "stale-released"
-                    if released["exit_code"] == 0
-                    else "stale-release-error"
+                    "stale-released" if released["exit_code"] == 0 else "stale-release-error"
                 ),
                 "output": released["output"],
             }
@@ -934,13 +958,17 @@ def _validate_and_compile(root: Path, source: Path, language: str) -> tuple[dict
     )
     if network["exit_code"] != 0:
         raise RuntimeError(f"network lint failed: {network['output']}")
-    toolchain = root / {
-        "python": "toolchain.lock.toml",
-        "node": "toolchain.node.lock.toml",
-        "go": "toolchain.go.lock.toml",
-    }[language]
-    compile_root = root / ".nl2repo/supervisor/compile" / re.sub(
-        r"[^A-Za-z0-9._-]+", "_", source.name
+    toolchain = (
+        root
+        / {
+            "python": "toolchain.lock.toml",
+            "node": "toolchain.node.lock.toml",
+            "go": "toolchain.go.lock.toml",
+            "java": "toolchain.java.lock.toml",
+        }[language]
+    )
+    compile_root = (
+        root / ".nl2repo/supervisor/compile" / re.sub(r"[^A-Za-z0-9._-]+", "_", source.name)
     )
     if compile_root.exists():
         shutil.rmtree(compile_root)
@@ -994,9 +1022,7 @@ def _git_status(root: Path) -> list[str]:
 
 
 def _remote_sync(root: Path, remote: str, branch: str) -> None:
-    result = _run(
-        ["git", "push", remote, f"HEAD:{branch}"], cwd=root, timeout=600
-    )
+    result = _run(["git", "push", remote, f"HEAD:{branch}"], cwd=root, timeout=600)
     if result["exit_code"] != 0:
         raise RuntimeError(f"git push failed: {result['output']}")
 
@@ -1090,9 +1116,7 @@ def _integrate_task(
         if source_changed:
             shutil.rmtree(source_target, ignore_errors=True)
         raise RuntimeError(f"git add failed: {staged['output']}")
-    staged_paths = _run(
-        ["git", "diff", "--cached", "--name-only"], cwd=root, timeout=60
-    )
+    staged_paths = _run(["git", "diff", "--cached", "--name-only"], cwd=root, timeout=60)
     if staged_paths["exit_code"] != 0:
         _run(
             ["git", "reset", "--", f"catalog/sources/{package}", f"catalog/tasks/{task_id}"],
@@ -1139,17 +1163,13 @@ def _integrate_task(
             if source_changed:
                 shutil.rmtree(source_target, ignore_errors=True)
             raise RuntimeError(f"git commit failed: {committed['output']}")
-        commit = _command_output(
-            _run(["git", "rev-parse", "HEAD"], cwd=root, timeout=60)
-        ).strip()
+        commit = _command_output(_run(["git", "rev-parse", "HEAD"], cwd=root, timeout=60)).strip()
     _remote_sync(root, remote, branch)
     if archive_bucket is None:
         raise RuntimeError("OSS credentials are missing; worktree retained")
     archived = archive_module.archive_task(
         archive_bucket,
-        lane=archive_module.Lane(
-            lane.language, lane.batch_id, lane.queue_state
-        ),
+        lane=archive_module.Lane(lane.language, lane.batch_id, lane.queue_state),
         package=package,
         worktree=worktree,
         receipt_root=receipt_root,
@@ -1227,19 +1247,14 @@ def _runtime_config(path: Path, args: argparse.Namespace) -> dict[str, Any]:
     if value.get("schema_version", "1.0") != "1.0":
         raise ValueError("runtime config schema_version must be 1.0")
     enabled = value.get("enabled", defaults["enabled"])
-    max_controllers = value.get(
-        "max_total_controllers", defaults["max_total_controllers"]
-    )
-    concurrency = value.get(
-        "controller_concurrency", defaults["controller_concurrency"]
-    )
+    max_controllers = value.get("max_total_controllers", defaults["max_total_controllers"])
+    concurrency = value.get("controller_concurrency", defaults["controller_concurrency"])
     max_integrations = value.get("max_integrations", defaults["max_integrations"])
     agent_limit = value.get("agent_limit", defaults["agent_limit"])
     if not isinstance(enabled, bool):
         raise ValueError("runtime config enabled must be boolean")
-    if (
-        not isinstance(max_controllers, int)
-        or not 0 <= max_controllers <= min(args.max_total_controllers, MAX_RUNTIME_CONTROLLERS)
+    if not isinstance(max_controllers, int) or not 0 <= max_controllers <= min(
+        args.max_total_controllers, MAX_RUNTIME_CONTROLLERS
     ):
         raise ValueError("runtime config max_total_controllers is out of bounds")
     if not isinstance(concurrency, int) or not 0 <= concurrency <= MAX_RUNTIME_CONCURRENCY:
@@ -1265,9 +1280,7 @@ def _save_failure_state(path: Path, value: dict[str, Any]) -> None:
     _atomic_write(path, value)
 
 
-def _failure_is_in_backoff(
-    state: dict[str, Any], worktree: Path, package: str
-) -> bool:
+def _failure_is_in_backoff(state: dict[str, Any], worktree: Path, package: str) -> bool:
     record = state.get(package)
     if not isinstance(record, dict):
         return False
@@ -1288,9 +1301,7 @@ def _oss_bucket() -> Any | None:
 
     return oss2.Bucket(
         oss2.Auth(key_id, key_secret),
-        os.environ.get(
-            "OSS_ENDPOINT", "https://oss-ap-southeast-1.aliyuncs.com"
-        ),
+        os.environ.get("OSS_ENDPOINT", "https://oss-ap-southeast-1.aliyuncs.com"),
         os.environ.get("OSS_BUCKET", "dingshang-sg"),
     )
 
@@ -1404,9 +1415,7 @@ def _start_controller(
     return process.pid
 
 
-def _resume_stopped_controllers(
-    lanes: list[Lane], procs: list[Proc]
-) -> list[int]:
+def _resume_stopped_controllers(lanes: list[Lane], procs: list[Proc]) -> list[int]:
     resumed: list[int] = []
     for lane in lanes:
         for proc in _controller_processes(lane, procs):
@@ -1443,7 +1452,7 @@ def _lanes(root: Path, live: Path, queue_root: Path) -> list[Lane]:
             (live / "plans" / DEFAULT_PLAN_FILES[language]).resolve(),
             (live / "queues" / f"{language}-wave2-20260828.json").resolve(),
         )
-        for language in ("python", "node", "go")
+        for language in ("python", "node", "go", "java")
     ]
     generated = live / "supervisor/generated-lanes.json"
     if generated.is_file():
@@ -1490,16 +1499,12 @@ def supervise(args: argparse.Namespace) -> int:
     report_path = live / "supervisor/status.json"
     failure_state_path = live / "supervisor/integration-failures.json"
     runtime_config_path = (
-        args.runtime_config
-        if args.runtime_config.is_absolute()
-        else root / args.runtime_config
+        args.runtime_config if args.runtime_config.is_absolute() else root / args.runtime_config
     ).resolve()
     last_runtime_config = {
         "schema_version": "1.0",
         "enabled": True,
-        "max_total_controllers": min(
-            args.max_total_controllers, MAX_RUNTIME_CONTROLLERS
-        ),
+        "max_total_controllers": min(args.max_total_controllers, MAX_RUNTIME_CONTROLLERS),
         "controller_concurrency": 1,
         "max_integrations": args.max_integrations,
         "agent_limit": None,
@@ -1602,7 +1607,7 @@ def supervise(args: argparse.Namespace) -> int:
                     )
             report["director"] = director
             selected_language = director.get("language")
-            if selected_language not in {"python", "node", "go", "all"}:
+            if selected_language not in {"python", "node", "go", "java", "all"}:
                 selected_language = "none"
             runtime_max_integrations = cast(int, runtime["max_integrations"])
             runtime_max_controllers = cast(int, runtime["max_total_controllers"])
@@ -1631,12 +1636,10 @@ def supervise(args: argparse.Namespace) -> int:
                 and integration_clean
                 and report["worker_disk_capacity"]
             ):
-                report["actions"].append(
-                    _run_discovery(args, root, live, director, lanes)
-                )
+                report["actions"].append(_run_discovery(args, root, live, director, lanes))
             if args.replenish_language:
                 selected = (
-                    ["python", "node", "go"]
+                    ["python", "node", "go", "java"]
                     if "all" in args.replenish_language
                     else list(args.replenish_language)
                 )
@@ -1667,14 +1670,10 @@ def supervise(args: argparse.Namespace) -> int:
                         )
             failure_state = _load_failure_state(failure_state_path)
             report["actions"].extend(
-                _release_stale_claims(root, lanes[0], procs, max_attempts=3)
-                if lanes
-                else []
+                _release_stale_claims(root, lanes[0], procs, max_attempts=3) if lanes else []
             )
             for lane in lanes[1:]:
-                report["actions"].extend(
-                    _release_stale_claims(root, lane, procs, max_attempts=3)
-                )
+                report["actions"].extend(_release_stale_claims(root, lane, procs, max_attempts=3))
             with _exclusive_lock(live / "archive.lock", blocking=False) as archive_lock:
                 if archive_lock:
                     bucket = _oss_bucket()
@@ -1753,8 +1752,7 @@ def supervise(args: argparse.Namespace) -> int:
                                             / package,
                                             package,
                                         ),
-                                        "retry_after": time.time()
-                                        + args.failure_backoff_seconds,
+                                        "retry_after": time.time() + args.failure_backoff_seconds,
                                         "error": action.get("error"),
                                         "recorded_at": datetime.now(UTC).isoformat(),
                                     }
@@ -1776,9 +1774,7 @@ def supervise(args: argparse.Namespace) -> int:
                 and worker_limit > 0
             )
             can_run_maintenance = (
-                not args.dry_run
-                and integration_clean
-                and free >= args.watcher_min_free_bytes
+                not args.dry_run and integration_clean and free >= args.watcher_min_free_bytes
             )
             if can_run_maintenance:
                 current = _watcher_processes(_proc_table())
@@ -1798,20 +1794,16 @@ def supervise(args: argparse.Namespace) -> int:
                 if args.resume_stopped_controllers:
                     resumed = _resume_stopped_controllers(lanes, current)
                     if resumed:
-                        report["actions"].append(
-                            {"status": "controllers-resumed", "pids": resumed}
-                        )
+                        report["actions"].append({"status": "controllers-resumed", "pids": resumed})
                         current = _proc_table()
-                active_total = sum(
-                    len(_controller_slots(lane, current)) for lane in lanes
-                )
+                active_total = sum(len(_controller_slots(lane, current)) for lane in lanes)
                 lane_records = {_lane_key(lane): _lane_records(lane) for lane in lanes}
                 language_lanes: dict[str, list[Lane]] = {}
                 for lane in lanes:
                     language_lanes.setdefault(lane.language, []).append(lane)
                 language_counts = _controller_counts(lanes, current)
                 for slot in range(min(args.workers, worker_limit)):
-                    for language in ("python", "node", "go"):
+                    for language in ("python", "node", "go", "java"):
                         if active_total >= runtime["max_total_controllers"]:
                             break
                         if language_counts.get(language, 0) > slot:
@@ -1839,9 +1831,7 @@ def supervise(args: argparse.Namespace) -> int:
                                 runtime_config_path,
                             )
                             active_total += 1
-                            language_counts[language] = (
-                                language_counts.get(language, 0) + 1
-                            )
+                            language_counts[language] = language_counts.get(language, 0) + 1
                             report["actions"].append(
                                 {
                                     "status": "controller-started",
@@ -1936,7 +1926,7 @@ def main() -> int:
     parser.add_argument("--once", action="store_true")
     parser.add_argument(
         "--replenish-language",
-        choices=("python", "node", "go", "all"),
+        choices=("python", "node", "go", "java", "all"),
         action="append",
         help="One-shot operator-approved discovery from the registered pool.",
     )
@@ -1957,9 +1947,7 @@ def main() -> int:
         or args.docker_min_free_bytes < 1
         or args.watcher_min_free_bytes < 1
     ):
-        parser.error(
-            "worker, integration, interval, timeout, and disk thresholds must be positive"
-        )
+        parser.error("worker, integration, interval, timeout, and disk thresholds must be positive")
     try:
         return supervise(args)
     except (OSError, ValueError, RuntimeError, json.JSONDecodeError) as exc:

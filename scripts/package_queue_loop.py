@@ -277,7 +277,7 @@ def build_parser() -> argparse.ArgumentParser:
             sub.add_argument("--limit", type=int, default=1)
             sub.add_argument("--lease-seconds", type=int, default=7200)
             sub.add_argument("--max-attempts", type=int, default=3)
-            sub.add_argument("--language", choices=("python", "node", "go"))
+            sub.add_argument("--language", choices=("python", "node", "go", "java"))
             sub.add_argument(
                 "--candidate-id",
                 action="append",

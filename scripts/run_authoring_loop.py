@@ -49,7 +49,6 @@ SPARSE_WORKTREE_PATHS = (
     "src",
     "tests",
     "tools",
-    "openhands",
     "verifier",
 )
 SCRIPT_ROOT = Path(__file__).resolve().parent
@@ -218,9 +217,7 @@ def _worktree(path: Path) -> str:
         check=False,
     )
     if sparse.returncode != 0:
-        subprocess.run(
-            ["git", "worktree", "remove", "--force", str(path)], check=False
-        )
+        subprocess.run(["git", "worktree", "remove", "--force", str(path)], check=False)
         raise RuntimeError(f"git sparse-checkout failed: {sparse.stderr[-1000:]}")
     return "created"
 
@@ -290,11 +287,11 @@ Work only in this existing detached worktree:
 
 Read these files first:
 - AGENTS.md
-- {worktree / '.nl2repo/authoring-claim.json'}
+- {worktree / ".nl2repo/authoring-claim.json"}
 - {brief_path}
-- {worktree / 'docs/authoring-agent-remediation-guide.zh-CN.md'}
+- {worktree / "docs/authoring-agent-remediation-guide.zh-CN.md"}
 
-Your package is {package!r}, language is {plan['language']!r}, and your only
+Your package is {package!r}, language is {plan["language"]!r}, and your only
 authoring source target is catalog/sources/{package}/ plus task-local private
 artifacts and evidence under .nl2repo/. `catalog/tasks/{package}/` is generated
 compiler output: do not hand-edit it. You are the sole writer for this worktree.
@@ -318,7 +315,9 @@ an explicit `[environment.network_policy]` with `mode = "no-network"` for
 normal tasks. Python tasks must use a hash-locked `lock_artifact` installed at
 Docker build time and must not vendor a wheelhouse. Node tasks use the pinned
 npm lock/cache contract. Go tasks use the locked module bundle and typed bridge
-contract. Do not make the evaluation Agent run
+contract. Java tasks use a verifier-owned Maven lock plus offline repository,
+reject candidate-controlled plugins/dependencies, and emit JUnit Open Test
+Reporting XML through the Java adapter. Do not make the evaluation Agent run
 `pip install`, `npm install`, `git clone`, `curl`, or `wget` to discover or
 install dependencies. If a special package needs an extra system library or
 runtime dependency, declare and freeze it in the source contract, then compile
@@ -424,10 +423,7 @@ def _write_authoring_settings(worktree: Path) -> Path:
         for package in packages
         if not (
             package == "npm:pi-lark-notify"
-            or (
-                isinstance(package, dict)
-                and package.get("source") == "npm:pi-lark-notify"
-            )
+            or (isinstance(package, dict) and package.get("source") == "npm:pi-lark-notify")
         )
     ]
     authoring_settings = {
@@ -590,14 +586,16 @@ def _run_authoring_task_lint(worktree: Path, task_root: Path) -> dict[str, Any]:
             else (
                 worktree / "toolchain.go.lock.toml"
                 if language == "go"
-                else worktree / "toolchain.lock.toml"
+                else (
+                    worktree / "toolchain.java.lock.toml"
+                    if language == "java"
+                    else worktree / "toolchain.lock.toml"
+                )
             )
         )
         compile_parent = worktree / ".nl2repo/authoring-gate"
         compile_parent.mkdir(parents=True, exist_ok=True)
-        compile_output = Path(
-            tempfile.mkdtemp(prefix=f"{task_root.name}-", dir=compile_parent)
-        )
+        compile_output = Path(tempfile.mkdtemp(prefix=f"{task_root.name}-", dir=compile_parent))
         compile_result = subprocess.run(
             [
                 "uv",
@@ -710,11 +708,7 @@ def _prepare_task(
         "agent_run_boundary": "direct top-level pi CLI session; no pi-subagents",
         "must_not": [
             "start a Harbor Agent Run",
-            *(
-                []
-                if getattr(args, "allow_internal_subagent", False)
-                else ["invoke subagent tools"]
-            ),
+            *([] if getattr(args, "allow_internal_subagent", False) else ["invoke subagent tools"]),
             "edit shared datasets/reports or the parent checkout",
             "publish without integrator",
         ],
@@ -906,8 +900,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     if not isinstance(tasks, list):
         raise ValueError("author plan requires tasks")
     language = plan.get("language")
-    if language not in {"python", "node", "go"}:
-        raise ValueError("author plan language must be python, node, or go")
+    if language not in {"python", "node", "go", "java"}:
+        raise ValueError("author plan language must be python, node, go, or java")
     batch_id = plan.get("batch_id")
     if not isinstance(batch_id, str) or not SAFE_NAME.fullmatch(batch_id):
         raise ValueError("author plan requires a safe batch_id")
@@ -1078,9 +1072,7 @@ def main() -> int:
     parser.add_argument(
         "--allow-internal-subagent",
         action="store_true",
-        help=(
-            "Allow a child Pi Agent to use subagent for bounded parallel probes."
-        ),
+        help=("Allow a child Pi Agent to use subagent for bounded parallel probes."),
     )
     args = parser.parse_args()
     try:

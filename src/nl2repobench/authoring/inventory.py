@@ -11,6 +11,7 @@ from __future__ import annotations
 import ast
 import hashlib
 import json
+import re
 import tokenize
 from dataclasses import asdict, dataclass
 from pathlib import Path
@@ -33,6 +34,16 @@ _RISKY_IMPORT_PREFIXES = (
     "selenium",
     "playwright",
 )
+_JAVA_PUBLIC_TYPE = re.compile(
+    r"(?m)^\s*public\s+(?:final\s+|abstract\s+)?"
+    r"(?:class|interface|enum|record)\s+([A-Za-z_$][A-Za-z0-9_$]*)"
+)
+_JAVA_METHOD = re.compile(
+    r"(?m)^\s*(?:public\s+)?(?:static\s+)?(?:final\s+)?"
+    r"[A-Za-z_$][A-Za-z0-9_$<>\[\], ?]*\s+([A-Za-z_$][A-Za-z0-9_$]*)\s*\([^;{}]*\)"
+)
+_JAVA_IMPORT = re.compile(r"(?m)^\s*import\s+(?:static\s+)?([A-Za-z0-9_.*]+)\s*;")
+_JAVA_TEST = re.compile(r"(?m)^\s*@(?:[A-Za-z0-9_.]+\.)?Test\b")
 
 
 @dataclass(frozen=True)
@@ -218,6 +229,135 @@ def write_inventory(inventory: ApiInventory, output: Path) -> None:
     temporary.replace(output)
 
 
+def scan_java_source(root: Path) -> ApiInventory:
+    """Scan Java source text and Maven metadata without compiling or importing it."""
+
+    resolved_root = root.resolve()
+    if not resolved_root.is_dir() or root.is_symlink():
+        raise InventoryError(f"source root must be a regular directory: {root}")
+    files = tuple(sorted(resolved_root.rglob("*.java")))
+    if not files:
+        raise InventoryError(f"no Java files found below {root}")
+    symbols: list[ApiSymbol] = []
+    imports: list[ImportEdge] = []
+    tests: list[TestReference] = []
+    risks: set[str] = set()
+    diagnostics: list[str] = []
+    implementation_loc = 0
+    test_loc = 0
+    test_file_count = 0
+    for path in files:
+        relative = path.relative_to(resolved_root)
+        is_test = "test" in {part.casefold() for part in relative.parts} or path.name.endswith(
+            "Test.java"
+        )
+        text = _read_text(path)
+        lines = _non_comment_lines(text)
+        if is_test:
+            test_file_count += 1
+            test_loc += lines
+        else:
+            implementation_loc += lines
+        module = _java_module_name(relative, text)
+        for match in _JAVA_PUBLIC_TYPE.finditer(text):
+            line = text.count("\n", 0, match.start()) + 1
+            symbols.append(
+                ApiSymbol(
+                    module=module,
+                    name=match.group(1),
+                    qualified_name=f"{module}.{match.group(1)}",
+                    kind="type",
+                    signature=None,
+                    line=line,
+                    end_line=line,
+                    public=True,
+                    exported=True,
+                )
+            )
+        for match in _JAVA_METHOD.finditer(text):
+            line = text.count("\n", 0, match.start()) + 1
+            symbols.append(
+                ApiSymbol(
+                    module=module,
+                    name=match.group(1),
+                    qualified_name=f"{module}.{match.group(1)}",
+                    kind="method",
+                    signature=match.group(0).strip(),
+                    line=line,
+                    end_line=line,
+                    public=True,
+                    exported=True,
+                )
+            )
+        for match in _JAVA_IMPORT.finditer(text):
+            imports.append(
+                ImportEdge(
+                    module=module,
+                    imported=match.group(1),
+                    line=text.count("\n", 0, match.start()) + 1,
+                )
+            )
+        test_matches = list(_JAVA_TEST.finditer(text))
+        for index, match in enumerate(test_matches):
+            line = text.count("\n", 0, match.start()) + 1
+            tests.append(
+                TestReference(
+                    module=module,
+                    name=f"test_{path.stem}_{index + 1}",
+                    line=line,
+                    end_line=line,
+                    decorators=(match.group(0).strip(),),
+                    referenced_names=(),
+                    assertion_kinds=("assertion",),
+                )
+            )
+        if re.search(r"\b(?:Runtime|ProcessBuilder|Socket|URL|Class\.forName)\b", text):
+            risks.add("runtime-or-external-io")
+        if re.search(r"\b(?:System\.exit|Runtime\.getRuntime)\b", text):
+            risks.add("process-control")
+        if re.search(r"\b(?:native|JNI)\b", text):
+            risks.add("native-extension")
+    pom = resolved_root / "pom.xml"
+    if not pom.is_file():
+        risks.add("missing-pom")
+    digest = _digest_files(resolved_root, files)
+    return ApiInventory(
+        language="java",
+        source_root=str(resolved_root),
+        source_digest=digest,
+        scanner_identity="java-regex-stdlib-v1",
+        symbols=tuple(sorted(symbols, key=_symbol_sort_key)),
+        imports=tuple(sorted(imports, key=lambda item: (item.module, item.line, item.imported))),
+        tests=tuple(sorted(tests, key=lambda item: (item.module, item.line, item.name))),
+        cli_entries=(),
+        risk_flags=tuple(sorted(risks)),
+        syntax_diagnostics=tuple(sorted(diagnostics)),
+        metrics=InventoryMetrics(
+            implementation_loc=implementation_loc,
+            test_loc=test_loc,
+            python_files=0,
+            test_files=test_file_count,
+            public_symbol_count=sum(1 for symbol in symbols if symbol.public),
+            test_count=len(tests),
+            import_count=len(imports),
+        ),
+        completeness={
+            "syntax": not diagnostics,
+            "dynamic": True,
+            "generated": True,
+            "native": "native-extension" not in risks,
+            "external-service": "runtime-or-external-io" not in risks,
+        },
+    )
+
+
+def _java_module_name(path: Path, text: str) -> str:
+    package = re.search(r"(?m)^\s*package\s+([A-Za-z0-9_.]+)\s*;", text)
+    if package:
+        return package.group(1)
+    return path.with_suffix("").as_posix().replace("/", ".")
+
+
 class _InventoryVisitor(ast.NodeVisitor):
     def __init__(self, module: str, *, is_test: bool, exported_names: set[str]) -> None:
         self.module = module
@@ -318,10 +458,7 @@ class _InventoryVisitor(ast.NodeVisitor):
         end_line = getattr(node, "end_lineno", line) or line
         public = not name.startswith("_") or name in self.exported_names
         decorators = tuple(
-            sorted(
-                _expression_text(item)
-                for item in getattr(node, "decorator_list", [])
-            )
+            sorted(_expression_text(item) for item in getattr(node, "decorator_list", []))
         )
         self.symbols.append(
             ApiSymbol(
@@ -418,8 +555,7 @@ def _explicit_exports(tree: ast.Module) -> set[str]:
         if not isinstance(node, ast.Assign):
             continue
         if not any(
-            isinstance(target, ast.Name) and target.id == "__all__"
-            for target in node.targets
+            isinstance(target, ast.Name) and target.id == "__all__" for target in node.targets
         ):
             continue
         value = node.value
@@ -474,9 +610,7 @@ def _non_comment_lines(text: str) -> int:
     """Count nonblank physical lines that are not comment-only lines."""
 
     return sum(
-        1
-        for line in text.splitlines()
-        if line.strip() and not line.lstrip().startswith("#")
+        1 for line in text.splitlines() if line.strip() and not line.lstrip().startswith("#")
     )
 
 
@@ -504,5 +638,6 @@ __all__ = [
     "InventoryMetrics",
     "TestReference",
     "scan_python_source",
+    "scan_java_source",
     "write_inventory",
 ]

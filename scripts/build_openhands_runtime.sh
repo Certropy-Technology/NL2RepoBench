@@ -12,7 +12,7 @@ LOG_FILE="$LOG_DIR/openhands-fork-runtime-build.log"
 mkdir -p "$LOG_DIR"
 build_and_verify() {
   local image="$1"
-  local expected_id="$2"
+  local runtime_metadata="$2"
   shift 2
   docker build \
     --pull=false \
@@ -25,6 +25,15 @@ build_and_verify() {
   docker run --rm --network none "$image" \
     /opt/openhands-sdk-venv/bin/python -c \
     'from importlib.metadata import version; from openhands.sdk.agent.utils import parse_tool_call_arguments; assert version("openhands-sdk")=="1.43.1"; assert version("openhands-tools")=="1.43.1"; assert version("litellm")=="1.93.0"; assert parse_tool_call_arguments("{}{\"command\":\"pwd\"}")=={"command":"pwd"}; print("OPENHANDS_FORK_OFFLINE_RUNTIME_OK")'
+  local expected_id
+  expected_id="$(python3 - "$runtime_metadata" <<'PY'
+import json
+import sys
+from pathlib import Path
+
+print(json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))["image_id"])
+PY
+)"
   actual_id="$(docker image inspect "$image" --format '{{.Id}}')"
   test "$actual_id" = "$expected_id"
   docker image inspect "$image" \
@@ -34,6 +43,6 @@ build_and_verify() {
 }
 
 {
-  build_and_verify "$IMAGE" "sha256:70525a5fbee81f4d202b7f7de14857fe78f961ce2ec3995efd1a4850e45c7ea5"
-  build_and_verify "$BOOKWORM_IMAGE" "sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f" --build-arg "PYTHON_BASE=$BOOKWORM_BASE"
+  build_and_verify "$IMAGE" "$ROOT/runtime/openhands-agent/runtime.json"
+  build_and_verify "$BOOKWORM_IMAGE" "$ROOT/runtime/openhands-agent/runtime.bookworm.json" --build-arg "PYTHON_BASE=$BOOKWORM_BASE"
 } 2>&1 | tee "$LOG_FILE"

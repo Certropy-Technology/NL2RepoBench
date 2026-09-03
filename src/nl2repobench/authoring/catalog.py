@@ -82,6 +82,16 @@ class DeclarativeTaskSource(RecordModel):
     @model_validator(mode="after")
     def validate_paths(self) -> DeclarativeTaskSource:
         _validate_relative_path(self.instruction, "instruction")
+        if self.metadata.language == "java":
+            runtime = self.environment.runtime
+            if runtime is None or runtime.package_manager != "maven":
+                raise ValueError(
+                    "Java tasks require environment.runtime with package_manager=maven"
+                )
+            if self.dependencies.installer != "maven":
+                raise ValueError("Java tasks require dependencies.installer=maven")
+            if self.tests.framework != "junit-platform":
+                raise ValueError("Java tasks require tests.framework=junit-platform")
         return self
 
 

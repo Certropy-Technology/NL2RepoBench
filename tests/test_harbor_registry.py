@@ -58,3 +58,14 @@ def test_registry_resolves_registered_pnpm_identity() -> None:
         )
     )
     assert factory.__name__ == "node_pnpm_factory"
+
+
+def test_registry_resolves_registered_java_maven_identity() -> None:
+    registry = HarborCompilerRegistry.default()
+    factory = registry.resolve(
+        RuntimeDiscriminator(
+            language=RuntimeLanguage.JAVA,
+            package_manager=PackageManager.MAVEN,
+        )
+    )
+    assert factory.__name__ == "java_maven_factory"

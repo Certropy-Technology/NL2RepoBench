@@ -187,8 +187,16 @@ def build_plan(
                         "typed bridge, Harbor compile, verifier build, Oracle once, "
                         "controls, review"
                         if language == "go"
-                        else "Python locked toolchain, AST/test inventory, active remediation, "
-                        "Harbor gates, review"
+                        else (
+                            "Java JDK 21/Maven 3.9 locked toolchain, POM/API/test inventory, "
+                            "offline Maven closure, verifier-owned JUnit report, Harbor compile, "
+                            "verifier build, Oracle once, controls, review"
+                            if language == "java"
+                            else (
+                                "Python locked toolchain, AST/test inventory, active remediation, "
+                                "Harbor gates, review"
+                            )
+                        )
                     )
                 ),
                 "handoff_status": "authoring-in-progress",
@@ -199,9 +207,8 @@ def build_plan(
         "batch_id": batch_id,
         "language": language,
         "candidate_input": str(candidate_path),
-        "candidate_input_sha256": "sha256:" + hashlib.sha256(
-            candidate_path.read_bytes()
-        ).hexdigest(),
+        "candidate_input_sha256": "sha256:"
+        + hashlib.sha256(candidate_path.read_bytes()).hexdigest(),
         "oss_inventory": str(oss_inventory) if oss_inventory else None,
         "parallelism": {"workers": min(limit, 3), "shared_integrator_writers": 1},
         "stages": list(STAGES),
@@ -218,7 +225,7 @@ def build_plan(
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--candidates", type=Path, required=True)
-    parser.add_argument("--language", choices=("python", "node", "go"), required=True)
+    parser.add_argument("--language", choices=("python", "node", "go", "java"), required=True)
     parser.add_argument("--catalog-root", type=Path, default=Path("catalog/sources"))
     parser.add_argument("--oss-inventory", type=Path)
     parser.add_argument("--limit", type=int, default=5)

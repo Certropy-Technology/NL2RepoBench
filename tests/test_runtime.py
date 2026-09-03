@@ -11,14 +11,43 @@ from nl2repobench.domain.runtime import (
 
 
 def test_runtime_discriminator_accepts_python_and_node_package_managers() -> None:
-    assert RuntimeDiscriminator(
-        language=RuntimeLanguage.PYTHON,
-        package_manager=PackageManager.UV,
-    ).package_manager is PackageManager.UV
-    assert RuntimeDiscriminator(
-        language=RuntimeLanguage.NODE,
-        package_manager=PackageManager.PNPM,
-    ).language is RuntimeLanguage.NODE
+    assert (
+        RuntimeDiscriminator(
+            language=RuntimeLanguage.PYTHON,
+            package_manager=PackageManager.UV,
+        ).package_manager
+        is PackageManager.UV
+    )
+    assert (
+        RuntimeDiscriminator(
+            language=RuntimeLanguage.NODE,
+            package_manager=PackageManager.PNPM,
+        ).language
+        is RuntimeLanguage.NODE
+    )
+
+
+def test_runtime_discriminator_accepts_java_maven() -> None:
+    assert (
+        RuntimeDiscriminator(
+            language=RuntimeLanguage.JAVA,
+            package_manager=PackageManager.MAVEN,
+        ).package_manager
+        is PackageManager.MAVEN
+    )
+
+
+def test_runtime_discriminator_reads_explicit_java_source() -> None:
+    result = RuntimeDiscriminator.from_catalog_source(
+        {
+            "metadata": {"language": "java"},
+            "dependencies": {"installer": "maven"},
+        }
+    )
+    assert result == RuntimeDiscriminator(
+        language=RuntimeLanguage.JAVA,
+        package_manager=PackageManager.MAVEN,
+    )
 
 
 def test_runtime_discriminator_rejects_cross_ecosystem_manager() -> None:

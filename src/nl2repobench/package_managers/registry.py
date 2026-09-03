@@ -6,6 +6,7 @@ from dataclasses import dataclass
 
 from .base import PackageManagerAdapter
 from .go_modules import GoModulesPackageManager
+from .maven import MavenPackageManager
 from .pnpm import PnpmPackageManager
 
 
@@ -22,6 +23,7 @@ class PackageManagerRegistry:
         return cls(
             adapters={
                 "go-modules": GoModulesPackageManager(),
+                "maven": MavenPackageManager(),
                 "pnpm": PnpmPackageManager(),
             }
         )

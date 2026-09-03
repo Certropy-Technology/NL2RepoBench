@@ -7,6 +7,7 @@ import pytest
 
 from nl2repobench.authoring.inventory import (
     InventoryError,
+    scan_java_source,
     scan_python_source,
     write_inventory,
 )
@@ -26,8 +27,7 @@ def test_python_inventory_is_static_complete_and_deterministic() -> None:
     assert "cli" in first.cli_entries
     assert any(symbol.qualified_name == "sample.Parser.parse" for symbol in first.symbols)
     assert any(
-        test.name == "test_empty" and "exception" in test.assertion_kinds
-        for test in first.tests
+        test.name == "test_empty" and "exception" in test.assertion_kinds for test in first.tests
     )
 
 
@@ -41,3 +41,39 @@ def test_inventory_writer_emits_canonical_json(tmp_path: Path) -> None:
 def test_inventory_rejects_empty_or_non_directory(tmp_path: Path) -> None:
     with pytest.raises(InventoryError, match="no Python files"):
         scan_python_source(tmp_path)
+
+
+def test_java_inventory_is_static_and_deterministic(tmp_path: Path) -> None:
+    source = tmp_path / "src/main/java/example"
+    source.mkdir(parents=True)
+    (source / "Parser.java").write_text(
+        """package example;
+import java.util.List;
+public final class Parser {
+    public static String parse(String value) { return value; }
+}
+""",
+        encoding="utf-8",
+    )
+    tests = tmp_path / "src/test/java/example"
+    tests.mkdir(parents=True)
+    (tests / "ParserTest.java").write_text(
+        """package example;
+import org.junit.jupiter.api.Test;
+class ParserTest {
+    @Test void parses() {}
+}
+""",
+        encoding="utf-8",
+    )
+    (tmp_path / "pom.xml").write_text("<project />", encoding="utf-8")
+
+    first = scan_java_source(tmp_path)
+    second = scan_java_source(tmp_path)
+
+    assert first == second
+    assert first.language == "java"
+    assert first.scanner_identity == "java-regex-stdlib-v1"
+    assert first.metrics.test_count == 1
+    assert first.metrics.public_symbol_count == 2
+    assert first.risk_flags == ()
