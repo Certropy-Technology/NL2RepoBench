@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0",
+  "framework": "node:test",
+  "report_format": "node-test-json-v1",
+  "frozen_total": 33,
+  "private_entry": "contract.test.mjs",
+  "groups": {
+    "package_contract": 1,
+    "npmRunPath_path_construction": 17,
+    "npmRunPathEnv_cloning_and_path_selection": 10,
+    "errors_and_determinism": 5
+  },
+  "upstream_baseline": {
+    "command": "xo && ava && tsd",
+    "ava_leaves": 28,
+    "result": "passed"
+  },
+  "adapter": "One-shot JSON adapter constructs URL inputs inside a UID 10001 child; the trusted test process never imports candidate code.",
+  "collection_policy": "All unique node:test TAP leaves are counted; mismatch from 33 invalidates grading."
+}

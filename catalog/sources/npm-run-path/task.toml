@@ -1,0 +1,110 @@
+schema_version = "2.0"
+task_id = "npm-run-path"
+version = "2.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "process-path-environment"
+tags = ["node", "npm", "esm", "path", "environment", "process"]
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/sindresorhus/npm-run-path"
+revision = "b9128591fc59429d8b0df7047d5283f259dc5e77"
+license_spdx = "MIT"
+source_digest = "sha256:8b7133f569873efe624778419ce87b94a9df78ac19f80a4a7217f9adbd67664f"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The verifier installs the integrity-locked npm closure from a private cache at image build time. Candidate and verifier phases have no egress; only the trusted Oracle receives a run-scoped github.com allowance to fetch the exact frozen revision."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = ["path-key", "unicorn-magic"]
+
+[dependencies.artifact]
+digest = "sha256:eb2735cb44d12c947427bbffca5584cef231a219fcf932310feb6d08b7801de4"
+size_bytes = 92160
+media_type = "application/vnd.nl2repobench.npm-bundle+tar"
+uri = "artifact://private/sha256:eb2735cb44d12c947427bbffca5584cef231a219fcf932310feb6d08b7801de4"
+visibility = "private"
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 33
+expected_total_source = "frozen-collection"
+
+[tests.commands_artifact]
+digest = "sha256:ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a"
+size_bytes = 176
+media_type = "application/vnd.nl2repobench.node-commands+json"
+uri = "artifact://private/sha256:ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a"
+visibility = "private"
+
+[tests.test_bundle]
+digest = "sha256:d643682871092029801cc946b76fe08f4f473f669c7d48b2a3f0c10557ebd953"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.node-tests+tar"
+uri = "artifact://private/sha256:d643682871092029801cc946b76fe08f4f473f669c7d48b2a3f0c10557ebd953"
+visibility = "private"
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Build npm-run-path as an offline ESM package with deterministic PATH and environment behavior."
+keywords = ["node", "npm", "esm", "path", "environment", "process"]
+agent_timeout_sec = 1200.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "node-author-discover-20260903T025741Z"
+reason = "Source validation, zero-error network lint, production compile, Harbor 0.21.0 Oracle 33/33, and empty/stub/forgery/offline/hang/loader-hook/install-script controls passed. No model Agent Run was started; review, pilot, dataset integration, and publication remain integrator stages."
+
+[oracle_bundle]
+digest = "sha256:bfb67879e82bc99dfe8e2ae2ed14225ab5c8ab06e90b377b41bb0b1a3a4e0652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:bfb67879e82bc99dfe8e2ae2ed14225ab5c8ab06e90b377b41bb0b1a3a4e0652"
+visibility = "private"

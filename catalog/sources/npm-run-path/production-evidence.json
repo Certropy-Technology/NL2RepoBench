@@ -1,0 +1,112 @@
+{
+  "schema_version": "1.0",
+  "task_id": "npm-run-path",
+  "terminal_kind": "valid",
+  "source": {
+    "upstream_url": "https://github.com/sindresorhus/npm-run-path",
+    "revision": "b9128591fc59429d8b0df7047d5283f259dc5e77",
+    "tree": "c02e747e5d191f16b9baf3e9454381fbcd1aa503",
+    "archive_sha256": "sha256:8b7133f569873efe624778419ce87b94a9df78ac19f80a4a7217f9adbd67664f",
+    "license": "MIT"
+  },
+  "environment": {
+    "node": "24.19.0",
+    "npm": "11.17.0",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "network_mode": "no-network"
+  },
+  "private_artifacts": {
+    "dependencies": {"digest": "sha256:eb2735cb44d12c947427bbffca5584cef231a219fcf932310feb6d08b7801de4", "size_bytes": 92160},
+    "commands": {"digest": "sha256:ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a", "size_bytes": 176},
+    "tests": {"digest": "sha256:d643682871092029801cc946b76fe08f4f473f669c7d48b2a3f0c10557ebd953", "size_bytes": 20480},
+    "oracle": {"digest": "sha256:bfb67879e82bc99dfe8e2ae2ed14225ab5c8ab06e90b377b41bb0b1a3a4e0652", "size_bytes": 10240}
+  },
+  "bundle": {
+    "path": ".nl2repo/authoring-work/node-author-discover-20260903T025741Z/npm-run-path/compiled-current/npm-run-path/bundle.manifest.json",
+    "sha256": "sha256:ce9b2d600c16d891efdfcdd8e6faf2c2b343621b4973195b76c6779ea679d47f",
+    "canonical_manifest_digest": "sha256:4ec2718b12cce4d7f8e7b3dc96e7a214a62d93893f001c58b88a39152bbfec23",
+    "file_count": 99,
+    "mode": "production"
+  },
+  "frozen_collection": {
+    "expected_total": 33,
+    "source": "frozen-collection",
+    "framework": "node:test",
+    "report_format": "node-test-json-v1"
+  },
+  "compile": {
+    "command": "uv run nl2repo harbor compile catalog/sources/npm-run-path --output .nl2repo/authoring-work/node-author-discover-20260903T025741Z/npm-run-path/compiled-current --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+    "exit_code": 0,
+    "output": ".nl2repo/authoring-work/node-author-discover-20260903T025741Z/npm-run-path/compiled-current/npm-run-path"
+  },
+  "oracle": {
+    "harbor_version": "0.21.0",
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-discover-20260903T025741Z/npm-run-path/compiled-current/npm-run-path -a oracle --allow-agent-host github.com --job-name npm-run-path-current-oracle-20260903 -o .nl2repo/authoring-work/node-author-discover-20260903T025741Z/npm-run-path/runs-current/oracle --n-concurrent 1 --max-retries 0 --yes",
+    "exit_code": 0,
+    "valid": true,
+    "expected_total": 33,
+    "collected": 33,
+    "passed": 33,
+    "reward": 1.0,
+    "retries": 0,
+    "grading": {
+      "path": ".nl2repo/authoring-work/node-author-discover-20260903T025741Z/npm-run-path/runs-current/oracle/npm-run-path-current-oracle-20260903/npm-run-path__mrFdiES/verifier/grading.json",
+      "sha256": "sha256:b4a833cb23854e778ba1e7abbb31be4c660dd2ce9e70475c8f97c1e0f3eb9ada"
+    },
+    "network": {
+      "path": ".nl2repo/authoring-work/node-author-discover-20260903T025741Z/npm-run-path/runs-current/oracle/npm-run-path-current-oracle-20260903/npm-run-path__mrFdiES/verifier/network.json",
+      "sha256": "sha256:46f4e1b15ddcc481422808f75b9936891e4fb9220dc8f678043ffeb8b509cf80",
+      "public_network_available": false
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-discover-20260903T025741Z/npm-run-path/controls-current/npm-run-path-empty -a oracle --job-name npm-run-path-current-empty-20260903 --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0, "valid": true, "collected": 0, "passed": 0, "reward": 0.0, "failure_class": "model", "failure_reason": "candidate-installation-failed",
+      "grading": {"path": ".nl2repo/authoring-work/node-author-discover-20260903T025741Z/npm-run-path/runs-current/empty/npm-run-path-current-empty-20260903/npm-run-path-empty__xa6EeMZ/verifier/grading.json", "sha256": "sha256:17941ee2a96977ac93548e4fc0892eb4bee196d5d3d68f43bb54c86811fa4e6c"},
+      "network": {"path": ".nl2repo/authoring-work/node-author-discover-20260903T025741Z/npm-run-path/runs-current/empty/npm-run-path-current-empty-20260903/npm-run-path-empty__xa6EeMZ/verifier/network.json", "sha256": "sha256:73e96564faf62e08a1d5fdd5e91d9a0d18f233798e7d97d26ee52fad781422fb", "public_network_available": false}
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-discover-20260903T025741Z/npm-run-path/controls-current/npm-run-path-stub -a oracle --job-name npm-run-path-current-stub-20260903 --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0, "valid": true, "collected": 33, "passed": 5, "reward": 0.15151515151515152,
+      "grading": {"path": ".nl2repo/authoring-work/node-author-discover-20260903T025741Z/npm-run-path/runs-current/stub/npm-run-path-current-stub-20260903/npm-run-path-stub__S6LDStn/verifier/grading.json", "sha256": "sha256:525b671f7af860266624957f739b9ee3d00f11997bb06720455ade3575c7623f"},
+      "network": {"path": ".nl2repo/authoring-work/node-author-discover-20260903T025741Z/npm-run-path/runs-current/stub/npm-run-path-current-stub-20260903/npm-run-path-stub__S6LDStn/verifier/network.json", "sha256": "sha256:46f4e1b15ddcc481422808f75b9936891e4fb9220dc8f678043ffeb8b509cf80", "public_network_available": false}
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-discover-20260903T025741Z/npm-run-path/controls-current/npm-run-path-forgery -a oracle --job-name npm-run-path-current-forgery-20260903 --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0, "valid": true, "collected": 33, "passed": 5, "reward": 0.15151515151515152, "verifier_owned_reward": true,
+      "grading": {"path": ".nl2repo/authoring-work/node-author-discover-20260903T025741Z/npm-run-path/runs-current/forgery/npm-run-path-current-forgery-20260903/npm-run-path-forgery__qB6ZWsM/verifier/grading.json", "sha256": "sha256:525b671f7af860266624957f739b9ee3d00f11997bb06720455ade3575c7623f"},
+      "network": {"path": ".nl2repo/authoring-work/node-author-discover-20260903T025741Z/npm-run-path/runs-current/forgery/npm-run-path-current-forgery-20260903/npm-run-path-forgery__qB6ZWsM/verifier/network.json", "sha256": "sha256:46f4e1b15ddcc481422808f75b9936891e4fb9220dc8f678043ffeb8b509cf80", "public_network_available": false}
+    },
+    "offline": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-discover-20260903T025741Z/npm-run-path/controls-current/npm-run-path-offline -a oracle --job-name npm-run-path-current-offline-20260903 --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0, "completed": true, "valid": true, "collected": 33, "passed": 5, "reward": 0.15151515151515152,
+      "grading": {"path": ".nl2repo/authoring-work/node-author-discover-20260903T025741Z/npm-run-path/runs-current/offline/npm-run-path-current-offline-20260903/npm-run-path-offline__tGjxJjC/verifier/grading.json", "sha256": "sha256:278f9acb3aa3ec130562ad5ef9e1192132c1d830d68d14d58198e99f254149d1"},
+      "network": {"path": ".nl2repo/authoring-work/node-author-discover-20260903T025741Z/npm-run-path/runs-current/offline/npm-run-path-current-offline-20260903/npm-run-path-offline__tGjxJjC/verifier/network.json", "sha256": "sha256:46f4e1b15ddcc481422808f75b9936891e4fb9220dc8f678043ffeb8b509cf80", "public_network_available": false}
+    },
+    "hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-discover-20260903T025741Z/npm-run-path/controls-current/npm-run-path-hang -a oracle --job-name npm-run-path-current-hang-20260903 --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0, "valid": true, "collected": 33, "passed": 1, "reward": 0.030303030303030304,
+      "grading": {"path": ".nl2repo/authoring-work/node-author-discover-20260903T025741Z/npm-run-path/runs-current/hang/npm-run-path-current-hang-20260903/npm-run-path-hang__D9DkmMf/verifier/grading.json", "sha256": "sha256:6a87b0585886e707182ce095e88d3c54312f3cbfaa426063432222a0d8886a9f"},
+      "network": {"path": ".nl2repo/authoring-work/node-author-discover-20260903T025741Z/npm-run-path/runs-current/hang/npm-run-path-current-hang-20260903/npm-run-path-hang__D9DkmMf/verifier/network.json", "sha256": "sha256:af210d5acd61ce7fcb3c7183242e18d8f7c707b5a019f9d0f4062a88404303f9", "public_network_available": false}
+    },
+    "loader-hook": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-discover-20260903T025741Z/npm-run-path/controls-current/npm-run-path-loader-hook -a oracle --job-name npm-run-path-current-loader-hook-20260903 --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0, "valid": true, "collected": 33, "passed": 0, "reward": 0.0,
+      "grading": {"path": ".nl2repo/authoring-work/node-author-discover-20260903T025741Z/npm-run-path/runs-current/loader-hook/npm-run-path-current-loader-hook-20260903/npm-run-path-loader-hook__BDaCU8X/verifier/grading.json", "sha256": "sha256:f1e95dbd8c8228b2e804e53ae3414ec3dce68a60a3191bf53236e8fa810834ed"},
+      "network": {"path": ".nl2repo/authoring-work/node-author-discover-20260903T025741Z/npm-run-path/runs-current/loader-hook/npm-run-path-current-loader-hook-20260903/npm-run-path-loader-hook__BDaCU8X/verifier/network.json", "sha256": "sha256:5600ef6f5b9fd001326a259bb38c841a86790ee6febc919da3c545d9755adb51", "public_network_available": false}
+    },
+    "install-script": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-discover-20260903T025741Z/npm-run-path/controls-current/npm-run-path-install-script -a oracle --job-name npm-run-path-current-install-script-20260903 --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0, "valid": true, "collected": 0, "passed": 0, "reward": 0.0, "failure_class": "model", "failure_reason": "candidate-installation-failed",
+      "grading": {"path": ".nl2repo/authoring-work/node-author-discover-20260903T025741Z/npm-run-path/runs-current/install-script/npm-run-path-current-install-script-20260903/npm-run-path-install-script__yVy75DV/verifier/grading.json", "sha256": "sha256:17941ee2a96977ac93548e4fc0892eb4bee196d5d3d68f43bb54c86811fa4e6c"},
+      "network": {"path": ".nl2repo/authoring-work/node-author-discover-20260903T025741Z/npm-run-path/runs-current/install-script/npm-run-path-current-install-script-20260903/npm-run-path-install-script__yVy75DV/verifier/network.json", "sha256": "sha256:46f4e1b15ddcc481422808f75b9936891e4fb9220dc8f678043ffeb8b509cf80", "public_network_available": false}
+    }
+  },
+  "residual_risks": [
+    "No model Agent Run was started in this authoring lane.",
+    "The fixed contract targets Linux PATH semantics; Windows PATH key and delimiter behavior are outside this task version.",
+    "The upstream development toolchain is excluded from the runtime-only offline closure; the complete upstream test command passed separately before packaging.",
+    "Blind review, model pilot, dataset integration, and publication remain integrator-stage gates."
+  ]
+}

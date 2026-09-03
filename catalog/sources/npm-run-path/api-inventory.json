@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "package": "npm-run-path",
+  "package_version": "6.0.0",
+  "revision": "b9128591fc59429d8b0df7047d5283f259dc5e77",
+  "module_system": "ESM",
+  "runtime_entry": "index.js",
+  "type_entry": "index.d.ts",
+  "public_runtime_exports": [
+    {
+      "name": "npmRunPath",
+      "signature": "npmRunPath(options?: RunPathOptions): string",
+      "options": ["cwd", "path", "preferLocal", "execPath", "addExecPath"]
+    },
+    {
+      "name": "npmRunPathEnv",
+      "signature": "npmRunPathEnv(options?: EnvOptions): ProcessEnv",
+      "options": ["env", "cwd", "preferLocal", "execPath", "addExecPath"]
+    }
+  ],
+  "runtime_dependencies": ["path-key@4.0.0", "unicorn-magic@0.3.0"],
+  "state": "No module state; defaults read the child process cwd, PATH, execPath, and platform at call time.",
+  "side_effects": "No filesystem, subprocess, or network I/O; npmRunPathEnv returns a clone.",
+  "risk_surfaces": ["PATH delimiter and key casing", "URL conversion", "parent path traversal", "process defaults"]
+}

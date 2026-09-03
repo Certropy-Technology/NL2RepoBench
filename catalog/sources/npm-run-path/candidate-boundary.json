@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "task_id": "npm-run-path",
+  "status": "implemented",
+  "transport": {
+    "mode": "one-shot-json",
+    "request_limit_bytes": 65536,
+    "response_limit_bytes": 262144,
+    "candidate_uid": 10001,
+    "call_timeout_seconds": 3,
+    "network": "none"
+  },
+  "operations": ["inspect package root", "invoke npmRunPath", "invoke npmRunPathEnv"],
+  "url_adapter": "Fixed cwdUrl and execPathUrl request fields become native URL objects inside the candidate child.",
+  "trusted_process_imports_candidate": false,
+  "forbidden_candidate_capabilities": ["network", "native addons", "custom loaders", "unbounded output", "trusted report writes"]
+}
