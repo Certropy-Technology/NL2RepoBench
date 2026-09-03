@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-brotli",
+  "public_to_private": [
+    {"instruction": "API Usage Guide/NewWriter-NewReader", "assertions": ["brotli_roundtrip", "stream_roundtrip", "reader_reset", "writer_reset", "flush_roundtrip"]},
+    {"instruction": "API Usage Guide/flate", "assertions": ["flate_roundtrip", "gzip_roundtrip"]},
+    {"instruction": "API Usage Guide/matchfinder", "assertions": ["matchfinder_output", "text_encoder_output"]},
+    {"instruction": "Implementation Notes/stream validity", "assertions": ["roundtrip bytes equal", "encoded stream decodes exactly", "close and reset errors surfaced"]}
+  ],
+  "private_to_public": [
+    {"assertion_class": "level handling", "public_contract": "NewWriterLevel and NewWriterV2 level domain"},
+    {"assertion_class": "bounded subprocess", "public_contract": "line-oriented JSON bridge and stderr diagnostics"},
+    {"assertion_class": "malformed request", "public_contract": "structured InvalidInput response"}
+  ],
+  "excluded": ["HTTP response negotiation", "unsafe/internal encoder state", "benchmarks", "randomized upstream fixture generation"]
+}

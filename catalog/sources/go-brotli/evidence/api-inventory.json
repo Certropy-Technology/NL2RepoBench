@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-brotli",
+  "packages": [
+    {"import_path": "github.com/andybalholm/brotli", "public_types": ["Encoder", "FastEncoder", "Reader", "Writer", "WriterOptions"], "public_functions": ["HTTPCompressor", "HTTPCompressorWithLevel", "NewReader", "NewWriter", "NewWriterLevel", "NewWriterOptions", "NewWriterV2"], "public_methods": ["Encoder.Encode", "Encoder.Reset", "FastEncoder.Encode", "FastEncoder.Reset", "Reader.Read", "Reader.Reset", "Writer.Close", "Writer.Flush", "Writer.Reset", "Writer.Write"]},
+    {"import_path": "github.com/andybalholm/brotli/flate", "public_functions": ["NewEncoder", "NewGZIPEncoder", "NewGZIPWriter", "NewWriter"]},
+    {"import_path": "github.com/andybalholm/brotli/matchfinder", "public_types": ["AutoReset", "Bargain1", "Bargain2", "Bargain3", "Encoder", "M0", "M4", "Match", "MatchFinder", "NoMatchFinder", "Pathfinder", "TextEncoder", "Trio", "Writer", "ZDFast", "ZFast", "ZM"], "public_methods": ["FindMatches", "Reset", "Encode", "Close", "Write"]}
+  ],
+  "method": "go doc -all plus exported declaration scan",
+  "risk_adaptations": ["HTTPCompressor excluded because http.ResponseWriter negotiation is not JSON-shaped", "randomized TestIssue51 is source-baseline only; deterministic bridge cases cover the same compression path"]
+}

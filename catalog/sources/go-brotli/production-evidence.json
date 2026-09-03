@@ -1,0 +1,303 @@
+{
+  "bundle": {
+    "canonical_manifest_digest": "sha256:fe561fbc21f0262bd03dd82e7cb18d1a0a515249f10e138f968ab9d13eb48afa",
+    "manifest_path": ".nl2repo/authoring-work/go-brotli/compiled-final/go-brotli/bundle.manifest.json",
+    "manifest_sha256": "sha256:499bb58e23eed811a09b341922837a59bd6f725e593835961b03fe8a94a0669a"
+  },
+  "commands": [
+    {
+      "command": "GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -count=1 -json ./...",
+      "exit_code": 0,
+      "result": "root and flate passed; matchfinder has no test files"
+    },
+    {
+      "command": "go test -list=. ./...",
+      "exit_code": 0,
+      "result": "43 listed upstream tests/examples"
+    },
+    {
+      "command": "uv run nl2repo task validate-source catalog/sources/go-brotli",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "result": "0 errors; warnings are pre-existing/unrelated plus expected Oracle authorization warnings"
+    },
+    {
+      "command": "uv run nl2repo harbor compile catalog/sources/go-brotli --output .nl2repo/authoring-work/go-brotli/compiled-final --toolchain toolchain.go.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0
+    },
+    {
+      "command": "docker build --platform linux/amd64 -f .nl2repo/authoring-work/go-brotli/compiled/go-brotli/tests/Dockerfile -t nl2repobench/go-brotli-verifier:authoring-final ...",
+      "exit_code": 0,
+      "image_digest": "sha256:d147f41b9a1d405ee1d88ab8836ab265cb1c7b27bac6448c33fb09befa86f4c9",
+      "warning": "FromPlatformFlagConstDisallowed"
+    },
+    {
+      "command": "docker run --rm --network none ... /tests/test.sh",
+      "exit_code": 0,
+      "result": "local frozen-source candidate smoke valid=true collected=1 passed=1 reward=1.0"
+    }
+  ],
+  "controls": {
+    "matrix": {
+      "empty": {
+        "counts": {
+          "collected": 0,
+          "errors": 0,
+          "failed": 0,
+          "passed": 0,
+          "schema_version": "1.0",
+          "skipped": 0,
+          "todo": 0,
+          "xfail": 0
+        },
+        "exit_code": 0,
+        "failure_class": "model",
+        "failure_reason": "candidate-installation-failed",
+        "frozen_total": 1,
+        "grading": {
+          "path": ".nl2repo/authoring-work/go-brotli/control-runs-final/empty/logs/verifier/grading.json",
+          "sha256": "sha256:f50f1c97834aae0757eb19f7b1926b462c178862bac6df8d7f04e6f4d30db843"
+        },
+        "network": {
+          "path": ".nl2repo/authoring-work/go-brotli/control-runs-final/empty/logs/verifier/network.json",
+          "sha256": "sha256:8dd6160752583c90ce24ac6c19375e084303d9dd616154fafd592077c6c1135e"
+        },
+        "public_network_available": false,
+        "reward": 0.0,
+        "valid": true
+      },
+      "forgery": {
+        "counts": {
+          "collected": 1,
+          "errors": 0,
+          "failed": 1,
+          "passed": 0,
+          "schema_version": "1.0",
+          "skipped": 0,
+          "todo": 0,
+          "xfail": 0
+        },
+        "exit_code": 0,
+        "failure_class": null,
+        "failure_reason": null,
+        "frozen_total": 1,
+        "grading": {
+          "path": ".nl2repo/authoring-work/go-brotli/control-runs-final/forgery/logs/verifier/grading.json",
+          "sha256": "sha256:770db3ca92e7856ca2aafafc513a44b9f7287cc614932077530145c6ab4ec74d"
+        },
+        "network": {
+          "path": ".nl2repo/authoring-work/go-brotli/control-runs-final/forgery/logs/verifier/network.json",
+          "sha256": "sha256:8dd6160752583c90ce24ac6c19375e084303d9dd616154fafd592077c6c1135e"
+        },
+        "public_network_available": false,
+        "reward": 0.0,
+        "valid": true
+      },
+      "hang": {
+        "counts": {
+          "collected": 1,
+          "errors": 0,
+          "failed": 1,
+          "passed": 0,
+          "schema_version": "1.0",
+          "skipped": 0,
+          "todo": 0,
+          "xfail": 0
+        },
+        "exit_code": 0,
+        "failure_class": null,
+        "failure_reason": null,
+        "frozen_total": 1,
+        "grading": {
+          "path": ".nl2repo/authoring-work/go-brotli/control-runs-final/hang/logs/verifier/grading.json",
+          "sha256": "sha256:770db3ca92e7856ca2aafafc513a44b9f7287cc614932077530145c6ab4ec74d"
+        },
+        "network": {
+          "path": ".nl2repo/authoring-work/go-brotli/control-runs-final/hang/logs/verifier/network.json",
+          "sha256": "sha256:531bdb698d18acf7c23a074c87b61c2a92cd42140037c9f777d5d6d13a72b8f8"
+        },
+        "public_network_available": false,
+        "reward": 0.0,
+        "valid": true
+      },
+      "install-failure": {
+        "counts": {
+          "collected": 0,
+          "errors": 0,
+          "failed": 0,
+          "passed": 0,
+          "schema_version": "1.0",
+          "skipped": 0,
+          "todo": 0,
+          "xfail": 0
+        },
+        "exit_code": 0,
+        "failure_class": "model",
+        "failure_reason": "candidate-installation-failed",
+        "frozen_total": 1,
+        "grading": {
+          "path": ".nl2repo/authoring-work/go-brotli/control-runs-final/install-failure/logs/verifier/grading.json",
+          "sha256": "sha256:f50f1c97834aae0757eb19f7b1926b462c178862bac6df8d7f04e6f4d30db843"
+        },
+        "network": {
+          "path": ".nl2repo/authoring-work/go-brotli/control-runs-final/install-failure/logs/verifier/network.json",
+          "sha256": "sha256:8dd6160752583c90ce24ac6c19375e084303d9dd616154fafd592077c6c1135e"
+        },
+        "public_network_available": false,
+        "reward": 0.0,
+        "valid": true
+      },
+      "oversized-output": {
+        "counts": {
+          "collected": 1,
+          "errors": 0,
+          "failed": 1,
+          "passed": 0,
+          "schema_version": "1.0",
+          "skipped": 0,
+          "todo": 0,
+          "xfail": 0
+        },
+        "exit_code": 0,
+        "failure_class": null,
+        "failure_reason": null,
+        "frozen_total": 1,
+        "grading": {
+          "path": ".nl2repo/authoring-work/go-brotli/control-runs-final/oversized-output/logs/verifier/grading.json",
+          "sha256": "sha256:770db3ca92e7856ca2aafafc513a44b9f7287cc614932077530145c6ab4ec74d"
+        },
+        "network": {
+          "path": ".nl2repo/authoring-work/go-brotli/control-runs-final/oversized-output/logs/verifier/network.json",
+          "sha256": "sha256:531bdb698d18acf7c23a074c87b61c2a92cd42140037c9f777d5d6d13a72b8f8"
+        },
+        "public_network_available": false,
+        "reward": 0.0,
+        "valid": true
+      },
+      "panic": {
+        "counts": {
+          "collected": 1,
+          "errors": 0,
+          "failed": 1,
+          "passed": 0,
+          "schema_version": "1.0",
+          "skipped": 0,
+          "todo": 0,
+          "xfail": 0
+        },
+        "exit_code": 0,
+        "failure_class": null,
+        "failure_reason": null,
+        "frozen_total": 1,
+        "grading": {
+          "path": ".nl2repo/authoring-work/go-brotli/control-runs-final/panic/logs/verifier/grading.json",
+          "sha256": "sha256:770db3ca92e7856ca2aafafc513a44b9f7287cc614932077530145c6ab4ec74d"
+        },
+        "network": {
+          "path": ".nl2repo/authoring-work/go-brotli/control-runs-final/panic/logs/verifier/network.json",
+          "sha256": "sha256:8dd6160752583c90ce24ac6c19375e084303d9dd616154fafd592077c6c1135e"
+        },
+        "public_network_available": false,
+        "reward": 0.0,
+        "valid": true
+      },
+      "stub": {
+        "counts": {
+          "collected": 1,
+          "errors": 0,
+          "failed": 1,
+          "passed": 0,
+          "schema_version": "1.0",
+          "skipped": 0,
+          "todo": 0,
+          "xfail": 0
+        },
+        "exit_code": 0,
+        "failure_class": null,
+        "failure_reason": null,
+        "frozen_total": 1,
+        "grading": {
+          "path": ".nl2repo/authoring-work/go-brotli/control-runs-final/stub/logs/verifier/grading.json",
+          "sha256": "sha256:770db3ca92e7856ca2aafafc513a44b9f7287cc614932077530145c6ab4ec74d"
+        },
+        "network": {
+          "path": ".nl2repo/authoring-work/go-brotli/control-runs-final/stub/logs/verifier/network.json",
+          "sha256": "sha256:8dd6160752583c90ce24ac6c19375e084303d9dd616154fafd592077c6c1135e"
+        },
+        "public_network_available": false,
+        "reward": 0.0,
+        "valid": true
+      }
+    },
+    "offline_network": "all local verifier runs reported public_network_available=false",
+    "supervisor_probes": {
+      "output_limit": {
+        "captured_bytes": 1024,
+        "output_limit_exceeded": true,
+        "returncode": 125
+      },
+      "timeout": {
+        "returncode": 124,
+        "timed_out": true
+      }
+    }
+  },
+  "dependency_closure": {
+    "digest": "sha256:52ed19871d37e8a4f1cb68a844bf8b256c7f3270e1f92a22849415cbfd8ec862",
+    "direct_dependencies": [
+      "github.com/xyproto/randomstring@v1.0.5"
+    ],
+    "kind": "go-module-bundle",
+    "manifest_sha256": "sha256:02702e349ae41439c72a15b08c5aff7697bf57937b4d11d108518b0ca9add2f5",
+    "offline": true,
+    "size_bytes": 20480
+  },
+  "environment": {
+    "agent_network_mode": "no-network",
+    "base_image_digest": "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd",
+    "cgo_enabled": false,
+    "platform": "linux/amd64",
+    "runtime": "go1.26.5-X:nodwarf5",
+    "toolchain_lock": "toolchain.go.lock.toml",
+    "verifier_image_digest": "sha256:d147f41b9a1d405ee1d88ab8836ab265cb1c7b27bac6448c33fb09befa86f4c9",
+    "verifier_network_mode": "no-network"
+  },
+  "frozen_collection": {
+    "framework": "custom-json-v1",
+    "frozen_total": 1,
+    "leaf_ids": [
+      "contract::compression-api"
+    ],
+    "source_baseline_leaves": 43
+  },
+  "oracle": {
+    "frozen_total": null,
+    "passed": null,
+    "reason": "This authoring lane is forbidden from starting a Harbor Agent Run; integrator must run trusted Oracle with exact GitHub host authorization.",
+    "reward": null,
+    "status": "not-run-by-lane-policy",
+    "valid": null
+  },
+  "residual_risks": [
+    "Official Harbor Oracle and Agent Run remain integrator-owned and were not started by lane policy.",
+    "The first Go profile freezes one verifier-owned contract leaf; 43 upstream test/example leaves remain source-baseline evidence.",
+    "HTTP negotiation, callbacks, internal encoder state, benchmarks, and random fixture generation are outside the JSON bridge.",
+    "Go upstream flate can panic on an excessively long highly repetitive input; contract fixtures stay within stable behavior and this boundary is documented.",
+    "A minimal generic compiler fix changed bridge binary installation mode from 0444 to 0555 in src/nl2repobench/harbor/go_compiler.py; integrator review is required."
+  ],
+  "schema_version": "1.0",
+  "source_freeze": {
+    "license_sha256": "sha256:3d180008e36922a4e8daec11c34c7af264fed5962d07924aea928c38e8663c94",
+    "license_spdx": "MIT",
+    "revision": "6b8aef6ece266fa87b925ce3a913bc30dc4b7b70",
+    "source_digest": "sha256:98f4e975d6de4ee7da812c21d147b57663e25e72a5e53db6673a1d5ffcaa14f8",
+    "upstream_url": "https://github.com/andybalholm/brotli"
+  },
+  "status": "packaged",
+  "task_id": "go-brotli",
+  "task_version": "0.1.0",
+  "terminal_kind": "intermediate"
+}

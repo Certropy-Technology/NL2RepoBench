@@ -1,0 +1,7 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-brotli",
+  "source_baseline": {"goos": "linux", "goarch": "amd64", "cgo_enabled": false, "packages": [{"package": "github.com/andybalholm/brotli", "test_files": ["brotli_test.go", "example_test.go"], "static_test_functions": 40, "listed_tests": 40}, {"package": "github.com/andybalholm/brotli/flate", "test_files": ["flate/flate_test.go"], "static_test_functions": 3, "listed_tests": 3}, {"package": "github.com/andybalholm/brotli/matchfinder", "test_files": [], "listed_tests": 0}], "total_listed_leaves": 43, "exit_code": 0},
+  "frozen_collection": {"framework": "custom-json-v1", "leaf_ids": ["contract::compression-api"], "frozen_total": 1, "private_assertion_classes": ["Brotli round trip", "streaming chunks", "Flush before Close", "Writer and Reader Reset", "quality levels", "V2 writer", "flate and gzip round trips", "NoMatchFinder and deterministic match output", "invalid operation handling"]},
+  "commands": [{"command": "GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -count=1 -json ./...", "exit_code": 0, "summary": "root 15.317s, flate 0.859s, matchfinder no test files"}, {"command": "go test -list=. ./...", "exit_code": 0, "summary": "43 listed tests/examples"}]
+}

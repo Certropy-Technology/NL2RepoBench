@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-brotli",
+  "upstream_url": "https://github.com/andybalholm/brotli",
+  "revision": "6b8aef6ece266fa87b925ce3a913bc30dc4b7b70",
+  "source_archive": {"format": "git archive --format=tar", "sha256": "sha256:98f4e975d6de4ee7da812c21d147b57663e25e72a5e53db6673a1d5ffcaa14f8", "size_bytes": 4454400},
+  "license": {"spdx": "MIT", "path": "LICENSE", "sha256": "sha256:3d180008e36922a4e8daec11c34c7af264fed5962d07924aea928c38e8663c94"},
+  "tracked_files": 93,
+  "commands": [
+    {"command": "git -C .nl2repo/authoring-work/go-brotli/upstream rev-parse HEAD", "exit_code": 0, "stdout": "6b8aef6ece266fa87b925ce3a913bc30dc4b7b70"},
+    {"command": "git -C .nl2repo/authoring-work/go-brotli/upstream archive --format=tar HEAD | sha256sum", "exit_code": 0, "stdout": "98f4e975d6de4ee7da812c21d147b57663e25e72a5e53db6673a1d5ffcaa14f8"}
+  ]
+}

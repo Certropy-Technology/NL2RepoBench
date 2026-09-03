@@ -1,0 +1,76 @@
+schema_version = "1.0"
+task_id = "go-brotli"
+version = "0.1.0"
+instruction = "instruction.md"
+oracle_bundle = { digest = "sha256:5112e4120bdf72d3230e00b8db18204d30f925d37596b3de9cf45a14eff5cca2", size_bytes = 10240, uri = "artifact://private/sha256:5112e4120bdf72d3230e00b8db18204d30f925d37596b3de9cf45a14eff5cca2", visibility = "private" }
+
+[metadata]
+difficulty = "hard"
+category = "go-library"
+tags = ["go", "go-modules", "compression", "brotli", "streaming", "typed-bridge", "public-api"]
+language = "go"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/andybalholm/brotli"
+revision = "6b8aef6ece266fa87b925ce3a913bc30dc4b7b70"
+license_spdx = "MIT"
+source_digest = "sha256:98f4e975d6de4ee7da812c21d147b57663e25e72a5e53db6673a1d5ffcaa14f8"
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+runtime_version = "1.26.5"
+base_image = "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+base_image_digest = "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "Candidate and verifier execution use a private pre-materialized Go module closure and run without network; only the trusted Oracle receives a run-scoped source-host authorization."
+
+[dependencies]
+status = "known"
+installer = "system"
+packages = []
+module_bundle = { digest = "sha256:52ed19871d37e8a4f1cb68a844bf8b256c7f3270e1f92a22849415cbfd8ec862", size_bytes = 20480, uri = "artifact://private/sha256:52ed19871d37e8a4f1cb68a844bf8b256c7f3270e1f92a22849415cbfd8ec862", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 1
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Recreate the deterministic pure-Go Brotli, flate, and matchfinder APIs through a typed subprocess bridge."
+keywords = ["go", "brotli", "compression", "streaming", "matchfinder", "typed-bridge"]
+agent_timeout_sec = 900.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "packaged"
+owner = "go-author-discover-20260903"
+reason = "Frozen source, API/test inventory, typed bridge, private dependency/verifier/Oracle bundles, and offline Go runtime contract are packaged; official Harbor Oracle and controls remain integrator-owned."
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:995c727c6436d156da635f9f57587c8e7158beebf5cdc087e1655f81f1cc1f33", size_bytes = 10240, uri = "artifact://private/sha256:995c727c6436d156da635f9f57587c8e7158beebf5cdc087e1655f81f1cc1f33", visibility = "private" }
+entrypoint = "contract.sh"
+
