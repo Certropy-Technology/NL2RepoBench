@@ -66,9 +66,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "packaged"
+status = "controls-passed"
 owner = "go-author-wave2-20260828"
-reason = "Frozen MIT Go module with a deterministic typed bridge, private offline closure, verifier, Oracle, and controls; final Oracle/control receipts remain subject to integrator review."
+reason = "Frozen MIT Go module with a deterministic typed bridge, private offline closure, verifier, Oracle, and fresh Harbor 0.21.0 Oracle/control receipts from the repair lane; independent review, dataset integration, pilot, and publication remain integrator stages."
 
 [verifier]
 protocol = "custom-json-v1"

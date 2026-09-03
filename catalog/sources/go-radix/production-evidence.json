@@ -3,10 +3,11 @@
   "task_id": "go-radix",
   "terminal_kind": "valid",
   "bundle_manifest": {
-    "path": ".nl2repo/compiled/go-radix-production/go-radix/bundle.manifest.json",
-    "sha256": "sha256:e580a0a8f7288bfa956122e05a7c8e26c48fba98cbcaf480738eb55a540d2433",
+    "path": ".nl2repo/compiled/go-radix-production-repair-20260904/go-radix/bundle.manifest.json",
+    "sha256": "sha256:f2c5f3c19359bbb8908535470be3795fd2913a426c0d8659857a0453b96c4b31",
     "mode": "production",
-    "file_count": 68
+    "file_count": 68,
+    "canonical_manifest_digest": "sha256:27a304dfddae373de6af1acaea9e6b65003613a9ebbaee511a4d84036dc4f055"
   },
   "source_freeze": {
     "upstream_url": "https://github.com/armon/go-radix",
@@ -40,114 +41,278 @@
     }
   },
   "oracle": {
-    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/go-radix-production/go-radix -a oracle --job-name go-radix-oracle-20260828-r1 -o .nl2repo/runs/go-radix-oracle-20260828-r1 --n-concurrent 1 --allow-agent-host github.com --yes",
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/go-radix-production-repair-20260904/go-radix -a oracle --allow-agent-host github.com --job-name go-radix-oracle-final-20260904 -o .nl2repo/runs/go-radix-oracle-final-20260904 --n-concurrent 1 --yes",
     "exit_code": 0,
-    "harbor_version": "0.21.0",
     "valid": true,
     "passed": 1,
-    "total": 1,
-    "reward": 1.0,
-    "grading": ".nl2repo/runs/go-radix-oracle-20260828-r1/go-radix-oracle-20260828-r1/go-radix__P8aFU3q/verifier/grading.json",
-    "network": ".nl2repo/runs/go-radix-oracle-20260828-r1/go-radix-oracle-20260828-r1/go-radix__P8aFU3q/verifier/network.json",
+    "collected": 1,
+    "frozen_total": 1,
+    "reward": 1,
+    "result": {
+      "path": ".nl2repo/runs/go-radix-oracle-final-20260904/go-radix-oracle-final-20260904/go-radix__tDDfxYv/result.json",
+      "sha256": "sha256:cdf52feb7cc1346982cc621aad5f0e21519c792f489cb57350ab6e9a3b4003e5"
+    },
+    "grading": {
+      "path": ".nl2repo/runs/go-radix-oracle-final-20260904/go-radix-oracle-final-20260904/go-radix__tDDfxYv/verifier/grading.json",
+      "sha256": "sha256:b00d7a553a2fddacea6fa04621bafef45310450fbfe030c859f754ad2e6f6933"
+    },
+    "network": {
+      "path": ".nl2repo/runs/go-radix-oracle-final-20260904/go-radix-oracle-final-20260904/go-radix__tDDfxYv/verifier/network.json",
+      "sha256": "sha256:a15c515acf148374330511e8a8dda8143ac160450265dccdc62e433fc4688294"
+    },
+    "reward_record": {
+      "path": ".nl2repo/runs/go-radix-oracle-final-20260904/go-radix-oracle-final-20260904/go-radix__tDDfxYv/verifier/reward.json",
+      "sha256": "sha256:f5ff2ade8b6b6ea4ef812375e5c71684d7655fb98854aac64a6bf629a3dfac06"
+    },
     "public_network_available": false
   },
   "controls": {
     "empty": {
-      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/go-radix-production/go-radix -a nop --job-name go-radix-empty-20260828-r1 -o .nl2repo/runs/go-radix-empty-20260828-r1 --n-concurrent 1 --yes",
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/go-radix-production-repair-20260904/go-radix -a nop --job-name go-radix-empty-final-20260904 -o .nl2repo/runs/go-radix-empty-final-20260904 --n-concurrent 1 --yes",
       "exit_code": 0,
       "valid": true,
-      "reward": 0.0,
+      "passed": 0,
+      "collected": 0,
+      "frozen_total": 0,
+      "reward": 0,
+      "failure_class": "model",
       "failure_reason": "candidate-installation-failed",
-      "grading": ".nl2repo/runs/go-radix-empty-20260828-r1/go-radix-empty-20260828-r1/go-radix__UXzb3Xk/verifier/grading.json",
-      "network": ".nl2repo/runs/go-radix-empty-20260828-r1/go-radix-empty-20260828-r1/go-radix__UXzb3Xk/verifier/network.json",
+      "result": {
+        "path": ".nl2repo/runs/go-radix-empty-final-20260904/go-radix-empty-final-20260904/go-radix__QxFEWgM/result.json",
+        "sha256": "sha256:b5343d43ed0634c5273af54fb25ab734ebaf77deab6e27bc3000c98ab586e304"
+      },
+      "grading": {
+        "path": ".nl2repo/runs/go-radix-empty-final-20260904/go-radix-empty-final-20260904/go-radix__QxFEWgM/verifier/grading.json",
+        "sha256": "sha256:77e86e68966384f3907b8e4c7d8a0e3fb4892de201dca2e6239603060861e416"
+      },
+      "network": {
+        "path": ".nl2repo/runs/go-radix-empty-final-20260904/go-radix-empty-final-20260904/go-radix__QxFEWgM/verifier/network.json",
+        "sha256": "sha256:bcbdec45d54bc642b1f5eda83d6674ce15b56f5b66f2247eea11548e2c966dbe"
+      },
+      "reward_record": {
+        "path": ".nl2repo/runs/go-radix-empty-final-20260904/go-radix-empty-final-20260904/go-radix__QxFEWgM/verifier/reward.json",
+        "sha256": "sha256:8ab285dd6836d028aa2dc600258716be1474a462a4ebd95b7072e5f32750fad6"
+      },
+      "public_network_available": false
+    },
+    "install-failure": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/go-radix-final-20260904-install-failure/go-radix-install-failure -a oracle --job-name go-radix-install-failure-final-20260904 -o .nl2repo/runs/go-radix-install-failure-final-20260904 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "passed": 0,
+      "collected": 0,
+      "frozen_total": 0,
+      "reward": 0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "result": {
+        "path": ".nl2repo/runs/go-radix-install-failure-final-20260904/go-radix-install-failure-final-20260904/go-radix-install-failure__tSzd6H2/result.json",
+        "sha256": "sha256:dfc55cd40140b98970bc9d2c5b65ff83fd1be4b304ce79eb920936ed06bd20ff"
+      },
+      "grading": {
+        "path": ".nl2repo/runs/go-radix-install-failure-final-20260904/go-radix-install-failure-final-20260904/go-radix-install-failure__tSzd6H2/verifier/grading.json",
+        "sha256": "sha256:77e86e68966384f3907b8e4c7d8a0e3fb4892de201dca2e6239603060861e416"
+      },
+      "network": {
+        "path": ".nl2repo/runs/go-radix-install-failure-final-20260904/go-radix-install-failure-final-20260904/go-radix-install-failure__tSzd6H2/verifier/network.json",
+        "sha256": "sha256:1e05289a5c5281d80660bebf1ec5039b7e3397ed2329a42fb76406f2785216a5"
+      },
+      "reward_record": {
+        "path": ".nl2repo/runs/go-radix-install-failure-final-20260904/go-radix-install-failure-final-20260904/go-radix-install-failure__tSzd6H2/verifier/reward.json",
+        "sha256": "sha256:8ab285dd6836d028aa2dc600258716be1474a462a4ebd95b7072e5f32750fad6"
+      },
       "public_network_available": false
     },
     "stub": {
-      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/go-radix/go-radix-stub -a oracle --job-name go-radix-stub-20260828-r1 -o .nl2repo/runs/go-radix-stub-20260828-r1 --n-concurrent 1 --yes",
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/go-radix-final-20260904-stub/go-radix-stub -a oracle --job-name go-radix-stub-final-20260904 -o .nl2repo/runs/go-radix-stub-final-20260904 --n-concurrent 1 --yes",
       "exit_code": 0,
       "valid": true,
-      "reward": 0.0,
+      "passed": 0,
       "collected": 1,
-      "failed": 1,
-      "grading": ".nl2repo/runs/go-radix-stub-20260828-r1/go-radix-stub-20260828-r1/go-radix-stub__iYAZ87N/verifier/grading.json",
-      "network": ".nl2repo/runs/go-radix-stub-20260828-r1/go-radix-stub-20260828-r1/go-radix-stub__iYAZ87N/verifier/network.json",
+      "frozen_total": 1,
+      "reward": 0,
+      "result": {
+        "path": ".nl2repo/runs/go-radix-stub-final-20260904/go-radix-stub-final-20260904/go-radix-stub__aqUJCuq/result.json",
+        "sha256": "sha256:66ae72b18865add0d1e190040cab8962be11d707444ac25ead72211a7197a4e0"
+      },
+      "grading": {
+        "path": ".nl2repo/runs/go-radix-stub-final-20260904/go-radix-stub-final-20260904/go-radix-stub__aqUJCuq/verifier/grading.json",
+        "sha256": "sha256:770db3ca92e7856ca2aafafc513a44b9f7287cc614932077530145c6ab4ec74d"
+      },
+      "network": {
+        "path": ".nl2repo/runs/go-radix-stub-final-20260904/go-radix-stub-final-20260904/go-radix-stub__aqUJCuq/verifier/network.json",
+        "sha256": "sha256:be906cca722f947a87822a0b005c37aaa5debcd33560cd4be602d91c2754b4f2"
+      },
+      "reward_record": {
+        "path": ".nl2repo/runs/go-radix-stub-final-20260904/go-radix-stub-final-20260904/go-radix-stub__aqUJCuq/verifier/reward.json",
+        "sha256": "sha256:8ab285dd6836d028aa2dc600258716be1474a462a4ebd95b7072e5f32750fad6"
+      },
       "public_network_available": false
     },
     "forgery": {
-      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/go-radix/go-radix-forgery -a oracle --job-name go-radix-forgery-20260828-r1 -o .nl2repo/runs/go-radix-forgery-20260828-r1 --n-concurrent 1 --yes",
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/go-radix-final-20260904-forgery/go-radix-forgery -a oracle --job-name go-radix-forgery-final-20260904 -o .nl2repo/runs/go-radix-forgery-final-20260904 --n-concurrent 1 --yes",
       "exit_code": 0,
       "valid": true,
-      "reward": 0.0,
+      "passed": 0,
       "collected": 1,
-      "failed": 1,
+      "frozen_total": 1,
+      "reward": 0,
       "verifier_owned_reward": true,
-      "grading": ".nl2repo/runs/go-radix-forgery-20260828-r1/go-radix-forgery-20260828-r1/go-radix-forgery__RDSwppU/verifier/grading.json",
-      "network": ".nl2repo/runs/go-radix-forgery-20260828-r1/go-radix-forgery-20260828-r1/go-radix-forgery__RDSwppU/verifier/network.json",
-      "public_network_available": false
-    },
-    "install_failure": {
-      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/go-radix/go-radix-install-failure -a oracle --job-name go-radix-install-failure-20260828-r1 -o .nl2repo/runs/go-radix-install-failure-20260828-r1 --n-concurrent 1 --yes",
-      "exit_code": 0,
-      "valid": true,
-      "reward": 0.0,
-      "failure_reason": "candidate-installation-failed",
-      "grading": ".nl2repo/runs/go-radix-install-failure-20260828-r1/go-radix-install-failure-20260828-r1/go-radix-install-failure__HrZfYxh/verifier/grading.json",
-      "network": ".nl2repo/runs/go-radix-install-failure-20260828-r1/go-radix-install-failure-20260828-r1/go-radix-install-failure__HrZfYxh/verifier/network.json",
+      "result": {
+        "path": ".nl2repo/runs/go-radix-forgery-final-20260904/go-radix-forgery-final-20260904/go-radix-forgery__78ZbeSh/result.json",
+        "sha256": "sha256:4edcdc37921d60fdea6d39ce6442fb6bd8d2b5c0c44c44e8acab51d9e50e7346"
+      },
+      "grading": {
+        "path": ".nl2repo/runs/go-radix-forgery-final-20260904/go-radix-forgery-final-20260904/go-radix-forgery__78ZbeSh/verifier/grading.json",
+        "sha256": "sha256:770db3ca92e7856ca2aafafc513a44b9f7287cc614932077530145c6ab4ec74d"
+      },
+      "network": {
+        "path": ".nl2repo/runs/go-radix-forgery-final-20260904/go-radix-forgery-final-20260904/go-radix-forgery__78ZbeSh/verifier/network.json",
+        "sha256": "sha256:91c4263e61c6d22edcaf531ec8e56b41a446a34c50b01fbb0fa9d4cfe82b6f1a"
+      },
+      "reward_record": {
+        "path": ".nl2repo/runs/go-radix-forgery-final-20260904/go-radix-forgery-final-20260904/go-radix-forgery__78ZbeSh/verifier/reward.json",
+        "sha256": "sha256:8ab285dd6836d028aa2dc600258716be1474a462a4ebd95b7072e5f32750fad6"
+      },
       "public_network_available": false
     },
     "panic": {
-      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/go-radix/go-radix-panic -a oracle --job-name go-radix-panic-20260828-r1 -o .nl2repo/runs/go-radix-panic-20260828-r1 --n-concurrent 1 --yes",
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/go-radix-final-20260904-panic/go-radix-panic -a oracle --job-name go-radix-panic-final-20260904 -o .nl2repo/runs/go-radix-panic-final-20260904 --n-concurrent 1 --yes",
       "exit_code": 0,
       "valid": true,
-      "reward": 0.0,
+      "passed": 0,
       "collected": 1,
-      "failed": 1,
-      "grading": ".nl2repo/runs/go-radix-panic-20260828-r1/go-radix-panic-20260828-r1/go-radix-panic__b9qp7GF/verifier/grading.json",
-      "network": ".nl2repo/runs/go-radix-panic-20260828-r1/go-radix-panic-20260828-r1/go-radix-panic__b9qp7GF/verifier/network.json",
+      "frozen_total": 1,
+      "reward": 0,
+      "result": {
+        "path": ".nl2repo/runs/go-radix-panic-final-20260904/go-radix-panic-final-20260904/go-radix-panic__jbriWmA/result.json",
+        "sha256": "sha256:61e085d67863285f1ed3b57e73478c930429bd34d37e75ae185ff2509df5b670"
+      },
+      "grading": {
+        "path": ".nl2repo/runs/go-radix-panic-final-20260904/go-radix-panic-final-20260904/go-radix-panic__jbriWmA/verifier/grading.json",
+        "sha256": "sha256:770db3ca92e7856ca2aafafc513a44b9f7287cc614932077530145c6ab4ec74d"
+      },
+      "network": {
+        "path": ".nl2repo/runs/go-radix-panic-final-20260904/go-radix-panic-final-20260904/go-radix-panic__jbriWmA/verifier/network.json",
+        "sha256": "sha256:d7509d134909f41dad5af0968b9901bffa3036ab63f74b69b5b87d3276ba21a5"
+      },
+      "reward_record": {
+        "path": ".nl2repo/runs/go-radix-panic-final-20260904/go-radix-panic-final-20260904/go-radix-panic__jbriWmA/verifier/reward.json",
+        "sha256": "sha256:8ab285dd6836d028aa2dc600258716be1474a462a4ebd95b7072e5f32750fad6"
+      },
       "public_network_available": false
     },
     "hang": {
-      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/go-radix/go-radix-hang -a oracle --job-name go-radix-hang-20260828-r1 -o .nl2repo/runs/go-radix-hang-20260828-r1 --n-concurrent 1 --yes",
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/go-radix-final-20260904-hang/go-radix-hang -a oracle --job-name go-radix-hang-final-20260904 -o .nl2repo/runs/go-radix-hang-final-20260904 --n-concurrent 1 --yes",
       "exit_code": 0,
       "valid": true,
-      "reward": 0.0,
+      "passed": 0,
       "collected": 1,
-      "failed": 1,
-      "grading": ".nl2repo/runs/go-radix-hang-20260828-r1/go-radix-hang-20260828-r1/go-radix-hang__EFQ3aEL/verifier/grading.json",
-      "network": ".nl2repo/runs/go-radix-hang-20260828-r1/go-radix-hang-20260828-r1/go-radix-hang__EFQ3aEL/verifier/network.json",
+      "frozen_total": 1,
+      "reward": 0,
+      "bounded": true,
+      "result": {
+        "path": ".nl2repo/runs/go-radix-hang-final-20260904/go-radix-hang-final-20260904/go-radix-hang__6PsPpSu/result.json",
+        "sha256": "sha256:045a381981d17ad3b3d716ae5a09ae340e3a3efe81a5106c267b2eb2df14b4ae"
+      },
+      "grading": {
+        "path": ".nl2repo/runs/go-radix-hang-final-20260904/go-radix-hang-final-20260904/go-radix-hang__6PsPpSu/verifier/grading.json",
+        "sha256": "sha256:770db3ca92e7856ca2aafafc513a44b9f7287cc614932077530145c6ab4ec74d"
+      },
+      "network": {
+        "path": ".nl2repo/runs/go-radix-hang-final-20260904/go-radix-hang-final-20260904/go-radix-hang__6PsPpSu/verifier/network.json",
+        "sha256": "sha256:8d2c1f36c7f74bc46d18906ab19415ef4f6abca195406fecd12fbdece6210901"
+      },
+      "reward_record": {
+        "path": ".nl2repo/runs/go-radix-hang-final-20260904/go-radix-hang-final-20260904/go-radix-hang__6PsPpSu/verifier/reward.json",
+        "sha256": "sha256:8ab285dd6836d028aa2dc600258716be1474a462a4ebd95b7072e5f32750fad6"
+      },
       "public_network_available": false
     },
-    "oversized_output": {
-      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/go-radix/go-radix-oversized-output -a oracle --job-name go-radix-oversized-output-20260828-r1 -o .nl2repo/runs/go-radix-oversized-output-20260828-r1 --n-concurrent 1 --yes",
+    "oversized-output": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/go-radix-final-20260904-oversized-output/go-radix-oversized-output -a oracle --job-name go-radix-oversized-final-20260904 -o .nl2repo/runs/go-radix-oversized-final-20260904 --n-concurrent 1 --yes",
       "exit_code": 0,
       "valid": true,
-      "reward": 0.0,
+      "passed": 0,
       "collected": 1,
-      "failed": 1,
-      "grading": ".nl2repo/runs/go-radix-oversized-output-20260828-r1/go-radix-oversized-output-20260828-r1/go-radix-oversized-output__SNTMyZD/verifier/grading.json",
-      "network": ".nl2repo/runs/go-radix-oversized-output-20260828-r1/go-radix-oversized-output-20260828-r1/go-radix-oversized-output__SNTMyZD/verifier/network.json",
+      "frozen_total": 1,
+      "reward": 0,
+      "bounded": true,
+      "result": {
+        "path": ".nl2repo/runs/go-radix-oversized-final-20260904/go-radix-oversized-final-20260904/go-radix-oversized-output__QdSRWhH/result.json",
+        "sha256": "sha256:fe93f6c76609aa3bc83bdde72efe3843c85aba72ae20fab3582f01f5af8065ae"
+      },
+      "grading": {
+        "path": ".nl2repo/runs/go-radix-oversized-final-20260904/go-radix-oversized-final-20260904/go-radix-oversized-output__QdSRWhH/verifier/grading.json",
+        "sha256": "sha256:770db3ca92e7856ca2aafafc513a44b9f7287cc614932077530145c6ab4ec74d"
+      },
+      "network": {
+        "path": ".nl2repo/runs/go-radix-oversized-final-20260904/go-radix-oversized-final-20260904/go-radix-oversized-output__QdSRWhH/verifier/network.json",
+        "sha256": "sha256:587b01ae67d91f1ea5f3e1242af5b9d26f2d3d859e90e18641070458806e71a3"
+      },
+      "reward_record": {
+        "path": ".nl2repo/runs/go-radix-oversized-final-20260904/go-radix-oversized-final-20260904/go-radix-oversized-output__QdSRWhH/verifier/reward.json",
+        "sha256": "sha256:8ab285dd6836d028aa2dc600258716be1474a462a4ebd95b7072e5f32750fad6"
+      },
       "public_network_available": false
     },
-    "background_process": {
-      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/go-radix/go-radix-background-process -a oracle --job-name go-radix-background-process-20260828-r1 -o .nl2repo/runs/go-radix-background-process-20260828-r1 --n-concurrent 1 --yes",
+    "background-process": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/go-radix-final-20260904-background-process/go-radix-background-process -a oracle --job-name go-radix-background-final-20260904 -o .nl2repo/runs/go-radix-background-final-20260904 --n-concurrent 1 --yes",
       "exit_code": 0,
       "valid": true,
-      "reward": 0.0,
+      "passed": 0,
       "collected": 1,
-      "failed": 1,
-      "grading": ".nl2repo/runs/go-radix-background-process-20260828-r1/go-radix-background-process-20260828-r1/go-radix-background-process__EHCKUrL/verifier/grading.json",
-      "network": ".nl2repo/runs/go-radix-background-process-20260828-r1/go-radix-background-process-20260828-r1/go-radix-background-process__EHCKUrL/verifier/network.json",
+      "frozen_total": 1,
+      "reward": 0,
+      "bounded": true,
+      "result": {
+        "path": ".nl2repo/runs/go-radix-background-final-20260904/go-radix-background-final-20260904/go-radix-background-process__r6zjMwp/result.json",
+        "sha256": "sha256:09efa4bea7cc7aae2816e004231f4990ccca37be1a38d5182100da86a7bca128"
+      },
+      "grading": {
+        "path": ".nl2repo/runs/go-radix-background-final-20260904/go-radix-background-final-20260904/go-radix-background-process__r6zjMwp/verifier/grading.json",
+        "sha256": "sha256:770db3ca92e7856ca2aafafc513a44b9f7287cc614932077530145c6ab4ec74d"
+      },
+      "network": {
+        "path": ".nl2repo/runs/go-radix-background-final-20260904/go-radix-background-final-20260904/go-radix-background-process__r6zjMwp/verifier/network.json",
+        "sha256": "sha256:32f79f5b6691f1bd754d30e99195b616c6e62f2b7f00975a711175e89e664d2b"
+      },
+      "reward_record": {
+        "path": ".nl2repo/runs/go-radix-background-final-20260904/go-radix-background-final-20260904/go-radix-background-process__r6zjMwp/verifier/reward.json",
+        "sha256": "sha256:8ab285dd6836d028aa2dc600258716be1474a462a4ebd95b7072e5f32750fad6"
+      },
       "public_network_available": false
     },
     "offline": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/go-radix-production-repair-20260904/go-radix -a oracle --allow-agent-host github.com --job-name go-radix-offline-repair-final-20260904 -o .nl2repo/runs/go-radix-offline-repair-final-20260904 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
       "completed": true,
-      "source": "Oracle verifier network probe and all control verifier probes",
+      "passed": 1,
+      "collected": 1,
+      "frozen_total": 1,
+      "reward": 1,
+      "result": ".nl2repo/runs/go-radix-offline-repair-final-20260904/go-radix-offline-repair-final-20260904/go-radix__54aWxEx/result.json",
+      "result_sha256": "sha256:bada0334543440a160e747660264731247a58b473b8eae59c0e58aec7e6757bd",
+      "grading": ".nl2repo/runs/go-radix-offline-repair-final-20260904/go-radix-offline-repair-final-20260904/go-radix__54aWxEx/verifier/grading.json",
+      "grading_sha256": "sha256:b00d7a553a2fddacea6fa04621bafef45310450fbfe030c859f754ad2e6f6933",
+      "network": ".nl2repo/runs/go-radix-offline-repair-final-20260904/go-radix-offline-repair-final-20260904/go-radix__54aWxEx/verifier/network.json",
+      "network_sha256": "sha256:4be25741638e4b6bf8b84e61ab989b40ce4facaa9e4cf00fa67180e5de27ebdc",
+      "reward_record": ".nl2repo/runs/go-radix-offline-repair-final-20260904/go-radix-offline-repair-final-20260904/go-radix__54aWxEx/verifier/reward.json",
+      "reward_record_sha256": "sha256:f5ff2ade8b6b6ea4ef812375e5c71684d7655fb98854aac64a6bf629a3dfac06",
       "public_network_available": false
     }
   },
-  "residual_risks": [
-    "Independent blind/spec review, model Agent Run, dataset integration, and publication remain integrator responsibilities.",
-    "The Oracle solution fetches only the exact pinned Git revision and verifies the source archive digest; the model Agent has no source-host authorization.",
-    "The upstream source archive has no go directive; the Oracle workspace and private module closure normalize only module metadata to locked Go 1.26.5."
-  ]
+  "network_policy": {
+    "mode": "no-network",
+    "agent_network_mode": "no-network",
+    "agent_allowed_hosts": [],
+    "oracle_source_host": "github.com"
+  },
+  "repair": {
+    "summary": "Reserved frozen_total=0 for the explicit candidate-installation-failed 0/0 exception and generated Go installation-failure branches with --expected 0; normal reports retain positive frozen denominator semantics.",
+    "focused_tests": "51 passed",
+    "toolchain_go_runtime_sha256": "sha256:bf6fea0657e71c28de545819798a6add60390679a4069b930fb5d7c5279a538b"
+  },
+  "recorded_at": "2026-09-04T03:35:00+08:00"
 }
