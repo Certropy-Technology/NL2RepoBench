@@ -591,6 +591,37 @@ def _active_workers(root: Path, live: Path) -> list[tuple[int, str]]:
     ]
 
 
+def _candidate_key(record: dict[str, Any]) -> str | None:
+    package = record.get("package")
+    if isinstance(package, str) and package:
+        return f"package:{package}"
+    candidate_id = record.get("candidate_id")
+    if isinstance(candidate_id, str) and candidate_id:
+        return f"candidate:{candidate_id}"
+    return None
+
+
+def _active_candidate_keys(active: list[tuple[int, str]]) -> set[str]:
+    reserved: set[str] = set()
+    for _pid, command in active:
+        match = re.search(r"--plan (\S+)", command)
+        if not match:
+            continue
+        try:
+            plan = _load_json(Path(match.group(1)))
+        except (OSError, UnicodeDecodeError, json.JSONDecodeError, ValueError):
+            continue
+        tasks = plan.get("tasks", [])
+        if not isinstance(tasks, list):
+            continue
+        for task in tasks:
+            if isinstance(task, dict):
+                key = _candidate_key(task)
+                if key is not None:
+                    reserved.add(key)
+    return reserved
+
+
 def _start_workers(
     root: Path, live: Path, args: argparse.Namespace
 ) -> list[dict[str, Any]]:
@@ -599,34 +630,39 @@ def _start_workers(
     if available == 0:
         return []
     lanes = _lane_registry(live)
-    capacities = {
-        lane.batch_id: len(_claimable(_state_records(lane.state)))
-        for lane in lanes
-    }
-    candidates = [lane for lane in lanes if capacities.get(lane.batch_id, 0) > 0]
+    reserved = _active_candidate_keys(active)
+    candidates: list[tuple[Lane, dict[str, Any]]] = []
+    seen: set[str] = set(reserved)
+    for lane in lanes:
+        for record in _claimable(_state_records(lane.state)):
+            key = _candidate_key(record)
+            if key is None or key in seen:
+                continue
+            seen.add(key)
+            candidates.append((lane, record))
     if not candidates:
         return []
     python = _python_bin(root)
     started: list[dict[str, Any]] = []
     slot = 0
     while available > 0 and candidates:
-        lane = candidates[slot % len(candidates)]
-        if capacities[lane.batch_id] <= 0:
-            candidates = [item for item in candidates if capacities[item.batch_id] > 0]
-            continue
-        capacities[lane.batch_id] -= 1
+        lane, record = candidates.pop(0)
         owner = (
             f"auto-authoring-{lane.language}-{lane.batch_id}-"
             f"{int(time.time())}-{slot}"
         )
         log = live / "logs" / f"{owner}.log"
         output = live / "results" / f"{owner}.json"
+        worker_plan = live / "plans" / "workers" / f"{owner}.json"
+        source_plan = _load_json(lane.plan)
+        source_plan["tasks"] = [record]
+        _atomic_write(worker_plan, source_plan)
         log.parent.mkdir(parents=True, exist_ok=True)
         command = [
             str(python),
             str(args.runner),
             "--plan",
-            str(lane.plan),
+            str(worker_plan),
             "--queue",
             str(lane.queue),
             "--queue-state",
@@ -645,7 +681,7 @@ def _start_workers(
             str(args.lease_seconds),
             "--max-attempts",
             str(TERMINAL_ATTEMPTS),
-            "--refill-queue",
+            "--no-refill-queue",
             "--output",
             str(output),
             "--provider",
@@ -679,6 +715,9 @@ def _start_workers(
                 "batch_id": lane.batch_id,
                 "owner": owner,
                 "pid": process.pid,
+                "plan": str(worker_plan),
+                "package": record.get("package"),
+                "candidate_id": record.get("candidate_id"),
                 "command": command,
                 "log": str(log),
                 "output": str(output),
