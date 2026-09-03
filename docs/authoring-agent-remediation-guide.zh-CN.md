@@ -1,8 +1,10 @@
 # 出题 Agent Remediation Guide
 
 本文件是 Raw Package -> Harbor 出题 Loop 的 Worker contract。它不负责 GPT/Fable
-或其他模型运行；Worker 的终点是把经过前置门禁的 task 放进 catalog，状态为
-`awaiting-agent-run`。后续模型评测由独立 Agent Run Loop 消费 catalog。
+或其他模型运行；Worker 必须完成题目自己的生产门禁，包括正式 Harbor Oracle、
+empty/stub/forgery/install-failure/panic/hang/oversized-output/background-process
+和 offline controls。Worker 的终点是把带有完整结构化证据的 task 交给 integration，
+状态为 `controls-passed`。后续模型评测由独立 Agent Run Loop 消费 catalog。
 
 ## 存储纪律
 
@@ -51,7 +53,7 @@ source-freeze
   -> Harbor package
   -> verifier build/offline smoke
   -> Oracle once
-  -> empty/stub/forgery/timeout/offline controls
+  -> empty/stub/forgery/install-failure/panic/hang/output/background-process/offline controls
   -> blind/spec review
   -> catalog handoff
 ```
@@ -96,7 +98,10 @@ uv run nl2repo harbor compile catalog/sources/<task> \
 ```
 
 然后在最终 compiled bundle 中运行一次 Oracle，要求 `valid=true`、collection 等于
-frozen denominator、reward `>=0.80`。再运行 empty/stub/forgery/timeout/offline controls。
+frozen denominator、reward `>=0.80`。再运行 empty/stub/forgery/install-failure/
+panic/hang/oversized-output/background-process/offline controls。所有运行必须保留
+result、grading、network 和 reward 证据；empty/install-failure 的允许 0/0 结果必须
+显式记录。只有完成这些门禁后，Worker 才能写 `controls-passed` handoff。
 只要 verifier/image/build 自身失败，分类为 `verifier`/`environment`/`infrastructure`，
 不能当作模型 0 分；只有 candidate workspace/install/behavior 已真实执行后才分类为
 `model`。
@@ -112,9 +117,11 @@ frozen collection and denominator
 verifier protocol and private artifact refs
 Oracle grading.json path
 control matrix paths
-status: awaiting-agent-run | blocked | excluded
+status: controls-passed | blocked | excluded
 BLOCKERS: none or precise evidence-backed reason
 ```
 
-Integrator 才能修改 dataset、canonical manifest、campaign report、共享 toolchain 和
-发布 projection。Worker 不启动 Agent Run，不写模型结果，不修改其他 task。
+Integrator 仍然负责独立复核、串行合并、dataset、canonical manifest、campaign report、
+共享 toolchain、发布 projection、OSS archive 和 worktree 清理。Worker 不运行模型
+Agent evaluation，不写模型结果，不修改其他 task；但 Worker 必须运行并记录本题的
+trusted Oracle 和 controls。

@@ -37,8 +37,19 @@ SAFE_PACKAGE = re.compile(
     r"^(?:[A-Za-z0-9][A-Za-z0-9._-]*|@[A-Za-z0-9][A-Za-z0-9._-]*/[A-Za-z0-9][A-Za-z0-9._-]*)$"
 )
 ENV_NAME = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
-MAX_CONCURRENCY = 8
+MAX_CONCURRENCY = 24
 DEFAULT_EXCLUDED_TOOLS = "subagent,subagent_supervisor,subagent_wait"
+REQUIRED_CONTROL_KINDS = (
+    "empty",
+    "stub",
+    "forgery",
+    "install-failure",
+    "panic",
+    "hang",
+    "oversized-output",
+    "background-process",
+    "offline",
+)
 TMPFS_ROOTS = (Path("/tmp"), Path("/dev/shm"))
 SPARSE_WORKTREE_PATHS = (
     "catalog/sources",
@@ -316,7 +327,9 @@ authoring source target is catalog/sources/{package}/ plus task-local private
 artifacts and evidence under .nl2repo/. `catalog/tasks/{package}/` is generated
 compiler output: do not hand-edit it. You are the sole writer for this worktree.
 Do not edit the parent checkout, another worktree, shared catalog/dataset files,
-or OSS data. Do not start a Harbor Agent Run from this lane.
+or OSS data. This authoring lane owns the trusted Harbor Oracle and all
+required negative/offline controls. Do not run a model Agent evaluation from
+this lane, and do not upload model-run results to OSS.
 {subagent_guidance}
 
 Turn the candidate into a real, testable Harbor task. Freeze and verify the
@@ -345,9 +358,9 @@ The LLM Provider is injected by the model runner as a run-scoped exact
 `--allow-agent-host` hostname. The trusted Oracle run is different: Oracle is
 the reference implementation and may fetch the frozen upstream revision from
 the exact hostname in `[source].upstream_url`; the Oracle runner supplies that
-host only for `-a oracle`. This exception is for Oracle, not for the model
-Agent. Do not add source hosts, PyPI/npm/package-registry hosts, or the LLM
-Provider to task metadata. Keep `agent_network_mode = "no-network"` and leave
+host only for `-a oracle`. This exception is for the trusted Oracle and control
+runs, not for the model Agent. Do not add source hosts, PyPI/npm/package-registry
+hosts, or the LLM Provider to task metadata. Keep `agent_network_mode = "no-network"` and leave
 `agent_allowed_hosts` empty. Never use `public`, wildcard hosts, GitHub, raw
 GitHub, GitHubusercontent, or generic source mirrors for a model run. Agent
 Compose files must not declare `network_mode` or `networks`, because that would
@@ -359,10 +372,28 @@ finding:
 - `uv run nl2repo task lint-network --tasks-root catalog/sources`
 - a production `uv run nl2repo harbor compile` using the language toolchain,
   `.nl2repo/artifacts`, `--allow-private`, and a task-local output directory
-The Loop repeats source validation, network lint, and a production compile
-before it records the claim as complete. Git source acquisition is allowed only
-inside the Oracle solution, which is uploaded exclusively to the trusted Oracle
-run and receives a run-scoped source-host override.
+Before handoff, the authoring Agent must also run the official Harbor Oracle
+against the final compiled bundle and all required empty, stub, forgery,
+install-failure, panic, hang, oversized-output, background-process, and offline
+controls. Oracle must report valid=true, collected equal to frozen_total, and
+reward >= 0.80. Each control must produce a valid structured receipt with a
+verifier-owned reward; the allowed empty/install-failure 0/0 result must be
+recorded explicitly.
+
+Use Harbor 0.21.0 from harbor-runner and keep all evidence in this worktree.
+Write `.nl2repo/authoring-production-gates.json` with schema_version `1.0`,
+the matching task_id, status `controls-passed`, a compile bundle manifest, the
+Oracle passed/collected/frozen_total/reward values and result/grading/network
+paths, and one result/grading/network record for every required control kind.
+Every negative control must have reward 0. The offline record must contain
+public_network_available=false. Do not use a hand-written local substitute as
+the official receipt.
+
+The Loop repeats source validation, network lint, production compile, and this
+fresh receipt check before it records the claim as complete. Git source
+acquisition is allowed only inside the Oracle solution, which is uploaded
+exclusively to the trusted Oracle run and receives a run-scoped source-host
+override.
 
 Shared verifier/compiler remediation is allowed only when it is a minimal
 generic change needed by this task; keep that change in this worktree for
@@ -717,6 +748,124 @@ def _run_authoring_task_lint(worktree: Path, task_root: Path) -> dict[str, Any]:
     }
 
 
+def _evidence_path_exists(worktree: Path, value: Any) -> bool:
+    if not isinstance(value, str) or not value or "<" in value or ">" in value:
+        return False
+    path = Path(value)
+    if not path.is_absolute():
+        path = worktree / path
+    return path.is_file()
+
+
+def _run_production_gate_check(worktree: Path, package: str) -> dict[str, Any]:
+    """Require the authoring Agent's fresh Oracle/control receipt."""
+
+    receipt_path = worktree / ".nl2repo/authoring-production-gates.json"
+    report_path = worktree / ".nl2repo/evidence/production-gates-check.json"
+    report_path.parent.mkdir(parents=True, exist_ok=True)
+    failures: list[str] = []
+    payload: dict[str, Any] = {}
+    try:
+        loaded = json.loads(receipt_path.read_text(encoding="utf-8"))
+        if isinstance(loaded, dict):
+            payload = loaded
+        else:
+            failures.append("receipt root is not an object")
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+        failures.append(f"cannot read receipt: {type(exc).__name__}: {exc}")
+
+    if payload.get("schema_version") != "1.0":
+        failures.append("schema_version must be 1.0")
+    if payload.get("task_id") != package:
+        failures.append("task_id does not match claimed package")
+    if payload.get("status") != "controls-passed":
+        failures.append("status is not controls-passed")
+
+    compile_record = payload.get("compile")
+    if not isinstance(compile_record, dict):
+        failures.append("compile receipt is missing")
+    elif compile_record.get("status") != "passed" or not _evidence_path_exists(
+        worktree, compile_record.get("bundle_manifest")
+    ):
+        failures.append("production compile receipt or bundle manifest is invalid")
+
+    oracle = payload.get("oracle")
+    if not isinstance(oracle, dict):
+        failures.append("oracle receipt is missing")
+    else:
+        if oracle.get("valid") is not True:
+            failures.append("oracle valid is not true")
+        passed = oracle.get("passed")
+        collected = oracle.get("collected")
+        frozen_total = oracle.get("frozen_total")
+        if (
+            not isinstance(passed, int)
+            or isinstance(passed, bool)
+            or not isinstance(collected, int)
+            or isinstance(collected, bool)
+            or not isinstance(frozen_total, int)
+            or isinstance(frozen_total, bool)
+            or collected != frozen_total
+            or not 0 <= passed <= collected
+            or frozen_total < 1
+        ):
+            failures.append("oracle counts do not match the frozen denominator")
+        reward = oracle.get("reward")
+        if (
+            not isinstance(reward, (int, float))
+            or isinstance(reward, bool)
+            or reward < 0.8
+        ):
+            failures.append("oracle reward is below 0.80 or invalid")
+        for key in ("result", "grading", "network"):
+            if not _evidence_path_exists(worktree, oracle.get(key)):
+                failures.append(f"oracle {key} evidence is missing")
+
+    controls = payload.get("controls")
+    if not isinstance(controls, dict):
+        failures.append("controls receipt is missing")
+    else:
+        for kind in REQUIRED_CONTROL_KINDS:
+            record = controls.get(kind)
+            if not isinstance(record, dict):
+                failures.append(f"control {kind} receipt is missing")
+                continue
+            if record.get("valid") is not True:
+                failures.append(f"control {kind} is not valid")
+            reward = record.get("reward")
+            if not isinstance(reward, (int, float)) or isinstance(reward, bool):
+                failures.append(f"control {kind} reward is invalid")
+            elif kind == "offline" and reward < 0.8:
+                failures.append("offline control reward is below 0.80")
+            elif kind != "offline" and reward != 0:
+                failures.append(f"control {kind} reward is not zero")
+            for key in ("result", "grading", "network"):
+                if not _evidence_path_exists(worktree, record.get(key)):
+                    failures.append(f"control {kind} {key} evidence is missing")
+        offline = controls.get("offline")
+        if isinstance(offline, dict) and offline.get("public_network_available") is not False:
+            failures.append("offline control does not prove public_network_available=false")
+
+    report = {
+        "schema_version": "1.0",
+        "task_id": package,
+        "status": "passed" if not failures else "failed",
+        "receipt": str(receipt_path),
+        "failures": failures,
+    }
+    report_path.write_text(
+        json.dumps(report, ensure_ascii=False, sort_keys=True, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    return {
+        "status": report["status"],
+        "exit_code": 0 if not failures else 1,
+        "report": str(report_path),
+        "receipt": str(receipt_path),
+        "output": "; ".join(failures) if failures else "Oracle and controls receipt passed",
+    }
+
+
 def _prepare_task(
     args: argparse.Namespace,
     *,
@@ -761,7 +910,6 @@ def _prepare_task(
         "worker_guidance": plan.get("worker_guidance"),
         "agent_run_boundary": "direct top-level pi CLI session; no pi-subagents",
         "must_not": [
-            "start a Harbor Agent Run",
             *(
                 []
                 if getattr(args, "allow_internal_subagent", False)
@@ -835,6 +983,11 @@ def _run_claimed(args: argparse.Namespace, context: dict[str, Any]) -> dict[str,
     artifacts = [context["brief"], context["worktree_claim"], agent["log"]]
     if handoff.is_file():
         artifacts.append(str(handoff))
+    production_gate_receipt = (
+        Path(context["worktree"]) / ".nl2repo/authoring-production-gates.json"
+    )
+    if production_gate_receipt.is_file():
+        artifacts.append(str(production_gate_receipt))
     handoff_digest = _file_digest(handoff)
     fresh_handoff = (
         handoff_digest is not None
@@ -852,7 +1005,7 @@ def _run_claimed(args: argparse.Namespace, context: dict[str, Any]) -> dict[str,
     handoff_task_id = handoff_payload.get("task_id")
     valid_handoff = (
         fresh_handoff
-        and handoff_status in {"awaiting-agent-run", "packaged", "controls-passed"}
+        and handoff_status == "controls-passed"
         and (handoff_task_id is None or handoff_task_id == context["package"])
     )
     ready = (
@@ -864,12 +1017,17 @@ def _run_claimed(args: argparse.Namespace, context: dict[str, Any]) -> dict[str,
     artifacts.append(network["report"])
     lint = _run_authoring_task_lint(Path(context["worktree"]), task_root)
     artifacts.append(lint["report"])
+    production_gates = _run_production_gate_check(
+        Path(context["worktree"]), context["package"]
+    )
+    artifacts.append(production_gates["report"])
     if (
         agent["exit_code"] == 0
         and ready
         and valid_handoff
         and network["status"] == "passed"
         and lint["status"] == "passed"
+        and production_gates["status"] == "passed"
     ):
         transition = _queue_transition(
             "record",
@@ -895,6 +1053,8 @@ def _run_claimed(args: argparse.Namespace, context: dict[str, Any]) -> dict[str,
             if network["status"] != "passed"
             else "authoring task lint failed: " + lint["output"]
             if lint["status"] != "passed"
+            else "production Oracle/control gate failed: " + production_gates["output"]
+            if production_gates["status"] != "passed"
             else "Pi Agent exited without a fresh valid task.toml/instruction/handoff"
         )
     )

@@ -128,7 +128,7 @@ def test_driver_launches_direct_pi_and_records_handoff(tmp_path: Path, monkeypat
         (task_root / "task.toml").write_text("task_id = 'one'\n", encoding="utf-8")
         (task_root / "instruction.md").write_text("# one\n", encoding="utf-8")
         handoff = Path(kwargs["handoff_path"])
-        handoff.write_text('{"status":"awaiting-agent-run"}\n', encoding="utf-8")
+        handoff.write_text('{"status":"controls-passed"}\n', encoding="utf-8")
         return {
             "status": "exited",
             "exit_code": 0,
@@ -157,6 +157,16 @@ def test_driver_launches_direct_pi_and_records_handoff(tmp_path: Path, monkeypat
             "status": "passed",
             "exit_code": 0,
             "report": str(Path(worktree) / ".nl2repo/evidence/authoring-task-lint.json"),
+            "output": "passed",
+        },
+    )
+    monkeypatch.setattr(
+        driver,
+        "_run_production_gate_check",
+        lambda *values: {
+            "status": "passed",
+            "exit_code": 0,
+            "report": "gates",
             "output": "passed",
         },
     )
@@ -246,6 +256,16 @@ def test_driver_does_not_reuse_an_old_handoff_after_empty_agent_exit(
         driver,
         "_run_authoring_task_lint",
         lambda *values: {"status": "passed", "exit_code": 0, "report": "lint", "output": "passed"},
+    )
+    monkeypatch.setattr(
+        driver,
+        "_run_production_gate_check",
+        lambda *values: {
+            "status": "passed",
+            "exit_code": 0,
+            "report": "gates",
+            "output": "passed",
+        },
     )
 
     output = driver.run(args)
@@ -368,6 +388,16 @@ def test_driver_refills_from_pending_queue_after_plan_is_exhausted(
             "output": "passed",
         },
     )
+    monkeypatch.setattr(
+        driver,
+        "_run_production_gate_check",
+        lambda *values: {
+            "status": "passed",
+            "exit_code": 0,
+            "report": "gates",
+            "output": "passed",
+        },
+    )
 
     def fake_launch(_args, **kwargs):
         package = Path(kwargs["worktree"]).name
@@ -376,7 +406,7 @@ def test_driver_refills_from_pending_queue_after_plan_is_exhausted(
         (task_root / "task.toml").write_text("task_id = 'demo'\n", encoding="utf-8")
         (task_root / "instruction.md").write_text("# task\n", encoding="utf-8")
         handoff = Path(kwargs["handoff_path"])
-        handoff.write_text('{"status":"awaiting-agent-run"}\n', encoding="utf-8")
+        handoff.write_text('{"status":"controls-passed"}\n', encoding="utf-8")
         return {
             "status": "exited",
             "exit_code": 0,
@@ -464,7 +494,7 @@ def test_driver_can_disable_queue_refill(tmp_path: Path, monkeypatch) -> None:
         (task_root / "task.toml").write_text("task_id = 'one'\n", encoding="utf-8")
         (task_root / "instruction.md").write_text("# one\n", encoding="utf-8")
         handoff = Path(kwargs["handoff_path"])
-        handoff.write_text('{"status":"awaiting-agent-run"}\n', encoding="utf-8")
+        handoff.write_text('{"status":"controls-passed"}\n', encoding="utf-8")
         return {"status": "exited", "exit_code": 0, "log": "log", "handoff": str(handoff)}
 
     monkeypatch.setattr(driver, "_launch_agent", fake_launch)

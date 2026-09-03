@@ -33,7 +33,7 @@ SAFE_PACKAGE = re.compile(
 )
 LANGUAGES = ("python", "node", "go")
 TERMINAL_ATTEMPTS = 3
-DEFAULT_MAX_AGENTS = 8
+DEFAULT_MAX_AGENTS = 24
 DEFAULT_PENDING_THRESHOLD = 20
 DEFAULT_DISCOVERY_BATCH_SIZE = 4
 DEFAULT_DISCOVERY_COOLDOWN_SECONDS = 900
@@ -849,7 +849,8 @@ def main() -> int:
         or args.discovery_batch_size < 1
     ):
         parser.error(
-            "max-agents must be 1..8; pending-threshold must be non-negative; "
+            f"max-agents must be 1..{DEFAULT_MAX_AGENTS}; "
+            "pending-threshold must be non-negative; "
             "discovery-batch-size must be positive"
         )
     if (
