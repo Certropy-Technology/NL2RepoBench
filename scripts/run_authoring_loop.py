@@ -11,6 +11,7 @@ future policy explicitly enables it.
 from __future__ import annotations
 
 import argparse
+import copy
 import hashlib
 import importlib.util
 import json
@@ -83,6 +84,8 @@ TRANSIENT_AGENT_MARKERS = (
     "upstream_error",
     "connection reset",
     "temporarily unavailable",
+    "too many pending requests",
+    "unknown provider for model",
 )
 TRANSIENT_AGENT_RETRIES = 2
 TRANSIENT_AGENT_MAX_RUNTIME_SEC = 120
@@ -555,22 +558,47 @@ def _launch_agent(
         handoff_path=handoff_path,
         allow_internal_subagent=getattr(args, "allow_internal_subagent", False),
     )
-    environment = _agent_environment(args)
+    launch_args = copy.copy(args)
+    primary_provider = args.provider
+    primary_model = args.model
+    fallback_provider = getattr(args, "fallback_provider", None)
+    fallback_model = getattr(args, "fallback_model", None)
+    fallback_thinking = getattr(args, "fallback_thinking", None)
+    fallback_configured = bool(fallback_provider and fallback_model)
+    fallback_used = False
+    fallback_reason: str | None = None
     provider_retries = 0
+    transient_provider_retries = 0
+    launch_number = 0
     while True:
+        launch_args.provider = (
+            fallback_provider if fallback_used else primary_provider
+        )
+        launch_args.model = fallback_model if fallback_used else primary_model
+        launch_args.thinking = (
+            fallback_thinking if fallback_used and fallback_thinking else args.thinking
+        )
+        environment = _agent_environment(launch_args)
         session_id = f"{plan['batch_id']}-{session_package}-attempt-{attempt}"
+        if fallback_used:
+            session_id += "-fallback"
         if provider_retries:
             session_id += f"-provider-retry-{provider_retries}"
         if not SAFE_NAME.fullmatch(session_id):
             raise ValueError(f"unsafe Pi session id: {session_id}")
         command = _pi_command(
-            args,
+            launch_args,
             prompt=prompt,
             session_dir=session_dir,
             session_id=session_id,
         )
         started = time.monotonic()
+        launch_marker = f"[authoring-loop] launch {launch_number}"
         with log_path.open("a", encoding="utf-8") as log:
+            log.write(
+                f"\n{launch_marker} provider={launch_args.provider} "
+                f"model={launch_args.model}\n"
+            )
             if provider_retries:
                 log.write(
                     f"\n[authoring-loop] transient provider retry "
@@ -593,23 +621,43 @@ def _launch_agent(
                 _terminate_process(process)
                 returncode = 124
                 status = "timeout"
-        if returncode == 0 or provider_retries >= TRANSIENT_AGENT_RETRIES:
+        if returncode == 0:
             break
         try:
-            log_text = log_path.read_text(encoding="utf-8", errors="replace").casefold()
+            log_text = log_path.read_text(encoding="utf-8", errors="replace")
         except OSError:
             log_text = ""
-        is_transient = any(marker in log_text for marker in TRANSIENT_AGENT_MARKERS)
+        launch_text = log_text.rsplit(launch_marker, 1)[-1].casefold()
+        is_transient = any(marker in launch_text for marker in TRANSIENT_AGENT_MARKERS)
         if not is_transient or time.monotonic() - started > TRANSIENT_AGENT_MAX_RUNTIME_SEC:
             break
-        provider_retries += 1
-        time.sleep(min(5 * provider_retries, 15))
+        if provider_retries < TRANSIENT_AGENT_RETRIES:
+            provider_retries += 1
+            transient_provider_retries += 1
+            launch_number += 1
+            time.sleep(min(5 * provider_retries, 15))
+            continue
+        if fallback_configured and not fallback_used:
+            fallback_used = True
+            fallback_reason = "transient provider retries exhausted"
+            provider_retries = 0
+            launch_number += 1
+            time.sleep(5)
+            continue
+        break
     return {
         "status": status,
         "exit_code": returncode,
         "command": command,
         "session_id": session_id,
-        "transient_provider_retries": provider_retries,
+        "primary_provider": primary_provider,
+        "primary_model": primary_model,
+        "provider": launch_args.provider,
+        "model": launch_args.model,
+        "thinking": launch_args.thinking,
+        "transient_provider_retries": transient_provider_retries,
+        "fallback_used": fallback_used,
+        "fallback_reason": fallback_reason,
         "session_dir": str(session_dir),
         "log": str(log_path),
         "handoff": str(handoff_path),
@@ -1334,6 +1382,9 @@ def main() -> int:
     )
     parser.add_argument("--model", default=os.environ.get("PI_MODEL", "gpt-5.6-sol"))
     parser.add_argument("--thinking", default="high")
+    parser.add_argument("--fallback-provider")
+    parser.add_argument("--fallback-model")
+    parser.add_argument("--fallback-thinking", default="high")
     parser.add_argument("--models-file", type=Path, default=Path.home() / ".pi/agent/models.json")
     parser.add_argument(
         "--credential-env",

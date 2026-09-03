@@ -46,6 +46,8 @@ DEFAULT_MIN_FREE_BYTES = 12 * 1024**3
 DEFAULT_DOCKER_ROOT = Path("/var/lib/docker")
 DEFAULT_DOCKER_MIN_FREE_BYTES = 20 * 1024**3
 DEFAULT_DOCKER_WORKER_RESERVE_BYTES = 2 * 1024**3
+DEFAULT_FALLBACK_PROVIDER = "aliyun-qwen-openai-responses"
+DEFAULT_FALLBACK_MODEL = "qwen3.8-flash"
 GO_POOL_FALLBACK: dict[str, str] = {
     "go-backoff": "cenkalti/backoff",
     "go-brotli": "andybalholm/brotli",
@@ -838,6 +840,12 @@ def _start_workers(
             args.model,
             "--thinking",
             args.thinking,
+            "--fallback-provider",
+            args.fallback_provider,
+            "--fallback-model",
+            args.fallback_model,
+            "--fallback-thinking",
+            args.fallback_thinking,
             "--models-file",
             str(Path.home() / ".pi/agent/models.json"),
             "--session-root",
@@ -1023,6 +1031,18 @@ def main() -> int:
     )
     parser.add_argument("--model", default=os.environ.get("PI_MODEL", "gpt-5.6-sol"))
     parser.add_argument("--thinking", default=os.environ.get("PI_THINKING", "high"))
+    parser.add_argument(
+        "--fallback-provider",
+        default=os.environ.get("PI_FALLBACK_PROVIDER", DEFAULT_FALLBACK_PROVIDER),
+    )
+    parser.add_argument(
+        "--fallback-model",
+        default=os.environ.get("PI_FALLBACK_MODEL", DEFAULT_FALLBACK_MODEL),
+    )
+    parser.add_argument(
+        "--fallback-thinking",
+        default=os.environ.get("PI_FALLBACK_THINKING", "high"),
+    )
     parser.add_argument("--max-agents", type=int, default=DEFAULT_MAX_AGENTS)
     parser.add_argument(
         "--pending-threshold", type=int, default=DEFAULT_PENDING_THRESHOLD

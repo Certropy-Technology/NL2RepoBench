@@ -250,7 +250,12 @@ def test_driver_does_not_reuse_an_old_handoff_after_empty_agent_exit(
     monkeypatch.setattr(
         driver,
         "_run_network_policy_check",
-        lambda *values: {"status": "passed", "exit_code": 0, "report": "network", "output": "passed"},
+        lambda *values: {
+            "status": "passed",
+            "exit_code": 0,
+            "report": "network",
+            "output": "passed",
+        },
     )
     monkeypatch.setattr(
         driver,
@@ -529,6 +534,69 @@ def test_authoring_settings_keep_capabilities_but_disable_lark_and_raise_retry(
     assert payload["lark-notify"] == {"enabled": False}
     assert payload["retry"]["maxRetries"] == 10
     assert payload["retry"]["provider"]["maxRetries"] == 5
+
+
+def test_launch_agent_falls_back_after_bounded_transient_provider_retries(
+    tmp_path: Path, monkeypatch
+) -> None:
+    plan = {"batch_id": "go-fallback", "language": "go"}
+    task = {"candidate_id": "go-demo", "package": "go-demo"}
+    args = _args(
+        tmp_path,
+        tmp_path / "plan.json",
+        tmp_path / "queue.json",
+        tmp_path / "state.json",
+    )
+    args.fallback_provider = "aliyun-qwen-openai-responses"
+    args.fallback_model = "qwen3.8-flash"
+    args.fallback_thinking = "high"
+    calls: list[list[str]] = []
+    primary_errors = [
+        "too many pending requests",
+        "unknown provider for model gpt-5.6-sol",
+        "stream_read_error",
+    ]
+
+    class FakeProcess:
+        def __init__(self, command, **kwargs):
+            self.pid = 1000 + len(calls)
+            calls.append(command)
+            provider = command[command.index("--provider") + 1]
+            if provider == args.provider:
+                kwargs["stdout"].write(primary_errors[len(calls) - 1] + "\n")
+                kwargs["stdout"].flush()
+                self.returncode = 1
+            else:
+                self.returncode = 0
+
+        def wait(self, timeout=None):
+            del timeout
+            return self.returncode
+
+    monkeypatch.setattr(driver.subprocess, "Popen", FakeProcess)
+    monkeypatch.setattr(driver.time, "sleep", lambda _seconds: None)
+
+    result = driver._launch_agent(
+        args,
+        plan=plan,
+        task=task,
+        brief_path=tmp_path / "brief.md",
+        worktree=tmp_path,
+        session_dir=tmp_path / "sessions",
+        log_path=tmp_path / "agent.log",
+        handoff_path=tmp_path / "handoff.json",
+        attempt=1,
+    )
+
+    providers = [call[call.index("--provider") + 1] for call in calls]
+    models = [call[call.index("--model") + 1] for call in calls]
+    assert providers == [args.provider] * 3 + [args.fallback_provider]
+    assert models[-1] == args.fallback_model
+    assert result["exit_code"] == 0
+    assert result["provider"] == args.fallback_provider
+    assert result["model"] == args.fallback_model
+    assert result["fallback_used"] is True
+    assert result["fallback_reason"] == "transient provider retries exhausted"
 
 
 def test_driver_rejects_tmpfs_worktree_root(tmp_path: Path) -> None:

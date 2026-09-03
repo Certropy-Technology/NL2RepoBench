@@ -221,6 +221,70 @@ def test_worker_slots_are_capped_by_docker_headroom(tmp_path: Path, monkeypatch)
     ) == 1
 
 
+def test_started_worker_receives_provider_fallback_configuration(
+    tmp_path: Path, monkeypatch
+) -> None:
+    root = tmp_path / "repo"
+    live = root / ".nl2repo/authoring-live"
+    plan = live / "plans/go.json"
+    plan.parent.mkdir(parents=True)
+    plan.write_text(
+        json.dumps({"batch_id": "go-test", "language": "go", "tasks": []}),
+        encoding="utf-8",
+    )
+    lane = coordinator.Lane(
+        "go",
+        "go-test",
+        live / "supervisor/queues/go.json",
+        plan,
+        live / "queues/go.json",
+    )
+    record = {
+        "candidate_id": "go-demo",
+        "package": "go-demo",
+        "language": "go",
+        "status": "pending",
+        "attempts": 0,
+    }
+    commands: list[list[str]] = []
+
+    class FakeProcess:
+        pid = 1234
+
+        def __init__(self, command, **_kwargs):
+            commands.append(command)
+
+    monkeypatch.setattr(coordinator, "_active_workers", lambda *_args: [])
+    monkeypatch.setattr(coordinator, "_active_lease_slots", lambda *_args: 0)
+    monkeypatch.setattr(coordinator, "_lane_registry", lambda *_args: [lane])
+    monkeypatch.setattr(coordinator, "_state_records", lambda *_args: [record])
+    monkeypatch.setattr(coordinator, "_python_bin", lambda *_args: Path("/python"))
+    monkeypatch.setattr(coordinator.subprocess, "Popen", FakeProcess)
+    args = SimpleNamespace(
+        max_agents=24,
+        runner=Path("/runner.py"),
+        lease_seconds=18000,
+        agent_timeout_seconds=14400,
+        provider="z-open-api-gpt-openai-responses",
+        model="gpt-5.6-sol",
+        thinking="high",
+        fallback_provider="aliyun-qwen-openai-responses",
+        fallback_model="qwen3.8-flash",
+        fallback_thinking="high",
+    )
+    capacity = {"can_start": True, "worker_slots": 1}
+
+    started = coordinator._start_workers(
+        root, live, args, disk_capacity=capacity
+    )
+
+    assert len(started) == 1
+    command = commands[0]
+    assert command[command.index("--fallback-provider") + 1] == args.fallback_provider
+    assert command[command.index("--fallback-model") + 1] == args.fallback_model
+    assert command[command.index("--fallback-thinking") + 1] == "high"
+
+
 def test_register_lane_preserves_registry_list(tmp_path: Path) -> None:
     live = tmp_path / "live"
     registry = live / "supervisor/generated-lanes.json"
