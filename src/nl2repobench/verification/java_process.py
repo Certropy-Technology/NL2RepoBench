@@ -105,7 +105,7 @@ def run_java_process(
     process_environment = {
         name: os.environ[name]
         for name in SAFE_ENVIRONMENT_NAMES
-        if name in os.environ
+        if name in os.environ and name != "MAVEN_OPTS"
     }
     process_environment.setdefault("PATH", "/usr/local/bin:/usr/bin:/bin")
     process_environment["HOME"] = "/root" if uid == 0 else "/home/candidate"

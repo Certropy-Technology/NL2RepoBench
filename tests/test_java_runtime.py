@@ -146,6 +146,7 @@ def test_java_process_supervisor_does_not_inherit_secret_environment(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     monkeypatch.setenv("API_KEY", "must-not-leak")
+    monkeypatch.setenv("MAVEN_OPTS", "-Dmust.not.inherit=true")
     result = run_java_process(
         ["/usr/bin/env"],
         cwd=tmp_path,
@@ -156,6 +157,7 @@ def test_java_process_supervisor_does_not_inherit_secret_environment(
 
     assert result.return_code == 0
     assert "API_KEY" not in result.stdout
+    assert "MAVEN_OPTS" not in result.stdout
 
 
 def test_java_process_supervisor_kills_descendant_process_group(tmp_path: Path) -> None:
