@@ -235,7 +235,7 @@ def compile_harbor_task(
     ] = Path("build/harbor"),
     toolchain: Annotated[
         Path,
-        typer.Option("--toolchain", help="Pinned Harbor/toolchain lock."),
+        typer.Option("--toolchain", help="Pinned toolchain matching the bundle runtime."),
     ] = Path("toolchain.lock.toml"),
     artifact_root: Annotated[
         Path,

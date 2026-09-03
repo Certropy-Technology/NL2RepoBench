@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import tomli_w
+
 from nl2repobench.domain.runtime import PackageManager, RuntimeDiscriminator, RuntimeLanguage
 from nl2repobench.harbor.registry import HarborCompilerRegistry
 
@@ -69,3 +71,27 @@ def test_registry_resolves_registered_java_maven_identity() -> None:
         )
     )
     assert factory.__name__ == "java_maven_factory"
+
+
+def test_control_resolution_uses_the_compiled_java_runtime_identity(tmp_path: Path) -> None:
+    task_root = tmp_path / "task"
+    task_root.mkdir()
+    (task_root / "task.toml").write_text(
+        tomli_w.dumps(
+            {
+                "metadata": {
+                    "language": "java",
+                    "package_manager": "maven",
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+    registry = HarborCompilerRegistry.default()
+
+    identity = registry._runtime_for_compiled_task(task_root)
+
+    assert identity == RuntimeDiscriminator(
+        language=RuntimeLanguage.JAVA,
+        package_manager=PackageManager.MAVEN,
+    )

@@ -62,7 +62,7 @@ commands = ["mvn -o test"]
 
 
 def test_java_verifier_script_bounds_candidate_execution() -> None:
-    source = ROOT / "catalog/sources/java-ministats"
+    source = ROOT / "tests/fixtures/java-ministats"
     descriptor = CatalogCompiler.load_task(source)
     assert descriptor.harbor is not None
     script = JavaHarborCompiler._test_script(descriptor.tests.expected_total, descriptor.harbor)
