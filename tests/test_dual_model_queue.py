@@ -56,6 +56,7 @@ def _models(path: Path) -> None:
 def test_dual_plan_resolves_both_pi_providers_without_serializing_keys(
     tmp_path: Path, monkeypatch
 ) -> None:
+    monkeypatch.setattr(dual, "validate_runnable_tasks", lambda *args, **kwargs: None)
     monkeypatch.setenv("TEST_MODEL_KEY", "test-key-not-written-to-plan")
     models = tmp_path / "models.json"
     _models(models)
@@ -99,6 +100,7 @@ def test_dual_plan_resolves_both_pi_providers_without_serializing_keys(
 def test_dual_plan_allows_fable_provider_env_override_without_old_env(
     tmp_path: Path, monkeypatch
 ) -> None:
+    monkeypatch.setattr(dual, "validate_runnable_tasks", lambda *args, **kwargs: None)
     models = tmp_path / "models.json"
     models.write_text(
         json.dumps(
@@ -140,6 +142,7 @@ def test_dual_plan_allows_fable_provider_env_override_without_old_env(
 
 
 def test_dual_plan_can_select_claude_opus_5(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.setattr(dual, "validate_runnable_tasks", lambda *args, **kwargs: None)
     monkeypatch.setenv("TEST_MODEL_KEY", "test-key-not-written-to-plan")
     models = tmp_path / "models.json"
     _models(models)
@@ -264,6 +267,7 @@ def test_fable_queue_uses_explicit_credential_environment(
 
 
 def test_dual_plan_skips_only_oss_backed_existing_runs(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.setattr(dual, "validate_runnable_tasks", lambda *args, **kwargs: None)
     monkeypatch.setenv("TEST_MODEL_KEY", "test-key-not-written-to-plan")
     models = tmp_path / "models.json"
     _models(models)

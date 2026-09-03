@@ -9,6 +9,7 @@ import json
 import re
 import subprocess
 import sys
+import tomllib
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import asdict, dataclass
 from pathlib import Path
@@ -17,6 +18,7 @@ from typing import Any
 from run_model_from_pi import provider_config, runtime_provider_config
 
 SAFE_NAME = re.compile(r"^[A-Za-z0-9._-]+$")
+RUNNABLE_LIFECYCLES = frozenset({"oracle-passed", "controls-passed", "reviewed", "piloted", "published"})
 
 
 @dataclass(frozen=True)
@@ -85,6 +87,27 @@ def campaign_tasks(path: Path) -> tuple[str, ...]:
     return tuple(task_ids)
 
 
+def validate_runnable_tasks(
+    tasks: tuple[str, ...], *, harbor_task_root: Path | None = None
+) -> None:
+    root = Path(__file__).parents[1]
+    source_root = root / "catalog/sources"
+    task_root = harbor_task_root or root / "catalog/tasks"
+    for task_id in tasks:
+        source_toml = source_root / task_id / "task.toml"
+        runtime_toml = task_root / task_id / "task.toml"
+        if not source_toml.is_file() or not runtime_toml.is_file():
+            raise ValueError(f"task is not materialized for model execution: {task_id}")
+        with source_toml.open("rb") as stream:
+            source = tomllib.load(stream)
+        lifecycle = source.get("lifecycle")
+        status = lifecycle.get("status") if isinstance(lifecycle, dict) else None
+        if status not in RUNNABLE_LIFECYCLES:
+            raise ValueError(
+                f"task lifecycle is not runnable for model execution: {task_id}={status!r}"
+            )
+
+
 def existing_model_runs(
     path: Path | None,
 ) -> tuple[dict[str, set[str]], dict[str, list[dict[str, Any]]]]:
@@ -136,6 +159,7 @@ def build_plan(
     if agent_timeout_seconds < 1:
         raise ValueError("agent_timeout_seconds must be positive")
     tasks = campaign_tasks(campaign_path)
+    validate_runnable_tasks(tasks, harbor_task_root=harbor_task_root)
     existing_by_model, refs_by_task = existing_model_runs(existing_inventory)
     campaign = _json(campaign_path)
     campaign_id = campaign.get("campaign_id") or campaign_path.stem
