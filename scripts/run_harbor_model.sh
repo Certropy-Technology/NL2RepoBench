@@ -4,6 +4,10 @@ set -euo pipefail
 
 SCRIPT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_ROOT/.." && pwd)"
+RUNTIME_PYTHON="${RUNTIME_PYTHON:-$REPO_ROOT/.venv/bin/python3}"
+if [[ ! -x "$RUNTIME_PYTHON" ]]; then
+  RUNTIME_PYTHON="$(command -v python3)"
+fi
 
 TASK_ID="${TASK_ID:?set TASK_ID}"
 MODEL="${MODEL:?set MODEL, e.g. openai/gpt-5.6-sol}"
@@ -39,7 +43,7 @@ case "$HARBOR_AGENT" in
 esac
 
 provider_host="$({
-  python3 - "$LLM_BASE_URL" <<'PY'
+  "$RUNTIME_PYTHON" - "$LLM_BASE_URL" <<'PY'
 from ipaddress import ip_address
 from urllib.parse import urlsplit
 import re
@@ -106,7 +110,7 @@ archive_task_id="${TASK_ID//\//__}"
 archive_script="$SCRIPT_ROOT/archive_harbor_job.py"
 
 agent_timeout_multiplier="$(
-  python3 - "$task_config" "$AGENT_TIMEOUT_SECONDS" <<'PY'
+  "$RUNTIME_PYTHON" - "$task_config" "$AGENT_TIMEOUT_SECONDS" <<'PY'
 import sys
 import tomllib
 from pathlib import Path
@@ -156,7 +160,8 @@ cleanup_harbor_trials() {
   # Harbor environment services intentionally use `sleep infinity`.  Cleanup
   # only the exact trials created below; never run a global Docker prune.
   set +e
-  PYTHONPATH="$REPO_ROOT/src" python3 "$REPO_ROOT/scripts/cleanup_harbor_trials.py" \
+  PYTHONPATH="$REPO_ROOT/src" "$RUNTIME_PYTHON" \
+    "$REPO_ROOT/scripts/cleanup_harbor_trials.py" \
     --jobs-dir "$harbor_jobs_dir" \
     >>"$job_dir/cleanup.log" 2>&1
   cleanup_rc=$?
@@ -170,7 +175,7 @@ archive_harbor_job() {
   # Upload and verify the complete job, including artifacts/workspace, before
   # removing the local job directory. Failure deliberately keeps local data.
   set +e
-  PYTHONPATH="$REPO_ROOT/src" python3 "$archive_script" \
+  PYTHONPATH="$REPO_ROOT/src" "$RUNTIME_PYTHON" "$archive_script" \
     --job-dir "$harbor_jobs_dir" \
     --model "$MODEL" \
     --task-id "$TASK_ID" \

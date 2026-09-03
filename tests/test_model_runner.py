@@ -103,6 +103,7 @@ def test_model_runner_uses_harbor_native_five_hour_agent_timeout(tmp_path: Path)
             "LLM_STREAM": "1",
             "MODEL": "openai/test-model",
             "PATH": f"{fake_bin}:{env['PATH']}",
+            "RUNTIME_PYTHON": str(fake_bin / "python3"),
             "TASK_ID": "demo",
         }
     )
@@ -176,6 +177,7 @@ def test_model_runner_preserves_absolute_jobs_dir(tmp_path: Path) -> None:
             "MODEL": "openai/test-model",
             "PATH": f"{fake_bin}:{env['PATH']}",
             "TASK_ID": "demo",
+            "RUNTIME_PYTHON": str(fake_bin / "python3"),
             "RUN_ROOT": str(absolute_root),
             "RUN_ID": "gpt56-demo",
         }
@@ -217,6 +219,7 @@ def test_model_runner_keeps_job_when_oss_archive_fails(tmp_path: Path) -> None:
             "MODEL": "openai/test-model",
             "PATH": f"{fake_bin}:{env['PATH']}",
             "TASK_ID": "demo",
+            "RUNTIME_PYTHON": str(fake_bin / "python3"),
             "RUN_ID": "failed-archive",
             "RUN_ROOT": str(run_root),
         }
