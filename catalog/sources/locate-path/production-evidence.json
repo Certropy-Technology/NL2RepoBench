@@ -1,0 +1,188 @@
+{
+  "schema_version": "1.0",
+  "task_id": "locate-path",
+  "task_version": "2.0.0",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/sindresorhus/locate-path",
+    "revision": "4c4ee027b830c35ff7605421a8ad92208f1b868a",
+    "tree": "4da63bfebadeaad61d829f358e16561f50815891",
+    "source_digest": "sha256:e5bf56cf0d89d2f6a1191cfea63f77157060ed42dcb3dcedc738de54595103bb",
+    "source_archive_size_bytes": 30720,
+    "license_spdx": "MIT",
+    "license_sha256": "sha256:5c932d88256b4ab958f64a856fa48e8bd1f55bc1d96b8149c65689e0c61789d3"
+  },
+  "runtime": {
+    "node": "24.19.0",
+    "npm": "11.17.0",
+    "os": "debian-bookworm",
+    "architecture": "linux/amd64",
+    "libc": "glibc-2.36",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "verifier_base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "verifier_image_digest": "sha256:1f243b2b1aa3749d0a8827f2d11806fe9a7b92d7bb569b7d99dc01b4320811ff",
+    "network_mode": "no-network",
+    "agent_allowed_hosts": []
+  },
+  "dependency_lock": {
+    "ecosystem": "npm",
+    "package_manager": "npm",
+    "package_manager_version": "11.17.0",
+    "lockfile": "package-lock.json",
+    "lockfile_version": 3,
+    "runtime_dependencies": ["p-locate@6.0.0", "p-limit@4.0.0", "yocto-queue@1.2.2"],
+    "install_mode": "offline",
+    "lifecycle_scripts": "ignore-scripts",
+    "bundle_digest": "sha256:a8e25ba26ed07c42e2dbec04a71145bcd7b15eb3a41735caf49c59c5772b0afb",
+    "bundle_size_bytes": 204800
+  },
+  "private_artifacts": {
+    "dependencies": {"digest": "sha256:a8e25ba26ed07c42e2dbec04a71145bcd7b15eb3a41735caf49c59c5772b0afb", "size_bytes": 204800},
+    "commands": {"digest": "sha256:2d26f417e15b226e1c66e85a46755677f1a57cbd6e0301c23876ded148feb12c", "size_bytes": 10240},
+    "tests": {"digest": "sha256:62e374a588e0d6cf85eba3369395735fd940f1f5a681c925d86e8c062896e9f5", "size_bytes": 30720},
+    "oracle": {"digest": "sha256:d813f5ac9a4cf9a15f2c84d9570eceb8e0d08e61112e8be610a505bd7e1ea9b1", "size_bytes": 20480}
+  },
+  "frozen_collection": {
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "expected_total": 45,
+    "metric_contract": "node-test-leaf-pass-rate-v1",
+    "boundary": "UID-separated candidate child with bounded JSON and filesystem scenarios"
+  },
+  "production_bundle": {
+    "path": ".nl2repo/authoring-work/node-author-discover-20260903T025741Z/locate-path/compiled-final3/locate-path/bundle.manifest.json",
+    "sha256": "sha256:658edde73ea80fbfc355ef755b9c72be57d7ccd39fce1848decb1da49862f54f",
+    "canonical_manifest_digest": "sha256:fbfcf9d2dc30bceb98a30f8b23957f3dcc4b38a5a8b460acf7ed0c9d52f9e868",
+    "toolchain_lock_digest": "sha256:aac76d5c1a423cd3c5c9c96870198475e0fed151793b60eeb830a7c053692dc8",
+    "mode": "production",
+    "file_count": 101,
+    "allow_incomplete": false
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-discover-20260903T025741Z/locate-path/compiled-final3/locate-path -a oracle --allow-agent-host github.com --job-name locate-path-final3-oracle-20260903 --jobs-dir .nl2repo/authoring-work/node-author-discover-20260903T025741Z/locate-path/harbor-runs-final3 --n-concurrent 1 --yes --quiet",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "valid": true,
+    "expected_total": 45,
+    "collected": 45,
+    "passed": 45,
+    "reward": 1.0,
+    "public_network_available": false,
+    "grading": {"path": ".nl2repo/authoring-work/node-author-discover-20260903T025741Z/locate-path/harbor-runs-final3/locate-path-final3-oracle-20260903/locate-path__jbWYL94/verifier/grading.json", "sha256": "sha256:00bcbf9068738201d49eb407648e9fbe338ed8164e6702a918f74e86d81eb08a"},
+    "network": {"path": ".nl2repo/authoring-work/node-author-discover-20260903T025741Z/locate-path/harbor-runs-final3/locate-path-final3-oracle-20260903/locate-path__jbWYL94/verifier/network.json", "sha256": "sha256:5600ef6f5b9fd001326a259bb38c841a86790ee6febc919da3c545d9755adb51"},
+    "reward_file": {"path": ".nl2repo/authoring-work/node-author-discover-20260903T025741Z/locate-path/harbor-runs-final3/locate-path-final3-oracle-20260903/locate-path__jbWYL94/verifier/reward.json", "sha256": "sha256:8cff279124dac5b7bc301ddfd573700a794f7fba6d8bc073afce8ffde99a9cc0"}
+  },
+  "controls": {
+    "empty": {
+      "command": "direct separate verifier replay with empty generated control workspace",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "public_network_available": false,
+      "grading": {"path": ".nl2repo/evidence/locate-path-final3/empty/verifier/grading.json", "sha256": "sha256:daa8ce5047cd7a8c414c6e9b72c5708776cb1f8cbc9c4ce1ec3fa51e63ee1e93"},
+      "network": {"path": ".nl2repo/evidence/locate-path-final3/empty/verifier/network.json", "sha256": "sha256:6a761f28b4d9b32b7cb08b3afea7414622ea361074a87468020c62e5727e9b14"}
+    },
+    "stub": {
+      "command": "direct separate verifier replay with generated stub workspace",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 45,
+      "passed": 7,
+      "reward": 0.15555555555555556,
+      "public_network_available": false,
+      "grading": {"path": ".nl2repo/evidence/locate-path-final3/stub/verifier/grading.json", "sha256": "sha256:298737af2d81b2675ff3d8bc6dd14cea5328e92644574b9faeae388ce869c0a6"},
+      "network": {"path": ".nl2repo/evidence/locate-path-final3/stub/verifier/network.json", "sha256": "sha256:6a761f28b4d9b32b7cb08b3afea7414622ea361074a87468020c62e5727e9b14"}
+    },
+    "forgery": {
+      "command": "direct separate verifier replay with generated workspace containing forged grading, reward, and private test files",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 45,
+      "passed": 6,
+      "reward": 0.13333333333333333,
+      "verifier_owned_reward": true,
+      "forged_workspace_reward_ignored": true,
+      "public_network_available": false,
+      "grading": {"path": ".nl2repo/evidence/locate-path-final3/forgery/verifier/grading.json", "sha256": "sha256:b842bb5619618e13afbb3aedf2140b9a2c4c49d7ffdd6c2d0e6a451850cbb7a9"},
+      "network": {"path": ".nl2repo/evidence/locate-path-final3/forgery/verifier/network.json", "sha256": "sha256:6a761f28b4d9b32b7cb08b3afea7414622ea361074a87468020c62e5727e9b14"}
+    },
+    "offline": {
+      "command": "direct separate verifier replay under Docker --network none",
+      "exit_code": 0,
+      "valid": true,
+      "completed": true,
+      "collected": 45,
+      "passed": 6,
+      "reward": 0.13333333333333333,
+      "public_network_available": false,
+      "grading": {"path": ".nl2repo/evidence/locate-path-final3/offline/verifier/grading.json", "sha256": "sha256:b842bb5619618e13afbb3aedf2140b9a2c4c49d7ffdd6c2d0e6a451850cbb7a9"},
+      "network": {"path": ".nl2repo/evidence/locate-path-final3/offline/verifier/network.json", "sha256": "sha256:eae2c2df827e519e8e556edac6659aaf980e49b4b3a732d77815d12e77478957"}
+    },
+    "install_script": {
+      "command": "direct separate verifier replay with generated lifecycle install-script workspace",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "public_network_available": false,
+      "grading": {"path": ".nl2repo/evidence/locate-path-final3/install-script/verifier/grading.json", "sha256": "sha256:daa8ce5047cd7a8c414c6e9b72c5708776cb1f8cbc9c4ce1ec3fa51e63ee1e93"},
+      "network": {"path": ".nl2repo/evidence/locate-path-final3/install-script/verifier/network.json", "sha256": "sha256:6a761f28b4d9b32b7cb08b3afea7414622ea361074a87468020c62e5727e9b14"}
+    },
+    "loader_hook": {
+      "command": "direct separate verifier replay with generated loader-hook workspace",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 45,
+      "passed": 6,
+      "reward": 0.13333333333333333,
+      "public_network_available": false,
+      "grading": {"path": ".nl2repo/evidence/locate-path-final3/loader-hook/verifier/grading.json", "sha256": "sha256:b842bb5619618e13afbb3aedf2140b9a2c4c49d7ffdd6c2d0e6a451850cbb7a9"},
+      "network": {"path": ".nl2repo/evidence/locate-path-final3/loader-hook/verifier/network.json", "sha256": "sha256:6a761f28b4d9b32b7cb08b3afea7414622ea361074a87468020c62e5727e9b14"}
+    },
+    "hang": {
+      "command": "direct separate verifier replay with non-settling candidate module",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-call-failed",
+      "bounded": true,
+      "public_network_available": false,
+      "grading": {"path": ".nl2repo/evidence/locate-path-final3/hang/verifier/grading.json", "sha256": "sha256:ac5a203c3c0750c6820f0f5e8771ccadfc06a3428567a5a330b292a6468ee2fb"},
+      "network": {"path": ".nl2repo/evidence/locate-path-final3/hang/verifier/network.json", "sha256": "sha256:6a761f28b4d9b32b7cb08b3afea7414622ea361074a87468020c62e5727e9b14"}
+    }
+  },
+  "commands": [
+    {"command": "git ls-remote and detached checkout of frozen revision; git archive and sha256sum", "tool_version": "git 2.53.0", "exit_code": 0},
+    {"command": "npm test", "tool_version": "Node 22.23.1 / npm 10.9.8", "exit_code": 0, "summary": "xo, AVA 2/2, and tsd passed"},
+    {"command": "npm ci --offline --ignore-scripts --no-audit --no-fund under Docker --network none", "tool_version": "Node 24.19.0 / npm 11.17.0", "exit_code": 0},
+    {"command": "uv run nl2repo task validate-source catalog/sources/locate-path", "tool_version": "nl2repobench current checkout", "exit_code": 0},
+    {"command": "uv run nl2repo task lint-network --tasks-root catalog/sources", "tool_version": "nl2repobench current checkout", "exit_code": 0, "task_findings": 0, "repository_warning_count": 175},
+    {"command": "uv run nl2repo harbor compile catalog/sources/locate-path --output .nl2repo/authoring-work/node-author-discover-20260903T025741Z/locate-path/compiled-final3 --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "tool_version": "locked Node toolchain", "exit_code": 0, "allow_incomplete": false},
+    {"command": "docker build --platform linux/amd64 -t nl2repo-locate-path-verifier:final3 <compiled>/tests", "tool_version": "Docker 28.4.0", "exit_code": 0}
+  ],
+  "authoring_attempts": [
+    {"stage": "dependency-archive", "exit_code": 2, "failure_class": "environment", "result": "ustar rejected npm cache long paths; POSIX tar succeeded with identical bundle content"},
+    {"stage": "local-verifier-path", "exit_code": 1, "failure_class": "verifier", "result": "host probe lacked /tests/private adapter path; added a test-only environment override and retained the fixed container path"},
+    {"stage": "local-verifier-expectations", "exit_code": 1, "failure_class": "verifier", "result": "fixture ordering and symlink booleans were corrected against the frozen reference; rerun passed 45/45"},
+    {"stage": "control-threshold", "exit_code": 0, "failure_class": "verifier", "result": "initial undefined stub overfit negative leaves; deterministic wrong-path controls reduced final stub and forgery below 0.20"}
+  ],
+  "residual_risks": [
+    "No model Agent Run was started in this lane.",
+    "Blind/spec review, model pilot, dataset integration, checked-in catalog/tasks projection, and publication remain integrator-owned.",
+    "The verifier is a deterministic public-behavior slice and does not claim full upstream tooling parity beyond the separately passed upstream test command."
+  ],
+  "blockers": [],
+  "next_unblock_action": "Integrator reviews traceability and evidence, copies private CAS artifacts into the integration artifact store, recompiles catalog/tasks/locate-path, and schedules the separate model run loop."
+}

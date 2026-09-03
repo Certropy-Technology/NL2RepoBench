@@ -1,0 +1,38 @@
+{
+  "schema_version": "1.0",
+  "task_id": "locate-path",
+  "source_revision": "4c4ee027b830c35ff7605421a8ad92208f1b868a",
+  "package": {
+    "name": "locate-path",
+    "version": "8.0.0",
+    "module_system": "esm",
+    "runtime_entries": ["index.js"],
+    "types_entry": "index.d.ts",
+    "node_engine": ">=20",
+    "runtime_dependencies": {"p-locate": "6.0.0", "p-limit": "4.0.0", "yocto-queue": "1.2.2"}
+  },
+  "public_exports": [
+    {"export": "locatePath", "signature": "locatePath(paths: Iterable<string>, options?: AsyncOptions): Promise<string | undefined>"},
+    {"export": "locatePathSync", "signature": "locatePathSync(paths: Iterable<string>, options?: Options): string | undefined"}
+  ],
+  "options": {
+    "cwd": "URL | string, default process.cwd()",
+    "type": "file | directory | both, default file",
+    "allowSymlinks": "boolean, default true",
+    "concurrency": "positive integer or positive infinity, async only",
+    "preserveOrder": "boolean, default true, async only"
+  },
+  "source_metrics": {
+    "tracked_files": 16,
+    "runtime_loc": 77,
+    "declaration_loc": 96,
+    "upstream_test_loc": 106,
+    "upstream_ava_tests": 2,
+    "upstream_type_test_file_count": 1
+  },
+  "inventory_notes": [
+    "The package exports two named filesystem helpers and no default export.",
+    "The upstream package-lock is disabled, so the task freezes a reviewed runtime-only npm v3 closure.",
+    "Filesystem, URL, symlink, iterator, and error behavior is exercised through a private child adapter."
+  ]
+}

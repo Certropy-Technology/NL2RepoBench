@@ -1,0 +1,65 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/locate-path"
+version = "2.0.0"
+description = "Build locate-path with deterministic asynchronous and synchronous filesystem path search APIs."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "node",
+    "npm",
+    "esm",
+    "filesystem",
+    "path",
+    "iterator",
+    "symlink",
+]
+
+[metadata]
+difficulty = "medium"
+category = "filesystem-path-search"
+tags = [
+    "node",
+    "npm",
+    "esm",
+    "filesystem",
+    "path",
+    "iterator",
+    "symlink",
+]
+language = "node"
+runtime = "node"
+runtime_version = "24.19.0"
+package_manager = "npm"
+test_framework = "node:test"
+metric_contract = "node-test-leaf-pass-rate-v1"
+expected_test_count = 45
+canonical_manifest_digest = "sha256:fbfcf9d2dc30bceb98a30f8b23957f3dcc4b38a5a8b460acf7ed0c9d52f9e868"
+toolchain_lock_digest = "sha256:aac76d5c1a423cd3c5c9c96870198475e0fed151793b60eeb830a7c053692dc8"
+
+[agent]
+timeout_sec = 900.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 1024
+storage_mb = 8192
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096

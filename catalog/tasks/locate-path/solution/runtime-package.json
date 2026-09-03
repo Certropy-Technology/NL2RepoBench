@@ -1,0 +1,20 @@
+{
+  "name": "locate-path",
+  "version": "8.0.0",
+  "type": "module",
+  "exports": {
+    "types": "./index.d.ts",
+    "default": "./index.js"
+  },
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "license"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "p-locate": "6.0.0"
+  }
+}

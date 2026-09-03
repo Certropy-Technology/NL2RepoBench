@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "task_id": "locate-path",
+  "framework": "node:test",
+  "expected_total": 45,
+  "adapter": "bounded declarative filesystem scenarios in a UID-separated candidate child",
+  "coverage": [
+    {"area": "package identity, exports, declarations, dependency, and scripts policy", "leaves": 1},
+    {"area": "async filesystem search, iterables, cwd, type filtering, and path preservation", "leaves": 12},
+    {"area": "sync filesystem search, iterables, cwd, type filtering, and path preservation", "leaves": 12},
+    {"area": "symlink following and disabled-link behavior", "leaves": 10},
+    {"area": "invalid options, iterator failures, async options and concurrency", "leaves": 10}
+  ],
+  "upstream_baseline": {
+    "command": "npm test",
+    "runner": "xo && ava && tsd",
+    "ava_collected": 2,
+    "exit_code": 0
+  },
+  "determinism": "Temporary fixture trees, finite iterables, and bounded child calls replace host-specific paths and timing assertions."
+}

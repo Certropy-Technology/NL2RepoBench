@@ -1,0 +1,122 @@
+import {mkdtempSync, mkdirSync, readFileSync, symlinkSync, writeFileSync} from 'node:fs';
+import {createRequire} from 'node:module';
+import {join} from 'node:path';
+import {pathToFileURL} from 'node:url';
+
+const PACKAGE = 'locate-path';
+const MAX_REQUEST_BYTES = 64 * 1024;
+const MAX_RESPONSE_BYTES = 256 * 1024;
+
+function emit(payload, code = 0) {
+  const encoded = JSON.stringify(payload);
+  if (Buffer.byteLength(encoded) > MAX_RESPONSE_BYTES) process.exit(70);
+  process.stdout.write(`${encoded}\n`);
+  process.exit(code);
+}
+
+function readRequest() {
+  const data = readFileSync(0);
+  if (data.byteLength > MAX_REQUEST_BYTES) emit({ok: false, error: 'request-too-large'}, 64);
+  let request;
+  try { request = JSON.parse(data.toString('utf8')); } catch { emit({ok: false, error: 'malformed-json'}, 64); }
+  if (!request || typeof request !== 'object' || Array.isArray(request)) emit({ok: false, error: 'invalid-request'}, 64);
+  if (typeof request.id !== 'string' || !/^request-[1-9][0-9]*$/.test(request.id)) emit({ok: false, error: 'invalid-id'}, 64);
+  if (typeof request.scenario !== 'string' || !/^[a-z0-9-]{1,64}$/.test(request.scenario)) emit({ok: false, error: 'invalid-scenario'}, 64);
+  return request;
+}
+
+function packageContext() {
+  const packageRoot = join(process.cwd(), 'node_modules', PACKAGE);
+  const packageManifest = JSON.parse(readFileSync(join(packageRoot, 'package.json'), 'utf8'));
+  const exports = packageManifest.exports;
+  const entry = typeof exports === 'string' ? exports : exports?.['.']?.import ?? exports?.['.']?.default ?? exports?.import ?? exports?.default;
+  const types = exports?.['.']?.types ?? exports?.types ?? packageManifest.types;
+  if (typeof entry !== 'string' || !entry.startsWith('./') || entry.includes('..')) throw new Error('unsafe package entry');
+  return {packageRoot, packageManifest, entry, types};
+}
+
+async function loadCandidate() {
+  const context = packageContext();
+  const namespace = await import(pathToFileURL(join(context.packageRoot, context.entry)).href);
+  if (typeof namespace.locatePath !== 'function' || typeof namespace.locatePathSync !== 'function') throw new TypeError('exports are not callable');
+  return {...context, namespace};
+}
+
+function fixture() {
+  const root = mkdtempSync(join(process.env.TMPDIR, 'locate-path-fixture-'));
+  writeFileSync(join(root, 'alpha.txt'), 'alpha');
+  writeFileSync(join(root, 'beta.txt'), 'beta');
+  mkdirSync(join(root, 'folder'));
+  symlinkSync('alpha.txt', join(root, 'file-link'));
+  symlinkSync('folder', join(root, 'directory-link'));
+  symlinkSync('missing-target', join(root, 'broken-link'));
+  return root;
+}
+
+function paths(kind) {
+  if (kind === 'empty') return [];
+  if (kind === 'missing') return ['missing-one', 'missing-two'];
+  if (kind === 'set') return new Set(['missing', 'beta.txt']);
+  if (kind === 'generator') return (function * () { yield 'missing'; yield 'beta.txt'; })();
+  if (kind === 'directory') return ['alpha.txt', 'folder'];
+  if (kind === 'bad-entry') return [null, 'alpha.txt'];
+  if (kind === 'original-path') return ['missing', './alpha.txt'];
+  return ['missing', 'alpha.txt', 'beta.txt'];
+}
+
+function throwingIterable() {
+  return (function * () { yield 'missing'; throw new RangeError('iterator failed'); })();
+}
+
+async function run(candidate, scenario) {
+  const {namespace} = candidate;
+  const root = fixture();
+  const isSync = scenario.startsWith('sync-');
+  const fn = isSync ? namespace.locatePathSync : namespace.locatePath;
+  const invoke = (input, options) => fn(input, options);
+  const finish = value => isSync ? value : Promise.resolve(value);
+  const prefix = isSync ? 'sync-' : 'async-';
+  const kind = scenario.slice(prefix.length);
+  if (kind === 'invalid-type') return finish(invoke(['alpha.txt'], {cwd: root, type: 'rainbow'}));
+  if (kind === 'prototype-type') return finish(invoke(['alpha.txt'], {cwd: root, type: 'toString'}));
+  if (kind === 'invalid-url') return finish(invoke(['alpha.txt'], {cwd: new URL('https://example.test/')}));
+  if (kind === 'iterator-error') return finish(invoke(throwingIterable(), {cwd: root}));
+  if (kind === 'file-link') return (await finish(invoke(['file-link'], {cwd: root, type: 'file'}))) === 'file-link';
+  if (kind === 'directory-link') return (await finish(invoke(['directory-link'], {cwd: root, type: 'directory'}))) === 'directory-link';
+  if (kind === 'file-link-disabled') return (await finish(invoke(['file-link'], {cwd: root, type: 'file', allowSymlinks: false}))) === 'file-link';
+  if (kind === 'directory-link-disabled') return (await finish(invoke(['directory-link'], {cwd: root, type: 'directory', allowSymlinks: false}))) === 'directory-link';
+  if (kind === 'broken-link') return (await finish(invoke(['broken-link'], {cwd: root, type: 'both'}))) === 'broken-link';
+  if (scenario === 'async-options') return namespace.locatePath(['missing', 'beta.txt'], {cwd: root, concurrency: 1, preserveOrder: false});
+  if (scenario === 'async-zero-concurrency') return namespace.locatePath(['alpha.txt'], {cwd: root, concurrency: 0});
+  const options = {cwd: kind === 'cwd-url' ? pathToFileURL(`${root}/`) : root};
+  if (kind === 'directory') options.type = 'directory';
+  if (kind === 'both-file' || kind === 'both-directory') options.type = 'both';
+  const inputKind = kind.replace(/^cwd-(?:string|url)$/, 'file').replace(/^both-file$/, 'file').replace(/^both-directory$/, 'directory');
+  const input = kind === 'both-file' ? ['alpha.txt'] : kind === 'both-directory' ? ['folder'] : paths(inputKind);
+  return finish(invoke(input, options));
+}
+
+const request = readRequest();
+try {
+  const candidate = await loadCandidate();
+  if (request.scenario === 'inventory') {
+    const {packageManifest, packageRoot, entry, types, namespace} = candidate;
+    const declaration = typeof types === 'string' ? readFileSync(join(packageRoot, types), 'utf8') : '';
+    emit({id: request.id, ok: true, value: {
+      packageName: packageManifest.name,
+      packageVersion: packageManifest.version,
+      moduleType: packageManifest.type,
+      runtimeEntry: entry,
+      declarationEntry: types,
+      exportNames: Object.keys(namespace).sort(),
+      dependency: packageManifest.dependencies?.['p-locate'],
+      scriptNames: Object.keys(packageManifest.scripts ?? {}).sort(),
+      devDependencyNames: Object.keys(packageManifest.devDependencies ?? {}).sort(),
+      declarations: /export function locatePath\(/.test(declaration) && /export function locatePathSync\(/.test(declaration),
+    }});
+  }
+  const value = await run(candidate, request.scenario);
+  emit({id: request.id, ok: true, value: value === undefined ? null : value});
+} catch (error) {
+  emit({id: request.id, ok: false, errorType: error?.constructor?.name ?? 'Error', message: String(error?.message ?? error)});
+}
