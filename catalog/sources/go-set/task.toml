@@ -1,0 +1,75 @@
+schema_version = "1.0"
+task_id = "go-set"
+version = "0.1.0"
+instruction = "instruction.md"
+oracle_bundle = { digest = "sha256:39dbabcf918c000c12f76b3aee51fbf2cf84be6da4cf031150e594d16eae548c", size_bytes = 764, uri = "artifact://private/sha256:39dbabcf918c000c12f76b3aee51fbf2cf84be6da4cf031150e594d16eae548c", visibility = "private" }
+
+[metadata]
+difficulty = "medium"
+category = "go-data-structures"
+tags = ["go", "go-modules", "set", "generics", "typed-bridge", "public-api"]
+language = "go"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/deckarep/golang-set"
+revision = "da03b7639be5170e7b8fc7183b2d4663a4133419"
+license_spdx = "MIT"
+source_digest = "sha256:9d77361bf07b5ecfcc236a1972f9aa524209dab5f300e774ca5b068a1aea4880"
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+runtime_version = "1.26.5"
+base_image = "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+base_image_digest = "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "Candidate and separate verifier execution use a private hash-addressed Go module closure and no network; only the trusted Oracle receives a run-scoped github.com authorization for the frozen source."
+
+[dependencies]
+status = "known"
+installer = "system"
+packages = ["go.mongodb.org/mongo-driver@v1.17.9"]
+module_bundle = { digest = "sha256:83178d96bc4df481bfff27f44d2c457d6ac01804ba22d57a026226acbac43af3", size_bytes = 116579, uri = "artifact://private/sha256:83178d96bc4df481bfff27f44d2c457d6ac01804ba22d57a026226acbac43af3", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 1
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Recreate the deterministic generic set API of deckarep/golang-set through a typed Go subprocess bridge."
+keywords = ["go", "go-set", "set", "generics", "typed-bridge", "public-api"]
+agent_timeout_sec = 900.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 8192
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "go-author-auto-20260903T133105Z"
+reason = "The digest-verified Oracle and all required negative and offline controls passed in official Harbor 0.21.0 runs; final receipts bind the controls-passed source to the compiled bundle."
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:8076e8dda777bee1af3a3d71a12d674052f6d24f330fc737d11902356f1d31af", size_bytes = 1493, uri = "artifact://private/sha256:8076e8dda777bee1af3a3d71a12d674052f6d24f330fc737d11902356f1d31af", visibility = "private" }
+entrypoint = "contract.sh"

@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-set",
+  "upstream_url": "https://github.com/deckarep/golang-set",
+  "revision": "da03b7639be5170e7b8fc7183b2d4663a4133419",
+  "revision_verified": true,
+  "license_spdx": "MIT",
+  "source_archive": {"format": "git archive tar", "sha256": "sha256:9d77361bf07b5ecfcc236a1972f9aa524209dab5f300e774ca5b068a1aea4880", "bytes": 266240},
+  "license_file": {"path": "LICENSE", "sha256": "sha256:90ce90ce0b63199252154d180c6029ed18d0585871bbb069f3bd1e785a7c8bea"},
+  "source_files": [
+    ".gitignore", "LICENSE", "README.md", "bench_helper_test.go", "bench_test.go",
+    "go.mod", "go.sum", "helper.go", "helper_1_21.go", "iterator.go",
+    "iterator_example_test.go", "new_improved.jpeg", "set.go", "set123_test.go",
+    "set_test.go", "sorted.go", "sorted_test.go", "threadsafe.go",
+    "threadsafe_test.go", "threadunsafe.go", "threadunsafe_test.go"
+  ],
+  "acquisition_boundary": "The frozen source is fetched only by the private Oracle solve.sh inside the trusted Oracle run.",
+  "commands": [
+    {"command": "git ls-remote https://github.com/deckarep/golang-set.git da03b7639be5170e7b8fc7183b2d4663a4133419", "exit_code": 0, "output": "da03b7639be5170e7b8fc7183b2d4663a4133419 refs/heads/main"},
+    {"command": "trusted Harbor Oracle go-set-final5-oracle-20260903T2351 solve.sh: clone, checkout, verify rev, git archive, sha256", "exit_code": 0, "output": "source_revision=da03b7639be5170e7b8fc7183b2d4663a4133419 source_archive_sha256=sha256:9d77361bf07b5ecfcc236a1972f9aa524209dab5f300e774ca5b068a1aea4880 source_archive_bytes=266240"}
+  ]
+}

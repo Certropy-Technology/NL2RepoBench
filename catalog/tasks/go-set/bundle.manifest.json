@@ -1,0 +1,1061 @@
+{
+  "canonical_manifest_digest": "sha256:f8ad1fd533f5a90418b24575674e9288b073263fa66e56be33302e1cebb6951d",
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "7c02ac5a6cea5c848116c15fa2adb0ab15ebee0f0cd29497a0ac25daebad5576",
+      "size_bytes": 151
+    },
+    {
+      "path": "controls/background-process.sh",
+      "sha256": "e51560360d73e1bbbafd880d77356779b1a102d3fa9effebb67bd6508c511c16",
+      "size_bytes": 2982
+    },
+    {
+      "path": "controls/forgery.sh",
+      "sha256": "668705aae9135fd0e9b2959cd00cd6e5eedbf6da5b6d182ef1406b9c2df76f89",
+      "size_bytes": 3026
+    },
+    {
+      "path": "controls/hang.sh",
+      "sha256": "bda867006e4baec372e0473bf8a191c92953a21b5d9cb001912948d6ba38ff69",
+      "size_bytes": 2899
+    },
+    {
+      "path": "controls/install-failure.sh",
+      "sha256": "1373644b4f805c3a34afa1694add637be858ddcb39a01788ea17f91fe215eb63",
+      "size_bytes": 182
+    },
+    {
+      "path": "controls/oversized-output.sh",
+      "sha256": "a16ba269e31e74fa8e1c6bf75c2ad2a5094cdcf967182d011659ad46f454e3a5",
+      "size_bytes": 2976
+    },
+    {
+      "path": "controls/panic.sh",
+      "sha256": "a0e2409d2608c29d177bef7f4042a3995f3fa4cddf35d8e07388955376a6bd7d",
+      "size_bytes": 2927
+    },
+    {
+      "path": "controls/stub.sh",
+      "sha256": "3ad42c83a3bdef14f30531bc20e6654b6c3fe5f51cb54c7724c1a3cc08df60ed",
+      "size_bytes": 2815
+    },
+    {
+      "path": "environment/Dockerfile",
+      "sha256": "8732e2751cacf7a6fe36836f3779c04b14a1381356b5a1a72d63d10d80a98a2e",
+      "size_bytes": 857
+    },
+    {
+      "path": "environment/go-module-bundle/closure.go",
+      "sha256": "1a3328b6ca0f6311c8f77143f7c0048590b4cc48896fb45998fda5a49bc3bb8f",
+      "size_bytes": 113
+    },
+    {
+      "path": "environment/go-module-bundle/go.mod",
+      "sha256": "76f520dafbec7e6ffe7540b859bec9fe741881b275681513c65cb9c1c8e9ddf3",
+      "size_bytes": 97
+    },
+    {
+      "path": "environment/go-module-bundle/go.sum",
+      "sha256": "29408e8c131624624f39f1b1b654605e6e067307be7b4c5023f72584787ea3ea",
+      "size_bytes": 513
+    },
+    {
+      "path": "environment/go-module-bundle/module.manifest.json",
+      "sha256": "966cb87087d8a17aa11a5aeb7608388f8ee4bf87819bc32e9d4c1ddc526ebfda",
+      "size_bytes": 11181
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/LICENSE",
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "size_bytes": 11357
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/bson.go",
+      "sha256": "54fc9647da6a40b4e607aa3b746ec999176d2b3711073858656f77410e4d8688",
+      "size_bytes": 1873
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/bsoncodec/array_codec.go",
+      "sha256": "6625eec0b28f1ca2eb6a00408fca289fd63298f21265af368d2c2452e2a3940d",
+      "size_bytes": 1773
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/bsoncodec/bsoncodec.go",
+      "sha256": "c9d06b787be4fb8086cb75c228a27bd291f5a4efece16d1a10b70d58c7943511",
+      "size_bytes": 14540
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/bsoncodec/byte_slice_codec.go",
+      "sha256": "45c30ef7f7c8d8d1792d52bf89e91efef9cb60d03c2915771e4da3de832bfdc4",
+      "size_bytes": 4390
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/bsoncodec/codec_cache.go",
+      "sha256": "60f74dd9a62343abb9f188d393d6fb31fe878f71243180343f961d6bfea850c6",
+      "size_bytes": 4414
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/bsoncodec/cond_addr_codec.go",
+      "sha256": "f3c10546a3a94c89c464fabb3c4bdfd2bae35034e080074f7fc1b4e07d421235",
+      "size_bytes": 1965
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/bsoncodec/default_value_decoders.go",
+      "sha256": "74f83f7790b768d5781d4a24f992e94346b289d67e0a4e6e45be8053a4df5505",
+      "size_bytes": 54867
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/bsoncodec/default_value_encoders.go",
+      "sha256": "cd8719bc4e2b15ee2f9a0b5eede7b670b14b32973f333a0a33d50a7cb9001d38",
+      "size_bytes": 30357
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/bsoncodec/doc.go",
+      "sha256": "277eda0a21e9c0ff4f0bd891e7f30c4df5b7d0d71acf23f407eed77a277a5b3b",
+      "size_bytes": 5648
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/bsoncodec/empty_interface_codec.go",
+      "sha256": "f030d66d28d3242ef5730d77c872880792407c529ed9c2632d95c2b39062c02f",
+      "size_bytes": 5735
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/bsoncodec/map_codec.go",
+      "sha256": "d5f7ec13999aee846a009d9547062a6c639b772f3cf8f1e1adba0867486afdb7",
+      "size_bytes": 10633
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/bsoncodec/mode.go",
+      "sha256": "a91e7faa3dd90d61a12eece97099a8ea2d81b758e41c0309f40c32c9b6dffe5b",
+      "size_bytes": 1423
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/bsoncodec/pointer_codec.go",
+      "sha256": "f498ed6faa68bb7709d91cede1023c252b22a429d49e08b9741f01b640a4edd1",
+      "size_bytes": 3285
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/bsoncodec/proxy.go",
+      "sha256": "5b9768d88508c4afaa3d1a468a4850d392c49a175d37fbae6abf935963a9d62c",
+      "size_bytes": 596
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/bsoncodec/registry.go",
+      "sha256": "786ef93203cacf1e714b67d5f908a8b5d0557e8aee5fe4fca41e0bcadd80cb56",
+      "size_bytes": 19427
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/bsoncodec/slice_codec.go",
+      "sha256": "0013d5732f6772ccad299e509f17600044a16c5466bd31ed6f4b203197295778",
+      "size_bytes": 6127
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/bsoncodec/string_codec.go",
+      "sha256": "6623f40daf2f4af0b65586d7f67c6cc6d40307d4f0c5d14b4a7ce2fe3f7a2401",
+      "size_bytes": 4236
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/bsoncodec/struct_codec.go",
+      "sha256": "97811c18c93acafd95550ee4a5cf2364fd33590cd4b61b2a9e34be168c8a4c3e",
+      "size_bytes": 20859
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/bsoncodec/struct_tag_parser.go",
+      "sha256": "5eabb824c94482374037c487ae5736183f750e25589b8574a9ddd64dd71b4b16",
+      "size_bytes": 4828
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/bsoncodec/time_codec.go",
+      "sha256": "da036163967a4afbadbe0776a91f1659159239b1f57355c297ee3028e14836ed",
+      "size_bytes": 4519
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/bsoncodec/types.go",
+      "sha256": "c4fc71a9e14036ee1c3d0837121690d9c5a77bc0dff7b89d4a52bb72cffb77c3",
+      "size_bytes": 2217
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/bsoncodec/uint_codec.go",
+      "sha256": "710d4989bb7cf86a3abb0011f8330cf11b064c4fc7617c2fb53671c45c0873ff",
+      "size_bytes": 5965
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/bsonoptions/byte_slice_codec_options.go",
+      "sha256": "60ee59084a50a041e7f11d53fec69ea6899ba5e5651bc7657ee18ec809e3dc6d",
+      "size_bytes": 1874
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/bsonoptions/doc.go",
+      "sha256": "8d439a58aed113285ffa3cee1665dc9eeb1c9d7a776d94d4c97821f93d3abd27",
+      "size_bytes": 370
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/bsonoptions/empty_interface_codec_options.go",
+      "sha256": "b28769c7ade86ce2542bbc4ccdd13009caadf71fee15e19bde3380d3c36b55c6",
+      "size_bytes": 1997
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/bsonoptions/map_codec_options.go",
+      "sha256": "2915e6a62233c910f603534ccd9ec43c9df88dd168da0ef6b71c13becbc49778",
+      "size_bytes": 3656
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/bsonoptions/slice_codec_options.go",
+      "sha256": "3242e1c19026258837ed9cdc6251c3345cc3a16b4967e47eb941baf21d18b717",
+      "size_bytes": 1783
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/bsonoptions/string_codec_options.go",
+      "sha256": "fc15e981503ebd7d65e5964122caa962a95a90b057b94fc78a4fc4cefa6efcb5",
+      "size_bytes": 1933
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/bsonoptions/struct_codec_options.go",
+      "sha256": "198e8913b1c7673ff1745495f237265393791c35b1f750c4637dbf0507fed747",
+      "size_bytes": 4712
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/bsonoptions/time_codec_options.go",
+      "sha256": "05f5716dbd1fe2e061576f7301010db9d42c234ff104cd04eaa4f0836f5bc249",
+      "size_bytes": 1735
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/bsonoptions/uint_codec_options.go",
+      "sha256": "14cf8c7663dcfb0fa5577f29026eec5c767240742d71b53eb45304b0915c4562",
+      "size_bytes": 1767
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/bsonrw/copier.go",
+      "sha256": "41b65b3ccd2d0f36c9d7e3b8985cda035a9b55fbc3835729ec7c7b23ac30bb50",
+      "size_bytes": 11912
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/bsonrw/doc.go",
+      "sha256": "838b3e53857d089861db60d53e8c83d5344cadb2459796c4f826a574ee79ce10",
+      "size_bytes": 443
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/bsonrw/extjson_parser.go",
+      "sha256": "fe8de88c2eff136970ec5bc873003c9ba2592ad4078e329be3e95bd057d16b58",
+      "size_bytes": 18871
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/bsonrw/extjson_reader.go",
+      "sha256": "5b98ba18dfb79781428991327585407b6189db8316f895a259cc6b1d04d53263",
+      "size_bytes": 15027
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/bsonrw/extjson_tables.go",
+      "sha256": "510909bf7f507adca19d3fede2189208b425dd42cc3533d1004b4b594113af9f",
+      "size_bytes": 4481
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/bsonrw/extjson_wrappers.go",
+      "sha256": "66896dc4470f29b03894638db313ac1910fdf64409b59f5eb3675cde1f7b89e1",
+      "size_bytes": 11882
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/bsonrw/extjson_writer.go",
+      "sha256": "465b2cb93da15194fba173472a54a704e22f6f14229b7fce9f4176bc5208a286",
+      "size_bytes": 18199
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/bsonrw/json_scanner.go",
+      "sha256": "a13d3f2ab4fe2692b89f7ee6a501e0350608ec8f5ddb86bc7d90efd509414ab4",
+      "size_bytes": 12397
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/bsonrw/mode.go",
+      "sha256": "d87c21467cfeed1cad8e47d42e1c19ad608bfdb121d7463edd49bf0229b769d8",
+      "size_bytes": 2290
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/bsonrw/reader.go",
+      "sha256": "8e7291e42f51e27339aac2d76bffc7b36242d487d69b88cf6eb634129b8ef08c",
+      "size_bytes": 2224
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/bsonrw/value_reader.go",
+      "sha256": "c57bfa9010d325c6842266e5917878326cb41aff3d0f0e28d9549244e188f7cb",
+      "size_bytes": 20400
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/bsonrw/value_writer.go",
+      "sha256": "4c6110cddc4a58fd7a1be15a582c4b1291c9e5d53e48b066549164f69437dffd",
+      "size_bytes": 15482
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/bsonrw/writer.go",
+      "sha256": "8d7f4f79ca9610a66c43fc88dc8bcc186172e1b7526dee1a91e170718af867f6",
+      "size_bytes": 2946
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/bsontype/bsontype.go",
+      "sha256": "e79d52cb5009563000b4bc35f8021b00609d3076e30caf30a40e4e49054f9afe",
+      "size_bytes": 3020
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/decoder.go",
+      "sha256": "85527f2bc3ea4b82aad584d55c81be849634250d0f4fa802482334061e903963",
+      "size_bytes": 6271
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/doc.go",
+      "sha256": "589b53920aaeaa2ff2b4510015a5fb3d4ed349d52fafbd9ed00c6e6d3237a615",
+      "size_bytes": 8546
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/encoder.go",
+      "sha256": "dcc585eafec4395a8cd4369a62fdeafb5b5b0842191d25743ab5459e1b151256",
+      "size_bytes": 6311
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/marshal.go",
+      "sha256": "f48df2b7171a191c9e26cc7c870673be8a95d18c2af44df7fd022c22209cd53e",
+      "size_bytes": 15575
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/primitive/decimal.go",
+      "sha256": "2e423cd1650101c235493f0a097e3d0377b2e46ccc04d4f4d6cb910a23d975f0",
+      "size_bytes": 10631
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/primitive/objectid.go",
+      "sha256": "8f3296df7c92ea238a0d04931af4c4c9350a720ca7475a33b201276a2a23a439",
+      "size_bytes": 5692
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/primitive/primitive.go",
+      "sha256": "8153539ec394e06107e9d4afd66a31804f268be5619ad5299341d26432237d73",
+      "size_bytes": 6509
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/primitive_codecs.go",
+      "sha256": "3dbb05bc45a1c102cd9b9966288dee75986ab9c53b93a603488b6d979eb5ac87",
+      "size_bytes": 4271
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/raw.go",
+      "sha256": "b60a854e0cdbc46e78336d2e10e24852afa53ec342ff9e646b534c053e7cf2c3",
+      "size_bytes": 3864
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/raw_element.go",
+      "sha256": "ce81dee23c21c7bca294e0a52b12f6f781c5e5f4540459aaf79e814eb59553ce",
+      "size_bytes": 2009
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/raw_value.go",
+      "sha256": "03fdf6cac83f2d27d532f33be7dee229340fd4c51e2fc949ad99f3c6d2b945b6",
+      "size_bytes": 13271
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/registry.go",
+      "sha256": "b1a46922665651e8d56ea54a6a62a25e2e72bfa5b24d418a3847ffd5d52874bd",
+      "size_bytes": 1743
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/types.go",
+      "sha256": "22e61d7eccdba24e1bc30e46fdf857e5c94857a66e701e3d0ae4d65b3d375b23",
+      "size_bytes": 1868
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/bson/unmarshal.go",
+      "sha256": "1fc3b079d26ceaefdaf29fd2886e7d39f63dd06d14cc66394240728f6ee1a55e",
+      "size_bytes": 6740
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/x/bsonx/bsoncore/array.go",
+      "sha256": "13f6d94afd77e0da01bf99ad1bdf9eeaf0df212fef31e81997498e35254ce894",
+      "size_bytes": 3992
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/x/bsonx/bsoncore/bson_arraybuilder.go",
+      "sha256": "fcc0168def5302b98985bd1c4a968f356aa20143586ee7d035bf118b884678bc",
+      "size_bytes": 6215
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/x/bsonx/bsoncore/bson_documentbuilder.go",
+      "sha256": "5ed29d4f58a3a913e202c0565ca1502702406e5fd3f514e9279289f8bdf092a8",
+      "size_bytes": 6673
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/x/bsonx/bsoncore/bsoncore.go",
+      "sha256": "a7b1fe07b3569fbc4d77409f6e6ee830b8505234e82b1701a0225cc3b40b2611",
+      "size_bytes": 28685
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/x/bsonx/bsoncore/doc.go",
+      "sha256": "a8f48ed5b68172dc0f436aa18938c71caedd0c3b08114c1dd9786b779fac0493",
+      "size_bytes": 1912
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/x/bsonx/bsoncore/document.go",
+      "sha256": "13d09eab8b35680a7cf16e33c5abdf47376f3a5820ca0c1b30ab9d574f07ff69",
+      "size_bytes": 10154
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/x/bsonx/bsoncore/document_sequence.go",
+      "sha256": "3101bec19d51f39aced5cda26dddb1ebd32768362fcd09e321e88c7998fa698a",
+      "size_bytes": 4526
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/x/bsonx/bsoncore/element.go",
+      "sha256": "3df429858d15b1b9af437527b73a41713e5e67fc0c013d4369bc582a5dbd6ecd",
+      "size_bytes": 4642
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/x/bsonx/bsoncore/tables.go",
+      "sha256": "bb78cb6971e037dfc2dd49826b9136bd9536964eda63746f133d8501acb35e40",
+      "size_bytes": 4483
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/go.mongodb.org/mongo-driver/x/bsonx/bsoncore/value.go",
+      "sha256": "2ef2f2cada5cf491e22351e638bcd24e073b5831aad2feb8521ce1d54d20b214",
+      "size_bytes": 23943
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/modules.txt",
+      "sha256": "ec364932a901fa1276f3250415db814aeeaf045d38dc620f769624635c6d374d",
+      "size_bytes": 350
+    },
+    {
+      "path": "instruction.md",
+      "sha256": "1f2eccb678d63c5d77df0ac327ec0bf7e2cf40bc9791fc91be9a621964979aa8",
+      "size_bytes": 5594
+    },
+    {
+      "path": "solution/solve.sh",
+      "sha256": "e5be32d8bd227117f067edfbba614085cd397141b089d60a7884e3c73727e2b6",
+      "size_bytes": 1236
+    },
+    {
+      "path": "task.toml",
+      "sha256": "d9962acfa1e1292b1ccd1681522093428510aa098d1f85ed45020e56d6bb1a0a",
+      "size_bytes": 1114
+    },
+    {
+      "path": "tests/Dockerfile",
+      "sha256": "0a2d22fd10bbf49321ef5ee4094e508e4b8333d5afd78d2747e994965f896b87",
+      "size_bytes": 719
+    },
+    {
+      "path": "tests/dependencies/closure.go",
+      "sha256": "1a3328b6ca0f6311c8f77143f7c0048590b4cc48896fb45998fda5a49bc3bb8f",
+      "size_bytes": 113
+    },
+    {
+      "path": "tests/dependencies/go.mod",
+      "sha256": "76f520dafbec7e6ffe7540b859bec9fe741881b275681513c65cb9c1c8e9ddf3",
+      "size_bytes": 97
+    },
+    {
+      "path": "tests/dependencies/go.sum",
+      "sha256": "29408e8c131624624f39f1b1b654605e6e067307be7b4c5023f72584787ea3ea",
+      "size_bytes": 513
+    },
+    {
+      "path": "tests/dependencies/module.manifest.json",
+      "sha256": "966cb87087d8a17aa11a5aeb7608388f8ee4bf87819bc32e9d4c1ddc526ebfda",
+      "size_bytes": 11181
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/LICENSE",
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "size_bytes": 11357
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/bson.go",
+      "sha256": "54fc9647da6a40b4e607aa3b746ec999176d2b3711073858656f77410e4d8688",
+      "size_bytes": 1873
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/bsoncodec/array_codec.go",
+      "sha256": "6625eec0b28f1ca2eb6a00408fca289fd63298f21265af368d2c2452e2a3940d",
+      "size_bytes": 1773
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/bsoncodec/bsoncodec.go",
+      "sha256": "c9d06b787be4fb8086cb75c228a27bd291f5a4efece16d1a10b70d58c7943511",
+      "size_bytes": 14540
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/bsoncodec/byte_slice_codec.go",
+      "sha256": "45c30ef7f7c8d8d1792d52bf89e91efef9cb60d03c2915771e4da3de832bfdc4",
+      "size_bytes": 4390
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/bsoncodec/codec_cache.go",
+      "sha256": "60f74dd9a62343abb9f188d393d6fb31fe878f71243180343f961d6bfea850c6",
+      "size_bytes": 4414
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/bsoncodec/cond_addr_codec.go",
+      "sha256": "f3c10546a3a94c89c464fabb3c4bdfd2bae35034e080074f7fc1b4e07d421235",
+      "size_bytes": 1965
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/bsoncodec/default_value_decoders.go",
+      "sha256": "74f83f7790b768d5781d4a24f992e94346b289d67e0a4e6e45be8053a4df5505",
+      "size_bytes": 54867
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/bsoncodec/default_value_encoders.go",
+      "sha256": "cd8719bc4e2b15ee2f9a0b5eede7b670b14b32973f333a0a33d50a7cb9001d38",
+      "size_bytes": 30357
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/bsoncodec/doc.go",
+      "sha256": "277eda0a21e9c0ff4f0bd891e7f30c4df5b7d0d71acf23f407eed77a277a5b3b",
+      "size_bytes": 5648
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/bsoncodec/empty_interface_codec.go",
+      "sha256": "f030d66d28d3242ef5730d77c872880792407c529ed9c2632d95c2b39062c02f",
+      "size_bytes": 5735
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/bsoncodec/map_codec.go",
+      "sha256": "d5f7ec13999aee846a009d9547062a6c639b772f3cf8f1e1adba0867486afdb7",
+      "size_bytes": 10633
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/bsoncodec/mode.go",
+      "sha256": "a91e7faa3dd90d61a12eece97099a8ea2d81b758e41c0309f40c32c9b6dffe5b",
+      "size_bytes": 1423
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/bsoncodec/pointer_codec.go",
+      "sha256": "f498ed6faa68bb7709d91cede1023c252b22a429d49e08b9741f01b640a4edd1",
+      "size_bytes": 3285
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/bsoncodec/proxy.go",
+      "sha256": "5b9768d88508c4afaa3d1a468a4850d392c49a175d37fbae6abf935963a9d62c",
+      "size_bytes": 596
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/bsoncodec/registry.go",
+      "sha256": "786ef93203cacf1e714b67d5f908a8b5d0557e8aee5fe4fca41e0bcadd80cb56",
+      "size_bytes": 19427
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/bsoncodec/slice_codec.go",
+      "sha256": "0013d5732f6772ccad299e509f17600044a16c5466bd31ed6f4b203197295778",
+      "size_bytes": 6127
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/bsoncodec/string_codec.go",
+      "sha256": "6623f40daf2f4af0b65586d7f67c6cc6d40307d4f0c5d14b4a7ce2fe3f7a2401",
+      "size_bytes": 4236
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/bsoncodec/struct_codec.go",
+      "sha256": "97811c18c93acafd95550ee4a5cf2364fd33590cd4b61b2a9e34be168c8a4c3e",
+      "size_bytes": 20859
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/bsoncodec/struct_tag_parser.go",
+      "sha256": "5eabb824c94482374037c487ae5736183f750e25589b8574a9ddd64dd71b4b16",
+      "size_bytes": 4828
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/bsoncodec/time_codec.go",
+      "sha256": "da036163967a4afbadbe0776a91f1659159239b1f57355c297ee3028e14836ed",
+      "size_bytes": 4519
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/bsoncodec/types.go",
+      "sha256": "c4fc71a9e14036ee1c3d0837121690d9c5a77bc0dff7b89d4a52bb72cffb77c3",
+      "size_bytes": 2217
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/bsoncodec/uint_codec.go",
+      "sha256": "710d4989bb7cf86a3abb0011f8330cf11b064c4fc7617c2fb53671c45c0873ff",
+      "size_bytes": 5965
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/bsonoptions/byte_slice_codec_options.go",
+      "sha256": "60ee59084a50a041e7f11d53fec69ea6899ba5e5651bc7657ee18ec809e3dc6d",
+      "size_bytes": 1874
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/bsonoptions/doc.go",
+      "sha256": "8d439a58aed113285ffa3cee1665dc9eeb1c9d7a776d94d4c97821f93d3abd27",
+      "size_bytes": 370
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/bsonoptions/empty_interface_codec_options.go",
+      "sha256": "b28769c7ade86ce2542bbc4ccdd13009caadf71fee15e19bde3380d3c36b55c6",
+      "size_bytes": 1997
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/bsonoptions/map_codec_options.go",
+      "sha256": "2915e6a62233c910f603534ccd9ec43c9df88dd168da0ef6b71c13becbc49778",
+      "size_bytes": 3656
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/bsonoptions/slice_codec_options.go",
+      "sha256": "3242e1c19026258837ed9cdc6251c3345cc3a16b4967e47eb941baf21d18b717",
+      "size_bytes": 1783
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/bsonoptions/string_codec_options.go",
+      "sha256": "fc15e981503ebd7d65e5964122caa962a95a90b057b94fc78a4fc4cefa6efcb5",
+      "size_bytes": 1933
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/bsonoptions/struct_codec_options.go",
+      "sha256": "198e8913b1c7673ff1745495f237265393791c35b1f750c4637dbf0507fed747",
+      "size_bytes": 4712
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/bsonoptions/time_codec_options.go",
+      "sha256": "05f5716dbd1fe2e061576f7301010db9d42c234ff104cd04eaa4f0836f5bc249",
+      "size_bytes": 1735
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/bsonoptions/uint_codec_options.go",
+      "sha256": "14cf8c7663dcfb0fa5577f29026eec5c767240742d71b53eb45304b0915c4562",
+      "size_bytes": 1767
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/bsonrw/copier.go",
+      "sha256": "41b65b3ccd2d0f36c9d7e3b8985cda035a9b55fbc3835729ec7c7b23ac30bb50",
+      "size_bytes": 11912
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/bsonrw/doc.go",
+      "sha256": "838b3e53857d089861db60d53e8c83d5344cadb2459796c4f826a574ee79ce10",
+      "size_bytes": 443
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/bsonrw/extjson_parser.go",
+      "sha256": "fe8de88c2eff136970ec5bc873003c9ba2592ad4078e329be3e95bd057d16b58",
+      "size_bytes": 18871
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/bsonrw/extjson_reader.go",
+      "sha256": "5b98ba18dfb79781428991327585407b6189db8316f895a259cc6b1d04d53263",
+      "size_bytes": 15027
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/bsonrw/extjson_tables.go",
+      "sha256": "510909bf7f507adca19d3fede2189208b425dd42cc3533d1004b4b594113af9f",
+      "size_bytes": 4481
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/bsonrw/extjson_wrappers.go",
+      "sha256": "66896dc4470f29b03894638db313ac1910fdf64409b59f5eb3675cde1f7b89e1",
+      "size_bytes": 11882
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/bsonrw/extjson_writer.go",
+      "sha256": "465b2cb93da15194fba173472a54a704e22f6f14229b7fce9f4176bc5208a286",
+      "size_bytes": 18199
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/bsonrw/json_scanner.go",
+      "sha256": "a13d3f2ab4fe2692b89f7ee6a501e0350608ec8f5ddb86bc7d90efd509414ab4",
+      "size_bytes": 12397
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/bsonrw/mode.go",
+      "sha256": "d87c21467cfeed1cad8e47d42e1c19ad608bfdb121d7463edd49bf0229b769d8",
+      "size_bytes": 2290
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/bsonrw/reader.go",
+      "sha256": "8e7291e42f51e27339aac2d76bffc7b36242d487d69b88cf6eb634129b8ef08c",
+      "size_bytes": 2224
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/bsonrw/value_reader.go",
+      "sha256": "c57bfa9010d325c6842266e5917878326cb41aff3d0f0e28d9549244e188f7cb",
+      "size_bytes": 20400
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/bsonrw/value_writer.go",
+      "sha256": "4c6110cddc4a58fd7a1be15a582c4b1291c9e5d53e48b066549164f69437dffd",
+      "size_bytes": 15482
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/bsonrw/writer.go",
+      "sha256": "8d7f4f79ca9610a66c43fc88dc8bcc186172e1b7526dee1a91e170718af867f6",
+      "size_bytes": 2946
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/bsontype/bsontype.go",
+      "sha256": "e79d52cb5009563000b4bc35f8021b00609d3076e30caf30a40e4e49054f9afe",
+      "size_bytes": 3020
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/decoder.go",
+      "sha256": "85527f2bc3ea4b82aad584d55c81be849634250d0f4fa802482334061e903963",
+      "size_bytes": 6271
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/doc.go",
+      "sha256": "589b53920aaeaa2ff2b4510015a5fb3d4ed349d52fafbd9ed00c6e6d3237a615",
+      "size_bytes": 8546
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/encoder.go",
+      "sha256": "dcc585eafec4395a8cd4369a62fdeafb5b5b0842191d25743ab5459e1b151256",
+      "size_bytes": 6311
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/marshal.go",
+      "sha256": "f48df2b7171a191c9e26cc7c870673be8a95d18c2af44df7fd022c22209cd53e",
+      "size_bytes": 15575
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/primitive/decimal.go",
+      "sha256": "2e423cd1650101c235493f0a097e3d0377b2e46ccc04d4f4d6cb910a23d975f0",
+      "size_bytes": 10631
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/primitive/objectid.go",
+      "sha256": "8f3296df7c92ea238a0d04931af4c4c9350a720ca7475a33b201276a2a23a439",
+      "size_bytes": 5692
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/primitive/primitive.go",
+      "sha256": "8153539ec394e06107e9d4afd66a31804f268be5619ad5299341d26432237d73",
+      "size_bytes": 6509
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/primitive_codecs.go",
+      "sha256": "3dbb05bc45a1c102cd9b9966288dee75986ab9c53b93a603488b6d979eb5ac87",
+      "size_bytes": 4271
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/raw.go",
+      "sha256": "b60a854e0cdbc46e78336d2e10e24852afa53ec342ff9e646b534c053e7cf2c3",
+      "size_bytes": 3864
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/raw_element.go",
+      "sha256": "ce81dee23c21c7bca294e0a52b12f6f781c5e5f4540459aaf79e814eb59553ce",
+      "size_bytes": 2009
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/raw_value.go",
+      "sha256": "03fdf6cac83f2d27d532f33be7dee229340fd4c51e2fc949ad99f3c6d2b945b6",
+      "size_bytes": 13271
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/registry.go",
+      "sha256": "b1a46922665651e8d56ea54a6a62a25e2e72bfa5b24d418a3847ffd5d52874bd",
+      "size_bytes": 1743
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/types.go",
+      "sha256": "22e61d7eccdba24e1bc30e46fdf857e5c94857a66e701e3d0ae4d65b3d375b23",
+      "size_bytes": 1868
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/bson/unmarshal.go",
+      "sha256": "1fc3b079d26ceaefdaf29fd2886e7d39f63dd06d14cc66394240728f6ee1a55e",
+      "size_bytes": 6740
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/x/bsonx/bsoncore/array.go",
+      "sha256": "13f6d94afd77e0da01bf99ad1bdf9eeaf0df212fef31e81997498e35254ce894",
+      "size_bytes": 3992
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/x/bsonx/bsoncore/bson_arraybuilder.go",
+      "sha256": "fcc0168def5302b98985bd1c4a968f356aa20143586ee7d035bf118b884678bc",
+      "size_bytes": 6215
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/x/bsonx/bsoncore/bson_documentbuilder.go",
+      "sha256": "5ed29d4f58a3a913e202c0565ca1502702406e5fd3f514e9279289f8bdf092a8",
+      "size_bytes": 6673
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/x/bsonx/bsoncore/bsoncore.go",
+      "sha256": "a7b1fe07b3569fbc4d77409f6e6ee830b8505234e82b1701a0225cc3b40b2611",
+      "size_bytes": 28685
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/x/bsonx/bsoncore/doc.go",
+      "sha256": "a8f48ed5b68172dc0f436aa18938c71caedd0c3b08114c1dd9786b779fac0493",
+      "size_bytes": 1912
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/x/bsonx/bsoncore/document.go",
+      "sha256": "13d09eab8b35680a7cf16e33c5abdf47376f3a5820ca0c1b30ab9d574f07ff69",
+      "size_bytes": 10154
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/x/bsonx/bsoncore/document_sequence.go",
+      "sha256": "3101bec19d51f39aced5cda26dddb1ebd32768362fcd09e321e88c7998fa698a",
+      "size_bytes": 4526
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/x/bsonx/bsoncore/element.go",
+      "sha256": "3df429858d15b1b9af437527b73a41713e5e67fc0c013d4369bc582a5dbd6ecd",
+      "size_bytes": 4642
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/x/bsonx/bsoncore/tables.go",
+      "sha256": "bb78cb6971e037dfc2dd49826b9136bd9536964eda63746f133d8501acb35e40",
+      "size_bytes": 4483
+    },
+    {
+      "path": "tests/dependencies/vendor/go.mongodb.org/mongo-driver/x/bsonx/bsoncore/value.go",
+      "sha256": "2ef2f2cada5cf491e22351e638bcd24e073b5831aad2feb8521ce1d54d20b214",
+      "size_bytes": 23943
+    },
+    {
+      "path": "tests/dependencies/vendor/modules.txt",
+      "sha256": "ec364932a901fa1276f3250415db814aeeaf045d38dc620f769624635c6d374d",
+      "size_bytes": 350
+    },
+    {
+      "path": "tests/docker-compose.yaml",
+      "sha256": "17ceef0a82e7dfb63d9f5ce974350f392dd8a323eac174ec69d28a90c7de8388",
+      "size_bytes": 41
+    },
+    {
+      "path": "tests/private/bridge.go",
+      "sha256": "7ed5403c7fa918be4a69d5fcedc71990da403fbeab660c77908b7feb7a572afb",
+      "size_bytes": 7437
+    },
+    {
+      "path": "tests/private/contract.py",
+      "sha256": "e59592460492962f84d7eb0454f9735781f20d0b513b497cc19d23bd3c46d23e",
+      "size_bytes": 4390
+    },
+    {
+      "path": "tests/private/contract.sh",
+      "sha256": "57cbeebe93cd759b7e08770fe25ef55c5c1dd0e99cf191e6adbff6358929f8c1",
+      "size_bytes": 98
+    },
+    {
+      "path": "tests/runtime/nl2repobench/__init__.py",
+      "sha256": "8b08fadac670b008370bddd3b1fd8697d3ffa6ae7e871597bca49ee6ac9391ec",
+      "size_bytes": 496
+    },
+    {
+      "path": "tests/runtime/nl2repobench/domain/__init__.py",
+      "sha256": "8dfe43a661476821aa4a66277248c1f3d67f6b9ca63418164e24bd3f2a74f357",
+      "size_bytes": 61
+    },
+    {
+      "path": "tests/runtime/nl2repobench/domain/canonical.py",
+      "sha256": "b9cf1b7843c52d4dd6dacb92b2a0c2590bd1895492713d4e24b06b0639fa0d2d",
+      "size_bytes": 1697
+    },
+    {
+      "path": "tests/runtime/nl2repobench/domain/models.py",
+      "sha256": "2fdcf16080e77749d95d5abcd99fd7fe99c1f9f7c35d3af1bd2f2004372f1ee2",
+      "size_bytes": 30133
+    },
+    {
+      "path": "tests/runtime/nl2repobench/domain/models_v2.py",
+      "sha256": "2e56ba41f7b5507781b4776f9bc02fb24b59f616b82708054fb404957e37bba1",
+      "size_bytes": 15225
+    },
+    {
+      "path": "tests/runtime/nl2repobench/domain/network_policy.py",
+      "sha256": "b62888f824570124e078bc0c6aec5d11f8fe4f55a40b24d8b6358f652dd5d7ef",
+      "size_bytes": 12693
+    },
+    {
+      "path": "tests/runtime/nl2repobench/domain/runtime.py",
+      "sha256": "b72eb097de0e25a01c9117bcbd7cbc4e10bcf1e9e9fcdf550b6a609f4efd12c8",
+      "size_bytes": 5529
+    },
+    {
+      "path": "tests/runtime/nl2repobench/package_managers/__init__.py",
+      "sha256": "3a2636d788e41dd7a31a20e422c3af2442c2ad6bee39e9cd6e4554666ac1a468",
+      "size_bytes": 1120
+    },
+    {
+      "path": "tests/runtime/nl2repobench/package_managers/base.py",
+      "sha256": "77c4a81eb31541db2343e80872e9649f32dc5e3434a689bb25d2dca83d47ca29",
+      "size_bytes": 784
+    },
+    {
+      "path": "tests/runtime/nl2repobench/package_managers/go_modules.py",
+      "sha256": "897c9a34b3b7300b0020c78ab124f12143fd25d13b0261674db25aad15bfe7fd",
+      "size_bytes": 6419
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/__init__.py",
+      "sha256": "2f97d1d1f2eb417a01310aae6ea7d15000451c088efba5c575f5ff6615a933c9",
+      "size_bytes": 1159
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/candidate_client.py",
+      "sha256": "5eca68115a8f21a1f8dfa9fecd34b20e7c911be6026c859fff8186a8317e510a",
+      "size_bytes": 10529
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/candidate_install.py",
+      "sha256": "a49314a0ad250d9fd5efcda2d15f9d62d9b882c9b2d9bbf813315c14c73ce76a",
+      "size_bytes": 6556
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/candidate_runner.py",
+      "sha256": "3b57b77d2097535362432f4b60353e2f58b181d5e34adde55ff0f3949492b55e",
+      "size_bytes": 9672
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/cli.py",
+      "sha256": "8427c0b606f76a1c73528dcb4588e7b18b5b35b7d3bf797a5a43758e1c745eb8",
+      "size_bytes": 3012
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/command_plan.py",
+      "sha256": "2766939c504f350ff4891221c2e37ae25f5c0613b5b0494c06b75c176e794e38",
+      "size_bytes": 1392
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/custom_verifier.py",
+      "sha256": "5ab59468d8058fb6e61cdaef567bf4334f0dfa116bd0219924d6dda8db96227c",
+      "size_bytes": 4008
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/evaluator.py",
+      "sha256": "20f9ad77f637b5232acafc0af7d00b2eccd701e8a13b60d9858f838cff97d265",
+      "size_bytes": 9040
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/go_bridge_proxy.py",
+      "sha256": "b9aadf2e8d45be4f17d595b907ba45e2e75a81a28146f56e917e242f3443d7b6",
+      "size_bytes": 661
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/go_contract_runner.py",
+      "sha256": "e3df4ba4f47de59c77fdb0c9d3dad5471fb9ba1547fe2c2248ad3919310d08a6",
+      "size_bytes": 1478
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/go_grader.py",
+      "sha256": "767bbd785eb07633f25a2c6c28d4e4109524978967412c1b3413ebc9c566aaf1",
+      "size_bytes": 2573
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/go_supervisor.py",
+      "sha256": "03b98283b778f30949c20052aa7ce1397f2f3e37cada77148ac119111b9c51b2",
+      "size_bytes": 5358
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/grader.py",
+      "sha256": "5ef7fd8572e80b88a9ba5057ee72a9fdd12e449fd81365c3c09a0bda51e8477b",
+      "size_bytes": 5497
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/integrity.py",
+      "sha256": "73c60b40435445d2e2951ffd73cd80e026b19a9c4357f85f6cbfa8076d076aae",
+      "size_bytes": 2015
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/junit.py",
+      "sha256": "91669b3cb4b1cee9fe999f3960336fc7f45bb3f0a11e5d34a3b20a882ae7e8de",
+      "size_bytes": 1189
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/leaf_report.py",
+      "sha256": "dda410859278a8d6ce0ac01d833fa2789ed5a0199ddaef12ae6630a54954b69e",
+      "size_bytes": 2203
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/metric_contract.py",
+      "sha256": "0615e0bdf0d573aa89618752f5569059b4b3a93454678d58d0542f2b32bb6a85",
+      "size_bytes": 1658
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/models.py",
+      "sha256": "3c006e41e00c911ecaf019742c4285df5538bdc23358ff424cdf33cb534166f4",
+      "size_bytes": 2732
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/network_check.py",
+      "sha256": "bafe627e95c474ff06e0ed6f9a612e372cff6a42325b4c934f4776ef64572af5",
+      "size_bytes": 1582
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/node_grader.py",
+      "sha256": "520f5703893bf11db0dd709eedac5d0446b0a422b82640b54266457c812e1472",
+      "size_bytes": 5527
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/node_models.py",
+      "sha256": "d08b3c42350e11f55969b7f52b923a454949969b01b79e47c04556823aeb64aa",
+      "size_bytes": 4199
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/normalize/__init__.py",
+      "sha256": "658c03542888fad58f9a83de7c8c8d5d4d981050094c7b9733a2422f314b1a67",
+      "size_bytes": 190
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/normalize/go_json.py",
+      "sha256": "e0f457a1e68717c29b05b861598b2c46292e6d4305bc756718d6222d63821112",
+      "size_bytes": 3707
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/normalize/node_test_json.py",
+      "sha256": "2b4029de215f52a038689c2fbcb6d9b1af2ea94acc413430b7c122f6adae58da",
+      "size_bytes": 4031
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/normalize/pytest_junit.py",
+      "sha256": "e53ef39639676ee596f977f338ef2ac576922a727867be903b37f7e7d9f32350",
+      "size_bytes": 5100
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/process_cleanup.py",
+      "sha256": "3038c7a317c3d12cf71efd332e779baba59dc177c3ddfa990a3f5dd07dc79a88",
+      "size_bytes": 1587
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/pytest_plugin.py",
+      "sha256": "45f2229563a8ffe1a60fba39117650e1676e9e96397a7b71f0661cb678430dce",
+      "size_bytes": 1915
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/registry.py",
+      "sha256": "3a75909aa2c8238825f90475b40257096f527b4e4acdf6002e406d3ae42b897f",
+      "size_bytes": 4145
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/run_pytest.py",
+      "sha256": "fd3b7cc9ecd14234c1c06bf172ae3d5974b44e7f92c528468863f5e1f22c0fdb",
+      "size_bytes": 924
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/taxonomy.py",
+      "sha256": "ae1dec2ec2c8123a01a5f8ac733fd82de56c998a11ebacc4cd01947e7bd19b47",
+      "size_bytes": 4885
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/workspace_copy.py",
+      "sha256": "3ead43edefb85db3aa7fbaa660ac095a8e2078f854eee9be814ba54309973a68",
+      "size_bytes": 4916
+    },
+    {
+      "path": "tests/test.sh",
+      "sha256": "83b1d14fc64761924f1784f261831b0ab82ae58c9783d047dfffdadfb60ccbb9",
+      "size_bytes": 3044
+    },
+    {
+      "path": "tests/verifier-requirements.lock.txt",
+      "sha256": "0e84b0dd5094c8841088ee35bc7d893399b7f0862b8e4b55065997113453f853",
+      "size_bytes": 4279
+    }
+  ],
+  "mode": "production",
+  "schema_version": "1.0",
+  "task_id": "go-set",
+  "task_version": "0.1.0",
+  "toolchain_lock_digest": "sha256:baa477549dd86ccfe68422aafd900a2ab76f0b091de9a85f9db883f9d6a551a3",
+  "toolchain_version": "1.26.5"
+}

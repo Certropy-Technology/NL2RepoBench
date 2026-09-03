@@ -1,0 +1,57 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-set",
+  "source_revision": "da03b7639be5170e7b8fc7183b2d4663a4133419",
+  "method": "Go source declaration inventory from the digest-verified workspace preserved by the official Harbor Oracle run",
+  "module_path": "github.com/deckarep/golang-set/v2",
+  "package_name": "mapset",
+  "public_types": ["Set[T comparable]", "Iterator[T comparable]"],
+  "public_functions": [
+    "NewSet[T comparable](vs ...T) Set[T]",
+    "NewSetWithSize[T comparable](cardinality int) Set[T]",
+    "NewThreadUnsafeSet[T comparable](vs ...T) Set[T]",
+    "NewThreadUnsafeSetWithSize[T comparable](cardinality int) Set[T]",
+    "NewSetFromMapKeys[T comparable, V any](val map[T]V) Set[T]",
+    "NewThreadUnsafeSetFromMapKeys[T comparable, V any](val map[T]V) Set[T]",
+    "Elements[T comparable](s Set[T]) func(func(element T) bool)",
+    "Sorted[E cmp.Ordered](set Set[E]) []E"
+  ],
+  "set_methods": [
+    "Add", "Append", "AppendFrom", "Cardinality", "Clear", "Clone",
+    "Contains", "ContainsOne", "ContainsAny", "ContainsAnyElement",
+    "Difference", "Equal", "Intersect", "IsEmpty", "IsProperSubset",
+    "IsProperSuperset", "IsSubset", "IsSuperset", "Each", "Filter",
+    "Iter", "Iterator", "Remove", "RemoveAll", "String",
+    "SymmetricDifference", "Union", "Pop", "PopN", "ToSlice",
+    "MarshalJSON", "UnmarshalJSON", "MarshalBSONValue", "UnmarshalBSONValue"
+  ],
+  "iterator_methods": ["Stop"],
+  "evaluated_profile": {
+    "constructors": [
+      "NewSet", "NewSetWithSize", "NewSetFromMapKeys",
+      "NewThreadUnsafeSet", "NewThreadUnsafeSetWithSize"
+    ],
+    "methods": [
+      "Add", "Append", "AppendFrom", "Cardinality", "Clear", "Clone",
+      "Contains", "ContainsOne", "ContainsAny", "ContainsAnyElement",
+      "Difference", "Equal", "Intersect", "IsEmpty", "IsProperSubset",
+      "IsProperSuperset", "IsSubset", "IsSuperset", "Each", "Filter",
+      "Remove", "RemoveAll", "SymmetricDifference", "Union", "Pop", "PopN",
+      "ToSlice"
+    ]
+  },
+  "bridge_operations": [
+    "basic", "mutate", "append_from", "algebra", "predicates", "clone",
+    "each_filter", "pop", "map_constructor", "concurrent", "invalid", "unknown"
+  ],
+  "risk_flags": [
+    "generic-comparable-types", "thread-safe-and-thread-unsafe-implementations",
+    "arbitrary-iteration-order", "callback-api", "destructive-pop",
+    "upstream-bson-dependency"
+  ],
+  "excluded_behavior": [
+    "benchmark timing", "implementation-private concrete types", "Iter and Iterator",
+    "Elements and Sorted helpers", "String formatting", "JSON and BSON codecs",
+    "race-detector performance"
+  ]
+}

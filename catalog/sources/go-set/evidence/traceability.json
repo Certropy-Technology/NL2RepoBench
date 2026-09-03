@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-set",
+  "source_revision": "da03b7639be5170e7b8fc7183b2d4663a4133419",
+  "leaf_id": "contract::public-api",
+  "frozen_total": 1,
+  "public_contract": "instruction.md#api-usage-guide",
+  "traceability": [
+    {"case_group": "constructor deduplication, cardinality, Contains, and caller-owned sorted observation", "bridge_operation": "basic", "instruction_section": "API Usage Guide"},
+    {"case_group": "Add, Append, Remove, RemoveAll, Clear, and IsEmpty", "bridge_operation": "mutate", "instruction_section": "API Usage Guide"},
+    {"case_group": "AppendFrom for safe and unsafe constructor families", "bridge_operation": "append_from", "instruction_section": "API Usage Guide"},
+    {"case_group": "Union, Intersect, Difference, SymmetricDifference, and non-mutation", "bridge_operation": "algebra", "instruction_section": "API Usage Guide"},
+    {"case_group": "subset, proper subset, superset, proper superset, equality, and overlap predicates", "bridge_operation": "predicates", "instruction_section": "API Usage Guide"},
+    {"case_group": "Clone independence", "bridge_operation": "clone", "instruction_section": "API Usage Guide"},
+    {"case_group": "Each completion and early stop plus Filter membership and non-mutation", "bridge_operation": "each_filter", "instruction_section": "API Usage Guide"},
+    {"case_group": "Pop and PopN removal, uniqueness, bounds, zero-value, and non-positive count behavior", "bridge_operation": "pop", "instruction_section": "API Usage Guide"},
+    {"case_group": "map-key constructor, safe and unsafe size constructors, and unsafe deduplication", "bridge_operation": "map_constructor", "instruction_section": "API Usage Guide"},
+    {"case_group": "concurrent Add safety and membership on the default implementation", "bridge_operation": "concurrent", "instruction_section": "API Usage Guide"},
+    {"case_group": "malformed and unknown bridge requests", "bridge_operation": "invalid/unknown", "instruction_section": "Implementation Notes"}
+  ],
+  "excluded_upstream_behavior": [
+    "benchmarks", "private concrete representations", "Iter and Iterator",
+    "Elements and Sorted helpers", "String formatting", "JSON and BSON serialization"
+  ]
+}

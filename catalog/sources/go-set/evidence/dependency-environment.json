@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-set",
+  "source_revision": "da03b7639be5170e7b8fc7183b2d4663a4133419",
+  "runtime": {
+    "go_version": "1.26.5",
+    "platform": "linux/amd64",
+    "cgo_enabled": false,
+    "os": "debian-bookworm",
+    "base_image": "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd",
+    "agent_runtime_image_id": "sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f"
+  },
+  "module": {
+    "path": "github.com/deckarep/golang-set/v2",
+    "go_version": "1.26.5",
+    "requirements": ["go.mongodb.org/mongo-driver@v1.17.9"],
+    "bundle_digest": "sha256:83178d96bc4df481bfff27f44d2c457d6ac01804ba22d57a026226acbac43af3",
+    "bundle_size_bytes": 116579,
+    "manifest": ".nl2repo/authoring-work/go-set/module/module.manifest.json",
+    "install_mode": "vendor",
+    "offline_environment": ["GOWORK=off", "GOPROXY=off", "GOSUMDB=off", "GOTOOLCHAIN=local", "CGO_ENABLED=0"]
+  },
+  "private_artifacts": {
+    "verifier_bundle": {
+      "digest": "sha256:8076e8dda777bee1af3a3d71a12d674052f6d24f330fc737d11902356f1d31af",
+      "size_bytes": 1493,
+      "members": ["contract.py", "contract.sh"]
+    },
+    "oracle_bundle": {
+      "digest": "sha256:39dbabcf918c000c12f76b3aee51fbf2cf84be6da4cf031150e594d16eae548c",
+      "size_bytes": 764,
+      "members": ["solve.sh"]
+    }
+  },
+  "network": {
+    "agent_mode": "no-network",
+    "agent_allowed_hosts": [],
+    "verifier_mode": "no-network",
+    "reference_source_fetch": "forbidden for model runs; trusted Oracle only receives github.com as a run-scoped host"
+  }
+}

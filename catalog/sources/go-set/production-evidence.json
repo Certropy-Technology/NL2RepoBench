@@ -1,0 +1,108 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-set",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source_freeze": {
+    "upstream_url": "https://github.com/deckarep/golang-set",
+    "revision": "da03b7639be5170e7b8fc7183b2d4663a4133419",
+    "source_digest": "sha256:9d77361bf07b5ecfcc236a1972f9aa524209dab5f300e774ca5b068a1aea4880",
+    "archive_size_bytes": 266240,
+    "license_spdx": "MIT"
+  },
+  "artifacts": {
+    "module_bundle": {"digest": "sha256:83178d96bc4df481bfff27f44d2c457d6ac01804ba22d57a026226acbac43af3", "size_bytes": 116579},
+    "verifier_bundle": {"digest": "sha256:8076e8dda777bee1af3a3d71a12d674052f6d24f330fc737d11902356f1d31af", "size_bytes": 1493},
+    "oracle_bundle": {"digest": "sha256:39dbabcf918c000c12f76b3aee51fbf2cf84be6da4cf031150e594d16eae548c", "size_bytes": 764}
+  },
+  "final_bundle": {
+    "path": ".nl2repo/compiled/go-set-final6/go-set/bundle.manifest.json",
+    "sha256": "sha256:137b7e2f887cbccd4e4b219f7f0227aeac5052300382c4dedaf320f58dd20df7",
+    "canonical_manifest_digest": "sha256:f8ad1fd533f5a90418b24575674e9288b073263fa66e56be33302e1cebb6951d"
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/go-set-final6/go-set -a oracle --allow-agent-host github.com --job-name go-set-final6-oracle-20260904T0025 -o .nl2repo/runs/go-set-final6-oracle --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "valid": true,
+    "passed": 1,
+    "collected": 1,
+    "frozen_total": 1,
+    "reward": 1.0,
+    "result": ".nl2repo/runs/go-set-final6-oracle/go-set-final6-oracle-20260904T0025/go-set__pCG9EAc/result.json",
+    "grading": {"path": ".nl2repo/runs/go-set-final6-oracle/go-set-final6-oracle-20260904T0025/go-set__pCG9EAc/verifier/grading.json", "sha256": "sha256:b00d7a553a2fddacea6fa04621bafef45310450fbfe030c859f754ad2e6f6933"},
+    "network": {"path": ".nl2repo/runs/go-set-final6-oracle/go-set-final6-oracle-20260904T0025/go-set__pCG9EAc/verifier/network.json", "sha256": "sha256:83f60d3012d0aed43bd155e9b1c2ea320a92c4650de9615c2077492eebf02d11"}
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/go-set-final6/go-set -a nop --job-name go-set-final6-empty-20260904T0025 -o .nl2repo/runs/go-set-final6-empty --n-concurrent 1 --yes",
+      "exit_code": 0, "valid": true, "passed": 0, "collected": 0, "frozen_total": 1, "reward": 0.0,
+      "failure_class": "model", "failure_reason": "candidate-installation-failed",
+      "result": ".nl2repo/runs/go-set-final6-empty/go-set-final6-empty-20260904T0025/go-set__eR2k5iN/result.json",
+      "grading": {"path": ".nl2repo/runs/go-set-final6-empty/go-set-final6-empty-20260904T0025/go-set__eR2k5iN/verifier/grading.json", "sha256": "sha256:f50f1c97834aae0757eb19f7b1926b462c178862bac6df8d7f04e6f4d30db843"},
+      "network": {"path": ".nl2repo/runs/go-set-final6-empty/go-set-final6-empty-20260904T0025/go-set__eR2k5iN/verifier/network.json", "sha256": "sha256:89034045349d7e285cc0327ba49ebf15c5621577587a095b819fe30dcdf358d4"}
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/go-set-final6/go-set-stub -a oracle --job-name go-set-final6-stub-20260904T0029 -o .nl2repo/runs/go-set-final6-stub --n-concurrent 1 --yes",
+      "exit_code": 0, "valid": true, "passed": 0, "collected": 1, "frozen_total": 1, "reward": 0.0,
+      "result": ".nl2repo/runs/go-set-final6-stub/go-set-final6-stub-20260904T0029/go-set-stub__dZthEWq/result.json",
+      "grading": {"path": ".nl2repo/runs/go-set-final6-stub/go-set-final6-stub-20260904T0029/go-set-stub__dZthEWq/verifier/grading.json", "sha256": "sha256:770db3ca92e7856ca2aafafc513a44b9f7287cc614932077530145c6ab4ec74d"},
+      "network": {"path": ".nl2repo/runs/go-set-final6-stub/go-set-final6-stub-20260904T0029/go-set-stub__dZthEWq/verifier/network.json", "sha256": "sha256:bb8cd608900e33947e10e927486a95b8746fff39b8da2ae45d631d0391a646bc"}
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/go-set-final6/go-set-forgery -a oracle --job-name go-set-final6-forgery-20260904T0029 -o .nl2repo/runs/go-set-final6-forgery --n-concurrent 1 --yes",
+      "exit_code": 0, "valid": true, "passed": 0, "collected": 1, "frozen_total": 1, "reward": 0.0,
+      "verifier_owned_reward": true, "workspace_forged_reward": 1.0,
+      "result": ".nl2repo/runs/go-set-final6-forgery/go-set-final6-forgery-20260904T0029/go-set-forgery__tpimERG/result.json",
+      "grading": {"path": ".nl2repo/runs/go-set-final6-forgery/go-set-final6-forgery-20260904T0029/go-set-forgery__tpimERG/verifier/grading.json", "sha256": "sha256:770db3ca92e7856ca2aafafc513a44b9f7287cc614932077530145c6ab4ec74d"},
+      "network": {"path": ".nl2repo/runs/go-set-final6-forgery/go-set-final6-forgery-20260904T0029/go-set-forgery__tpimERG/verifier/network.json", "sha256": "sha256:d86be24922112784505b31f97150625fb0c8c6d0f70ae3fb8118d45b216601cd"}
+    },
+    "install-failure": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/go-set-final6/go-set-install-failure -a oracle --job-name go-set-final6-install-failure-20260904T0032 -o .nl2repo/runs/go-set-final6-install-failure --n-concurrent 1 --yes",
+      "exit_code": 0, "valid": true, "passed": 0, "collected": 0, "frozen_total": 1, "reward": 0.0,
+      "failure_class": "model", "failure_reason": "candidate-installation-failed",
+      "result": ".nl2repo/runs/go-set-final6-install-failure/go-set-final6-install-failure-20260904T0032/go-set-install-failure__3wUVjwY/result.json",
+      "grading": {"path": ".nl2repo/runs/go-set-final6-install-failure/go-set-final6-install-failure-20260904T0032/go-set-install-failure__3wUVjwY/verifier/grading.json", "sha256": "sha256:f50f1c97834aae0757eb19f7b1926b462c178862bac6df8d7f04e6f4d30db843"},
+      "network": {"path": ".nl2repo/runs/go-set-final6-install-failure/go-set-final6-install-failure-20260904T0032/go-set-install-failure__3wUVjwY/verifier/network.json", "sha256": "sha256:b52d255335bf1140e4cb47e9726968f2c443cda42cc4fbe7d893cb07507ef390"}
+    },
+    "panic": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/go-set-final6/go-set-panic -a oracle --job-name go-set-final6-panic-20260904T0032 -o .nl2repo/runs/go-set-final6-panic --n-concurrent 1 --yes",
+      "exit_code": 0, "valid": true, "passed": 0, "collected": 1, "frozen_total": 1, "reward": 0.0,
+      "result": ".nl2repo/runs/go-set-final6-panic/go-set-final6-panic-20260904T0032/go-set-panic__YM9DzbT/result.json",
+      "grading": {"path": ".nl2repo/runs/go-set-final6-panic/go-set-final6-panic-20260904T0032/go-set-panic__YM9DzbT/verifier/grading.json", "sha256": "sha256:770db3ca92e7856ca2aafafc513a44b9f7287cc614932077530145c6ab4ec74d"},
+      "network": {"path": ".nl2repo/runs/go-set-final6-panic/go-set-final6-panic-20260904T0032/go-set-panic__YM9DzbT/verifier/network.json", "sha256": "sha256:7dc6f398f00a883d74e9f0bf0f07fb851278e80dfd6795c3f63ca00b6e3d1124"}
+    },
+    "hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/go-set-final6/go-set-hang -a oracle --job-name go-set-final6-hang-20260904T0034 -o .nl2repo/runs/go-set-final6-hang --n-concurrent 1 --yes",
+      "exit_code": 0, "valid": true, "passed": 0, "collected": 1, "frozen_total": 1, "reward": 0.0,
+      "result": ".nl2repo/runs/go-set-final6-hang/go-set-final6-hang-20260904T0034/go-set-hang__CBsBvAm/result.json",
+      "grading": {"path": ".nl2repo/runs/go-set-final6-hang/go-set-final6-hang-20260904T0034/go-set-hang__CBsBvAm/verifier/grading.json", "sha256": "sha256:770db3ca92e7856ca2aafafc513a44b9f7287cc614932077530145c6ab4ec74d"},
+      "network": {"path": ".nl2repo/runs/go-set-final6-hang/go-set-final6-hang-20260904T0034/go-set-hang__CBsBvAm/verifier/network.json", "sha256": "sha256:4a6c8be7021fc4b9872b335df94019f71ff9b7788eb487431446022662e4c2d9"}
+    },
+    "oversized-output": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/go-set-final6/go-set-oversized-output -a oracle --job-name go-set-final6-oversized-output-20260904T0034 -o .nl2repo/runs/go-set-final6-oversized-output --n-concurrent 1 --yes",
+      "exit_code": 0, "valid": true, "passed": 0, "collected": 1, "frozen_total": 1, "reward": 0.0,
+      "result": ".nl2repo/runs/go-set-final6-oversized-output/go-set-final6-oversized-output-20260904T0034/go-set-oversized-output__mQ5xUHG/result.json",
+      "grading": {"path": ".nl2repo/runs/go-set-final6-oversized-output/go-set-final6-oversized-output-20260904T0034/go-set-oversized-output__mQ5xUHG/verifier/grading.json", "sha256": "sha256:770db3ca92e7856ca2aafafc513a44b9f7287cc614932077530145c6ab4ec74d"},
+      "network": {"path": ".nl2repo/runs/go-set-final6-oversized-output/go-set-final6-oversized-output-20260904T0034/go-set-oversized-output__mQ5xUHG/verifier/network.json", "sha256": "sha256:cc2248b03acba164fb6504153b99c3e0ec70f61577d471dae5d315a3470dca53"}
+    },
+    "background-process": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/go-set-final6/go-set-background-process -a oracle --job-name go-set-final6-background-process-20260904T0036 -o .nl2repo/runs/go-set-final6-background-process --n-concurrent 1 --yes",
+      "exit_code": 0, "valid": true, "passed": 0, "collected": 1, "frozen_total": 1, "reward": 0.0,
+      "result": ".nl2repo/runs/go-set-final6-background-process/go-set-final6-background-process-20260904T0036/go-set-background-process__rPCS68N/result.json",
+      "grading": {"path": ".nl2repo/runs/go-set-final6-background-process/go-set-final6-background-process-20260904T0036/go-set-background-process__rPCS68N/verifier/grading.json", "sha256": "sha256:770db3ca92e7856ca2aafafc513a44b9f7287cc614932077530145c6ab4ec74d"},
+      "network": {"path": ".nl2repo/runs/go-set-final6-background-process/go-set-final6-background-process-20260904T0036/go-set-background-process__rPCS68N/verifier/network.json", "sha256": "sha256:12fcb2ebc708f7dccfcd10f7b23f366b35b459ef3ab88412a90b86cd3fd09fc9"}
+    },
+    "offline": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/go-set-final6/go-set -a oracle --allow-agent-host github.com --job-name go-set-final6-offline-20260904T0036 -o .nl2repo/runs/go-set-final6-offline --n-concurrent 1 --yes",
+      "exit_code": 0, "valid": true, "completed": true, "passed": 1, "collected": 1, "frozen_total": 1, "reward": 1.0, "public_network_available": false,
+      "result": ".nl2repo/runs/go-set-final6-offline/go-set-final6-offline-20260904T0036/go-set__75MnCnQ/result.json",
+      "grading": {"path": ".nl2repo/runs/go-set-final6-offline/go-set-final6-offline-20260904T0036/go-set__75MnCnQ/verifier/grading.json", "sha256": "sha256:b00d7a553a2fddacea6fa04621bafef45310450fbfe030c859f754ad2e6f6933"},
+      "network": {"path": ".nl2repo/runs/go-set-final6-offline/go-set-final6-offline-20260904T0036/go-set__75MnCnQ/verifier/network.json", "sha256": "sha256:013888d465abd5fbaff97d9168406c729d4ccb08ea618401318114f94fa1936b"}
+    }
+  },
+  "residual_risks": [
+    "The task evaluates the documented core set profile, not the upstream iterator, formatting, JSON, or BSON APIs.",
+    "Go 1.26.5 requires -vet=off for the unchanged upstream suite because two upstream Errorf calls use %q with int values; all 108 dynamic leaves pass after this environment-only adaptation."
+  ]
+}

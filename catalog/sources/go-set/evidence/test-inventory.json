@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-set",
+  "source_revision": "da03b7639be5170e7b8fc7183b2d4663a4133419",
+  "upstream_collection": {
+    "command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -mod=vendor -vet=off -count=1 -json ./...",
+    "exit_code": 0,
+    "packages": 1,
+    "static_test_functions": 107,
+    "dynamic_test_events": 109,
+    "dynamic_leaf_tests": 108,
+    "passed_leaf_tests": 108,
+    "failed_leaf_tests": 0,
+    "collection_errors": []
+  },
+  "environment_remediation": {
+    "unadapted_command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -mod=vendor -count=1 -json ./...",
+    "exit_code": 1,
+    "failure_class": "environment",
+    "reason": "Go 1.26.5 vet rejects two upstream testing.Errorf %q calls whose arguments are int; -vet=off runs the unchanged test binary and all 108 leaves pass"
+  },
+  "frozen_leaf": {
+    "id": "contract::public-api",
+    "framework": "Go typed bridge contract",
+    "frozen_total": 1,
+    "bridge_operations": 12,
+    "collection_source": "fixed verifier-owned contract"
+  }
+}
