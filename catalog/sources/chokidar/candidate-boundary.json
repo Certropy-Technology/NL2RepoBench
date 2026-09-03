@@ -1,0 +1,10 @@
+{
+  "schema_version": "1.0",
+  "task_id": "chokidar",
+  "protocol": "node-test-subprocess-boundary-v1",
+  "transport": {"mode": "one-shot-json", "request_limit_bytes": 65536, "response_limit_bytes": 262144, "network": "none"},
+  "candidate_operations": ["inventory", "initial", "add", "change", "unlink", "polling-change", "ignored", "cwd", "depth", "get-watched", "dynamic", "close", "invalid-path"],
+  "fixture_policy": "The adapter creates a unique temporary root inside the candidate child, restricts all paths to that root, bounds each scenario at 15 seconds, closes watchers, and removes the root before returning.",
+  "forbidden": ["network", "arbitrary imports or commands", "paths outside the child fixture", "unbounded event streams", "trusted-process import", "candidate-written grading or collection reports"],
+  "serialization": "Only package metadata, primitive values, relative event strings, sorted directory names, and bounded error fields are returned. Stats and callbacks remain child-local."
+}

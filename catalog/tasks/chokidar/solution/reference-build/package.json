@@ -1,0 +1,11 @@
+{
+  "name": "chokidar",
+  "version": "5.0.0",
+  "type": "module",
+  "main": "./index.js",
+  "exports": {".": {"default": "./index.js"}, "./handler.js": {"default": "./handler.js"}},
+  "files": ["index.js", "index.d.ts", "handler.js", "handler.d.ts"],
+  "dependencies": {"readdirp": "5.0.0"},
+  "license": "MIT",
+  "engines": {"node": ">= 20.19.0"}
+}

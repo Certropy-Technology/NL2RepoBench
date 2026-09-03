@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "task_id": "chokidar",
+  "source_revision": "0bc7bed37d6b018e5b11afcce329bbf797d6441f",
+  "package": {"name": "chokidar", "version": "5.0.0", "type": "module", "runtime_dependency": "readdirp@5.0.0"},
+  "exports": [
+    {"name": "default", "import_path": "chokidar", "signature": "{watch: typeof watch, FSWatcher: typeof FSWatcher}"},
+    {"name": "watch", "import_path": "chokidar", "signature": "watch(paths: string | string[], options?: ChokidarOptions): FSWatcher"},
+    {"name": "FSWatcher", "import_path": "chokidar", "signature": "new FSWatcher(options?: ChokidarOptions): FSWatcher"}
+  ],
+  "watcher_methods": [
+    {"name": "add", "signature": "add(paths: string | string[]): FSWatcher", "returns_same_instance": true},
+    {"name": "unwatch", "signature": "unwatch(paths: string | string[]): FSWatcher", "returns_same_instance": true},
+    {"name": "on", "signature": "on(event: EventName, listener: Function): FSWatcher", "returns_same_instance": true},
+    {"name": "close", "signature": "close(): Promise<void>"},
+    {"name": "getWatched", "signature": "getWatched(): Record<string, string[]>"}
+  ],
+  "events": ["add", "addDir", "change", "unlink", "unlinkDir", "ready", "raw", "error", "all"],
+  "options": ["persistent", "ignored", "ignoreInitial", "followSymlinks", "cwd", "usePolling", "interval", "binaryInterval", "alwaysStat", "depth", "awaitWriteFinish", "ignorePermissionErrors", "atomic"],
+  "risk_surfaces": ["native filesystem events", "callbacks", "Stats objects", "event timing", "symlink traversal", "polling resource use"],
+  "adaptation": "Private tests create and remove bounded temporary fixtures inside a candidate child and assert normalized JSON event observations. No callback, Stats, native handle, or arbitrary path crosses the verifier boundary."
+}

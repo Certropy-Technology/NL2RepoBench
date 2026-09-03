@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "task_id": "chokidar",
+  "source_revision": "0bc7bed37d6b018e5b11afcce329bbf797d6441f",
+  "framework": "node:test",
+  "report_format": "node-test-json-v1",
+  "frozen_total": 29,
+  "private_entry": "private/contract.test.mjs",
+  "groups": {
+    "package_shape": 4,
+    "initial_scan_and_options": 8,
+    "filesystem_events": 4,
+    "watch_set_and_lifecycle": 7,
+    "normalized_observations": 6
+  },
+  "upstream_basis": "The frozen chokidar 5.0.0 package metadata, TypeScript declarations, README behavior, and Node 24 upstream test suite (207 passing leaves) were inspected. The scored slice is an independently authored deterministic black-box contract, not a copied upstream test file.",
+  "collection": "node --test private/contract.test.mjs; each test invokes an allowlisted child-side scenario and emits node:test JSON leaves."
+}

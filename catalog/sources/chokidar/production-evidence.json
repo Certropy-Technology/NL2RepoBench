@@ -1,0 +1,113 @@
+{
+  "schema_version": "1.0",
+  "task_id": "chokidar",
+  "task_version": "2.0.0",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/paulmillr/chokidar",
+    "revision": "0bc7bed37d6b018e5b11afcce329bbf797d6441f",
+    "license_spdx": "MIT",
+    "source_digest": "sha256:db938843dec95dbe7faf8d926240f97429432002a760f9d68dfec049c367c0af",
+    "license_digest": "sha256:bdfd5e0edb6089e6586c8f15e6a86fab83ffbeeda3b3b7b33734ccb8c5906965"
+  },
+  "environment": {
+    "runtime": "node 24.19.0",
+    "package_manager": "npm 11.17.0",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "verifier_base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "agent_network_mode": "no-network",
+    "verifier_network_mode": "none"
+  },
+  "dependency_bundle": {
+    "digest": "sha256:0482c83126f454a6ce685b1a2370c94200fa7c95e5941a2d52ba56a3b395bafd",
+    "size_bytes": 245760,
+    "lockfile": "npm v3; readdirp 5.0.0 with sha512 integrity; offline cache"
+  },
+  "test_collection": {
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "frozen_total": 29,
+    "test_bundle_digest": "sha256:c57fe7216fe12414a0601a93f6a631c3e94ec424e054a56c8d25bd25c4406e04",
+    "adapter": "candidate-child filesystem scenarios; native handles and callbacks remain child-local"
+  },
+  "compile": {
+    "bundle_manifest": ".nl2repo/authoring-work/chokidar/compiled-final/chokidar/bundle.manifest.json",
+    "bundle_manifest_sha256": "sha256:cb3284d15f81ef455f57e7e6a50e29f66031fd543307927354b70425cffe5ce1",
+    "command": "uv run nl2repo harbor compile catalog/sources/chokidar --output .nl2repo/authoring-work/chokidar/compiled-final --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+    "exit_code": 0
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/chokidar/compiled-final/chokidar -a oracle --allow-agent-host github.com --job-name chokidar-authoring-oracle-current-20260903 -o .nl2repo/authoring-work/chokidar/runs/oracle-current --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "valid": true,
+    "passed": 29,
+    "collected": 29,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/authoring-work/chokidar/runs/oracle-current/chokidar-authoring-oracle-current-20260903/chokidar__hMb8dpP/verifier/grading.json",
+      "sha256": "sha256:5b01c41b26d75dae72a1bf4040d5f1ad221861ca30ac5969b9acb18f0d6fdcd7"
+    },
+    "network": {
+      "path": ".nl2repo/authoring-work/chokidar/runs/oracle-current/chokidar-authoring-oracle-current-20260903/chokidar__hMb8dpP/verifier/network.json",
+      "sha256": "sha256:59b5283e031380f589be790dd5d6af5a8ac237f35b663d948c811baf5d0e75e8",
+      "public_network_available": false
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/chokidar/compiled-final/chokidar -a nop --job-name chokidar-control-empty-current-20260903 -o .nl2repo/authoring-work/chokidar/runs/empty-current --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "reward": 0.0,
+      "valid": true,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {"path": ".nl2repo/authoring-work/chokidar/runs/empty-current/chokidar-control-empty-current-20260903/chokidar__jWsZC6q/verifier/grading.json", "sha256": "sha256:68293ee8907ce42f26ebdb31c590904385815382029969a3a6274b4f23e2196d"},
+      "network": {"path": ".nl2repo/authoring-work/chokidar/runs/empty-current/chokidar-control-empty-current-20260903/chokidar__jWsZC6q/verifier/network.json", "sha256": "sha256:46f4e1b15ddcc481422808f75b9936891e4fb9220dc8f678043ffeb8b509cf80", "public_network_available": false}
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/chokidar/controls-final/chokidar-stub -a oracle --job-name chokidar-control-stub-current-20260903 -o .nl2repo/authoring-work/chokidar/runs/stub-current --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "reward": 0.10344827586206896,
+      "valid": true,
+      "passed": 3,
+      "collected": 29,
+      "grading": {"path": ".nl2repo/authoring-work/chokidar/runs/stub-current/chokidar-control-stub-current-20260903/chokidar-stub__v4mbquN/verifier/grading.json", "sha256": "sha256:cd20730d380680d3b6296214e2d57932394847a1382b1d7c04e6627131bb8311"},
+      "network": {"path": ".nl2repo/authoring-work/chokidar/runs/stub-current/chokidar-control-stub-current-20260903/chokidar-stub__v4mbquN/verifier/network.json", "sha256": "sha256:7bfa98fd58a14de86b052f5b48710653895af2a1e304eb2c50cccfe9a228707f", "public_network_available": false}
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/chokidar/controls-final/chokidar-forgery -a oracle --job-name chokidar-control-forgery-current-20260903 -o .nl2repo/authoring-work/chokidar/runs/forgery-current --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "reward": 0.10344827586206896,
+      "valid": true,
+      "passed": 3,
+      "collected": 29,
+      "verifier_owned_reward": true,
+      "grading": {"path": ".nl2repo/authoring-work/chokidar/runs/forgery-current/chokidar-control-forgery-current-20260903/chokidar-forgery__9Evm4Be/verifier/grading.json", "sha256": "sha256:cd20730d380680d3b6296214e2d57932394847a1382b1d7c04e6627131bb8311"},
+      "network": {"path": ".nl2repo/authoring-work/chokidar/runs/forgery-current/chokidar-control-forgery-current-20260903/chokidar-forgery__9Evm4Be/verifier/network.json", "sha256": "sha256:98ea9e3ccde4b269a722828a902cefeb5211d7c91a45b558837ef0b8fb93b65f", "public_network_available": false}
+    },
+    "offline": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/chokidar/controls-final-extra/chokidar-offline -a oracle --job-name chokidar-control-offline-current-20260903 -o .nl2repo/authoring-work/chokidar/runs/offline-current --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "reward": 1.0,
+      "valid": true,
+      "completed": true,
+      "passed": 29,
+      "collected": 29,
+      "grading": {"path": ".nl2repo/authoring-work/chokidar/runs/offline-current/chokidar-control-offline-current-20260903/chokidar-offline__4qdKeVL/verifier/grading.json", "sha256": "sha256:5b01c41b26d75dae72a1bf4040d5f1ad221861ca30ac5969b9acb18f0d6fdcd7"},
+      "network": {"path": ".nl2repo/authoring-work/chokidar/runs/offline-current/chokidar-control-offline-current-20260903/chokidar-offline__4qdKeVL/verifier/network.json", "sha256": "sha256:73e96564faf62e08a1d5fdd5e91d9a0d18f233798e7d97d26ee52fad781422fb", "public_network_available": false}
+    }
+  },
+  "additional_controls": {
+    "install-script": {"result": "0/29", "failure_reason": "candidate-installation-failed", "run": ".nl2repo/authoring-work/chokidar/runs/install-script"},
+    "loader-hook": {"result": "3/29", "run": ".nl2repo/authoring-work/chokidar/runs/loader-hook"},
+    "hang": {"result": "1/29", "bounded": true, "run": ".nl2repo/authoring-work/chokidar/runs/hang"}
+  },
+  "residual_risks": [
+    "This lane did not start a model Agent Run by policy.",
+    "Blind/spec review, dataset integration, publication, and generated catalog/tasks/chokidar projection are integrator-owned.",
+    "The scored adapter is a deterministic child-side slice of the full 207-leaf upstream suite; OS-specific native timing and callback/Stats identity are intentionally outside the JSON contract."
+  ]
+}

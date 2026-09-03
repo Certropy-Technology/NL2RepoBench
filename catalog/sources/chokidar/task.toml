@@ -1,0 +1,110 @@
+schema_version = "2.0"
+task_id = "chokidar"
+version = "2.0.0"
+instruction = "instruction.md"
+
+[metadata]
+language = "node"
+difficulty = "hard"
+category = "filesystem-watching"
+tags = ["node", "npm", "esm", "filesystem", "watcher", "events", "polling"]
+
+[source]
+status = "known"
+upstream_url = "https://github.com/paulmillr/chokidar"
+revision = "0bc7bed37d6b018e5b11afcce329bbf797d6441f"
+license_spdx = "MIT"
+source_digest = "sha256:db938843dec95dbe7faf8d926240f97429432002a760f9d68dfec049c367c0af"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "Candidate and separate verifier runs have no network. npm dependencies are installed from an immutable private cache during build; only the trusted Oracle receives a run-scoped authorization for github.com to fetch and verify the pinned source revision."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = ["readdirp"]
+
+[dependencies.artifact]
+digest = "sha256:0482c83126f454a6ce685b1a2370c94200fa7c95e5941a2d52ba56a3b395bafd"
+size_bytes = 245760
+media_type = "application/vnd.nl2repobench.npm-bundle+tar"
+uri = "artifact://private/sha256:0482c83126f454a6ce685b1a2370c94200fa7c95e5941a2d52ba56a3b395bafd"
+visibility = "private"
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 29
+expected_total_source = "frozen-collection"
+
+[tests.commands_artifact]
+digest = "sha256:507c4bc7ec2495c6ccf48c80392fb684f77a5f9b92f70e9cabe5fe84d7f43657"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.node-commands+tar"
+uri = "artifact://private/sha256:507c4bc7ec2495c6ccf48c80392fb684f77a5f9b92f70e9cabe5fe84d7f43657"
+visibility = "private"
+
+[tests.test_bundle]
+digest = "sha256:c57fe7216fe12414a0601a93f6a631c3e94ec424e054a56c8d25bd25c4406e04"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.node-tests+tar"
+uri = "artifact://private/sha256:c57fe7216fe12414a0601a93f6a631c3e94ec424e054a56c8d25bd25c4406e04"
+visibility = "private"
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Build the chokidar 5 ESM filesystem watcher with deterministic event normalization, filtering, polling, and watcher lifecycle behavior."
+keywords = ["node", "npm", "esm", "filesystem", "watcher", "events", "polling"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 900.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 600.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 2048
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "node-author-discover-20260902T142801Z/chokidar"
+reason = "Frozen source, private npm closure, deterministic 29-leaf child-side contract, production compile, Oracle, empty, stub, forgery, install-script, loader-hook, hang, and offline controls passed in this authoring attempt. Independent review, dataset integration, and model Agent Run remain integrator-owned."
+
+[oracle_bundle]
+digest = "sha256:4ed32f24d217f916e5da1d07f62c8e381cca36f1545b68778a8683a006fdef94"
+size_bytes = 81920
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:4ed32f24d217f916e5da1d07f62c8e381cca36f1545b68778a8683a006fdef94"
+visibility = "private"
