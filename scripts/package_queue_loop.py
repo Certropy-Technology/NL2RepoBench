@@ -98,7 +98,7 @@ def locked_global_claims(state_path: Path) -> Iterator[None]:
 
 
 def _claim_conflict_in_other_states(
-    state_path: Path, *, candidate_id: str, package: str
+    state_path: Path, *, candidate_id: str, package: str, allow_repair: bool = False
 ) -> str | None:
     """Return the other state path if this candidate/package is already owned."""
 
@@ -126,6 +126,8 @@ def _claim_conflict_in_other_states(
                 except ValueError:
                     pass
             if record.get("candidate_id") == candidate_id or record.get("package") == package:
+                if allow_repair and status == "complete":
+                    continue
                 return str(other_path)
     return None
 
@@ -242,7 +244,10 @@ def command_claim(args: argparse.Namespace) -> int:
                 if not isinstance(package, str):
                     continue
                 if _claim_conflict_in_other_states(
-                    args.state, candidate_id=candidate_id, package=package
+                    args.state,
+                    candidate_id=candidate_id,
+                    package=package,
+                    allow_repair=bool(getattr(args, "allow_repair", False)),
                 ):
                     continue
                 record.update(
@@ -386,6 +391,11 @@ def build_parser() -> argparse.ArgumentParser:
             sub.add_argument("--lease-seconds", type=int, default=7200)
             sub.add_argument("--max-attempts", type=int, default=3)
             sub.add_argument("--language", choices=("python", "node", "go"))
+            sub.add_argument(
+                "--allow-repair",
+                action="store_true",
+                help="Allow an explicit repair queue to reclaim a completed package.",
+            )
             sub.add_argument(
                 "--candidate-id",
                 action="append",

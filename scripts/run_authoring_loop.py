@@ -146,6 +146,7 @@ def _claim(
     language: str,
     lease: int,
     attempts: int,
+    allow_repair: bool = False,
 ) -> dict[str, Any] | None:
     loop = _load_queue_loop()
     args = type(
@@ -160,6 +161,7 @@ def _claim(
             "max_attempts": attempts,
             "language": language,
             "candidate_id": [candidate_id],
+            "allow_repair": allow_repair,
         },
     )()
     output = StringIO()
@@ -906,6 +908,7 @@ def _prepare_task(
         language,
         args.lease_seconds,
         args.max_attempts,
+        getattr(args, "repair_existing", False),
     )
     if claimed is None:
         return None
@@ -1313,6 +1316,11 @@ def main() -> int:
         help="Claim lease in seconds; keep it longer than the agent timeout and final gates.",
     )
     parser.add_argument("--max-attempts", type=int, default=3)
+    parser.add_argument(
+        "--repair-existing",
+        action="store_true",
+        help="Use only for an explicit repair queue reclaiming an already-completed package.",
+    )
     parser.add_argument(
         "--refill-queue",
         action=argparse.BooleanOptionalAction,
