@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-backoff",
+  "package": "github.com/cenkalti/backoff/v7",
+  "source_revision": "ffcfd8ab39e2910a1180ba0b7a02a52f0485adc9",
+  "public_packages": ["github.com/cenkalti/backoff/v7"],
+  "public_api_surface": {
+    "interfaces": ["BackOff"],
+    "constants": ["Stop", "DefaultInitialInterval", "DefaultRandomizationFactor", "DefaultMultiplier", "DefaultMaxInterval", "DefaultMaxElapsedTime"],
+    "policies": ["ZeroBackOff", "StopBackOff", "ConstantBackOff", "NewConstantBackOff", "ExponentialBackOff", "NewExponentialBackOff"],
+    "retry": ["Operation[T]", "Notify", "RetryOption", "Retry", "WithBackOff", "WithMaxTries", "WithMaxElapsedTime", "WithNotify"],
+    "errors": ["RetryError", "RetryAfterError", "Permanent", "RetryAfter", "AsRetryError", "ErrPermanent", "ErrExhausted", "ErrMaxElapsedTime"],
+    "concurrency_surface": ["Ticker", "NewTicker", "Ticker.Stop"],
+    "private_surface": ["timer", "defaultTimer", "withTimer", "permanent", "getRandomValueFromInterval"]
+  },
+  "bridge_operations": ["constant_sequence", "zero_and_stop", "exponential_sequence", "retry_failures", "retry_after_and_notify", "error_wrappers"],
+  "bridge_scope": "Bounded JSON-safe deterministic policy and retry observations; Ticker channels, custom timers, arbitrary callbacks, HTTP examples, and wall-clock timing are excluded.",
+  "tracked_repository_files": 19,
+  "go_implementation_files": 6,
+  "go_test_files": 6
+}

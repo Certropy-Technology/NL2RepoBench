@@ -1,0 +1,75 @@
+schema_version = "1.0"
+task_id = "go-backoff"
+version = "0.1.0"
+instruction = "instruction.md"
+oracle_bundle = { digest = "sha256:4c07c256f0413b2b21455de4fbbb73582a43638d73b4c6e7facf679cb319187d", size_bytes = 609, uri = "artifact://private/sha256:4c07c256f0413b2b21455de4fbbb73582a43638d73b4c6e7facf679cb319187d", visibility = "private" }
+
+[metadata]
+difficulty = "hard"
+category = "go-library"
+tags = ["go", "go-modules", "retry", "backoff", "generics", "typed-bridge", "public-api"]
+language = "go"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/cenkalti/backoff"
+revision = "ffcfd8ab39e2910a1180ba0b7a02a52f0485adc9"
+license_spdx = "MIT"
+source_digest = "sha256:2cb02d3324fb2aaa1c02d0d348427bc2e5b0e27bf2b8402b30df4482adbd63ab"
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+runtime_version = "1.26.5"
+base_image = "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+base_image_digest = "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "Candidate and verifier execution use the private pre-materialized Go module closure and run without network; only the trusted Oracle receives a run-scoped source-host authorization."
+
+[dependencies]
+status = "known"
+installer = "system"
+packages = []
+module_bundle = { digest = "sha256:2bfcba113ddb1d3849a3e59d425747e95f49ea0d52a309d162fb96ca5b695f86", size_bytes = 469, uri = "artifact://private/sha256:2bfcba113ddb1d3849a3e59d425747e95f49ea0d52a309d162fb96ca5b695f86", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 1
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Recreate deterministic retry policies, error wrappers, and generic Retry behavior from github.com/cenkalti/backoff/v7 through a typed subprocess bridge."
+keywords = ["go", "backoff", "retry", "generics", "typed-bridge"]
+agent_timeout_sec = 900.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 2048
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "go-author-auto-20260903T131454Z"
+reason = "Frozen source, deterministic typed bridge, private module/verifier/Oracle bundles, production compile, official Oracle, empty/install-failure exception, negative controls, and offline control all passed in this lane."
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:647b22046f6bc976663b83dac74a624ee302bc4b5086876ed964227313d23d74", size_bytes = 1038, uri = "artifact://private/sha256:647b22046f6bc976663b83dac74a624ee302bc4b5086876ed964227313d23d74", visibility = "private" }
+entrypoint = "contract.sh"

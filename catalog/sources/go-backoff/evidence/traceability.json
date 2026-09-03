@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-backoff",
+  "source_revision": "ffcfd8ab39e2910a1180ba0b7a02a52f0485adc9",
+  "leaf_id": "contract::public-api",
+  "frozen_total": 1,
+  "public_contract": "instruction.md#api-usage-guide",
+  "traceability": [
+    {"assertion_class": "constant, zero, and stop policies", "bridge_operation": "constant_sequence / zero_and_stop", "instruction_section": "API Usage Guide"},
+    {"assertion_class": "exponential growth and max cap without randomness", "bridge_operation": "exponential_sequence", "instruction_section": "API Usage Guide"},
+    {"assertion_class": "retry ordering and success", "bridge_operation": "retry_failures", "instruction_section": "API Usage Guide"},
+    {"assertion_class": "max tries and permanent causes", "bridge_operation": "retry_failures", "instruction_section": "API Usage Guide"},
+    {"assertion_class": "RetryAfter reset and Notify callback", "bridge_operation": "retry_after_and_notify", "instruction_section": "API Usage Guide"},
+    {"assertion_class": "error wrapper and errors.Is contracts", "bridge_operation": "error_wrappers", "instruction_section": "API Usage Guide"},
+    {"assertion_class": "newline-delimited structured invalid input", "bridge_operation": "unknown operation", "instruction_section": "Implementation Notes"}
+  ],
+  "unscored_public_behavior": ["Ticker channel scheduling", "HTTP examples", "real wall-clock deadlines", "custom timer and arbitrary callback implementations", "randomized sample values", "benchmark timing"],
+  "adaptation_reason": "The bridge boundary accepts only bounded JSON-safe values. The public instruction documents the wider exported contract, while the frozen score covers deterministic retry, policy, and error observations."
+}

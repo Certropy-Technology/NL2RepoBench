@@ -1,0 +1,8 @@
+go-backoff authoring remediation
+
+source freeze: fetched and checked out ffcfd8ab39e2910a1180ba0b7a02a52f0485adc9; git archive SHA-256 sha256:2cb02d3324fb2aaa1c02d0d348427bc2e5b0e27bf2b8402b30df4482adbd63ab; MIT LICENSE SHA-256 sha256:5c0476add4c38b55d0ed5ac11b85e00c38f26e1caee20dfe3ab58190103d1fbc.
+dependency remediation: upstream has no require directives and no go.sum; created a private, hash-inventoried module bundle with empty go.sum and vendor/modules.txt for offline -mod=vendor builds.
+environment remediation: source go directive 1.23 is adapted only in the trusted Oracle workspace to the locked Go 1.26.5 directive; candidate contract requires module path and exact locked directive. Base image and Harbor toolchain are digest locked.
+bridge remediation: excluded HTTP examples, Ticker wall-clock scheduling, arbitrary custom callbacks/timers, and benchmark timing; retained deterministic policy/retry/error behavior behind a typed JSON subprocess bridge.
+baseline: frozen upstream GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -count=1 -json ./... exit 0.
+fresh verification 2026-09-03T15:40:06Z: exact revision fetch exit 0; archive and license digests matched; pristine upstream test run emitted 33 run events, 33 pass events, and zero failure events. The JSON log is .nl2repo/authoring-work/go-author-auto-20260903T131454Z/go-backoff/provenance/upstream-go-test-attempt4.json (sha256:960209dd3323bffdd7132f4ed3f4ab82c914bb0dd5d03ea6cfb02b8c861208b0).

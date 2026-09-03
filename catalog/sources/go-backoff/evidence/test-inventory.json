@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-backoff",
+  "source_revision": "ffcfd8ab39e2910a1180ba0b7a02a52f0485adc9",
+  "upstream_test_files": 6,
+  "upstream_static_test_and_example_functions": 29,
+  "upstream_packages": 1,
+  "upstream_baseline": {
+    "command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -count=1 -json ./...",
+    "exit_code": 0,
+    "top_level_test_and_example_events": 33,
+    "passed_events": 33,
+    "failure_events": 0,
+    "test_json": ".nl2repo/authoring-work/go-author-auto-20260903T131454Z/go-backoff/provenance/upstream-go-test-attempt4.json",
+    "test_json_sha256": "960209dd3323bffdd7132f4ed3f4ab82c914bb0dd5d03ea6cfb02b8c861208b0"
+  },
+  "frozen_collection": {
+    "framework": "go typed bridge contract",
+    "protocol": "custom-json-v1",
+    "leaf_ids": ["contract::public-api"],
+    "frozen_total": 1,
+    "collection_source": "fixed verifier-owned contract",
+    "private_assertion_classes": [
+      "constant, zero, and stop policy sequences",
+      "deterministic exponential sequence, multiplier, and max cap",
+      "retry success and max-tries exhaustion",
+      "permanent error cause and last-error preservation",
+      "RetryAfter policy reset and Notify timing",
+      "structured Permanent and RetryAfter error wrappers",
+      "malformed/unknown bridge operation response"
+    ]
+  }
+}

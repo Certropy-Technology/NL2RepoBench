@@ -1,0 +1,54 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/go-backoff"
+version = "0.1.0"
+description = "Recreate deterministic retry policies, error wrappers, and generic Retry behavior from github.com/cenkalti/backoff/v7 through a typed subprocess bridge."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "go",
+    "backoff",
+    "retry",
+    "generics",
+    "typed-bridge",
+]
+
+[metadata]
+difficulty = "hard"
+category = "go-library"
+tags = [
+    "go",
+    "go-modules",
+    "retry",
+    "backoff",
+    "generics",
+    "typed-bridge",
+    "public-api",
+]
+language = "go"
+runtime = "go"
+runtime_version = "1.26.5"
+package_manager = "go-modules"
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 1
+canonical_manifest_digest = "sha256:5e417ab52b08f0d6dc01f6651e6e93abca973100e8732cd32126640bf9c33efd"
+toolchain_lock_digest = "sha256:baa477549dd86ccfe68422aafd900a2ab76f0b091de9a85f9db883f9d6a551a3"
+
+[agent]
+timeout_sec = 900.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[environment]
+network_mode = "no-network"
+cpus = 1
+memory_mb = 2048
+storage_mb = 4096

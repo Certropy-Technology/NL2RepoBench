@@ -1,0 +1,133 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-backoff",
+  "task_version": "0.1.0",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "completed_at": "2026-09-03T16:34:50Z",
+  "source_freeze": {
+    "upstream_url": "https://github.com/cenkalti/backoff",
+    "revision": "ffcfd8ab39e2910a1180ba0b7a02a52f0485adc9",
+    "source_digest": "sha256:2cb02d3324fb2aaa1c02d0d348427bc2e5b0e27bf2b8402b30df4482adbd63ab",
+    "license_spdx": "MIT",
+    "license_sha256": "sha256:5c0476add4c38b55d0ed5ac11b85e00c38f26e1caee20dfe3ab58190103d1fbc",
+    "fresh_log": ".nl2repo/authoring-work/go-author-auto-20260903T131454Z/go-backoff/provenance/source-freeze-attempt4.txt"
+  },
+  "environment": {
+    "runtime": "go1.26.5-X:nodwarf5",
+    "platform": "linux/amd64",
+    "cgo_enabled": false,
+    "base_image_digest": "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd",
+    "toolchain_lock": "toolchain.go.lock.toml",
+    "toolchain_lock_digest": "sha256:baa477549dd86ccfe68422aafd900a2ab76f0b091de9a85f9db883f9d6a551a3",
+    "agent_network_mode": "no-network",
+    "agent_allowed_hosts": [],
+    "verifier_network_mode": "no-network"
+  },
+  "dependency_closure": {
+    "kind": "go-module-bundle",
+    "digest": "sha256:2bfcba113ddb1d3849a3e59d425747e95f49ea0d52a309d162fb96ca5b695f86",
+    "size_bytes": 469,
+    "direct_dependencies": [],
+    "offline": true
+  },
+  "frozen_collection": {
+    "framework": "go typed bridge contract",
+    "protocol": "custom-json-v1",
+    "leaf_ids": ["contract::public-api"],
+    "frozen_total": 1,
+    "contract_cases": 9,
+    "upstream_baseline": {
+      "go_test_exit_code": 0,
+      "top_level_run_events": 33,
+      "top_level_pass_events": 33,
+      "failure_events": 0,
+      "log": ".nl2repo/authoring-work/go-author-auto-20260903T131454Z/go-backoff/provenance/upstream-go-test-attempt4.json",
+      "log_sha256": "sha256:960209dd3323bffdd7132f4ed3f4ab82c914bb0dd5d03ea6cfb02b8c861208b0"
+    }
+  },
+  "bundle": {
+    "manifest_path": ".nl2repo/compiled-go-backoff-attempt4/go-backoff/bundle.manifest.json",
+    "manifest_sha256": "sha256:9ee3b5d564ad367b1def94f20cfa25dc9efa7951798adfb01c9eee07de545a89",
+    "canonical_manifest_digest": "sha256:5e417ab52b08f0d6dc01f6651e6e93abca973100e8732cd32126640bf9c33efd",
+    "deterministic_repeat": true
+  },
+  "gate_receipt": ".nl2repo/authoring-production-gates.json",
+  "oracle": {
+    "harbor_version": "0.21.0",
+    "exit_code": 0,
+    "valid": true,
+    "passed": 1,
+    "collected": 1,
+    "frozen_total": 1,
+    "reward": 1.0,
+    "result": ".nl2repo/runs/go-backoff-attempt4/oracle/go-backoff-attempt4-oracle/result.json",
+    "grading": ".nl2repo/runs/go-backoff-attempt4/oracle/go-backoff-attempt4-oracle/go-backoff__vtzdvyS/verifier/grading.json",
+    "network": ".nl2repo/runs/go-backoff-attempt4/oracle/go-backoff-attempt4-oracle/go-backoff__vtzdvyS/verifier/network.json",
+    "reward_record": ".nl2repo/runs/go-backoff-attempt4/oracle/go-backoff-attempt4-oracle/go-backoff__vtzdvyS/verifier/reward.json"
+  },
+  "controls": {
+    "empty": {
+      "exit_code": 0, "valid": true, "passed": 0, "collected": 0, "frozen_total": 1, "reward": 0.0,
+      "failure_class": "model", "failure_reason": "candidate-installation-failed", "allowed_zero_collection_exception": true,
+      "result": ".nl2repo/runs/go-backoff-attempt4/empty/go-backoff-attempt4-empty/result.json",
+      "grading": ".nl2repo/runs/go-backoff-attempt4/empty/go-backoff-attempt4-empty/go-backoff__UgynjFd/verifier/grading.json",
+      "network": ".nl2repo/runs/go-backoff-attempt4/empty/go-backoff-attempt4-empty/go-backoff__UgynjFd/verifier/network.json"
+    },
+    "stub": {
+      "exit_code": 0, "valid": true, "passed": 0, "collected": 1, "frozen_total": 1, "reward": 0.0,
+      "result": ".nl2repo/runs/go-backoff-attempt4/stub/go-backoff-attempt4-stub/result.json",
+      "grading": ".nl2repo/runs/go-backoff-attempt4/stub/go-backoff-attempt4-stub/go-backoff-stub__7En2rSA/verifier/grading.json",
+      "network": ".nl2repo/runs/go-backoff-attempt4/stub/go-backoff-attempt4-stub/go-backoff-stub__7En2rSA/verifier/network.json"
+    },
+    "forgery": {
+      "exit_code": 0, "valid": true, "passed": 0, "collected": 1, "frozen_total": 1, "reward": 0.0,
+      "result": ".nl2repo/runs/go-backoff-attempt4/forgery/go-backoff-attempt4-forgery/result.json",
+      "grading": ".nl2repo/runs/go-backoff-attempt4/forgery/go-backoff-attempt4-forgery/go-backoff-forgery__PBRBDPg/verifier/grading.json",
+      "network": ".nl2repo/runs/go-backoff-attempt4/forgery/go-backoff-attempt4-forgery/go-backoff-forgery__PBRBDPg/verifier/network.json"
+    },
+    "install-failure": {
+      "exit_code": 0, "valid": true, "passed": 0, "collected": 0, "frozen_total": 1, "reward": 0.0,
+      "failure_class": "model", "failure_reason": "candidate-installation-failed", "allowed_zero_collection_exception": true,
+      "result": ".nl2repo/runs/go-backoff-attempt4/install-failure/go-backoff-attempt4-install-failure/result.json",
+      "grading": ".nl2repo/runs/go-backoff-attempt4/install-failure/go-backoff-attempt4-install-failure/go-backoff-install-failure__m3TwuqP/verifier/grading.json",
+      "network": ".nl2repo/runs/go-backoff-attempt4/install-failure/go-backoff-attempt4-install-failure/go-backoff-install-failure__m3TwuqP/verifier/network.json"
+    },
+    "panic": {
+      "exit_code": 0, "valid": true, "passed": 0, "collected": 1, "frozen_total": 1, "reward": 0.0,
+      "result": ".nl2repo/runs/go-backoff-attempt4/panic/go-backoff-attempt4-panic/result.json",
+      "grading": ".nl2repo/runs/go-backoff-attempt4/panic/go-backoff-attempt4-panic/go-backoff-panic__cj728ms/verifier/grading.json",
+      "network": ".nl2repo/runs/go-backoff-attempt4/panic/go-backoff-attempt4-panic/go-backoff-panic__cj728ms/verifier/network.json"
+    },
+    "hang": {
+      "exit_code": 0, "valid": true, "passed": 0, "collected": 1, "frozen_total": 1, "reward": 0.0,
+      "result": ".nl2repo/runs/go-backoff-attempt4/hang/go-backoff-attempt4-hang/result.json",
+      "grading": ".nl2repo/runs/go-backoff-attempt4/hang/go-backoff-attempt4-hang/go-backoff-hang__GMCUKSH/verifier/grading.json",
+      "network": ".nl2repo/runs/go-backoff-attempt4/hang/go-backoff-attempt4-hang/go-backoff-hang__GMCUKSH/verifier/network.json"
+    },
+    "oversized-output": {
+      "exit_code": 0, "valid": true, "passed": 0, "collected": 1, "frozen_total": 1, "reward": 0.0,
+      "result": ".nl2repo/runs/go-backoff-attempt4/oversized-output/go-backoff-attempt4-oversized-output/result.json",
+      "grading": ".nl2repo/runs/go-backoff-attempt4/oversized-output/go-backoff-attempt4-oversized-output/go-backoff-oversized-output__zMP2p7M/verifier/grading.json",
+      "network": ".nl2repo/runs/go-backoff-attempt4/oversized-output/go-backoff-attempt4-oversized-output/go-backoff-oversized-output__zMP2p7M/verifier/network.json"
+    },
+    "background-process": {
+      "exit_code": 0, "valid": true, "passed": 0, "collected": 1, "frozen_total": 1, "reward": 0.0,
+      "result": ".nl2repo/runs/go-backoff-attempt4/background-process/go-backoff-attempt4-background-process/result.json",
+      "grading": ".nl2repo/runs/go-backoff-attempt4/background-process/go-backoff-attempt4-background-process/go-backoff-background-process__sKhxjjH/verifier/grading.json",
+      "network": ".nl2repo/runs/go-backoff-attempt4/background-process/go-backoff-attempt4-background-process/go-backoff-background-process__sKhxjjH/verifier/network.json"
+    },
+    "offline": {
+      "exit_code": 0, "valid": true, "passed": 1, "collected": 1, "frozen_total": 1, "reward": 1.0,
+      "public_network_available": false,
+      "result": ".nl2repo/runs/go-backoff-attempt4/offline/go-backoff-attempt4-offline/result.json",
+      "grading": ".nl2repo/runs/go-backoff-attempt4/offline/go-backoff-attempt4-offline/go-backoff__z76yTdd/verifier/grading.json",
+      "network": ".nl2repo/runs/go-backoff-attempt4/offline/go-backoff-attempt4-offline/go-backoff__z76yTdd/verifier/network.json"
+    }
+  },
+  "residual_risks": [
+    "The frozen score is one verifier-owned leaf containing nine deterministic contract cases; it does not expose per-case partial credit.",
+    "Exact Ticker wall-clock scheduling, random samples, arbitrary callbacks/custom timers, HTTP examples, and benchmark timing are outside the deterministic JSON score.",
+    "The trusted Oracle changes only the verified upstream go directive from 1.23 to the locked 1.26.5 toolchain and adds the empty offline closure."
+  ]
+}

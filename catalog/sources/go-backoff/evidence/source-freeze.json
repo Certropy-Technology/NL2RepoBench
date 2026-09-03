@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-backoff",
+  "upstream_url": "https://github.com/cenkalti/backoff",
+  "revision": "ffcfd8ab39e2910a1180ba0b7a02a52f0485adc9",
+  "archive_format": "git archive tar",
+  "archive_sha256": "2cb02d3324fb2aaa1c02d0d348427bc2e5b0e27bf2b8402b30df4482adbd63ab",
+  "license_spdx": "MIT",
+  "license_file": "LICENSE",
+  "license_sha256": "5c0476add4c38b55d0ed5ac11b85e00c38f26e1caee20dfe3ab58190103d1fbc",
+  "module_path": "github.com/cenkalti/backoff/v7",
+  "module_go_directive": "1.23",
+  "toolchain": {"go": "1.26.5", "goos": "linux", "goarch": "amd64", "cgo_enabled": false, "base_image": "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"},
+  "fresh_verification": {
+    "verified_at": "2026-09-03T15:40:06Z",
+    "fetch_command": "git fetch --depth 1 origin ffcfd8ab39e2910a1180ba0b7a02a52f0485adc9",
+    "fetch_exit_code": 0,
+    "resolved_revision": "ffcfd8ab39e2910a1180ba0b7a02a52f0485adc9",
+    "archive_sha256": "2cb02d3324fb2aaa1c02d0d348427bc2e5b0e27bf2b8402b30df4482adbd63ab",
+    "license_sha256": "5c0476add4c38b55d0ed5ac11b85e00c38f26e1caee20dfe3ab58190103d1fbc",
+    "log": ".nl2repo/authoring-work/go-author-auto-20260903T131454Z/go-backoff/provenance/source-freeze-attempt4.txt"
+  },
+  "upstream_probe": {
+    "command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -count=1 -json ./...",
+    "exit_code": 0,
+    "top_level_run_events": 33,
+    "top_level_pass_events": 33,
+    "failure_events": 0,
+    "log": ".nl2repo/authoring-work/go-author-auto-20260903T131454Z/go-backoff/provenance/upstream-go-test-attempt4.json",
+    "log_sha256": "960209dd3323bffdd7132f4ed3f4ab82c914bb0dd5d03ea6cfb02b8c861208b0"
+  }
+}
