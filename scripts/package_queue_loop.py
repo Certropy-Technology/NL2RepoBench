@@ -309,19 +309,30 @@ def command_release(args: argparse.Namespace) -> int:
         if record.get("owner") != args.owner or record.get("status") != "running":
             raise ValueError(f"{args.candidate_id} is not claimed by {args.owner}")
         max_attempts = getattr(args, "max_attempts", 3)
-        exhausted = int(record.get("attempts", 0)) >= max_attempts
+        attempts = int(record.get("attempts", 0))
+        refund_attempt = bool(getattr(args, "refund_attempt", False))
+        release_failure_class = getattr(args, "failure_class", None)
+        if refund_attempt and attempts > 0:
+            attempts -= 1
+            record["attempt_refund"] = {
+                "reason": args.reason,
+                "recorded_at": now(),
+            }
+        exhausted = attempts >= max_attempts
         record.update(
             {
                 "status": "retry-exhausted" if exhausted else "pending",
+                "attempts": attempts,
                 "owner": None,
                 "lease_expires_at": None,
                 "release_reason": args.reason,
+                "failure_class": release_failure_class,
                 "updated_at": now(),
             }
         )
         if exhausted:
             record["reason"] = args.reason
-            record["failure_class"] = getattr(args, "failure_class", None) or "infrastructure"
+            record["failure_class"] = release_failure_class or "infrastructure"
         output_status = record["status"]
     print(
         json.dumps(
@@ -389,6 +400,11 @@ def build_parser() -> argparse.ArgumentParser:
         if name == "release":
             sub.add_argument("--max-attempts", type=int, default=3)
             sub.add_argument("--failure-class")
+            sub.add_argument(
+                "--refund-attempt",
+                action="store_true",
+                help="Refund a claim attempt when setup failed before Pi started.",
+            )
             sub.add_argument("--reason", required=True)
             continue
         if name == "reconcile":

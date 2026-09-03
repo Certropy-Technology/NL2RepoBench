@@ -316,3 +316,62 @@ def test_release_marks_exhausted_attempt_as_blocked(tmp_path: Path) -> None:
     record = payload["items"]["candidate"]
     assert record["status"] == "retry-exhausted"
     assert record["failure_class"] == "model"
+
+
+def test_release_can_refund_attempt_for_pre_agent_infrastructure_failure(
+    tmp_path: Path,
+) -> None:
+    queue = tmp_path / "queue.json"
+    state = tmp_path / "state.json"
+    queue.write_text(
+        json.dumps(
+            {
+                "queue": [
+                    {
+                        "candidate_id": "candidate",
+                        "package": "pkg",
+                        "language": "python",
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    with redirect_stdout(StringIO()):
+        queue_loop.command_init(type("Args", (), {"queue": queue, "state": state})())
+        queue_loop.command_claim(
+            type(
+                "Args",
+                (),
+                {
+                    "queue": queue,
+                    "state": state,
+                    "owner": "worker",
+                    "limit": 1,
+                    "lease_seconds": 60,
+                    "max_attempts": 3,
+                    "language": "python",
+                    "candidate_id": None,
+                },
+            )()
+        )
+        queue_loop.command_release(
+            type(
+                "Args",
+                (),
+                {
+                    "queue": queue,
+                    "state": state,
+                    "owner": "worker",
+                    "candidate_id": "candidate",
+                    "reason": "worktree setup failed before Pi launch",
+                    "max_attempts": 3,
+                    "failure_class": "infrastructure",
+                    "refund_attempt": True,
+                },
+            )()
+        )
+    record = json.loads(state.read_text(encoding="utf-8"))["items"]["candidate"]
+    assert record["status"] == "pending"
+    assert record["attempts"] == 0
+    assert record["failure_class"] == "infrastructure"
