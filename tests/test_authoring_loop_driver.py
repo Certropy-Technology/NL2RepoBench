@@ -183,6 +183,79 @@ def test_driver_launches_direct_pi_and_records_handoff(tmp_path: Path, monkeypat
     assert status_output[0]["counts"] == {"complete": 1}
 
 
+def test_driver_does_not_reuse_an_old_handoff_after_empty_agent_exit(
+    tmp_path: Path, monkeypatch
+) -> None:
+    monkeypatch.setattr(driver, "TMPFS_ROOTS", ())
+    queue = tmp_path / "queue.json"
+    state = tmp_path / "state.json"
+    queue.write_text(
+        json.dumps(
+            {
+                "queue": [
+                    {"candidate_id": "python-one", "package": "one", "language": "python"}
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    queue_loop = driver._load_queue_loop()
+    queue_loop.command_init(type("Args", (), {"queue": queue, "state": state})())
+    plan = tmp_path / "plan.json"
+    plan.write_text(
+        json.dumps(
+            {
+                "batch_id": "python-stale-handoff-batch",
+                "language": "python",
+                "stages": [],
+                "tasks": [{"candidate_id": "python-one", "package": "one"}],
+            }
+        ),
+        encoding="utf-8",
+    )
+    args = _args(tmp_path, plan, queue, state)
+
+    def fake_worktree(path: Path) -> str:
+        path.mkdir(parents=True)
+        old_handoff = path / ".nl2repo/authoring-handoff.json"
+        old_handoff.parent.mkdir(parents=True)
+        old_handoff.write_text('{"status":"awaiting-agent-run"}\n', encoding="utf-8")
+        return "reused"
+
+    monkeypatch.setattr(driver, "_worktree", fake_worktree)
+
+    def fake_launch(_args, **kwargs):
+        task_root = Path(kwargs["worktree"]) / "catalog/sources/one"
+        task_root.mkdir(parents=True)
+        (task_root / "task.toml").write_text("task_id = 'one'\n", encoding="utf-8")
+        (task_root / "instruction.md").write_text("# one\n", encoding="utf-8")
+        return {
+            "status": "exited",
+            "exit_code": 0,
+            "log": str(kwargs["log_path"]),
+            "handoff": str(kwargs["handoff_path"]),
+        }
+
+    monkeypatch.setattr(driver, "_launch_agent", fake_launch)
+    monkeypatch.setattr(
+        driver,
+        "_run_network_policy_check",
+        lambda *values: {"status": "passed", "exit_code": 0, "report": "network", "output": "passed"},
+    )
+    monkeypatch.setattr(
+        driver,
+        "_run_authoring_task_lint",
+        lambda *values: {"status": "passed", "exit_code": 0, "report": "lint", "output": "passed"},
+    )
+
+    output = driver.run(args)
+
+    assert output["results"][0]["status"] == "released"
+    assert "fresh valid" in output["results"][0]["reason"]
+    state_payload = json.loads(state.read_text(encoding="utf-8"))
+    assert state_payload["items"]["python-one"]["status"] == "pending"
+
+
 def test_pi_command_is_top_level_and_excludes_subagent_tools(tmp_path: Path) -> None:
     args = type(
         "Args",

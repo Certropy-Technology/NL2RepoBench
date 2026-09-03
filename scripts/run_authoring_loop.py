@@ -11,16 +11,19 @@ future policy explicitly enables it.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import importlib.util
 import json
 import os
 import re
 import shlex
 import signal
+import shutil
 import subprocess
 import sys
 import tempfile
 import threading
+import time
 import tomllib
 from collections.abc import Iterator
 from concurrent.futures import FIRST_COMPLETED, ThreadPoolExecutor, wait
@@ -64,6 +67,15 @@ AUTHORING_RETRY_SETTINGS = {
     }
 }
 QUEUE_OUTPUT_LOCK = threading.Lock()
+TRANSIENT_AGENT_MARKERS = (
+    "stream_read_error",
+    "upstream request failed",
+    "upstream_error",
+    "connection reset",
+    "temporarily unavailable",
+)
+TRANSIENT_AGENT_RETRIES = 2
+TRANSIENT_AGENT_MAX_RUNTIME_SEC = 120
 
 
 def _load_queue_loop() -> Any:
@@ -81,6 +93,12 @@ def _load_json(path: Path) -> dict[str, Any]:
     if not isinstance(value, dict):
         raise ValueError(f"JSON root must be an object: {path}")
     return value
+
+
+def _file_digest(path: Path) -> str | None:
+    if not path.is_file():
+        return None
+    return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def _effective_concurrency(args: argparse.Namespace) -> tuple[bool, int]:
@@ -360,6 +378,18 @@ Before finishing, write a concise machine-readable handoff to:
 {handoff_path}
 including status, changed files, commands, versions, exit codes, artifacts,
 Oracle/control outcomes, residual risks, and any evidence-backed blocker.
+
+Execution discipline:
+- Save source-freeze, inventory, dependency, and environment evidence as each
+  stage finishes, so a timeout leaves a useful recovery point.
+- Inspect the existing worktree and claim before expensive work. Reuse valid
+  task-local artifacts, but do not treat an old handoff as proof for this
+  attempt. Rewrite the handoff with this attempt's results.
+- Keep probes bounded. If the provider returns a transient stream or upstream
+  error repeatedly, record the exact error and stop instead of repeating it for
+  the rest of the attempt.
+- Never report success without a fresh handoff, real task.toml and
+  instruction.md, and current validation/compile evidence.
 """
 
 
@@ -472,9 +502,6 @@ def _launch_agent(
     session_dir.mkdir(parents=True, exist_ok=True)
     log_path.parent.mkdir(parents=True, exist_ok=True)
     session_package = re.sub(r"[^A-Za-z0-9._-]+", "_", task["package"])
-    session_id = f"{plan['batch_id']}-{session_package}-attempt-{attempt}"
-    if not SAFE_NAME.fullmatch(session_id):
-        raise ValueError(f"unsafe Pi session id: {session_id}")
     prompt = _agent_prompt(
         plan=plan,
         task=task,
@@ -483,35 +510,61 @@ def _launch_agent(
         handoff_path=handoff_path,
         allow_internal_subagent=getattr(args, "allow_internal_subagent", False),
     )
-    command = _pi_command(
-        args,
-        prompt=prompt,
-        session_dir=session_dir,
-        session_id=session_id,
-    )
     environment = _agent_environment(args)
-    with log_path.open("w", encoding="utf-8") as log:
-        process = subprocess.Popen(
-            command,
-            cwd=worktree,
-            env=environment,
-            stdout=log,
-            stderr=subprocess.STDOUT,
-            text=True,
-            start_new_session=True,
+    provider_retries = 0
+    while True:
+        session_id = f"{plan['batch_id']}-{session_package}-attempt-{attempt}"
+        if provider_retries:
+            session_id += f"-provider-retry-{provider_retries}"
+        if not SAFE_NAME.fullmatch(session_id):
+            raise ValueError(f"unsafe Pi session id: {session_id}")
+        command = _pi_command(
+            args,
+            prompt=prompt,
+            session_dir=session_dir,
+            session_id=session_id,
         )
+        started = time.monotonic()
+        with log_path.open("a", encoding="utf-8") as log:
+            if provider_retries:
+                log.write(
+                    f"\n[authoring-loop] transient provider retry "
+                    f"{provider_retries}/{TRANSIENT_AGENT_RETRIES}\n"
+                )
+                log.flush()
+            process = subprocess.Popen(
+                command,
+                cwd=worktree,
+                env=environment,
+                stdout=log,
+                stderr=subprocess.STDOUT,
+                text=True,
+                start_new_session=True,
+            )
+            try:
+                returncode = process.wait(timeout=args.agent_timeout_sec)
+                status = "exited"
+            except subprocess.TimeoutExpired:
+                _terminate_process(process)
+                returncode = 124
+                status = "timeout"
+        if returncode == 0 or provider_retries >= TRANSIENT_AGENT_RETRIES:
+            break
         try:
-            returncode = process.wait(timeout=args.agent_timeout_sec)
-            status = "exited"
-        except subprocess.TimeoutExpired:
-            _terminate_process(process)
-            returncode = 124
-            status = "timeout"
+            log_text = log_path.read_text(encoding="utf-8", errors="replace").casefold()
+        except OSError:
+            log_text = ""
+        is_transient = any(marker in log_text for marker in TRANSIENT_AGENT_MARKERS)
+        if not is_transient or time.monotonic() - started > TRANSIENT_AGENT_MAX_RUNTIME_SEC:
+            break
+        provider_retries += 1
+        time.sleep(min(5 * provider_retries, 15))
     return {
         "status": status,
         "exit_code": returncode,
         "command": command,
         "session_id": session_id,
+        "transient_provider_retries": provider_retries,
         "session_dir": str(session_dir),
         "log": str(log_path),
         "handoff": str(handoff_path),
@@ -737,6 +790,16 @@ def _prepare_task(
         f"{package_filename}.attempt-{attempt}.log"
     )
     handoff_path = worktree / ".nl2repo" / "authoring-handoff.json"
+    previous_handoff_digest = _file_digest(handoff_path)
+    if handoff_path.is_file():
+        history_path = (
+            worktree
+            / ".nl2repo/authoring-history"
+            / f"handoff-before-attempt-{attempt}.json"
+        )
+        history_path.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(handoff_path, history_path)
+        handoff_path.unlink()
     return {
         "package": package,
         "candidate_id": candidate_id,
@@ -749,6 +812,7 @@ def _prepare_task(
         "session_root": str(session_root),
         "log": str(log_path),
         "handoff": str(handoff_path),
+        "previous_handoff_digest": previous_handoff_digest,
         "task_root": str(worktree / "catalog/sources" / package),
         "plan": plan,
         "task": task,
@@ -772,7 +836,31 @@ def _run_claimed(args: argparse.Namespace, context: dict[str, Any]) -> dict[str,
     artifacts = [context["brief"], context["worktree_claim"], agent["log"]]
     if handoff.is_file():
         artifacts.append(str(handoff))
-    ready = (task_root / "task.toml").is_file() and (task_root / "instruction.md").is_file()
+    handoff_digest = _file_digest(handoff)
+    fresh_handoff = (
+        handoff_digest is not None
+        and handoff_digest != context.get("previous_handoff_digest")
+    )
+    handoff_payload: dict[str, Any] = {}
+    if fresh_handoff:
+        try:
+            loaded = json.loads(handoff.read_text(encoding="utf-8"))
+            if isinstance(loaded, dict):
+                handoff_payload = loaded
+        except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+            handoff_payload = {}
+    handoff_status = handoff_payload.get("status")
+    handoff_task_id = handoff_payload.get("task_id")
+    valid_handoff = (
+        fresh_handoff
+        and handoff_status in {"awaiting-agent-run", "packaged", "controls-passed"}
+        and (handoff_task_id is None or handoff_task_id == context["package"])
+    )
+    ready = (
+        (task_root / "task.toml").is_file()
+        and (task_root / "instruction.md").is_file()
+        and valid_handoff
+    )
     network = _run_network_policy_check(Path(context["worktree"]), task_root)
     artifacts.append(network["report"])
     lint = _run_authoring_task_lint(Path(context["worktree"]), task_root)
@@ -780,7 +868,7 @@ def _run_claimed(args: argparse.Namespace, context: dict[str, Any]) -> dict[str,
     if (
         agent["exit_code"] == 0
         and ready
-        and handoff.is_file()
+        and valid_handoff
         and network["status"] == "passed"
         and lint["status"] == "passed"
     ):
@@ -808,7 +896,7 @@ def _run_claimed(args: argparse.Namespace, context: dict[str, Any]) -> dict[str,
             if network["status"] != "passed"
             else "authoring task lint failed: " + lint["output"]
             if lint["status"] != "passed"
-            else "Pi Agent exited without complete task.toml/instruction/handoff"
+            else "Pi Agent exited without a fresh valid task.toml/instruction/handoff"
         )
     )
     transition = _queue_transition(
@@ -1042,7 +1130,12 @@ def main() -> int:
             "changes are hot-reloaded between claims."
         ),
     )
-    parser.add_argument("--lease-seconds", type=int, default=7200)
+    parser.add_argument(
+        "--lease-seconds",
+        type=int,
+        default=18000,
+        help="Claim lease in seconds; keep it longer than the agent timeout and final gates.",
+    )
     parser.add_argument("--max-attempts", type=int, default=3)
     parser.add_argument(
         "--refill-queue",
@@ -1069,7 +1162,12 @@ def main() -> int:
         default=Path(".nl2repo/authoring/sessions"),
         help="Persistent session root; must not be on tmpfs.",
     )
-    parser.add_argument("--agent-timeout-sec", type=int, default=3600)
+    parser.add_argument(
+        "--agent-timeout-sec",
+        type=int,
+        default=14400,
+        help="Hard timeout for one authoring Agent task, default four hours.",
+    )
     parser.add_argument(
         "--exclude-tools",
         default=DEFAULT_EXCLUDED_TOOLS,
