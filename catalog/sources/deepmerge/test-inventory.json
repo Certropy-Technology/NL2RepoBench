@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "task_id": "deepmerge",
+  "source_revision": "5b87756a5671635679001cbac72aa42f23472c81",
+  "framework": "node:test",
+  "report_format": "node-test-json-v1",
+  "frozen_total": 32,
+  "private_entry": "private/contract.test.mjs",
+  "groups": {
+    "package_shape": 4,
+    "default_merge": 10,
+    "arrays_and_clone": 7,
+    "hooks_and_all": 7,
+    "prototype_and_boundaries": 4
+  },
+  "upstream_basis": "The frozen deepmerge 4.3.1 package metadata, CommonJS source, declarations, README, package lock, and 5 upstream Tape suites were inspected. The scored slice is an independently authored deterministic black-box contract, not a copied upstream test file.",
+  "upstream_observation": {"tracked_files": 18, "javascript_test_files": 5, "typescript_test_files": 1, "upstream_tape_assertion_calls": 162},
+  "collection": "node --test private/contract.test.mjs; each leaf invokes an allowlisted child-side scenario and emits node:test TAP leaves."
+}

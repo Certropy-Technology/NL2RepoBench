@@ -1,0 +1,130 @@
+const fs = require('node:fs');
+const path = require('node:path');
+
+const site = process.env.NODE_CANDIDATE_SITE;
+const packageRoot = path.join(site, 'node_modules', 'deepmerge');
+const merge = require(packageRoot);
+
+function optionsFor(value = {}) {
+  const options = {};
+  if (typeof value.clone === 'boolean') options.clone = value.clone;
+  if (value.arrayMerge === 'overwrite') options.arrayMerge = (_target, source) => source;
+  if (value.arrayMerge === 'combine') {
+    options.arrayMerge = (target, source, config) => {
+      const destination = target.slice();
+      source.forEach((item, index) => {
+        if (typeof destination[index] === 'undefined') {
+          destination[index] = config.cloneUnlessOtherwiseSpecified(item, config);
+        } else if (config.isMergeableObject(item)) {
+          destination[index] = merge(target[index], item, config);
+        } else if (target.indexOf(item) === -1) {
+          destination.push(item);
+        }
+      });
+      return destination;
+    };
+  }
+  if (value.customMerge === 'join-name') {
+    options.customMerge = (key) => key === 'name'
+      ? (left, right) => `${left.first} and ${right.first}`
+      : undefined;
+  }
+  if (value.customMerge === 'invalid') options.customMerge = () => false;
+  if (value.isMergeableObject === 'plain') {
+    options.isMergeableObject = (candidate) => {
+      if (candidate === null || typeof candidate !== 'object') return false;
+      const prototype = Object.getPrototypeOf(candidate);
+      return prototype === Object.prototype || prototype === null;
+    };
+  }
+  return options;
+}
+
+function metadata() {
+  const packageJson = JSON.parse(fs.readFileSync(path.join(packageRoot, 'package.json'), 'utf8'));
+  return {
+    name: packageJson.name,
+    version: packageJson.version,
+    main: packageJson.main,
+    type: packageJson.type ?? null,
+    callable: typeof merge === 'function',
+    allCallable: typeof merge.all === 'function',
+  };
+}
+
+function special() {
+  const date = new Date('2020-01-02T03:04:05.000Z');
+  const regexp = /value/;
+  const defaultDate = merge({key: {old: true}}, {key: date});
+  const defaultRegexp = merge({key: {old: true}}, {key: regexp});
+  const customDate = merge({key: {old: true}}, {key: date}, optionsFor({isMergeableObject: 'plain'}));
+  const customRegexp = merge({key: {old: true}}, {key: regexp}, optionsFor({isMergeableObject: 'plain'}));
+  return {
+    defaultDateIdentity: defaultDate.key === date,
+    defaultRegexpIdentity: defaultRegexp.key === regexp,
+    plainDateIdentity: customDate.key === date,
+    plainRegexpIdentity: customRegexp.key === regexp,
+  };
+}
+
+function identity() {
+  const targetChild = {left: 1};
+  const sourceChild = {right: 2};
+  const result = merge({targetChild}, {sourceChild}, {clone: false});
+  const cloned = merge({targetChild}, {sourceChild});
+  return {
+    cloneFalseTarget: result.targetChild === targetChild,
+    cloneFalseSource: result.sourceChild === sourceChild,
+    cloneTrueTarget: cloned.targetChild !== targetChild,
+    cloneTrueSource: cloned.sourceChild !== sourceChild,
+  };
+}
+
+function symbols() {
+  const key = Symbol('key');
+  const source = {[key]: 'value'};
+  const result = merge({}, source);
+  return {copied: result[key] === 'value', count: Object.getOwnPropertySymbols(result).length};
+}
+
+function prototypeCase() {
+  const malicious = JSON.parse('{"__proto__":{"admin":true},"safe":1}');
+  const result = merge({}, malicious);
+  return {
+    safe: result.safe,
+    admin: result.admin,
+    prototypeAdmin: Object.getPrototypeOf(result).admin,
+    ownProto: Object.prototype.hasOwnProperty.call(result, '__proto__'),
+  };
+}
+
+function run({operation, args = {}}) {
+  if (operation === 'metadata') return metadata();
+  if (operation === 'merge') return merge(args.target, args.source, optionsFor(args.options));
+  if (operation === 'all') return merge.all(args.values, optionsFor(args.options));
+  if (operation === 'identity') return identity();
+  if (operation === 'symbols') return symbols();
+  if (operation === 'special') return special();
+  if (operation === 'prototype') return prototypeCase();
+  if (operation === 'invalid-all') {
+    try {
+      merge.all(args.value);
+      return {threw: false};
+    } catch (error) {
+      return {threw: true, name: error.name, message: error.message};
+    }
+  }
+  throw new Error('operation is not allowlisted');
+}
+
+let input = '';
+process.stdin.setEncoding('utf8');
+process.stdin.on('data', (chunk) => { input += chunk; });
+process.stdin.on('end', () => {
+  try {
+    process.stdout.write(JSON.stringify({ok: true, value: run(JSON.parse(input))}) + '\n');
+  } catch (error) {
+    process.stdout.write(JSON.stringify({ok: false, message: String(error?.message ?? error)}) + '\n');
+    process.exitCode = 1;
+  }
+});

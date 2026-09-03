@@ -1,0 +1,262 @@
+{
+  "schema_version": "1.0",
+  "task_id": "deepmerge",
+  "terminal_kind": "valid",
+  "source": {
+    "upstream_url": "https://github.com/TehShrike/deepmerge",
+    "revision": "5b87756a5671635679001cbac72aa42f23472c81",
+    "archive_sha256": "sha256:6efceb65f541465fe6755f427fd8ca33f925b36a56b38f39ab1282bf9830b51d",
+    "license_spdx": "MIT",
+    "license_sha256": "sha256:6cfc4687cb2f2d86f4a77e6b526290d3878e5e512f3fec2f4cb36a9cb36f798b"
+  },
+  "environment": {
+    "node": "24.19.0",
+    "npm": "11.17.0",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "network_mode": "no-network",
+    "harbor_version": "0.21.0"
+  },
+  "compile": {
+    "command": "uv run nl2repo harbor compile catalog/sources/deepmerge --output .nl2repo/authoring-work/deepmerge/compiled/final7 --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+    "exit_code": 0,
+    "bundle_manifest": {
+      "path": ".nl2repo/authoring-work/deepmerge/compiled/final7/deepmerge/bundle.manifest.json",
+      "sha256": "sha256:ee3ea61a72db256cc25815e7a51062b2e3aab9478762fc37009a6dcaf21d36d9"
+    },
+    "toolchain": "toolchain.node.lock.toml",
+    "bundle_manifest_sha256": null
+  },
+  "frozen_collection": {
+    "expected_total": 32,
+    "framework": "node:test",
+    "report_format": "node-test-json-v1"
+  },
+  "oracle": {
+    "harbor_version": "0.21.0",
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/deepmerge/compiled/final7/deepmerge -a oracle --allow-agent-host github.com --job-name deepmerge-oracle-final7 -o .nl2repo/authoring-work/deepmerge/runs/final7/oracle --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "valid": true,
+    "frozen_total": 32,
+    "collected": 32,
+    "passed": 32,
+    "reward": 1.0,
+    "result": {
+      "path": ".nl2repo/authoring-work/deepmerge/runs/final7/oracle/deepmerge-oracle-final7/deepmerge__CK2Womc/result.json",
+      "sha256": "sha256:41095733a1619a652a95d4865baa694d3e77f3f6c967d360e5aefbd1592c2791"
+    },
+    "grading": {
+      "path": ".nl2repo/authoring-work/deepmerge/runs/final7/oracle/deepmerge-oracle-final7/deepmerge__CK2Womc/verifier/grading.json",
+      "sha256": "sha256:c0b4db93b1742c8c7e7f3812e0da3918963dcd14ab6379e2bd3150b84303c89a"
+    },
+    "network": {
+      "path": ".nl2repo/authoring-work/deepmerge/runs/final7/oracle/deepmerge-oracle-final7/deepmerge__CK2Womc/verifier/network.json",
+      "sha256": "sha256:128cc02ff091f4c10c46e6db4ad3345a1f33eef4e0eb69aa1f969d4af7660a0c"
+    },
+    "reward_file": {
+      "path": ".nl2repo/authoring-work/deepmerge/runs/final7/oracle/deepmerge-oracle-final7/deepmerge__CK2Womc/verifier/reward.json",
+      "sha256": "sha256:8cff279124dac5b7bc301ddfd573700a794f7fba6d8bc073afce8ffde99a9cc0"
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/deepmerge/compiled/final7/deepmerge -a nop --job-name deepmerge-empty-final7 -o .nl2repo/authoring-work/deepmerge/runs/final7/empty --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "frozen_total": 32,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "result": {
+        "path": ".nl2repo/authoring-work/deepmerge/runs/final7/empty/deepmerge-empty-final7/deepmerge__6RTcykH/result.json",
+        "sha256": "sha256:9afc50d3b2d5c8bad4f57439ca6deb696b2b255ab0f4f90d535bf2c5f82842b4"
+      },
+      "grading": {
+        "path": ".nl2repo/authoring-work/deepmerge/runs/final7/empty/deepmerge-empty-final7/deepmerge__6RTcykH/verifier/grading.json",
+        "sha256": "sha256:e45b0a3c684318f96a78fa8c1f917e2ff1ac9e51e85ff54d47b0089b92583961"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/deepmerge/runs/final7/empty/deepmerge-empty-final7/deepmerge__6RTcykH/verifier/network.json",
+        "sha256": "sha256:7dc6f398f00a883d74e9f0bf0f07fb851278e80dfd6795c3f63ca00b6e3d1124"
+      }
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/deepmerge/controls/final7/deepmerge-stub -a oracle --job-name deepmerge-stub-final7 -o .nl2repo/authoring-work/deepmerge/runs/final7/stub --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 32,
+      "passed": 0,
+      "frozen_total": 32,
+      "reward": 0.0,
+      "result": {
+        "path": ".nl2repo/authoring-work/deepmerge/runs/final7/stub/deepmerge-stub-final7/deepmerge-stub__XndTngf/result.json",
+        "sha256": "sha256:ba78305e9ee54a90f5ac1aa4f270002b46bcfec73149ae7758162aa99e4effd2"
+      },
+      "grading": {
+        "path": ".nl2repo/authoring-work/deepmerge/runs/final7/stub/deepmerge-stub-final7/deepmerge-stub__XndTngf/verifier/grading.json",
+        "sha256": "sha256:33536a2dfdf3be0fba1c66c201f2fcfce87132b3d5cd7637f64da1e13d0f03d1"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/deepmerge/runs/final7/stub/deepmerge-stub-final7/deepmerge-stub__XndTngf/verifier/network.json",
+        "sha256": "sha256:128cc02ff091f4c10c46e6db4ad3345a1f33eef4e0eb69aa1f969d4af7660a0c"
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/deepmerge/controls/final7/deepmerge-forgery -a oracle --job-name deepmerge-forgery-final7 -o .nl2repo/authoring-work/deepmerge/runs/final7/forgery --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 32,
+      "passed": 0,
+      "frozen_total": 32,
+      "reward": 0.0,
+      "verifier_owned_reward": true,
+      "result": {
+        "path": ".nl2repo/authoring-work/deepmerge/runs/final7/forgery/deepmerge-forgery-final7/deepmerge-forgery__Sqr3qiJ/result.json",
+        "sha256": "sha256:3ce4ea9b9925700aa366aa2d2a2c18811449b57830779c20225a27e8b0e98611"
+      },
+      "grading": {
+        "path": ".nl2repo/authoring-work/deepmerge/runs/final7/forgery/deepmerge-forgery-final7/deepmerge-forgery__Sqr3qiJ/verifier/grading.json",
+        "sha256": "sha256:33536a2dfdf3be0fba1c66c201f2fcfce87132b3d5cd7637f64da1e13d0f03d1"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/deepmerge/runs/final7/forgery/deepmerge-forgery-final7/deepmerge-forgery__Sqr3qiJ/verifier/network.json",
+        "sha256": "sha256:c3acfe88216affbc8d47b959abe0516383288548abf37c42e2357cf428e1f315"
+      }
+    },
+    "install-failure": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/deepmerge/controls/final7/deepmerge-install-failure -a oracle --job-name deepmerge-install-failure-final7 -o .nl2repo/authoring-work/deepmerge/runs/final7/install-failure --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "frozen_total": 32,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "result": {
+        "path": ".nl2repo/authoring-work/deepmerge/runs/final7/install-failure/deepmerge-install-failure-final7/deepmerge-install-failure__B4YcT5P/result.json",
+        "sha256": "sha256:100ee14eef4af9afa809a7088a745f22f5710f01a1a138b624a4895dfda033f8"
+      },
+      "grading": {
+        "path": ".nl2repo/authoring-work/deepmerge/runs/final7/install-failure/deepmerge-install-failure-final7/deepmerge-install-failure__B4YcT5P/verifier/grading.json",
+        "sha256": "sha256:e45b0a3c684318f96a78fa8c1f917e2ff1ac9e51e85ff54d47b0089b92583961"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/deepmerge/runs/final7/install-failure/deepmerge-install-failure-final7/deepmerge-install-failure__B4YcT5P/verifier/network.json",
+        "sha256": "sha256:c3acfe88216affbc8d47b959abe0516383288548abf37c42e2357cf428e1f315"
+      }
+    },
+    "panic": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/deepmerge/controls/final7/deepmerge-panic -a oracle --job-name deepmerge-panic-final7 -o .nl2repo/authoring-work/deepmerge/runs/final7/panic --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 32,
+      "passed": 0,
+      "frozen_total": 32,
+      "reward": 0.0,
+      "result": {
+        "path": ".nl2repo/authoring-work/deepmerge/runs/final7/panic/deepmerge-panic-final7/deepmerge-panic__ZdPRmx6/result.json",
+        "sha256": "sha256:ca0a76d2c481a65216fe8b8be346fc55816ff1595035d529202ec1162abe59e3"
+      },
+      "grading": {
+        "path": ".nl2repo/authoring-work/deepmerge/runs/final7/panic/deepmerge-panic-final7/deepmerge-panic__ZdPRmx6/verifier/grading.json",
+        "sha256": "sha256:33536a2dfdf3be0fba1c66c201f2fcfce87132b3d5cd7637f64da1e13d0f03d1"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/deepmerge/runs/final7/panic/deepmerge-panic-final7/deepmerge-panic__ZdPRmx6/verifier/network.json",
+        "sha256": "sha256:7dc6f398f00a883d74e9f0bf0f07fb851278e80dfd6795c3f63ca00b6e3d1124"
+      }
+    },
+    "hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/deepmerge/controls/final7/deepmerge-hang -a oracle --job-name deepmerge-hang-final7 -o .nl2repo/authoring-work/deepmerge/runs/final7/hang --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 32,
+      "passed": 0,
+      "frozen_total": 32,
+      "reward": 0.0,
+      "result": {
+        "path": ".nl2repo/authoring-work/deepmerge/runs/final7/hang/deepmerge-hang-final7/deepmerge-hang__CCR88eX/result.json",
+        "sha256": "sha256:c796c6fac600ea96daf49946e718073c6d823ae3ca4249bcce6f02eef1375740"
+      },
+      "grading": {
+        "path": ".nl2repo/authoring-work/deepmerge/runs/final7/hang/deepmerge-hang-final7/deepmerge-hang__CCR88eX/verifier/grading.json",
+        "sha256": "sha256:33536a2dfdf3be0fba1c66c201f2fcfce87132b3d5cd7637f64da1e13d0f03d1"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/deepmerge/runs/final7/hang/deepmerge-hang-final7/deepmerge-hang__CCR88eX/verifier/network.json",
+        "sha256": "sha256:7dc6f398f00a883d74e9f0bf0f07fb851278e80dfd6795c3f63ca00b6e3d1124"
+      }
+    },
+    "oversized-output": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/deepmerge/controls/final7/deepmerge-oversized-output -a oracle --job-name deepmerge-oversized-output-final7 -o .nl2repo/authoring-work/deepmerge/runs/final7/oversized-output --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 32,
+      "passed": 0,
+      "frozen_total": 32,
+      "reward": 0.0,
+      "result": {
+        "path": ".nl2repo/authoring-work/deepmerge/runs/final7/oversized-output/deepmerge-oversized-output-final7/deepmerge-oversized-output__PEAZxHo/result.json",
+        "sha256": "sha256:9a815b84416d5ed872d9dc86221a0d8d7c2a49c4e50857f98d4fe69208d5c9a1"
+      },
+      "grading": {
+        "path": ".nl2repo/authoring-work/deepmerge/runs/final7/oversized-output/deepmerge-oversized-output-final7/deepmerge-oversized-output__PEAZxHo/verifier/grading.json",
+        "sha256": "sha256:33536a2dfdf3be0fba1c66c201f2fcfce87132b3d5cd7637f64da1e13d0f03d1"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/deepmerge/runs/final7/oversized-output/deepmerge-oversized-output-final7/deepmerge-oversized-output__PEAZxHo/verifier/network.json",
+        "sha256": "sha256:12fcb2ebc708f7dccfcd10f7b23f366b35b459ef3ab88412a90b86cd3fd09fc9"
+      }
+    },
+    "background-process": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/deepmerge/controls/final7/deepmerge-background-process -a oracle --job-name deepmerge-background-process-final7 -o .nl2repo/authoring-work/deepmerge/runs/final7/background-process --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 32,
+      "passed": 0,
+      "frozen_total": 32,
+      "reward": 0.0,
+      "result": {
+        "path": ".nl2repo/authoring-work/deepmerge/runs/final7/background-process/deepmerge-background-process-final7/deepmerge-background-process__jp387yV/result.json",
+        "sha256": "sha256:0a16e69e07370ac7a5766818c3881685176486339443509ddee33968797135d4"
+      },
+      "grading": {
+        "path": ".nl2repo/authoring-work/deepmerge/runs/final7/background-process/deepmerge-background-process-final7/deepmerge-background-process__jp387yV/verifier/grading.json",
+        "sha256": "sha256:33536a2dfdf3be0fba1c66c201f2fcfce87132b3d5cd7637f64da1e13d0f03d1"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/deepmerge/runs/final7/background-process/deepmerge-background-process-final7/deepmerge-background-process__jp387yV/verifier/network.json",
+        "sha256": "sha256:128cc02ff091f4c10c46e6db4ad3345a1f33eef4e0eb69aa1f969d4af7660a0c"
+      }
+    },
+    "offline": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/deepmerge/controls/final7/deepmerge-offline -a oracle --job-name deepmerge-offline-final7 -o .nl2repo/authoring-work/deepmerge/runs/final7/offline --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "completed": true,
+      "valid": true,
+      "collected": 32,
+      "passed": 32,
+      "frozen_total": 32,
+      "reward": 1.0,
+      "public_network_available": false,
+      "result": {
+        "path": ".nl2repo/authoring-work/deepmerge/runs/final7/offline/deepmerge-offline-final7/deepmerge-offline__EQ86rti/result.json",
+        "sha256": "sha256:1701f3696de121292eb278dd03227eed05784afd5a4b83ef8c21ed441013f1aa"
+      },
+      "grading": {
+        "path": ".nl2repo/authoring-work/deepmerge/runs/final7/offline/deepmerge-offline-final7/deepmerge-offline__EQ86rti/verifier/grading.json",
+        "sha256": "sha256:c0b4db93b1742c8c7e7f3812e0da3918963dcd14ab6379e2bd3150b84303c89a"
+      },
+      "network": {
+        "path": ".nl2repo/authoring-work/deepmerge/runs/final7/offline/deepmerge-offline-final7/deepmerge-offline__EQ86rti/verifier/network.json",
+        "sha256": "sha256:c3acfe88216affbc8d47b959abe0516383288548abf37c42e2357cf428e1f315"
+      }
+    }
+  },
+  "residual_risks": [
+    "The scored contract is a deterministic 32-leaf behavioral slice, not complete upstream test-suite parity.",
+    "Independent review, dataset integration, and model Agent evaluation remain integrator-owned."
+  ]
+}

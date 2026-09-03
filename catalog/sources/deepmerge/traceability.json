@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "task_id": "deepmerge",
+  "source_revision": "5b87756a5671635679001cbac72aa42f23472c81",
+  "coverage_statement": "Every private leaf maps to a named public contract in instruction.md; every scored API and option has at least one leaf.",
+  "mappings": [
+    {"leaves": [1, 2, 3, 4], "contract": "package metadata, CommonJS callable root, version, all method", "basis": "package.json and index.d.ts"},
+    {"leaves": [5, 6, 7, 8, 9, 10, 11, 12, 13, 14], "contract": "root merge, source precedence, recursive copy, immutability, type replacement, null, key order", "basis": "README API and merge.js upstream tests"},
+    {"leaves": [15, 16, 17, 18, 19, 20, 21], "contract": "array concatenation, nested array cloning, clone false, empty values", "basis": "README arrayMerge section and merge.js upstream tests"},
+    {"leaves": [22, 23, 24, 25, 26, 27, 28], "contract": "custom arrayMerge, customMerge, custom isMergeableObject, merge.all and its error", "basis": "README options and custom-array/custom-is-mergeable-object/merge-all suites"},
+    {"leaves": [29, 30, 31, 32], "contract": "prototype poisoning defense, own __proto__, symbol copy, special object treatment", "basis": "prototype-poisoning.js and source implementation"}
+  ]
+}

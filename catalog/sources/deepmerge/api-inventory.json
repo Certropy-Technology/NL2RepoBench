@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "task_id": "deepmerge",
+  "source_revision": "5b87756a5671635679001cbac72aa42f23472c81",
+  "package": {"name": "deepmerge", "version": "4.3.1", "main": "index.js", "module_kind": "commonjs"},
+  "exports": [
+    {"name": "default_callable", "import_path": "require('deepmerge')", "signature": "merge(target, source, options?)"},
+    {"name": "all", "import_path": "require('deepmerge').all", "signature": "all(objects, options?)"}
+  ],
+  "options": ["arrayMerge", "clone", "customMerge", "isMergeableObject", "cloneUnlessOtherwiseSpecified"],
+  "risk_surfaces": ["custom callbacks", "symbols", "Date/RegExp values", "prototype-sensitive keys", "recursive cloning"],
+  "adaptation": "Private tests use a bounded JSON request to a candidate child process. The child constructs callback, symbol, Date, and class-instance fixtures locally; trusted verifier code never imports the candidate."
+}

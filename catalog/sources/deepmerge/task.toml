@@ -1,0 +1,110 @@
+schema_version = "2.0"
+task_id = "deepmerge"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+language = "node"
+difficulty = "medium"
+category = "deep-merge"
+tags = ["node", "npm", "commonjs", "objects", "arrays", "clone", "subprocess"]
+
+[source]
+status = "known"
+upstream_url = "https://github.com/TehShrike/deepmerge"
+revision = "5b87756a5671635679001cbac72aa42f23472c81"
+license_spdx = "MIT"
+source_digest = "sha256:6efceb65f541465fe6755f427fd8ca33f925b36a56b38f39ab1282bf9830b51d"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "Candidate and separate verifier runs have no network. The candidate installs from a frozen empty npm cache; only the trusted Oracle receives a run-scoped exact source-host authorization to verify the pinned revision."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = []
+
+[dependencies.artifact]
+digest = "sha256:254f5f7dbff06a78cd543aa30f51ba20d7f78b67633f7157246c7b994239f20a"
+size_bytes = 390
+media_type = "application/vnd.nl2repobench.npm-bundle+tar"
+uri = "artifact://private/sha256:254f5f7dbff06a78cd543aa30f51ba20d7f78b67633f7157246c7b994239f20a"
+visibility = "private"
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 32
+expected_total_source = "frozen-collection"
+
+[tests.commands_artifact]
+digest = "sha256:3a0d5d438bfa114938040770c8c288320518bdaec8733dbd7f373f0c5cf0827f"
+size_bytes = 261
+media_type = "application/vnd.nl2repobench.node-commands+tar"
+uri = "artifact://private/sha256:3a0d5d438bfa114938040770c8c288320518bdaec8733dbd7f373f0c5cf0827f"
+visibility = "private"
+
+[tests.test_bundle]
+digest = "sha256:ceeee38aa50d66b43376ad7dd312d360725bef97f1c96b276b041c9803097051"
+size_bytes = 3301
+media_type = "application/vnd.nl2repobench.node-tests+tar"
+uri = "artifact://private/sha256:ceeee38aa50d66b43376ad7dd312d360725bef97f1c96b276b041c9803097051"
+visibility = "private"
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Build the deepmerge 4.3.1 CommonJS deep object and array merge package with cloning, custom merge hooks, merge.all, and prototype-safe behavior."
+keywords = ["node", "npm", "commonjs", "objects", "arrays", "deep-merge"]
+agent_timeout_sec = 1200.0
+verifier_timeout_sec = 720.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "node-author-batch2-20260902T1456Z/deepmerge"
+reason = "Frozen source and zero-runtime-dependency npm closure, 32-leaf separate-verifier contract, production compile, trusted Oracle, empty, stub, forgery, install-failure, panic, bounded hang, oversized-output, background-process, and offline controls are complete. Independent review, dataset integration, and model Agent Run remain integrator-owned."
+
+[oracle_bundle]
+digest = "sha256:7a7f94257429ad928f6a088fbcc38a38ef156922952efe7144d70a25b93be042"
+size_bytes = 1615
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:7a7f94257429ad928f6a088fbcc38a38ef156922952efe7144d70a25b93be042"
+visibility = "private"

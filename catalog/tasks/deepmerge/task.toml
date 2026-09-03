@@ -1,0 +1,64 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/deepmerge"
+version = "1.0.0"
+description = "Build the deepmerge 4.3.1 CommonJS deep object and array merge package with cloning, custom merge hooks, merge.all, and prototype-safe behavior."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "node",
+    "npm",
+    "commonjs",
+    "objects",
+    "arrays",
+    "deep-merge",
+]
+
+[metadata]
+difficulty = "medium"
+category = "deep-merge"
+tags = [
+    "node",
+    "npm",
+    "commonjs",
+    "objects",
+    "arrays",
+    "clone",
+    "subprocess",
+]
+language = "node"
+runtime = "node"
+runtime_version = "24.19.0"
+package_manager = "npm"
+test_framework = "node:test"
+metric_contract = "node-test-leaf-pass-rate-v1"
+expected_test_count = 32
+canonical_manifest_digest = "sha256:2597bd6372c5e3cec834e81e0e46eeeee6e0683f0d755ae4c57358480e4b77ef"
+toolchain_lock_digest = "sha256:aac76d5c1a423cd3c5c9c96870198475e0fed151793b60eeb830a7c053692dc8"
+
+[agent]
+timeout_sec = 1200.0
+
+[verifier]
+timeout_sec = 720.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 16384
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 4096
+storage_mb = 8192
