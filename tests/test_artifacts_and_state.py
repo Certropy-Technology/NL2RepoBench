@@ -60,6 +60,23 @@ def test_private_artifact_resolver_can_be_scoped_to_declared_digests(tmp_path) -
         resolver.resolve(denied)
 
 
+def test_scoping_an_already_scoped_resolver_only_narrows_access(tmp_path) -> None:
+    store = FileArtifactStore(tmp_path / "artifacts")
+    first = store.put_bytes(b"first", visibility=Visibility.PRIVATE)
+    second = store.put_bytes(b"second", visibility=Visibility.PRIVATE)
+    resolver = LocalArtifactResolver(
+        store,
+        allow_private=True,
+        allowed_private_digests=frozenset({first.digest, second.digest}),
+    )
+
+    narrowed = resolver.scoped(frozenset({first.digest}))
+
+    assert narrowed.resolve(first).is_file()
+    with pytest.raises(ArtifactStoreError, match="outside the task scope"):
+        narrowed.resolve(second)
+
+
 def test_artifact_store_rejects_symlinked_visibility_namespace(tmp_path) -> None:
     root = tmp_path / "artifacts"
     outside = tmp_path / "outside"

@@ -173,3 +173,18 @@ class LocalArtifactResolver:
                 f"private artifact is outside the task scope: {reference.digest}"
             )
         return self.store.path_for(reference, allow_private=self.allow_private)
+
+    def scoped(self, allowed_private_digests: frozenset[str]) -> LocalArtifactResolver:
+        """Return a resolver restricted to one task's declared private refs."""
+
+        if not self.allow_private:
+            return LocalArtifactResolver(self.store)
+        if self.allowed_private_digests is None:
+            allowed = allowed_private_digests
+        else:
+            allowed = self.allowed_private_digests & allowed_private_digests
+        return LocalArtifactResolver(
+            self.store,
+            allow_private=True,
+            allowed_private_digests=allowed,
+        )

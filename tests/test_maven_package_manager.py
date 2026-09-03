@@ -134,6 +134,27 @@ def test_maven_lock_rejects_unrecognized_fields() -> None:
         load_maven_lock(data)
 
 
+def test_maven_lock_rejects_invalid_scope_and_repository_metadata() -> None:
+    lock = json.loads(_lock_bytes())
+    lock["artifacts"][0]["scope"] = "system"
+    data = json.dumps(lock, sort_keys=True, separators=(",", ":")).encode() + b"\n"
+    with pytest.raises(PackageManagerError, match="scope"):
+        load_maven_lock(data)
+
+    lock = json.loads(_lock_bytes())
+    lock["repositories"] = [
+        {
+            "id": "central",
+            "url": "https://repo.maven.apache.org/maven2",
+            "releases_enabled": False,
+            "snapshots_enabled": False,
+        }
+    ]
+    data = json.dumps(lock, sort_keys=True, separators=(",", ":")).encode() + b"\n"
+    with pytest.raises(PackageManagerError, match="repository metadata"):
+        load_maven_lock(data)
+
+
 def test_candidate_pom_is_metadata_only_and_cannot_define_build_behavior() -> None:
     pom = b"""<project xmlns="http://maven.apache.org/POM/4.0.0">
       <modelVersion>4.0.0</modelVersion>

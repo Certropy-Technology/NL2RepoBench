@@ -93,6 +93,12 @@ def test_java_verifier_script_bounds_candidate_execution() -> None:
     assert "--release 21" in script
     assert "find /tmp/java-harness -type d -exec chmod 0555" in script
     assert "find /tmp/java-harness -type f -exec chmod 0444" in script
+    assert "candidate-classes" in script
+    assert "trusted-classes" in script
+    assert "candidate.classpath" in script
+    assert "-Dmaven.repo.local=/opt/maven/repository" in script
+    assert "rm -rf /tmp/java-harness/src" in script
+    assert "find /tmp/java-harness/candidate-src" in script
     assert "verifier-internal-error" in script
 
 
@@ -123,6 +129,49 @@ def test_java_process_supervisor_reports_timeout(tmp_path: Path) -> None:
     assert result.timed_out is True
     assert result.return_code is None
     assert result.spawn_error is None
+
+
+def test_java_process_supervisor_rejects_untrusted_environment_variables(tmp_path: Path) -> None:
+    with pytest.raises(ValueError, match="unsafe variable"):
+        run_java_process(
+            ["/bin/true"],
+            cwd=tmp_path,
+            uid=0,
+            timeout_sec=1,
+            environment={"API_KEY": "must-not-leak"},
+        )
+
+
+def test_java_process_supervisor_does_not_inherit_secret_environment(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("API_KEY", "must-not-leak")
+    result = run_java_process(
+        ["/usr/bin/env"],
+        cwd=tmp_path,
+        uid=0,
+        timeout_sec=1,
+        environment={"PATH": "/usr/bin:/bin"},
+    )
+
+    assert result.return_code == 0
+    assert "API_KEY" not in result.stdout
+
+
+def test_java_process_supervisor_kills_descendant_process_group(tmp_path: Path) -> None:
+    pid_file = tmp_path / "child.pid"
+    result = run_java_process(
+        ["/bin/sh", "-c", f"sleep 30 & echo $! > {pid_file}; wait"],
+        cwd=tmp_path,
+        uid=0,
+        timeout_sec=0.1,
+        environment={"PATH": "/usr/bin:/bin"},
+    )
+
+    assert result.timed_out is True
+    child_pid = int(pid_file.read_text(encoding="utf-8"))
+    with pytest.raises(ProcessLookupError):
+        __import__("os").kill(child_pid, 0)
 
 
 def test_java_process_supervisor_allows_jvm_virtual_reservations() -> None:

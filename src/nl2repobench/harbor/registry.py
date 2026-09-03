@@ -144,6 +144,10 @@ class HarborCompilerRegistry:
 
         source = CatalogCompiler.load_task(source_dir)
         identity = RuntimeDiscriminator.from_catalog_source(source.model_dump(mode="python"))
+        if artifact_resolver is not None:
+            artifact_resolver = artifact_resolver.scoped(
+                _private_artifact_digests(source.model_dump(mode="python"))
+            )
         return self.resolve(identity)(toolchain_path, artifact_resolver)
 
     def compile_task(
@@ -167,7 +171,6 @@ class HarborCompilerRegistry:
             output_root,
             allow_incomplete=allow_incomplete,
         )
-
     def prepare_control_bundle(
         self,
         task_root: Path,
@@ -232,6 +235,19 @@ class HarborCompilerRegistry:
             raise UnknownRuntimeAdapterError(
                 f"invalid compiled task runtime: {language}+{package_manager}"
             ) from exc
+
+
+def _private_artifact_digests(value: object) -> frozenset[str]:
+    found: set[str] = set()
+    if isinstance(value, dict):
+        if value.get("visibility") == "private" and isinstance(value.get("digest"), str):
+            found.add(value["digest"])
+        for child in value.values():
+            found.update(_private_artifact_digests(child))
+    elif isinstance(value, list):
+        for child in value:
+            found.update(_private_artifact_digests(child))
+    return frozenset(found)
 
 
 __all__ = [

@@ -20,6 +20,9 @@ MAX_TIMEOUT_SEC = 600.0
 DEFAULT_ADDRESS_SPACE_BYTES = 4 * 1024 * 1024 * 1024
 DEFAULT_NOFILE = 128
 DEFAULT_NPROC = 256
+SAFE_ENVIRONMENT_NAMES = frozenset(
+    {"PATH", "JAVA_HOME", "MAVEN_HOME", "HOME", "LANG", "LC_ALL", "MAVEN_OPTS"}
+)
 
 
 @dataclass(frozen=True)
@@ -97,12 +100,23 @@ def run_java_process(
         raise ValueError("Java process address space limit must be positive")
     if uid != os.getuid() and os.geteuid() != 0:
         raise ValueError("dropping to a different UID requires root")
+    if environment is not None and not set(environment).issubset(SAFE_ENVIRONMENT_NAMES):
+        raise ValueError("Java process environment contains an unsafe variable")
+    process_environment = {
+        name: os.environ[name]
+        for name in SAFE_ENVIRONMENT_NAMES
+        if name in os.environ
+    }
+    process_environment.setdefault("PATH", "/usr/local/bin:/usr/bin:/bin")
+    process_environment["HOME"] = "/root" if uid == 0 else "/home/candidate"
+    if environment is not None:
+        process_environment.update(environment)
 
     try:
         process = subprocess.Popen(
             command,
             cwd=cwd,
-            env=environment,
+            env=process_environment,
             stdin=subprocess.DEVNULL,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
@@ -179,7 +193,7 @@ def _main() -> int:
     parser.add_argument("--timeout-sec", type=float, required=True)
     parser.add_argument("--address-space-bytes", type=int, default=DEFAULT_ADDRESS_SPACE_BYTES)
     parser.add_argument("--env", action="append", default=[])
-    parser.add_argument("--source-root", type=Path)
+    parser.add_argument("--source-root", type=Path, action="append", default=[])
     parser.add_argument("--classes-dir", type=Path)
     parser.add_argument("--release", type=int, choices=(8, 11, 17, 21), default=21)
     parser.add_argument("command", nargs=argparse.REMAINDER)
@@ -188,11 +202,14 @@ def _main() -> int:
     command = list(args.command)
     if command and command[0] == "--":
         command = command[1:]
-    if args.source_root is not None:
+    if args.source_root:
         if args.classes_dir is None or command:
             parser.error("--source-root requires --classes-dir and no command")
         java_files = sorted(
-            path for path in args.source_root.rglob("*.java") if path.is_file()
+            path
+            for source_root in args.source_root
+            for path in source_root.rglob("*.java")
+            if path.is_file()
         )
         if not java_files:
             parser.error("--source-root contains no Java files")

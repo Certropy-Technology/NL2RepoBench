@@ -72,6 +72,8 @@ ARTIFACT_KEYS = frozenset(
 )
 PLUGIN_KEYS = frozenset({"group_id", "artifact_id", "version", "dependencies"})
 REPOSITORY_KEYS = frozenset({"id", "url", "releases_enabled", "snapshots_enabled"})
+SMOKE_KEYS = frozenset({"status"})
+VALID_SCOPES = frozenset({"compile", "runtime", "provided", "test"})
 
 
 @dataclass(frozen=True)
@@ -163,7 +165,9 @@ def maven_repository_path(artifact: Mapping[str, Any]) -> PurePosixPath:
     if kind not in {"jar", "pom"}:
         raise _fail("Maven artifact type must be jar or pom")
     suffix = f"-{classifier}" if classifier else ""
-    if classifier is not None and not COORDINATE.fullmatch(str(classifier)):
+    if classifier is not None and (
+        not isinstance(classifier, str) or not COORDINATE.fullmatch(classifier)
+    ):
         raise _fail("Maven artifact classifier is malformed")
     return PurePosixPath(
         *group_id.split("."), artifact_id, version, f"{artifact_id}-{version}{suffix}.{kind}"
@@ -226,10 +230,13 @@ def load_maven_lock(data: bytes) -> dict[str, Any]:
         maven_repository_path(artifact)
         digest = artifact.get("sha256")
         size = artifact.get("size")
+        scope = artifact.get("scope")
         if not isinstance(digest, str) or not re.fullmatch(r"[0-9a-f]{64}", digest):
             raise _fail("Maven artifact sha256 is invalid")
         if not isinstance(size, int) or isinstance(size, bool) or size < 0:
             raise _fail("Maven artifact size is invalid")
+        if not isinstance(scope, str) or scope not in VALID_SCOPES:
+            raise _fail("Maven artifact scope is invalid")
         keys.append(str(maven_repository_path(artifact)))
     if keys != sorted(keys) or len(keys) != len(set(keys)):
         raise _fail("Maven artifacts must be sorted and unique")
@@ -241,8 +248,21 @@ def load_maven_lock(data: bytes) -> dict[str, Any]:
             str(plugin.get("artifact_id", "")),
             str(plugin.get("version", "")),
         )
-        if not isinstance(plugin["dependencies"], list):
+        dependencies = plugin["dependencies"]
+        if not isinstance(dependencies, list):
             raise _fail("Maven plugin dependencies must be an array")
+        for dependency in dependencies:
+            if not isinstance(dependency, dict) or set(dependency) != {
+                "group_id",
+                "artifact_id",
+                "version",
+            }:
+                raise _fail("Maven plugin dependency entry is malformed")
+            _coordinate(
+                str(dependency["group_id"]),
+                str(dependency["artifact_id"]),
+                str(dependency["version"]),
+            )
     for repository in repositories:
         if (
             not isinstance(repository, dict)
@@ -250,10 +270,18 @@ def load_maven_lock(data: bytes) -> dict[str, Any]:
             or repository.get("url") != ALLOWED_REPOSITORY
         ):
             raise _fail("Maven repository is not approved")
+        if (
+            not isinstance(repository["id"], str)
+            or not COORDINATE.fullmatch(repository["id"])
+            or not isinstance(repository["releases_enabled"], bool)
+            or repository["releases_enabled"] is not True
+            or not isinstance(repository["snapshots_enabled"], bool)
+        ):
+            raise _fail("Maven repository metadata is invalid")
         if repository.get("snapshots_enabled", False) is not False:
             raise _fail("Maven snapshots must be disabled")
     smoke = payload.get("offline_smoke")
-    if not isinstance(smoke, dict) or smoke.get("status") != "passed":
+    if not isinstance(smoke, dict) or set(smoke) != SMOKE_KEYS or smoke.get("status") != "passed":
         raise _fail("Maven offline smoke is not recorded as passed")
     canonical = (
         json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode()

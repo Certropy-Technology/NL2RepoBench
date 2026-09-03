@@ -468,9 +468,28 @@ fi
 rm -rf /tmp/java-harness
 cp -a /tests/private/harness /tmp/java-harness
 cp -a /tmp/java-candidate/src/main/java/. /tmp/java-harness/src/main/java/
-mkdir -p /tmp/maven-repository /tmp/java-harness/classes
-chmod -R u+rwX /tmp/java-harness /tmp/maven-repository
-chown -R candidate:candidate /tmp/java-harness /tmp/java-candidate /tmp/maven-repository
+mkdir -p /tmp/java-harness/classes
+chmod -R u+rwX /tmp/java-harness
+chown -R candidate:candidate /tmp/java-harness /tmp/java-candidate
+rm -rf /tmp/java-harness/candidate-src /tmp/java-harness/candidate-main-src \
+  /tmp/java-harness/trusted-src \
+  /tmp/java-harness/candidate-classes /tmp/java-harness/trusted-classes
+mkdir -p /tmp/java-harness/candidate-src /tmp/java-harness/candidate-main-src \
+  /tmp/java-harness/trusted-src \
+  /tmp/java-harness/candidate-classes \
+  /tmp/java-harness/trusted-classes \
+  /tmp/java-harness/candidate-main-src/nl2repobench/harness \
+  /tmp/java-harness/trusted-src/nl2repobench/harness
+chown candidate:candidate /tmp/java-harness/candidate-classes
+cp -a /tmp/java-candidate/src/main/java/. /tmp/java-harness/candidate-src/
+cp /tests/private/harness/src/main/java/nl2repobench/harness/CandidateMain.java \
+  /tmp/java-harness/candidate-main-src/nl2repobench/harness/CandidateMain.java
+cp /tests/private/harness/src/main/java/nl2repobench/harness/ContractMain.java \
+  /tmp/java-harness/trusted-src/nl2repobench/harness/ContractMain.java
+find /tmp/java-harness/candidate-src /tmp/java-harness/candidate-main-src \
+  /tmp/java-harness/trusted-src -type d -exec chmod 0555 {{}} +
+find /tmp/java-harness/candidate-src /tmp/java-harness/candidate-main-src \
+  /tmp/java-harness/trusted-src -type f -exec chmod 0444 {{}} +
 set +e
 python3 -I -m nl2repobench.verification.java_process \\
   --report /logs/verifier/maven-process.json \\
@@ -479,7 +498,7 @@ python3 -I -m nl2repobench.verification.java_process \\
   --timeout-sec {int(profile.candidate_install_timeout_sec)} \\
   --env MAVEN_OPTS="-Xmx256m -XX:MaxMetaspaceSize=128m -XX:CompressedClassSpaceSize=64m -Djava.awt.headless=true" -- \\
   /opt/maven/bin/mvn --offline --batch-mode --no-transfer-progress --strict-checksums \\
-  -Dmaven.repo.local=/tmp/maven-repository -f /tmp/java-harness/pom.xml validate
+  -Dmaven.repo.local=/opt/maven/repository -f /tmp/java-harness/pom.xml validate
 maven_process_exit=$?
 set -e
 if [ "$maven_process_exit" -eq 2 ]; then
@@ -499,8 +518,9 @@ python3 -I -m nl2repobench.verification.java_process \
   --cwd /tmp/java-harness --uid 10001 \
   --timeout-sec {int(profile.candidate_install_timeout_sec)} \
   --release {maven_release} \
-  --source-root /tmp/java-harness/src/main/java \
-  --classes-dir /tmp/java-harness/classes
+  --source-root /tmp/java-harness/candidate-src \
+  --source-root /tmp/java-harness/candidate-main-src \
+  --classes-dir /tmp/java-harness/candidate-classes
 javac_process_exit=$?
 set -e
 if [ "$javac_process_exit" -eq 2 ]; then
@@ -513,9 +533,28 @@ elif [ "$javac_process_exit" -ne 0 ]; then
   grade --reason candidate-installation-failed
   exit 0
 fi
+set +e
+python3 -I -m nl2repobench.verification.java_process \
+  --report /logs/verifier/trusted-javac-process.json \
+  --stderr-path /logs/verifier/trusted-javac-stderr.txt \
+  --cwd /tmp/java-harness --uid 0 \
+  --timeout-sec {int(profile.candidate_install_timeout_sec)} \
+  --release {maven_release} \
+  --source-root /tmp/java-harness/trusted-src \
+  --classes-dir /tmp/java-harness/trusted-classes
+trusted_javac_process_exit=$?
+set -e
+if [ "$trusted_javac_process_exit" -ne 0 ]; then
+  grade --reason verifier-internal-error
+  exit 0
+fi
 chown -R root:root /tmp/java-harness
+rm -rf /tmp/java-harness/src /tmp/java-harness/candidate-src \
+  /tmp/java-harness/candidate-main-src /tmp/java-harness/trusted-src
 find /tmp/java-harness -type d -exec chmod 0555 {{}} +
 find /tmp/java-harness -type f -exec chmod 0444 {{}} +
+chmod 0700 /tmp/java-harness/trusted-classes
+find /tmp/java-harness/trusted-classes -type f -exec chmod 0400 {{}} +
 set +e
 python3 -I -m nl2repobench.verification.java_process \
   --report /logs/verifier/java-process.json \
@@ -525,7 +564,8 @@ python3 -I -m nl2repobench.verification.java_process \
   --timeout-sec {int(profile.candidate_total_timeout_sec)} -- \
   /opt/java/openjdk/bin/java -Xmx256m -XX:MaxMetaspaceSize=128m \
   -XX:CompressedClassSpaceSize=64m -Djava.awt.headless=true \
-  -cp /tmp/java-harness/classes \
+  -Dnl2repobench.candidate.classpath=/tmp/java-harness/candidate-classes \
+  -cp /tmp/java-harness/trusted-classes \
   nl2repobench.harness.ContractMain
 runner_process_exit=$?
 set -e
