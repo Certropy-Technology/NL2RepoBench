@@ -1,0 +1,362 @@
+{
+  "bundle": {
+    "handoff_artifacts": [
+      ".nl2repo/artifacts/private/sha256/0a/0a1e7dd2f478186a4ff2a2b050b4d72182e03479ea2de0d08371af868488dd8f",
+      ".nl2repo/artifacts/private/sha256/82/8231431ec2c565d65a7485a49e48f39d7fea2ba4024cfb60ceff3c891911d8b1",
+      ".nl2repo/compiled-go-glob-final5/go-glob/bundle.manifest.json",
+      ".nl2repo/authoring-production-gates.json",
+      ".nl2repo/evidence/production-gates-check.json"
+    ],
+    "handoff_compiled_bundle": {
+      "canonical_manifest_digest": "sha256:65feef2bfdf75548e4db25dd310ebb7669d750a98daa3f6fb6aab87be1f8f05a",
+      "manifest": ".nl2repo/compiled-go-glob-final5/go-glob/bundle.manifest.json",
+      "manifest_sha256": "sha256:e7481c67d859e04806b036590634739422b3a512bb4347bda63edeaea4cf7116",
+      "path": ".nl2repo/compiled-go-glob-final5/go-glob",
+      "toolchain_lock": "toolchain.go.lock.toml",
+      "toolchain_lock_digest": "sha256:bafbfe0548d431f168df91bfa0c1f3e3c15e13e4570c5df2c9176dbfaf9552dc"
+    }
+  },
+  "commands": [
+    {
+      "command": "uv run --frozen --project harbor-runner harbor --version",
+      "exit_code": 0,
+      "output": "0.21.0"
+    },
+    {
+      "command": "go version",
+      "exit_code": 0,
+      "output": "go1.26.5-X:nodwarf5 linux/amd64"
+    },
+    {
+      "command": "uv --version",
+      "exit_code": 0,
+      "output": "uv 0.11.32"
+    },
+    {
+      "command": "uv run nl2repo task validate-source catalog/sources/go-glob",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "summary": "go-glob task findings=0; catalog-wide warnings=178"
+    },
+    {
+      "command": "git diff --check",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run pytest -q -p no:cacheprovider --no-cov tests/test_go_adapter.py",
+      "exit_code": 0,
+      "summary": "10 passed"
+    },
+    {
+      "command": "uv run nl2repo harbor compile catalog/sources/go-glob --output .nl2repo/compiled-go-glob-final5 --toolchain toolchain.go.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0
+    },
+    {
+      "command": "official Harbor Oracle and controls",
+      "exit_code": 0,
+      "summary": "Oracle 1/1 reward=1.0; offline Oracle 1/1 reward=1.0 with public_network_available=false; all required controls valid"
+    }
+  ],
+  "controls": {
+    "background-process": {
+      "collected": 1,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/go-glob-final5/go-glob-background-process/go-glob-background-process -a oracle --job-name go-glob-background-process-final5-20260904 -o .nl2repo/runs/go-glob/final5/background-process --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "frozen_total": 1,
+      "grading": ".nl2repo/runs/go-glob/final5/background-process/go-glob-background-process-final5-20260904/go-glob-background-process__W2DAiej/verifier/grading.json",
+      "network": ".nl2repo/runs/go-glob/final5/background-process/go-glob-background-process-final5-20260904/go-glob-background-process__W2DAiej/verifier/network.json",
+      "passed": 0,
+      "process_group_cleanup": true,
+      "result": ".nl2repo/runs/go-glob/final5/background-process/go-glob-background-process-final5-20260904/result.json",
+      "reward": 0.0,
+      "reward_record": ".nl2repo/runs/go-glob/final5/background-process/go-glob-background-process-final5-20260904/go-glob-background-process__W2DAiej/verifier/reward.json",
+      "sha256": {
+        "grading": "sha256:770db3ca92e7856ca2aafafc513a44b9f7287cc614932077530145c6ab4ec74d",
+        "network": "sha256:e75e018362f3da7452cb07a82b28202759d96b76a277fb55d3d39ce674060556",
+        "result": "sha256:1887849aaff2de6771b82259816db9fe487d65d7e6a6ef66e83f4b9e5e9aa92e",
+        "reward": "sha256:8ab285dd6836d028aa2dc600258716be1474a462a4ebd95b7072e5f32750fad6"
+      },
+      "valid": true
+    },
+    "empty": {
+      "allowed_zero_over_zero_exception": true,
+      "collected": 0,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled-go-glob-final5/go-glob -a nop --job-name go-glob-empty-final5-20260904 -o .nl2repo/runs/go-glob/final5/empty --n-concurrent 1 --yes",
+      "exception_note": "No candidate leaf executed; Harbor preserves the task frozen_total=1 field while the allowed installation-failure result is passed=0/collected=0.",
+      "exit_code": 0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "frozen_total": 1,
+      "grading": ".nl2repo/runs/go-glob/final5/empty/go-glob-empty-final5-20260904/go-glob__aZkJuqe/verifier/grading.json",
+      "network": ".nl2repo/runs/go-glob/final5/empty/go-glob-empty-final5-20260904/go-glob__aZkJuqe/verifier/network.json",
+      "passed": 0,
+      "result": ".nl2repo/runs/go-glob/final5/empty/go-glob-empty-final5-20260904/result.json",
+      "reward": 0.0,
+      "reward_record": ".nl2repo/runs/go-glob/final5/empty/go-glob-empty-final5-20260904/go-glob__aZkJuqe/verifier/reward.json",
+      "sha256": {
+        "grading": "sha256:f50f1c97834aae0757eb19f7b1926b462c178862bac6df8d7f04e6f4d30db843",
+        "network": "sha256:c58f365fb344743cc7ff26dc88cb3f891cedc481bb3ab3c1c43f41131d79deae",
+        "result": "sha256:c3fb5da2a5262bce5e9552ff4016b22dcd3d6f637bc7fd2a2565862339a775a1",
+        "reward": "sha256:8ab285dd6836d028aa2dc600258716be1474a462a4ebd95b7072e5f32750fad6"
+      },
+      "valid": true
+    },
+    "forgery": {
+      "collected": 1,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/go-glob-final5/go-glob-forgery/go-glob-forgery -a oracle --job-name go-glob-forgery-final5-20260904 -o .nl2repo/runs/go-glob/final5/forgery --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "frozen_total": 1,
+      "grading": ".nl2repo/runs/go-glob/final5/forgery/go-glob-forgery-final5-20260904/go-glob-forgery__E8B6LL5/verifier/grading.json",
+      "network": ".nl2repo/runs/go-glob/final5/forgery/go-glob-forgery-final5-20260904/go-glob-forgery__E8B6LL5/verifier/network.json",
+      "passed": 0,
+      "result": ".nl2repo/runs/go-glob/final5/forgery/go-glob-forgery-final5-20260904/result.json",
+      "reward": 0.0,
+      "reward_record": ".nl2repo/runs/go-glob/final5/forgery/go-glob-forgery-final5-20260904/go-glob-forgery__E8B6LL5/verifier/reward.json",
+      "sha256": {
+        "grading": "sha256:770db3ca92e7856ca2aafafc513a44b9f7287cc614932077530145c6ab4ec74d",
+        "network": "sha256:556c410f8135c030dd912ace88aacff6482761f3a41ce0cc6af54fb052d7e351",
+        "result": "sha256:2f95af82db9dfa861207b45a7cab5d78b49a8df8020f02dd7eb4d28e6633497c",
+        "reward": "sha256:8ab285dd6836d028aa2dc600258716be1474a462a4ebd95b7072e5f32750fad6"
+      },
+      "valid": true,
+      "verifier_owned_reward": true
+    },
+    "hang": {
+      "collected": 1,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/go-glob-final5/go-glob-hang/go-glob-hang -a oracle --job-name go-glob-hang-final5-20260904 -o .nl2repo/runs/go-glob/final5/hang --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "frozen_total": 1,
+      "grading": ".nl2repo/runs/go-glob/final5/hang/go-glob-hang-final5-20260904/go-glob-hang__xQSaVSh/verifier/grading.json",
+      "network": ".nl2repo/runs/go-glob/final5/hang/go-glob-hang-final5-20260904/go-glob-hang__xQSaVSh/verifier/network.json",
+      "passed": 0,
+      "result": ".nl2repo/runs/go-glob/final5/hang/go-glob-hang-final5-20260904/result.json",
+      "reward": 0.0,
+      "reward_record": ".nl2repo/runs/go-glob/final5/hang/go-glob-hang-final5-20260904/go-glob-hang__xQSaVSh/verifier/reward.json",
+      "sha256": {
+        "grading": "sha256:770db3ca92e7856ca2aafafc513a44b9f7287cc614932077530145c6ab4ec74d",
+        "network": "sha256:531bdb698d18acf7c23a074c87b61c2a92cd42140037c9f777d5d6d13a72b8f8",
+        "result": "sha256:a86e1018f1d7352828af9ce01eeedeb466e3fcca352dc7e34b3cab0960ace7de",
+        "reward": "sha256:8ab285dd6836d028aa2dc600258716be1474a462a4ebd95b7072e5f32750fad6"
+      },
+      "valid": true
+    },
+    "install-failure": {
+      "allowed_zero_over_zero_exception": true,
+      "collected": 0,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/go-glob-final5/go-glob-install-failure/go-glob-install-failure -a oracle --job-name go-glob-install-failure-final5-20260904 -o .nl2repo/runs/go-glob/final5/install-failure --n-concurrent 1 --yes",
+      "exception_note": "No candidate leaf executed; Harbor preserves the task frozen_total=1 field while the allowed installation-failure result is passed=0/collected=0.",
+      "exit_code": 0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "frozen_total": 1,
+      "grading": ".nl2repo/runs/go-glob/final5/install-failure/go-glob-install-failure-final5-20260904/go-glob-install-failure__tcpmaAv/verifier/grading.json",
+      "network": ".nl2repo/runs/go-glob/final5/install-failure/go-glob-install-failure-final5-20260904/go-glob-install-failure__tcpmaAv/verifier/network.json",
+      "passed": 0,
+      "result": ".nl2repo/runs/go-glob/final5/install-failure/go-glob-install-failure-final5-20260904/result.json",
+      "reward": 0.0,
+      "reward_record": ".nl2repo/runs/go-glob/final5/install-failure/go-glob-install-failure-final5-20260904/go-glob-install-failure__tcpmaAv/verifier/reward.json",
+      "sha256": {
+        "grading": "sha256:f50f1c97834aae0757eb19f7b1926b462c178862bac6df8d7f04e6f4d30db843",
+        "network": "sha256:4cf30bbfd584276836beb30d47b09d8b7c735bb97871131cc2716d94aa6c21ad",
+        "result": "sha256:e5354ab7b38875ff9d1fc62bec211c6304b9335c9083cc3ea209c7a2957c17ba",
+        "reward": "sha256:8ab285dd6836d028aa2dc600258716be1474a462a4ebd95b7072e5f32750fad6"
+      },
+      "valid": true
+    },
+    "offline": {
+      "collected": 1,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled-go-glob-final5/go-glob -a oracle --allow-agent-host github.com --job-name go-glob-offline-final5-oracle-20260904 -o .nl2repo/runs/go-glob/final5/offline-oracle --n-concurrent 1 --yes",
+      "completed": true,
+      "exit_code": 0,
+      "frozen_total": 1,
+      "grading": ".nl2repo/runs/go-glob/final5/offline-oracle/go-glob-offline-final5-oracle-20260904/go-glob__6HBXq6P/verifier/grading.json",
+      "network": ".nl2repo/runs/go-glob/final5/offline-oracle/go-glob-offline-final5-oracle-20260904/go-glob__6HBXq6P/verifier/network.json",
+      "passed": 1,
+      "public_network_available": false,
+      "result": ".nl2repo/runs/go-glob/final5/offline-oracle/go-glob-offline-final5-oracle-20260904/result.json",
+      "reward": 1.0,
+      "reward_record": ".nl2repo/runs/go-glob/final5/offline-oracle/go-glob-offline-final5-oracle-20260904/go-glob__6HBXq6P/verifier/reward.json",
+      "sha256": {
+        "grading": "sha256:b00d7a553a2fddacea6fa04621bafef45310450fbfe030c859f754ad2e6f6933",
+        "network": "sha256:2075d036f7d43ee5a9aee73689bca582f1b7db6d2875d25199a73846c22f8249",
+        "result": "sha256:4d989b0e0b0d21ca78c38b2a7c32209302f2310c22f0bc6e2953782ec785df4d",
+        "reward": "sha256:f5ff2ade8b6b6ea4ef812375e5c71684d7655fb98854aac64a6bf629a3dfac06"
+      },
+      "valid": true
+    },
+    "oversized-output": {
+      "collected": 1,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/go-glob-final5/go-glob-oversized-output/go-glob-oversized-output -a oracle --job-name go-glob-oversized-output-final5-20260904 -o .nl2repo/runs/go-glob/final5/oversized-output --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "frozen_total": 1,
+      "grading": ".nl2repo/runs/go-glob/final5/oversized-output/go-glob-oversized-output-final5-20260904/go-glob-oversized-output__pwLCwwH/verifier/grading.json",
+      "network": ".nl2repo/runs/go-glob/final5/oversized-output/go-glob-oversized-output-final5-20260904/go-glob-oversized-output__pwLCwwH/verifier/network.json",
+      "passed": 0,
+      "result": ".nl2repo/runs/go-glob/final5/oversized-output/go-glob-oversized-output-final5-20260904/result.json",
+      "reward": 0.0,
+      "reward_record": ".nl2repo/runs/go-glob/final5/oversized-output/go-glob-oversized-output-final5-20260904/go-glob-oversized-output__pwLCwwH/verifier/reward.json",
+      "sha256": {
+        "grading": "sha256:770db3ca92e7856ca2aafafc513a44b9f7287cc614932077530145c6ab4ec74d",
+        "network": "sha256:f10e8837818c6ace04b34fc16cf3a2205422ae97c10aa6f1a5ce6062e06fb1ef",
+        "result": "sha256:4f11a163b9861fac149140be873009e8eb32ca76f7522d105a436b78719959fa",
+        "reward": "sha256:8ab285dd6836d028aa2dc600258716be1474a462a4ebd95b7072e5f32750fad6"
+      },
+      "valid": true
+    },
+    "panic": {
+      "collected": 1,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/go-glob-final5/go-glob-panic/go-glob-panic -a oracle --job-name go-glob-panic-final5-20260904 -o .nl2repo/runs/go-glob/final5/panic --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "frozen_total": 1,
+      "grading": ".nl2repo/runs/go-glob/final5/panic/go-glob-panic-final5-20260904/go-glob-panic__7GyhKey/verifier/grading.json",
+      "network": ".nl2repo/runs/go-glob/final5/panic/go-glob-panic-final5-20260904/go-glob-panic__7GyhKey/verifier/network.json",
+      "passed": 0,
+      "result": ".nl2repo/runs/go-glob/final5/panic/go-glob-panic-final5-20260904/result.json",
+      "reward": 0.0,
+      "reward_record": ".nl2repo/runs/go-glob/final5/panic/go-glob-panic-final5-20260904/go-glob-panic__7GyhKey/verifier/reward.json",
+      "sha256": {
+        "grading": "sha256:770db3ca92e7856ca2aafafc513a44b9f7287cc614932077530145c6ab4ec74d",
+        "network": "sha256:f38a5854aff1d02771d8e9c7cf75c35b583c97eb4fb2c48d196d1b3dda65083a",
+        "result": "sha256:c436f02f029a92242ff8d6fd1c112e79d54b028638329e43530840000244da7c",
+        "reward": "sha256:8ab285dd6836d028aa2dc600258716be1474a462a4ebd95b7072e5f32750fad6"
+      },
+      "valid": true
+    },
+    "stub": {
+      "collected": 1,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/go-glob-final5/go-glob-stub/go-glob-stub -a oracle --job-name go-glob-stub-final5-20260904 -o .nl2repo/runs/go-glob/final5/stub --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "frozen_total": 1,
+      "grading": ".nl2repo/runs/go-glob/final5/stub/go-glob-stub-final5-20260904/go-glob-stub__dd7tcys/verifier/grading.json",
+      "network": ".nl2repo/runs/go-glob/final5/stub/go-glob-stub-final5-20260904/go-glob-stub__dd7tcys/verifier/network.json",
+      "passed": 0,
+      "result": ".nl2repo/runs/go-glob/final5/stub/go-glob-stub-final5-20260904/result.json",
+      "reward": 0.0,
+      "reward_record": ".nl2repo/runs/go-glob/final5/stub/go-glob-stub-final5-20260904/go-glob-stub__dd7tcys/verifier/reward.json",
+      "sha256": {
+        "grading": "sha256:770db3ca92e7856ca2aafafc513a44b9f7287cc614932077530145c6ab4ec74d",
+        "network": "sha256:83f60d3012d0aed43bd155e9b1c2ea320a92c4650de9615c2077492eebf02d11",
+        "result": "sha256:f07319a30c3518841ebdbfdfe80521e901b09523d76af416784a52c3fdff9283",
+        "reward": "sha256:8ab285dd6836d028aa2dc600258716be1474a462a4ebd95b7072e5f32750fad6"
+      },
+      "valid": true
+    }
+  },
+  "dependency_closure": {
+    "installer": "system",
+    "module_bundle": {
+      "digest": "sha256:eb1014c320101771ebc61f1a3a1c5a0f47b450329ef4bac8e25576c2e3814ab1",
+      "size_bytes": 513,
+      "uri": "artifact://private/sha256:eb1014c320101771ebc61f1a3a1c5a0f47b450329ef4bac8e25576c2e3814ab1",
+      "visibility": "private"
+    },
+    "packages": [],
+    "status": "known"
+  },
+  "environment": {
+    "base_image": "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd",
+    "base_image_digest": "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd",
+    "build_command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -mod=vendor ./...",
+    "network_mode": "no-network",
+    "network_policy": {
+      "mode": "no-network",
+      "offline_dependencies": "private-artifact",
+      "reason": "Candidate and separate verifier execution use a private hash-addressed Go module closure and no network; only the trusted Oracle receives a run-scoped github.com authorization.",
+      "reference_source_fetch": "forbidden"
+    },
+    "os_name": "debian-bookworm",
+    "runtime_version": "1.26.5",
+    "status": "known"
+  },
+  "frozen_collection": {
+    "handoff_collection": null,
+    "handoff_frozen_tests": {
+      "frozen_total": 1,
+      "leaf_ids": [
+        "contract::public-api"
+      ],
+      "metric_contract": "fixed-test-pass-rate-v1",
+      "protocol": "custom-json-v1"
+    },
+    "handoff_inventory": {
+      "private_bridge_cases": 32,
+      "public_api": [
+        "Compile",
+        "MustCompile",
+        "QuoteMeta",
+        "Pattern.Match",
+        "Pattern.String",
+        "Pattern.Separators",
+        "SyntaxError"
+      ],
+      "public_root_package": "glob",
+      "upstream_baseline": {
+        "expanded_test_run_events": 209,
+        "go_test_exit_code": 0,
+        "packages": 4,
+        "static_test_functions": 7
+      }
+    },
+    "tests": {
+      "commands": [
+        "custom-json-v1"
+      ],
+      "expected_total": 1,
+      "expected_total_source": "frozen-collection",
+      "framework": "pytest"
+    }
+  },
+  "integrator_repair": {
+    "input_handoff": ".nl2repo/authoring-handoff.json",
+    "kind": "production-evidence-from-authored-handoff",
+    "official_controls_created": false,
+    "official_oracle_created": false,
+    "recorded_at": "2026-09-03T17:43:41.471649+00:00",
+    "source": "agent-production-gate-receipt"
+  },
+  "lifecycle": {
+    "owner": "go-author-auto-20260903T131454Z-go-glob",
+    "reason": "Frozen source, typed bridge, production compile, official Harbor Oracle, and all required negative/offline controls passed in this authoring lane; independent review, dataset integration, and model pilot remain downstream.",
+    "status": "controls-passed"
+  },
+  "oracle": {
+    "collected": 1,
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled-go-glob-final5/go-glob -a oracle --allow-agent-host github.com --job-name go-glob-oracle-final5-20260904 -o .nl2repo/runs/go-glob/final5/oracle --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "frozen_total": 1,
+    "grading": ".nl2repo/runs/go-glob/final5/oracle/go-glob-oracle-final5-20260904/go-glob__Dx64YEm/verifier/grading.json",
+    "harbor_version": "0.21.0",
+    "network": ".nl2repo/runs/go-glob/final5/oracle/go-glob-oracle-final5-20260904/go-glob__Dx64YEm/verifier/network.json",
+    "passed": 1,
+    "public_network_available": false,
+    "result": ".nl2repo/runs/go-glob/final5/oracle/go-glob-oracle-final5-20260904/result.json",
+    "reward": 1.0,
+    "reward_record": ".nl2repo/runs/go-glob/final5/oracle/go-glob-oracle-final5-20260904/go-glob__Dx64YEm/verifier/reward.json",
+    "sha256": {
+      "grading": "sha256:b00d7a553a2fddacea6fa04621bafef45310450fbfe030c859f754ad2e6f6933",
+      "network": "sha256:01664ddb3514311cd3f5d58f558f7363680a81687bc88b45e24483c7ebd73517",
+      "result": "sha256:459d9d414e4270d2aa16e6fa3f78664148f9bcff8e509ba6e48b0e0b3602f9d3",
+      "reward": "sha256:f5ff2ade8b6b6ea4ef812375e5c71684d7655fb98854aac64a6bf629a3dfac06"
+    },
+    "valid": true
+  },
+  "residual_risks": [
+    "Independent review, dataset integration, publication approval, and model Agent evaluation remain downstream.",
+    "The fixed contract covers the documented root package; syntax, CLI, debug output, benchmarks, and fuzz-driver internals are intentionally excluded.",
+    "The repository-wide network lint has 178 pre-existing warnings in other tasks; go-glob has zero task findings."
+  ],
+  "schema_version": "1.0",
+  "source_freeze": {
+    "license_spdx": "MIT",
+    "revision": "986c05fb7000e63414ddc61162d0067b7a1f5639",
+    "source_digest": "sha256:dcf7c3e6caf75b32e832bc6236e056904ae3d96ffc23904d0a1662b84a684a07",
+    "upstream_url": "https://github.com/gobwas/glob"
+  },
+  "status": "controls-passed",
+  "task_id": "go-glob",
+  "task_version": "0.1.0",
+  "terminal_kind": "controls-passed"
+}

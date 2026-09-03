@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-glob",
+  "source_revision": "986c05fb7000e63414ddc61162d0067b7a1f5639",
+  "leaf_id": "contract::public-api",
+  "frozen_total": 1,
+  "public_contract": "instruction.md#api-usage-guide",
+  "traceability": [
+    {"case_group": "literal, empty, Unicode, and whole-string matching", "bridge_operation": "match", "instruction_section": "API Usage Guide / Compile and Pattern.Match"},
+    {"case_group": "single and double wildcard behavior", "bridge_operation": "match", "instruction_section": "API Usage Guide / wildcard semantics"},
+    {"case_group": "separator-limited * and ?, separator-crossing **", "bridge_operation": "match", "instruction_section": "API Usage Guide / wildcard semantics"},
+    {"case_group": "sets, negated sets, ranges, and negated ranges", "bridge_operation": "match", "instruction_section": "API Usage Guide / Character classes"},
+    {"case_group": "alternatives, nesting, and empty alternatives", "bridge_operation": "match", "instruction_section": "API Usage Guide / Braces"},
+    {"case_group": "escaped metacharacters and literal commas", "bridge_operation": "match", "instruction_section": "API Usage Guide / backslash"},
+    {"case_group": "compiled source and separator metadata", "bridge_operation": "match_info", "instruction_section": "API Usage Guide / Pattern.String and Pattern.Separators"},
+    {"case_group": "MustCompile success path", "bridge_operation": "must_match", "instruction_section": "API Usage Guide / MustCompile"},
+    {"case_group": "caller separator mutation does not change matching state", "bridge_operation": "separator_ownership", "instruction_section": "API Usage Guide / Pattern.Separators"},
+    {"case_group": "QuoteMeta output", "bridge_operation": "quote", "instruction_section": "API Usage Guide / QuoteMeta"},
+    {"case_group": "malformed braces, ranges, and trailing escapes", "bridge_operation": "compile_error", "instruction_section": "API Usage Guide / Compile and SyntaxError"},
+    {"case_group": "unknown bridge operation rejection", "bridge_operation": "unknown", "instruction_section": "Implementation Notes"}
+  ],
+  "excluded_upstream_behavior": ["syntax.Lexer", "CLI", "debug rendering", "benchmark timing", "fuzz-driver implementation"],
+  "exclusion_reason": "The production Go profile evaluates deterministic root-package behavior through a separate typed bridge on Linux/amd64."
+}

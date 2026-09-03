@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-glob",
+  "source_revision": "986c05fb7000e63414ddc61162d0067b7a1f5639",
+  "module": "github.com/gobwas/glob",
+  "tracked_file_count": 21,
+  "go_source_file_count": 12,
+  "public_packages": ["github.com/gobwas/glob", "github.com/gobwas/glob/syntax", "github.com/gobwas/glob/cmd/globtest"],
+  "root_public_api": [
+    "SyntaxError.Error() string",
+    "Compile(string, ...rune) (*Pattern, error)",
+    "MustCompile(string, ...rune) *Pattern",
+    "QuoteMeta(string) string",
+    "Pattern.Match(string) bool",
+    "Pattern.String() string",
+    "Pattern.Separators() []rune"
+  ],
+  "syntax_public_api": [
+    "type TokenType int and constants EOF, Error, Text, Any, Super, Single, Not, TermSeparator, RangeOpen, RangeClose, RangeLo, RangeHi, RangeBetween, TermsOpen, TermsClose",
+    "TokenType.String() string",
+    "type Token struct { Type TokenType; Data string }",
+    "Token.String() string",
+    "IsSpecial(byte) bool",
+    "type Lexer",
+    "NewLexer(string) *Lexer",
+    "Lexer.Offset() int",
+    "Lexer.Next() Token"
+  ],
+  "command_api": ["cmd/globtest main command with optional -v debug-tree output"],
+  "evaluated_public_surface": [
+    "Compile and SyntaxError offset/reason",
+    "MustCompile-compatible successful compilation through the bridge",
+    "Pattern.Match for literals, wildcards, character classes, alternatives, escaping, Unicode, and separators",
+    "Pattern.String and Pattern.Separators",
+    "QuoteMeta"
+  ],
+  "excluded_surface": ["syntax package token and lexer API", "cmd/globtest CLI", "internal debug rendering", "benchmark timing and fuzz-driver internals"],
+  "risk_flags": ["backtracking matcher; bounded bridge calls", "Unicode rune matching", "variadic separator ownership"]
+}

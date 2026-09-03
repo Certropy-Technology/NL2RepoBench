@@ -1,0 +1,76 @@
+schema_version = "1.0"
+task_id = "go-glob"
+version = "0.1.0"
+instruction = "instruction.md"
+oracle_bundle = { digest = "sha256:0a1e7dd2f478186a4ff2a2b050b4d72182e03479ea2de0d08371af868488dd8f", size_bytes = 635, uri = "artifact://private/sha256:0a1e7dd2f478186a4ff2a2b050b4d72182e03479ea2de0d08371af868488dd8f", visibility = "private" }
+
+[metadata]
+difficulty = "medium"
+category = "go-library"
+tags = ["go", "go-modules", "glob", "pattern-matching", "typed-bridge", "public-api"]
+language = "go"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/gobwas/glob"
+revision = "986c05fb7000e63414ddc61162d0067b7a1f5639"
+license_spdx = "MIT"
+source_digest = "sha256:dcf7c3e6caf75b32e832bc6236e056904ae3d96ffc23904d0a1662b84a684a07"
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+runtime_version = "1.26.5"
+base_image = "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+base_image_digest = "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+network_mode = "no-network"
+build_command = "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -mod=vendor ./..."
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "Candidate and separate verifier execution use a private hash-addressed Go module closure and no network; only the trusted Oracle receives a run-scoped github.com authorization."
+
+[dependencies]
+status = "known"
+installer = "system"
+packages = []
+module_bundle = { digest = "sha256:eb1014c320101771ebc61f1a3a1c5a0f47b450329ef4bac8e25576c2e3814ab1", size_bytes = 513, uri = "artifact://private/sha256:eb1014c320101771ebc61f1a3a1c5a0f47b450329ef4bac8e25576c2e3814ab1", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 1
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Recreate the deterministic glob compilation, matching, escaping, and separator behavior of gobwas/glob through a typed Go subprocess bridge."
+keywords = ["go", "go-modules", "glob", "pattern-matching", "typed-bridge", "public-api"]
+agent_timeout_sec = 900.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 4096
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "go-author-auto-20260903T131454Z-go-glob"
+reason = "Frozen source, typed bridge, production compile, official Harbor Oracle, and all required negative/offline controls passed in this authoring lane; independent review, dataset integration, and model pilot remain downstream."
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:8231431ec2c565d65a7485a49e48f39d7fea2ba4024cfb60ceff3c891911d8b1", size_bytes = 1504, uri = "artifact://private/sha256:8231431ec2c565d65a7485a49e48f39d7fea2ba4024cfb60ceff3c891911d8b1", visibility = "private" }
+entrypoint = "contract.sh"

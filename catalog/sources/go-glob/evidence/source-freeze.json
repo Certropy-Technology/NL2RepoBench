@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-glob",
+  "upstream_url": "https://github.com/gobwas/glob",
+  "revision": "986c05fb7000e63414ddc61162d0067b7a1f5639",
+  "ref": "frozen-commit",
+  "source_authority": "known",
+  "source_digest": "sha256:dcf7c3e6caf75b32e832bc6236e056904ae3d96ffc23904d0a1662b84a684a07",
+  "source_digest_definition": "sha256 of git archive --format=tar --prefix=source/ at the frozen commit",
+  "license_spdx": "MIT",
+  "license_sha256": "sha256:e4d63d6f9b65f053ce5beb8c5225a83c7be73010cef4fb849aca0c52d92b9236",
+  "materialization": "task-local detached clone used only for inventory and bounded probes; Oracle independently fetches and verifies the same commit",
+  "checkout": ".nl2repo/authoring-work/go-glob/source",
+  "commands": [
+    {"command": "git clone https://github.com/gobwas/glob .nl2repo/authoring-work/go-glob/source && git -C .nl2repo/authoring-work/go-glob/source checkout --detach 986c05fb7000e63414ddc61162d0067b7a1f5639", "exit_code": 0},
+    {"command": "git -C .nl2repo/authoring-work/go-glob/source rev-parse HEAD", "exit_code": 0, "output": "986c05fb7000e63414ddc61162d0067b7a1f5639"},
+    {"command": "git -C .nl2repo/authoring-work/go-glob/source archive --format=tar --prefix=source/ HEAD | sha256sum", "exit_code": 0, "output": "dcf7c3e6caf75b32e832bc6236e056904ae3d96ffc23904d0a1662b84a684a07"}
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-glob",
+  "source_revision": "986c05fb7000e63414ddc61162d0067b7a1f5639",
+  "upstream_test_files": ["glob_test.go", "issues_test.go", "fuzz_test.go", "syntax/lexer_test.go"],
+  "active_linux_test_files": ["glob_test.go", "issues_test.go", "fuzz_test.go", "syntax/lexer_test.go"],
+  "upstream_static_test_functions": 7,
+  "upstream_fuzz_functions": 1,
+  "upstream_benchmark_functions": 2,
+  "upstream_examples": 1,
+  "upstream_collection": {"command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -count=1 -json ./...", "exit_code": 0, "packages": 4, "expanded_test_run_events": 209, "static_test_functions": 7, "collection_errors": []},
+  "frozen_leaf": {"id": "contract::public-api", "frozen_total": 1, "framework": "go bridge contract", "private_case_count": 32, "collection_source": "fixed verifier-owned contract"},
+  "retained_behavior": ["whole-string matching with literal, *, **, ?, classes, alternatives, escapes, and Unicode", "separator-limited wildcard behavior", "compiled pattern source and separator metadata", "syntax error classification and byte offsets", "QuoteMeta escaping"],
+  "excluded_behavior": ["syntax lexer package", "debug tree", "CLI", "benchmarks", "fuzz driver"]
+}

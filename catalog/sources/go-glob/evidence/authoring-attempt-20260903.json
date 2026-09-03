@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-glob",
+  "attempt_finished_at": "2026-09-03T15:29:28Z",
+  "work_root": ".nl2repo/authoring-work/go-glob",
+  "source": {
+    "revision": "986c05fb7000e63414ddc61162d0067b7a1f5639",
+    "archive_sha256": "sha256:dcf7c3e6caf75b32e832bc6236e056904ae3d96ffc23904d0a1662b84a684a07",
+    "license_sha256": "sha256:e4d63d6f9b65f053ce5beb8c5225a83c7be73010cef4fb849aca0c52d92b9236"
+  },
+  "commands": [
+    {
+      "command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -count=1 -json ./...",
+      "exit_code": 0,
+      "log": ".nl2repo/authoring-work/go-glob/logs/upstream-go-test-fresh.json",
+      "log_sha256": "sha256:e53726fcd9705c1724d744ee7913ac5f3316181ec3052ea881632ffb0bb4517d"
+    },
+    {
+      "command": "go vet ./...",
+      "exit_code": 0,
+      "log": ".nl2repo/authoring-work/go-glob/logs/go-vet-fresh.txt",
+      "log_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": "bash contract.sh local-contract-fresh/bridge local-proxy",
+      "exit_code": 0,
+      "log": ".nl2repo/authoring-work/go-glob/logs/local-contract-fresh.json",
+      "log_sha256": "sha256:40a13baa2e87e5821fc078a6eaf753aecee8e9d8edbf356ac38d18f866fa3a0d"
+    }
+  ],
+  "upstream_collection": {
+    "packages": 4,
+    "expanded_test_run_events": 209,
+    "fail_events": 0
+  },
+  "private_contract": {
+    "frozen_total": 1,
+    "case_count": 32,
+    "local_result": "passed",
+    "bundle_digest": "sha256:8231431ec2c565d65a7485a49e48f39d7fea2ba4024cfb60ceff3c891911d8b1"
+  }
+}
