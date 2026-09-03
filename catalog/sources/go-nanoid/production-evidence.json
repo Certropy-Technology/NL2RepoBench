@@ -1,0 +1,90 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-nanoid",
+  "terminal_kind": "valid",
+  "status": "packaged",
+  "source_freeze": {
+    "upstream_url": "https://github.com/matoous/go-nanoid",
+    "revision": "2ab893bb7af49f55a4180d22371fbe9f954203b4",
+    "source_digest": "sha256:18957a3e43ffb9b662c49467f7b52beadd78292bfb81505ba85d01bc2411a4b7",
+    "license_spdx": "MIT",
+    "license_sha256": "sha256:f3761e96aa8e31365d2287c5562ab8808ac78e0cbf220e1a15c3a4d3da1cddff",
+    "source_archive_bytes": 30720
+  },
+  "runtime": {
+    "language": "go",
+    "package_manager": "go-modules",
+    "go_version": "1.26.5",
+    "platform": "linux/amd64",
+    "base_image": "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd",
+    "agent_network_mode": "no-network",
+    "agent_allowed_hosts": [],
+    "verifier_network_mode": "no-network",
+    "verifier_image": "sha256:4581419e442c8e4483909abaf39420fcfa302b0c97f7dc6dc526f9c7d8b5c48b"
+  },
+  "dependency_closure": {
+    "kind": "go-module-bundle",
+    "digest": "sha256:9d73397f11b7aea254c710dc316bf32d16cf6d08c5b99ef43b87c581ca34811d",
+    "size_bytes": 491,
+    "offline": true,
+    "direct_dependencies": [],
+    "artifact_path": ".nl2repo/authoring-work/go-nanoid/artifacts/module.tar.gz"
+  },
+  "frozen_collection": {
+    "framework": "Go typed bridge contract",
+    "protocol": "custom-json-v1",
+    "leaf_ids": ["contract::public-api"],
+    "frozen_total": 1,
+    "bridge_request_groups": 9,
+    "upstream_baseline": {"go_test_exit_code": 0, "top_level_test_functions": 4, "subtests": 8, "benchmarks_not_run": 1}
+  },
+  "artifacts": {
+    "module_bundle": {"digest": "sha256:9d73397f11b7aea254c710dc316bf32d16cf6d08c5b99ef43b87c581ca34811d", "size_bytes": 491},
+    "verifier_bundle": {"digest": "sha256:5ed6a32b885a87beffbfaa8ca0a8b547ab756e180df39957a098c72ace02a538", "size_bytes": 1242},
+    "oracle_bundle": {"digest": "sha256:d38211520d6bac15383e35680fb184873140c2a37ab3b803f258dffa4da7a2e6", "size_bytes": 572}
+  },
+  "final_bundle": {
+    "path": ".nl2repo/authoring-work/go-nanoid/compiled-production-final/go-nanoid/bundle.manifest.json",
+    "sha256": "sha256:7942b88f366317d7ec1e996762257e67b6f22b3b7981fd11718d3f75773aa7ee",
+    "canonical_manifest_digest": "sha256:937d3d4aeb05c440b4284fe1886b9a24a44131dfe8db436b31b3a06ccfabb7fe",
+    "file_count": 68
+  },
+  "commands": [
+    {"command": "git clone --no-checkout https://github.com/matoous/go-nanoid upstream && git -C upstream checkout --detach 2ab893bb7af49f55a4180d22371fbe9f954203b4", "exit_code": 0},
+    {"command": "git -C upstream archive --format=tar 2ab893bb7af49f55a4180d22371fbe9f954203b4 | sha256sum", "exit_code": 0, "output": "sha256:18957a3e43ffb9b662c49467f7b52beadd78292bfb81505ba85d01bc2411a4b7"},
+    {"command": "go mod download && go mod vendor && GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -count=1 -json ./...", "exit_code": 0, "summary": "12 passing test actions, 0 failures; collision/distribution checks included"},
+    {"command": "uv run nl2repo task validate-source catalog/sources/go-nanoid", "exit_code": 0, "source_digest": "sha256:fd5b3d8918ec49071902cbb973e79e2ceced8a098bc21a662ccbc2ac60c1f0a6"},
+    {"command": "uv run nl2repo task lint-network --tasks-root catalog/sources", "exit_code": 0, "error_count": 0, "warning_count": 178, "warning_scope": "pre-existing findings in other catalog tasks"},
+    {"command": "uv run nl2repo harbor compile catalog/sources/go-nanoid --output .nl2repo/authoring-work/go-nanoid/compiled-production-final --toolchain toolchain.go.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "exit_code": 0, "bundle_sha256": "sha256:7942b88f366317d7ec1e996762257e67b6f22b3b7981fd11718d3f75773aa7ee"},
+    {"command": "docker build --platform linux/amd64 -f .nl2repo/authoring-work/go-nanoid/compiled-production-final/go-nanoid/tests/Dockerfile -t nl2repobench/go-nanoid-verifier:production-final ...", "exit_code": 0, "image_digest": "sha256:4581419e442c8e4483909abf39420fcfa302b0c97f7dc6dc526f9c7d8b5c48b"},
+    {"command": "PYTHONPATH=src .venv/bin/python src/nl2repobench/verification/go_contract_runner.py --script tests/private/contract.sh --bridge bridge --proxy go_bridge_proxy.py", "exit_code": 0, "summary": "typed bridge contract passed"}
+  ],
+  "oracle": {
+    "kind": "separate-verifier-smoke",
+    "command": "docker run --rm --network none -v <frozen-workspace>:/workspace -v <logs>:/logs nl2repobench/go-nanoid-verifier:production-final /tests/test.sh",
+    "exit_code": 0,
+    "valid": true,
+    "passed": 1,
+    "collected": 1,
+    "frozen_total": 1,
+    "reward": 1.0,
+    "grading": {"path": ".nl2repo/authoring-work/go-nanoid/oracle-production-final/logs/verifier/grading.json", "sha256": "sha256:b00d7a553a2fddacea6fa04621bafef45310450fbfe030c859f754ad2e6f6933"},
+    "network": {"path": ".nl2repo/authoring-work/go-nanoid/oracle-production-final/logs/verifier/network.json", "sha256": "sha256:463dc3baac264a58f980c26d7020ef7b3253635cd2989086cdb5fcaa845b25d6", "public_network_available": false}
+  },
+  "controls": {
+    "empty": {"valid": true, "collected": 0, "passed": 0, "reward": 0.0, "failure_reason": "candidate-installation-failed", "exception": "permitted empty-workspace 0/0 exception"},
+    "stub": {"valid": true, "collected": 1, "passed": 0, "reward": 0.0, "verifier_owned_reward": true},
+    "forgery": {"valid": true, "collected": 1, "passed": 0, "reward": 0.0, "verifier_owned_reward": true},
+    "install-failure": {"valid": true, "collected": 0, "passed": 0, "reward": 0.0, "failure_reason": "candidate-installation-failed"},
+    "panic": {"valid": true, "collected": 1, "passed": 0, "reward": 0.0},
+    "hang": {"valid": true, "collected": 1, "passed": 0, "reward": 0.0},
+    "oversized-output": {"valid": true, "collected": 1, "passed": 0, "reward": 0.0},
+    "background-process": {"valid": true, "collected": 1, "passed": 0, "reward": 0.0}
+  },
+  "offline_replay": {"valid": true, "collected": 1, "passed": 1, "reward": 1.0, "public_network_available": false},
+  "residual_risks": [
+    "The upstream dependency-enabled test suite is baseline evidence; the task candidate closure is intentionally zero-dependency and the typed bridge does not expose testify.",
+    "Random bytes are checked through length and alphabet invariants, not exact values; collision and distribution tests are not deterministic scoring leaves.",
+    "No Harbor Agent Run, blind review, pilot, or publication was performed in this lane; integrator owns those stages."
+  ]
+}

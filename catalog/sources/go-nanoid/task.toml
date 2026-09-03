@@ -1,0 +1,78 @@
+schema_version = "1.0"
+task_id = "go-nanoid"
+version = "0.1.0"
+instruction = "instruction.md"
+oracle_bundle = { digest = "sha256:d38211520d6bac15383e35680fb184873140c2a37ab3b803f258dffa4da7a2e6", size_bytes = 572, media_type = "application/vnd.nl2repobench.go-oracle+tar", uri = "artifact://private/sha256:d38211520d6bac15383e35680fb184873140c2a37ab3b803f258dffa4da7a2e6", visibility = "private" }
+
+[metadata]
+difficulty = "easy"
+category = "go-library"
+tags = ["go", "go-modules", "random-id", "unicode", "typed-bridge", "public-api"]
+language = "go"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/matoous/go-nanoid"
+revision = "2ab893bb7af49f55a4180d22371fbe9f954203b4"
+license_spdx = "MIT"
+source_digest = "sha256:18957a3e43ffb9b662c49467f7b52beadd78292bfb81505ba85d01bc2411a4b7"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+network_mode = "no-network"
+runtime_version = "1.26.5"
+base_image = "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+base_image_digest = "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+build_command = "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -mod=vendor ./..."
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "Candidate and separate verifier execution use a private zero-dependency Go module closure and remain offline; only the trusted Oracle receives a run-scoped github.com authorization for the frozen source revision."
+
+[dependencies]
+status = "known"
+installer = "system"
+packages = []
+module_bundle = { digest = "sha256:9d73397f11b7aea254c710dc316bf32d16cf6d08c5b99ef43b87c581ca34811d", size_bytes = 491, media_type = "application/vnd.nl2repobench.go-module-bundle+tar", uri = "artifact://private/sha256:9d73397f11b7aea254c710dc316bf32d16cf6d08c5b99ef43b87c581ca34811d", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 1
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Recreate the secure random ID generation and alphabet presets of go-nanoid through a bounded typed Go bridge."
+keywords = ["go", "go-modules", "random-id", "unicode", "typed-bridge", "public-api"]
+agent_timeout_sec = 900.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "packaged"
+owner = "go-author-auto-20260903T042249Z"
+reason = "Frozen source, public API inventory, deterministic typed bridge, private offline module closure, Oracle solve, production compile inputs, and task-local negative controls are authored; official Harbor Oracle, controls, review, and model Agent Run remain integrator responsibilities."
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:5ed6a32b885a87beffbfaa8ca0a8b547ab756e180df39957a098c72ace02a538", size_bytes = 1242, media_type = "application/vnd.nl2repobench.go-verifier+tar", uri = "artifact://private/sha256:5ed6a32b885a87beffbfaa8ca0a8b547ab756e180df39957a098c72ace02a538", visibility = "private" }
+entrypoint = "contract.sh"

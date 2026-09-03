@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-nanoid",
+  "method": "go doc -all at frozen revision",
+  "package": "github.com/matoous/go-nanoid/v2",
+  "public_symbol_count": 13,
+  "public_variables": [
+    {"name": "AlphaNum", "kind": "var", "type": "string"},
+    {"name": "Alpha", "kind": "var", "type": "string"},
+    {"name": "AlphaLowerNum", "kind": "var", "type": "string"},
+    {"name": "AlphaUpperNum", "kind": "var", "type": "string"},
+    {"name": "AlphaLower", "kind": "var", "type": "string"},
+    {"name": "AlphaUpper", "kind": "var", "type": "string"},
+    {"name": "Numeric", "kind": "var", "type": "string"},
+    {"name": "CrockfordBase32Upper", "kind": "var", "type": "string"},
+    {"name": "CrockfordBase32Lower", "kind": "var", "type": "string"}
+  ],
+  "public_functions": [
+    {"name": "Generate", "signature": "func Generate(alphabet string, size int) (string, error)"},
+    {"name": "MustGenerate", "signature": "func MustGenerate(alphabet string, size int) string"},
+    {"name": "New", "signature": "func New(l ...int) (string, error)"},
+    {"name": "Must", "signature": "func Must(l ...int) string"}
+  ],
+  "source_file_count": 9,
+  "source_implementation_files": ["gonanoid.go"]
+}

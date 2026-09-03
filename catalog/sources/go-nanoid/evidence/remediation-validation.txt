@@ -1,0 +1,16 @@
+go-nanoid authoring remediation
+
+Source freeze:
+- git clone --no-checkout https://github.com/matoous/go-nanoid upstream && git checkout --detach 2ab893bb7af49f55a4180d22371fbe9f954203b4: exit 0
+- git archive --format=tar 2ab893bb7af49f55a4180d22371fbe9f954203b4 | sha256sum: 18957a3e43ffb9b662c49467f7b52beadd78292bfb81505ba85d01bc2411a4b7
+- LICENSE sha256: f3761e96aa8e31365d2287c5562ab8808ac78e0cbf220e1a15c3a4d3da1cddff
+
+Environment remediation:
+- go version: go1.26.5-X:nodwarf5 linux/amd64
+- upstream go.mod: module github.com/matoous/go-nanoid/v2, go 1.23, testify 1.10.0 test closure
+- production adaptation: root candidate module is zero-dependency and uses locked go 1.26.5; Oracle preserves package source and rewrites only module metadata/vendor closure
+- upstream dependency-enabled probe: go mod download && go mod vendor && GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -count=1 -json ./...: exit 0
+
+Boundary:
+- no filesystem, network, callback, native, or live-service behavior crosses the bridge
+- random outputs are checked for requested length and alphabet membership; exact random values are intentionally not asserted

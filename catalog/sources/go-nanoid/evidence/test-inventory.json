@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-nanoid",
+  "source_revision": "2ab893bb7af49f55a4180d22371fbe9f954203b4",
+  "upstream_test_command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -mod=vendor -count=1 -json ./...",
+  "upstream_baseline": {
+    "go_test_exit_code": 0,
+    "top_level_test_functions": 4,
+    "subtests": 8,
+    "benchmarks_not_run": 1,
+    "packages": ["github.com/matoous/go-nanoid/v2", "github.com/matoous/go-nanoid/v2/examples"],
+    "test_runtime_seconds": 0.77,
+    "randomized_tests": ["TestHasNoCollisions", "TestFlatDistribution"]
+  },
+  "private_contract": {
+    "framework": "Go typed bridge contract",
+    "protocol": "custom-json-v1",
+    "leaf_id": "contract::public-api",
+    "frozen_total": 1,
+    "bridge_request_groups": 9,
+    "reason": "The trusted contract batches serializable assertions for all exported variables and functions into one verifier-owned leaf under the current Go compiler profile."
+  },
+  "remediation": "The upstream test dependency closure uses testify and is kept in the authoring source-freeze probe; the production candidate module is intentionally zero-dependency because gonanoid.go imports only crypto/rand, errors, and math."
+}

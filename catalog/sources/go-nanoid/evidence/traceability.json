@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-nanoid",
+  "verifier_protocol": "custom-json-v1",
+  "candidate_execution": "bounded subprocess through typed bridge proxy",
+  "contract_leaf": {
+    "id": "contract::public-api",
+    "frozen_total": 1,
+    "instruction_sections": ["instruction.md#project-description", "instruction.md#supports", "instruction.md#api-usage-guide", "instruction.md#implementation-notes"],
+    "behavior_groups": [
+      {"group": "exported alphabet presets", "apis": ["AlphaNum", "Alpha", "AlphaLowerNum", "AlphaUpperNum", "AlphaLower", "AlphaUpper", "Numeric", "CrockfordBase32Upper", "CrockfordBase32Lower"], "bridge_cases": ["constants"]},
+      {"group": "custom alphabet generation", "apis": ["Generate", "MustGenerate"], "bridge_cases": ["generate-ascii", "generate-unicode", "generate-errors", "must-generate"]},
+      {"group": "default generation", "apis": ["New", "Must"], "bridge_cases": ["new-default", "new-zero", "new-errors", "must"]}
+    ]
+  },
+  "adaptations": [
+    "The random source remains crypto/rand and is observed through output invariants rather than exact bytes.",
+    "The subprocess bridge transports owned UTF-8 strings and scalar integers; no random reader, mutable package state, or pointer crosses the boundary.",
+    "Upstream collision and distribution checks are retained as source baseline evidence but are not used as a flaky scoring oracle; deterministic contract assertions cover their public consequences."
+  ]
+}
