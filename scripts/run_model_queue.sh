@@ -76,11 +76,21 @@ stop_children() {
 trap stop_children INT TERM
 
 reap_one() {
-    local finished_pid task rc
+    local finished_pid="" task rc
     if wait -n -p finished_pid "${!active_tasks[@]}"; then
         rc=0
     else
         rc=$?
+    fi
+    if [[ -z "$finished_pid" ]]; then
+        # wait -n can be interrupted while the TERM trap is stopping children.
+        # Do not let set -u turn an intentional queue stop into a launcher bug.
+        for finished_pid in "${!active_tasks[@]}"; do
+            wait "$finished_pid" 2>/dev/null || true
+            unset 'active_tasks[$finished_pid]'
+        done
+        active=0
+        return
     fi
     task="${active_tasks[$finished_pid]}"
     unset 'active_tasks[$finished_pid]'

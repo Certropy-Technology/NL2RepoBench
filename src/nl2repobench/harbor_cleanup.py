@@ -29,6 +29,10 @@ def project_for_trial(trial_dir: Path) -> str | None:
     name = trial_dir.name
     if not TRIAL_NAME.fullmatch(name):
         return None
+    if "__" in name and not name.startswith("harbor__"):
+        # Harbor 0.21 task-scoped projects use the task and trial ID directly.
+        # Keep this exact shape so cleanup cannot match unrelated compose apps.
+        return f"{name.lower()}__env"
     suffix = name.removeprefix("harbor__")
     if not suffix or not TRIAL_NAME.fullmatch(suffix):
         return None

@@ -23,6 +23,16 @@ status = _load_script("reconcile_task_status")
 uploader = _load_script("upload_runs_to_oss")
 
 
+def test_harbor_cleanup_accepts_task_scoped_trial_project_names() -> None:
+    from nl2repobench.harbor_cleanup import project_for_trial
+
+    assert (
+        project_for_trial(Path("validate-npm-package-name__NS89g4F"))
+        == "validate-npm-package-name__ns89g4f__env"
+    )
+    assert project_for_trial(Path("harbor__abc")) == "harbor__abc__env"
+
+
 def test_archive_manifest_rejects_duplicate_keys(tmp_path: Path) -> None:
     manifest = tmp_path / "objects.json"
     row = {"key": "nl2repobench/runs/gpt/demo/trial/result", "size": 1, "sha256": "a" * 64}

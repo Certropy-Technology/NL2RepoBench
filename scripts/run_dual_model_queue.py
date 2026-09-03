@@ -129,9 +129,12 @@ def build_plan(
     per_model_concurrency: int = 2,
     harbor_task_root: Path | None = None,
     model_specs: tuple[ModelSpec, ...] = MODEL_SPECS,
+    agent_timeout_seconds: int = 18000,
 ) -> dict[str, Any]:
     if not 1 <= per_model_concurrency <= 4:
         raise ValueError("per_model_concurrency must be between 1 and 4")
+    if agent_timeout_seconds < 1:
+        raise ValueError("agent_timeout_seconds must be positive")
     tasks = campaign_tasks(campaign_path)
     existing_by_model, refs_by_task = existing_model_runs(existing_inventory)
     campaign = _json(campaign_path)
@@ -169,6 +172,7 @@ def build_plan(
                 "skipped_existing_tasks": sorted(existing_for_model.intersection(tasks)),
                 "run_root": str((run_root / spec.run_prefix).resolve()),
                 "lock_root": str((lock_root / spec.run_prefix).resolve()),
+                "agent_timeout_seconds": agent_timeout_seconds,
                 "retry_policy": "infrastructure-only",
                 "concurrency": per_model_concurrency,
                 "harbor_task_root": str(harbor_task_root.resolve())
@@ -204,6 +208,7 @@ def build_plan(
         "models": queues,
         "credential_policy": "Pi provider config only; no key in plan or argv",
         "per_model_concurrency": per_model_concurrency,
+        "agent_timeout_seconds": agent_timeout_seconds,
         "max_total_concurrency": per_model_concurrency * len(model_specs),
     }
 
@@ -228,6 +233,8 @@ def _run_queue(queue: dict[str, Any], models_file: Path) -> dict[str, Any]:
         queue["lock_root"],
         "--concurrency",
         str(queue.get("concurrency", 2)),
+        "--agent-timeout-seconds",
+        str(queue.get("agent_timeout_seconds", 18000)),
         "--models-file",
         str(models_file),
     ]
@@ -269,6 +276,7 @@ def main() -> int:
         help="Trusted JSON inventory of OSS runs to skip; entries must declare source=oss.",
     )
     parser.add_argument("--per-model-concurrency", type=int, default=2)
+    parser.add_argument("--agent-timeout-seconds", type=int, default=14400)
     parser.add_argument("--harbor-task-root", type=Path)
     parser.add_argument(
         "--second-model",
@@ -288,6 +296,7 @@ def main() -> int:
             per_model_concurrency=args.per_model_concurrency,
             harbor_task_root=args.harbor_task_root,
             model_specs=MODEL_SETS[args.second_model],
+            agent_timeout_seconds=args.agent_timeout_seconds,
         )
     except (OSError, ValueError) as exc:
         print(f"dual model plan failed: {exc}", file=sys.stderr)

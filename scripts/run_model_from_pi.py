@@ -175,6 +175,12 @@ def main() -> int:
         help="Bounded concurrent Harbor trials (default: 2).",
     )
     parser.add_argument(
+        "--agent-timeout-seconds",
+        type=int,
+        default=18000,
+        help="Harbor agent phase timeout for each task, in seconds.",
+    )
+    parser.add_argument(
         "--credential-env",
         help="Use this already-exported environment variable instead of the Pi literal key.",
     )
@@ -191,6 +197,8 @@ def main() -> int:
 
     if not 1 <= args.concurrency <= 8:
         raise SystemExit("--concurrency must be between 1 and 8")
+    if args.agent_timeout_seconds < 1:
+        raise SystemExit("--agent-timeout-seconds must be positive")
 
     task_names = [item.strip() for item in args.task.split(",") if item.strip()]
     if not task_names:
@@ -264,7 +272,7 @@ def main() -> int:
             "RUN_PREFIX": args.run_prefix,
             "LOCK_ROOT": str(lock_root),
             "MAX_CONCURRENCY": str(args.concurrency),
-            "AGENT_TIMEOUT_SECONDS": "18000",
+            "AGENT_TIMEOUT_SECONDS": str(args.agent_timeout_seconds),
             "AGENT_SETUP_TIMEOUT_MULTIPLIER": "3",
             "REASONING_EFFORT": "max",
             "MAX_RETRIES": "3",

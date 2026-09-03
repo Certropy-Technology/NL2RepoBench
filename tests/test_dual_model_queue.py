@@ -84,6 +84,7 @@ def test_dual_plan_resolves_both_pi_providers_without_serializing_keys(
     }
     assert all(item["concurrency"] == 2 for item in plan["models"])
     assert plan["max_total_concurrency"] == 4
+    assert plan["agent_timeout_seconds"] == 18000
     by_model = {item["model_id"]: item for item in plan["models"]}
     assert by_model["claude-fable-5"]["provider"] == "z-open-api-fabel5"
     assert by_model["claude-fable-5"]["credential_env"] is None
@@ -163,6 +164,36 @@ def test_dual_plan_can_select_claude_opus_5(tmp_path: Path, monkeypatch) -> None
     )
     assert by_model["claude-opus-5"]["api"] == "anthropic-messages"
     assert by_model["claude-opus-5"]["harbor_model"] == "anthropic/claude-opus-5"
+
+
+def test_dual_queue_passes_agent_timeout_to_model_runner(
+    tmp_path: Path, monkeypatch
+) -> None:
+    calls: list[list[str]] = []
+
+    class Result:
+        returncode = 0
+
+    def fake_run(command, **kwargs):
+        calls.append(command)
+        del kwargs
+        return Result()
+
+    monkeypatch.setattr(dual.subprocess, "run", fake_run)
+    queue = {
+        "provider": "z-open-api-gpt-openai-responses",
+        "model_id": "gpt-5.6-sol",
+        "harbor_model": "openai/gpt-5.6-sol",
+        "run_prefix": "gpt56",
+        "run_root": str(tmp_path / "runs"),
+        "lock_root": str(tmp_path / "locks"),
+        "tasks": ["demo"],
+        "agent_timeout_seconds": 14400,
+    }
+    result = dual._run_queue(queue, tmp_path / "models.json")
+
+    assert result["status"] == "completed"
+    assert calls[0][calls[0].index("--agent-timeout-seconds") + 1] == "14400"
 
 
 def test_dual_queue_invocation_keeps_credentials_out_of_argv(tmp_path: Path, monkeypatch) -> None:
