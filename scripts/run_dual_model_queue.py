@@ -28,20 +28,35 @@ class ModelSpec:
     credential_env: str | None = None
 
 
-MODEL_SPECS = (
-    ModelSpec(
-        provider="z-open-api-gpt-openai-responses",
-        model_id="gpt-5.6-sol",
-        harbor_model="openai/gpt-5.6-sol",
-        run_prefix="gpt56",
-    ),
-    ModelSpec(
-        provider="z-open-api-fabel5",
-        model_id="claude-fable-5",
-        harbor_model="anthropic/claude-fable-5",
-        run_prefix="fable",
-    ),
+GPT_SPEC = ModelSpec(
+    provider="z-open-api-gpt-openai-responses",
+    model_id="gpt-5.6-sol",
+    harbor_model="openai/gpt-5.6-sol",
+    run_prefix="gpt56",
 )
+
+FABLE_SPEC = ModelSpec(
+    provider="z-open-api-fabel5",
+    model_id="claude-fable-5",
+    harbor_model="anthropic/claude-fable-5",
+    run_prefix="fable",
+)
+
+OPUS_SPEC = ModelSpec(
+    provider="z-open-api-claude-anthropic-messages",
+    model_id="claude-opus-5",
+    harbor_model="anthropic/claude-opus-5",
+    run_prefix="opus5",
+)
+
+MODEL_SETS = {
+    "fable": (GPT_SPEC, FABLE_SPEC),
+    "opus": (GPT_SPEC, OPUS_SPEC),
+}
+
+# Backward-compatible default for programmatic callers and the historical
+# GPT/Fable campaign tests.
+MODEL_SPECS = MODEL_SETS["fable"]
 
 
 def _json(path: Path) -> dict[str, Any]:
@@ -113,18 +128,18 @@ def build_plan(
     existing_inventory: Path | None = None,
     per_model_concurrency: int = 2,
     harbor_task_root: Path | None = None,
+    model_specs: tuple[ModelSpec, ...] = MODEL_SPECS,
 ) -> dict[str, Any]:
     if not 1 <= per_model_concurrency <= 4:
         raise ValueError("per_model_concurrency must be between 1 and 4")
     tasks = campaign_tasks(campaign_path)
-    _, refs_by_task = existing_model_runs(existing_inventory)
-    existing_tasks = set(refs_by_task)
+    existing_by_model, refs_by_task = existing_model_runs(existing_inventory)
     campaign = _json(campaign_path)
     campaign_id = campaign.get("campaign_id") or campaign_path.stem
     if not isinstance(campaign_id, str) or SAFE_NAME.fullmatch(campaign_id) is None:
         raise ValueError("campaign_id must be a safe name")
     queues: list[dict[str, Any]] = []
-    for spec in MODEL_SPECS:
+    for spec in model_specs:
         api, base_url, _ = provider_config(
             models_file,
             spec.provider,
@@ -138,7 +153,8 @@ def build_plan(
             spec.model_id,
             spec.harbor_model,
         )
-        missing_tasks = [task for task in tasks if task not in existing_tasks]
+        existing_for_model = existing_by_model.get(spec.model_id, set())
+        missing_tasks = [task for task in tasks if task not in existing_for_model]
         queues.append(
             {
                 **asdict(spec),
@@ -146,7 +162,7 @@ def build_plan(
                 "base_url": runtime_base_url,
                 "harbor_model": runtime_model,
                 "tasks": missing_tasks,
-                "skipped_existing_tasks": sorted(set(tasks) - set(missing_tasks)),
+                "skipped_existing_tasks": sorted(existing_for_model.intersection(tasks)),
                 "run_root": str((run_root / spec.run_prefix).resolve()),
                 "lock_root": str((lock_root / spec.run_prefix).resolve()),
                 "retry_policy": "infrastructure-only",
@@ -168,14 +184,23 @@ def build_plan(
             if existing_inventory
             else None
         ),
-        "skipped_existing_tasks": sorted(existing_tasks.intersection(tasks)),
+        "skipped_existing_tasks": sorted(
+            task
+            for task in tasks
+            if all(task in existing_by_model.get(spec.model_id, set()) for spec in model_specs)
+        ),
         "existing_oss_runs": {
-            task: refs_by_task[task] for task in sorted(existing_tasks.intersection(tasks))
+            task: [
+                row
+                for row in refs_by_task[task]
+                if row.get("model") in {spec.model_id for spec in model_specs}
+            ]
+            for task in sorted(set(refs_by_task).intersection(tasks))
         },
         "models": queues,
         "credential_policy": "Pi provider config only; no key in plan or argv",
         "per_model_concurrency": per_model_concurrency,
-        "max_total_concurrency": per_model_concurrency * len(MODEL_SPECS),
+        "max_total_concurrency": per_model_concurrency * len(model_specs),
     }
 
 
@@ -241,6 +266,12 @@ def main() -> int:
     )
     parser.add_argument("--per-model-concurrency", type=int, default=2)
     parser.add_argument("--harbor-task-root", type=Path)
+    parser.add_argument(
+        "--second-model",
+        choices=sorted(MODEL_SETS),
+        default="fable",
+        help="Run GPT-5.6 Sol with either Claude Fable 5 or Claude Opus 5.",
+    )
     parser.add_argument("--execute", action="store_true")
     args = parser.parse_args()
     try:
@@ -252,6 +283,7 @@ def main() -> int:
             existing_inventory=args.existing_inventory,
             per_model_concurrency=args.per_model_concurrency,
             harbor_task_root=args.harbor_task_root,
+            model_specs=MODEL_SETS[args.second_model],
         )
     except (OSError, ValueError) as exc:
         print(f"dual model plan failed: {exc}", file=sys.stderr)

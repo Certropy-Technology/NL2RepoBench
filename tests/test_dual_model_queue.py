@@ -39,6 +39,12 @@ def _models(path: Path) -> None:
                         "apiKey": "${TEST_MODEL_KEY}",
                         "models": [{"id": "claude-fable-5"}],
                     },
+                    "z-open-api-claude-anthropic-messages": {
+                        "api": "anthropic-messages",
+                        "baseUrl": "https://example.invalid",
+                        "apiKey": "${TEST_MODEL_KEY}",
+                        "models": [{"id": "claude-opus-5"}],
+                    },
                 }
             }
         ),
@@ -128,6 +134,33 @@ def test_dual_plan_allows_fable_provider_env_override_without_old_env(
     )
 
     assert len(plan["models"]) == 2
+
+
+def test_dual_plan_can_select_claude_opus_5(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.setenv("TEST_MODEL_KEY", "test-key-not-written-to-plan")
+    models = tmp_path / "models.json"
+    _models(models)
+    campaign = tmp_path / "campaign.json"
+    campaign.write_text(
+        json.dumps({"campaign_id": "opus-pilot", "tasks": [{"task_id": "demo"}]}),
+        encoding="utf-8",
+    )
+
+    plan = dual.build_plan(
+        campaign,
+        run_root=tmp_path / "runs",
+        lock_root=tmp_path / "locks",
+        models_file=models,
+        model_specs=dual.MODEL_SETS["opus"],
+    )
+
+    by_model = {item["model_id"]: item for item in plan["models"]}
+    assert set(by_model) == {"gpt-5.6-sol", "claude-opus-5"}
+    assert by_model["claude-opus-5"]["provider"] == (
+        "z-open-api-claude-anthropic-messages"
+    )
+    assert by_model["claude-opus-5"]["api"] == "anthropic-messages"
+    assert by_model["claude-opus-5"]["harbor_model"] == "anthropic/claude-opus-5"
 
 
 def test_dual_queue_invocation_keeps_credentials_out_of_argv(tmp_path: Path, monkeypatch) -> None:
@@ -235,5 +268,5 @@ def test_dual_plan_skips_only_oss_backed_existing_runs(tmp_path: Path, monkeypat
     by_model = {model["model_id"]: model for model in plan["models"]}
     assert by_model["gpt-5.6-sol"]["tasks"] == []
     assert by_model["gpt-5.6-sol"]["skipped_existing_tasks"] == ["demo"]
-    assert by_model["claude-fable-5"]["tasks"] == []
-    assert by_model["claude-fable-5"]["skipped_existing_tasks"] == ["demo"]
+    assert by_model["claude-fable-5"]["tasks"] == ["demo"]
+    assert by_model["claude-fable-5"]["skipped_existing_tasks"] == []
