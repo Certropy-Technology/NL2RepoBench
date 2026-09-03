@@ -1,0 +1,54 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/go-gods"
+version = "0.1.0"
+description = "Recreate the deterministic public data-structure APIs of emirpasic/gods through a typed JSON subprocess bridge."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "go",
+    "go-modules",
+    "data-structures",
+    "generics",
+    "typed-bridge",
+    "public-api",
+]
+
+[metadata]
+difficulty = "hard"
+category = "go-data-structures"
+tags = [
+    "go",
+    "go-modules",
+    "data-structures",
+    "generics",
+    "typed-bridge",
+    "public-api",
+]
+language = "go"
+runtime = "go"
+runtime_version = "1.26.5"
+package_manager = "go-modules"
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 1
+canonical_manifest_digest = "sha256:cc5898332bb2a3db70e98e8fb1da4a2608c3839a2f187985da920b5e0dc7945a"
+toolchain_lock_digest = "sha256:baa477549dd86ccfe68422aafd900a2ab76f0b091de9a85f9db883f9d6a551a3"
+
+[agent]
+timeout_sec = 1200.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[environment]
+network_mode = "no-network"
+cpus = 1
+memory_mb = 4096
+storage_mb = 4096

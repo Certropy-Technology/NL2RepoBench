@@ -1,0 +1,258 @@
+{
+  "bundle": {
+    "handoff_artifacts": {
+      "bundle_manifest": ".nl2repo/compiled/go-gods-final2/go-gods/bundle.manifest.json",
+      "bundle_manifest_sha256": "sha256:16298265bac4ad334a607fe16a76f5e5b8d08e298a67391c339e46bd1fe4bf84",
+      "canonical_manifest_digest": "sha256:cc5898332bb2a3db70e98e8fb1da4a2608c3839a2f187985da920b5e0dc7945a",
+      "compiled_bundle": ".nl2repo/compiled/go-gods-final2/go-gods",
+      "module_bundle": {
+        "digest": "sha256:77876a99db85ec8ae3f7691ef62254bd5df22d31a318efe284b58d71e2f6f9fc",
+        "size_bytes": 587
+      },
+      "oracle_bundle": {
+        "digest": "sha256:ec410f4c4da4b3694ffbd59b599bb958f7bee82036b5e141d4568e551927bef6",
+        "size_bytes": 836
+      },
+      "verifier_bundle": {
+        "digest": "sha256:50c81a438eb3da19aa8ecad3e2393ab55b62cf5768c605d4782d3facd47b5db2",
+        "size_bytes": 1608
+      }
+    },
+    "handoff_compiled_bundle": null
+  },
+  "commands": [
+    {
+      "command": "uv run nl2repo task validate-source catalog/sources/go-gods",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources/go-gods",
+      "exit_code": 0,
+      "summary": "0 errors, 0 warnings"
+    },
+    {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "summary": "178 warnings from unrelated tasks; no errors"
+    },
+    {
+      "command": "bash -n catalog/sources/go-gods/harbor/controls/*.sh catalog/sources/go-gods/harbor/tests/*.sh catalog/sources/go-gods/harbor/solution/solve.sh",
+      "exit_code": 0
+    },
+    {
+      "command": "gofmt -d catalog/sources/go-gods/harbor/tests/bridge.go",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run nl2repo harbor compile catalog/sources/go-gods --output .nl2repo/compiled/go-gods-final2 --toolchain toolchain.go.lock.toml --artifact-root /data/NL2RepoBench-integration-20260827/.nl2repo/artifacts --allow-private",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run --frozen --project harbor-runner harbor --version",
+      "exit_code": 0,
+      "version": "0.21.0"
+    },
+    {
+      "command": "fresh official Harbor 0.21.0 Oracle and controls matrix",
+      "exit_code": 0
+    }
+  ],
+  "controls": {
+    "background-process": {
+      "collected": 1,
+      "exit_code": 0,
+      "frozen_total": 1,
+      "grading": ".nl2repo/runs/go-gods-final3/background-process/go-gods-final3-background-process/go-gods-background-process__TUtBxuz/verifier/grading.json",
+      "network": ".nl2repo/runs/go-gods-final3/background-process/go-gods-final3-background-process/go-gods-background-process__TUtBxuz/verifier/network.json",
+      "passed": 0,
+      "result": ".nl2repo/runs/go-gods-final3/background-process/go-gods-final3-background-process/result.json",
+      "reward": 0.0,
+      "reward_receipt": ".nl2repo/runs/go-gods-final3/background-process/go-gods-final3-background-process/go-gods-background-process__TUtBxuz/verifier/reward.json",
+      "valid": true
+    },
+    "empty": {
+      "allowed_install_failure_0_of_0": true,
+      "collected": 0,
+      "exit_code": 0,
+      "failure_reason": "candidate-installation-failed",
+      "frozen_total": 1,
+      "grading": ".nl2repo/runs/go-gods-final3/empty/go-gods-final3-empty/go-gods__QBWvLqq/verifier/grading.json",
+      "network": ".nl2repo/runs/go-gods-final3/empty/go-gods-final3-empty/go-gods__QBWvLqq/verifier/network.json",
+      "passed": 0,
+      "result": ".nl2repo/runs/go-gods-final3/empty/go-gods-final3-empty/result.json",
+      "reward": 0.0,
+      "reward_receipt": ".nl2repo/runs/go-gods-final3/empty/go-gods-final3-empty/go-gods__QBWvLqq/verifier/reward.json",
+      "valid": true
+    },
+    "forgery": {
+      "collected": 1,
+      "exit_code": 0,
+      "frozen_total": 1,
+      "grading": ".nl2repo/runs/go-gods-final3/forgery/go-gods-final3-forgery/go-gods-forgery__p3M4Bpm/verifier/grading.json",
+      "network": ".nl2repo/runs/go-gods-final3/forgery/go-gods-final3-forgery/go-gods-forgery__p3M4Bpm/verifier/network.json",
+      "passed": 0,
+      "result": ".nl2repo/runs/go-gods-final3/forgery/go-gods-final3-forgery/result.json",
+      "reward": 0.0,
+      "reward_receipt": ".nl2repo/runs/go-gods-final3/forgery/go-gods-final3-forgery/go-gods-forgery__p3M4Bpm/verifier/reward.json",
+      "valid": true,
+      "verifier_owned_reward": true
+    },
+    "hang": {
+      "collected": 1,
+      "exit_code": 0,
+      "frozen_total": 1,
+      "grading": ".nl2repo/runs/go-gods-final3/hang/go-gods-final3-hang/go-gods-hang__TBCPcUi/verifier/grading.json",
+      "network": ".nl2repo/runs/go-gods-final3/hang/go-gods-final3-hang/go-gods-hang__TBCPcUi/verifier/network.json",
+      "passed": 0,
+      "result": ".nl2repo/runs/go-gods-final3/hang/go-gods-final3-hang/result.json",
+      "reward": 0.0,
+      "reward_receipt": ".nl2repo/runs/go-gods-final3/hang/go-gods-final3-hang/go-gods-hang__TBCPcUi/verifier/reward.json",
+      "valid": true
+    },
+    "install-failure": {
+      "allowed_install_failure_0_of_0": true,
+      "collected": 0,
+      "exit_code": 0,
+      "failure_reason": "candidate-installation-failed",
+      "frozen_total": 1,
+      "grading": ".nl2repo/runs/go-gods-final3/install-failure/go-gods-final3-install-failure/go-gods-install-failure__VF7r2Eb/verifier/grading.json",
+      "network": ".nl2repo/runs/go-gods-final3/install-failure/go-gods-final3-install-failure/go-gods-install-failure__VF7r2Eb/verifier/network.json",
+      "passed": 0,
+      "result": ".nl2repo/runs/go-gods-final3/install-failure/go-gods-final3-install-failure/result.json",
+      "reward": 0.0,
+      "reward_receipt": ".nl2repo/runs/go-gods-final3/install-failure/go-gods-final3-install-failure/go-gods-install-failure__VF7r2Eb/verifier/reward.json",
+      "valid": true
+    },
+    "offline": {
+      "collected": 1,
+      "exit_code": 0,
+      "frozen_total": 1,
+      "grading": ".nl2repo/runs/go-gods-final3/offline/go-gods-final3-offline/go-gods__DbVq7PN/verifier/grading.json",
+      "network": ".nl2repo/runs/go-gods-final3/offline/go-gods-final3-offline/go-gods__DbVq7PN/verifier/network.json",
+      "passed": 1,
+      "public_network_available": false,
+      "result": ".nl2repo/runs/go-gods-final3/offline/go-gods-final3-offline/result.json",
+      "reward": 1.0,
+      "reward_receipt": ".nl2repo/runs/go-gods-final3/offline/go-gods-final3-offline/go-gods__DbVq7PN/verifier/reward.json",
+      "valid": true
+    },
+    "oversized-output": {
+      "collected": 1,
+      "exit_code": 0,
+      "frozen_total": 1,
+      "grading": ".nl2repo/runs/go-gods-final3/oversized-output/go-gods-final3-oversized-output/go-gods-oversized-output__CExq8Yg/verifier/grading.json",
+      "network": ".nl2repo/runs/go-gods-final3/oversized-output/go-gods-final3-oversized-output/go-gods-oversized-output__CExq8Yg/verifier/network.json",
+      "passed": 0,
+      "result": ".nl2repo/runs/go-gods-final3/oversized-output/go-gods-final3-oversized-output/result.json",
+      "reward": 0.0,
+      "reward_receipt": ".nl2repo/runs/go-gods-final3/oversized-output/go-gods-final3-oversized-output/go-gods-oversized-output__CExq8Yg/verifier/reward.json",
+      "valid": true
+    },
+    "panic": {
+      "collected": 1,
+      "exit_code": 0,
+      "frozen_total": 1,
+      "grading": ".nl2repo/runs/go-gods-final3/panic/go-gods-final3-panic/go-gods-panic__34QgNbt/verifier/grading.json",
+      "network": ".nl2repo/runs/go-gods-final3/panic/go-gods-final3-panic/go-gods-panic__34QgNbt/verifier/network.json",
+      "passed": 0,
+      "result": ".nl2repo/runs/go-gods-final3/panic/go-gods-final3-panic/result.json",
+      "reward": 0.0,
+      "reward_receipt": ".nl2repo/runs/go-gods-final3/panic/go-gods-final3-panic/go-gods-panic__34QgNbt/verifier/reward.json",
+      "valid": true
+    },
+    "stub": {
+      "collected": 1,
+      "exit_code": 0,
+      "frozen_total": 1,
+      "grading": ".nl2repo/runs/go-gods-final3/stub/go-gods-final3-stub/go-gods-stub__QL6yfFx/verifier/grading.json",
+      "network": ".nl2repo/runs/go-gods-final3/stub/go-gods-final3-stub/go-gods-stub__QL6yfFx/verifier/network.json",
+      "passed": 0,
+      "result": ".nl2repo/runs/go-gods-final3/stub/go-gods-final3-stub/result.json",
+      "reward": 0.0,
+      "reward_receipt": ".nl2repo/runs/go-gods-final3/stub/go-gods-final3-stub/go-gods-stub__QL6yfFx/verifier/reward.json",
+      "valid": true,
+      "verifier_owned_reward": true
+    }
+  },
+  "dependency_closure": {
+    "installer": "system",
+    "module_bundle": {
+      "digest": "sha256:77876a99db85ec8ae3f7691ef62254bd5df22d31a318efe284b58d71e2f6f9fc",
+      "size_bytes": 587,
+      "uri": "artifact://private/sha256:77876a99db85ec8ae3f7691ef62254bd5df22d31a318efe284b58d71e2f6f9fc",
+      "visibility": "private"
+    },
+    "packages": [],
+    "status": "known"
+  },
+  "environment": {
+    "base_image": "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd",
+    "base_image_digest": "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd",
+    "build_command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -mod=vendor ./...",
+    "network_mode": "no-network",
+    "network_policy": {
+      "mode": "no-network",
+      "offline_dependencies": "private-artifact",
+      "reason": "The candidate and separate verifier use a private pre-materialized Go module closure and run without network.",
+      "reference_source_fetch": "forbidden"
+    },
+    "os_name": "debian-bookworm",
+    "runtime_version": "1.26.5",
+    "status": "known"
+  },
+  "frozen_collection": {
+    "handoff_collection": null,
+    "handoff_frozen_tests": null,
+    "handoff_inventory": null,
+    "tests": {
+      "commands": [
+        "custom-json-v1"
+      ],
+      "expected_total": 1,
+      "expected_total_source": "frozen-collection",
+      "framework": "pytest"
+    }
+  },
+  "integrator_repair": {
+    "input_handoff": ".nl2repo/authoring-handoff.json",
+    "kind": "production-evidence-from-authored-handoff",
+    "official_controls_created": false,
+    "official_oracle_created": false,
+    "recorded_at": "2026-09-03T17:27:47.100818+00:00",
+    "source": "agent-production-gate-receipt"
+  },
+  "lifecycle": {
+    "owner": "go-author-wave2-20260828-c3",
+    "reason": "Frozen Go v2 data-structure library with a deterministic typed bridge, private offline closure, verifier, Oracle, and all required Harbor controls completed against the final compiled bundle.",
+    "status": "controls-passed"
+  },
+  "oracle": {
+    "collected": 1,
+    "exit_code": 0,
+    "frozen_total": 1,
+    "grading": ".nl2repo/runs/go-gods-final3/oracle/go-gods-final3-oracle/go-gods__E5Cohej/verifier/grading.json",
+    "network": ".nl2repo/runs/go-gods-final3/oracle/go-gods-final3-oracle/go-gods__E5Cohej/verifier/network.json",
+    "passed": 1,
+    "result": ".nl2repo/runs/go-gods-final3/oracle/go-gods-final3-oracle/result.json",
+    "reward": 1.0,
+    "reward_receipt": ".nl2repo/runs/go-gods-final3/oracle/go-gods-final3-oracle/go-gods__E5Cohej/verifier/reward.json",
+    "valid": true
+  },
+  "residual_risks": [
+    "The typed bridge covers deterministic JSON-serializable int/string container behavior; callback and unsafe/internal APIs are outside the serializable contract.",
+    "The Oracle applies the documented Go directive-only adaptation from upstream Go 1.21 to locked Go 1.26.5.",
+    "Global catalog network lint reports 178 warnings from unrelated tasks; go-gods task-local lint reports zero errors and zero warnings.",
+    "The task is controls-passed, not reviewed, piloted, or published; integrator owns those release stages."
+  ],
+  "schema_version": "1.0",
+  "source_freeze": {
+    "license_spdx": "BSD-3-Clause",
+    "revision": "1d83d5ae39fbb0de45a60365791ff1c8b9bae953",
+    "source_digest": "sha256:a92231b4759f195eb0dc3467badc410494761aeefedbf1afed96411b5f6f2b34",
+    "upstream_url": "https://github.com/emirpasic/gods"
+  },
+  "status": "controls-passed",
+  "task_id": "go-gods",
+  "task_version": "0.1.0",
+  "terminal_kind": "controls-passed"
+}
