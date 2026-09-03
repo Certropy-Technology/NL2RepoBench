@@ -66,9 +66,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "packaged"
+status = "controls-passed"
 owner = "authoring-go-discover-b-r3-20260903"
-reason = "Frozen source, reviewed public behavior bridge, private offline Go module closure, verifier contract, and Oracle solve are packaged; current validation, production compile, and controls remain part of this authoring attempt."
+reason = "Fresh Harbor 0.21.0 production compile, trusted Oracle, empty/install-failure, stub, forgery, panic, hang, oversized-output, background-process, and authorized offline controls passed in the 2026-09-04 repair attempt."
 
 [verifier]
 protocol = "custom-json-v1"

@@ -18,4 +18,9 @@ verifier_image=sha256:a47f3073748e2eacba199e7e9fbabc8b373e55af698ccf83222f571c98
 oracle_smoke=valid=true collected=1 passed=1 reward=1.0
 controls_smoke=stub/forgery/panic/hang/oversized-output/background-process collected=1 passed=0 reward=0.0; install-failure collected=0 allowed exception
 offline_smoke=valid=true collected=1 passed=1 reward=1.0 public_network_available=false
-next_step=integrator-owned Harbor Oracle receipt and model Agent Run remain pending; this lane does not start either Agent Run
+repair_attempt=2026-09-04
+repair_compile=uv run nl2repo harbor compile catalog/sources/go-ordered-map --output .nl2repo/compiled/go-ordered-map-repair-20260904 --toolchain toolchain.go.lock.toml --artifact-root .nl2repo/artifacts --allow-private; exit=0
+repair_bundle=.nl2repo/compiled/go-ordered-map-repair-20260904/go-ordered-map/bundle.manifest.json; sha256=f1d833e9d481d67d9a5a9e345d3ce40c990f453f2e26efe64f9d7aa6b3a81b0d
+repair_oracle=Harbor 0.21.0; valid=true collected=1 frozen_total=1 passed=1 reward=1.0; source_host=github.com
+repair_controls=empty/install-failure allowed 0/0 candidate-installation-failed; stub/forgery/panic/hang/oversized-output/background-process fixed 1 leaf failed reward=0.0; offline authorized valid=true collected=1 passed=1 reward=1.0 public_network_available=false
+next_step=integrator-owned review, canonical manifest integration, and downstream model Agent Run remain pending; this lane does not start a model Agent Run

@@ -1,98 +1,50 @@
 {
   "schema_version": "1.0",
   "task_id": "go-ordered-map",
-  "status": "packaged",
-  "terminal_kind": "valid",
+  "task_version": "0.1.0",
+  "status": "controls-passed",
+  "terminal_kind": "controls-passed",
   "source_freeze": {
     "upstream_url": "https://github.com/iancoleman/orderedmap",
     "revision": "01810fd7f1123a3e2e52a7320d5eb49215ca2474",
-    "source_digest": "sha256:08ed69c80663ed3926e5bce8db647519324b4b20ca9eec839acbd4d5c3fae9cc",
-    "source_archive_bytes": 30720,
     "license_spdx": "MIT",
-    "license_sha256": "sha256:b08d8a44e534a6c464fdebf1fbb1618739099b6d42e6c0ae0199dfb48d7df65d"
+    "source_digest": "sha256:08ed69c80663ed3926e5bce8db647519324b4b20ca9eec839acbd4d5c3fae9cc"
   },
   "runtime": {
     "language": "go",
     "package_manager": "go-modules",
     "go_version": "1.26.5",
-    "platform": "linux/amd64",
-    "base_image": "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd",
+    "harbor_version": "0.21.0",
     "agent_network_mode": "no-network",
-    "agent_allowed_hosts": [],
-    "oracle_allowed_hosts": ["github.com"]
+    "verifier_network_mode": "no-network"
   },
-  "dependency_closure": {
-    "kind": "go-module-bundle",
-    "digest": "sha256:35ac13a1fe5b594d8d1d30790f83bd289de7f47a8691931c726736f367039bb9",
-    "size_bytes": 541,
-    "offline": true,
-    "direct_dependencies": [],
-    "artifact_path": ".nl2repo/authoring-work/go-ordered-map/module-bundle.tar.gz"
+  "bundle": {
+    "manifest": ".nl2repo/compiled/go-ordered-map-final-20260904/go-ordered-map/bundle.manifest.json",
+    "manifest_sha256": "sha256:8a751cc9e7d68da5c41837916a60c2028c7009b4a792f7f79eee7fbef6a22210",
+    "canonical_manifest_digest": "sha256:bcd4b78bcc8a130fc0789b6467da25c92f90e7d4e3930c168489f0481223b969",
+    "toolchain_lock_digest": "sha256:baa477549dd86ccfe68422aafd900a2ab76f0b091de9a85f9db883f9d6a551a3"
   },
-  "frozen_collection": {
-    "framework": "Go typed bridge contract",
-    "protocol": "custom-json-v1",
-    "leaf_ids": ["contract::public-api"],
-    "frozen_total": 1,
-    "private_bridge_cases": 12,
-    "upstream_baseline": {"go_test_exit_code": 0, "top_level_tests": 14, "source_files": 1}
-  },
-  "artifacts": {
-    "module_bundle": {"digest": "sha256:35ac13a1fe5b594d8d1d30790f83bd289de7f47a8691931c726736f367039bb9", "size_bytes": 541},
-    "verifier_bundle": {"digest": "sha256:446ebe8bc905364baec4a1530b1fed91f41e9da0749f9f862a4e2b27a85902b05", "size_bytes": 1250},
-    "oracle_bundle": {"digest": "sha256:d74c263d619e19173deccb24aabeac70127680e7ad68bd8d94345d6c7a4a1cd7", "size_bytes": 561}
-  },
-  "images": {
-    "go_base": "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd",
-    "agent_runtime": "sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f",
-    "built_verifier": "sha256:a47f3073748e2eacba199e7e9fbabc8b373e55af698ccf83222f571c98951b6e"
-  },
-  "final_bundle": {
-    "path": ".nl2repo/compiled/go-ordered-map-final/go-ordered-map/bundle.manifest.json",
-    "sha256": "sha256:f1d833e9d481d67d9a5a9e345d3ce40c990f453f2e26efe64f9d7aa6b3a81b0d",
-    "canonical_manifest_digest": "sha256:aa1c2ebccfdac02e1e289fa5cbc509ea8c9f181a4df6c9d6a7d4e28cb21d4a87",
-    "entries": 67,
-    "integrity_mismatches": 0
-  },
-  "commands": [
-    {"command": "git clone --no-checkout https://github.com/iancoleman/orderedmap upstream && git -C upstream checkout --detach 01810fd7f1123a3e2e52a7320d5eb49215ca2474", "exit_code": 0},
-    {"command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -count=1 -json ./...", "exit_code": 0, "summary": "14 top-level source tests passed"},
-    {"command": "uv run nl2repo task validate-source catalog/sources/go-ordered-map", "exit_code": 0},
-    {"command": "uv run nl2repo task lint-network --tasks-root catalog/sources", "exit_code": 0, "summary": "No errors; 176 warnings are pre-existing findings in other catalog tasks"},
-    {"command": "uv run nl2repo harbor compile catalog/sources/go-ordered-map --output .nl2repo/compiled/go-ordered-map-final --toolchain toolchain.go.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "exit_code": 0, "bundle_manifest": ".nl2repo/compiled/go-ordered-map-final/go-ordered-map/bundle.manifest.json", "bundle_sha256": "sha256:f1d833e9d481d67d9a5a9e345d3ce40c990f453f2e26efe64f9d7aa6b3a81b0d", "canonical_manifest_digest": "sha256:aa1c2ebccfdac02e1e289fa5cbc509ea8c9f181a4df6c9d6a7d4e28cb21d4a87"},
-    {"command": "docker build --platform linux/amd64 -f .nl2repo/compiled/go-ordered-map-final/go-ordered-map/tests/Dockerfile -t nl2repobench/go-ordered-map-verifier:authoring-final .nl2repo/compiled/go-ordered-map-final/go-ordered-map/tests", "exit_code": 0, "image_digest": "sha256:a47f3073748e2eacba199e7e9fbabc8b373e55af698ccf83222f571c98951b6e", "warning": "FromPlatformFlagConstDisallowed"},
-    {"command": "docker run --rm --network none ... /tests/test.sh with frozen upstream workspace", "exit_code": 0, "summary": "valid=true collected=1 passed=1 reward=1.0"},
-    {"command": "docker run --rm --network none ... /tests/test.sh with stub, forgery, install-failure, panic, hang, oversized-output, and background-process controls", "exit_code": 0, "summary": "all verifier runs valid; fixed-denominator controls score 0.0; install failure is the allowed 0/0 exception"},
-    {"command": "docker run --rm --network none ... /tests/test.sh offline replay", "exit_code": 0, "summary": "valid=true collected=1 passed=1 reward=1.0 public_network_available=false"},
-    {"command": "uv run pytest -q -p no:cacheprovider --no-cov tests/test_go_adapter.py", "exit_code": 0, "summary": "9 passed"},
-    {"command": "gofmt -d catalog/sources/go-ordered-map/harbor/tests/bridge.go && bash -n catalog/sources/go-ordered-map/harbor/controls/*.sh", "exit_code": 0}
-  ],
   "oracle": {
-    "kind": "separate-verifier-smoke",
-    "runs": 1,
     "valid": true,
     "passed": 1,
+    "collected": 1,
     "frozen_total": 1,
     "reward": 1.0,
-    "grading": ".nl2repo/authoring-work/go-ordered-map/verifier-smoke/oracle-writable/verifier/grading.json",
-    "network": ".nl2repo/authoring-work/go-ordered-map/verifier-smoke/oracle-writable/verifier/network.json",
-    "source_host_authorization": "The private Oracle solve fetches only github.com; this lane did not invoke Harbor Agent Run."
+    "result": ".nl2repo/runs/go-ordered-map/final-20260904/oracle/go-ordered-map-final-oracle-20260904/go-ordered-map__s4ELfSm/result.json",
+    "grading": ".nl2repo/runs/go-ordered-map/final-20260904/oracle/go-ordered-map-final-oracle-20260904/go-ordered-map__s4ELfSm/verifier/grading.json",
+    "network": ".nl2repo/runs/go-ordered-map/final-20260904/oracle/go-ordered-map-final-oracle-20260904/go-ordered-map__s4ELfSm/verifier/network.json",
+    "reward_path": ".nl2repo/runs/go-ordered-map/final-20260904/oracle/go-ordered-map-final-oracle-20260904/go-ordered-map__s4ELfSm/verifier/reward.json"
   },
   "controls": {
-    "root": ".nl2repo/authoring-work/go-ordered-map/controls",
-    "empty": {"valid": true, "collected": 0, "reward": 0.0, "failure_reason": "candidate-installation-failed", "grading": ".nl2repo/authoring-work/go-ordered-map/controls/install-failure/logs/verifier/grading.json", "network": ".nl2repo/authoring-work/go-ordered-map/controls/install-failure/logs/verifier/network.json"},
-    "stub": {"valid": true, "collected": 1, "passed": 0, "reward": 0.0, "grading": ".nl2repo/authoring-work/go-ordered-map/controls/stub/logs/verifier/grading.json", "network": ".nl2repo/authoring-work/go-ordered-map/controls/stub/logs/verifier/network.json"},
-    "forgery": {"valid": true, "collected": 1, "passed": 0, "reward": 0.0, "verifier_owned_reward": true, "grading": ".nl2repo/authoring-work/go-ordered-map/controls/forgery/logs/verifier/grading.json", "network": ".nl2repo/authoring-work/go-ordered-map/controls/forgery/logs/verifier/network.json"},
-    "install_failure": {"valid": true, "collected": 0, "reward": 0.0, "failure_reason": "candidate-installation-failed", "grading": ".nl2repo/authoring-work/go-ordered-map/controls/install-failure/logs/verifier/grading.json", "network": ".nl2repo/authoring-work/go-ordered-map/controls/install-failure/logs/verifier/network.json"},
-    "panic": {"valid": true, "collected": 1, "passed": 0, "reward": 0.0, "grading": ".nl2repo/authoring-work/go-ordered-map/controls/panic/logs/verifier/grading.json", "network": ".nl2repo/authoring-work/go-ordered-map/controls/panic/logs/verifier/network.json"},
-    "hang": {"valid": true, "collected": 1, "passed": 0, "reward": 0.0, "grading": ".nl2repo/authoring-work/go-ordered-map/controls/hang/logs/verifier/grading.json", "network": ".nl2repo/authoring-work/go-ordered-map/controls/hang/logs/verifier/network.json"},
-    "oversized_output": {"valid": true, "collected": 1, "passed": 0, "reward": 0.0, "grading": ".nl2repo/authoring-work/go-ordered-map/controls/oversized-output/logs/verifier/grading.json", "network": ".nl2repo/authoring-work/go-ordered-map/controls/oversized-output/logs/verifier/network.json"},
-    "background_process": {"valid": true, "collected": 1, "passed": 0, "reward": 0.0, "grading": ".nl2repo/authoring-work/go-ordered-map/controls/background-process/logs/verifier/grading.json", "network": ".nl2repo/authoring-work/go-ordered-map/controls/background-process/logs/verifier/network.json", "candidate_uid_processes_after_run": 0},
-    "offline": {"valid": true, "collected": 1, "passed": 1, "reward": 1.0, "public_network_available": false, "grading": ".nl2repo/authoring-work/go-ordered-map/controls/offline/logs/verifier/grading.json", "network": ".nl2repo/authoring-work/go-ordered-map/controls/offline/logs/verifier/network.json"}
+    "empty": {"valid": true, "collected": 0, "reward": 0.0, "failure_reason": "candidate-installation-failed", "result": ".nl2repo/runs/go-ordered-map/final-20260904/empty/go-ordered-map-final-empty-20260904/go-ordered-map__L9BAzrb/result.json", "grading": ".nl2repo/runs/go-ordered-map/final-20260904/empty/go-ordered-map-final-empty-20260904/go-ordered-map__L9BAzrb/verifier/grading.json", "network": ".nl2repo/runs/go-ordered-map/final-20260904/empty/go-ordered-map-final-empty-20260904/go-ordered-map__L9BAzrb/verifier/network.json", "reward_path": ".nl2repo/runs/go-ordered-map/final-20260904/empty/go-ordered-map-final-empty-20260904/go-ordered-map__L9BAzrb/verifier/reward.json"},
+    "stub": {"valid": true, "collected": 1, "passed": 0, "reward": 0.0, "result": ".nl2repo/runs/go-ordered-map/final-20260904/stub/go-ordered-map-final-stub-20260904/go-ordered-map-stub__DZqErpF/result.json", "grading": ".nl2repo/runs/go-ordered-map/final-20260904/stub/go-ordered-map-final-stub-20260904/go-ordered-map-stub__DZqErpF/verifier/grading.json", "network": ".nl2repo/runs/go-ordered-map/final-20260904/stub/go-ordered-map-final-stub-20260904/go-ordered-map-stub__DZqErpF/verifier/network.json", "reward_path": ".nl2repo/runs/go-ordered-map/final-20260904/stub/go-ordered-map-final-stub-20260904/go-ordered-map-stub__DZqErpF/verifier/reward.json"},
+    "forgery": {"valid": true, "collected": 1, "passed": 0, "reward": 0.0, "result": ".nl2repo/runs/go-ordered-map/final-20260904/forgery/go-ordered-map-final-forgery-20260904/go-ordered-map-forgery__Rf2kUfN/result.json", "grading": ".nl2repo/runs/go-ordered-map/final-20260904/forgery/go-ordered-map-final-forgery-20260904/go-ordered-map-forgery__Rf2kUfN/verifier/grading.json", "network": ".nl2repo/runs/go-ordered-map/final-20260904/forgery/go-ordered-map-final-forgery-20260904/go-ordered-map-forgery__Rf2kUfN/verifier/network.json", "reward_path": ".nl2repo/runs/go-ordered-map/final-20260904/forgery/go-ordered-map-final-forgery-20260904/go-ordered-map-forgery__Rf2kUfN/verifier/reward.json"},
+    "install-failure": {"valid": true, "collected": 0, "reward": 0.0, "failure_reason": "candidate-installation-failed", "result": ".nl2repo/runs/go-ordered-map/final-20260904/install-failure/go-ordered-map-final-install-failure-20260904/go-ordered-map-install-failure__RAncHSK/result.json", "grading": ".nl2repo/runs/go-ordered-map/final-20260904/install-failure/go-ordered-map-final-install-failure-20260904/go-ordered-map-install-failure__RAncHSK/verifier/grading.json", "network": ".nl2repo/runs/go-ordered-map/final-20260904/install-failure/go-ordered-map-final-install-failure-20260904/go-ordered-map-install-failure__RAncHSK/verifier/network.json", "reward_path": ".nl2repo/runs/go-ordered-map/final-20260904/install-failure/go-ordered-map-final-install-failure-20260904/go-ordered-map-install-failure__RAncHSK/verifier/reward.json"},
+    "panic": {"valid": true, "collected": 1, "passed": 0, "reward": 0.0, "result": ".nl2repo/runs/go-ordered-map/final-20260904/panic/go-ordered-map-final-panic-20260904/go-ordered-map-panic__sLThGZ2/result.json", "grading": ".nl2repo/runs/go-ordered-map/final-20260904/panic/go-ordered-map-final-panic-20260904/go-ordered-map-panic__sLThGZ2/verifier/grading.json", "network": ".nl2repo/runs/go-ordered-map/final-20260904/panic/go-ordered-map-final-panic-20260904/go-ordered-map-panic__sLThGZ2/verifier/network.json", "reward_path": ".nl2repo/runs/go-ordered-map/final-20260904/panic/go-ordered-map-final-panic-20260904/go-ordered-map-panic__sLThGZ2/verifier/reward.json"},
+    "hang": {"valid": true, "collected": 1, "passed": 0, "reward": 0.0, "result": ".nl2repo/runs/go-ordered-map/final-20260904/hang/go-ordered-map-final-hang-20260904/go-ordered-map-hang__CpWFTQ9/result.json", "grading": ".nl2repo/runs/go-ordered-map/final-20260904/hang/go-ordered-map-final-hang-20260904/go-ordered-map-hang__CpWFTQ9/verifier/grading.json", "network": ".nl2repo/runs/go-ordered-map/final-20260904/hang/go-ordered-map-final-hang-20260904/go-ordered-map-hang__CpWFTQ9/verifier/network.json", "reward_path": ".nl2repo/runs/go-ordered-map/final-20260904/hang/go-ordered-map-final-hang-20260904/go-ordered-map-hang__CpWFTQ9/verifier/reward.json"},
+    "oversized-output": {"valid": true, "collected": 1, "passed": 0, "reward": 0.0, "result": ".nl2repo/runs/go-ordered-map/final-20260904/oversized-output/go-ordered-map-final-oversized-output-20260904/go-ordered-map-oversized-output__3tca4AZ/result.json", "grading": ".nl2repo/runs/go-ordered-map/final-20260904/oversized-output/go-ordered-map-final-oversized-output-20260904/go-ordered-map-oversized-output__3tca4AZ/verifier/grading.json", "network": ".nl2repo/runs/go-ordered-map/final-20260904/oversized-output/go-ordered-map-final-oversized-output-20260904/go-ordered-map-oversized-output__3tca4AZ/verifier/network.json", "reward_path": ".nl2repo/runs/go-ordered-map/final-20260904/oversized-output/go-ordered-map-final-oversized-output-20260904/go-ordered-map-oversized-output__3tca4AZ/verifier/reward.json"},
+    "background-process": {"valid": true, "collected": 1, "passed": 0, "reward": 0.0, "result": ".nl2repo/runs/go-ordered-map/final-20260904/background-process/go-ordered-map-final-background-process-20260904/go-ordered-map-background-proces__KrQHjee/result.json", "grading": ".nl2repo/runs/go-ordered-map/final-20260904/background-process/go-ordered-map-final-background-process-20260904/go-ordered-map-background-proces__KrQHjee/verifier/grading.json", "network": ".nl2repo/runs/go-ordered-map/final-20260904/background-process/go-ordered-map-final-background-process-20260904/go-ordered-map-background-proces__KrQHjee/verifier/network.json", "reward_path": ".nl2repo/runs/go-ordered-map/final-20260904/background-process/go-ordered-map-final-background-process-20260904/go-ordered-map-background-proces__KrQHjee/verifier/reward.json"},
+    "offline": {"valid": true, "collected": 1, "passed": 1, "reward": 1.0, "public_network_available": false, "result": ".nl2repo/runs/go-ordered-map/final-20260904/offline/go-ordered-map-final-offline-20260904/go-ordered-map__UyQDeYR/result.json", "grading": ".nl2repo/runs/go-ordered-map/final-20260904/offline/go-ordered-map-final-offline-20260904/go-ordered-map__UyQDeYR/verifier/grading.json", "network": ".nl2repo/runs/go-ordered-map/final-20260904/offline/go-ordered-map-final-offline-20260904/go-ordered-map__UyQDeYR/verifier/network.json", "reward_path": ".nl2repo/runs/go-ordered-map/final-20260904/offline/go-ordered-map-final-offline-20260904/go-ordered-map__UyQDeYR/verifier/reward.json"}
   },
-  "residual_risks": [
-    "The first Go profile exposes one verifier-owned aggregate contract leaf; the 12 bridge requests are not separate scoring leaves.",
-    "The source revision declares Go 1.16; the Oracle adaptation raises only the go.mod language directive to the locked Go 1.26.5 and does not alter package behavior.",
-    "The private Oracle solve and controls are task-local staging inputs; no Harbor Agent Run was started. Integrator-owned official Oracle receipt, review, and model pilot remain pending."
-  ]
+  "residual_risks": ["The score is one aggregate typed-bridge leaf covering 13 public-behavior requests.", "No downstream model Agent Run, review, publication, or OSS upload was performed by this authoring lane."]
 }
