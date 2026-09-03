@@ -67,9 +67,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "packaged"
+status = "controls-passed"
 owner = "go-author-discover-20260829T173503Z"
-reason = "Source, public contract, typed bridge, private verifier, Oracle bundle, offline module closure, and control fixtures are prepared; Harbor Oracle and controls are executed before handoff."
+reason = "The final production bundle passed the official Harbor 0.21.0 Oracle at 1/1 with reward 1.0. Empty and install-failure used the explicit 0/0 installation exception; stub, forgery, panic, hang, oversized-output, and background-process controls all produced verifier-owned reward 0, and the offline verifier probe reported public_network_available=false. Independent review, model Agent Run, dataset integration, and publication remain integrator stages."
 
 [verifier]
 protocol = "custom-json-v1"

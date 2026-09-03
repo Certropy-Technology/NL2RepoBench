@@ -6,13 +6,13 @@
   "api_inventory": {
     "artifact": ".nl2repo/authoring-work/go-uuid/api-inventory.json",
     "method": "go doc -all plus manual review of uuid.go",
-    "public_surface_count": 52,
+    "public_surface_count": 74,
     "selected_symbols": ["UUID", "Parse", "UUID.String"]
   },
   "upstream_test_inventory": {
     "artifact": ".nl2repo/authoring-work/go-uuid/test-inventory.json",
     "top_level_test_count": 46,
-    "full_source_run_collected": 202,
+    "full_source_run_collected": 205,
     "full_source_run_failures": 0,
     "excluded_behavior": [
       "random generation",
