@@ -1,0 +1,21 @@
+task_id: go-ordered-map
+stage: source-freeze-and-inventory
+status: complete
+source_revision=01810fd7f1123a3e2e52a7320d5eb49215ca2474
+source_archive_sha256=sha256:08ed69c80663ed3926e5bce8db647519324b4b20ca9eec839acbd4d5c3fae9cc
+license=MIT
+initial_wrong_directory_test_exit=1
+initial_wrong_directory_failure=worktree root has no go.mod; this was not used as source evidence
+correct_source_test_exit=0
+correct_source_test_summary=14 top-level tests passed, standard library only
+module_bundle=sha256:35ac13a1fe5b594d8d1d30790f83bd289de7f47a8691931c726736f367039bb9 size=541
+verifier_bundle=sha256:446ebe8bc905364baec4a1530b1fed91f41e9da074f9f862a4e2b27a85902b05 size=1250
+oracle_bundle=sha256:d74c263d619e19173deccb24aabeac70127680e7ad68bd8d94345d6c7a4a1cd7 size=561
+source_validation_exit=0
+network_lint_exit=0
+production_compile_exit=0
+verifier_image=sha256:a47f3073748e2eacba199e7e9fbabc8b373e55af698ccf83222f571c98951b6e
+oracle_smoke=valid=true collected=1 passed=1 reward=1.0
+controls_smoke=stub/forgery/panic/hang/oversized-output/background-process collected=1 passed=0 reward=0.0; install-failure collected=0 allowed exception
+offline_smoke=valid=true collected=1 passed=1 reward=1.0 public_network_available=false
+next_step=integrator-owned Harbor Oracle receipt and model Agent Run remain pending; this lane does not start either Agent Run

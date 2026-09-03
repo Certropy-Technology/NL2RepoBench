@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-ordered-map",
+  "source_revision": "01810fd7f1123a3e2e52a7320d5eb49215ca2474",
+  "verifier_protocol": "custom-json-v1",
+  "frozen_total": 1,
+  "leaf_ids": ["contract::public-api"],
+  "mappings": [
+    {"upstream_tests": ["TestOrderedMap"], "bridge": "basic_mutation", "instruction": "API Usage Guide#OrderedMap construction and ordinary mutation"},
+    {"upstream_tests": ["TestBlankMarshalJSON", "TestMarshalJSON", "TestOrderedMap_empty_array", "TestOrderedMap_empty_map"], "bridge": "marshal_default", "instruction": "API Usage Guide#JSON behavior"},
+    {"upstream_tests": ["TestMarshalJSONNoEscapeHTML", "TestMarshalJSONNoEscapeHTMLRecursive"], "bridge": "marshal_no_escape", "instruction": "API Usage Guide#JSON behavior"},
+    {"upstream_tests": ["TestUnmarshalJSON", "TestUnmarshalJSONArrayOfMaps"], "bridge": "unmarshal_nested", "instruction": "API Usage Guide#JSON behavior"},
+    {"upstream_tests": ["TestUnmarshalJSONDuplicateKeys"], "bridge": "unmarshal_duplicates", "instruction": "API Usage Guide#JSON behavior"},
+    {"upstream_tests": ["TestUnmarshalJSONSpecialChars"], "bridge": "unmarshal_special_keys", "instruction": "API Usage Guide#JSON behavior"},
+    {"upstream_tests": ["TestOrderedMap_SortKeys"], "bridge": "sort_keys", "instruction": "API Usage Guide#Ordering operations"},
+    {"upstream_tests": ["TestOrderedMap_Sort"], "bridge": "sort_pairs", "instruction": "API Usage Guide#Ordering operations; API Usage Guide#Pair and ByPair"},
+    {"upstream_tests": ["TestUnmarshalJSONStruct"], "bridge": "struct_unmarshal", "instruction": "API Usage Guide#JSON behavior"}
+  ],
+  "bidirectional_review": "Every included bridge case is described by the public instruction; the instruction's core ordering, JSON, mutation, and sorting promises each have a bridge assertion.",
+  "excluded_reason": "The excluded behaviors are implementation details or direct callback/backing-storage mechanics that are not needed for the deterministic black-box contract."
+}

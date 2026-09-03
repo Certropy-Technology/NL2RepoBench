@@ -1,0 +1,77 @@
+schema_version = "1.0"
+task_id = "go-ordered-map"
+version = "0.1.0"
+instruction = "instruction.md"
+oracle_bundle = { digest = "sha256:d74c263d619e19173deccb24aabeac70127680e7ad68bd8d94345d6c7a4a1cd7", size_bytes = 561, uri = "artifact://private/sha256:d74c263d619e19173deccb24aabeac70127680e7ad68bd8d94345d6c7a4a1cd7", visibility = "private" }
+
+[metadata]
+difficulty = "medium"
+category = "go-data-structures"
+tags = ["go", "go-modules", "json", "ordered-map", "serialization", "typed-bridge", "public-api"]
+language = "go"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/iancoleman/orderedmap"
+revision = "01810fd7f1123a3e2e52a7320d5eb49215ca2474"
+license_spdx = "MIT"
+source_digest = "sha256:08ed69c80663ed3926e5bce8db647519324b4b20ca9eec839acbd4d5c3fae9cc"
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+network_mode = "no-network"
+runtime_version = "1.26.5"
+base_image = "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+base_image_digest = "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+build_command = "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -mod=vendor ./..."
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "Candidate and separate verifier execution use a private hash-addressed standard-library-only Go module closure and no network; only the trusted Oracle receives a run-scoped source-host authorization."
+
+[dependencies]
+status = "known"
+installer = "system"
+packages = []
+module_bundle = { digest = "sha256:35ac13a1fe5b594d8d1d30790f83bd289de7f47a8691931c726736f367039bb9", size_bytes = 541, uri = "artifact://private/sha256:35ac13a1fe5b594d8d1d30790f83bd289de7f47a8691931c726736f367039bb9", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 1
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Recreate the deterministic public ordered-map and JSON ordering behavior of iancoleman/orderedmap through a bounded typed Go subprocess bridge."
+keywords = ["go", "go-modules", "json", "ordered-map", "serialization", "typed-bridge", "public-api"]
+agent_timeout_sec = 900.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "packaged"
+owner = "authoring-go-discover-b-r3-20260903"
+reason = "Frozen source, reviewed public behavior bridge, private offline Go module closure, verifier contract, and Oracle solve are packaged; current validation, production compile, and controls remain part of this authoring attempt."
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:446ebe8bc905364baec4a1530b1fed91f41e9da074f9f862a4e2b27a85902b05", size_bytes = 1250, uri = "artifact://private/sha256:446ebe8bc905364baec4a1530b1fed91f41e9da074f9f862a4e2b27a85902b05", visibility = "private" }
+entrypoint = "contract.sh"
+

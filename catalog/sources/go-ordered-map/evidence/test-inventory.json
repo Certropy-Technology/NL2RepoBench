@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-ordered-map",
+  "framework": "go test",
+  "upstream_test_files": ["orderedmap_test.go"],
+  "upstream_top_level_tests": [
+    "TestOrderedMap", "TestBlankMarshalJSON", "TestMarshalJSON", "TestMarshalJSONNoEscapeHTML",
+    "TestMarshalJSONNoEscapeHTMLRecursive", "TestUnmarshalJSON", "TestUnmarshalJSONDuplicateKeys",
+    "TestUnmarshalJSONSpecialChars", "TestUnmarshalJSONArrayOfMaps", "TestUnmarshalJSONStruct",
+    "TestOrderedMap_SortKeys", "TestOrderedMap_Sort", "TestOrderedMap_empty_array", "TestOrderedMap_empty_map"
+  ],
+  "upstream_top_level_test_count": 14,
+  "upstream_collection": {"command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -count=1 -json ./...", "exit_code": 0, "passed": 14, "failed": 0},
+  "frozen_metric": {"protocol": "custom-json-v1", "leaf_ids": ["contract::public-api"], "frozen_total": 1, "private_bridge_cases": 13},
+  "classification": {
+    "included": ["public API mutation", "ordered key enumeration", "JSON marshal/unmarshal", "nested objects and arrays", "duplicate key ordering", "HTML escaping", "sorting and Pair access", "JSON struct integration"],
+    "excluded": ["benchmark timing", "private fields", "direct backing-slice mutation"]
+  }
+}

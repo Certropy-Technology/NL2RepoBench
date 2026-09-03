@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-ordered-map",
+  "method": "go/parser, go/ast, go/types review at Go 1.26.5",
+  "module_path": "github.com/iancoleman/orderedmap",
+  "packages": ["github.com/iancoleman/orderedmap"],
+  "source_files": ["orderedmap.go"],
+  "public_symbol_count": 19,
+  "public_symbols": [
+    "Pair", "Pair.Key", "Pair.Value", "ByPair", "ByPair.Len", "ByPair.Swap", "ByPair.Less",
+    "OrderedMap", "New", "OrderedMap.SetEscapeHTML", "OrderedMap.Get", "OrderedMap.Set",
+    "OrderedMap.Delete", "OrderedMap.Keys", "OrderedMap.Values", "OrderedMap.SortKeys",
+    "OrderedMap.Sort", "OrderedMap.UnmarshalJSON", "OrderedMap.MarshalJSON"
+  ],
+  "public_symbols_count_note": "Count includes the two exported types and all exported functions/methods. ByPair's exported fields are inventory metadata, not callable symbols.",
+  "risk_flags": ["recursive-json-decoding", "duplicate-json-keys", "callback-sort-api", "interface-values"],
+  "reviewed_bridge_operations": [
+    "basic_mutation", "keys_values_delete", "marshal_default", "marshal_no_escape",
+    "unmarshal_nested", "unmarshal_duplicates", "unmarshal_special_keys", "sort_keys",
+    "sort_pairs", "struct_unmarshal", "pair_access", "invalid", "unknown_operation"
+  ],
+  "excluded_behavior": ["direct mutation of Keys/Values backing storage", "private fields", "benchmark and timing behavior"]
+}

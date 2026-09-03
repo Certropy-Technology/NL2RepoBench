@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-ordered-map",
+  "upstream_url": "https://github.com/iancoleman/orderedmap",
+  "revision": "01810fd7f1123a3e2e52a7320d5eb49215ca2474",
+  "revision_verified": true,
+  "license_spdx": "MIT",
+  "license_sha256": "sha256:b08d8a44e534a6c464fdebf1fbb1618739099b6d42e6c0ae0199dfb48d7df65d",
+  "source_archive": {
+    "format": "git archive tar",
+    "bytes": 30720,
+    "sha256": "sha256:08ed69c80663ed3926e5bce8db647519324b4b20ca9eec839acbd4d5c3fae9cc"
+  },
+  "source_files": ["LICENSE", "go.mod", "orderedmap.go", "orderedmap_test.go", "readme.md"],
+  "clone_path": ".nl2repo/authoring-work/go-ordered-map/upstream",
+  "commands": [
+    {"command": "git clone --no-checkout https://github.com/iancoleman/orderedmap upstream && git -C upstream checkout --detach 01810fd7f1123a3e2e52a7320d5eb49215ca2474", "exit_code": 0},
+    {"command": "git -C upstream rev-parse HEAD", "exit_code": 0, "output": "01810fd7f1123a3e2e52a7320d5eb49215ca2474"},
+    {"command": "git -C upstream archive --format=tar 01810fd7f1123a3e2e52a7320d5eb49215ca2474", "exit_code": 0, "bytes": 30720, "sha256": "sha256:08ed69c80663ed3926e5bce8db647519324b4b20ca9eec839acbd4d5c3fae9cc"}
+  ]
+}
