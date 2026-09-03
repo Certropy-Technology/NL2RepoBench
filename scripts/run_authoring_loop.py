@@ -347,6 +347,15 @@ Risky cloud, database, native, browser, or network behavior needs a bounded
 deterministic adaptation when the contract permits it; do not mechanically
 translate a README and do not lower tests to hide failures.
 
+These required tracked release files must all exist before handoff:
+- catalog/sources/{package}/task.toml
+- catalog/sources/{package}/instruction.md
+- catalog/sources/{package}/production-evidence.json
+The production-evidence file is separate from `.nl2repo/` receipts. It must
+summarize the frozen source, environment, compile, Oracle, controls, commands,
+versions, artifact paths, and residual risks using JSON that the integrator can
+archive with the source catalog. Do not report controls-passed without it.
+
 Network policy is a security gate. The future Harbor Agent Run must not be
 able to clone or download the reference implementation from GitHub. Set
 an explicit `[environment.network_policy]` with `mode = "no-network"` for

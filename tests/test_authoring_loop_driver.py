@@ -331,6 +331,20 @@ def test_pi_command_can_explicitly_allow_internal_subagent(tmp_path: Path) -> No
     assert command[command.index("--exclude-tools") + 1] == "subagent_wait"
 
 
+def test_agent_prompt_names_required_tracked_production_evidence(tmp_path: Path) -> None:
+    prompt = driver._agent_prompt(
+        plan={"batch_id": "go-test", "language": "go"},
+        task={"candidate_id": "go-demo", "package": "go-demo"},
+        brief_path=tmp_path / "brief.json",
+        worktree=tmp_path,
+        handoff_path=tmp_path / ".nl2repo/authoring-handoff.json",
+        allow_internal_subagent=False,
+    )
+
+    assert "catalog/sources/go-demo/production-evidence.json" in prompt
+    assert "required tracked release files" in prompt
+
+
 def test_driver_refills_from_pending_queue_after_plan_is_exhausted(
     tmp_path: Path, monkeypatch
 ) -> None:
