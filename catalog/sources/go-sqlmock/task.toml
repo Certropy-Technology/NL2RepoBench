@@ -66,9 +66,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "packaged"
-owner = "authoring-go-batch2-20260902T1456Z-go-sqlmock"
-reason = "Frozen source, reviewed typed bridge, private offline module closure, production compile inputs, and task-local contract probes are complete; Oracle, Harbor controls, independent review, and model Agent Run remain integrator responsibilities."
+status = "controls-passed"
+owner = "go-packaged-repair-20260903T2118Z-go-sqlmock"
+reason = "Fresh Harbor 0.21.0 Oracle and all required negative/offline controls passed against the final compiled bundle; review, pilot, and publication remain integrator responsibilities."
 
 [verifier]
 protocol = "custom-json-v1"

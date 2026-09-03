@@ -1,5 +1,5 @@
 {
-  "canonical_manifest_digest": "sha256:2047d31a4ec53274f56dd9c2f075c2031b9506a157d8bd7ad538ea15c1171c4a",
+  "canonical_manifest_digest": "sha256:b5a350c19a24b61758e8d68f933c612d5dc4e59034d4ebfe0b255152cbf11926",
   "files": [
     {
       "path": "README.md",
@@ -8,18 +8,18 @@
     },
     {
       "path": "controls/background-process.sh",
-      "sha256": "bc2fb01bf9fbc65be37fe6edf5e1bd0d95bb9201ad5219749a991176754d946a",
-      "size_bytes": 359
+      "sha256": "71ad4b72990fcb473b6b4cd1fe82572fff978d5e60d14b998e1fac7d316f7ee2",
+      "size_bytes": 5187
     },
     {
       "path": "controls/forgery.sh",
-      "sha256": "e277b29d48cad263e7dad2c3950cd171eb86fb8915ad690dbc507d454854eb9e",
-      "size_bytes": 702
+      "sha256": "feaa25a26d8fff385da82cdc54cdd11380a938cfa034c76a9e22f1abf9e4dbbb",
+      "size_bytes": 5205
     },
     {
       "path": "controls/hang.sh",
-      "sha256": "9c62cbca174797ace676d77604ceccb843e320a7b2003cfd980d9ee2229427ab",
-      "size_bytes": 229
+      "sha256": "c5d723214a948c3fd93687a961d3ee4b73c18cd1a9ec872728d82229638463d4",
+      "size_bytes": 5068
     },
     {
       "path": "controls/install-failure.sh",
@@ -28,18 +28,18 @@
     },
     {
       "path": "controls/oversized-output.sh",
-      "sha256": "01ff056de1ea412cc966d8073934ad367caf4e9a6d13099da5a7c3035bba344d",
-      "size_bytes": 316
+      "sha256": "2e0def4af23d4d7ee6b2e49567123d31b275108ed1eb55c7b2bba0d96ba2780f",
+      "size_bytes": 5123
     },
     {
       "path": "controls/panic.sh",
-      "sha256": "030bae660dd7ede911e8494a263cd741198e6cbcf2e5bd075578a05da1004643",
-      "size_bytes": 259
+      "sha256": "9420c125ffd95ada2d5e771f60e8c84cc305147609d0b01a6b0cdb0506d324c9",
+      "size_bytes": 5104
     },
     {
       "path": "controls/stub.sh",
-      "sha256": "fc1965b9804df3d54fb1c4eda891b1761d1a83adf0a9a7cf9be58fc32c53f779",
-      "size_bytes": 484
+      "sha256": "114f47f533a2a63d879294eabcce262f1c7471b1ccb9e793c569cb514bcde58e",
+      "size_bytes": 5050
     },
     {
       "path": "environment/Dockerfile",
@@ -103,7 +103,7 @@
     },
     {
       "path": "task.toml",
-      "sha256": "b7cfcbef37f4210a97620063527dfdf23f63f93489f5c9c4a4b0821de264506c",
+      "sha256": "92d2e92554a406110b360a1335029649eb5ab547930a0f3607db6978d6e64ad9",
       "size_bytes": 1151
     },
     {
