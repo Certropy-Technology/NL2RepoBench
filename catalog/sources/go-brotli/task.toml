@@ -2,7 +2,7 @@ schema_version = "1.0"
 task_id = "go-brotli"
 version = "0.1.0"
 instruction = "instruction.md"
-oracle_bundle = { digest = "sha256:5112e4120bdf72d3230e00b8db18204d30f925d37596b3de9cf45a14eff5cca2", size_bytes = 10240, uri = "artifact://private/sha256:5112e4120bdf72d3230e00b8db18204d30f925d37596b3de9cf45a14eff5cca2", visibility = "private" }
+oracle_bundle = { digest = "sha256:96e61ce9c9fdbce9baef135a7c85f3d026909253397dabf103c2a5c0e3700c08", size_bytes = 846, media_type = "application/vnd.nl2repobench.go-oracle+tar", uri = "artifact://private/sha256:96e61ce9c9fdbce9baef135a7c85f3d026909253397dabf103c2a5c0e3700c08", visibility = "private" }
 
 [metadata]
 difficulty = "hard"
@@ -35,7 +35,7 @@ reason = "Candidate and verifier execution use a private pre-materialized Go mod
 status = "known"
 installer = "system"
 packages = []
-module_bundle = { digest = "sha256:52ed19871d37e8a4f1cb68a844bf8b256c7f3270e1f92a22849415cbfd8ec862", size_bytes = 20480, uri = "artifact://private/sha256:52ed19871d37e8a4f1cb68a844bf8b256c7f3270e1f92a22849415cbfd8ec862", visibility = "private" }
+module_bundle = { digest = "sha256:4854de7af87eefab85cc787f0a852a6025d78048adb5416d8e7810162cbd2073", size_bytes = 3718, media_type = "application/vnd.nl2repobench.go-module-bundle+tar", uri = "artifact://private/sha256:4854de7af87eefab85cc787f0a852a6025d78048adb5416d8e7810162cbd2073", visibility = "private" }
 
 [tests]
 framework = "pytest"
@@ -65,12 +65,12 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "packaged"
+status = "controls-passed"
 owner = "go-author-discover-20260903"
-reason = "Frozen source, API/test inventory, typed bridge, private dependency/verifier/Oracle bundles, and offline Go runtime contract are packaged; official Harbor Oracle and controls remain integrator-owned."
+reason = "Frozen source, API/test inventory, typed bridge, rebuilt private dependency/verifier/Oracle bundles, offline Go runtime contract, and fresh Harbor Oracle/control receipts are complete."
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:995c727c6436d156da635f9f57587c8e7158beebf5cdc087e1655f81f1cc1f33", size_bytes = 10240, uri = "artifact://private/sha256:995c727c6436d156da635f9f57587c8e7158beebf5cdc087e1655f81f1cc1f33", visibility = "private" }
+bundle = { digest = "sha256:9d2390fba59c73bebfe20107d5231377df6ff4ad046333cd55aac6d6b982ec27", size_bytes = 3183, media_type = "application/vnd.nl2repobench.go-verifier+tar", uri = "artifact://private/sha256:9d2390fba59c73bebfe20107d5231377df6ff4ad046333cd55aac6d6b982ec27", visibility = "private" }
 entrypoint = "contract.sh"
 

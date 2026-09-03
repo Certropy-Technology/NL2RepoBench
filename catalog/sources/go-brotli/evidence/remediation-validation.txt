@@ -1,0 +1,48 @@
+go-brotli authoring repair attempt: 2026-09-03
+
+source-freeze
+- upstream=https://github.com/andybalholm/brotli
+- revision=6b8aef6ece266fa87b925ce3a913bc30dc4b7b70
+- source_archive_sha256=sha256:98f4e975d6de4ee7da812c21d147b57663e25e72a5e53db6673a1d5ffcaa14f8
+- license=MIT license_sha256=sha256:3d180008e36922a4e8daec11c34c7af264fed5962d07924aea928c38e8663c94
+
+dependency-closure remediation
+- Initial production compile exited 1: referenced module bundle sha256:52ed19871d37e8a4f1cb68a844bf8b256c7f3270e1f92a22849415cbfd8ec862 was absent from the task-local private CAS.
+- First rebuilt archive compile exited 1: the archive contained tests/dependencies/go.mod below an extra directory level and was rejected as "go.mod must be a bounded regular file".
+- Rebuilt the module archive with go.mod, go.sum, module.manifest.json, vendor/modules.txt, and vendor contents at archive root. Final digest=sha256:4854de7af87eefab85cc787f0a852a6025d78048adb5416d8e7810162cbd2073 size=3718.
+- Rebuilt verifier digest=sha256:9d2390fba59c73bebfe20107d5231377df6ff4ad046333cd55aac6d6b982ec27 size=3183 and Oracle digest=sha256:96e61ce9c9fdbce9baef135a7c85f3d026909253397dabf103c2a5c0e3700c08 size=846.
+- All three final CAS files passed exact SHA-256 and size verification.
+
+package and verifier remediation
+- Go runtime is Go 1.26.5 on linux/amd64 with CGO_ENABLED=0; Harbor is 0.21.0; the locked base image is sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd.
+- Final source validation exited 0 and final production compile exited 0; bundle manifest has 75 files and digest sha256:f6f8a5e674f61d0b76d0c370ade84aaf41ad91081d800b9febb46e93edfbb779.
+- A transient final control build was observed during an earlier attempt. Panic/output/background control scripts were then checked and repaired so the final receipts exercise candidate-call failure, output limiting, and background-process handling rather than hiding the issue as installation failure.
+- The final upstream vendor test run exited 0 with 51 passed test leaves and 0 failed leaves across the root, flate, and matchfinder packages.
+
+final gates
+- Oracle: valid=true, passed=1, collected=1, frozen_total=1, reward=1.0.
+- Empty and install-failure: allowed candidate-installation-failed exception, collected=0, reward=0.0.
+- Stub, forgery, panic, hang, oversized-output, background-process, and offline: valid=true, frozen_total=1, reward=0.0; every verifier network receipt reports public_network_available=false.
+- The final structured receipt index is .nl2repo/authoring-production-gates.json.
+- No model Agent evaluation or publication was performed.
+
+revalidation attempt: 2026-09-03/04
+- Prior handoff was absent from this detached worktree, so the source, claim, private CAS, and all gates were rechecked instead of being reused as proof.
+- `uv run nl2repo task validate-source catalog/sources/go-brotli` exited 0 with source content digest `sha256:1e4eb80c0f603305e7d2d2d0499df3729ceec7bdd8ea30f5d34c8c1b2e1e1048`.
+- `uv run nl2repo task lint-network --tasks-root catalog/sources` exited 0; go-brotli produced zero errors. The 178 reported warnings belong to unrelated catalog tasks.
+- Go 1.26.5 and Harbor 0.21.0 were confirmed. CAS integrity for module, verifier, and Oracle references passed.
+- Fresh production compile exited 0 at `.nl2repo/authoring-work/go-brotli/revalidation-20260903-2351-compile/go-brotli`; the 75-file manifest is `sha256:f6f8a5e674f61d0b76d0c370ade84aaf41ad91081d800b9febb46e93edfbb779`.
+- Fresh official Harbor Oracle exited 0 with `valid=true`, `passed=1`, `collected=1`, `frozen_total=1`, and `reward=1.0`; it used only run-scoped `github.com` authorization.
+- Fresh Oracle workspace vendor tests exited 0 with 51 passed leaves and 0 failed leaves.
+- Fresh official Harbor empty, stub, forgery, install-failure, panic, hang, oversized-output, background-process, and offline jobs all exited 0 and produced structured verifier receipts. Empty/install-failure are the explicit allowed 0/0 installation-failure cases. All other controls collected one leaf and returned reward 0.0. Offline reported `public_network_available=false`; its reward is not used as network proof.
+- Every fresh result, grading, network, and reward path is SHA-256 bound in the rewritten production evidence and `.nl2repo/authoring-production-gates.json`.
+
+independent top-level attempt: 2026-09-04 00:46-01:50
+- Read the live claim and remediation guide and did not treat the missing handoff or prior receipts as proof for this attempt.
+- Source validation again exited 0 with content digest `sha256:1e4eb80c0f603305e7d2d2d0499df3729ceec7bdd8ea30f5d34c8c1b2e1e1048`; repository network lint exited 0 with no go-brotli error and 178 unrelated/expected warnings.
+- Production compile again exited 0 at `.nl2repo/authoring-work/go-brotli/attempt-20260904-0053-compile/go-brotli`; its 75-file manifest is byte-identical to the previous deterministic compile (`sha256:f6f8a5e674f61d0b76d0c370ade84aaf41ad91081d800b9febb46e93edfbb779`, canonical digest `sha256:22207b96d4a763e22ff5f9c90258eef08da215469d3dc19dbaa9dd51c81f3935`).
+- Fresh Harbor 0.21.0 Oracle fetched only revision `6b8aef6ece266fa87b925ce3a913bc30dc4b7b70` using run-scoped `github.com` authorization, verified archive digest `98f4e975d6de4ee7da812c21d147b57663e25e72a5e53db6673a1d5ffcaa14f8`, and produced valid 1/1, reward 1.0.
+- Fresh official empty and install-failure controls produced the allowed verifier-owned `candidate-installation-failed` 0/0 result. Stub, forgery, panic, hang, oversized-output, and background-process each collected the frozen leaf, passed 0, and produced reward 0.0.
+- Fresh successful offline-verifier control produced valid 1/1, reward 1.0, while the separate verifier recorded both public probes false and `public_network_available=false`; reward was not used as the network proof.
+- Focused Go adapter/custom verifier/compiler tests passed 35/35. Shell syntax, Go formatting, JSON parsing, task-local artifact existence, receipt shape, and `git diff --check` passed.
+- `scripts/harbor_production_validation.py` was not changed: its legacy catalog validator still declares only Python/Node runtime languages and expects a Python/Node-style `expected_total` grading key, while current Go verifier receipts correctly use `frozen_total`. This shared validator coverage gap does not invalidate the Loop receipt or the official Go Harbor outcomes and is left for integrator-owned shared remediation.

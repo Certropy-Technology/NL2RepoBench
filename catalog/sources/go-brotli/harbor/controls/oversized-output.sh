@@ -25,8 +25,8 @@ func NewEncoder()matchfinder.Encoder{return matchfinder.TextEncoder{}};func NewG
 GO
 cat > oversized.go <<'GO'
 package brotli
-import("io";"github.com/andybalholm/brotli/matchfinder")
+import("fmt";"io";"os";"strings";"github.com/andybalholm/brotli/matchfinder")
 type Writer struct{};type Reader struct{};type WriterOptions struct{Quality,LGWin int};type Encoder struct{};type FastEncoder struct{}
-func NewWriter(io.Writer)*Writer{return &Writer{}};func NewWriterLevel(io.Writer,int)*Writer{return &Writer{}};func NewWriterOptions(io.Writer,WriterOptions)*Writer{return &Writer{}};func NewWriterV2(io.Writer,int)*matchfinder.Writer{return &matchfinder.Writer{}};func NewReader(io.Reader)*Reader{return &Reader{}}
+func NewWriter(io.Writer)*Writer{return &Writer{}};func NewWriterLevel(io.Writer,int)*Writer{fmt.Fprint(os.Stdout,strings.Repeat("x",2<<20));return &Writer{}};func NewWriterOptions(io.Writer,WriterOptions)*Writer{return &Writer{}};func NewWriterV2(io.Writer,int)*matchfinder.Writer{return &matchfinder.Writer{}};func NewReader(io.Reader)*Reader{return &Reader{}}
 func(*Writer)Write(p []byte)(int,error){return len(p),nil};func(*Writer)Flush()error{return nil};func(*Writer)Close()error{return nil};func(*Writer)Reset(io.Writer){};func(*Reader)Read([]byte)(int,error){return 0,io.EOF};func(*Reader)Reset(io.Reader)error{return nil}
 GO
