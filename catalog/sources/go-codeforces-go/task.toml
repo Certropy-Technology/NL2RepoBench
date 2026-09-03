@@ -2,7 +2,7 @@ schema_version = "1.0"
 task_id = "go-codeforces-go"
 version = "0.1.0"
 instruction = "instruction.md"
-oracle_bundle = { digest = "sha256:f7ce1cd0d8e1b9650a382c99c751577f5bd5672e51054544be7eede9a78c1854", size_bytes = 711, uri = "artifact://private/sha256:f7ce1cd0d8e1b9650a382c99c751577f5bd5672e51054544be7eede9a78c1854", visibility = "private" }
+oracle_bundle = { digest = "sha256:e03b7f84ddbe7985eb5cea4e80891b86b248a71d5799b14aa5d388cf719fe646", size_bytes = 735, uri = "artifact://private/sha256:e03b7f84ddbe7985eb5cea4e80891b86b248a71d5799b14aa5d388cf719fe646", visibility = "private" }
 
 [metadata]
 difficulty = "medium"
@@ -35,7 +35,7 @@ reason = "The candidate and separate verifier use a pre-materialized standard-li
 status = "known"
 installer = "system"
 packages = []
-module_bundle = { digest = "sha256:efe4e91e6ede841148233895e19bfd30f72656e973a601459af07a627f0e7254", size_bytes = 426, uri = "artifact://private/sha256:efe4e91e6ede841148233895e19bfd30f72656e973a601459af07a627f0e7254", visibility = "private" }
+module_bundle = { digest = "sha256:3ac5dc681248f165c6e1976f6053ac0e112455dbdd5c93d08ed2581ad75fdaff", size_bytes = 477, uri = "artifact://private/sha256:3ac5dc681248f165c6e1976f6053ac0e112455dbdd5c93d08ed2581ad75fdaff", visibility = "private" }
 
 [tests]
 framework = "pytest"
@@ -60,16 +60,16 @@ candidate_total_timeout_sec = 300.0
 agent_network_mode = "no-network"
 verifier_network_mode = "no-network"
 cpus = 1
-memory_mb = 1024
+memory_mb = 4096
 storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "packaged"
+status = "controls-passed"
 owner = "go-author-wave2-20260828-c3"
-reason = "Bounded public Bitset adaptation is compiled and manually verified in the generated offline images; awaiting the independent Harbor Oracle/Agent Run loop."
+reason = "Fresh Harbor 0.21.0 production compile, Oracle, empty, negative controls, and offline control completed against the current bundle."
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:5460cfb57b7e382643a59fd1f43ee00d3b083e35bbcb5e6c4bcf6c415de8c964", size_bytes = 1230, uri = "artifact://private/sha256:5460cfb57b7e382643a59fd1f43ee00d3b083e35bbcb5e6c4bcf6c415de8c964", visibility = "private" }
+bundle = { digest = "sha256:378ac67f48e7924c10e123fa6dfcaa5089ace428a29581c2f609aaad6b059a1a", size_bytes = 1256, uri = "artifact://private/sha256:378ac67f48e7924c10e123fa6dfcaa5089ace428a29581c2f609aaad6b059a1a", visibility = "private" }
 entrypoint = "contract.sh"

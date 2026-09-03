@@ -1,0 +1,769 @@
+{
+  "allowed_zero_over_zero": [
+    "empty",
+    "install-failure"
+  ],
+  "artifacts": {
+    "bundle": ".nl2repo/compiled-ev4/go-codeforces-go",
+    "control_bundles": ".nl2repo/controls-ev4",
+    "handoff": ".nl2repo/authoring-handoff.json",
+    "loop_receipt_check": ".nl2repo/evidence/production-gates-check.json",
+    "network_lint": ".nl2repo/evidence/network-lint-att4.json",
+    "production_compile": ".nl2repo/evidence/production-compile-att4.json",
+    "receipt": ".nl2repo/authoring-production-gates.json",
+    "runs_root": ".nl2repo/runs/go-codeforces-go",
+    "source_freeze": ".nl2repo/evidence/source-freeze-att4.json",
+    "source_validation": ".nl2repo/evidence/source-validation-att4.json"
+  },
+  "attempt": {
+    "batch_id": "go-packaged-repair-20260903T2118Z",
+    "candidate_id": "repair-go-codeforces-go-go-packaged-repair-20260903T2118Z",
+    "claim_attempts": 3,
+    "claim_owner": "operator-qwen-go-codeforces-evidence-final-20260904T0425",
+    "recorded_at": "2026-09-04T04:35:00+00:00"
+  },
+  "commands": [
+    {
+      "command": "uv run nl2repo task validate-source catalog/sources/go-codeforces-go",
+      "evidence": ".nl2repo/evidence/source-validation-att4.json",
+      "exit_code": 0,
+      "name": "validate-source"
+    },
+    {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "error_count": 0,
+      "evidence": ".nl2repo/evidence/network-lint-att4.json",
+      "exit_code": 0,
+      "name": "lint-network"
+    },
+    {
+      "command": "uv run nl2repo harbor compile catalog/sources/go-codeforces-go --output .nl2repo/compiled-ev4 --toolchain toolchain.go.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "evidence": ".nl2repo/evidence/production-compile-att4.json",
+      "exit_code": 0,
+      "name": "production-compile"
+    },
+    {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled-ev4/go-codeforces-go -a oracle --allow-agent-host github.com --job-name go-codeforces-go-oracle-ev4 --jobs-dir .nl2repo/runs/go-codeforces-go/ev4-oracle --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "name": "oracle"
+    },
+    {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled-ev4/go-codeforces-go -a nop --job-name go-codeforces-go-empty-ev4 --jobs-dir .nl2repo/runs/go-codeforces-go/ev4-empty --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "name": "control:empty"
+    },
+    {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-ev4/go-codeforces-go-stub -a oracle --job-name go-codeforces-go-stub-ev4 --jobs-dir .nl2repo/runs/go-codeforces-go/ev4-stub --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "name": "control:stub"
+    },
+    {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-ev4/go-codeforces-go-forgery -a oracle --job-name go-codeforces-go-forgery-ev4 --jobs-dir .nl2repo/runs/go-codeforces-go/ev4-forgery --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "name": "control:forgery"
+    },
+    {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-ev4/go-codeforces-go-install-failure -a oracle --job-name go-codeforces-go-install-failure-ev4 --jobs-dir .nl2repo/runs/go-codeforces-go/ev4-install-failure --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "name": "control:install-failure"
+    },
+    {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-ev4/go-codeforces-go-panic -a oracle --job-name go-codeforces-go-panic-ev4 --jobs-dir .nl2repo/runs/go-codeforces-go/ev4-panic --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "name": "control:panic"
+    },
+    {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-ev4/go-codeforces-go-hang -a oracle --job-name go-codeforces-go-hang-ev4 --jobs-dir .nl2repo/runs/go-codeforces-go/ev4-hang --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "name": "control:hang"
+    },
+    {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-ev4/go-codeforces-go-oversized-output -a oracle --job-name go-codeforces-go-oversized-output-ev4 --jobs-dir .nl2repo/runs/go-codeforces-go/ev4-oversized-output --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "name": "control:oversized-output"
+    },
+    {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-ev4/go-codeforces-go-background-process -a oracle --job-name go-codeforces-go-background-process-ev4 --jobs-dir .nl2repo/runs/go-codeforces-go/ev4-background-process --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "name": "control:background-process"
+    },
+    {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled-ev4/go-codeforces-go -a oracle --allow-agent-host github.com --job-name go-codeforces-go-offline-ev4 --jobs-dir .nl2repo/runs/go-codeforces-go/ev4-offline --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "name": "control:offline"
+    }
+  ],
+  "compile": {
+    "allow_incomplete": false,
+    "bundle": ".nl2repo/compiled-ev4/go-codeforces-go",
+    "command": "uv run nl2repo harbor compile catalog/sources/go-codeforces-go --output .nl2repo/compiled-ev4 --toolchain toolchain.go.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+    "determinism": {
+      "attempt_2_and_3_digest": "sha256:52c566406ed9477e68d7c140e41208ebe28483f880a7be6603099b1fbe9c966b",
+      "attempt_4_digest": "sha256:52c566406ed9477e68d7c140e41208ebe28483f880a7be6603099b1fbe9c966b",
+      "recompiled_identical_across_attempts": true
+    },
+    "evidence": ".nl2repo/evidence/production-compile-att4.json",
+    "exit_code": 0,
+    "manifest": {
+      "canonical_manifest_digest": "sha256:52c566406ed9477e68d7c140e41208ebe28483f880a7be6603099b1fbe9c966b",
+      "file_count": 67,
+      "path": ".nl2repo/compiled-ev4/go-codeforces-go/bundle.manifest.json",
+      "sha256": "sha256:4ac78b085ee8235fe98002b23449ae8277e97e2bb62c3e86fc3ce7b8eceeb4ba",
+      "size_bytes": 12575
+    },
+    "mode": "production",
+    "status": "passed"
+  },
+  "controls": {
+    "background-process": {
+      "agent": "oracle",
+      "agent_allowed_hosts": [],
+      "collected": 1,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-ev4/go-codeforces-go-background-process -a oracle --job-name go-codeforces-go-background-process-ev4 --jobs-dir .nl2repo/runs/go-codeforces-go/ev4-background-process --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "failed": 1,
+      "frozen_total": 1,
+      "grading": {
+        "path": ".nl2repo/runs/go-codeforces-go/ev4-background-process/go-codeforces-go-background-process-ev4/go-codeforces-go-background-proc__cCtPHY9/verifier/grading.json",
+        "sha256": "sha256:770db3ca92e7856ca2aafafc513a44b9f7287cc614932077530145c6ab4ec74d",
+        "size_bytes": 565
+      },
+      "harbor_version": "0.21.0",
+      "metric_contract": "fixed-test-pass-rate-v1",
+      "network": {
+        "path": ".nl2repo/runs/go-codeforces-go/ev4-background-process/go-codeforces-go-background-process-ev4/go-codeforces-go-background-proc__cCtPHY9/verifier/network.json",
+        "sha256": "sha256:556c410f8135c030dd912ace88aacff6482761f3a41ce0cc6af54fb052d7e351",
+        "size_bytes": 342
+      },
+      "network_probes": {
+        "1.1.1.1:443": false,
+        "pypi.org:443": false
+      },
+      "passed": 0,
+      "public_network_available": false,
+      "result": {
+        "path": ".nl2repo/runs/go-codeforces-go/ev4-background-process/go-codeforces-go-background-process-ev4/result.json",
+        "sha256": "sha256:7392b8c0fd17973c71baf49d3201cf2a30218ff25f5ea8a2580f5b23091d6b6c",
+        "size_bytes": 1366
+      },
+      "reward": 0.0,
+      "reward_file": {
+        "path": ".nl2repo/runs/go-codeforces-go/ev4-background-process/go-codeforces-go-background-process-ev4/go-codeforces-go-background-proc__cCtPHY9/verifier/reward.json",
+        "sha256": "sha256:8ab285dd6836d028aa2dc600258716be1474a462a4ebd95b7072e5f32750fad6",
+        "size_bytes": 39
+      },
+      "reward_record": {
+        "reward": 0.0,
+        "test_pass_rate": 0.0
+      },
+      "trial_exception_count": 0,
+      "valid": true
+    },
+    "empty": {
+      "agent": "nop",
+      "agent_allowed_hosts": [],
+      "allowed_install_failure": true,
+      "allowed_zero_over_zero": true,
+      "collected": 0,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled-ev4/go-codeforces-go -a nop --job-name go-codeforces-go-empty-ev4 --jobs-dir .nl2repo/runs/go-codeforces-go/ev4-empty --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "failed": 0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "frozen_total": 1,
+      "grading": {
+        "path": ".nl2repo/runs/go-codeforces-go/ev4-empty/go-codeforces-go-empty-ev4/go-codeforces-go__fzHXFea/verifier/grading.json",
+        "sha256": "sha256:f50f1c97834aae0757eb19f7b1926b462c178862bac6df8d7f04e6f4d30db843",
+        "size_bytes": 310
+      },
+      "harbor_version": "0.21.0",
+      "metric_contract": "fixed-test-pass-rate-v1",
+      "network": {
+        "path": ".nl2repo/runs/go-codeforces-go/ev4-empty/go-codeforces-go-empty-ev4/go-codeforces-go__fzHXFea/verifier/network.json",
+        "sha256": "sha256:839fd7b5ac47b332fd3a8c7384025de8994194f5e13eb4b6ce38de9070f082e6",
+        "size_bytes": 342
+      },
+      "network_probes": {
+        "1.1.1.1:443": false,
+        "pypi.org:443": false
+      },
+      "note": "Verifiable contract: empty/broken candidates fail install-time; 0/0 with reward 0 is the explicitly allowed exception and is recorded as such.",
+      "passed": 0,
+      "public_network_available": false,
+      "result": {
+        "path": ".nl2repo/runs/go-codeforces-go/ev4-empty/go-codeforces-go-empty-ev4/result.json",
+        "sha256": "sha256:6035af6763b6d2813026eab6fcf4cdb73066046cfcb5d59af6a5e47b2614083f",
+        "size_bytes": 1331
+      },
+      "reward": 0.0,
+      "reward_file": {
+        "path": ".nl2repo/runs/go-codeforces-go/ev4-empty/go-codeforces-go-empty-ev4/go-codeforces-go__fzHXFea/verifier/reward.json",
+        "sha256": "sha256:8ab285dd6836d028aa2dc600258716be1474a462a4ebd95b7072e5f32750fad6",
+        "size_bytes": 39
+      },
+      "reward_record": {
+        "reward": 0.0,
+        "test_pass_rate": 0.0
+      },
+      "trial_exception_count": 0,
+      "valid": true
+    },
+    "forgery": {
+      "agent": "oracle",
+      "agent_allowed_hosts": [],
+      "collected": 1,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-ev4/go-codeforces-go-forgery -a oracle --job-name go-codeforces-go-forgery-ev4 --jobs-dir .nl2repo/runs/go-codeforces-go/ev4-forgery --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "failed": 1,
+      "frozen_total": 1,
+      "grading": {
+        "path": ".nl2repo/runs/go-codeforces-go/ev4-forgery/go-codeforces-go-forgery-ev4/go-codeforces-go-forgery__nSKWdY5/verifier/grading.json",
+        "sha256": "sha256:770db3ca92e7856ca2aafafc513a44b9f7287cc614932077530145c6ab4ec74d",
+        "size_bytes": 565
+      },
+      "harbor_version": "0.21.0",
+      "metric_contract": "fixed-test-pass-rate-v1",
+      "network": {
+        "path": ".nl2repo/runs/go-codeforces-go/ev4-forgery/go-codeforces-go-forgery-ev4/go-codeforces-go-forgery__nSKWdY5/verifier/network.json",
+        "sha256": "sha256:e72da442c5f0e2274e0652e3a96704fd6e58261123b208c5dbe38f0950eec5e8",
+        "size_bytes": 342
+      },
+      "network_probes": {
+        "1.1.1.1:443": false,
+        "pypi.org:443": false
+      },
+      "passed": 0,
+      "public_network_available": false,
+      "result": {
+        "path": ".nl2repo/runs/go-codeforces-go/ev4-forgery/go-codeforces-go-forgery-ev4/result.json",
+        "sha256": "sha256:4c6448461e6633361af94d79d4a468414332b6b6511065f0e5633d3fab421e5b",
+        "size_bytes": 1350
+      },
+      "reward": 0.0,
+      "reward_file": {
+        "path": ".nl2repo/runs/go-codeforces-go/ev4-forgery/go-codeforces-go-forgery-ev4/go-codeforces-go-forgery__nSKWdY5/verifier/reward.json",
+        "sha256": "sha256:8ab285dd6836d028aa2dc600258716be1474a462a4ebd95b7072e5f32750fad6",
+        "size_bytes": 39
+      },
+      "reward_record": {
+        "reward": 0.0,
+        "test_pass_rate": 0.0
+      },
+      "trial_exception_count": 0,
+      "valid": true
+    },
+    "hang": {
+      "agent": "oracle",
+      "agent_allowed_hosts": [],
+      "collected": 1,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-ev4/go-codeforces-go-hang -a oracle --job-name go-codeforces-go-hang-ev4 --jobs-dir .nl2repo/runs/go-codeforces-go/ev4-hang --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "failed": 1,
+      "frozen_total": 1,
+      "grading": {
+        "path": ".nl2repo/runs/go-codeforces-go/ev4-hang/go-codeforces-go-hang-ev4/go-codeforces-go-hang__u9jQEjq/verifier/grading.json",
+        "sha256": "sha256:770db3ca92e7856ca2aafafc513a44b9f7287cc614932077530145c6ab4ec74d",
+        "size_bytes": 565
+      },
+      "harbor_version": "0.21.0",
+      "metric_contract": "fixed-test-pass-rate-v1",
+      "network": {
+        "path": ".nl2repo/runs/go-codeforces-go/ev4-hang/go-codeforces-go-hang-ev4/go-codeforces-go-hang__u9jQEjq/verifier/network.json",
+        "sha256": "sha256:839fd7b5ac47b332fd3a8c7384025de8994194f5e13eb4b6ce38de9070f082e6",
+        "size_bytes": 342
+      },
+      "network_probes": {
+        "1.1.1.1:443": false,
+        "pypi.org:443": false
+      },
+      "passed": 0,
+      "public_network_available": false,
+      "result": {
+        "path": ".nl2repo/runs/go-codeforces-go/ev4-hang/go-codeforces-go-hang-ev4/result.json",
+        "sha256": "sha256:02fa0bf38a43c88be02ace753b1582383c203c9f0a3eda375f30725049360d16",
+        "size_bytes": 1344
+      },
+      "reward": 0.0,
+      "reward_file": {
+        "path": ".nl2repo/runs/go-codeforces-go/ev4-hang/go-codeforces-go-hang-ev4/go-codeforces-go-hang__u9jQEjq/verifier/reward.json",
+        "sha256": "sha256:8ab285dd6836d028aa2dc600258716be1474a462a4ebd95b7072e5f32750fad6",
+        "size_bytes": 39
+      },
+      "reward_record": {
+        "reward": 0.0,
+        "test_pass_rate": 0.0
+      },
+      "trial_exception_count": 0,
+      "valid": true
+    },
+    "install-failure": {
+      "agent": "oracle",
+      "agent_allowed_hosts": [],
+      "allowed_install_failure": true,
+      "allowed_zero_over_zero": true,
+      "collected": 0,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-ev4/go-codeforces-go-install-failure -a oracle --job-name go-codeforces-go-install-failure-ev4 --jobs-dir .nl2repo/runs/go-codeforces-go/ev4-install-failure --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "failed": 0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "frozen_total": 1,
+      "grading": {
+        "path": ".nl2repo/runs/go-codeforces-go/ev4-install-failure/go-codeforces-go-install-failure-ev4/go-codeforces-go-install-failure__SVxw4Ad/verifier/grading.json",
+        "sha256": "sha256:f50f1c97834aae0757eb19f7b1926b462c178862bac6df8d7f04e6f4d30db843",
+        "size_bytes": 310
+      },
+      "harbor_version": "0.21.0",
+      "metric_contract": "fixed-test-pass-rate-v1",
+      "network": {
+        "path": ".nl2repo/runs/go-codeforces-go/ev4-install-failure/go-codeforces-go-install-failure-ev4/go-codeforces-go-install-failure__SVxw4Ad/verifier/network.json",
+        "sha256": "sha256:f38a5854aff1d02771d8e9c7cf75c35b583c97eb4fb2c48d196d1b3dda65083a",
+        "size_bytes": 342
+      },
+      "network_probes": {
+        "1.1.1.1:443": false,
+        "pypi.org:443": false
+      },
+      "note": "Verifiable contract: empty/broken candidates fail install-time; 0/0 with reward 0 is the explicitly allowed exception and is recorded as such.",
+      "passed": 0,
+      "public_network_available": false,
+      "result": {
+        "path": ".nl2repo/runs/go-codeforces-go/ev4-install-failure/go-codeforces-go-install-failure-ev4/result.json",
+        "sha256": "sha256:1ac0b0f58e583fcd514c4255e1fc76d8e5696e247932edd928db6ee5479b4432",
+        "size_bytes": 1366
+      },
+      "reward": 0.0,
+      "reward_file": {
+        "path": ".nl2repo/runs/go-codeforces-go/ev4-install-failure/go-codeforces-go-install-failure-ev4/go-codeforces-go-install-failure__SVxw4Ad/verifier/reward.json",
+        "sha256": "sha256:8ab285dd6836d028aa2dc600258716be1474a462a4ebd95b7072e5f32750fad6",
+        "size_bytes": 39
+      },
+      "reward_record": {
+        "reward": 0.0,
+        "test_pass_rate": 0.0
+      },
+      "trial_exception_count": 0,
+      "valid": true
+    },
+    "offline": {
+      "agent": "oracle",
+      "agent_allowed_hosts": [
+        "github.com"
+      ],
+      "collected": 1,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled-ev4/go-codeforces-go -a oracle --allow-agent-host github.com --job-name go-codeforces-go-offline-ev4 --jobs-dir .nl2repo/runs/go-codeforces-go/ev4-offline --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "failed": 0,
+      "frozen_total": 1,
+      "grading": {
+        "path": ".nl2repo/runs/go-codeforces-go/ev4-offline/go-codeforces-go-offline-ev4/go-codeforces-go__y3SbH5E/verifier/grading.json",
+        "sha256": "sha256:b00d7a553a2fddacea6fa04621bafef45310450fbfe030c859f754ad2e6f6933",
+        "size_bytes": 531
+      },
+      "harbor_version": "0.21.0",
+      "metric_contract": "fixed-test-pass-rate-v1",
+      "network": {
+        "path": ".nl2repo/runs/go-codeforces-go/ev4-offline/go-codeforces-go-offline-ev4/go-codeforces-go__y3SbH5E/verifier/network.json",
+        "sha256": "sha256:9c553b2566bf7ad71c7233a631f249fdc7311fb19189ac7ecb3eda728f6bc69c",
+        "size_bytes": 342
+      },
+      "network_probes": {
+        "1.1.1.1:443": false,
+        "pypi.org:443": false
+      },
+      "note": "Offline control runs the trusted Oracle without any extra verifier-side host; public_network_available=false is the network proof, the reward is informational.",
+      "passed": 1,
+      "public_network_available": false,
+      "result": {
+        "path": ".nl2repo/runs/go-codeforces-go/ev4-offline/go-codeforces-go-offline-ev4/result.json",
+        "sha256": "sha256:b20afa3b5f1809eef318333a250792d54e0f6da6b6a2afb3e36d125a585100a2",
+        "size_bytes": 1334
+      },
+      "reward": 1.0,
+      "reward_file": {
+        "path": ".nl2repo/runs/go-codeforces-go/ev4-offline/go-codeforces-go-offline-ev4/go-codeforces-go__y3SbH5E/verifier/reward.json",
+        "sha256": "sha256:f5ff2ade8b6b6ea4ef812375e5c71684d7655fb98854aac64a6bf629a3dfac06",
+        "size_bytes": 39
+      },
+      "reward_not_used_as_network_proof": true,
+      "reward_record": {
+        "reward": 1.0,
+        "test_pass_rate": 1.0
+      },
+      "trial_exception_count": 0,
+      "valid": true
+    },
+    "oversized-output": {
+      "agent": "oracle",
+      "agent_allowed_hosts": [],
+      "collected": 1,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-ev4/go-codeforces-go-oversized-output -a oracle --job-name go-codeforces-go-oversized-output-ev4 --jobs-dir .nl2repo/runs/go-codeforces-go/ev4-oversized-output --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "failed": 1,
+      "frozen_total": 1,
+      "grading": {
+        "path": ".nl2repo/runs/go-codeforces-go/ev4-oversized-output/go-codeforces-go-oversized-output-ev4/go-codeforces-go-oversized-outpu__EbekisP/verifier/grading.json",
+        "sha256": "sha256:770db3ca92e7856ca2aafafc513a44b9f7287cc614932077530145c6ab4ec74d",
+        "size_bytes": 565
+      },
+      "harbor_version": "0.21.0",
+      "metric_contract": "fixed-test-pass-rate-v1",
+      "network": {
+        "path": ".nl2repo/runs/go-codeforces-go/ev4-oversized-output/go-codeforces-go-oversized-output-ev4/go-codeforces-go-oversized-outpu__EbekisP/verifier/network.json",
+        "sha256": "sha256:b39691f5f499ca4fbe6bfb39d405542c04323b3e4736db4f219e5e23e8e9576e",
+        "size_bytes": 342
+      },
+      "network_probes": {
+        "1.1.1.1:443": false,
+        "pypi.org:443": false
+      },
+      "note": "Bounded candidate path: go_supervisor caps captured bridge output at 256 KiB and kills the process group (returncode 125); the contract helper then reports E2BIG. Grading remains verifier-owned at collected=1/frozen_total=1 with reward 0.",
+      "passed": 0,
+      "public_network_available": false,
+      "result": {
+        "path": ".nl2repo/runs/go-codeforces-go/ev4-oversized-output/go-codeforces-go-oversized-output-ev4/result.json",
+        "sha256": "sha256:4992f6d07f0e2cce5e436feb6e9fc4ea060b0ae412ec035ccbf504df5bc9b43d",
+        "size_bytes": 1366
+      },
+      "reward": 0.0,
+      "reward_file": {
+        "path": ".nl2repo/runs/go-codeforces-go/ev4-oversized-output/go-codeforces-go-oversized-output-ev4/go-codeforces-go-oversized-outpu__EbekisP/verifier/reward.json",
+        "sha256": "sha256:8ab285dd6836d028aa2dc600258716be1474a462a4ebd95b7072e5f32750fad6",
+        "size_bytes": 39
+      },
+      "reward_record": {
+        "reward": 0.0,
+        "test_pass_rate": 0.0
+      },
+      "trial_exception_count": 0,
+      "valid": true
+    },
+    "panic": {
+      "agent": "oracle",
+      "agent_allowed_hosts": [],
+      "collected": 1,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-ev4/go-codeforces-go-panic -a oracle --job-name go-codeforces-go-panic-ev4 --jobs-dir .nl2repo/runs/go-codeforces-go/ev4-panic --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "failed": 1,
+      "frozen_total": 1,
+      "grading": {
+        "path": ".nl2repo/runs/go-codeforces-go/ev4-panic/go-codeforces-go-panic-ev4/go-codeforces-go-panic__xARsm7w/verifier/grading.json",
+        "sha256": "sha256:770db3ca92e7856ca2aafafc513a44b9f7287cc614932077530145c6ab4ec74d",
+        "size_bytes": 565
+      },
+      "harbor_version": "0.21.0",
+      "metric_contract": "fixed-test-pass-rate-v1",
+      "network": {
+        "path": ".nl2repo/runs/go-codeforces-go/ev4-panic/go-codeforces-go-panic-ev4/go-codeforces-go-panic__xARsm7w/verifier/network.json",
+        "sha256": "sha256:5ba95a653bdd58409f720a83c106e5337257b9997337ad6f7d1261fdd0a44bf3",
+        "size_bytes": 342
+      },
+      "network_probes": {
+        "1.1.1.1:443": false,
+        "pypi.org:443": false
+      },
+      "passed": 0,
+      "public_network_available": false,
+      "result": {
+        "path": ".nl2repo/runs/go-codeforces-go/ev4-panic/go-codeforces-go-panic-ev4/result.json",
+        "sha256": "sha256:b53105b886108bb3c34d7c970a8d552ed629ad4acbebb99f18fe50ed5d730809",
+        "size_bytes": 1346
+      },
+      "reward": 0.0,
+      "reward_file": {
+        "path": ".nl2repo/runs/go-codeforces-go/ev4-panic/go-codeforces-go-panic-ev4/go-codeforces-go-panic__xARsm7w/verifier/reward.json",
+        "sha256": "sha256:8ab285dd6836d028aa2dc600258716be1474a462a4ebd95b7072e5f32750fad6",
+        "size_bytes": 39
+      },
+      "reward_record": {
+        "reward": 0.0,
+        "test_pass_rate": 0.0
+      },
+      "trial_exception_count": 0,
+      "valid": true
+    },
+    "stub": {
+      "agent": "oracle",
+      "agent_allowed_hosts": [],
+      "collected": 1,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-ev4/go-codeforces-go-stub -a oracle --job-name go-codeforces-go-stub-ev4 --jobs-dir .nl2repo/runs/go-codeforces-go/ev4-stub --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "failed": 1,
+      "frozen_total": 1,
+      "grading": {
+        "path": ".nl2repo/runs/go-codeforces-go/ev4-stub/go-codeforces-go-stub-ev4/go-codeforces-go-stub__CadgCzR/verifier/grading.json",
+        "sha256": "sha256:770db3ca92e7856ca2aafafc513a44b9f7287cc614932077530145c6ab4ec74d",
+        "size_bytes": 565
+      },
+      "harbor_version": "0.21.0",
+      "metric_contract": "fixed-test-pass-rate-v1",
+      "network": {
+        "path": ".nl2repo/runs/go-codeforces-go/ev4-stub/go-codeforces-go-stub-ev4/go-codeforces-go-stub__CadgCzR/verifier/network.json",
+        "sha256": "sha256:ffe26b9c39344f3c73440a9d57fb7fd782407aa16e64daa71a0de5fb91cbb5af",
+        "size_bytes": 342
+      },
+      "network_probes": {
+        "1.1.1.1:443": false,
+        "pypi.org:443": false
+      },
+      "passed": 0,
+      "public_network_available": false,
+      "result": {
+        "path": ".nl2repo/runs/go-codeforces-go/ev4-stub/go-codeforces-go-stub-ev4/result.json",
+        "sha256": "sha256:b4119c4c8202d3c11f06a3227fb763e1d2c8a6fff3fcb3e74caae5a785b79031",
+        "size_bytes": 1344
+      },
+      "reward": 0.0,
+      "reward_file": {
+        "path": ".nl2repo/runs/go-codeforces-go/ev4-stub/go-codeforces-go-stub-ev4/go-codeforces-go-stub__CadgCzR/verifier/reward.json",
+        "sha256": "sha256:8ab285dd6836d028aa2dc600258716be1474a462a4ebd95b7072e5f32750fad6",
+        "size_bytes": 39
+      },
+      "reward_record": {
+        "reward": 0.0,
+        "test_pass_rate": 0.0
+      },
+      "trial_exception_count": 0,
+      "valid": true
+    }
+  },
+  "dependency_closure": {
+    "build_env": "GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local, go build -mod=vendor, CGO_ENABLED=0",
+    "installer": "system",
+    "kind": "go-offline-module-bundle-v1",
+    "module_bundle": {
+      "digest": "sha256:3ac5dc681248f165c6e1976f6053ac0e112455dbdd5c93d08ed2581ad75fdaff",
+      "size_bytes": 477,
+      "uri": "artifact://private/sha256:3ac5dc681248f165c6e1976f6053ac0e112455dbdd5c93d08ed2581ad75fdaff",
+      "visibility": "private"
+    },
+    "packages": [],
+    "status": "known"
+  },
+  "environment": {
+    "agent_allowed_hosts": [],
+    "agent_network_mode": "no-network",
+    "agent_runtime_image": "nl2repobench/openhands-sdk-fork:930e9b1da-bookworm",
+    "agent_runtime_image_id": "sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f",
+    "base_image": "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd",
+    "base_image_digest": "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd",
+    "cpus": 1,
+    "memory_mb": 4096,
+    "network_mode": "no-network",
+    "network_policy": {
+      "mode": "no-network",
+      "offline_dependencies": "private-artifact",
+      "reason": "The candidate and separate verifier use a pre-materialized standard-library-only Go module closure; only the trusted Oracle fetches the frozen source revision.",
+      "reference_source_fetch": "forbidden"
+    },
+    "os_name": "debian-bookworm",
+    "runtime_version": "1.26.5",
+    "status": "known",
+    "storage_mb": 4096,
+    "verifier": "separate",
+    "verifier_network_mode": "no-network",
+    "verifier_protocol": "custom-json-v1"
+  },
+  "frozen_collection": {
+    "collection_mismatch": "fail",
+    "expected_total": 1,
+    "expected_total_source": "frozen-collection",
+    "framework": "pytest",
+    "frozen_total": 1,
+    "leaf_id": "contract::public-api",
+    "oracle_collected": 1
+  },
+  "inventory": {
+    "out_of_scope": [
+      "unexported string-matching helper in the same file",
+      "other copypasta helpers and contest programs",
+      "repository-root module dependencies"
+    ],
+    "public_api": [
+      "NewBitset",
+      "Bitset",
+      "Has",
+      "Set",
+      "Reset",
+      "Flip",
+      "Index0",
+      "Index1",
+      "Next0",
+      "Next1",
+      "LastIndex1",
+      "OnesCount",
+      "OnesCountRange",
+      "TrailingZeros",
+      "Len",
+      "AllIndex1",
+      "String",
+      "SetRange",
+      "ResetRange",
+      "FlipRange",
+      "ResetFrom",
+      "Lsh",
+      "Rsh",
+      "Add",
+      "Sub",
+      "Or",
+      "And",
+      "Xor",
+      "Equals",
+      "HasSubset"
+    ],
+    "source_component": "copypasta/bitset.go (exported, standard-library-only Bitset)",
+    "traceability": "catalog/sources/go-codeforces-go/provenance.md",
+    "upstream_baseline_note": "The full upstream copypasta package does not compile at this revision (unrelated bits.go uses an unimported binary identifier); the task copies only the independently compilable Bitset component without weakening its contract."
+  },
+  "metadata_notes": [
+    "[tests] framework = \"pytest\" with commands = [\"custom-json-v1\"] is the batch-wide convention for all 33 custom-protocol Go lanes; the [verifier] protocol field is the actual dispatch discriminator, so the informational framework label was left unchanged rather than diverging from the accepted catalog shape.",
+    "[tests].expected_total = 1 equals the graded leaf count because the Go contract verifier emits one aggregated public-API contract leaf; the frozen denominator is enforced by collection_mismatch = \"fail\"."
+  ],
+  "negative_controls_reward_zero": [
+    "empty",
+    "stub",
+    "forgery",
+    "install-failure",
+    "panic",
+    "hang",
+    "oversized-output",
+    "background-process"
+  ],
+  "not_claimed": [
+    "reviewed",
+    "piloted",
+    "published",
+    "model_agent_run",
+    "blind_review",
+    "traceability_review",
+    "oss_upload",
+    "cross_version_parity"
+  ],
+  "oracle": {
+    "agent": "oracle",
+    "agent_allowed_hosts": [
+      "github.com"
+    ],
+    "collected": 1,
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled-ev4/go-codeforces-go -a oracle --allow-agent-host github.com --job-name go-codeforces-go-oracle-ev4 --jobs-dir .nl2repo/runs/go-codeforces-go/ev4-oracle --n-concurrent 1 --max-retries 0 --yes",
+    "exit_code": 0,
+    "failed": 0,
+    "frozen_total": 1,
+    "grading": {
+      "path": ".nl2repo/runs/go-codeforces-go/ev4-oracle/go-codeforces-go-oracle-ev4/go-codeforces-go__fkT6Yuz/verifier/grading.json",
+      "sha256": "sha256:b00d7a553a2fddacea6fa04621bafef45310450fbfe030c859f754ad2e6f6933",
+      "size_bytes": 531
+    },
+    "harbor_version": "0.21.0",
+    "metric_contract": "fixed-test-pass-rate-v1",
+    "network": {
+      "path": ".nl2repo/runs/go-codeforces-go/ev4-oracle/go-codeforces-go-oracle-ev4/go-codeforces-go__fkT6Yuz/verifier/network.json",
+      "sha256": "sha256:1c047977edf3289d30ee1677cde97cb9925a0350fefbb8314000770c652f0d2c",
+      "size_bytes": 342
+    },
+    "network_probes": {
+      "1.1.1.1:443": false,
+      "pypi.org:443": false
+    },
+    "passed": 1,
+    "public_network_available": false,
+    "result": {
+      "path": ".nl2repo/runs/go-codeforces-go/ev4-oracle/go-codeforces-go-oracle-ev4/result.json",
+      "sha256": "sha256:b139d967ba633a6746dc6606bc809836895498b9f91bbc77bc9ac7228333ce1b",
+      "size_bytes": 1334
+    },
+    "reward": 1.0,
+    "reward_file": {
+      "path": ".nl2repo/runs/go-codeforces-go/ev4-oracle/go-codeforces-go-oracle-ev4/go-codeforces-go__fkT6Yuz/verifier/reward.json",
+      "sha256": "sha256:f5ff2ade8b6b6ea4ef812375e5c71684d7655fb98854aac64a6bf629a3dfac06",
+      "size_bytes": 39
+    },
+    "reward_record": {
+      "reward": 1.0,
+      "test_pass_rate": 1.0
+    },
+    "trial_exception_count": 0,
+    "valid": true
+  },
+  "private_bundles": {
+    "module_bundle": {
+      "digest": "sha256:3ac5dc681248f165c6e1976f6053ac0e112455dbdd5c93d08ed2581ad75fdaff",
+      "size_bytes": 477,
+      "uri": "artifact://private/sha256:3ac5dc681248f165c6e1976f6053ac0e112455dbdd5c93d08ed2581ad75fdaff",
+      "visibility": "private"
+    },
+    "oracle_bundle": {
+      "digest": "sha256:e03b7f84ddbe7985eb5cea4e80891b86b248a71d5799b14aa5d388cf719fe646",
+      "size_bytes": 735,
+      "uri": "artifact://private/sha256:e03b7f84ddbe7985eb5cea4e80891b86b248a71d5799b14aa5d388cf719fe646",
+      "visibility": "private"
+    },
+    "verifier_bundle": {
+      "digest": "sha256:378ac67f48e7924c10e123fa6dfcaa5089ace428a29581c2f609aaad6b059a1a",
+      "size_bytes": 1256,
+      "uri": "artifact://private/sha256:378ac67f48e7924c10e123fa6dfcaa5089ace428a29581c2f609aaad6b059a1a",
+      "visibility": "private"
+    }
+  },
+  "private_cas_paths": {
+    "module_bundle": ".nl2repo/artifacts/private/sha256/3a/3ac5dc681248f165c6e1976f6053ac0e112455dbdd5c93d08ed2581ad75fdaff",
+    "oracle_bundle": ".nl2repo/artifacts/private/sha256/e0/e03b7f84ddbe7985eb5cea4e80891b86b248a71d5799b14aa5d388cf719fe646",
+    "verifier_bundle": ".nl2repo/artifacts/private/sha256/37/378ac67f48e7924c10e123fa6dfcaa5089ace428a29581c2f609aaad6b059a1a"
+  },
+  "residual_risks": [
+    "Shared-catalog network lint reports warnings for unrelated tasks only; this task contributes zero errors and zero task-specific findings.",
+    "The Oracle/offline runs authorize github.com run-scoped for the trusted frozen-source fetch only; model agent runs stay no-network with an empty allowlist and never receive that host.",
+    "Grading is a single Oracle run per the current campaign gate; three attempts produced identical outcomes on the identical bundle digest, which is recorded as a reproducibility observation and not merged into the gate metric.",
+    "oversized-output is bounded by go_supervisor (256 KiB capture, SIGKILL of the process group, returncode 125) and surfaces as E2BIG in the contract helper; grading stays a verifier-owned 0 with the frozen denominator, so no shared verifier change was made in this lane."
+  ],
+  "runtime": {
+    "docker_version": "29.7.2",
+    "git_head": "89c05cba180ce8004bec4fe2e2ac3a01177b499e",
+    "go_version": "1.26.5",
+    "harbor_version": "0.21.0",
+    "platform": "linux/amd64",
+    "python_version": "3.14.6",
+    "toolchain_lock": "toolchain.go.lock.toml",
+    "toolchain_lock_digest": "sha256:baa477549dd86ccfe68422aafd900a2ab76f0b091de9a85f9db883f9d6a551a3",
+    "uv_version": "0.11.32"
+  },
+  "schema_version": "1.0",
+  "source_freeze": {
+    "license_sha256": "sha256:fba375dbd9336f1e7506255fb4d9419529cf05daf9c0fdc9f9bde2146775e2b1",
+    "license_size_bytes": 1065,
+    "license_spdx": "MIT",
+    "local_archive_reverification": {
+      "archive_sha256": "sha256:4430dd7dc9bdddc82768874bc08ecfe694234af0367f7422c612e78ddd566563",
+      "archive_size_bytes": 44144640,
+      "command": "git -C .nl2repo/authoring-work/go-codeforces-go/source/codeforces-go archive --format=tar HEAD | sha256sum",
+      "digest_matches_task_toml": true,
+      "evidence": ".nl2repo/evidence/source-freeze-att4.json",
+      "revision_matches_task_toml": true
+    },
+    "oracle_source_acquisition": "solution/solve.sh fetches the pinned revision, asserts HEAD == revision, rebuilds the tar archive and asserts its SHA-256 before populating /workspace; run-scoped --allow-agent-host github.com is supplied only for trusted Oracle/offline runs.",
+    "revision": "4996b3d7733aabafe25ba045bbc87f794d963ac4",
+    "source_archive_format": "git archive --format=tar",
+    "source_archive_sha256": "sha256:4430dd7dc9bdddc82768874bc08ecfe694234af0367f7422c612e78ddd566563",
+    "source_archive_size_bytes": 44144640,
+    "status": "known",
+    "upstream_url": "https://github.com/EndlessCheng/codeforces-go"
+  },
+  "status": "controls-passed",
+  "task_id": "go-codeforces-go",
+  "task_version": "0.1.0",
+  "terminal_kind": "valid",
+  "verification": {
+    "agent_declares_no_network_without_own_compose": true,
+    "empty_and_install_failure_allowed_zero_over_zero": true,
+    "forgery_cannot_change_trusted_reward": "candidate wrote /logs/verifier/reward.json {\"reward\":1}; verifier-owned reward.json recorded 0.0",
+    "negative_controls_collect_frozen_denominator": true,
+    "negative_controls_reward_zero": true,
+    "network_lint_error_count": 0,
+    "offline_public_network_available": false,
+    "oracle_collected_equals_frozen_total": true,
+    "oracle_reward": 1.0,
+    "oracle_valid": true,
+    "private_cas_hashes_match_task_toml": true,
+    "single_leaf_grading_note": "A passing single-leaf Go grading.json is byte-identical across Go lanes that share the contract::public-api leaf id, metric contract and zero reported duration; the identical sha256 against other Go tasks is expected determinism, not a copied receipt."
+  }
+}

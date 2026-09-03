@@ -11,8 +11,6 @@ mkdir -p vendor copypasta
 cat > copypasta/bitset.go <<'GO'
 package copypasta
 
-import "time"
-
 type Bitset []uint
 
 func NewBitset(int) Bitset { return Bitset{} }
@@ -30,7 +28,7 @@ func (Bitset) OnesCountRange(int, int) int { return 0 }
 func (Bitset) TrailingZeros() int { return 0 }
 func (Bitset) Len() int { return 0 }
 func (Bitset) AllIndex1() []int { return nil }
-func (Bitset) String() string { time.Sleep(60 * time.Second); return "" }
+func (Bitset) String() string { return "" }
 func (Bitset) SetRange(int, int) {}
 func (Bitset) ResetRange(int, int) {}
 func (Bitset) FlipRange(int, int) {}
