@@ -68,3 +68,53 @@ flock -u 9
     assert result.returncode == 1
     assert (state / "max").read_text(encoding="utf-8") == "2"
     assert "failure[c]" in (run_root / "queue.log").read_text(encoding="utf-8")
+
+
+def test_model_queue_handles_sigterm_without_unbound_finished_pid(tmp_path: Path) -> None:
+    scripts = tmp_path / "scripts"
+    scripts.mkdir()
+    shutil.copy2(ROOT / "scripts/run_model_queue.sh", scripts / "run_model_queue.sh")
+    (scripts / "cleanup_harbor_trials.py").write_text(
+        "#!/usr/bin/env python3\n", encoding="utf-8"
+    )
+    fake_runner = scripts / "run_harbor_model.sh"
+    fake_runner.write_text(
+        "#!/usr/bin/env bash\nset -euo pipefail\nsleep 30\n",
+        encoding="utf-8",
+    )
+    fake_runner.chmod(0o755)
+    run_root = tmp_path / "runs"
+    env = {
+        **os.environ,
+        "TASKS": "a,b",
+        "MODEL": "test/model",
+        "LLM_BASE_URL": "https://example.invalid",
+        "LLM_API_KEY": "not-used-by-fake",
+        "RUN_ROOT": str(run_root),
+        "RUN_PREFIX": "term-test",
+        "LOCK_ROOT": str(tmp_path / "locks"),
+        "MAX_CONCURRENCY": "2",
+        "PATH": f"{scripts.parent}:{os.environ['PATH']}",
+    }
+    process = subprocess.Popen(
+        ["bash", str(scripts / "run_model_queue.sh")],
+        cwd=tmp_path,
+        env=env,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    try:
+        import time
+
+        time.sleep(0.2)
+        process.terminate()
+        stdout, stderr = process.communicate(timeout=5)
+    finally:
+        if process.poll() is None:
+            process.kill()
+            process.communicate()
+
+    assert process.returncode == 130
+    assert "finished_pid: unbound variable" not in stderr
+    assert "queue_interrupted=" in stdout

@@ -82,6 +82,7 @@ reap_one() {
     else
         rc=$?
     fi
+    finished_pid="${finished_pid:-}"
     if [[ -z "$finished_pid" ]]; then
         # wait -n can be interrupted while the TERM trap is stopping children.
         # Do not let set -u turn an intentional queue stop into a launcher bug.
