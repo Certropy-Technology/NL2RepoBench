@@ -1,0 +1,86 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-errgroup",
+  "task_version": "0.1.0",
+  "terminal_kind": "awaiting-agent-run",
+  "status": "packaged",
+  "source_freeze": {
+    "upstream_url": "https://github.com/golang/sync",
+    "revision": "f75267d8412fc1dfd12b343644a7ea46e4d9c85d",
+    "source_digest": "sha256:22414d7297aba3d45f32f30a1f58564a680efbf6cbfe89d30b6e3aa87c38ce09",
+    "license_spdx": "BSD-3-Clause",
+    "license_sha256": "sha256:911f8f5782931320f5b8d1160a76365b83aea6447ee6c04fa6d5591467db9dad"
+  },
+  "environment": {
+    "runtime": "go1.26.5",
+    "platform": "linux/amd64",
+    "cgo_enabled": false,
+    "base_image_digest": "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd",
+    "toolchain_lock": "toolchain.go.lock.toml",
+    "agent_network_mode": "no-network",
+    "verifier_network_mode": "no-network"
+  },
+  "dependency_closure": {
+    "kind": "go-module-bundle",
+    "digest": "sha256:257538bcb3027c2b476fc8a0d575175e1aeab0dbc1695d2de9d5a05ce31636b5",
+    "size_bytes": 635,
+    "direct_dependencies": [],
+    "offline": true,
+    "manifest": ".nl2repo/authoring-work/go-author-auto-20260903T035119Z/go-errgroup/module/module.manifest.json"
+  },
+  "frozen_collection": {
+    "framework": "go bridge contract",
+    "protocol": "custom-json-v1",
+    "leaf_ids": ["contract::public-api"],
+    "frozen_total": 1,
+    "private_bridge_cases": 10
+  },
+  "artifacts": {
+    "oracle_bundle": {"digest": "sha256:6ded7dd6601d887f20aba3e19b1db2602a69970ecb69f67801a9a6a98041268b", "size_bytes": 586},
+    "verifier_bundle": {"digest": "sha256:574fba567af36436084260a9d6a48d567f3104ba75af69b23d9bde0aa744e4bf", "size_bytes": 933},
+    "module_bundle": {"digest": "sha256:257538bcb3027c2b476fc8a0d575175e1aeab0dbc1695d2de9d5a05ce31636b5", "size_bytes": 635}
+  },
+  "commands": [
+    {"command": "git clone --filter=blob:none --no-checkout https://github.com/golang/sync .../source", "exit_code": 0},
+    {"command": "git -C .../source checkout --detach f75267d8412fc1dfd12b343644a7ea46e4d9c85d", "exit_code": 0},
+    {"command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -count=1 -json ./...", "exit_code": 0, "summary": "Frozen upstream repository tests passed."},
+    {"command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go vet ./errgroup", "exit_code": 0, "summary": "Frozen errgroup package vet passed."},
+    {"command": "deterministic private module/verifier/oracle archives and CAS ingestion", "exit_code": 0, "summary": "All three private refs exist with recorded SHA-256 and sizes."},
+    {"command": "uv run nl2repo task validate-source catalog/sources/go-errgroup", "exit_code": 0, "summary": "Source descriptor accepted."},
+    {"command": "uv run nl2repo task lint-network --tasks-root catalog/sources", "exit_code": 0, "summary": "0 errors; 178 catalog-wide warnings, including the expected Oracle host-authorization warning for this task."},
+    {"command": "uv run nl2repo harbor compile catalog/sources/go-errgroup --output .nl2repo/compiled/go-errgroup-handoff-final --toolchain toolchain.go.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "exit_code": 0, "summary": "Closed-world production bundle compiled."}
+  ],
+  "authoring_smoke": {
+    "bundle_manifest_path": ".nl2repo/compiled/go-errgroup-handoff-final/go-errgroup/bundle.manifest.json",
+    "bundle_manifest_sha256": "sha256:6a429f4ce39fbc93cbe1e1ae0ea3f3883c51cbccc75914e4a1ea5920904b215f",
+    "canonical_manifest_digest": "sha256:fc12e3ade700fd0d9fda052b7aff12b17b40f9c0f16f98ec5101e8ed5eb1fc4c",
+    "verifier_image_digest": "sha256:8ea871c12be64dc1a9f40222964e8bc2e96412b2c902b1e0b6c9b0639e9a57a4",
+    "oracle_reference": {
+      "solve_exit_code": 0,
+      "build_exit_code": 0,
+      "contract_exit_code": 0,
+      "revision": "f75267d8412fc1dfd12b343644a7ea46e4d9c85d",
+      "archive_digest_asserted": "sha256:22414d7297aba3d45f32f30a1f58564a680efbf6cbfe89d30b6e3aa87c38ce09",
+      "log_root": ".nl2repo/authoring-work/go-author-auto-20260903T035119Z/go-errgroup/final-gates-v4"
+    },
+    "controls": {
+      "log_root": ".nl2repo/authoring-work/go-author-auto-20260903T035119Z/go-errgroup/final-gates-v4",
+      "empty": {"valid": true, "collected": 0, "passed": 0, "reward": 0.0, "failure_reason": "candidate-installation-failed", "public_network_available": false},
+      "stub": {"valid": true, "collected": 1, "passed": 0, "reward": 0.0, "public_network_available": false},
+      "forgery": {"valid": true, "collected": 1, "passed": 0, "reward": 0.0, "public_network_available": false},
+      "install-failure": {"valid": true, "collected": 0, "passed": 0, "reward": 0.0, "failure_reason": "candidate-installation-failed", "public_network_available": false},
+      "panic": {"valid": true, "collected": 1, "passed": 0, "reward": 0.0, "public_network_available": false},
+      "hang": {"valid": true, "collected": 1, "passed": 0, "reward": 0.0, "public_network_available": false}
+    },
+    "supervisor": {"timeout_returncode": 124, "output_limit_returncode": 125, "combined_output_limit_returncode": 125}
+  },
+  "oracle": {"status": "not-run-by-lane-policy", "valid": null, "passed": null, "frozen_total": null, "reward": null},
+  "controls": {"status": "not-run-by-lane-policy", "empty": null, "stub": null, "forgery": null, "timeout": null, "offline": null},
+  "residual_risks": [
+    "Official Harbor Oracle and compiled controls remain integrator-owned and are intentionally not run in this lane.",
+    "The Oracle solve fetches only the exact frozen commit and asserts FETCH_HEAD before checkout; it adapts only the Go directive and creates an empty go.sum.",
+    "The bridge covers bounded deterministic context and concurrency behavior; panic stack details and network/filesystem examples are excluded.",
+    "The upstream repository source digest covers all packages, while the task contract scopes implementation and hidden assertions to errgroup."
+  ],
+  "evidence_files": ["evidence/source-freeze.json", "evidence/api-inventory.json", "evidence/test-inventory.json", "evidence/traceability.json", "evidence/remediation-validation.txt"]
+}

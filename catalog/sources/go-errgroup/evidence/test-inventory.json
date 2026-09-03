@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-errgroup",
+  "source_revision": "f75267d8412fc1dfd12b343644a7ea46e4d9c85d",
+  "upstream_test_inventory": {
+    "test_files": ["errgroup/errgroup_test.go", "errgroup/errgroup_example_md5all_test.go"],
+    "top_level_test_functions": 5,
+    "examples": ["ExampleGroup_justErrors", "ExampleGroup_parallel", "ExampleGroup_pipeline"],
+    "benchmarks": ["BenchmarkGo"],
+    "source_package_command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -count=1 -json ./errgroup",
+    "source_package_exit_code": 0,
+    "full_repository_command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -count=1 -json ./...",
+    "full_repository_exit_code": 0
+  },
+  "frozen_leaf": {
+    "id": "contract::public-api",
+    "frozen_total": 1,
+    "framework": "go bridge contract",
+    "private_case_count": 10,
+    "cases": ["zero-group wait", "first error and repeated wait", "error context cause", "successful context cancellation", "TryGo capacity rejection and recovery", "blocking Go capacity", "zero limit", "negative unlimited limit", "timed completion", "structured invalid operation"]
+  },
+  "excluded_behavior": ["networking examples", "filesystem MD5 pipeline", "benchmark throughput", "other x/sync packages"]
+}

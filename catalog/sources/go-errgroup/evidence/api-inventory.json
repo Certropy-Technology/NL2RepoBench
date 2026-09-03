@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-errgroup",
+  "source_revision": "f75267d8412fc1dfd12b343644a7ea46e4d9c85d",
+  "package": "golang.org/x/sync/errgroup",
+  "api_inventory": {
+    "method": "go doc -all ./errgroup plus manual review of errgroup/errgroup.go",
+    "public_surface_count": 5,
+    "selected_symbols": ["Group", "Group.Go", "Group.TryGo", "Group.SetLimit", "Group.Wait", "WithContext"],
+    "imports": ["context", "fmt", "sync"]
+  },
+  "upstream_scope": {
+    "repository_packages": ["errgroup", "semaphore", "singleflight", "syncmap"],
+    "task_package": "errgroup",
+    "excluded_packages": ["semaphore", "singleflight", "syncmap"]
+  },
+  "adaptation": {
+    "module_path": "golang.org/x/sync",
+    "go_mod_directive_change": "go 1.26.0 -> go 1.26.5 in Oracle setup; no library source changes",
+    "dependencies": "Go standard library only"
+  }
+}

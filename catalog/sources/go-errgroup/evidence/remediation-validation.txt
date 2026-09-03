@@ -1,0 +1,16 @@
+stage=source-freeze command=git clone/checkout exit_code=0 result=f75267d8412fc1dfd12b343644a7ea46e4d9c85d
+stage=source-freeze command=git archive sha256 exit_code=0 result=sha256:22414d7297aba3d45f32f30a1f58564a680efbf6cbfe89d30b6e3aa87c38ce09
+stage=dependency-probe command=go list -deps ./errgroup exit_code=0 result=standard-library imports only
+stage=environment-remediation command=go test ./errgroup with linux/amd64 CGO_DISABLED and GOPROXY=off exit_code=0 result=source package baseline passed
+stage=environment-remediation command=go vet ./errgroup exit_code=0 result=source package vet passed
+stage=dependency-closure remediation=created go.mod/go.sum/vendor/modules.txt/module.manifest.json with exact Go 1.26.5 and no external modules
+stage=dependency-closure command=GoModulesPackageManager.validate_offline_store exit_code=0 result=module.manifest.json matches go.mod/go.sum/vendor file hashes and offline closure is private CAS-backed
+stage=harbor-package command=uv run nl2repo task validate-source catalog/sources/go-errgroup exit_code=0 result=source descriptor and instruction accepted
+stage=harbor-package command=uv run nl2repo task lint-network --tasks-root catalog/sources exit_code=0 result=0 errors; 178 catalog-wide warnings, including one expected Oracle host-authorization warning for this task
+stage=harbor-package command=uv run nl2repo harbor compile catalog/sources/go-errgroup --output .nl2repo/compiled/go-errgroup-handoff-final --toolchain toolchain.go.lock.toml --artifact-root .nl2repo/artifacts --allow-private exit_code=0 result=closed-world production bundle compiled
+stage=verifier-build command=docker build --platform linux/amd64 -f .nl2repo/compiled/go-errgroup-handoff-final/go-errgroup/tests/Dockerfile -t nl2repobench/go-errgroup-verifier:authoring-final ... exit_code=0 result=image sha256:8ea871c12be64dc1a9f40222964e8bc2e96412b2c902b1e0b6c9b0639e9a57a4; non-blocking FromPlatformFlagConstDisallowed warning
+stage=oracle-local-smoke command=compiled solution solve.sh plus exact revision/archive assertion exit_code=0 result=FETCH_HEAD and archive digest matched f75267d8412fc1dfd12b343644a7ea46e4d9c85d/22414d7297aba3d45f32f30a1f58564a680efbf6cbfe89d30b6e3aa87c38ce09
+stage=oracle-local-smoke command=go build -mod=vendor ./cmd/bridge exit_code=0 result=reference bridge compiled with go1.26.5-X:nodwarf5
+stage=oracle-local-smoke command=go_contract_runner against compiled private contract exit_code=0 result=all private bridge assertions passed
+stage=controls-local-smoke command=separate verifier Docker matrix with empty/stub/forgery/install-failure/panic/hang exit_code=0 result=all cases completed with verifier-owned grading and public_network_available=false
+stage=supervisor-probe command=run_go_bridge timeout_sec=2 and max_output_bytes=1024 exit_code=0 result=wall timeout returned 124; output flood and combined stdout/stderr returned 125 within cap

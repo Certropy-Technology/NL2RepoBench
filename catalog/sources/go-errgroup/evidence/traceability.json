@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-errgroup",
+  "source_revision": "f75267d8412fc1dfd12b343644a7ea46e4d9c85d",
+  "leaf_id": "contract::public-api",
+  "frozen_total": 1,
+  "public_contract": "instruction.md#api-usage-guide",
+  "traceability": [
+    {"assertion_class": "zero-group and nil completion", "bridge_operation": "zero_wait", "instruction_section": "API Usage Guide / Group"},
+    {"assertion_class": "error propagation and repeated Wait", "bridge_operation": "single_error", "instruction_section": "API Usage Guide / Group"},
+    {"assertion_class": "context cancellation and first error cause", "bridge_operation": "with_context", "instruction_section": "API Usage Guide / WithContext"},
+    {"assertion_class": "context cancellation after successful Wait", "bridge_operation": "with_context_success", "instruction_section": "API Usage Guide / WithContext"},
+    {"assertion_class": "TryGo capacity and post-completion recovery", "bridge_operation": "trygo_limit", "instruction_section": "API Usage Guide / Group"},
+    {"assertion_class": "blocking Go under a positive limit", "bridge_operation": "go_limit", "instruction_section": "API Usage Guide / Group"},
+    {"assertion_class": "zero and negative limits", "bridge_operation": "trygo_zero / negative_limit", "instruction_section": "API Usage Guide / Group"},
+    {"assertion_class": "malformed operation response", "bridge_operation": "invalid", "instruction_section": "Implementation Notes"}
+  ],
+  "excluded_behavior": ["panic stack propagation", "timing-sensitive throughput", "network HTTP example", "other repository packages"],
+  "exclusion_reason": "These behaviors are either process-level hazards, nondeterministic performance observations, network-dependent examples, or outside the errgroup package selected for this task."
+}

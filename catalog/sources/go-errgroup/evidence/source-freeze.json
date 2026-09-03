@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-errgroup",
+  "upstream_url": "https://github.com/golang/sync",
+  "revision": "f75267d8412fc1dfd12b343644a7ea46e4d9c85d",
+  "source_digest": "sha256:22414d7297aba3d45f32f30a1f58564a680efbf6cbfe89d30b6e3aa87c38ce09",
+  "license_spdx": "BSD-3-Clause",
+  "license_sha256": "sha256:911f8f5782931320f5b8d1160a76365b83aea6447ee6c04fa6d5591467db9dad",
+  "checkout": ".nl2repo/authoring-work/go-author-auto-20260903T035119Z/go-errgroup/source",
+  "archive_command": "git -C .nl2repo/authoring-work/go-author-auto-20260903T035119Z/go-errgroup/source archive --format=tar HEAD | sha256sum",
+  "archive_exit_code": 0,
+  "source_authority": "known",
+  "revision_assertion": "git -C .nl2repo/authoring-work/go-author-auto-20260903T035119Z/go-errgroup/source rev-parse HEAD",
+  "revision_assertion_exit_code": 0
+}

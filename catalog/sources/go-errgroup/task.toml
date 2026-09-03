@@ -1,0 +1,76 @@
+schema_version = "1.0"
+task_id = "go-errgroup"
+version = "0.1.0"
+instruction = "instruction.md"
+oracle_bundle = { digest = "sha256:6ded7dd6601d887f20aba3e19b1db2602a69970ecb69f67801a9a6a98041268b", size_bytes = 586, uri = "artifact://private/sha256:6ded7dd6601d887f20aba3e19b1db2602a69970ecb69f67801a9a6a98041268b", visibility = "private" }
+
+[metadata]
+difficulty = "medium"
+category = "go-library"
+tags = ["go", "go-modules", "concurrency", "context", "typed-bridge", "public-api"]
+language = "go"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/golang/sync"
+revision = "f75267d8412fc1dfd12b343644a7ea46e4d9c85d"
+license_spdx = "BSD-3-Clause"
+source_digest = "sha256:22414d7297aba3d45f32f30a1f58564a680efbf6cbfe89d30b6e3aa87c38ce09"
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+runtime_version = "1.26.5"
+base_image = "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+base_image_digest = "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+network_mode = "no-network"
+build_command = "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go build -mod=vendor ./cmd/bridge"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "Candidate and verifier execution use a private pre-materialized standard-library-only Go module closure and run without network; only the trusted Oracle receives a run-scoped source-host authorization."
+
+[dependencies]
+status = "known"
+installer = "system"
+packages = []
+module_bundle = { digest = "sha256:257538bcb3027c2b476fc8a0d575175e1aeab0dbc1695d2de9d5a05ce31636b5", size_bytes = 635, uri = "artifact://private/sha256:257538bcb3027c2b476fc8a0d575175e1aeab0dbc1695d2de9d5a05ce31636b5", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 1
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Recreate the public errgroup synchronization, error propagation, context cancellation, and goroutine-limit APIs through a typed Go subprocess bridge."
+keywords = ["go", "errgroup", "concurrency", "context", "typed-bridge", "public-api"]
+agent_timeout_sec = 900.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "packaged"
+owner = "go-author-auto-20260903T035119Z"
+reason = "Frozen source, API/test inventory, typed bridge, private verifier/Oracle bundles, and offline Go runtime contract are packaged; official Oracle and Harbor controls remain integrator-owned."
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:574fba567af36436084260a9d6a48d567f3104ba75af69b23d9bde0aa744e4bf", size_bytes = 933, uri = "artifact://private/sha256:574fba567af36436084260a9d6a48d567f3104ba75af69b23d9bde0aa744e4bf", visibility = "private" }
+entrypoint = "contract.sh"
