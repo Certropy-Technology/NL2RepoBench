@@ -1,0 +1,78 @@
+schema_version = "1.0"
+task_id = "go-copier"
+version = "0.1.0"
+instruction = "instruction.md"
+oracle_bundle = { digest = "sha256:0bf40ed9050e2392068fdd8c8e0e73baf3b5f3d24b2ce39112df8f091642c3df", size_bytes = 517, media_type = "application/vnd.nl2repobench.go-oracle+tar", uri = "artifact://private/sha256:0bf40ed9050e2392068fdd8c8e0e73baf3b5f3d24b2ce39112df8f091642c3df", visibility = "private" }
+
+[metadata]
+difficulty = "medium"
+category = "go-library"
+tags = ["go", "go-modules", "reflection", "struct-copy", "typed-bridge", "public-api"]
+language = "go"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/jinzhu/copier"
+revision = "c6b47b092d9840406d0abc347e68a28a7b812643"
+license_spdx = "MIT"
+source_digest = "sha256:11b05c7a410dc39fd2cbcfb0f6cb307c1a694d3c33fff7a422109921f704cf18"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+network_mode = "no-network"
+runtime_version = "1.26.5"
+base_image = "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+base_image_digest = "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+build_command = "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -mod=vendor ./..."
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "The candidate and separate verifier use a private zero-dependency Go module closure with no network. Only the trusted Oracle receives a run-scoped github.com authorization to fetch and verify the frozen source revision."
+
+[dependencies]
+status = "known"
+installer = "system"
+packages = []
+module_bundle = { digest = "sha256:f9176ea41c05e736fef693c3a4397779d89ac6691f840b42b8f5bb10ac1d4bfd", size_bytes = 540, media_type = "application/vnd.nl2repobench.go-module-bundle+tar", uri = "artifact://private/sha256:f9176ea41c05e736fef693c3a4397779d89ac6691f840b42b8f5bb10ac1d4bfd", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 1
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Recreate bounded struct, slice, map, tag, option, and converter behavior of github.com/jinzhu/copier through a typed Go bridge."
+keywords = ["go", "go-modules", "reflection", "struct-copy", "typed-bridge", "public-api"]
+agent_timeout_sec = 900.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 4096
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "go-author-auto-20260903T131454Z"
+reason = "Frozen source, typed bridge, private offline module closure, production compile, official Oracle, empty/install-failure, stub, forgery, panic, hang, oversized-output, background-process, and offline controls passed. Independent review and publication remain integrator responsibilities."
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:24a9113142afb314dabdd3df52698f8c3175aa4fddef816887d89ddb361b1655", size_bytes = 783, media_type = "application/vnd.nl2repobench.go-verifier+tar", uri = "artifact://private/sha256:24a9113142afb314dabdd3df52698f8c3175aa4fddef816887d89ddb361b1655", visibility = "private" }
+entrypoint = "contract.sh"

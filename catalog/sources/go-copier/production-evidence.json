@@ -1,0 +1,161 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-copier",
+  "task_version": "0.1.0",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "production_receipt": ".nl2repo/authoring-production-gates.json",
+  "authoring_handoff": ".nl2repo/authoring-handoff.json",
+  "source_freeze": {
+    "upstream_url": "https://github.com/jinzhu/copier",
+    "revision": "c6b47b092d9840406d0abc347e68a28a7b812643",
+    "source_digest": "sha256:11b05c7a410dc39fd2cbcfb0f6cb307c1a694d3c33fff7a422109921f704cf18",
+    "license_spdx": "MIT"
+  },
+  "environment": {
+    "runtime": "go1.26.5",
+    "platform": "linux/amd64",
+    "base_image_digest": "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd",
+    "toolchain_lock": "toolchain.go.lock.toml",
+    "agent_network_mode": "no-network",
+    "verifier_network_mode": "no-network"
+  },
+  "dependency_closure": {
+    "kind": "go-module-bundle",
+    "digest": "sha256:f9176ea41c05e736fef693c3a4397779d89ac6691f840b42b8f5bb10ac1d4bfd",
+    "size_bytes": 540,
+    "offline": true
+  },
+  "frozen_collection": {
+    "framework": "go bridge contract",
+    "protocol": "custom-json-v1",
+    "leaf_ids": ["contract::public-api"],
+    "frozen_total": 1,
+    "upstream_test_exit_code": 0
+  },
+  "bundle": {
+    "manifest_path": ".nl2repo/authoring-work/go-copier/compiled-attempt4/go-copier/bundle.manifest.json",
+    "manifest_sha256": "sha256:14bda1ab6ba51bfd230a3ed47a7aaf0eafb0b08bc3654f51cbd547f5cfbba346",
+    "canonical_manifest_digest": "sha256:422454074b410cf050c20d70b0311b37caf8ecb07747dd2d120c73765950fd02"
+  },
+  "oracle": {
+    "valid": true,
+    "passed": 1,
+    "collected": 1,
+    "frozen_total": 1,
+    "reward": 1.0,
+    "result": ".nl2repo/runs/go-copier/attempt4/oracle/go-copier-oracle-attempt4/go-copier__QeDw6CW/result.json",
+    "grading": ".nl2repo/runs/go-copier/attempt4/oracle/go-copier-oracle-attempt4/go-copier__QeDw6CW/verifier/grading.json",
+    "network": ".nl2repo/runs/go-copier/attempt4/oracle/go-copier-oracle-attempt4/go-copier__QeDw6CW/verifier/network.json",
+    "reward_receipt": ".nl2repo/runs/go-copier/attempt4/oracle/go-copier-oracle-attempt4/go-copier__QeDw6CW/verifier/reward.json"
+  },
+  "controls": {
+    "empty": {
+      "valid": true,
+      "passed": 0,
+      "collected": 0,
+      "frozen_total": 1,
+      "reward": 0.0,
+      "failure_reason": "candidate-installation-failed",
+      "result": ".nl2repo/runs/go-copier/attempt4/empty/go-copier-empty-attempt4/go-copier__9xo6pJc/result.json",
+      "grading": ".nl2repo/runs/go-copier/attempt4/empty/go-copier-empty-attempt4/go-copier__9xo6pJc/verifier/grading.json",
+      "network": ".nl2repo/runs/go-copier/attempt4/empty/go-copier-empty-attempt4/go-copier__9xo6pJc/verifier/network.json",
+      "reward_receipt": ".nl2repo/runs/go-copier/attempt4/empty/go-copier-empty-attempt4/go-copier__9xo6pJc/verifier/reward.json"
+    },
+    "stub": {
+      "valid": true,
+      "passed": 0,
+      "collected": 1,
+      "frozen_total": 1,
+      "reward": 0.0,
+      "result": ".nl2repo/runs/go-copier/attempt4/stub/go-copier-stub-attempt4/go-copier-stub__cLdzY4d/result.json",
+      "grading": ".nl2repo/runs/go-copier/attempt4/stub/go-copier-stub-attempt4/go-copier-stub__cLdzY4d/verifier/grading.json",
+      "network": ".nl2repo/runs/go-copier/attempt4/stub/go-copier-stub-attempt4/go-copier-stub__cLdzY4d/verifier/network.json",
+      "reward_receipt": ".nl2repo/runs/go-copier/attempt4/stub/go-copier-stub-attempt4/go-copier-stub__cLdzY4d/verifier/reward.json"
+    },
+    "forgery": {
+      "valid": true,
+      "passed": 0,
+      "collected": 1,
+      "frozen_total": 1,
+      "reward": 0.0,
+      "result": ".nl2repo/runs/go-copier/attempt4/forgery/go-copier-forgery-attempt4/go-copier-forgery__eNHN4eo/result.json",
+      "grading": ".nl2repo/runs/go-copier/attempt4/forgery/go-copier-forgery-attempt4/go-copier-forgery__eNHN4eo/verifier/grading.json",
+      "network": ".nl2repo/runs/go-copier/attempt4/forgery/go-copier-forgery-attempt4/go-copier-forgery__eNHN4eo/verifier/network.json",
+      "reward_receipt": ".nl2repo/runs/go-copier/attempt4/forgery/go-copier-forgery-attempt4/go-copier-forgery__eNHN4eo/verifier/reward.json"
+    },
+    "install-failure": {
+      "valid": true,
+      "passed": 0,
+      "collected": 0,
+      "frozen_total": 1,
+      "reward": 0.0,
+      "failure_reason": "candidate-installation-failed",
+      "result": ".nl2repo/runs/go-copier/attempt4/install-failure/go-copier-install-failure-attempt4/go-copier-install-failure__w7yvtVD/result.json",
+      "grading": ".nl2repo/runs/go-copier/attempt4/install-failure/go-copier-install-failure-attempt4/go-copier-install-failure__w7yvtVD/verifier/grading.json",
+      "network": ".nl2repo/runs/go-copier/attempt4/install-failure/go-copier-install-failure-attempt4/go-copier-install-failure__w7yvtVD/verifier/network.json",
+      "reward_receipt": ".nl2repo/runs/go-copier/attempt4/install-failure/go-copier-install-failure-attempt4/go-copier-install-failure__w7yvtVD/verifier/reward.json"
+    },
+    "panic": {
+      "valid": true,
+      "passed": 0,
+      "collected": 1,
+      "frozen_total": 1,
+      "reward": 0.0,
+      "result": ".nl2repo/runs/go-copier/attempt4/panic/go-copier-panic-attempt4/go-copier-panic__AFQWRkP/result.json",
+      "grading": ".nl2repo/runs/go-copier/attempt4/panic/go-copier-panic-attempt4/go-copier-panic__AFQWRkP/verifier/grading.json",
+      "network": ".nl2repo/runs/go-copier/attempt4/panic/go-copier-panic-attempt4/go-copier-panic__AFQWRkP/verifier/network.json",
+      "reward_receipt": ".nl2repo/runs/go-copier/attempt4/panic/go-copier-panic-attempt4/go-copier-panic__AFQWRkP/verifier/reward.json"
+    },
+    "hang": {
+      "valid": true,
+      "passed": 0,
+      "collected": 1,
+      "frozen_total": 1,
+      "reward": 0.0,
+      "result": ".nl2repo/runs/go-copier/attempt4/hang/go-copier-hang-attempt4/go-copier-hang__A5vNKo3/result.json",
+      "grading": ".nl2repo/runs/go-copier/attempt4/hang/go-copier-hang-attempt4/go-copier-hang__A5vNKo3/verifier/grading.json",
+      "network": ".nl2repo/runs/go-copier/attempt4/hang/go-copier-hang-attempt4/go-copier-hang__A5vNKo3/verifier/network.json",
+      "reward_receipt": ".nl2repo/runs/go-copier/attempt4/hang/go-copier-hang-attempt4/go-copier-hang__A5vNKo3/verifier/reward.json"
+    },
+    "oversized-output": {
+      "valid": true,
+      "passed": 0,
+      "collected": 1,
+      "frozen_total": 1,
+      "reward": 0.0,
+      "result": ".nl2repo/runs/go-copier/attempt4/oversized-output/go-copier-oversized-output-attempt4/go-copier-oversized-output__snbeYvi/result.json",
+      "grading": ".nl2repo/runs/go-copier/attempt4/oversized-output/go-copier-oversized-output-attempt4/go-copier-oversized-output__snbeYvi/verifier/grading.json",
+      "network": ".nl2repo/runs/go-copier/attempt4/oversized-output/go-copier-oversized-output-attempt4/go-copier-oversized-output__snbeYvi/verifier/network.json",
+      "reward_receipt": ".nl2repo/runs/go-copier/attempt4/oversized-output/go-copier-oversized-output-attempt4/go-copier-oversized-output__snbeYvi/verifier/reward.json"
+    },
+    "background-process": {
+      "valid": true,
+      "passed": 0,
+      "collected": 1,
+      "frozen_total": 1,
+      "reward": 0.0,
+      "result": ".nl2repo/runs/go-copier/attempt4/background-process/go-copier-background-process-attempt4/go-copier-background-process__e3gwX3L/result.json",
+      "grading": ".nl2repo/runs/go-copier/attempt4/background-process/go-copier-background-process-attempt4/go-copier-background-process__e3gwX3L/verifier/grading.json",
+      "network": ".nl2repo/runs/go-copier/attempt4/background-process/go-copier-background-process-attempt4/go-copier-background-process__e3gwX3L/verifier/network.json",
+      "reward_receipt": ".nl2repo/runs/go-copier/attempt4/background-process/go-copier-background-process-attempt4/go-copier-background-process__e3gwX3L/verifier/reward.json"
+    },
+    "offline": {
+      "valid": true,
+      "passed": 1,
+      "collected": 1,
+      "frozen_total": 1,
+      "reward": 1.0,
+      "public_network_available": false,
+      "result": ".nl2repo/runs/go-copier/attempt4/offline/go-copier-offline-attempt4/go-copier__c5bC4ry/result.json",
+      "grading": ".nl2repo/runs/go-copier/attempt4/offline/go-copier-offline-attempt4/go-copier__c5bC4ry/verifier/grading.json",
+      "network": ".nl2repo/runs/go-copier/attempt4/offline/go-copier-offline-attempt4/go-copier__c5bC4ry/verifier/network.json",
+      "reward_receipt": ".nl2repo/runs/go-copier/attempt4/offline/go-copier-offline-attempt4/go-copier__c5bC4ry/verifier/reward.json"
+    }
+  },
+  "residual_risks": [
+    "No model Agent evaluation was run in this authoring lane; integrator owns that stage.",
+    "The typed JSON bridge excludes arbitrary reflection values, private fields, database interfaces, and caller-supplied callback transport."
+  ],
+  "receipt": ".nl2repo/authoring-production-gates.json"
+}

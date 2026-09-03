@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-copier",
+  "module_path": "github.com/jinzhu/copier",
+  "upstream_go_directive": "1.13",
+  "task_go_version": "1.26.5",
+  "public_api": {
+    "functions": ["Copy(toValue interface{}, fromValue interface{}) error", "CopyWithOption(toValue interface{}, fromValue interface{}, opt Option) error"],
+    "types": ["Option", "TypeConverter", "FieldNameMapping"],
+    "exported_error_variables": ["ErrInvalidCopyDestination", "ErrInvalidCopyFrom", "ErrMapKeyNotMatch", "ErrNotSupported", "ErrFieldNameTagStartNotUpperCase"]
+  },
+  "upstream_tests": {
+    "top_level_test_and_benchmark_declarations": 62,
+    "test_command": "GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -count=1 -json ./...",
+    "exit_code": 0,
+    "coverage_groups": ["struct and pointer fields", "slices and maps", "deep copy", "case sensitivity", "tags", "field mappings", "type converters", "invalid source and destination"]
+  },
+  "bridge_adaptation": "Fixed Go structs and scalar scenarios cross JSON. Callbacks, reflection values, database interfaces, private fields, and arbitrary type shapes remain inside the candidate process."
+}

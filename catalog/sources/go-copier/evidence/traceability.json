@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-copier",
+  "verifier_protocol": "custom-json-v1",
+  "candidate_execution": "bounded candidate UID subprocess through the reviewed Go bridge proxy",
+  "contract_leaf": {
+    "id": "contract::public-api",
+    "frozen_total": 1,
+    "instruction_sections": ["instruction.md#project-description", "instruction.md#supports", "instruction.md#api-usage-guide", "instruction.md#implementation-notes"],
+    "behavior_groups": [
+      {"group": "ordinary struct copying", "apis": ["Copy"], "bridge_cases": ["basic", "invalid"]},
+      {"group": "slices and maps", "apis": ["Copy"], "bridge_cases": ["slice", "map"]},
+      {"group": "options", "apis": ["CopyWithOption", "Option"], "bridge_cases": ["ignore_empty", "case_matching", "deep_copy"]},
+      {"group": "tags and mappings", "apis": ["Copy", "CopyWithOption", "FieldNameMapping"], "bridge_cases": ["tags", "field_mapping"]},
+      {"group": "conversion hooks", "apis": ["CopyWithOption", "TypeConverter"], "bridge_cases": ["converter"]}
+    ]
+  },
+  "adaptations": [
+    "A bounded typed bridge owns all JSON decoding and candidate calls, preventing the trusted verifier from importing candidate code.",
+    "The callback conversion contract is observed through a fixed string-to-int converter implemented in the candidate bridge process.",
+    "Database driver and scanner integration, arbitrary reflection values, and private field copying are source-inventory baseline behavior outside this serializable task contract."
+  ]
+}

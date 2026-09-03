@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-copier",
+  "upstream_url": "https://github.com/jinzhu/copier",
+  "revision": "c6b47b092d9840406d0abc347e68a28a7b812643",
+  "resolved_revision": "c6b47b092d9840406d0abc347e68a28a7b812643",
+  "source_archive_sha256": "sha256:11b05c7a410dc39fd2cbcfb0f6cb307c1a694d3c33fff7a422109921f704cf18",
+  "license_spdx": "MIT",
+  "license_sha256": "sha256:04a07632499685c7614e52e822b0ac0ec0767b4e9b2a3e8ae7cb52ed0d4df3c7",
+  "module_version": "v0.4.1-0.20260314121710-c6b47b092d98",
+  "module_zip_sha256": "sha256:114630d1eb76f795828ca1ad717596913ab5ee8a6acecf528919e1addbcfcbfe",
+  "commands": [
+    {
+      "command": "GOWORK=off go mod download -json github.com/jinzhu/copier@c6b47b092d9840406d0abc347e68a28a7b812643",
+      "exit_code": 0,
+      "result": "Go module metadata resolved the claimed immutable revision."
+    },
+    {
+      "command": "git clone --no-checkout https://github.com/jinzhu/copier upstream && git -C upstream checkout --detach c6b47b092d9840406d0abc347e68a28a7b812643 && git -C upstream archive --format=tar HEAD | sha256sum",
+      "exit_code": 0,
+      "result": "Frozen checkout and archive digest verified."
+    }
+  ]
+}
