@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "framework": "go",
+  "report_format": "go-test-json-v1",
+  "frozen_total": 1,
+  "leaf_ids": ["contract::public-api"],
+  "assertion_classes": [
+    "loose and strict parsing",
+    "prefix stripping and original/prefix preservation",
+    "canonical formatting and normalized segments",
+    "SemVer and prerelease comparison",
+    "metadata exclusion and core extraction",
+    "copy-safe segment accessors",
+    "constraint operators and prerelease behavior",
+    "collection sorting",
+    "invalid JSON and package error handling"
+  ]
+}

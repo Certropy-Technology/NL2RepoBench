@@ -1,0 +1,701 @@
+{
+  "canonical_manifest_digest": "sha256:a3a456ed77f4adef1ec1647ebb73a14df49e1360ab75b5f552232d2dfbcdc04c",
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "304b9100b8fd8b4721b4aa72da0aad84bd1b4eef8dbf1d491e8b1c1f3e92ff66",
+      "size_bytes": 150
+    },
+    {
+      "path": "controls/background-process.sh",
+      "sha256": "5d2aba41a26fcca8971035c003df56b58abccf19f5d334164d121cad770dab13",
+      "size_bytes": 447
+    },
+    {
+      "path": "controls/forgery.sh",
+      "sha256": "cc0a07ed18c97eb283a05e7417d624cf723738eeeef9d4145a61323728b9ac6a",
+      "size_bytes": 383
+    },
+    {
+      "path": "controls/hang.sh",
+      "sha256": "1cf7405dbcd9465800ef41eb679592b8a7ee310827a167ae10c347faa9c551f5",
+      "size_bytes": 372
+    },
+    {
+      "path": "controls/install-failure.sh",
+      "sha256": "8b3d41bc2aa7bd48b89f2bbe13b439a3f7fed9168e749adbd7cac72ccde65a81",
+      "size_bytes": 155
+    },
+    {
+      "path": "controls/oversized-output.sh",
+      "sha256": "d36da38215caf580c266f05c90130ccb1bda4f50e4f71db82175dba4b8801ca4",
+      "size_bytes": 416
+    },
+    {
+      "path": "controls/panic.sh",
+      "sha256": "efa17f6d07afde85214ac6a7e81cac92ee98416b861fc1594e4e4520b07a8f80",
+      "size_bytes": 402
+    },
+    {
+      "path": "controls/stub.sh",
+      "sha256": "6bf50f58433d224b351891cfd097f6c3769f85062336b8b7e2190639aadbc3dd",
+      "size_bytes": 375
+    },
+    {
+      "path": "environment/Dockerfile",
+      "sha256": "8732e2751cacf7a6fe36836f3779c04b14a1381356b5a1a72d63d10d80a98a2e",
+      "size_bytes": 857
+    },
+    {
+      "path": "environment/go-module-bundle/go.mod",
+      "sha256": "79392cfa9204b3b4e03874481a6ca1a426ffce2eb2cf23091517e8212fc9a053",
+      "size_bytes": 81
+    },
+    {
+      "path": "environment/go-module-bundle/go.sum",
+      "sha256": "b14bae894b3fa9e9b39c5c850cb044afa3fbd20d5b5104556506baf3acee2b49",
+      "size_bytes": 163
+    },
+    {
+      "path": "environment/go-module-bundle/module.manifest.json",
+      "sha256": "db6aa5a286c057e59ee1e884d4736c30e8294401a30d0c72d1616c7e5a2ec6d7",
+      "size_bytes": 3459
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/github.com/rivo/uniseg/LICENSE.txt",
+      "sha256": "a59885f5f0f3b3c07cf9444db5fe399b6f0791eac82055f7b85cc65500551039",
+      "size_bytes": 1072
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/github.com/rivo/uniseg/README.md",
+      "sha256": "e692131c9282c3e3e6bdb52b4c4c01c34890382e112922dcf514f1041b382fd2",
+      "size_bytes": 7415
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/github.com/rivo/uniseg/doc.go",
+      "sha256": "7df403cb9db73831ebcc70fd14c546b71dca153b0b5fe49d25a614d3439b4e91",
+      "size_bytes": 5465
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/github.com/rivo/uniseg/eastasianwidth.go",
+      "sha256": "1cd2368ddedc56182d2f64576f2a713a2ad6234265d940575285f61006527c5b",
+      "size_bytes": 215729
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/github.com/rivo/uniseg/emojipresentation.go",
+      "sha256": "c4e1921aafedd787a29a0a6e329b85c6833eb1cfad0cfaf00450783f99e33b9c",
+      "size_bytes": 26466
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/github.com/rivo/uniseg/gen_breaktest.go",
+      "sha256": "9896daff18016cd14af4f74cbcb5c207f15da84f7bad3f51db48f4e4eaddf3eb",
+      "size_bytes": 5925
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/github.com/rivo/uniseg/gen_properties.go",
+      "sha256": "6fc3dda9e39d2346e516b463b1ccae7be7594fe9f7e665aeef69e01644ca4a88",
+      "size_bytes": 7932
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/github.com/rivo/uniseg/grapheme.go",
+      "sha256": "9b19b4dab5926971b5da48e77d33c66bb4f8ffc795b0c61fe52f06ebd08d90ac",
+      "size_bytes": 9910
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/github.com/rivo/uniseg/graphemeproperties.go",
+      "sha256": "321483625d9a4aa92e4a5730df51c59d5b49725cd20e3879749488e5628b3da8",
+      "size_bytes": 179629
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/github.com/rivo/uniseg/graphemerules.go",
+      "sha256": "5a4414dfc0402ab1f2b415c0faf89166270f7201a584aee503da69ce6a65d738",
+      "size_bytes": 5152
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/github.com/rivo/uniseg/line.go",
+      "sha256": "c71b13b940922b440da48b4f1f48c6df1446aabaa4b96003385983bdb8a2d528",
+      "size_bytes": 4923
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/github.com/rivo/uniseg/lineproperties.go",
+      "sha256": "d73432ab989195312fdaa4f4dcea34c7bfb478160b98ad26fbc31df94f898b45",
+      "size_bytes": 298992
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/github.com/rivo/uniseg/linerules.go",
+      "sha256": "08ad2a2fb188a2349ba76774d0e973711a7ab15d2a865c56e12438a63a433c67",
+      "size_bytes": 16008
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/github.com/rivo/uniseg/properties.go",
+      "sha256": "ff66c81730c902cac9d8d7bfaa4a1d4e914ef5f9a04f9b525aad4e1cb507b94f",
+      "size_bytes": 3509
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/github.com/rivo/uniseg/sentence.go",
+      "sha256": "9883efae40e69051fcf1f1a8c2927f32fbe67e42aba344707a8aaf308fa1b0d7",
+      "size_bytes": 2735
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/github.com/rivo/uniseg/sentenceproperties.go",
+      "sha256": "272502600803b8e99721cb9d76002a6546ea2350056bf66bb7860c39a2032bd9",
+      "size_bytes": 241800
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/github.com/rivo/uniseg/sentencerules.go",
+      "sha256": "12ff3986697a1e31c9029c885c39662a267c6bd40e2df88b0466eb7ff34ebf56",
+      "size_bytes": 7887
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/github.com/rivo/uniseg/step.go",
+      "sha256": "93c8f1f8b5eac3e00393eeb49a616fa08d3fdf5b20e0e29a069c73c4bffeb7e7",
+      "size_bytes": 9698
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/github.com/rivo/uniseg/width.go",
+      "sha256": "9a76bbb3ef247b33e00a3d5d7b98380d8d3ea46e793b50ab13fbbc8b246008ee",
+      "size_bytes": 1631
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/github.com/rivo/uniseg/word.go",
+      "sha256": "3b0856f8e6bc473e8129c2611dea482201acdef4e62c6f9ea2073c59fa77808e",
+      "size_bytes": 2656
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/github.com/rivo/uniseg/wordproperties.go",
+      "sha256": "10136e6c3c8ea619276428d59278e312aa4ce33b2e50d98f3a618f162b3a5864",
+      "size_bytes": 187876
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/github.com/rivo/uniseg/wordrules.go",
+      "sha256": "7c3ebaf4ed47c37a3e2aa14402b4233ca8d15f3114b48ea0bda183adab268729",
+      "size_bytes": 8395
+    },
+    {
+      "path": "environment/go-module-bundle/vendor/modules.txt",
+      "sha256": "7c89016b1e953e738f066d3f806601f15dd326ac6260ff1ed89e1707b6d127eb",
+      "size_bytes": 76
+    },
+    {
+      "path": "instruction.md",
+      "sha256": "244e2112b6742b7f0a30bb5f58218dbdeaa3021660244c72e617a86dcbdf6832",
+      "size_bytes": 2756
+    },
+    {
+      "path": "solution/module-bundle/go.mod",
+      "sha256": "79392cfa9204b3b4e03874481a6ca1a426ffce2eb2cf23091517e8212fc9a053",
+      "size_bytes": 81
+    },
+    {
+      "path": "solution/module-bundle/go.sum",
+      "sha256": "b14bae894b3fa9e9b39c5c850cb044afa3fbd20d5b5104556506baf3acee2b49",
+      "size_bytes": 163
+    },
+    {
+      "path": "solution/module-bundle/module.manifest.json",
+      "sha256": "db6aa5a286c057e59ee1e884d4736c30e8294401a30d0c72d1616c7e5a2ec6d7",
+      "size_bytes": 3459
+    },
+    {
+      "path": "solution/module-bundle/vendor/github.com/rivo/uniseg/LICENSE.txt",
+      "sha256": "a59885f5f0f3b3c07cf9444db5fe399b6f0791eac82055f7b85cc65500551039",
+      "size_bytes": 1072
+    },
+    {
+      "path": "solution/module-bundle/vendor/github.com/rivo/uniseg/README.md",
+      "sha256": "e692131c9282c3e3e6bdb52b4c4c01c34890382e112922dcf514f1041b382fd2",
+      "size_bytes": 7415
+    },
+    {
+      "path": "solution/module-bundle/vendor/github.com/rivo/uniseg/doc.go",
+      "sha256": "7df403cb9db73831ebcc70fd14c546b71dca153b0b5fe49d25a614d3439b4e91",
+      "size_bytes": 5465
+    },
+    {
+      "path": "solution/module-bundle/vendor/github.com/rivo/uniseg/eastasianwidth.go",
+      "sha256": "1cd2368ddedc56182d2f64576f2a713a2ad6234265d940575285f61006527c5b",
+      "size_bytes": 215729
+    },
+    {
+      "path": "solution/module-bundle/vendor/github.com/rivo/uniseg/emojipresentation.go",
+      "sha256": "c4e1921aafedd787a29a0a6e329b85c6833eb1cfad0cfaf00450783f99e33b9c",
+      "size_bytes": 26466
+    },
+    {
+      "path": "solution/module-bundle/vendor/github.com/rivo/uniseg/gen_breaktest.go",
+      "sha256": "9896daff18016cd14af4f74cbcb5c207f15da84f7bad3f51db48f4e4eaddf3eb",
+      "size_bytes": 5925
+    },
+    {
+      "path": "solution/module-bundle/vendor/github.com/rivo/uniseg/gen_properties.go",
+      "sha256": "6fc3dda9e39d2346e516b463b1ccae7be7594fe9f7e665aeef69e01644ca4a88",
+      "size_bytes": 7932
+    },
+    {
+      "path": "solution/module-bundle/vendor/github.com/rivo/uniseg/grapheme.go",
+      "sha256": "9b19b4dab5926971b5da48e77d33c66bb4f8ffc795b0c61fe52f06ebd08d90ac",
+      "size_bytes": 9910
+    },
+    {
+      "path": "solution/module-bundle/vendor/github.com/rivo/uniseg/graphemeproperties.go",
+      "sha256": "321483625d9a4aa92e4a5730df51c59d5b49725cd20e3879749488e5628b3da8",
+      "size_bytes": 179629
+    },
+    {
+      "path": "solution/module-bundle/vendor/github.com/rivo/uniseg/graphemerules.go",
+      "sha256": "5a4414dfc0402ab1f2b415c0faf89166270f7201a584aee503da69ce6a65d738",
+      "size_bytes": 5152
+    },
+    {
+      "path": "solution/module-bundle/vendor/github.com/rivo/uniseg/line.go",
+      "sha256": "c71b13b940922b440da48b4f1f48c6df1446aabaa4b96003385983bdb8a2d528",
+      "size_bytes": 4923
+    },
+    {
+      "path": "solution/module-bundle/vendor/github.com/rivo/uniseg/lineproperties.go",
+      "sha256": "d73432ab989195312fdaa4f4dcea34c7bfb478160b98ad26fbc31df94f898b45",
+      "size_bytes": 298992
+    },
+    {
+      "path": "solution/module-bundle/vendor/github.com/rivo/uniseg/linerules.go",
+      "sha256": "08ad2a2fb188a2349ba76774d0e973711a7ab15d2a865c56e12438a63a433c67",
+      "size_bytes": 16008
+    },
+    {
+      "path": "solution/module-bundle/vendor/github.com/rivo/uniseg/properties.go",
+      "sha256": "ff66c81730c902cac9d8d7bfaa4a1d4e914ef5f9a04f9b525aad4e1cb507b94f",
+      "size_bytes": 3509
+    },
+    {
+      "path": "solution/module-bundle/vendor/github.com/rivo/uniseg/sentence.go",
+      "sha256": "9883efae40e69051fcf1f1a8c2927f32fbe67e42aba344707a8aaf308fa1b0d7",
+      "size_bytes": 2735
+    },
+    {
+      "path": "solution/module-bundle/vendor/github.com/rivo/uniseg/sentenceproperties.go",
+      "sha256": "272502600803b8e99721cb9d76002a6546ea2350056bf66bb7860c39a2032bd9",
+      "size_bytes": 241800
+    },
+    {
+      "path": "solution/module-bundle/vendor/github.com/rivo/uniseg/sentencerules.go",
+      "sha256": "12ff3986697a1e31c9029c885c39662a267c6bd40e2df88b0466eb7ff34ebf56",
+      "size_bytes": 7887
+    },
+    {
+      "path": "solution/module-bundle/vendor/github.com/rivo/uniseg/step.go",
+      "sha256": "93c8f1f8b5eac3e00393eeb49a616fa08d3fdf5b20e0e29a069c73c4bffeb7e7",
+      "size_bytes": 9698
+    },
+    {
+      "path": "solution/module-bundle/vendor/github.com/rivo/uniseg/width.go",
+      "sha256": "9a76bbb3ef247b33e00a3d5d7b98380d8d3ea46e793b50ab13fbbc8b246008ee",
+      "size_bytes": 1631
+    },
+    {
+      "path": "solution/module-bundle/vendor/github.com/rivo/uniseg/word.go",
+      "sha256": "3b0856f8e6bc473e8129c2611dea482201acdef4e62c6f9ea2073c59fa77808e",
+      "size_bytes": 2656
+    },
+    {
+      "path": "solution/module-bundle/vendor/github.com/rivo/uniseg/wordproperties.go",
+      "sha256": "10136e6c3c8ea619276428d59278e312aa4ce33b2e50d98f3a618f162b3a5864",
+      "size_bytes": 187876
+    },
+    {
+      "path": "solution/module-bundle/vendor/github.com/rivo/uniseg/wordrules.go",
+      "sha256": "7c3ebaf4ed47c37a3e2aa14402b4233ca8d15f3114b48ea0bda183adab268729",
+      "size_bytes": 8395
+    },
+    {
+      "path": "solution/module-bundle/vendor/modules.txt",
+      "sha256": "7c89016b1e953e738f066d3f806601f15dd326ac6260ff1ed89e1707b6d127eb",
+      "size_bytes": 76
+    },
+    {
+      "path": "solution/solve.sh",
+      "sha256": "cc3a605e7af9bb6d07c3b23a7099aded464f554566cdfbdc2413b4e86841a6bd",
+      "size_bytes": 1228
+    },
+    {
+      "path": "task.toml",
+      "sha256": "f55aa070b87acc150ac56a0d5b6351a2c0986ed0e6b93adb58c2a7df423c69ba",
+      "size_bytes": 1105
+    },
+    {
+      "path": "tests/Dockerfile",
+      "sha256": "0a2d22fd10bbf49321ef5ee4094e508e4b8333d5afd78d2747e994965f896b87",
+      "size_bytes": 719
+    },
+    {
+      "path": "tests/dependencies/go.mod",
+      "sha256": "79392cfa9204b3b4e03874481a6ca1a426ffce2eb2cf23091517e8212fc9a053",
+      "size_bytes": 81
+    },
+    {
+      "path": "tests/dependencies/go.sum",
+      "sha256": "b14bae894b3fa9e9b39c5c850cb044afa3fbd20d5b5104556506baf3acee2b49",
+      "size_bytes": 163
+    },
+    {
+      "path": "tests/dependencies/module.manifest.json",
+      "sha256": "db6aa5a286c057e59ee1e884d4736c30e8294401a30d0c72d1616c7e5a2ec6d7",
+      "size_bytes": 3459
+    },
+    {
+      "path": "tests/dependencies/vendor/github.com/rivo/uniseg/LICENSE.txt",
+      "sha256": "a59885f5f0f3b3c07cf9444db5fe399b6f0791eac82055f7b85cc65500551039",
+      "size_bytes": 1072
+    },
+    {
+      "path": "tests/dependencies/vendor/github.com/rivo/uniseg/README.md",
+      "sha256": "e692131c9282c3e3e6bdb52b4c4c01c34890382e112922dcf514f1041b382fd2",
+      "size_bytes": 7415
+    },
+    {
+      "path": "tests/dependencies/vendor/github.com/rivo/uniseg/doc.go",
+      "sha256": "7df403cb9db73831ebcc70fd14c546b71dca153b0b5fe49d25a614d3439b4e91",
+      "size_bytes": 5465
+    },
+    {
+      "path": "tests/dependencies/vendor/github.com/rivo/uniseg/eastasianwidth.go",
+      "sha256": "1cd2368ddedc56182d2f64576f2a713a2ad6234265d940575285f61006527c5b",
+      "size_bytes": 215729
+    },
+    {
+      "path": "tests/dependencies/vendor/github.com/rivo/uniseg/emojipresentation.go",
+      "sha256": "c4e1921aafedd787a29a0a6e329b85c6833eb1cfad0cfaf00450783f99e33b9c",
+      "size_bytes": 26466
+    },
+    {
+      "path": "tests/dependencies/vendor/github.com/rivo/uniseg/gen_breaktest.go",
+      "sha256": "9896daff18016cd14af4f74cbcb5c207f15da84f7bad3f51db48f4e4eaddf3eb",
+      "size_bytes": 5925
+    },
+    {
+      "path": "tests/dependencies/vendor/github.com/rivo/uniseg/gen_properties.go",
+      "sha256": "6fc3dda9e39d2346e516b463b1ccae7be7594fe9f7e665aeef69e01644ca4a88",
+      "size_bytes": 7932
+    },
+    {
+      "path": "tests/dependencies/vendor/github.com/rivo/uniseg/grapheme.go",
+      "sha256": "9b19b4dab5926971b5da48e77d33c66bb4f8ffc795b0c61fe52f06ebd08d90ac",
+      "size_bytes": 9910
+    },
+    {
+      "path": "tests/dependencies/vendor/github.com/rivo/uniseg/graphemeproperties.go",
+      "sha256": "321483625d9a4aa92e4a5730df51c59d5b49725cd20e3879749488e5628b3da8",
+      "size_bytes": 179629
+    },
+    {
+      "path": "tests/dependencies/vendor/github.com/rivo/uniseg/graphemerules.go",
+      "sha256": "5a4414dfc0402ab1f2b415c0faf89166270f7201a584aee503da69ce6a65d738",
+      "size_bytes": 5152
+    },
+    {
+      "path": "tests/dependencies/vendor/github.com/rivo/uniseg/line.go",
+      "sha256": "c71b13b940922b440da48b4f1f48c6df1446aabaa4b96003385983bdb8a2d528",
+      "size_bytes": 4923
+    },
+    {
+      "path": "tests/dependencies/vendor/github.com/rivo/uniseg/lineproperties.go",
+      "sha256": "d73432ab989195312fdaa4f4dcea34c7bfb478160b98ad26fbc31df94f898b45",
+      "size_bytes": 298992
+    },
+    {
+      "path": "tests/dependencies/vendor/github.com/rivo/uniseg/linerules.go",
+      "sha256": "08ad2a2fb188a2349ba76774d0e973711a7ab15d2a865c56e12438a63a433c67",
+      "size_bytes": 16008
+    },
+    {
+      "path": "tests/dependencies/vendor/github.com/rivo/uniseg/properties.go",
+      "sha256": "ff66c81730c902cac9d8d7bfaa4a1d4e914ef5f9a04f9b525aad4e1cb507b94f",
+      "size_bytes": 3509
+    },
+    {
+      "path": "tests/dependencies/vendor/github.com/rivo/uniseg/sentence.go",
+      "sha256": "9883efae40e69051fcf1f1a8c2927f32fbe67e42aba344707a8aaf308fa1b0d7",
+      "size_bytes": 2735
+    },
+    {
+      "path": "tests/dependencies/vendor/github.com/rivo/uniseg/sentenceproperties.go",
+      "sha256": "272502600803b8e99721cb9d76002a6546ea2350056bf66bb7860c39a2032bd9",
+      "size_bytes": 241800
+    },
+    {
+      "path": "tests/dependencies/vendor/github.com/rivo/uniseg/sentencerules.go",
+      "sha256": "12ff3986697a1e31c9029c885c39662a267c6bd40e2df88b0466eb7ff34ebf56",
+      "size_bytes": 7887
+    },
+    {
+      "path": "tests/dependencies/vendor/github.com/rivo/uniseg/step.go",
+      "sha256": "93c8f1f8b5eac3e00393eeb49a616fa08d3fdf5b20e0e29a069c73c4bffeb7e7",
+      "size_bytes": 9698
+    },
+    {
+      "path": "tests/dependencies/vendor/github.com/rivo/uniseg/width.go",
+      "sha256": "9a76bbb3ef247b33e00a3d5d7b98380d8d3ea46e793b50ab13fbbc8b246008ee",
+      "size_bytes": 1631
+    },
+    {
+      "path": "tests/dependencies/vendor/github.com/rivo/uniseg/word.go",
+      "sha256": "3b0856f8e6bc473e8129c2611dea482201acdef4e62c6f9ea2073c59fa77808e",
+      "size_bytes": 2656
+    },
+    {
+      "path": "tests/dependencies/vendor/github.com/rivo/uniseg/wordproperties.go",
+      "sha256": "10136e6c3c8ea619276428d59278e312aa4ce33b2e50d98f3a618f162b3a5864",
+      "size_bytes": 187876
+    },
+    {
+      "path": "tests/dependencies/vendor/github.com/rivo/uniseg/wordrules.go",
+      "sha256": "7c3ebaf4ed47c37a3e2aa14402b4233ca8d15f3114b48ea0bda183adab268729",
+      "size_bytes": 8395
+    },
+    {
+      "path": "tests/dependencies/vendor/modules.txt",
+      "sha256": "7c89016b1e953e738f066d3f806601f15dd326ac6260ff1ed89e1707b6d127eb",
+      "size_bytes": 76
+    },
+    {
+      "path": "tests/docker-compose.yaml",
+      "sha256": "17ceef0a82e7dfb63d9f5ce974350f392dd8a323eac174ec69d28a90c7de8388",
+      "size_bytes": 41
+    },
+    {
+      "path": "tests/private/bridge.go",
+      "sha256": "ba5d0a43ea05bcca90474c9d2b3c3900d18b5793b5424245c49d4dd9c04d778a",
+      "size_bytes": 1888
+    },
+    {
+      "path": "tests/private/contract.py",
+      "sha256": "e2f21b25e669e9f6fd99ff147eb7c13d158f4c37f53c70cdd94fc3a3819877d1",
+      "size_bytes": 1658
+    },
+    {
+      "path": "tests/private/contract.sh",
+      "sha256": "19765199b2fd40a369f5342e4fd0f98b6a66e0bfc2fae7fa8b38b3bbe8626a66",
+      "size_bytes": 100
+    },
+    {
+      "path": "tests/runtime/nl2repobench/__init__.py",
+      "sha256": "8b08fadac670b008370bddd3b1fd8697d3ffa6ae7e871597bca49ee6ac9391ec",
+      "size_bytes": 496
+    },
+    {
+      "path": "tests/runtime/nl2repobench/domain/__init__.py",
+      "sha256": "8dfe43a661476821aa4a66277248c1f3d67f6b9ca63418164e24bd3f2a74f357",
+      "size_bytes": 61
+    },
+    {
+      "path": "tests/runtime/nl2repobench/domain/canonical.py",
+      "sha256": "b9cf1b7843c52d4dd6dacb92b2a0c2590bd1895492713d4e24b06b0639fa0d2d",
+      "size_bytes": 1697
+    },
+    {
+      "path": "tests/runtime/nl2repobench/domain/models.py",
+      "sha256": "2fdcf16080e77749d95d5abcd99fd7fe99c1f9f7c35d3af1bd2f2004372f1ee2",
+      "size_bytes": 30133
+    },
+    {
+      "path": "tests/runtime/nl2repobench/domain/models_v2.py",
+      "sha256": "2e56ba41f7b5507781b4776f9bc02fb24b59f616b82708054fb404957e37bba1",
+      "size_bytes": 15225
+    },
+    {
+      "path": "tests/runtime/nl2repobench/domain/network_policy.py",
+      "sha256": "b62888f824570124e078bc0c6aec5d11f8fe4f55a40b24d8b6358f652dd5d7ef",
+      "size_bytes": 12693
+    },
+    {
+      "path": "tests/runtime/nl2repobench/domain/runtime.py",
+      "sha256": "b72eb097de0e25a01c9117bcbd7cbc4e10bcf1e9e9fcdf550b6a609f4efd12c8",
+      "size_bytes": 5529
+    },
+    {
+      "path": "tests/runtime/nl2repobench/package_managers/__init__.py",
+      "sha256": "3a2636d788e41dd7a31a20e422c3af2442c2ad6bee39e9cd6e4554666ac1a468",
+      "size_bytes": 1120
+    },
+    {
+      "path": "tests/runtime/nl2repobench/package_managers/base.py",
+      "sha256": "77c4a81eb31541db2343e80872e9649f32dc5e3434a689bb25d2dca83d47ca29",
+      "size_bytes": 784
+    },
+    {
+      "path": "tests/runtime/nl2repobench/package_managers/go_modules.py",
+      "sha256": "897c9a34b3b7300b0020c78ab124f12143fd25d13b0261674db25aad15bfe7fd",
+      "size_bytes": 6419
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/__init__.py",
+      "sha256": "2f97d1d1f2eb417a01310aae6ea7d15000451c088efba5c575f5ff6615a933c9",
+      "size_bytes": 1159
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/candidate_client.py",
+      "sha256": "5eca68115a8f21a1f8dfa9fecd34b20e7c911be6026c859fff8186a8317e510a",
+      "size_bytes": 10529
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/candidate_install.py",
+      "sha256": "a49314a0ad250d9fd5efcda2d15f9d62d9b882c9b2d9bbf813315c14c73ce76a",
+      "size_bytes": 6556
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/candidate_runner.py",
+      "sha256": "3b57b77d2097535362432f4b60353e2f58b181d5e34adde55ff0f3949492b55e",
+      "size_bytes": 9672
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/cli.py",
+      "sha256": "8427c0b606f76a1c73528dcb4588e7b18b5b35b7d3bf797a5a43758e1c745eb8",
+      "size_bytes": 3012
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/command_plan.py",
+      "sha256": "2766939c504f350ff4891221c2e37ae25f5c0613b5b0494c06b75c176e794e38",
+      "size_bytes": 1392
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/custom_verifier.py",
+      "sha256": "5ab59468d8058fb6e61cdaef567bf4334f0dfa116bd0219924d6dda8db96227c",
+      "size_bytes": 4008
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/evaluator.py",
+      "sha256": "20f9ad77f637b5232acafc0af7d00b2eccd701e8a13b60d9858f838cff97d265",
+      "size_bytes": 9040
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/go_bridge_proxy.py",
+      "sha256": "b9aadf2e8d45be4f17d595b907ba45e2e75a81a28146f56e917e242f3443d7b6",
+      "size_bytes": 661
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/go_contract_runner.py",
+      "sha256": "e3df4ba4f47de59c77fdb0c9d3dad5471fb9ba1547fe2c2248ad3919310d08a6",
+      "size_bytes": 1478
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/go_grader.py",
+      "sha256": "767bbd785eb07633f25a2c6c28d4e4109524978967412c1b3413ebc9c566aaf1",
+      "size_bytes": 2573
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/go_supervisor.py",
+      "sha256": "03b98283b778f30949c20052aa7ce1397f2f3e37cada77148ac119111b9c51b2",
+      "size_bytes": 5358
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/grader.py",
+      "sha256": "5ef7fd8572e80b88a9ba5057ee72a9fdd12e449fd81365c3c09a0bda51e8477b",
+      "size_bytes": 5497
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/integrity.py",
+      "sha256": "73c60b40435445d2e2951ffd73cd80e026b19a9c4357f85f6cbfa8076d076aae",
+      "size_bytes": 2015
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/junit.py",
+      "sha256": "91669b3cb4b1cee9fe999f3960336fc7f45bb3f0a11e5d34a3b20a882ae7e8de",
+      "size_bytes": 1189
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/leaf_report.py",
+      "sha256": "dda410859278a8d6ce0ac01d833fa2789ed5a0199ddaef12ae6630a54954b69e",
+      "size_bytes": 2203
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/metric_contract.py",
+      "sha256": "0615e0bdf0d573aa89618752f5569059b4b3a93454678d58d0542f2b32bb6a85",
+      "size_bytes": 1658
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/models.py",
+      "sha256": "3c006e41e00c911ecaf019742c4285df5538bdc23358ff424cdf33cb534166f4",
+      "size_bytes": 2732
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/network_check.py",
+      "sha256": "bafe627e95c474ff06e0ed6f9a612e372cff6a42325b4c934f4776ef64572af5",
+      "size_bytes": 1582
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/node_grader.py",
+      "sha256": "520f5703893bf11db0dd709eedac5d0446b0a422b82640b54266457c812e1472",
+      "size_bytes": 5527
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/node_models.py",
+      "sha256": "d08b3c42350e11f55969b7f52b923a454949969b01b79e47c04556823aeb64aa",
+      "size_bytes": 4199
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/normalize/__init__.py",
+      "sha256": "658c03542888fad58f9a83de7c8c8d5d4d981050094c7b9733a2422f314b1a67",
+      "size_bytes": 190
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/normalize/go_json.py",
+      "sha256": "e0f457a1e68717c29b05b861598b2c46292e6d4305bc756718d6222d63821112",
+      "size_bytes": 3707
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/normalize/node_test_json.py",
+      "sha256": "2b4029de215f52a038689c2fbcb6d9b1af2ea94acc413430b7c122f6adae58da",
+      "size_bytes": 4031
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/normalize/pytest_junit.py",
+      "sha256": "e53ef39639676ee596f977f338ef2ac576922a727867be903b37f7e7d9f32350",
+      "size_bytes": 5100
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/process_cleanup.py",
+      "sha256": "3038c7a317c3d12cf71efd332e779baba59dc177c3ddfa990a3f5dd07dc79a88",
+      "size_bytes": 1587
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/pytest_plugin.py",
+      "sha256": "45f2229563a8ffe1a60fba39117650e1676e9e96397a7b71f0661cb678430dce",
+      "size_bytes": 1915
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/registry.py",
+      "sha256": "3a75909aa2c8238825f90475b40257096f527b4e4acdf6002e406d3ae42b897f",
+      "size_bytes": 4145
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/run_pytest.py",
+      "sha256": "fd3b7cc9ecd14234c1c06bf172ae3d5974b44e7f92c528468863f5e1f22c0fdb",
+      "size_bytes": 924
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/taxonomy.py",
+      "sha256": "ae1dec2ec2c8123a01a5f8ac733fd82de56c998a11ebacc4cd01947e7bd19b47",
+      "size_bytes": 4885
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/workspace_copy.py",
+      "sha256": "3ead43edefb85db3aa7fbaa660ac095a8e2078f854eee9be814ba54309973a68",
+      "size_bytes": 4916
+    },
+    {
+      "path": "tests/test.sh",
+      "sha256": "83b1d14fc64761924f1784f261831b0ab82ae58c9783d047dfffdadfb60ccbb9",
+      "size_bytes": 3044
+    },
+    {
+      "path": "tests/verifier-requirements.lock.txt",
+      "sha256": "0e84b0dd5094c8841088ee35bc7d893399b7f0862b8e4b55065997113453f853",
+      "size_bytes": 4279
+    }
+  ],
+  "mode": "production",
+  "schema_version": "1.0",
+  "task_id": "go-fx",
+  "task_version": "0.1.0",
+  "toolchain_lock_digest": "sha256:baa477549dd86ccfe68422aafd900a2ab76f0b091de9a85f9db883f9d6a551a3",
+  "toolchain_version": "1.26.5"
+}

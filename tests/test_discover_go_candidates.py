@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 import sys
 from pathlib import Path
 
@@ -84,3 +85,43 @@ def test_license_spdx_uses_auditable_file_when_api_has_no_assertion(
     assert discover._license_spdx(
         {"license": {"spdx_id": "NOASSERTION"}}, license_path
     ) == "MIT"
+
+
+def test_main_treats_archived_repository_as_rejected_not_discovery_failure(
+    tmp_path: Path, monkeypatch
+) -> None:
+    output = tmp_path / "report.json"
+    monkeypatch.setattr(
+        discover,
+        "_load_seeds",
+        lambda repositories, seed_files: [("go-old", "owner/old")],
+    )
+    monkeypatch.setattr(
+        discover,
+        "discover",
+        lambda *args: (_ for _ in ()).throw(
+            ValueError("repository is archived: owner/old")
+        ),
+    )
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "discover_go_candidates.py",
+            "--repository",
+            "go-old=owner/old",
+            "--output",
+            str(output),
+        ],
+    )
+
+    assert discover.main() == 0
+    report = json.loads(output.read_text(encoding="utf-8"))
+    assert report["errors"] == []
+    assert report["rejected"] == [
+        {
+            "package": "go-old",
+            "repository": "owner/old",
+            "reason": "ValueError: repository is archived: owner/old",
+        }
+    ]

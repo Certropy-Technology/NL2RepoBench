@@ -56,15 +56,20 @@ DEFAULT_PLAN_FILES = {
     "go": "go-author-wave2-20260828.json",
 }
 GO_DISCOVERY_REPOSITORIES = {
+    "go-backoff": "cenkalti/backoff",
     "go-brotli": "andybalholm/brotli",
     "go-btree": "google/btree",
     "go-cast": "spf13/cast",
     "go-colorable": "mattn/go-colorable",
+    "go-cleanhttp": "hashicorp/go-cleanhttp",
     "go-cmp": "google/go-cmp",
+    "go-copier": "jinzhu/copier",
     "go-decimal": "shopspring/decimal",
     "go-difflib": "sergi/go-diff",
     "go-gjson": "tidwall/gjson",
+    "go-glob": "gobwas/glob",
     "go-humanize": "dustin/go-humanize",
+    "go-immutable-radix": "hashicorp/go-immutable-radix",
     "go-ini": "go-ini/ini",
     "go-isatty": "mattn/go-isatty",
     "go-jwt": "golang-jwt/jwt",
@@ -91,6 +96,8 @@ GO_DISCOVERY_REPOSITORIES = {
     "go-zap": "uber-go/zap",
     "go-zerolog": "rs/zerolog",
     "go-errgroup": "golang/sync",
+    "go-tablewriter": "olekukonko/tablewriter",
+    "go-toml": "pelletier/go-toml",
 }
 DEFAULT_WORKERS = 3
 DEFAULT_MAX_TOTAL_CONTROLLERS = 3

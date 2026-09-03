@@ -1,0 +1,54 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/go-version"
+version = "0.1.0"
+description = "Recreate deterministic version parsing, comparison, constraints, and sorting APIs of hashicorp/go-version through a typed Go bridge."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "go",
+    "go-version",
+    "constraints",
+    "go-modules",
+    "typed-bridge",
+    "public-api",
+]
+
+[metadata]
+difficulty = "medium"
+category = "go-library"
+tags = [
+    "go",
+    "go-modules",
+    "versioning",
+    "constraints",
+    "typed-bridge",
+    "public-api",
+]
+language = "go"
+runtime = "go"
+runtime_version = "1.26.5"
+package_manager = "go-modules"
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 1
+canonical_manifest_digest = "sha256:7ff7d28e9d55046dc08014a94a6ff9a0f62d276da64bd2fc66e72077a287681e"
+toolchain_lock_digest = "sha256:baa477549dd86ccfe68422aafd900a2ab76f0b091de9a85f9db883f9d6a551a3"
+
+[agent]
+timeout_sec = 900.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[environment]
+network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096

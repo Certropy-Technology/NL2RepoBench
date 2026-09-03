@@ -44,8 +44,11 @@ DEFAULT_AGENT_TIMEOUT_SECONDS = 14_400
 DEFAULT_LEASE_SECONDS = 18_000
 DEFAULT_MIN_FREE_BYTES = 12 * 1024**3
 GO_POOL_FALLBACK: dict[str, str] = {
+    "go-backoff": "cenkalti/backoff",
     "go-brotli": "andybalholm/brotli",
+    "go-cleanhttp": "hashicorp/go-cleanhttp",
     "go-colorable": "mattn/go-colorable",
+    "go-copier": "jinzhu/copier",
     "go-difflib": "sergi/go-diff",
     "go-ini": "go-ini/ini",
     "go-isatty": "mattn/go-isatty",
@@ -53,11 +56,15 @@ GO_POOL_FALLBACK: dict[str, str] = {
     "go-pkg-errors": "pkg/errors",
     "go-runewidth": "mattn/go-runewidth",
     "go-errgroup": "golang/sync",
+    "go-glob": "gobwas/glob",
+    "go-immutable-radix": "hashicorp/go-immutable-radix",
     "go-jwt": "golang-jwt/jwt",
     "go-logrus": "sirupsen/logrus",
     "go-metrics": "rcrowley/go-metrics",
     "go-nanoid": "matoous/go-nanoid",
     "go-set": "deckarep/golang-set",
+    "go-tablewriter": "olekukonko/tablewriter",
+    "go-toml": "pelletier/go-toml",
     "go-version": "hashicorp/go-version",
     "go-zerolog": "rs/zerolog",
 }

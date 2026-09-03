@@ -345,6 +345,7 @@ def main() -> int:
         parser.error(str(exc))
     records: list[dict[str, Any]] = []
     errors: list[dict[str, str]] = []
+    rejected: list[dict[str, str]] = []
     with ThreadPoolExecutor(max_workers=args.workers) as pool:
         futures = {
             pool.submit(discover, package, repository, args.observed_at, args.work_root): (
@@ -358,13 +359,26 @@ def main() -> int:
             try:
                 records.append(future.result())
             except Exception as exc:  # noqa: BLE001 - preserve candidate-specific evidence
-                errors.append(
-                    {
-                        "package": package,
-                        "repository": repository,
-                        "error": f"{type(exc).__name__}: {exc}",
-                    }
-                )
+                message = f"{type(exc).__name__}: {exc}"
+                if message in {
+                    f"ValueError: repository is archived: {repository}",
+                    f"ValueError: repository is a fork: {repository}",
+                }:
+                    rejected.append(
+                        {
+                            "package": package,
+                            "repository": repository,
+                            "reason": message,
+                        }
+                    )
+                else:
+                    errors.append(
+                        {
+                            "package": package,
+                            "repository": repository,
+                            "error": message,
+                        }
+                    )
     records.sort(key=lambda item: item["package"])
     candidates = [record for record in records if record["profile_eligible"]]
     excluded = [record for record in records if not record["profile_eligible"]]
@@ -382,6 +396,7 @@ def main() -> int:
         },
         "candidates": candidates,
         "excluded": excluded,
+        "rejected": sorted(rejected, key=lambda item: item["package"]),
         "errors": sorted(errors, key=lambda item: item["package"]),
         "next_stage": "queue-build-source-freeze-go-packages-test-inventory",
     }
@@ -396,12 +411,13 @@ def main() -> int:
                 "output": str(args.output),
                 "candidates": len(candidates),
                 "excluded": len(excluded),
+                "rejected": len(rejected),
                 "errors": len(errors),
             },
             sort_keys=True,
         )
     )
-    return 0 if candidates else 1
+    return 0 if candidates or not errors else 1
 
 
 if __name__ == "__main__":
