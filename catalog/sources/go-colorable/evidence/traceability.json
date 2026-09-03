@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-colorable",
+  "source_revision": "8bf39a204f13f0cfcf86ab9b297c3d6e0668e54a",
+  "leaf_id": "contract::public-api",
+  "frozen_total": 1,
+  "public_contract": "instruction.md#api-usage-guide",
+  "traceability": [
+    {"case_group": "plain, Unicode, NUL/non-UTF8 byte preservation and input byte count", "bridge_operation": "strip", "instruction_section": "API Usage Guide / NewNonColorable"},
+    {"case_group": "CSI color, erase, cursor and reset filtering", "bridge_operation": "strip", "instruction_section": "API Usage Guide / NewNonColorable"},
+    {"case_group": "incomplete ESC and ESC-pair handling", "bridge_operation": "strip", "instruction_section": "API Usage Guide / NewNonColorable"},
+    {"case_group": "independent parsing across repeated Write calls", "bridge_operation": "strip_chunks", "instruction_section": "API Usage Guide / NewNonColorable"},
+    {"case_group": "Unix NewColorable pass-through", "bridge_operation": "colorable", "instruction_section": "API Usage Guide / Unix constructors"},
+    {"case_group": "stdout and stderr return files", "bridge_operation": "stdio_types", "instruction_section": "API Usage Guide / Unix constructors"},
+    {"case_group": "EnableColorsStdout sets a non-nil flag and cleanup is a no-op", "bridge_operation": "enable_colors", "instruction_section": "API Usage Guide / EnableColorsStdout"},
+    {"case_group": "NewColorable nil panic", "bridge_operation": "nil_colorable", "instruction_section": "API Usage Guide / Unix constructors"},
+    {"case_group": "unknown operation is rejected by the bridge", "bridge_operation": "unknown", "instruction_section": "Implementation Notes"}
+  ],
+  "excluded_upstream_behavior": ["Windows console conversion", "benchmark timing", "CLI stdin integration"],
+  "exclusion_reason": "The production first Go profile is Linux/amd64 and scores deterministic JSON-serializable public behavior through a separate typed bridge."
+}

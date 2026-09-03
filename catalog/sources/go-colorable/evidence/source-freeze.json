@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-colorable",
+  "upstream_url": "https://github.com/mattn/go-colorable",
+  "revision": "8bf39a204f13f0cfcf86ab9b297c3d6e0668e54a",
+  "ref": "refs/tags/v0.1.15",
+  "source_authority": "known",
+  "source_digest": "sha256:920a15ba309669f30091349025493e370edc0aeee39eec63642c2e44a848197a",
+  "source_digest_definition": "sha256 of git archive --format=tar --prefix=source/ at the frozen commit",
+  "license_spdx": "MIT",
+  "license_sha256": "sha256:88a2379b3ca34bf5c57127aff9dcb802bbb60ece0805cdbda65b3bd115f971d9",
+  "materialization": "preinstalled Go module cache v0.1.15; Oracle solve independently fetches and verifies the frozen commit",
+  "oracle_freeze_probe": {
+    "command": "AUTHORING_PROBE=1 .nl2repo/authoring-work/go-colorable/oracle/solve.sh",
+    "exit_code": 0,
+    "result": "commit assertion passed and archive digest matched sha256:920a15ba309669f30091349025493e370edc0aeee39eec63642c2e44a848197a"
+  },
+  "submodules": [],
+  "checkout": ".nl2repo/authoring-work/go-colorable/source"
+}

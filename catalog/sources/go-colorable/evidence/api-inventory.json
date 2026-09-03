@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-colorable",
+  "source_revision": "8bf39a204f13f0cfcf86ab9b297c3d6e0668e54a",
+  "module": "github.com/mattn/go-colorable",
+  "tracked_file_count": 16,
+  "go_source_file_count": 9,
+  "active_linux_go_files": ["colorable_others.go", "noncolorable.go"],
+  "build_ignored_for_linux": ["colorable_windows.go", "colorable_windows_bench_test.go"],
+  "public_packages": ["github.com/mattn/go-colorable", "github.com/mattn/go-colorable/cmd/colorable"],
+  "public_api": {
+    "github.com/mattn/go-colorable": [
+      "NonColorable.Write([]byte) (int, error)",
+      "NewNonColorable(io.Writer) io.Writer",
+      "NewColorable(*os.File) io.Writer",
+      "NewColorableStdout() io.Writer",
+      "NewColorableStderr() io.Writer",
+      "EnableColorsStdout(*bool) func()"
+    ],
+    "github.com/mattn/go-colorable/cmd/colorable": ["main()"]
+  },
+  "evaluated_public_surface": [
+    "NewNonColorable and the returned io.Writer behavior",
+    "NewColorable on Linux",
+    "NewColorableStdout and NewColorableStderr concrete file identity",
+    "EnableColorsStdout Linux behavior"
+  ],
+  "excluded_surface": [
+    "Windows console conversion and syscall behavior",
+    "Windows-only unexported writer state",
+    "benchmark timing",
+    "cmd/colorable integration command"
+  ],
+  "risk_flags": ["TTY and platform-specific behavior; bounded to Linux/amd64 file constructors", "byte-oriented ANSI parser"]
+}

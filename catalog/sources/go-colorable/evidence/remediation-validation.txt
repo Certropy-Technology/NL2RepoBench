@@ -1,0 +1,7 @@
+stage=source-freeze command=AUTHORING_PROBE=1 .nl2repo/authoring-work/go-colorable/oracle/solve.sh exit_code=0 result=exact commit and git-archive digest verified
+stage=baseline command=GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -count=1 -json ./... exit_code=0 result=6 tests collected and passed across 2 packages
+stage=baseline command=GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go vet ./... exit_code=0 result=clean
+stage=dependency-closure command=GoModulesPackageManager.validate_offline_store exit_code=0 result=module.manifest.json matches go.mod/go.sum and vendor file hashes
+stage=bridge command=go build -o bridge-bin ./cmd/bridge exit_code=0 result=CGO-disabled Linux bridge built
+stage=contract command=.nl2repo/authoring-work/go-colorable/verifier/contract.sh bridge-bin bridge-proxy exit_code=0 result=13 bridge cases passed against frozen source
+stage=first-probe command=go test from worktree root exit_code=1 failure_class=authoring-command result=incorrect cwd; corrected run passed

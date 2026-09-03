@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-colorable",
+  "source_revision": "8bf39a204f13f0cfcf86ab9b297c3d6e0668e54a",
+  "upstream_test_files": ["colorable_test.go", "colorable_windows_bench_test.go"],
+  "active_linux_test_files": ["colorable_test.go"],
+  "upstream_static_test_functions": 6,
+  "upstream_benchmark_functions": 2,
+  "upstream_collection": {
+    "command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -count=1 -json ./...",
+    "exit_code": 0,
+    "packages": 2,
+    "test_functions": 6,
+    "collection_errors": []
+  },
+  "frozen_leaf": {
+    "id": "contract::public-api",
+    "frozen_total": 1,
+    "framework": "go bridge contract",
+    "private_case_count": 13,
+    "collection_source": "fixed verifier-owned contract"
+  },
+  "retained_behavior": [
+    "plain and arbitrary-byte preservation",
+    "CSI and incomplete escape removal",
+    "per-call writer behavior",
+    "Unix colorable pass-through",
+    "Unix stdout/stderr constructors",
+    "EnableColorsStdout and nil NewColorable panic"
+  ],
+  "excluded_behavior": [
+    "Windows-only console API and benchmarks",
+    "benchmark performance",
+    "cmd/colorable stdin integration"
+  ]
+}
