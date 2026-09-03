@@ -233,7 +233,7 @@ def _bundle_manifest_schema_for_source(
         raise ProductionGateError(f"{task_id}: source metadata must be an object")
     language = metadata.get("language")
     if language in {"python", "go", "java"}:
-        return "python", "1.0"
+        return language, "1.0"
     if language == "node":
         return "node", "2.0"
     raise ProductionGateError(
