@@ -45,6 +45,37 @@ def test_copy_if_new_scans_secrets_and_refuses_collisions(tmp_path: Path) -> Non
         supervisor._copy_if_new(source, tmp_path / "secret-target")
 
 
+def test_repair_lane_replaces_existing_tree_and_can_rollback(tmp_path: Path) -> None:
+    source = tmp_path / "source"
+    target = tmp_path / "target"
+    rollback_root = tmp_path / "rollback"
+    source.mkdir()
+    target.mkdir()
+    (source / "task.toml").write_text("task_id = 'new'\n", encoding="utf-8")
+    (target / "task.toml").write_text("task_id = 'old'\n", encoding="utf-8")
+
+    with pytest.raises(ValueError, match="integration source collision"):
+        supervisor._copy_for_integration(
+            source,
+            target,
+            allow_replace=False,
+            rollback_root=rollback_root,
+        )
+
+    changed, backup = supervisor._copy_for_integration(
+        source,
+        target,
+        allow_replace=True,
+        rollback_root=rollback_root,
+    )
+    assert changed is True
+    assert backup is not None
+    assert (target / "task.toml").read_text(encoding="utf-8") == "task_id = 'new'\n"
+
+    supervisor._rollback_tree_change(target, changed, backup)
+    assert (target / "task.toml").read_text(encoding="utf-8") == "task_id = 'old'\n"
+
+
 def test_sync_private_cas_copies_only_referenced_verified_objects(tmp_path: Path) -> None:
     root = tmp_path / "repo"
     worktree = tmp_path / "worktree"

@@ -119,6 +119,7 @@ class Lane:
     queue: Path
     plan: Path
     queue_state: Path
+    repair_existing: bool = False
 
 
 def _lane_key(lane: Lane) -> str:
@@ -1006,6 +1007,68 @@ def _copy_generated(compiled: Path, target: Path) -> bool:
     return True
 
 
+def _copy_for_integration(
+    source: Path,
+    target: Path,
+    *,
+    allow_replace: bool,
+    rollback_root: Path,
+) -> tuple[bool, Path | None]:
+    """Copy a task tree, optionally replacing an existing tree for repair lanes."""
+
+    if not source.is_dir() or source.is_symlink():
+        raise ValueError(f"source directory is missing or unsafe: {source}")
+    findings = _secret_paths(source)
+    if findings:
+        raise ValueError(f"secret-shaped source content: {findings[0]}")
+    if not target.exists() and not target.is_symlink():
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copytree(source, target, symlinks=False)
+        return True, None
+    if target.is_symlink():
+        raise ValueError(f"integration target is a symlink: {target}")
+    if _tree_digest(source) == _tree_digest(target):
+        return False, None
+    if not allow_replace:
+        raise ValueError(f"integration source collision: {target}")
+    rollback_root.mkdir(parents=True, exist_ok=True)
+    backup_parent = Path(
+        tempfile.mkdtemp(prefix="integration-rollback-", dir=rollback_root)
+    )
+    backup = backup_parent / target.name
+    shutil.copytree(target, backup, symlinks=False)
+    shutil.rmtree(target)
+    try:
+        shutil.copytree(source, target, symlinks=False)
+    except Exception:
+        shutil.rmtree(target, ignore_errors=True)
+        shutil.copytree(backup, target, symlinks=False)
+        shutil.rmtree(backup_parent, ignore_errors=True)
+        raise
+    return True, backup
+
+
+def _rollback_tree_change(
+    target: Path | None, changed: bool, backup: Path | None
+) -> None:
+    if target is None or not changed:
+        return
+    if target.exists() or target.is_symlink():
+        if target.is_dir() and not target.is_symlink():
+            shutil.rmtree(target, ignore_errors=True)
+        else:
+            target.unlink(missing_ok=True)
+    if backup is not None and backup.is_dir():
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copytree(backup, target, symlinks=False)
+        shutil.rmtree(backup.parent, ignore_errors=True)
+
+
+def _discard_tree_backup(backup: Path | None) -> None:
+    if backup is not None:
+        shutil.rmtree(backup.parent, ignore_errors=True)
+
+
 def _git_status(root: Path) -> list[str]:
     result = _run(
         ["git", "status", "--porcelain=v1", "--untracked-files=all"],
@@ -1091,19 +1154,33 @@ def _integrate_task(
     source_changed = False
     generated_changed = False
     generated_target: Path | None = None
+    source_backup: Path | None = None
+    generated_backup: Path | None = None
     cas_copied: list[str] = []
+
+    def rollback_changes() -> None:
+        _rollback_tree_change(generated_target, generated_changed, generated_backup)
+        _rollback_tree_change(source_target, source_changed, source_backup)
+
     try:
-        source_changed = _copy_if_new(source, source_target)
+        source_changed, source_backup = _copy_for_integration(
+            source,
+            source_target,
+            allow_replace=lane.repair_existing,
+            rollback_root=root / ".nl2repo/supervisor/rollback",
+        )
         cas_copied = _sync_private_cas(root, worktree, source_target)
         checks, compiled = _validate_and_compile(root, source_target, lane.language)
         task_id = _compiled_task_id(source_target)
         generated_target = root / "catalog/tasks" / task_id
-        generated_changed = _copy_generated(compiled, generated_target)
+        generated_changed, generated_backup = _copy_for_integration(
+            compiled,
+            generated_target,
+            allow_replace=lane.repair_existing,
+            rollback_root=root / ".nl2repo/supervisor/rollback",
+        )
     except Exception:
-        if generated_changed and generated_target is not None:
-            shutil.rmtree(generated_target, ignore_errors=True)
-        if source_changed:
-            shutil.rmtree(source_target, ignore_errors=True)
+        rollback_changes()
         raise
     allowed = {
         f"catalog/sources/{Path(package).as_posix()}",
@@ -1132,10 +1209,7 @@ def _integrate_task(
             cwd=root,
             timeout=60,
         )
-        if generated_changed:
-            shutil.rmtree(generated_target, ignore_errors=True)
-        if source_changed:
-            shutil.rmtree(source_target, ignore_errors=True)
+        rollback_changes()
         raise RuntimeError(f"git add failed: {staged['output']}")
     staged_paths = _run(
         ["git", "diff", "--cached", "--name-only"], cwd=root, timeout=60
@@ -1146,10 +1220,7 @@ def _integrate_task(
             cwd=root,
             timeout=60,
         )
-        if generated_changed:
-            shutil.rmtree(generated_target, ignore_errors=True)
-        if source_changed:
-            shutil.rmtree(source_target, ignore_errors=True)
+        rollback_changes()
         raise RuntimeError(f"staged diff failed: {staged_paths['output']}")
     changed_paths = set(_command_output(staged_paths).splitlines())
     allowed_changes = {
@@ -1163,10 +1234,7 @@ def _integrate_task(
             cwd=root,
             timeout=60,
         )
-        if generated_changed:
-            shutil.rmtree(generated_target, ignore_errors=True)
-        if source_changed:
-            shutil.rmtree(source_target, ignore_errors=True)
+        rollback_changes()
         raise RuntimeError(f"supervisor staged unexpected paths: {sorted(changed_paths - allowed)}")
     commit = None
     if changed_paths:
@@ -1181,15 +1249,14 @@ def _integrate_task(
                 cwd=root,
                 timeout=60,
             )
-            if generated_changed:
-                shutil.rmtree(generated_target, ignore_errors=True)
-            if source_changed:
-                shutil.rmtree(source_target, ignore_errors=True)
+            rollback_changes()
             raise RuntimeError(f"git commit failed: {committed['output']}")
         commit = _command_output(
             _run(["git", "rev-parse", "HEAD"], cwd=root, timeout=60)
         ).strip()
     _remote_sync(root, remote, branch)
+    _discard_tree_backup(source_backup)
+    _discard_tree_backup(generated_backup)
     if archive_bucket is None:
         raise RuntimeError("OSS credentials are missing; worktree retained")
     archived = archive_module.archive_task(
@@ -1519,6 +1586,7 @@ def _lanes(root: Path, live: Path, queue_root: Path) -> list[Lane]:
                     Path(queue).resolve(),
                     Path(plan).resolve(),
                     Path(queue_state).resolve(),
+                    record.get("repair_existing") is True,
                 )
             )
     return lanes
