@@ -1,0 +1,92 @@
+schema_version = "1.0"
+task_id = "arrow"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "datetime-library"
+tags = ["python", "datetime", "timezone", "parsing", "formatting", "locale", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/arrow-py/arrow"
+revision = "2224255c4acc594d734cef0bbc83360452a67983"
+license_spdx = "Apache-2.0"
+source_digest = "sha256:8c08b167afc01268080ba13e5e1cf17223ec2fe12512fd298f03132270f7cda6"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.14"
+os_name = "debian-12-amd64"
+base_image = "python:3.12.14-slim-bookworm"
+base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e"
+system_packages = []
+network_mode = "no-network"
+build_command = "install the hash-locked build and runtime closure during image build; candidate installation uses pip --no-build-isolation --no-deps without network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The build and candidate runtime closure is installed during image build from a private hash-locked requirements artifact. Agent and separate verifier runs have no egress; only the trusted Oracle receives a run-scoped authorization for github.com."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = [
+  "flit_core==3.12.0",
+  "python-dateutil==2.9.0.post0",
+  "six==1.17.0",
+  "tzdata==2026.3",
+]
+lock_artifact = { digest = "sha256:365003f9407c628ec931a875b05cdc3a590a28e8794ac962142115baa8d0ed40", size_bytes = 1389, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:365003f9407c628ec931a875b05cdc3a590a28e8794ac962142115baa8d0ed40", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 48
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+bundle = { digest = "sha256:6a71958acf3056b86f998d42bed1900ec54122e9769f2452dde43dbc4572c267", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:6a71958acf3056b86f998d42bed1900ec54122e9769f2452dde43dbc4572c267", visibility = "private" }
+environment = {}
+
+[harbor]
+description = "Build the pure-Python Arrow datetime library from an empty workspace and satisfy deterministic timezone, parsing, formatting, shifting, span, range, locale, and humanization behavior through a separate verifier."
+keywords = ["python", "datetime", "timezone", "parsing", "formatting", "locale", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 900.0
+candidate_install_timeout_sec = 180.0
+candidate_total_timeout_sec = 600.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:8cf970182760ea0e43bc43b196d718920ea9017fbabc9726557bb06a7eca5382"
+size_bytes = 839680
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:8cf970182760ea0e43bc43b196d718920ea9017fbabc9726557bb06a7eca5382"
+visibility = "private"
+
+[lifecycle]
+status = "packaged"
+owner = "python-author-discover-20260903T025734Z"
+reason = "Frozen source, dependency closure, private verifier, and digest-checked Oracle bundle are prepared; production compile and Harbor Oracle/controls remain to be run by the authoring lane and integrator."

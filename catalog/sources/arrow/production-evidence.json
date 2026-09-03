@@ -1,0 +1,172 @@
+{
+  "bundle": {
+    "handoff_artifacts": {
+      "canonical_manifest_digest": "sha256:b7bc4b29bebaa3aa3423870db5c8eb85cb10e74e1ab02affd01d60578763483b",
+      "compiled_bundle": ".nl2repo/compiled-final/arrow",
+      "oracle_bundle": {
+        "digest": "sha256:8cf970182760ea0e43bc43b196d718920ea9017fbabc9726557bb06a7eca5382",
+        "path": ".nl2repo/artifacts/private/sha256/8c/8cf970182760ea0e43bc43b196d718920ea9017fbabc9726557bb06a7eca5382",
+        "size_bytes": 839680
+      },
+      "verifier_image": "nl2repo-arrow-verifier:authoring-final@sha256:29a68358add80a09c401cdaeffb57fc1ff6d852686eb1bcf10af4813550f8b6a"
+    },
+    "handoff_compiled_bundle": null
+  },
+  "commands": [
+    {
+      "command": "uv run nl2repo author scan-source ...",
+      "evidence": ".nl2repo/evidence/arrow/inventory/scan-source.stdout",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run nl2repo author scan-tests ...",
+      "evidence": ".nl2repo/evidence/arrow/inventory/scan-tests.stdout",
+      "exit_code": 0
+    },
+    {
+      "command": "python -m pytest --collect-only -q upstream/tests",
+      "evidence": ".nl2repo/evidence/arrow/dependencies/collect.stdout",
+      "exit_code": 0,
+      "result": "1902 collected"
+    },
+    {
+      "command": "python -m pytest -q upstream/tests",
+      "evidence": ".nl2repo/evidence/arrow/dependencies/upstream-tests.stdout",
+      "exit_code": 0,
+      "result": "1902 passed in 26.68s"
+    },
+    {
+      "command": "docker build --platform linux/amd64 -f compiled/arrow/tests/Dockerfile",
+      "evidence": ".nl2repo/evidence/arrow/verification/docker-build.log",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run nl2repo task validate-source catalog/sources/arrow",
+      "evidence": ".nl2repo/evidence/arrow/verification/final-validate-source.stdout",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "evidence": ".nl2repo/evidence/arrow/verification/final-network-lint.stdout",
+      "exit_code": 0,
+      "result": "arrow findings=0; global warnings are pre-existing"
+    },
+    {
+      "bundle": ".nl2repo/compiled-final/arrow/bundle.manifest.json",
+      "command": "uv run nl2repo harbor compile catalog/sources/arrow --output .nl2repo/compiled-final --allow-private",
+      "evidence": ".nl2repo/evidence/arrow/verification/final-compile.stdout",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run nl2repo harbor prepare-control ... stub",
+      "evidence": ".nl2repo/evidence/arrow/verification/prepare-stub.stdout",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run nl2repo harbor prepare-control ... forgery",
+      "evidence": ".nl2repo/evidence/arrow/verification/prepare-forgery.stdout",
+      "exit_code": 0
+    },
+    {
+      "command": "git diff --check",
+      "evidence": ".nl2repo/evidence/arrow/verification/git-diff-check.stdout",
+      "exit_code": 0
+    }
+  ],
+  "controls": {
+    "status": "pending-integrator-runtime"
+  },
+  "dependency_closure": {
+    "installer": "pip",
+    "lock_artifact": {
+      "digest": "sha256:365003f9407c628ec931a875b05cdc3a590a28e8794ac962142115baa8d0ed40",
+      "media_type": "text/plain; charset=utf-8",
+      "size_bytes": 1389,
+      "uri": "artifact://private/sha256:365003f9407c628ec931a875b05cdc3a590a28e8794ac962142115baa8d0ed40",
+      "visibility": "private"
+    },
+    "packages": [
+      "flit_core==3.12.0",
+      "python-dateutil==2.9.0.post0",
+      "six==1.17.0",
+      "tzdata==2026.3"
+    ],
+    "status": "known"
+  },
+  "environment": {
+    "base_image": "python:3.12.14-slim-bookworm",
+    "base_image_digest": "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e",
+    "build_command": "install the hash-locked build and runtime closure during image build; candidate installation uses pip --no-build-isolation --no-deps without network",
+    "network_mode": "no-network",
+    "network_policy": {
+      "mode": "no-network",
+      "offline_dependencies": "preinstalled-image",
+      "reason": "The build and candidate runtime closure is installed during image build from a private hash-locked requirements artifact. Agent and separate verifier runs have no egress; only the trusted Oracle receives a run-scoped authorization for github.com.",
+      "reference_source_fetch": "forbidden"
+    },
+    "os_name": "debian-12-amd64",
+    "python_version": "3.12.14",
+    "status": "known",
+    "system_packages": []
+  },
+  "frozen_collection": {
+    "handoff_collection": null,
+    "handoff_frozen_tests": null,
+    "handoff_inventory": {
+      "api_inventory": ".nl2repo/evidence/arrow/inventory/api-inventory.json",
+      "implementation_files": 11,
+      "implementation_loc": 8774,
+      "risk_flags": [
+        "dynamic-execution"
+      ],
+      "static_test_definitions": 708,
+      "test_files": 10,
+      "test_inventory": ".nl2repo/evidence/arrow/inventory/test-inventory.json",
+      "upstream_collected_tests": 1902
+    },
+    "tests": {
+      "commands": [
+        "custom-json-v1 verifier entrypoint"
+      ],
+      "expected_total": 48,
+      "expected_total_source": "frozen-collection",
+      "framework": "pytest",
+      "protected_paths": [
+        "/tests/verifier/run.py"
+      ]
+    }
+  },
+  "integrator_repair": {
+    "input_handoff": ".nl2repo/authoring-live/worktrees/python-author-discover-20260903T025734Z/arrow/.nl2repo/authoring-handoff.json",
+    "kind": "production-evidence-from-authored-handoff",
+    "official_controls_created": false,
+    "official_oracle_created": false,
+    "recorded_at": "2026-09-03T04:43:47.952679+00:00"
+  },
+  "lifecycle": {
+    "owner": "python-author-discover-20260903T025734Z",
+    "reason": "Frozen source, dependency closure, private verifier, and digest-checked Oracle bundle are prepared; production compile and Harbor Oracle/controls remain to be run by the authoring lane and integrator.",
+    "status": "packaged"
+  },
+  "oracle": {
+    "reason": "No official Harbor Oracle was run in the authoring lane.",
+    "status": "not-run"
+  },
+  "residual_risks": [
+    "Static inventory flags dynamic-execution; this is confined to upstream parser/format behavior and is covered by the bounded JSON scenarios.",
+    "The full upstream suite is 1902 leaves, while the separate Harbor contract freezes 48 representative public-behavior leaves.",
+    "This lane did not start an official Harbor Agent Run. Integrator must run the official trusted Oracle and empty/stub/forgery/offline gates against the generated bundle before controls-passed/publication.",
+    "The source Oracle solve fetches github.com only in the trusted Oracle run and verifies the frozen archive digest; model Agent metadata remains no-network with no allowed hosts."
+  ],
+  "schema_version": "1.0",
+  "source_freeze": {
+    "license_spdx": "Apache-2.0",
+    "revision": "2224255c4acc594d734cef0bbc83360452a67983",
+    "source_digest": "sha256:8c08b167afc01268080ba13e5e1cf17223ec2fe12512fd298f03132270f7cda6",
+    "upstream_url": "https://github.com/arrow-py/arrow"
+  },
+  "status": "awaiting-agent-run",
+  "task_id": "arrow",
+  "task_version": "0.1.0",
+  "terminal_kind": "awaiting-agent-run"
+}
