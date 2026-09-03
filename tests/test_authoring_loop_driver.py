@@ -551,3 +551,65 @@ def test_driver_default_worktree_root_is_disk_backed() -> None:
         default=Path(".nl2repo/authoring-work/worktrees"),
     )
     assert parser.parse_args([]).worktree_root == Path(".nl2repo/authoring-work/worktrees")
+
+
+def test_production_gate_receipt_requires_oracle_and_all_controls(tmp_path: Path) -> None:
+    evidence = tmp_path / ".nl2repo/evidence"
+    evidence.mkdir(parents=True)
+
+    def evidence_file(name: str) -> str:
+        path = evidence / name
+        path.write_text("{}\n", encoding="utf-8")
+        return str(path.relative_to(tmp_path))
+
+    compile_manifest = evidence_file("bundle.manifest.json")
+    oracle = {
+        "valid": True,
+        "passed": 1,
+        "collected": 1,
+        "frozen_total": 1,
+        "reward": 1.0,
+        "result": evidence_file("oracle-result.json"),
+        "grading": evidence_file("oracle-grading.json"),
+        "network": evidence_file("oracle-network.json"),
+    }
+    controls = {}
+    for kind in driver.REQUIRED_CONTROL_KINDS:
+        controls[kind] = {
+            "valid": True,
+            "reward": 1.0 if kind == "offline" else 0.0,
+            "result": evidence_file(f"{kind}-result.json"),
+            "grading": evidence_file(f"{kind}-grading.json"),
+            "network": evidence_file(f"{kind}-network.json"),
+        }
+    controls["offline"]["public_network_available"] = False
+    receipt = tmp_path / ".nl2repo/authoring-production-gates.json"
+    receipt.parent.mkdir(parents=True, exist_ok=True)
+
+    def write_receipt() -> None:
+        receipt.write_text(
+            json.dumps(
+                {
+                    "schema_version": "1.0",
+                    "task_id": "demo",
+                    "status": "controls-passed",
+                    "compile": {
+                        "status": "passed",
+                        "bundle_manifest": compile_manifest,
+                    },
+                    "oracle": oracle,
+                    "controls": controls,
+                }
+            ),
+            encoding="utf-8",
+        )
+
+    write_receipt()
+    result = driver._run_production_gate_check(tmp_path, "demo")
+    assert result["status"] == "passed"
+
+    controls["stub"]["reward"] = 0.1
+    write_receipt()
+    result = driver._run_production_gate_check(tmp_path, "demo")
+    assert result["status"] == "failed"
+    assert "control stub reward is not zero" in result["output"]
