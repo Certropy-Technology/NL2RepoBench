@@ -43,6 +43,8 @@ DEFAULT_INTERVAL_SECONDS = 60
 DEFAULT_AGENT_TIMEOUT_SECONDS = 14_400
 DEFAULT_LEASE_SECONDS = 18_000
 DEFAULT_MIN_FREE_BYTES = 12 * 1024**3
+DEFAULT_DOCKER_ROOT = Path("/var/lib/docker")
+DEFAULT_DOCKER_MIN_FREE_BYTES = 20 * 1024**3
 GO_POOL_FALLBACK: dict[str, str] = {
     "go-backoff": "cenkalti/backoff",
     "go-brotli": "andybalholm/brotli",
@@ -708,9 +710,45 @@ def _active_candidate_keys(active: list[tuple[int, str]]) -> set[str]:
     return reserved
 
 
+def _worker_disk_capacity(root: Path, args: argparse.Namespace) -> dict[str, Any]:
+    """Return the two filesystem watermarks that gate new workers."""
+
+    repository_free = shutil.disk_usage(root).free
+    capacity: dict[str, Any] = {
+        "can_start": False,
+        "repository_free_bytes": repository_free,
+        "repository_min_free_bytes": args.min_free_bytes,
+        "docker_root": str(args.docker_root),
+        "docker_free_bytes": None,
+        "docker_min_free_bytes": args.docker_min_free_bytes,
+        "reason": None,
+    }
+    if repository_free < args.min_free_bytes:
+        capacity["reason"] = "repository-disk-low"
+        return capacity
+    try:
+        docker_free = shutil.disk_usage(args.docker_root).free
+    except OSError:
+        capacity["reason"] = "docker-disk-unavailable"
+        return capacity
+    capacity["docker_free_bytes"] = docker_free
+    if docker_free < args.docker_min_free_bytes:
+        capacity["reason"] = "docker-disk-low"
+        return capacity
+    capacity["can_start"] = True
+    return capacity
+
+
 def _start_workers(
-    root: Path, live: Path, args: argparse.Namespace
+    root: Path,
+    live: Path,
+    args: argparse.Namespace,
+    *,
+    disk_capacity: dict[str, Any] | None = None,
 ) -> list[dict[str, Any]]:
+    capacity = disk_capacity or _worker_disk_capacity(root, args)
+    if capacity.get("can_start") is not True:
+        return []
     active = _active_workers(root, live)
     process_slots = _active_agent_slots(active)
     lease_slots = _active_lease_slots(live)
@@ -886,8 +924,14 @@ def _cycle(
                 )
             else:
                 runtime_state["last_discovery_epoch"][language] = time.time()
-    started = [] if args.dry_run else _start_workers(root, live, args)
+    disk_capacity = _worker_disk_capacity(root, args)
+    started = (
+        []
+        if args.dry_run
+        else _start_workers(root, live, args, disk_capacity=disk_capacity)
+    )
     event["discoveries"] = discovery_events
+    event["worker_disk_capacity"] = disk_capacity
     event["workers_started"] = started
     active_after = _active_workers(root, live)
     event["active_workers_after"] = len(active_after)
@@ -976,6 +1020,12 @@ def main() -> int:
     parser.add_argument("--lease-seconds", type=int, default=DEFAULT_LEASE_SECONDS)
     parser.add_argument("--command-timeout-seconds", type=int, default=900)
     parser.add_argument("--min-free-bytes", type=int, default=DEFAULT_MIN_FREE_BYTES)
+    parser.add_argument("--docker-root", type=Path, default=DEFAULT_DOCKER_ROOT)
+    parser.add_argument(
+        "--docker-min-free-bytes",
+        type=int,
+        default=DEFAULT_DOCKER_MIN_FREE_BYTES,
+    )
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--once", action="store_true")
     args = parser.parse_args()
@@ -983,11 +1033,14 @@ def main() -> int:
         not 1 <= args.max_agents <= DEFAULT_MAX_AGENTS
         or args.pending_threshold < 0
         or args.discovery_batch_size < 1
+        or args.min_free_bytes < 0
+        or args.docker_min_free_bytes < 0
     ):
         parser.error(
             f"max-agents must be 1..{DEFAULT_MAX_AGENTS}; "
             "pending-threshold must be non-negative; "
-            "discovery-batch-size must be positive"
+            "discovery-batch-size must be positive; "
+            "disk thresholds must be non-negative"
         )
     if (
         args.agent_timeout_seconds < 1

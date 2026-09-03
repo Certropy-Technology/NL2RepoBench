@@ -4,6 +4,7 @@ import importlib.util
 import json
 import sys
 from pathlib import Path
+from types import SimpleNamespace
 
 
 def _load():
@@ -124,6 +125,65 @@ def test_active_lease_slots_counts_unexpired_running_records(tmp_path: Path) -> 
     )
 
     assert coordinator._active_lease_slots(tmp_path) == 1
+
+
+def test_start_workers_stops_when_docker_disk_is_below_floor(
+    tmp_path: Path, monkeypatch
+) -> None:
+    root = tmp_path / "repo"
+    live = root / ".nl2repo/authoring-live"
+    docker_root = tmp_path / "docker"
+    root.mkdir()
+    docker_root.mkdir()
+    gib = 1024**3
+
+    def disk_usage(path: Path):
+        free = 100 * gib if Path(path) == root else 19 * gib
+        return SimpleNamespace(total=100 * gib, used=100 * gib - free, free=free)
+
+    monkeypatch.setattr(coordinator.shutil, "disk_usage", disk_usage)
+    monkeypatch.setattr(
+        coordinator,
+        "_lane_registry",
+        lambda _live: (_ for _ in ()).throw(
+            AssertionError("low Docker capacity must stop before queue inspection")
+        ),
+    )
+    args = SimpleNamespace(
+        min_free_bytes=12 * gib,
+        docker_root=docker_root,
+        docker_min_free_bytes=20 * gib,
+    )
+
+    capacity = coordinator._worker_disk_capacity(root, args)
+    assert capacity["can_start"] is False
+    assert capacity["reason"] == "docker-disk-low"
+    assert capacity["docker_free_bytes"] == 19 * gib
+    assert coordinator._start_workers(root, live, args) == []
+
+
+def test_worker_disk_capacity_fails_closed_when_docker_root_is_unavailable(
+    tmp_path: Path, monkeypatch
+) -> None:
+    root = tmp_path / "repo"
+    root.mkdir()
+    gib = 1024**3
+
+    def disk_usage(path: Path):
+        if Path(path) == root:
+            return SimpleNamespace(total=100 * gib, used=0, free=100 * gib)
+        raise FileNotFoundError(path)
+
+    monkeypatch.setattr(coordinator.shutil, "disk_usage", disk_usage)
+    args = SimpleNamespace(
+        min_free_bytes=12 * gib,
+        docker_root=tmp_path / "missing-docker",
+        docker_min_free_bytes=20 * gib,
+    )
+
+    capacity = coordinator._worker_disk_capacity(root, args)
+    assert capacity["can_start"] is False
+    assert capacity["reason"] == "docker-disk-unavailable"
 
 
 def test_register_lane_preserves_registry_list(tmp_path: Path) -> None:
