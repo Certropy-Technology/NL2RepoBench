@@ -45,6 +45,23 @@ def test_copy_if_new_scans_secrets_and_refuses_collisions(tmp_path: Path) -> Non
         supervisor._copy_if_new(source, tmp_path / "secret-target")
 
 
+def test_secret_scan_accepts_valid_go_sum_checksums_but_not_extra_lines(
+    tmp_path: Path,
+) -> None:
+    go_sum = tmp_path / "environment/go-module-bundle/go.sum"
+    go_sum.parent.mkdir(parents=True)
+    checksum = (
+        "github.com/go-logr/stdr v1.2.2 "
+        "h1:hSWxHoqTgW2S2qGc0LTAI563KZ5YKYRhT3MFKZMbjag=\n"
+    )
+    go_sum.write_text(checksum, encoding="utf-8")
+
+    assert supervisor._secret_paths(tmp_path) == []
+
+    go_sum.write_text(checksum + "AKIA" + "A" * 16 + "\n", encoding="utf-8")
+    assert supervisor._secret_paths(tmp_path) == [str(go_sum)]
+
+
 def test_repair_lane_replaces_existing_tree_and_can_rollback(tmp_path: Path) -> None:
     source = tmp_path / "source"
     target = tmp_path / "target"

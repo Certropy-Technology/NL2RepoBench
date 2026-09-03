@@ -92,6 +92,25 @@ def test_secret_shaped_workspace_blocks_authoring_archive(tmp_path: Path) -> Non
         archive.archive_files(worktree)
 
 
+def test_archive_accepts_valid_go_sum_checksums_but_not_extra_lines(
+    tmp_path: Path,
+) -> None:
+    worktree = tmp_path / "task"
+    go_sum = worktree / ".nl2repo/runs/trial/go.sum"
+    go_sum.parent.mkdir(parents=True)
+    checksum = (
+        "github.com/go-logr/stdr v1.2.2 "
+        "h1:hSWxHoqTgW2S2qGc0LTAI563KZ5YKYRhT3MFKZMbjag=\n"
+    )
+    go_sum.write_text(checksum, encoding="utf-8")
+
+    assert any(item.relative.endswith("go.sum") for item in archive.archive_files(worktree))
+
+    go_sum.write_text(checksum + "AKIA" + "A" * 16 + "\n", encoding="utf-8")
+    with pytest.raises(ValueError, match="secret-shaped"):
+        archive.archive_files(worktree)
+
+
 def test_cleanup_verified_task_preserves_source_evidence_and_cas(tmp_path: Path) -> None:
     worktree = tmp_path / "task"
     removable = (

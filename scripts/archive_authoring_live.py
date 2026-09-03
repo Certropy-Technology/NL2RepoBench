@@ -26,6 +26,7 @@ SECRET_PATTERNS = (
     re.compile(rb"LTAI[A-Za-z0-9]{12,}"),
     re.compile(rb"AKIA[A-Z0-9]{12,}"),
 )
+GO_SUM_LINE = re.compile(rb"\S+\s+\S+\s+h1:[A-Za-z0-9+/]{43}=")
 REBUILDABLE_PATHS = (
     ".venv",
     "harbor-runner/.venv",
@@ -73,7 +74,22 @@ def _package_slug(package: str) -> str:
     return quote(package, safe="")
 
 
+def _valid_go_sum(path: Path) -> bool:
+    if path.name != "go.sum":
+        return False
+    found = False
+    with path.open("rb") as stream:
+        for raw_line in stream:
+            line = raw_line.rstrip(b"\r\n")
+            if len(line) > 4096 or GO_SUM_LINE.fullmatch(line) is None:
+                return False
+            found = True
+    return found
+
+
 def _secret_shaped(path: Path) -> bool:
+    if _valid_go_sum(path):
+        return False
     tail = b""
     with path.open("rb") as stream:
         for chunk in iter(lambda: stream.read(1024 * 1024), b""):

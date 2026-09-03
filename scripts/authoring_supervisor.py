@@ -40,6 +40,7 @@ SECRET_PATTERNS = (
     re.compile(r"LTAI[A-Za-z0-9]{12,}"),
     re.compile(r"AKIA[A-Z0-9]{12,}"),
 )
+GO_SUM_LINE = re.compile(r"\S+\s+\S+\s+h1:[A-Za-z0-9+/]{43}=")
 DEFAULT_BATCHES = {
     "python": "python-author-wave2-20260828",
     "node": "node-author-wave2-20260828",
@@ -212,6 +213,13 @@ def _secret_paths(root: Path) -> list[str]:
         if not path.is_file():
             continue
         text = path.read_text(encoding="utf-8", errors="ignore")
+        lines = text.splitlines()
+        if (
+            path.name == "go.sum"
+            and lines
+            and all(GO_SUM_LINE.fullmatch(line) for line in lines)
+        ):
+            continue
         if any(pattern.search(text) for pattern in SECRET_PATTERNS):
             findings.append(str(path))
     return findings
