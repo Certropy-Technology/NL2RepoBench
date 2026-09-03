@@ -1,0 +1,54 @@
+{
+  "schema_version": "1.0",
+  "task_id": "minimist",
+  "source_revision": "ecfdaea23e7931c0d529c52b743c711c3278a8ce",
+  "package_version": "1.2.8",
+  "module_system": "commonjs",
+  "exports": [
+    {
+      "import_path": "minimist",
+      "name": "module.exports",
+      "kind": "function",
+      "signature": "parse(args, options?)",
+      "arguments": {
+        "args": "array of strings",
+        "options": ["boolean", "string", "alias", "default", "stopEarly", "--"]
+      },
+      "return": "plain JSON-compatible object with positional array at _"
+    }
+  ],
+  "behavior_groups": [
+    "long options and equals values",
+    "short and grouped options",
+    "number and string coercion",
+    "boolean declarations and defaults",
+    "aliases and repeated values",
+    "dotted paths",
+    "double-dash and stop-early parsing",
+    "prototype-pollution resistance"
+  ],
+  "upstream_test_files": [
+    "test/all_bool.js",
+    "test/array.js",
+    "test/bool.js",
+    "test/dash.js",
+    "test/default_bool.js",
+    "test/dotted.js",
+    "test/kv_short.js",
+    "test/long.js",
+    "test/num.js",
+    "test/parse.js",
+    "test/parse_modified.js",
+    "test/proto.js",
+    "test/short.js",
+    "test/stop_early.js",
+    "test/unknown.js",
+    "test/whitespace.js"
+  ],
+  "scored_boundary": {
+    "framework": "node:test",
+    "frozen_total": 20,
+    "transport": "fresh unprivileged JSON child process per candidate call",
+    "excluded": ["callback-valued unknown option", "non-JSON inputs", "ambient process argv parsing"]
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0",
+  "purpose": "Verifier-owned JSON-safe child boundary for the CommonJS minimist root export.",
+  "transport": {
+    "request": "one JSON object supplied to a fresh child process on stdin",
+    "response": "one JSON object emitted by the child on stdout",
+    "candidate_import": "require('minimist') inside the isolated child only"
+  },
+  "request": {
+    "operation": "parse | prototype-probe | export-probe",
+    "args": "array of strings",
+    "options": "plain JSON object; callback-valued unknown handlers are forbidden"
+  },
+  "bounds": {
+    "request_bytes": 65536,
+    "response_bytes": 262144,
+    "call_timeout_seconds": 10
+  },
+  "environment": {
+    "candidate_uid": "candidate",
+    "network": "unavailable",
+    "removed": ["NODE_OPTIONS", "NODE_PATH", "NPM_CONFIG_USERCONFIG", "HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY"]
+  }
+}

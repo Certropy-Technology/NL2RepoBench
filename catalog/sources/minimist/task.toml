@@ -1,0 +1,92 @@
+schema_version = "2.0"
+task_id = "minimist"
+version = "2.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "easy"
+category = "command-line-parsing"
+tags = ["node", "npm", "commonjs", "argv", "parser", "repository-generation"]
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/minimistjs/minimist"
+revision = "ecfdaea23e7931c0d529c52b743c711c3278a8ce"
+license_spdx = "MIT"
+source_digest = "sha256:880c54feb7058c36a6600d35d58a17d834d403b4460cb9c62c33cb455c8adc3c"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The zero-dependency candidate uses a verifier-owned npm v3 root lock and empty cache. The model agent and verifier have no source or registry access; only the trusted Oracle receives a run-scoped source-host override."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = []
+artifact = { digest = "sha256:1bea0f38985dbf6c8690f6d8e2ac092b8493550a559899dd19266af0a3d8a81b", size_bytes = 10240, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:1bea0f38985dbf6c8690f6d8e2ac092b8493550a559899dd19266af0a3d8a81b", visibility = "private" }
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 20
+expected_total_source = "frozen-collection"
+commands_artifact = { digest = "sha256:08bd7f24e3a6d8ff5d454d628990f32e37ebf94be61d3411ab845caed761c9ee", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:08bd7f24e3a6d8ff5d454d628990f32e37ebf94be61d3411ab845caed761c9ee", visibility = "private" }
+test_bundle = { digest = "sha256:fe76f3653b13817d74df197fb80c3a64a7d96e4c9108ebc23dde09c25d466255", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:fe76f3653b13817d74df197fb80c3a64a7d96e4c9108ebc23dde09c25d466255", visibility = "private" }
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Production CommonJS command-line argument parser with deterministic JSON-safe subprocess verification."
+keywords = ["node", "npm", "commonjs", "argv", "parser", "minimist"]
+agent_timeout_sec = 900.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "node-author-expansion-20260902T1446Z-minimist"
+reason = "Harbor 0.21.0 production validation passed for the immutable source and final verifier slice: Oracle and offline scored 20/20 with reward 1.0; empty and install-failure produced the allowed verifier-owned 0/0 model result; stub, forgery, panic, hang, oversized-output, and background-process each collected 20 leaves with reward 0; all verifier network receipts report no public network. Review, pilot, dataset integration, and publication remain pending."
+
+[oracle_bundle]
+digest = "sha256:0f065528d1f41e9d892b79b7d3eb34aca88401cd092b2024efabf49918950d90"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:0f065528d1f41e9d892b79b7d3eb34aca88401cd092b2024efabf49918950d90"
+visibility = "private"

@@ -1,0 +1,166 @@
+{
+  "schema_version": "1.0",
+  "task_id": "minimist",
+  "terminal_kind": "valid",
+  "bundle": {
+    "path": "catalog/tasks/minimist/bundle.manifest.json",
+    "sha256": "sha256:bfd1bc5416a846bef99a555abb8a690c710a0416f2cb935042303ebb4f9581b8"
+  },
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/minimistjs/minimist",
+    "revision": "ecfdaea23e7931c0d529c52b743c711c3278a8ce",
+    "source_digest": "sha256:880c54feb7058c36a6600d35d58a17d834d403b4460cb9c62c33cb455c8adc3c",
+    "license_spdx": "MIT",
+    "license_digest": "sha256:27138518ed50ee99976a8a4c6fe1d5f84cbd8a95c8b9b308a15a5df962801979",
+    "submodules": []
+  },
+  "environment": {
+    "node": "24.19.0",
+    "npm": "11.17.0",
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "agent_network_mode": "no-network",
+    "verifier_network_mode": "no-network"
+  },
+  "private_artifacts": {
+    "dependency_bundle": "sha256:1bea0f38985dbf6c8690f6d8e2ac092b8493550a559899dd19266af0a3d8a81b",
+    "commands_bundle": "sha256:08bd7f24e3a6d8ff5d454d628990f32e37ebf94be61d3411ab845caed761c9ee",
+    "test_bundle": "sha256:fe76f3653b13817d74df197fb80c3a64a7d96e4c9108ebc23dde09c25d466255",
+    "oracle_bundle": "sha256:0f065528d1f41e9d892b79b7d3eb34aca88401cd092b2024efabf49918950d90"
+  },
+  "oracle": {
+    "harbor_version": "0.21.0",
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-expansion-20260902T1446Z/minimist/final2-compile/minimist -a oracle --allow-agent-host github.com --job-name minimist-final2-oracle -o .nl2repo/runs/minimist/final2/oracle --n-concurrent 1 --max-retries 0 --yes --quiet",
+    "exit_code": 0,
+    "valid": true,
+    "passed": 20,
+    "collected": 20,
+    "frozen_total": 20,
+    "reward": 1.0,
+    "result": {
+      "path": ".nl2repo/runs/minimist/final2/oracle/minimist-final2-oracle/minimist__H2V8wgu/result.json",
+      "sha256": "sha256:e0e5a2f9674a57f195bee237eb42e4853e8e821286f0cecd4750aaafdb894ecf"
+    },
+    "grading": {
+      "path": ".nl2repo/runs/minimist/final2/oracle/minimist-final2-oracle/minimist__H2V8wgu/verifier/grading.json",
+      "sha256": "sha256:01d36e6a9ac611ae8136a821e84fd3f705dd15b8e355b9c574be24aeed842ee0"
+    },
+    "network": {
+      "path": ".nl2repo/runs/minimist/final2/oracle/minimist-final2-oracle/minimist__H2V8wgu/verifier/network.json",
+      "sha256": "sha256:28e58efb47ae0a0e22bed49f1e76377bdfece7ad7bfb1479644e025f3acfbc18"
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-expansion-20260902T1446Z/minimist/final2-compile/minimist -a nop --job-name minimist-final2-empty -o .nl2repo/runs/minimist/final2/empty --n-concurrent 1 --max-retries 0 --yes --quiet",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "passed": 0,
+      "collected": 0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "result": {"path": ".nl2repo/runs/minimist/final2/empty/minimist-final2-empty/minimist__Rwy34XT/result.json", "sha256": "sha256:adce56a34180deea97887895cdd179e1a5577fcc7599dffd26f3b16d2b5b7715"},
+      "grading": {"path": ".nl2repo/runs/minimist/final2/empty/minimist-final2-empty/minimist__Rwy34XT/verifier/grading.json", "sha256": "sha256:642163a1190627ca92041434cff26a1f71a6f2cb7890ec92a12a159cf107047b"},
+      "network": {"path": ".nl2repo/runs/minimist/final2/empty/minimist-final2-empty/minimist__Rwy34XT/verifier/network.json", "sha256": "sha256:178876e2bc3ab88c62536cac7fab68dd20d142e67bc446c50f8a930f1e39bb58"}
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-expansion-20260902T1446Z/minimist/final2-controls/minimist-stub -a oracle --job-name minimist-final2-stub -o .nl2repo/runs/minimist/final2/stub --n-concurrent 1 --max-retries 0 --yes --quiet",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "passed": 0,
+      "collected": 20,
+      "result": {"path": ".nl2repo/runs/minimist/final2/stub/minimist-final2-stub/minimist-stub__PbMMve3/result.json", "sha256": "sha256:c2c5967a8e28ccaca6f5f9f398f1edca631f5a1bc480a400b792f1ac5fa9078b"},
+      "grading": {"path": ".nl2repo/runs/minimist/final2/stub/minimist-final2-stub/minimist-stub__PbMMve3/verifier/grading.json", "sha256": "sha256:3a16a216458420c70d2c6bfa5a1abbdeaa78972c86a6c4a2f67efb719f284246"},
+      "network": {"path": ".nl2repo/runs/minimist/final2/stub/minimist-final2-stub/minimist-stub__PbMMve3/verifier/network.json", "sha256": "sha256:72ee0c45cfd05efd7cb356f98dabcf2e9307fa7688f784d037f53f556420e198"}
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-expansion-20260902T1446Z/minimist/final2-controls/minimist-forgery -a oracle --job-name minimist-final2-forgery -o .nl2repo/runs/minimist/final2/forgery --n-concurrent 1 --max-retries 0 --yes --quiet",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "passed": 0,
+      "collected": 20,
+      "verifier_owned_reward": true,
+      "result": {"path": ".nl2repo/runs/minimist/final2/forgery/minimist-final2-forgery/minimist-forgery__rfXWsvz/result.json", "sha256": "sha256:9ecaddc298571a64a48d23d22462f7477482b14119851b72e12c302e1da06d1a"},
+      "grading": {"path": ".nl2repo/runs/minimist/final2/forgery/minimist-final2-forgery/minimist-forgery__rfXWsvz/verifier/grading.json", "sha256": "sha256:3a16a216458420c70d2c6bfa5a1abbdeaa78972c86a6c4a2f67efb719f284246"},
+      "network": {"path": ".nl2repo/runs/minimist/final2/forgery/minimist-final2-forgery/minimist-forgery__rfXWsvz/verifier/network.json", "sha256": "sha256:0448a982d950c1747892d5c90d8c0cecb4582e12711d6b225821286386869567"}
+    },
+    "install-failure": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-expansion-20260902T1446Z/minimist/final2-controls/minimist-install-failure -a oracle --job-name minimist-final2-install-failure -o .nl2repo/runs/minimist/final2/install-failure --n-concurrent 1 --max-retries 0 --yes --quiet",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "passed": 0,
+      "collected": 0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "result": {"path": ".nl2repo/runs/minimist/final2/install-failure/minimist-final2-install-failure/minimist-install-failure__ZsCLXyX/result.json", "sha256": "sha256:fe1c4d363c543dec71972c6fc8a19e2f50d4fc06a4bfc132cf5cba4d98719ef8"},
+      "grading": {"path": ".nl2repo/runs/minimist/final2/install-failure/minimist-final2-install-failure/minimist-install-failure__ZsCLXyX/verifier/grading.json", "sha256": "sha256:642163a1190627ca92041434cff26a1f71a6f2cb7890ec92a12a159cf107047b"},
+      "network": {"path": ".nl2repo/runs/minimist/final2/install-failure/minimist-final2-install-failure/minimist-install-failure__ZsCLXyX/verifier/network.json", "sha256": "sha256:1f2112d8fa84a942960b85380204af35e0fc2ff080f79d563153756f52d6241e"}
+    },
+    "panic": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-expansion-20260902T1446Z/minimist/final2-controls/minimist-panic -a oracle --job-name minimist-final2-panic -o .nl2repo/runs/minimist/final2/panic --n-concurrent 1 --max-retries 0 --yes --quiet",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "passed": 0,
+      "collected": 20,
+      "result": {"path": ".nl2repo/runs/minimist/final2/panic/minimist-final2-panic/minimist-panic__yAtBFhh/result.json", "sha256": "sha256:2bf35e224575c48fdfc77681699b265fd522f6f374ea0b2ef1f4ca2a237b3a9e"},
+      "grading": {"path": ".nl2repo/runs/minimist/final2/panic/minimist-final2-panic/minimist-panic__yAtBFhh/verifier/grading.json", "sha256": "sha256:3a16a216458420c70d2c6bfa5a1abbdeaa78972c86a6c4a2f67efb719f284246"},
+      "network": {"path": ".nl2repo/runs/minimist/final2/panic/minimist-final2-panic/minimist-panic__yAtBFhh/verifier/network.json", "sha256": "sha256:847f6ecd1903a80f6fe913ffdd1de4e307cc7c1cc6415902be717f37da1e4da7"}
+    },
+    "hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-expansion-20260902T1446Z/minimist/final2-controls/minimist-hang -a oracle --job-name minimist-final2-hang -o .nl2repo/runs/minimist/final2/hang --n-concurrent 1 --max-retries 0 --yes --quiet",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "passed": 0,
+      "collected": 20,
+      "result": {"path": ".nl2repo/runs/minimist/final2/hang/minimist-final2-hang/minimist-hang__pksva23/result.json", "sha256": "sha256:4f1fa3f4f5e906eb76e0acae37ad771f4de816992bf81e56376ebae241b16375"},
+      "grading": {"path": ".nl2repo/runs/minimist/final2/hang/minimist-final2-hang/minimist-hang__pksva23/verifier/grading.json", "sha256": "sha256:3a16a216458420c70d2c6bfa5a1abbdeaa78972c86a6c4a2f67efb719f284246"},
+      "network": {"path": ".nl2repo/runs/minimist/final2/hang/minimist-final2-hang/minimist-hang__pksva23/verifier/network.json", "sha256": "sha256:fb2c41be8da78edb2f336d149da2c85244c2500822cd9712ad738a25783abf81"}
+    },
+    "oversized-output": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-expansion-20260902T1446Z/minimist/final2-controls/minimist-oversized-output -a oracle --job-name minimist-final2-oversized-output -o .nl2repo/runs/minimist/final2/oversized-output --n-concurrent 1 --max-retries 0 --yes --quiet",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "passed": 0,
+      "collected": 20,
+      "result": {"path": ".nl2repo/runs/minimist/final2/oversized-output/minimist-final2-oversized-output/minimist-oversized-output__i3NijdK/result.json", "sha256": "sha256:a3994887d1f6d83f3ca01e7fabfd8ddafe4ab3ecf6f08d7ea1f01421619c0166"},
+      "grading": {"path": ".nl2repo/runs/minimist/final2/oversized-output/minimist-final2-oversized-output/minimist-oversized-output__i3NijdK/verifier/grading.json", "sha256": "sha256:3a16a216458420c70d2c6bfa5a1abbdeaa78972c86a6c4a2f67efb719f284246"},
+      "network": {"path": ".nl2repo/runs/minimist/final2/oversized-output/minimist-final2-oversized-output/minimist-oversized-output__i3NijdK/verifier/network.json", "sha256": "sha256:6dc7ab30e861e8d6a96cf071b3d478aa6d5044200255cafe3cdea25599e68c70"}
+    },
+    "background-process": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-expansion-20260902T1446Z/minimist/final2-controls/minimist-background-process -a oracle --job-name minimist-final2-background-process -o .nl2repo/runs/minimist/final2/background-process --n-concurrent 1 --max-retries 0 --yes --quiet",
+      "exit_code": 0,
+      "valid": true,
+      "reward": 0.0,
+      "passed": 0,
+      "collected": 20,
+      "result": {"path": ".nl2repo/runs/minimist/final2/background-process/minimist-final2-background-process/minimist-background-process__LW9C5bq/result.json", "sha256": "sha256:f87f2334f0d778862c2a253319d7d6efb537de62c12af73a3c5c2fa2e95cf937"},
+      "grading": {"path": ".nl2repo/runs/minimist/final2/background-process/minimist-final2-background-process/minimist-background-process__LW9C5bq/verifier/grading.json", "sha256": "sha256:3a16a216458420c70d2c6bfa5a1abbdeaa78972c86a6c4a2f67efb719f284246"},
+      "network": {"path": ".nl2repo/runs/minimist/final2/background-process/minimist-final2-background-process/minimist-background-process__LW9C5bq/verifier/network.json", "sha256": "sha256:4a8f30cddd93afca39d73c81ede9747369fa93309304815b50c73ee974e0742f"}
+    },
+    "offline": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node-author-expansion-20260902T1446Z/minimist/final2-compile/minimist -a oracle --allow-agent-host github.com --job-name minimist-final2-offline -o .nl2repo/runs/minimist/final2/offline --n-concurrent 1 --max-retries 0 --yes --quiet",
+      "exit_code": 0,
+      "completed": true,
+      "valid": true,
+      "reward": 1.0,
+      "passed": 20,
+      "collected": 20,
+      "public_network_available": false,
+      "result": {"path": ".nl2repo/runs/minimist/final2/offline/minimist-final2-offline/minimist__3dBVA7G/result.json", "sha256": "sha256:806771193499795b3ed79c41b9cfc14cf0d53bca9d0865b02d8f1e8c11764ca0"},
+      "grading": {"path": ".nl2repo/runs/minimist/final2/offline/minimist-final2-offline/minimist__3dBVA7G/verifier/grading.json", "sha256": "sha256:01d36e6a9ac611ae8136a821e84fd3f705dd15b8e355b9c574be24aeed842ee0"},
+      "network": {"path": ".nl2repo/runs/minimist/final2/offline/minimist-final2-offline/minimist__3dBVA7G/verifier/network.json", "sha256": "sha256:5c85888ef1eadaca659384fac0679e8a2ee4c4059189b1f4b925414c2b68806b"}
+    }
+  },
+  "residual_risks": [
+    "The task is controls-passed, not reviewed, piloted, integrated into a dataset, or published.",
+    "No model Agent evaluation was run in this authoring lane.",
+    "The generic Node compiler control-kind whitelist and its focused tests require integrator review."
+  ]
+}
