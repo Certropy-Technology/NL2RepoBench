@@ -1,0 +1,95 @@
+schema_version = "1.0"
+task_id = "pendulum"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "datetime-library"
+tags = ["python", "datetime", "timezone", "localization", "parsing", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/sdispater/pendulum"
+revision = "0d71391ab2b617b2e86d15c926e6cde9fddc5676"
+license_spdx = "MIT"
+source_digest = "sha256:bcc6303eabd924e272cde41cf251ef7c0a383594a67633bfd2005f8c2f777404"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.14"
+os_name = "debian-12-amd64"
+base_image = "python:3.12.14-slim-bookworm"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = ["git", "ca-certificates"]
+network_mode = "no-network"
+build_command = "install the hash-locked build/runtime closure during image build; candidate installation uses pip --no-deps --no-build-isolation"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The exact Python build and runtime closure is installed during Docker image build. Agent and verifier execution have no egress; only the trusted Oracle receives the exact github.com source-host override."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = [
+  "packaging==26.3",
+  "python-dateutil==2.9.0.post0",
+  "setuptools==84.0.0",
+  "six==1.17.0",
+  "time-machine==3.5.0",
+  "tzdata==2026.3",
+  "wheel==0.46.3",
+]
+lock_artifact = { digest = "sha256:7afac5fbe68110febfc05c402083d755a77e746ea57559ed4b4f6a2439cf501c", size_bytes = 7381, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:7afac5fbe68110febfc05c402083d755a77e746ea57559ed4b4f6a2439cf501c", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 47
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py"]
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:cb9db3f7cf82dede3b55aa438e9a0041b69c6995bb43ce2a806f7105ab631ee0", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:cb9db3f7cf82dede3b55aa438e9a0041b69c6995bb43ce2a806f7105ab631ee0", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build Pendulum 3.2.0 from an empty workspace with deterministic datetime, timezone, parsing, duration, interval, localization, and time-travel behavior."
+keywords = ["python", "datetime", "timezone", "localization", "parsing", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 900.0
+candidate_install_timeout_sec = 30.0
+candidate_total_timeout_sec = 180.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:273ff529e80de67ab61fd28d5c2607b913b019ab64853c6c3918b3f9942115ea"
+size_bytes = 491520
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:273ff529e80de67ab61fd28d5c2607b913b019ab64853c6c3918b3f9942115ea"
+visibility = "private"
+
+[lifecycle]
+status = "controls-passed"
+owner = "authoring-pendulum-20260902"
+reason = "Frozen source, hash-locked dependency closure, private subprocess verifier, production compile, Oracle, and task-local negative controls have passed. No Harbor Agent Run was started in this authoring lane; downstream evaluation remains awaiting-agent-run."

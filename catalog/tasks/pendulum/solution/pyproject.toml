@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools==84.0.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pendulum"
+version = "3.2.0"
+description = "Python datetimes made easy"
+requires-python = ">=3.10"
+license = "MIT"
+dependencies = [
+  "python-dateutil==2.9.0.post0",
+  "tzdata==2026.3",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+pendulum = ["*.so", "*.pyi", "py.typed"]

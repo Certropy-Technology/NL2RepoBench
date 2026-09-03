@@ -1,0 +1,210 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pendulum",
+  "task_version": "1.0.0",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "handoff_status": "awaiting-agent-run",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/sdispater/pendulum",
+    "revision": "0d71391ab2b617b2e86d15c926e6cde9fddc5676",
+    "source_archive_sha256": "sha256:bcc6303eabd924e272cde41cf251ef7c0a383594a67633bfd2005f8c2f777404",
+    "source_content_sha256": "sha256:bcc6303eabd924e272cde41cf251ef7c0a383594a67633bfd2005f8c2f777404",
+    "license_spdx": "MIT",
+    "license_path": ".nl2repo/authoring-work/pendulum/upstream/LICENSE",
+    "license_sha256": "sha256:79d76bbec3899d16482163a365c7f65e87a729993a1d65f960f4181e2ecb81a0",
+    "submodules": [],
+    "source_worktree_note": "Frozen detached task-local clone; trusted Oracle acquisition is digest checked."
+  },
+  "environment": {
+    "runtime": "CPython 3.12.14 in declared Harbor image",
+    "os_name": "debian-12-amd64",
+    "architecture": "linux/amd64",
+    "base_image": "python:3.12.14-slim-bookworm",
+    "base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "network_mode": "no-network",
+    "network_policy": {
+      "mode": "no-network",
+      "agent_allowed_hosts": [],
+      "offline_dependencies": "preinstalled-image",
+      "reference_source_fetch": "forbidden",
+      "oracle_run_scoped_host": "github.com"
+    },
+    "toolchain_lock_path": "toolchain.lock.toml",
+    "toolchain_lock_sha256": "sha256:a9ced26fa28eb2c6fc1079c306a92a77bdd0f20aee92a45b9a0f192c1b9fae24",
+    "harbor_version": "0.21.0",
+    "verifier_image_id": "sha256:f65f0fad89b7084553e2fdd3964bd5af8cdc051ab6281e866ae4d13e619acf6e",
+    "verifier_image_build_warning": "Docker FromPlatformFlagConstDisallowed for the declared linux/amd64 platform; build succeeded."
+  },
+  "dependencies": {
+    "status": "known",
+    "ecosystem": "python",
+    "installer": "pip",
+    "install_mode": "hash-locked build-stage install",
+    "lock_artifact": {
+      "path": ".nl2repo/artifacts/private/sha256/7a/7afac5fbe68110febfc05c402083d755a77e746ea57559ed4b4f6a2439cf501c",
+      "sha256": "sha256:7afac5fbe68110febfc05c402083d755a77e746ea57559ed4b4f6a2439cf501c",
+      "size_bytes": 7381
+    },
+    "packages": [
+      "packaging==26.3",
+      "python-dateutil==2.9.0.post0",
+      "setuptools==84.0.0",
+      "six==1.17.0",
+      "time-machine==3.5.0",
+      "tzdata==2026.3",
+      "wheel==0.46.3"
+    ]
+  },
+  "inventory": {
+    "implementation_python_files": 121,
+    "implementation_loc": 11867,
+    "static_public_symbols": 1426,
+    "upstream_test_files": 103,
+    "upstream_static_test_definitions": 1113,
+    "expanded_upstream_collected": 1843,
+    "expanded_upstream_passed": 1840,
+    "expanded_upstream_skipped": 3,
+    "risk_flags": ["dynamic-execution"],
+    "api_inventory": ".nl2repo/authoring-work/pendulum/inventory/api-inventory.json",
+    "test_inventory": ".nl2repo/authoring-work/pendulum/inventory/test-inventory.json"
+  },
+  "tests": {
+    "protocol": "custom-json-v1",
+    "framework": "deterministic scenario runner",
+    "frozen_total": 47,
+    "private_verifier_bundle": {
+      "path": ".nl2repo/artifacts/private/sha256/cb/cb9db3f7cf82dede3b55aa438e9a0041b69c6995bb43ce2a806f7105ab631ee0",
+      "sha256": "sha256:cb9db3f7cf82dede3b55aa438e9a0041b69c6995bb43ce2a806f7105ab631ee0",
+      "size_bytes": 20480
+    },
+    "collection": "47 unique JSON-safe leaves; no collection errors",
+    "candidate_boundary": "UID 10001 subprocess with bounded install, per-call, cumulative wall, output, process-group, and workspace limits"
+  },
+  "metric": {
+    "contract_id": "fixed-test-pass-rate-v1",
+    "formula": "clamp(passed / frozen_total, 0, 1)",
+    "collection_mismatch": "fail",
+    "passed_statuses": ["passed"],
+    "excluded_statuses": []
+  },
+  "compiled_bundle": {
+    "path": ".nl2repo/authoring-gate/pendulum-final/pendulum",
+    "mode": "production",
+    "schema_version": "1.0",
+    "file_count": 61,
+    "bundle_manifest_sha256": "sha256:73d1cf62d8faa33aab232cb174abace6c36f8b543267d3e78233c09a298c7f59",
+    "canonical_manifest_digest": "sha256:52aed81bf68b0295a7695485a4f15ab4b11bbfad2a7d0ecab3524bbf7c2db147",
+    "allow_incomplete": false
+  },
+  "execution_boundary": {
+    "mode": "task-local-docker-verifier-smoke",
+    "harbor_agent_run_started": false,
+    "reason": "The authoring lane forbids starting a Harbor Agent Run; direct Docker execution proves the compiled verifier and controls without claiming downstream model evaluation."
+  },
+  "oracle": {
+    "command": "docker run --rm --network none -v .nl2repo/authoring-work/pendulum/runtime/oracle-workspace:/workspace -v .nl2repo/authoring-work/pendulum/final-evidence/oracle:/logs/verifier nl2repobench-pendulum-verifier:authoring-final /tests/test.sh",
+    "exit_code": 0,
+    "valid": true,
+    "expected_total": 47,
+    "collected": 47,
+    "passed": 47,
+    "failed": 0,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/authoring-work/pendulum/final-evidence/oracle/grading.json",
+      "sha256": "sha256:4fa613763d3fa221322cd1d1e91483f544f4536e936fe2d4cf4349a01b59cd40"
+    },
+    "network": {
+      "path": ".nl2repo/authoring-work/pendulum/final-evidence/oracle/network.json",
+      "sha256": "sha256:73cfd6a63e325cac69ce60e3d29878c560d6e8bfd068082d6232c7789da0cde2",
+      "public_network_available": false
+    },
+    "candidate_install": {
+      "path": ".nl2repo/authoring-work/pendulum/final-evidence/oracle/candidate-install.json",
+      "sha256": "sha256:1b52609c57ed085d4f0bc3e7ec65a426a351157641f301316391fb4a479d7cc4"
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "docker run --rm --network none -v .nl2repo/authoring-work/pendulum/final-workspaces/empty:/workspace -v .nl2repo/authoring-work/pendulum/final-evidence/empty:/logs/verifier nl2repobench-pendulum-verifier:authoring-final /tests/test.sh",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {"path": ".nl2repo/authoring-work/pendulum/final-evidence/empty/grading.json", "sha256": "sha256:85943e172214d10de7e348c3a0a742189b41f8e45e57f5a5733c40db85752c4a"},
+      "network": {"path": ".nl2repo/authoring-work/pendulum/final-evidence/empty/network.json", "sha256": "sha256:ba99be1bb2809f082562a8efeef101a27d94bedcdc687841aed2582a2c670070", "public_network_available": false}
+    },
+    "stub": {
+      "command": "docker run --rm --network none -v .nl2repo/authoring-work/pendulum/final-workspaces/stub:/workspace -v .nl2repo/authoring-work/pendulum/final-evidence/stub:/logs/verifier nl2repobench-pendulum-verifier:authoring-final /tests/test.sh",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 47,
+      "collected": 47,
+      "passed": 1,
+      "failed": 46,
+      "reward": 0.02127659574468085,
+      "grading": {"path": ".nl2repo/authoring-work/pendulum/final-evidence/stub/grading.json", "sha256": "sha256:c83f05df0d57e508803ffa830915a2a5251ece6982848fcd32cf8b78e95bc785"},
+      "network": {"path": ".nl2repo/authoring-work/pendulum/final-evidence/stub/network.json", "sha256": "sha256:4be25741638e4b6bf8b84e61ab989b40ce4facaa9e4cf00fa67180e5de27ebdc", "public_network_available": false}
+    },
+    "forgery": {
+      "command": "docker run --rm --network none -v .nl2repo/authoring-work/pendulum/final-workspaces/forgery:/workspace -v .nl2repo/authoring-work/pendulum/final-evidence/forgery:/logs/verifier nl2repobench-pendulum-verifier:authoring-final /tests/test.sh",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 47,
+      "collected": 47,
+      "passed": 1,
+      "failed": 46,
+      "reward": 0.02127659574468085,
+      "verifier_owned_reward": true,
+      "candidate_fake_report_ignored": true,
+      "grading": {"path": ".nl2repo/authoring-work/pendulum/final-evidence/forgery/grading.json", "sha256": "sha256:c83f05df0d57e508803ffa830915a2a5251ece6982848fcd32cf8b78e95bc785"},
+      "network": {"path": ".nl2repo/authoring-work/pendulum/final-evidence/forgery/network.json", "sha256": "sha256:8b3226332e157ad32d6f138ae272634784ee5ca87708222767a19cc1550fa60f", "public_network_available": false}
+    },
+    "call_hang": {
+      "command": "docker run --rm --network none -v .nl2repo/authoring-work/pendulum/final-workspaces/call-hang:/workspace -v .nl2repo/authoring-work/pendulum/final-evidence/call-hang:/logs/verifier nl2repobench-pendulum-verifier:authoring-final /tests/test.sh",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 47,
+      "collected": 47,
+      "passed": 1,
+      "failed": 46,
+      "reward": 0.02127659574468085,
+      "bounded": true,
+      "grading": {"path": ".nl2repo/authoring-work/pendulum/final-evidence/call-hang/grading.json", "sha256": "sha256:c83f05df0d57e508803ffa830915a2a5251ece6982848fcd32cf8b78e95bc785"},
+      "network": {"path": ".nl2repo/authoring-work/pendulum/final-evidence/call-hang/network.json", "sha256": "sha256:ba99be1bb2809f082562a8efeef101a27d94bedcdc687841aed2582a2c670070", "public_network_available": false}
+    },
+    "install_hang": {
+      "command": "docker run --rm --network none -v .nl2repo/authoring-work/pendulum/final-workspaces/install-hang:/workspace -v .nl2repo/authoring-work/pendulum/final-evidence/install-hang:/logs/verifier nl2repobench-pendulum-verifier:authoring-final /tests/test.sh",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "candidate_install_outcome": "timeout",
+      "bounded": true,
+      "grading": {"path": ".nl2repo/authoring-work/pendulum/final-evidence/install-hang/grading.json", "sha256": "sha256:85943e172214d10de7e348c3a0a742189b41f8e45e57f5a5733c40db85752c4a"},
+      "network": {"path": ".nl2repo/authoring-work/pendulum/final-evidence/install-hang/network.json", "sha256": "sha256:6a761f28b4d9b32b7cb08b3afea7414622ea361074a87468020c62e5727e9b14", "public_network_available": false}
+    }
+  },
+  "commands": [
+    {"stage": "source-validation", "command": "uv run nl2repo task validate-source catalog/sources/pendulum", "exit_code": 0},
+    {"stage": "network-lint", "command": "uv run nl2repo task lint-network --tasks-root catalog/sources/pendulum --strict", "exit_code": 0, "outcome": "0 errors; 0 findings"},
+    {"stage": "production-compile", "command": "uv run nl2repo harbor compile catalog/sources/pendulum --output .nl2repo/authoring-gate/pendulum-final --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "exit_code": 0, "bundle_manifest_sha256": "sha256:73d1cf62d8faa33aab232cb174abace6c36f8b543267d3e78233c09a298c7f59"},
+    {"stage": "verifier-image-build", "command": "docker build --platform linux/amd64 -t nl2repobench-pendulum-verifier:authoring-final .nl2repo/authoring-gate/pendulum-final/pendulum/tests", "exit_code": 0, "image_id": "sha256:f65f0fad89b7084553e2fdd3964bd5af8cdc051ab6281e866ae4d13e619acf6e"},
+    {"stage": "regression-tests", "command": "uv run pytest -q -p no:cacheprovider --no-cov tests/test_candidate_boundary.py tests/test_harbor_compiler.py tests/test_verifier.py", "exit_code": 0, "summary": "67 passed"},
+    {"stage": "syntax-and-integrity", "command": "uv run python -m py_compile verifier/run.py src/nl2repobench/verification/candidate_install.py src/nl2repobench/harbor/compiler.py; bash -n controls and generated scripts; git diff --check", "exit_code": 0}
+  ],
+  "residual_risks": [
+    "No Harbor Agent Run was started in this lane; awaiting-agent-run is the handoff boundary, not publication approval.",
+    "The 47-leaf contract is a deterministic representative subset of the 1,843-leaf expanded upstream suite.",
+    "The package contract excludes the upstream empirical timing classifier and CPython test.support-dependent harness details.",
+    "The candidate-install working-directory fix and custom-verifier grading grace are shared runtime/compiler changes retained in this worktree for integrator review."
+  ]
+}
