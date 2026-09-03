@@ -67,9 +67,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "packaged"
+status = "controls-passed"
 owner = "authoring-go-discover-20260903"
-reason = "Frozen source, API and test inventory, typed file-descriptor bridge, private offline module/verifier/Oracle bundles, and production compile are prepared; official Harbor Oracle and runtime controls remain integrator-owned because this lane cannot start Agent Runs."
+reason = "Production compile and fresh Harbor 0.21.0 Oracle/controls passed: Oracle 1/1 reward 1.0; empty and install-failure used the permitted candidate-installation-failed 0/0 result; stub, forgery, panic, hang, oversized-output, background-process, and offline controls all produced verifier-owned reward 0 with public_network_available=false. Review, pilot, and publication remain integrator stages."
 
 [verifier]
 protocol = "custom-json-v1"

@@ -2,89 +2,82 @@
   "schema_version": "1.0",
   "task_id": "go-isatty",
   "task_version": "0.1.0",
-  "terminal_kind": "intermediate",
-  "status": "packaged",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
   "source_freeze": {
     "upstream_url": "https://github.com/mattn/go-isatty",
     "revision": "c44dc0b9c702c76577fdb7898032969e0611efc2",
-    "source_archive_sha256": "sha256:777f5b348771b16c22295784ad7b225254e1408ff983df7827b65ca819c5c3db",
+    "source_digest": "sha256:777f5b348771b16c22295784ad7b225254e1408ff983df7827b65ca819c5c3db",
     "license_spdx": "MIT",
     "license_sha256": "sha256:08eab1118c80885fa1fa6a6dd7303f65a379fcb3733e063d20d1bbc2c76e6fa1"
   },
-  "runtime": {
+  "environment": {
     "language": "go",
     "package_manager": "go-modules",
     "go_version": "1.26.5",
     "platform": "linux/amd64",
     "base_image_digest": "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd",
     "toolchain_lock": "toolchain.go.lock.toml",
-    "toolchain_lock_sha256": "sha256:baa477549dd86ccfe68422aafd900a2ab76f0b091de9a85f9db883f9d6a551a3",
     "agent_network_mode": "no-network",
-    "verifier_network_mode": "no-network",
-    "verifier_image_digest": "sha256:4751f88c2901a60508200e2bd653ef29b5514ecf59c6f53f5ddc841cd4a5a956"
+    "agent_allowed_hosts": [],
+    "verifier_network_mode": "no-network"
   },
-  "artifacts": {
-    "module_bundle": {"digest": "sha256:b554361552d902f2c8142f59144953aaac6371e5b563cd0dbcd79e7e563d16c7", "size_bytes": 1024779},
-    "oracle_bundle": {"digest": "sha256:273286a92a013f3ef23bf257d2b05082142cb6f02abe6b3f99aca1620531fe76", "size_bytes": 803},
-    "verifier_bundle": {"digest": "sha256:9461107536ec53fa791702bf3c8cf295f27cb0d57ee20ec4e95bb96548ab56ef", "size_bytes": 773}
+  "dependency_closure": {
+    "kind": "go-module-bundle",
+    "digest": "sha256:b554361552d902f2c8142f59144953aaac6371e5b563cd0dbcd79e7e563d16c7",
+    "size_bytes": 1024779,
+    "direct_dependencies": ["golang.org/x/sys v0.28.0"],
+    "offline": true
   },
-  "final_bundle": {
-    "path": ".nl2repo/compiled/go-isatty-final/go-isatty/bundle.manifest.json",
-    "sha256": "sha256:d2065a84bb884ec9e280affef09dac0641e34a72c685ff9a3a6f4b357915ba5a",
-    "canonical_manifest_digest": "sha256:56a4d0c52e024d19ba8db74fc2e3d132a9baab580acc8be097700555436a9c3f",
-    "file_count": 706
-  },
-  "tests": {
-    "framework": "go bridge contract",
+  "frozen_collection": {
     "protocol": "custom-json-v1",
-    "leaf_id": "contract::public-api",
+    "leaf_ids": ["contract::public-api"],
     "frozen_total": 1,
-    "upstream_command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -count=1 -json ./...",
-    "upstream_exit_code": 0,
-    "upstream_passed_tests": 2,
-    "candidate_command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -mod=vendor -count=1 ./...",
-    "candidate_exit_code": 0,
-    "bridge_contract_exit_code": 0,
-    "bridge_cases": 5
+    "bridge_cases": 5,
+    "upstream_passed_tests": 2
+  },
+  "bundle": {
+    "manifest_path": ".nl2repo/compiled/go-isatty-attempt2/go-isatty/bundle.manifest.json",
+    "manifest_sha256": "sha256:1f299d4c1dc5830f799d1549e79a7b785c5d81486747d5bdbe0cb6d37719a455",
+    "canonical_manifest_digest": "sha256:8fd04119ca6b6e50c28b2803c9ce041b78fc7b71d01381b84fbb87957b503ce2",
+    "file_count": 705
   },
   "commands": [
-    {"command": "git clone --no-checkout https://github.com/mattn/go-isatty .nl2repo/authoring-work/go-isatty/source; git fetch --depth=1 origin c44dc0b9c702c76577fdb7898032969e0611efc2; git checkout --detach c44dc0b9c702c76577fdb7898032969e0611efc2", "exit_code": 0},
-    {"command": "GOWORK=off GOTOOLCHAIN=local GOPROXY=off GOSUMDB=off GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go test -count=1 -json ./...", "exit_code": 0},
     {"command": "uv run nl2repo task validate-source catalog/sources/go-isatty", "exit_code": 0},
-    {"command": "uv run nl2repo task lint-network --tasks-root catalog/sources --include-generated", "exit_code": 0, "summary": "0 errors; 176 warnings across unrelated/pre-existing sources and one expected go-isatty Oracle-host warning"},
-    {"command": "uv run nl2repo harbor compile catalog/sources/go-isatty --output .nl2repo/compiled/go-isatty-final --toolchain toolchain.go.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "exit_code": 0},
-    {"command": "uv run nl2repo harbor compile catalog/sources/go-isatty --output .nl2repo/compiled/go-isatty-repeat --toolchain toolchain.go.lock.toml --artifact-root .nl2repo/artifacts --allow-private; cmp final and repeat bundle manifests", "exit_code": 0, "summary": "repeat manifest identical; sha256:d2065a84bb884ec9e280affef09dac0641e34a72c685ff9a3a6f4b357915ba5a"},
-    {"command": "gofmt -d bridge.go; bash -n task-local shell scripts; python3 -m py_compile Go verifier runtime; GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go vet -mod=vendor ./...", "exit_code": 0},
-    {"command": "uv run pytest -q -o addopts=-ra tests/test_go_adapter.py", "exit_code": 0, "summary": "9 passed"},
-    {"command": "docker build --platform linux/amd64 -f .nl2repo/compiled/go-isatty-final/go-isatty/tests/Dockerfile -t nl2repobench/go-isatty-verifier:authoring ...", "exit_code": 0, "image_digest": "sha256:4751f88c2901a60508200e2bd653ef29b5514ecf59c6f53f5ddc841cd4a5a956"},
-    {"command": "docker run --rm --network none ... nl2repobench/go-isatty-verifier:authoring /tests/test.sh", "exit_code": 0, "summary": "valid=true, collected=1, passed=1, reward=1.0, public_network_available=false", "grading": {"path": ".nl2repo/authoring-work/go-isatty/offline-replay/verifier/grading.json", "sha256": "sha256:b00d7a553a2fddacea6fa04621bafef45310450fbfe030c859f754ad2e6f6933"}, "network": {"path": ".nl2repo/authoring-work/go-isatty/offline-replay/verifier/network.json", "sha256": "sha256:6a761f28b4d9b32b7cb08b3afea7414622ea361074a87468020c62e5727e9b14"}},
-    {"command": "docker controls smoke: empty, stub, forgery, install-failure, panic, hang, oversized-output, background-process", "exit_code": 0, "summary": "empty/install-failure allowed 0/0 installation exception; all non-empty controls collected 1 leaf and reward 0.0", "artifact": ".nl2repo/authoring-work/go-isatty/control-smoke-final2"}
+    {"command": "uv run nl2repo task lint-network --tasks-root catalog/sources --include-generated", "exit_code": 0, "result": "0 errors; 178 warnings; go-isatty has only the expected Oracle-host warning"},
+    {"command": "uv run nl2repo harbor compile catalog/sources/go-isatty --output .nl2repo/compiled/go-isatty-attempt2 --toolchain toolchain.go.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "exit_code": 0},
+    {"command": "uv run --frozen --project harbor-runner harbor --version", "exit_code": 0, "result": "0.21.0"},
+    {"command": "uv run pytest -q -o addopts=-ra tests/test_go_adapter.py", "exit_code": 0, "result": "9 passed in 1.66s"}
   ],
   "oracle": {
-    "status": "not-run-by-lane-policy",
-    "valid": null,
-    "passed": null,
-    "collected": null,
-    "frozen_total": null,
-    "reward": null,
-    "reason": "This independent authoring lane is forbidden from starting a Harbor Agent/Oracle Run; integrator must run Oracle with the exact source-host authorization."
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/go-isatty-attempt2/go-isatty -a oracle --allow-agent-host github.com --job-name go-isatty-attempt2-oracle -o .nl2repo/runs/go-isatty-attempt2/oracle --n-concurrent 1 --yes",
+    "harbor_version": "0.21.0",
+    "exit_code": 0,
+    "valid": true,
+    "passed": 1,
+    "collected": 1,
+    "frozen_total": 1,
+    "reward": 1.0,
+    "result": {"path": ".nl2repo/runs/go-isatty-attempt2/oracle/go-isatty-attempt2-oracle/go-isatty__4BXwPg2/result.json", "sha256": "sha256:398e9c69e3c6ed4c3fa27d0287a28030967479a4edeb8e76ea04753e6076065b"},
+    "grading": {"path": ".nl2repo/runs/go-isatty-attempt2/oracle/go-isatty-attempt2-oracle/go-isatty__4BXwPg2/verifier/grading.json", "sha256": "sha256:b00d7a553a2fddacea6fa04621bafef45310450fbfe030c859f754ad2e6f6933"},
+    "network": {"path": ".nl2repo/runs/go-isatty-attempt2/oracle/go-isatty-attempt2-oracle/go-isatty__4BXwPg2/verifier/network.json", "sha256": "sha256:9f19ae80fc2c3dacd89afe8dcc795ae3718b0ed8f652ade5ea05ead69edf266d", "public_network_available": false},
+    "reward_receipt": {"path": ".nl2repo/runs/go-isatty-attempt2/oracle/go-isatty-attempt2-oracle/go-isatty__4BXwPg2/verifier/reward.json", "sha256": "sha256:f5ff2ade8b6b6ea4ef812375e5c71684d7655fb98854aac64a6bf629a3dfac06"}
   },
   "controls": {
-    "status": "local-verifier-smoke-complete",
-    "empty": {"valid": true, "reward": 0.0, "collected": 0, "failure_reason": "candidate-installation-failed"},
-    "stub": {"valid": true, "reward": 0.0, "collected": 1, "passed": 0},
-    "forgery": {"valid": true, "reward": 0.0, "collected": 1, "passed": 0},
-    "install-failure": {"valid": true, "reward": 0.0, "collected": 0, "failure_reason": "candidate-installation-failed"},
-    "panic": {"valid": true, "reward": 0.0, "collected": 1, "passed": 0},
-    "hang": {"valid": true, "reward": 0.0, "collected": 1, "passed": 0},
-    "oversized-output": {"valid": true, "reward": 0.0, "collected": 1, "passed": 0},
-    "background-process": {"valid": true, "reward": 0.0, "collected": 1, "passed": 0},
-    "offline_network": {"public_network_available": false}
+    "empty": {"command": "Harbor nop run: go-isatty-attempt2-empty", "exit_code": 0, "valid": true, "reward": 0.0, "passed": 0, "collected": 0, "frozen_total": 1, "failure_class": "model", "failure_reason": "candidate-installation-failed", "result": {"path": ".nl2repo/runs/go-isatty-attempt2/empty/go-isatty-attempt2-empty/go-isatty__XUHcwzm/result.json", "sha256": "sha256:48610bb11000e249f08b42108903941d8a0430a5bf3b80b37e700eddc29a80c3"}, "grading": {"path": ".nl2repo/runs/go-isatty-attempt2/empty/go-isatty-attempt2-empty/go-isatty__XUHcwzm/verifier/grading.json", "sha256": "sha256:f50f1c97834aae0757eb19f7b1926b462c178862bac6df8d7f04e6f4d30db843"}, "network": {"path": ".nl2repo/runs/go-isatty-attempt2/empty/go-isatty-attempt2-empty/go-isatty__XUHcwzm/verifier/network.json", "sha256": "sha256:9ba16e3a52fe4a4126c87a400b58b9994fc7e6f2197c54b01d9a7262c2a50010", "public_network_available": false}, "reward_receipt": {"path": ".nl2repo/runs/go-isatty-attempt2/empty/go-isatty-attempt2-empty/go-isatty__XUHcwzm/verifier/reward.json", "sha256": "sha256:8ab285dd6836d028aa2dc600258716be1474a462a4ebd95b7072e5f32750fad6"}},
+    "stub": {"command": "prepare-control stub; Harbor oracle run go-isatty-attempt2-stub", "exit_code": 0, "valid": true, "reward": 0.0, "passed": 0, "collected": 1, "frozen_total": 1, "result": {"path": ".nl2repo/runs/go-isatty-attempt2/stub/go-isatty-attempt2-stub/go-isatty-stub__YPEf2bL/result.json", "sha256": "sha256:ad848246f5e3d21667c17baf1595c46567976836b3be8a3377c806b1f86db8ab"}, "grading": {"path": ".nl2repo/runs/go-isatty-attempt2/stub/go-isatty-attempt2-stub/go-isatty-stub__YPEf2bL/verifier/grading.json", "sha256": "sha256:770db3ca92e7856ca2aafafc513a44b9f7287cc614932077530145c6ab4ec74d"}, "network": {"path": ".nl2repo/runs/go-isatty-attempt2/stub/go-isatty-attempt2-stub/go-isatty-stub__YPEf2bL/verifier/network.json", "sha256": "sha256:aae64e14db7be3ab16169de117370b5eca161a11a1013ca75456ebf82462d5df", "public_network_available": false}, "reward_receipt": {"path": ".nl2repo/runs/go-isatty-attempt2/stub/go-isatty-attempt2-stub/go-isatty-stub__YPEf2bL/verifier/reward.json", "sha256": "sha256:8ab285dd6836d028aa2dc600258716be1474a462a4ebd95b7072e5f32750fad6"}},
+    "forgery": {"command": "prepare-control forgery; Harbor oracle run go-isatty-attempt2-forgery", "exit_code": 0, "valid": true, "reward": 0.0, "passed": 0, "collected": 1, "frozen_total": 1, "verifier_owned_reward": true, "result": {"path": ".nl2repo/runs/go-isatty-attempt2/forgery/go-isatty-attempt2-forgery/go-isatty-forgery__pqRjDAn/result.json", "sha256": "sha256:9628e7af75ba74b5b19e1d8b9455a805361faf0fd3536bb007425ad4e6b9b1e4"}, "grading": {"path": ".nl2repo/runs/go-isatty-attempt2/forgery/go-isatty-attempt2-forgery/go-isatty-forgery__pqRjDAn/verifier/grading.json", "sha256": "sha256:770db3ca92e7856ca2aafafc513a44b9f7287cc614932077530145c6ab4ec74d"}, "network": {"path": ".nl2repo/runs/go-isatty-attempt2/forgery/go-isatty-attempt2-forgery/go-isatty-forgery__pqRjDAn/verifier/network.json", "sha256": "sha256:d6d165c9253e6e66399605519ac1be67aff80aeae88c72e56a84cf1210713100", "public_network_available": false}, "reward_receipt": {"path": ".nl2repo/runs/go-isatty-attempt2/forgery/go-isatty-attempt2-forgery/go-isatty-forgery__pqRjDAn/verifier/reward.json", "sha256": "sha256:8ab285dd6836d028aa2dc600258716be1474a462a4ebd95b7072e5f32750fad6"}},
+    "install-failure": {"command": "prepare-control install-failure; Harbor oracle run go-isatty-attempt2-install-failure", "exit_code": 0, "valid": true, "reward": 0.0, "passed": 0, "collected": 0, "frozen_total": 1, "failure_class": "model", "failure_reason": "candidate-installation-failed", "result": {"path": ".nl2repo/runs/go-isatty-attempt2/install-failure/go-isatty-attempt2-install-failure/go-isatty-install-failure__wM84idr/result.json", "sha256": "sha256:3a95c1bfa3811b6238a8a6d65fe36c2f9f2410a37584d26bf7e8b1e2ad8c67f6"}, "grading": {"path": ".nl2repo/runs/go-isatty-attempt2/install-failure/go-isatty-attempt2-install-failure/go-isatty-install-failure__wM84idr/verifier/grading.json", "sha256": "sha256:f50f1c97834aae0757eb19f7b1926b462c178862bac6df8d7f04e6f4d30db843"}, "network": {"path": ".nl2repo/runs/go-isatty-attempt2/install-failure/go-isatty-attempt2-install-failure/go-isatty-install-failure__wM84idr/verifier/network.json", "sha256": "sha256:1064ead0aca831e8ba3cb993f6ab1c5e25e6ec1c467d29b69cb7fb3871c75b81", "public_network_available": false}, "reward_receipt": {"path": ".nl2repo/runs/go-isatty-attempt2/install-failure/go-isatty-attempt2-install-failure/go-isatty-install-failure__wM84idr/verifier/reward.json", "sha256": "sha256:8ab285dd6836d028aa2dc600258716be1474a462a4ebd95b7072e5f32750fad6"}},
+    "panic": {"command": "prepare-control panic; Harbor oracle run go-isatty-attempt2-panic", "exit_code": 0, "valid": true, "reward": 0.0, "passed": 0, "collected": 1, "frozen_total": 1, "result": {"path": ".nl2repo/runs/go-isatty-attempt2/panic/go-isatty-attempt2-panic/go-isatty-panic__CSFERDV/result.json", "sha256": "sha256:e472dc2e07ca765f9db5362d00833e5220fa82c0584ead760c72e019178849a3"}, "grading": {"path": ".nl2repo/runs/go-isatty-attempt2/panic/go-isatty-attempt2-panic/go-isatty-panic__CSFERDV/verifier/grading.json", "sha256": "sha256:770db3ca92e7856ca2aafafc513a44b9f7287cc614932077530145c6ab4ec74d"}, "network": {"path": ".nl2repo/runs/go-isatty-attempt2/panic/go-isatty-attempt2-panic/go-isatty-panic__CSFERDV/verifier/network.json", "sha256": "sha256:0f09ecf5e139dc1dd718aae3c999310a6a7ba74be080760489229066e4ce3a84", "public_network_available": false}, "reward_receipt": {"path": ".nl2repo/runs/go-isatty-attempt2/panic/go-isatty-attempt2-panic/go-isatty-panic__CSFERDV/verifier/reward.json", "sha256": "sha256:8ab285dd6836d028aa2dc600258716be1474a462a4ebd95b7072e5f32750fad6"}},
+    "hang": {"command": "prepare-control hang; Harbor oracle run go-isatty-attempt2-hang", "exit_code": 0, "valid": true, "reward": 0.0, "passed": 0, "collected": 1, "frozen_total": 1, "result": {"path": ".nl2repo/runs/go-isatty-attempt2/hang/go-isatty-attempt2-hang/go-isatty-hang__pZyF2NX/result.json", "sha256": "sha256:710ad6867ce55c339fda95dce5d85932a557a032cd408c12bd2d9d7c399deb2b"}, "grading": {"path": ".nl2repo/runs/go-isatty-attempt2/hang/go-isatty-attempt2-hang/go-isatty-hang__pZyF2NX/verifier/grading.json", "sha256": "sha256:770db3ca92e7856ca2aafafc513a44b9f7287cc614932077530145c6ab4ec74d"}, "network": {"path": ".nl2repo/runs/go-isatty-attempt2/hang/go-isatty-attempt2-hang/go-isatty-hang__pZyF2NX/verifier/network.json", "sha256": "sha256:f1fbc436e07db255c577e4375cdd59a5298b52f5a3db4e5eea4c4c28610d7bed", "public_network_available": false}, "reward_receipt": {"path": ".nl2repo/runs/go-isatty-attempt2/hang/go-isatty-attempt2-hang/go-isatty-hang__pZyF2NX/verifier/reward.json", "sha256": "sha256:8ab285dd6836d028aa2dc600258716be1474a462a4ebd95b7072e5f32750fad6"}},
+    "oversized-output": {"command": "prepare-control oversized-output; Harbor oracle run go-isatty-attempt2-oversized-output", "exit_code": 0, "valid": true, "reward": 0.0, "passed": 0, "collected": 1, "frozen_total": 1, "result": {"path": ".nl2repo/runs/go-isatty-attempt2/oversized-output/go-isatty-attempt2-oversized-output/go-isatty-oversized-output__hno8RrU/result.json", "sha256": "sha256:5cb353b3d8153102b0987f53b0d43cbb33dc7123040483d0598b245c4cbadaf4"}, "grading": {"path": ".nl2repo/runs/go-isatty-attempt2/oversized-output/go-isatty-attempt2-oversized-output/go-isatty-oversized-output__hno8RrU/verifier/grading.json", "sha256": "sha256:770db3ca92e7856ca2aafafc513a44b9f7287cc614932077530145c6ab4ec74d"}, "network": {"path": ".nl2repo/runs/go-isatty-attempt2/oversized-output/go-isatty-attempt2-oversized-output/go-isatty-oversized-output__hno8RrU/verifier/network.json", "sha256": "sha256:7dc6f398f00a883d74e9f0bf0f07fb851278e80dfd6795c3f63ca00b6e3d1124", "public_network_available": false}, "reward_receipt": {"path": ".nl2repo/runs/go-isatty-attempt2/oversized-output/go-isatty-attempt2-oversized-output/go-isatty-oversized-output__hno8RrU/verifier/reward.json", "sha256": "sha256:8ab285dd6836d028aa2dc600258716be1474a462a4ebd95b7072e5f32750fad6"}},
+    "background-process": {"command": "prepare-control background-process; Harbor oracle run go-isatty-attempt2-background-process", "exit_code": 0, "valid": true, "reward": 0.0, "passed": 0, "collected": 1, "frozen_total": 1, "result": {"path": ".nl2repo/runs/go-isatty-attempt2/background-process/go-isatty-attempt2-background-process/go-isatty-background-process__sUVUyfZ/result.json", "sha256": "sha256:80d5dc570636d6b2543e315e26dcd4b90d1ae3bcb273a29b664e33cf89894e79"}, "grading": {"path": ".nl2repo/runs/go-isatty-attempt2/background-process/go-isatty-attempt2-background-process/go-isatty-background-process__sUVUyfZ/verifier/grading.json", "sha256": "sha256:770db3ca92e7856ca2aafafc513a44b9f7287cc614932077530145c6ab4ec74d"}, "network": {"path": ".nl2repo/runs/go-isatty-attempt2/background-process/go-isatty-attempt2-background-process/go-isatty-background-process__sUVUyfZ/verifier/network.json", "sha256": "sha256:9ba16e3a52fe4a4126c87a400b58b9994fc7e6f2197c54b01d9a7262c2a50010", "public_network_available": false}, "reward_receipt": {"path": ".nl2repo/runs/go-isatty-attempt2/background-process/go-isatty-attempt2-background-process/go-isatty-background-process__sUVUyfZ/verifier/reward.json", "sha256": "sha256:8ab285dd6836d028aa2dc600258716be1474a462a4ebd95b7072e5f32750fad6"}},
+    "offline": {"command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/go-isatty-attempt2/go-isatty -a oracle --allow-agent-host github.com --job-name go-isatty-attempt2-offline-verifier -o .nl2repo/runs/go-isatty-attempt2/offline-verifier --n-concurrent 1 --yes", "exit_code": 0, "completed": true, "valid": true, "reward": 1.0, "passed": 1, "collected": 1, "frozen_total": 1, "public_network_available": false, "network_proof": "separate verifier network.json; reward is recorded but not used as network proof", "result": {"path": ".nl2repo/runs/go-isatty-attempt2/offline-verifier/go-isatty-attempt2-offline-verifier/go-isatty__K2sc8MR/result.json", "sha256": "sha256:412bbfdb20535e831e4f616bdd2beaf630f369ff4171911345bd6ad7f2514c9e"}, "grading": {"path": ".nl2repo/runs/go-isatty-attempt2/offline-verifier/go-isatty-attempt2-offline-verifier/go-isatty__K2sc8MR/verifier/grading.json", "sha256": "sha256:b00d7a553a2fddacea6fa04621bafef45310450fbfe030c859f754ad2e6f6933"}, "network": {"path": ".nl2repo/runs/go-isatty-attempt2/offline-verifier/go-isatty-attempt2-offline-verifier/go-isatty__K2sc8MR/verifier/network.json", "sha256": "sha256:eae2c2df827e519e8e556edac6659aaf980e49b4b3a732d77815d12e77478957", "public_network_available": false}, "reward_receipt": {"path": ".nl2repo/runs/go-isatty-attempt2/offline-verifier/go-isatty-attempt2-offline-verifier/go-isatty__K2sc8MR/verifier/reward.json", "sha256": "sha256:f5ff2ade8b6b6ea4ef812375e5c71684d7655fb98854aac64a6bf629a3dfac06"}, "additional_denial_evidence": {"result": ".nl2repo/runs/go-isatty-attempt2/offline/go-isatty-attempt2-offline/go-isatty__ZMMpSRJ/result.json", "network": ".nl2repo/runs/go-isatty-attempt2/offline/go-isatty-attempt2-offline/go-isatty__ZMMpSRJ/verifier/network.json", "outcome": "source fetch denied without run-scoped host; candidate-installation-failed; public_network_available=false"}}
   },
   "residual_risks": [
-    "Official Harbor Oracle and Harbor-native controls remain unexecuted by lane policy and require integrator orchestration.",
-    "The first Go profile freezes one verifier-owned contract leaf; the upstream suite is source-baseline evidence rather than the published denominator.",
-    "The bridge creates a Linux pseudo-terminal and tests TIOCGWINSZ; interactive terminal availability is not assumed.",
-    "Docker reports the non-blocking FromPlatformFlagConstDisallowed warning for the digest-pinned linux/amd64 base image."
+    "The production runtime is Linux/amd64; Windows Cygwin kernel behavior is not scored.",
+    "The published denominator is one verifier-owned bridge leaf; upstream tests remain baseline evidence.",
+    "The offline verifier control uses the permitted trusted-control source-host override; the separate verifier remains no-network and its network.json is the network proof.",
+    "Review, model pilot, dataset integration, and publication remain integrator stages."
   ]
 }
