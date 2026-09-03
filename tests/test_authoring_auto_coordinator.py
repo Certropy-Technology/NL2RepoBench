@@ -101,6 +101,31 @@ def test_active_agent_slots_count_controller_concurrency() -> None:
     assert coordinator._active_agent_slots(active) == 12
 
 
+def test_active_lease_slots_counts_unexpired_running_records(tmp_path: Path) -> None:
+    queues = tmp_path / "queues"
+    queues.mkdir()
+    queues.joinpath("state.json").write_text(
+        json.dumps(
+            {
+                "items": {
+                    "live": {
+                        "status": "running",
+                        "lease_expires_at": "2099-01-01T00:00:00+00:00",
+                    },
+                    "expired": {
+                        "status": "running",
+                        "lease_expires_at": "2000-01-01T00:00:00+00:00",
+                    },
+                    "pending": {"status": "pending"},
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    assert coordinator._active_lease_slots(tmp_path) == 1
+
+
 def test_register_lane_preserves_registry_list(tmp_path: Path) -> None:
     live = tmp_path / "live"
     registry = live / "supervisor/generated-lanes.json"

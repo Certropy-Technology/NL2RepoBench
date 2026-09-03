@@ -652,6 +652,31 @@ def _active_agent_slots(active: list[tuple[int, str]]) -> int:
     return sum(_worker_slots(command) for _pid, command in active)
 
 
+def _active_lease_slots(live: Path) -> int:
+    """Count unexpired queue leases, including manually launched repair workers."""
+
+    now = datetime.now(UTC)
+    slots = 0
+    for state_path in (live / "queues").glob("*.json"):
+        try:
+            state = _load_json(state_path)
+        except (OSError, UnicodeDecodeError, json.JSONDecodeError, ValueError):
+            continue
+        items = state.get("items", {})
+        if not isinstance(items, dict):
+            continue
+        for record in items.values():
+            if not isinstance(record, dict) or record.get("status") != "running":
+                continue
+            expires = record.get("lease_expires_at")
+            try:
+                if isinstance(expires, str) and datetime.fromisoformat(expires) > now:
+                    slots += 1
+            except ValueError:
+                continue
+    return slots
+
+
 def _candidate_key(record: dict[str, Any]) -> str | None:
     package = record.get("package")
     if isinstance(package, str) and package:
@@ -687,7 +712,9 @@ def _start_workers(
     root: Path, live: Path, args: argparse.Namespace
 ) -> list[dict[str, Any]]:
     active = _active_workers(root, live)
-    available = max(0, args.max_agents - _active_agent_slots(active))
+    process_slots = _active_agent_slots(active)
+    lease_slots = _active_lease_slots(live)
+    available = max(0, args.max_agents - max(process_slots, lease_slots))
     if available == 0:
         return []
     lanes = _lane_registry(live)
@@ -815,12 +842,14 @@ def _cycle(
         counts[lane.language] += len(_claimable(_state_records(lane.state)))
     pending_total = sum(counts.values())
     active_before = _active_workers(root, live)
+    lease_slots_before = _active_lease_slots(live)
     event: dict[str, Any] = {
         "event": "cycle",
         "pending_by_language": counts,
         "pending_total": pending_total,
         "active_workers_before": len(active_before),
         "active_agent_slots_before": _active_agent_slots(active_before),
+        "active_lease_slots_before": lease_slots_before,
         "threshold": args.pending_threshold,
     }
     discovery_events: list[dict[str, Any]] = []
@@ -863,6 +892,7 @@ def _cycle(
     active_after = _active_workers(root, live)
     event["active_workers_after"] = len(active_after)
     event["active_agent_slots_after"] = _active_agent_slots(active_after)
+    event["active_lease_slots_after"] = _active_lease_slots(live)
     return event
 
 
