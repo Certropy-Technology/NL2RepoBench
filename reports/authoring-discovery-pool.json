@@ -5,30 +5,52 @@
     "arrow",
     "cachecontrol",
     "furl",
-    "humanfriendly",
+    "humanize",
+    "markdown-it-py",
+    "mistune",
     "more-itertools",
     "portalocker",
+    "pyyaml",
     "python-json-logger",
-    "requests-cache"
+    "pytest-asyncio",
+    "pytest-xdist",
+    "requests-cache",
+    "tabulate"
   ],
   "node": [
     "cli-cursor",
     "cross-spawn",
+    "figures",
     "is-docker",
     "is-unicode-supported",
     "locate-path",
+    "mimic-fn",
     "npm-run-path",
     "path-exists",
-    "signal-exit"
+    "path-key",
+    "p-limit",
+    "p-queue",
+    "signal-exit",
+    "strip-ansi",
+    "which",
+    "yoctocolors"
   ],
   "go": [
     "go-brotli",
     "go-colorable",
     "go-ini",
     "go-isatty",
+    "go-jwt",
+    "go-logrus",
+    "go-metrics",
+    "go-nanoid",
     "go-ordered-map",
     "go-pkg-errors",
     "go-runewidth",
-    "go-difflib"
+    "go-difflib",
+    "go-set",
+    "go-version",
+    "go-zerolog",
+    "go-errgroup"
   ]
 }
