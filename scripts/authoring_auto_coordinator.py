@@ -756,7 +756,7 @@ def _cycle(
     started = [] if args.dry_run else _start_workers(root, live, args)
     event["discoveries"] = discovery_events
     event["workers_started"] = started
-    event["active_workers_after"] = len(_active_workers(root, live)) + len(started)
+    event["active_workers_after"] = len(_active_workers(root, live))
     return event
 
 

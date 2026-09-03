@@ -399,6 +399,36 @@ def test_controller_owner_is_unique_across_restarts() -> None:
     ) != supervisor._controller_owner(lane, 0, launch_nonce="second")
 
 
+def test_controller_start_uses_python_interpreter_and_long_authoring_budget(
+    tmp_path: Path, monkeypatch
+) -> None:
+    root = tmp_path / "repo"
+    live = root / ".nl2repo/authoring-live"
+    (live / "pids").mkdir(parents=True)
+    python = root / ".venv/bin/python3"
+    python.parent.mkdir(parents=True)
+    python.write_text("", encoding="utf-8")
+    lane = supervisor.Lane(
+        "python", "batch", root / "queue", root / "plan", root / "state"
+    )
+    calls: list[list[str]] = []
+
+    class FakeProcess:
+        pid = 1234
+
+    def fake_popen(command, **_kwargs):
+        calls.append(command)
+        return FakeProcess()
+
+    monkeypatch.setattr(supervisor.subprocess, "Popen", fake_popen)
+
+    assert supervisor._start_controller(root, lane, live, "owner", live / "control.json") == 1234
+    command = calls[0]
+    assert command[0] == str(python)
+    assert command[command.index("--lease-seconds") + 1] == "18000"
+    assert command[command.index("--agent-timeout-sec") + 1] == "14400"
+
+
 def test_integrate_task_does_not_mutate_without_oss(tmp_path: Path) -> None:
     root = tmp_path / "repo"
     worktree = root / ".nl2repo/authoring-live/worktrees/batch/demo"

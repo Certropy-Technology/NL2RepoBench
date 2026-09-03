@@ -1364,8 +1364,9 @@ def _start_controller(
     output = live / "results" / f"{owner}.json"
     pid_path = live / "pids" / f"{owner}.pid"
     log.parent.mkdir(parents=True, exist_ok=True)
+    python_bin = root / ".venv/bin/python3"
     command = [
-        sys.executable,
+        str(python_bin) if python_bin.is_file() else sys.executable,
         str(root / "scripts/run_authoring_loop.py"),
         "--plan",
         str(lane.plan),
@@ -1386,7 +1387,7 @@ def _start_controller(
         "--concurrency-file",
         str(concurrency_file),
         "--lease-seconds",
-        "7200",
+        "18000",
         "--max-attempts",
         "3",
         "--refill-queue",
@@ -1403,7 +1404,7 @@ def _start_controller(
         "--session-root",
         str(live / "sessions"),
         "--agent-timeout-sec",
-        "3600",
+        "14400",
         "--exclude-tools",
         "subagent,subagent_supervisor,subagent_wait",
     ]
