@@ -77,6 +77,7 @@ class Lane:
     queue: Path
     plan: Path
     state: Path
+    repair_existing: bool = False
 
 
 @dataclass
@@ -187,6 +188,7 @@ def _lane_registry(live: Path) -> list[Lane]:
                 queue=Path(str(record["queue"])).resolve(),
                 plan=Path(str(record["plan"])).resolve(),
                 state=Path(str(record["queue_state"])).resolve(),
+                repair_existing=record.get("repair_existing") is True,
             )
         )
     return lanes
@@ -383,15 +385,16 @@ def _register_lane(live: Path, lane: Lane) -> None:
         existing = json.loads(registry.read_text(encoding="utf-8")) if registry.is_file() else []
         if not isinstance(existing, list):
             raise ValueError("generated lane registry must be a list")
-        existing.append(
-            {
-                "language": lane.language,
-                "batch_id": lane.batch_id,
-                "queue": str(lane.queue),
-                "plan": str(lane.plan),
-                "queue_state": str(lane.state),
-            }
-        )
+        record = {
+            "language": lane.language,
+            "batch_id": lane.batch_id,
+            "queue": str(lane.queue),
+            "plan": str(lane.plan),
+            "queue_state": str(lane.state),
+        }
+        if lane.repair_existing:
+            record["repair_existing"] = True
+        existing.append(record)
         temporary = registry.with_name(f".{registry.name}.list-tmp")
         try:
             temporary.write_text(
@@ -757,6 +760,8 @@ def _start_workers(
             "--exclude-tools",
             "subagent,subagent_supervisor,subagent_wait",
         ]
+        if lane.repair_existing:
+            command.append("--repair-existing")
         with log.open("a", encoding="utf-8") as stream:
             process = subprocess.Popen(
                 command,

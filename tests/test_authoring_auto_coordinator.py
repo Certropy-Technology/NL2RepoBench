@@ -124,3 +124,28 @@ def test_register_lane_preserves_registry_list(tmp_path: Path) -> None:
             "queue_state": str(lane.state),
         }
     ]
+
+
+def test_lane_registry_preserves_explicit_repair_flag(tmp_path: Path) -> None:
+    live = tmp_path / "live"
+    registry = live / "supervisor/generated-lanes.json"
+    registry.parent.mkdir(parents=True)
+    registry.write_text(
+        json.dumps(
+            [
+                {
+                    "language": "go",
+                    "batch_id": "go-repair",
+                    "queue": str(live / "q.json"),
+                    "plan": str(live / "p.json"),
+                    "queue_state": str(live / "s.json"),
+                    "repair_existing": True,
+                }
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    lanes = coordinator._lane_registry(live)
+    assert len(lanes) == 1
+    assert lanes[0].repair_existing is True
