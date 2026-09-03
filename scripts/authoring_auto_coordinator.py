@@ -585,7 +585,7 @@ def _active_workers(root: Path, live: Path) -> list[tuple[int, str]]:
     relative_state = os.path.relpath(live / "state", root)
     absolute_worktree = str((live / "worktrees").resolve())
     relative_worktree = os.path.relpath(live / "worktrees", root)
-    return [
+    workers = [
         (pid, command)
         for pid, command in _proc_commands()
         if "run_authoring_loop.py" in command
@@ -598,6 +598,44 @@ def _active_workers(root: Path, live: Path) -> list[tuple[int, str]]:
             or f"--worktree-root {relative_worktree}" in command
         )
     ]
+    managed_pids = {pid for pid, _command in workers}
+
+    def parent_pid(pid: int) -> int | None:
+        try:
+            fields = (Path("/proc") / str(pid) / "stat").read_text(
+                encoding="utf-8"
+            ).rsplit(")", 1)[1].split()
+            return int(fields[1])
+        except (OSError, UnicodeDecodeError, ValueError, IndexError):
+            return None
+
+    def has_managed_ancestor(pid: int) -> bool:
+        seen: set[int] = set()
+        current = parent_pid(pid)
+        while current not in {None, 0, 1} and current not in seen:
+            if current in managed_pids:
+                return True
+            seen.add(current)
+            current = parent_pid(current)
+        return False
+
+    # A manually launched repair may outlive its run_authoring_loop parent.
+    # Count its top-level Pi process so the coordinator cannot add 24 new
+    # workers on top of an in-flight repair lane. Managed Pi children are
+    # already represented by their run_authoring_loop parent and are skipped.
+    for pid, command in _proc_commands():
+        if pid in managed_pids or not command:
+            continue
+        executable = command.split(None, 1)[0].rsplit("/", 1)[-1]
+        if executable != "pi" or has_managed_ancestor(pid):
+            continue
+        try:
+            cwd = os.path.realpath(Path("/proc") / str(pid) / "cwd")
+        except OSError:
+            continue
+        if cwd == absolute_worktree or cwd.startswith(absolute_worktree + os.sep):
+            workers.append((pid, command))
+    return workers
 
 
 def _worker_slots(command: str) -> int:
