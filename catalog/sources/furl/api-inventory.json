@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "task_id": "furl",
+  "source_revision": "46d9ea79c98bb14b970a199fb924705d024f29ad",
+  "modules": [
+    {"path": "furl.furl", "classes": ["Path", "PathCompositionInterface", "URLPathCompositionInterface", "FragmentPathCompositionInterface", "Query", "QueryCompositionInterface", "Fragment", "FragmentCompositionInterface", "furl"], "functions": ["lget", "attemptstr", "utf8", "non_string_iterable", "idna_encode", "idna_decode", "is_valid_port", "static_vars", "create_quote_fn", "is_valid_encoded_path_segment", "is_valid_encoded_query_key", "is_valid_encoded_query_value", "is_valid_scheme", "is_valid_host", "get_scheme", "strip_scheme", "set_scheme", "has_netloc", "urlsplit", "urljoin", "join_path_segments", "remove_path_segments", "quacks_like_a_path_with_segments"]},
+    {"path": "furl.omdict1D", "classes": ["omdict1D"], "functions": []},
+    {"path": "furl.common", "classes": [], "functions": ["callable_attr", "is_iterable_but_not_string"]},
+    {"path": "furl.compat", "classes": ["UnicodeMixin"], "functions": []}
+  ],
+  "public_behavior_groups": ["path", "query", "fragment", "url-facade", "ordered-multivalue", "encoding-and-validation", "metadata-and-exports"]
+}

@@ -1,0 +1,75 @@
+schema_version = "1.0"
+task_id = "furl"
+version = "1.0.0"
+instruction = "instruction.md"
+[metadata]
+difficulty = "medium"
+category = "url-manipulation-library"
+tags = ["python", "urls", "url-encoding", "ordered-multivalue", "unicode", "separate-verifier"]
+language = "python"
+[source]
+status = "known"
+upstream_url = "https://github.com/gruns/furl"
+revision = "46d9ea79c98bb14b970a199fb924705d024f29ad"
+license_spdx = "Unlicense"
+source_digest = "sha256:11dfb073771de0ecf9117808aa37282afff150be2ba809f15e01f9802b21a197"
+submodules = []
+[environment]
+status = "known"
+python_version = "3.12.11"
+os_name = "debian-12-amd64"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
+network_mode = "no-network"
+build_command = "install the hash-locked candidate and verifier dependencies during image build"
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "Candidate and verifier dependencies are installed during image build from the private hash lock; Agent and verifier execution is network-isolated, while only the trusted Oracle receives the exact upstream host override."
+[dependencies]
+status = "known"
+installer = "pip"
+packages = ["iniconfig==2.3.0", "orderedmultidict==1.0.2", "packaging==26.3", "pluggy==1.6.0", "pygments==2.21.0", "pytest==9.1.1", "setuptools==84.0.0", "six==1.17.0", "wheel==0.48.0"]
+lock_artifact = { digest = "sha256:a6169993cc695b56153692317828c9ba72ee1921820111d473db5344e48a76c0", size_bytes = 2043, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:a6169993cc695b56153692317828c9ba72ee1921820111d473db5344e48a76c0", visibility = "private" }
+[tests]
+framework = "pytest"
+expected_total = 74
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = []
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:5dc032d4002cfa310a7eaff0dab5104e6521ae3628bdb4533d33a52c4ce436c2", size_bytes = 122880, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:5dc032d4002cfa310a7eaff0dab5104e6521ae3628bdb4533d33a52c4ce436c2", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
+[harbor]
+description = "Build furl from an empty workspace and satisfy a deterministic URL parsing, encoding, component mutation, and ordered-query contract."
+keywords = ["python", "urls", "url-encoding", "ordered-multivalue", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 360.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+[oracle_bundle]
+digest = "sha256:9c6e5c9b4e350ef1529901765c1fdbd39af9a4c9cf5decba878a736230ad10fe"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:9c6e5c9b4e350ef1529901765c1fdbd39af9a4c9cf5decba878a736230ad10fe"
+visibility = "private"
+[lifecycle]
+status = "packaged"
+owner = "authoring-python-discover-20260903T025734Z"
+reason = "Source, modern-Python portability adaptation, hash-locked dependencies, subprocess verifier, controls, and digest-checked Oracle bundle are prepared; Harbor Agent/Oracle execution is deferred to the separate run loop."

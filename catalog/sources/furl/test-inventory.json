@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "task_id": "furl",
+  "source_revision": "46d9ea79c98bb14b970a199fb924705d024f29ad",
+  "framework": "pytest",
+  "raw_collected": 77,
+  "portable_frozen_total": 74,
+  "collection_exclusions": [
+    {"node_group": "TestFurl.test_hosts", "reason": "modern urllib.parse rejects malformed bracketed IPv6"},
+    {"node_group": "TestFurl.test_netloc", "reason": "modern urllib.parse rejects malformed bracketed IPv6"},
+    {"node_group": "TestFurl.test_odd_urls", "reason": "modern urllib.parse empty-netloc slash serialization differs"}
+  ],
+  "groups": {
+    "test_furl.py": {"portable_leaves": 70, "behaviors": ["Path", "Query", "Fragment", "furl facade", "URL helpers", "metadata"]},
+    "test_omdict1D.py": {"portable_leaves": 4, "behaviors": ["ordered multivalue add", "set", "setitem", "update/updateall"]}
+  },
+  "collection_source": "private conftest removes only the three named incompatible methods; all remaining upstream test bodies are unchanged"
+}

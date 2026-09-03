@@ -1,0 +1,85 @@
+{
+  "schema_version": "1.0",
+  "task_id": "furl",
+  "task_version": "1.0.0",
+  "terminal_kind": "packaged",
+  "status": "packaged",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/gruns/furl",
+    "revision": "46d9ea79c98bb14b970a199fb924705d024f29ad",
+    "source_archive_sha256": "sha256:11dfb073771de0ecf9117808aa37282afff150be2ba809f15e01f9802b21a197",
+    "license_spdx": "Unlicense",
+    "license_sha256": "sha256:0f5fa5878fe34ce4d934c0207b194c8eb235d2caa29a79bf6d576f3091298120",
+    "submodules": []
+  },
+  "environment": {
+    "python_version": "3.12.11",
+    "os_name": "debian-12-amd64",
+    "base_image": "python:3.12-slim",
+    "base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "network_mode": "no-network",
+    "agent_allowed_hosts": []
+  },
+  "dependencies": {
+    "installer": "pip",
+    "packages": ["iniconfig==2.3.0", "orderedmultidict==1.0.2", "packaging==26.3", "pluggy==1.6.0", "pygments==2.21.0", "pytest==9.1.1", "setuptools==84.0.0", "six==1.17.0", "wheel==0.48.0"],
+    "lock_artifact": {"digest": "sha256:a6169993cc695b56153692317828c9ba72ee1921820111d473db5344e48a76c0", "size_bytes": 2043, "visibility": "private"}
+  },
+  "inventory": {
+    "api_path": "catalog/sources/furl/api-inventory.json",
+    "test_path": "catalog/sources/furl/test-inventory.json",
+    "traceability_path": "catalog/sources/furl/traceability.json",
+    "implementation_python_files": 6,
+    "upstream_test_files": 2,
+    "raw_collected": 77,
+    "deterministic_verifier_leaves": 74,
+    "portable_subset_exclusions": 3
+  },
+  "compiled_bundle": {
+    "mode": "production",
+    "path": ".nl2repo/authoring-work/python-author-discover-20260903T025734Z/furl/compiled/furl",
+    "manifest_sha256": "sha256:d6d5e8934f8e13b485991bb59b0aa8270b0f40dcda05c3df11b35f206568d947",
+    "canonical_manifest_digest": "sha256:07d67592bd244a5aaaf8806abaaf8f7e14a0f6ee597e6d077fea6967357b8caf",
+    "toolchain_lock_digest": "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366",
+    "file_count": 64
+  },
+  "private_artifacts": {
+    "verifier_bundle": {"digest": "sha256:5dc032d4002cfa310a7eaff0dab5104e6521ae3628bdb4533d33a52c4ce436c2", "size_bytes": 122880},
+    "oracle_bundle": {"digest": "sha256:9c6e5c9b4e350ef1529901765c1fdbd39af9a4c9cf5decba878a736230ad10fe", "size_bytes": 10240}
+  },
+  "tests": {
+    "framework": "custom-json-v1",
+    "frozen_total": 74,
+    "collection": "frozen-collection",
+    "boundary": "UID-isolated candidate subprocess; trusted verifier owns collection, JUnit, and reward"
+  },
+  "commands": [
+    {"command": "uv run nl2repo task validate-source catalog/sources/furl", "exit_code": 0, "instruction_sha256": "sha256:f5e2e3638f23791bfd3d8dac33493bcd9480a5f0ca4351fdbb2a8dcec8dd6404"},
+    {"command": "uv run nl2repo task lint-network --tasks-root catalog/sources", "exit_code": 0, "errors": 0, "task_local_findings": 0, "repository_warning_count": 175, "log": ".nl2repo/evidence/furl-network-lint-full.json", "log_sha256": "sha256:828550134d5c56e03a4c5db9a0128151766c44688cd6f0d85e9b3a2678e49e81"},
+    {"command": "uv run nl2repo harbor compile catalog/sources/furl --output .nl2repo/authoring-work/python-author-discover-20260903T025734Z/furl/compiled --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "exit_code": 0, "manifest_sha256": "sha256:d6d5e8934f8e13b485991bb59b0aa8270b0f40dcda05c3df11b35f206568d947"},
+    {"command": "python3 -m py_compile private verifier; bash -n Oracle and controls; git diff --check", "exit_code": 0},
+    {"command": "source Python 3.12.11 pytest --collect-only -q", "exit_code": 0, "collected": 77, "log": ".nl2repo/authoring-work/python-author-discover-20260903T025734Z/furl/evidence/upstream-py312-collection.log", "log_sha256": "sha256:2012fba37333d3a45055a8fb7cf69a86cf76dd5886fd6ee85ee0323f921ad887"},
+    {"command": "source Python 3.12.11 pytest -q", "exit_code": 1, "passed": 74, "failed": 3, "log": ".nl2repo/authoring-work/python-author-discover-20260903T025734Z/furl/evidence/upstream-py312-full.log", "log_sha256": "sha256:9fcf8c8463c0bdb4b7ae86099cce5f480944055ceab54d6b53b08609c30f64ba"},
+    {"command": "installed candidate through verification.candidate_install and ran private adapter", "exit_code": 0, "passed": 74, "failed": 0, "log": ".nl2repo/authoring-work/python-author-discover-20260903T025734Z/furl/evidence/candidate-adapter-report.json", "log_sha256": "sha256:9bf13949975169eca64c45afe5572cc8d0ce55d361e176ff00db810ad4f12752"},
+    {"command": "HarborCompilerRegistry.prepare_control_bundle for stub, forgery, install-hang, call-hang", "exit_code": 0}
+  ],
+  "authoring_smoke": {
+    "offline_adapter": {"exit_code": 0, "collected": 74, "passed": 74, "failed": 0, "log": ".nl2repo/authoring-work/python-author-discover-20260903T025734Z/furl/evidence/offline-adapter-report.log", "log_sha256": "sha256:707971fffd29db7951b32e78a2f099c6abe0d6c0bb4ef3bf178f23a41ae395d2"},
+    "stub": {"install_exit_code": 0, "collected": 74, "passed": 0, "failed": 74, "log": ".nl2repo/authoring-work/python-author-discover-20260903T025734Z/furl/evidence/stub-adapter-report.json", "log_sha256": "sha256:5ca49d98b85ea7057706543678acc2b5aa424bc1201dc71784faa81929a23785"},
+    "forgery": {"install_exit_code": 0, "collected": 74, "passed": 0, "failed": 74, "fake_reward_written": true, "log": ".nl2repo/authoring-work/python-author-discover-20260903T025734Z/furl/evidence/forgery-adapter-report.json", "log_sha256": "sha256:eacd808b18248b93edd2a1f4c924c9da44a7ac527fefb5a38fa583ae809c70db"},
+    "empty": {"install_exit_code": 20, "outcome": "candidate-failure", "failure_class": "model-installation-exception", "log": ".nl2repo/authoring-work/python-author-discover-20260903T025734Z/furl/evidence/empty-install.json", "log_sha256": "sha256:01724768b84ee7364614b6cd5c640d0b515a1bd52fdfb2e9c558faa005ee49f7"},
+    "call_timeout": {"install_exit_code": 0, "timeout_exit_code": 124, "timeout_seconds": 8, "log": ".nl2repo/authoring-work/python-author-discover-20260903T025734Z/furl/evidence/call-hang-timeout.txt", "log_sha256": "sha256:67d5135fffeb1490ba0a5f5cd8463ac103d8c38db3f248ae223cdbcf958d4313"}
+  },
+  "deferred_gates": {
+    "oracle": {"status": "not-run", "reason": "This lane is prohibited from starting a Harbor Agent Run; the independent run loop must execute the compiled Oracle bundle with exact upstream host authorization."},
+    "controls": {"status": "not-run", "reason": "Official Harbor control receipts belong to the independent Agent Run loop; local child, empty, stub, forgery, timeout, and network-isolated probes are recorded above."}
+  },
+  "residual_risks": [
+    "The upstream revision has three legacy assertions incompatible with modern urllib.parse; they are explicitly excluded from the 74-leaf frozen portable subset.",
+    "Official Harbor Oracle, empty, stub, forgery, timeout, and offline receipts remain pending the independent Agent Run loop.",
+    "Repository-wide network lint retains 175 warnings on unrelated existing tasks; furl has zero errors and zero local findings.",
+    "Blind review, publication, and dataset integration remain pending."
+  ],
+  "next_unblock_action": "Run the compiled task once through the independent Harbor Agent Run loop, using the Oracle-only exact upstream source-host override, then attach verifier-owned Oracle/control receipts before advancing lifecycle beyond packaged."
+}

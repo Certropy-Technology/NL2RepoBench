@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "task_id": "furl",
+  "source_revision": "46d9ea79c98bb14b970a199fb924705d024f29ad",
+  "frozen_total": 74,
+  "mappings": [
+    {"test_group": "TestPath", "spec_sections": ["Path", "Determinism and error boundaries"]},
+    {"test_group": "TestQuery", "spec_sections": ["Query and omdict1D", "Determinism and error boundaries"]},
+    {"test_group": "TestFragment", "spec_sections": ["Fragment", "Query and omdict1D"]},
+    {"test_group": "TestFurl", "spec_sections": ["furl", "Package exports and helpers", "Path", "Query and omdict1D", "Fragment"]},
+    {"test_group": "TestOmdict1D", "spec_sections": ["Query and omdict1D"]},
+    {"test_group": "TestMetadata", "spec_sections": ["Supports", "Package exports and helpers"]}
+  ],
+  "coverage_statement": "Every frozen upstream test group maps to a public behavior section; every public core behavior group is exercised by at least one frozen group. The three modern-stdlib exclusions are documented in provenance and the instruction."
+}
