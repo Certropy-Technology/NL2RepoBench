@@ -2,7 +2,7 @@ schema_version = "1.0"
 task_id = "go-badger"
 version = "0.1.0"
 instruction = "instruction.md"
-oracle_bundle = { digest = "sha256:36a95678fa75bdea404830f2c80227bc413a6122c5493a5972625e7f230616bc", size_bytes = 663, uri = "artifact://private/sha256:36a95678fa75bdea404830f2c80227bc413a6122c5493a5972625e7f230616bc", visibility = "private" }
+oracle_bundle = { digest = "sha256:0224ce1d3cedbef4a6d98759f41bd54e4f65b7ed01e382f7a9a165ed85f47562", size_bytes = 714, uri = "artifact://private/sha256:0224ce1d3cedbef4a6d98759f41bd54e4f65b7ed01e382f7a9a165ed85f47562", visibility = "private" }
 
 [metadata]
 difficulty = "hard"
@@ -47,7 +47,7 @@ packages = [
   "golang.org/x/sys@v0.41.0",
   "google.golang.org/protobuf@v1.36.7",
 ]
-module_bundle = { digest = "sha256:b36996f41a537acb138492a6986c8da64c4a34019483be45b59e4556cd876abc", size_bytes = 2623622, uri = "artifact://private/sha256:b36996f41a537acb138492a6986c8da64c4a34019483be45b59e4556cd876abc", visibility = "private" }
+module_bundle = { digest = "sha256:d43f1d2178cb48ad3d6b83def70f5fc9d2dbe73f5b1b6e70a4fc6ce467cbdd83", size_bytes = 2429649, uri = "artifact://private/sha256:d43f1d2178cb48ad3d6b83def70f5fc9d2dbe73f5b1b6e70a4fc6ce467cbdd83", visibility = "private" }
 
 [tests]
 framework = "pytest"
@@ -72,14 +72,14 @@ candidate_total_timeout_sec = 360.0
 agent_network_mode = "no-network"
 verifier_network_mode = "no-network"
 cpus = 1
-memory_mb = 1536
+memory_mb = 4096
 storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "packaged"
+status = "controls-passed"
 owner = "go-author-wave2-20260828"
-reason = "Frozen source, private module closure, typed bridge, separate verifier, and production compilation are complete; official Oracle and model Agent Run remain for the parent loop."
+reason = "Frozen source, private module closure, typed bridge, separate verifier, production compilation, Oracle, and required controls are complete; model Agent evaluation, independent review, and publication remain parent-loop responsibilities."
 
 [verifier]
 protocol = "custom-json-v1"

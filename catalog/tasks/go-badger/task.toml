@@ -1,0 +1,57 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/go-badger"
+version = "0.1.0"
+description = "Recreate a bounded, deterministic slice of Badger's pure-Go transactional key-value API through a typed subprocess bridge."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "go",
+    "badger",
+    "key-value",
+    "transactions",
+    "iterator",
+    "go-modules",
+    "typed-bridge",
+    "public-api",
+]
+
+[metadata]
+difficulty = "hard"
+category = "go-database"
+tags = [
+    "go",
+    "go-modules",
+    "badger",
+    "key-value",
+    "transactions",
+    "typed-bridge",
+    "public-api",
+]
+language = "go"
+runtime = "go"
+runtime_version = "1.26.5"
+package_manager = "go-modules"
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 1
+canonical_manifest_digest = "sha256:c5e9c04f6e288c89881aacd9b94034aadf0f002229132052e7341a89ae6e9a5f"
+toolchain_lock_digest = "sha256:baa477549dd86ccfe68422aafd900a2ab76f0b091de9a85f9db883f9d6a551a3"
+
+[agent]
+timeout_sec = 1200.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[environment]
+network_mode = "no-network"
+cpus = 1
+memory_mb = 4096
+storage_mb = 4096
