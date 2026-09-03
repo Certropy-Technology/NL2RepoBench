@@ -67,9 +67,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "packaged"
+status = "controls-passed"
 owner = "authoring-go-batch2-20260903"
-reason = "Frozen source, private module closure, typed bridge, verifier contract, environment, Oracle script, and task-local controls compile successfully. Harbor Oracle and runtime control receipts remain an integrator step because this lane cannot start Harbor Agent Runs."
+reason = "Current source passed validation, compiled with the Go toolchain lock, and completed the official Harbor Oracle plus empty, stub, forgery, install-failure, panic, hang, oversized-output, background-process, and offline controls."
 
 [verifier]
 protocol = "custom-json-v1"
