@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "task_id": "factory-boy",
+  "source_revision": "ae9f2f4650afef0bc9b0925de97f618603233ff8",
+  "package_version": "3.3.4.dev0",
+  "public_core_modules": [
+    "factory",
+    "factory.base",
+    "factory.declarations",
+    "factory.enums",
+    "factory.errors",
+    "factory.faker",
+    "factory.fuzzy",
+    "factory.helpers",
+    "factory.random",
+    "factory.utils"
+  ],
+  "public_symbols": {
+    "factory.base": ["Factory", "BaseFactory", "StubFactory", "DictFactory", "ListFactory", "use_strategy"],
+    "factory.declarations": ["LazyFunction", "LazyAttribute", "Sequence", "LazyAttributeSequence", "SelfAttribute", "Iterator", "SubFactory", "Dict", "List", "Maybe", "Trait", "Transformer", "PostGeneration", "PostGenerationMethodCall"],
+    "factory.fuzzy": ["FuzzyText", "FuzzyChoice", "FuzzyInteger", "FuzzyDecimal", "FuzzyFloat", "FuzzyDate", "FuzzyNaiveDateTime", "FuzzyDateTime"],
+    "factory.helpers": ["build", "build_batch", "create", "create_batch", "stub", "stub_batch", "generate", "generate_batch", "simple_generate", "simple_generate_batch", "make_factory", "debug"],
+    "factory.random": ["get_random_state", "set_random_state", "reseed_random"],
+    "factory.utils": ["import_object"]
+  },
+  "excluded_integrations": ["factory.django", "factory.alchemy", "factory.mongoengine", "factory.mogo"],
+  "notes": "ORM integrations require external frameworks, databases, or unavailable services and are outside the deterministic contract."
+}

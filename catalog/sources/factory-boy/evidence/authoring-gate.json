@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0",
+  "task_id": "factory-boy",
+  "status": "awaiting-agent-run",
+  "source": {
+    "upstream_url": "https://github.com/FactoryBoy/factory_boy",
+    "revision": "ae9f2f4650afef0bc9b0925de97f618603233ff8",
+    "source_digest": "sha256:9a3b710c3cc5ae1b00ef8b07a6ddae7a15f8545d9f006f256993322b867c0cd0",
+    "license_spdx": "MIT",
+    "license_sha256": "sha256:1e3bd28a22593bd69aad9b64595cbcc39be625b5a51ea21aafa4b08136a76966"
+  },
+  "environment": {
+    "python": "3.12.11",
+    "base_image": "python:3.12-slim@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "harbor": "0.21.0",
+    "docker": "29.7.2",
+    "network_mode": "no-network",
+    "agent_allowed_hosts": []
+  },
+  "artifacts": {
+    "dependency_lock": {"digest": "sha256:2b8c9dcc9de8a352ac4f40a43befccbe84ffc5b0339ef4db27528e740b05b40d", "size_bytes": 1737},
+    "verifier_bundle": {"digest": "sha256:d9831f55f49d9803f779fc0522ad950b565f685465b73d930aaf4fc6c22e0578", "size_bytes": 20480},
+    "oracle_bundle": {"digest": "sha256:59e66008af475f70b1681c2e1ff6d0410472df63a517ce2da3789b58a71e8506", "size_bytes": 10240},
+    "compiled_bundle_manifest": {"digest": "sha256:667b8ad371c661edc84036b62473af1ec6db48b91f8d9fe6dcd59674e88eddb1", "files": 59},
+    "verifier_image": "sha256:c3629466b3a11a81f7cbde4993478bd6cf40b58e4014964a745a952055ad149b"
+  },
+  "tests": {
+    "upstream_collected": 329,
+    "upstream_passed": 314,
+    "upstream_skipped": 18,
+    "upstream_failed": 0,
+    "frozen_total": 30,
+    "scenario_ids": "test-inventory.json"
+  },
+  "commands": [
+    {"command": "git clone + checkout --detach ae9f2f4650afef0bc9b0925de97f618603233ff8", "exit_code": 0, "log": ".nl2repo/authoring-work/factory-boy/logs/clone-and-freeze.log"},
+    {"command": "uv pip compile --python-version 3.12 --generate-hashes", "exit_code": 0, "log": ".nl2repo/authoring-work/factory-boy/requirements.lock.txt"},
+    {"command": "uv pip install --target candidate-site --require-hashes", "exit_code": 0, "log": ".nl2repo/authoring-work/factory-boy/logs/candidate-install.log"},
+    {"command": "python -m pytest --collect-only -q -c /dev/null tests", "exit_code": 0, "log": ".nl2repo/authoring-work/factory-boy/logs/upstream-collect.log"},
+    {"command": "python -m pytest -q -c /dev/null tests", "exit_code": 0, "log": ".nl2repo/authoring-work/factory-boy/logs/upstream-test.log"},
+    {"command": "uv run nl2repo task validate-source catalog/sources/factory-boy", "exit_code": 0, "log": ".nl2repo/authoring-work/factory-boy/logs/validate-source-final.log"},
+    {"command": "uv run nl2repo task lint-network --tasks-root catalog/sources", "exit_code": 0, "log": ".nl2repo/authoring-work/factory-boy/logs/network-lint-all.log", "result": "error_count=0; factory-boy produced no finding"},
+    {"command": "uv run nl2repo harbor compile catalog/sources/factory-boy --output .nl2repo/compiled-production --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "exit_code": 0, "result": "59-file bundle; repeat manifest byte-identical"},
+    {"command": "docker build --platform linux/amd64 -t nl2repo/factory-boy-verifier:local .nl2repo/compiled-production/factory-boy/tests", "exit_code": 0, "result": "image sha256:c3629466b3a11a81f7cbde4993478bd6cf40b58e4014964a745a952055ad149b"}
+  ],
+  "local_oracle_smoke": {"valid": true, "collected": 30, "passed": 30, "failed": 0, "reward": 1.0, "public_network_available": false, "grading": ".nl2repo/authoring-work/factory-boy/local-verifier-run/grading.json"},
+  "controls": {
+    "stub": {"valid": true, "collected": 30, "passed": 0, "failed": 30, "reward": 0.0, "grading": ".nl2repo/authoring-work/factory-boy/control-stub-logs/grading.json"},
+    "forgery": {"valid": true, "collected": 30, "passed": 0, "failed": 30, "reward": 0.0, "grading": ".nl2repo/authoring-work/factory-boy/control-forgery-logs/grading.json"},
+    "workspace-invalid": {"valid": true, "failure_class": "model", "failure_reason": "candidate-workspace-rejected", "reward": 0.0, "grading": ".nl2repo/authoring-work/factory-boy/control-invalid-logs/grading.json"},
+    "install-timeout": {"host_wrapper_exit_code": 124, "result": "bounded timeout observed; Docker cleanup latency is a residual infrastructure risk"}
+  },
+  "official_gates": {"harbor_oracle": "not_run_by_lane_policy", "harbor_agent_run": "not_run_by_lane_policy", "independent_review": "not_run"},
+  "residual_risks": ["Official Harbor Oracle and control receipts must be run by the integration loop with the exact upstream host authorization.", "The source archive contains documentation symlinks; Oracle solve.sh removes only ChangeLog and docs/credits.rst after verifying the archive digest so workspace ingestion remains link-free."]
+}

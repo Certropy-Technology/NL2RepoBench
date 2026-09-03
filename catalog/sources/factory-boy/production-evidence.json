@@ -1,0 +1,145 @@
+{
+  "bundle": {
+    "handoff_artifacts": {
+      "compiled_manifest": "sha256:667b8ad371c661edc84036b62473af1ec6db48b91f8d9fe6dcd59674e88eddb1",
+      "dependency_lock": "sha256:2b8c9dcc9de8a352ac4f40a43befccbe84ffc5b0339ef4db27528e740b05b40d (1737 bytes)",
+      "oracle_bundle": "sha256:59e66008af475f70b1681c2e1ff6d0410472df63a517ce2da3789b58a71e8506 (10240 bytes)",
+      "private_artifact_root": ".nl2repo/artifacts/private/sha256",
+      "verifier_bundle": "sha256:d9831f55f49d9803f779fc0522ad950b565f685465b73d930aaf4fc6c22e0578 (20480 bytes)"
+    },
+    "handoff_compiled_bundle": null
+  },
+  "commands": {
+    "network_lint": {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "error_count": 0,
+      "exit_code": 0,
+      "log": ".nl2repo/authoring-work/factory-boy/logs/network-lint-all.log"
+    },
+    "production_compile": {
+      "command": "uv run nl2repo harbor compile catalog/sources/factory-boy --output .nl2repo/compiled-production --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0,
+      "manifest_digest": "sha256:667b8ad371c661edc84036b62473af1ec6db48b91f8d9fe6dcd59674e88eddb1"
+    },
+    "repeat_compile": {
+      "byte_identical_manifest": true,
+      "exit_code": 0
+    },
+    "source_validation": {
+      "command": "uv run nl2repo task validate-source catalog/sources/factory-boy",
+      "exit_code": 0,
+      "log": ".nl2repo/authoring-work/factory-boy/logs/validate-source-final.log"
+    },
+    "verifier_image_build": {
+      "exit_code": 0,
+      "image_digest": "sha256:c3629466b3a11a81f7cbde4993478bd6cf40b58e4014964a745a952055ad149b"
+    }
+  },
+  "controls": {
+    "forgery": "valid=true, 0/30, reward=0.0; forged reports ignored",
+    "install-timeout": "host timeout wrapper exit=124",
+    "stub": "valid=true, 0/30, reward=0.0",
+    "workspace-invalid": "valid=true, model/candidate-workspace-rejected"
+  },
+  "dependency_closure": {
+    "installer": "pip",
+    "lock_artifact": {
+      "digest": "sha256:2b8c9dcc9de8a352ac4f40a43befccbe84ffc5b0339ef4db27528e740b05b40d",
+      "media_type": "text/plain; charset=utf-8",
+      "size_bytes": 1737,
+      "uri": "artifact://private/sha256:2b8c9dcc9de8a352ac4f40a43befccbe84ffc5b0339ef4db27528e740b05b40d",
+      "visibility": "private"
+    },
+    "packages": [
+      "faker==37.1.0",
+      "iniconfig==2.3.0",
+      "packaging==26.3",
+      "pluggy==1.6.0",
+      "pytest==8.3.5",
+      "setuptools==80.10.2",
+      "tzdata==2026.3",
+      "wheel==0.45.1"
+    ],
+    "status": "known"
+  },
+  "environment": {
+    "base_image": "python:3.12-slim",
+    "base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "build_command": "install the hash-locked candidate and verifier closures during image build; install the candidate with pip --no-deps --no-build-isolation",
+    "network_mode": "no-network",
+    "network_policy": {
+      "mode": "no-network",
+      "offline_dependencies": "preinstalled-image",
+      "reason": "The Faker, test, build, and verifier closures are installed during Docker image construction. Agent and verifier execution have no egress; only the trusted Oracle receives a run-scoped exact upstream host override.",
+      "reference_source_fetch": "forbidden"
+    },
+    "os_name": "debian-12-amd64",
+    "python_version": "3.12.11",
+    "status": "known",
+    "system_packages": [
+      "ca-certificates",
+      "git"
+    ]
+  },
+  "frozen_collection": {
+    "handoff_collection": null,
+    "handoff_frozen_tests": {
+      "production_denominator": 30,
+      "protocol": "custom-json-v1",
+      "upstream_collected": 329,
+      "upstream_failed": 0,
+      "upstream_passed": 314,
+      "upstream_skipped": 18
+    },
+    "handoff_inventory": null,
+    "tests": {
+      "commands": [
+        "custom-json-v1 verifier entrypoint"
+      ],
+      "expected_total": 30,
+      "expected_total_source": "frozen-collection",
+      "framework": "pytest",
+      "protected_paths": [
+        "/tests/verifier/run.py",
+        "/tests/command-plan.json"
+      ]
+    }
+  },
+  "integrator_repair": {
+    "input_handoff": ".nl2repo/authoring-live/worktrees/python-author-batch2-20260902T1456Z/factory-boy/.nl2repo/authoring-handoff.json",
+    "kind": "production-evidence-from-authored-handoff",
+    "official_controls_created": false,
+    "official_oracle_created": false,
+    "recorded_at": "2026-09-03T04:43:47.687039+00:00"
+  },
+  "lifecycle": {
+    "owner": "python-author-batch2-20260902-factory-boy",
+    "reason": "Exact source, MIT license, hash-locked Python closure, private custom verifier, digest-checking Oracle solution, controls, and production compile are prepared. Official Harbor Agent Run and integration review remain outside this lane.",
+    "status": "packaged"
+  },
+  "oracle": {
+    "collected": 30,
+    "grading": ".nl2repo/authoring-work/factory-boy/local-verifier-run/grading.json",
+    "kind": "local-verifier-smoke-with-frozen-source",
+    "network_public": false,
+    "passed": 30,
+    "reward": 1.0,
+    "valid": true
+  },
+  "residual_risks": [
+    "Official Harbor Oracle/controls and independent review are pending integration.",
+    "Timeout control Docker cleanup was slower than the 40-second host wrapper, although the wrapper returned 124 and no task container remains.",
+    "Global network lint reports unrelated warnings for other tasks; factory-boy itself has no finding and global error_count is zero."
+  ],
+  "schema_version": "1.0",
+  "source_freeze": {
+    "license_spdx": "MIT",
+    "revision": "ae9f2f4650afef0bc9b0925de97f618603233ff8",
+    "source_digest": "sha256:9a3b710c3cc5ae1b00ef8b07a6ddae7a15f8545d9f006f256993322b867c0cd0",
+    "upstream_url": "https://github.com/FactoryBoy/factory_boy"
+  },
+  "status": "awaiting-agent-run",
+  "task_id": "factory-boy",
+  "task_version": "1.0.0",
+  "terminal_kind": "awaiting-agent-run"
+}

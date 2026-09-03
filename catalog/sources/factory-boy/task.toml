@@ -1,0 +1,96 @@
+schema_version = "1.0"
+task_id = "factory-boy"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "test-fixture-library"
+tags = ["python", "factories", "declarations", "faker", "fuzzy-values", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/FactoryBoy/factory_boy"
+revision = "ae9f2f4650afef0bc9b0925de97f618603233ff8"
+license_spdx = "MIT"
+source_digest = "sha256:9a3b710c3cc5ae1b00ef8b07a6ddae7a15f8545d9f006f256993322b867c0cd0"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.11"
+os_name = "debian-12-amd64"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = ["ca-certificates", "git"]
+network_mode = "no-network"
+build_command = "install the hash-locked candidate and verifier closures during image build; install the candidate with pip --no-deps --no-build-isolation"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The Faker, test, build, and verifier closures are installed during Docker image construction. Agent and verifier execution have no egress; only the trusted Oracle receives a run-scoped exact upstream host override."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = [
+  "faker==37.1.0",
+  "iniconfig==2.3.0",
+  "packaging==26.3",
+  "pluggy==1.6.0",
+  "pytest==8.3.5",
+  "setuptools==80.10.2",
+  "tzdata==2026.3",
+  "wheel==0.45.1",
+]
+lock_artifact = { digest = "sha256:2b8c9dcc9de8a352ac4f40a43befccbe84ffc5b0339ef4db27528e740b05b40d", size_bytes = 1737, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:2b8c9dcc9de8a352ac4f40a43befccbe84ffc5b0339ef4db27528e740b05b40d", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 30
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py", "/tests/command-plan.json"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:d9831f55f49d9803f779fc0522ad950b565f685465b73d930aaf4fc6c22e0578", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:d9831f55f49d9803f779fc0522ad950b565f685465b73d930aaf4fc6c22e0578", visibility = "private" }
+entrypoint = "run.py"
+environment = { NL2REPO_CANDIDATE_TOTAL_TIMEOUT_SEC = "300" }
+
+[harbor]
+description = "Build factory-boy 3.3.4.dev0 from an empty workspace and satisfy a deterministic child-side contract for declarative factories, nested declarations, strategies, Faker, fuzzy values, random state, and core utilities."
+keywords = ["python", "factories", "declarations", "faker", "fuzzy-values", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:59e66008af475f70b1681c2e1ff6d0410472df63a517ce2da3789b58a71e8506"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:59e66008af475f70b1681c2e1ff6d0410472df63a517ce2da3789b58a71e8506"
+visibility = "private"
+
+[lifecycle]
+status = "packaged"
+owner = "python-author-batch2-20260902-factory-boy"
+reason = "Exact source, MIT license, hash-locked Python closure, private custom verifier, digest-checking Oracle solution, controls, and production compile are prepared. Official Harbor Agent Run and integration review remain outside this lane."

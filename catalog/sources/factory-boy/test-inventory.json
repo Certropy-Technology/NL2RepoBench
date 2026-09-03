@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "task_id": "factory-boy",
+  "source_revision": "ae9f2f4650afef0bc9b0925de97f618603233ff8",
+  "upstream_baseline": {
+    "collection_command": "python -m pytest --collect-only -q -c /dev/null tests",
+    "collected": 329,
+    "execution_command": "python -m pytest -q -c /dev/null tests",
+    "passed": 314,
+    "skipped": 18,
+    "failed": 0,
+    "python": "3.12.11"
+  },
+  "frozen_total": 30,
+  "frozen_total_source": "custom-json-v1 deterministic core projection",
+  "scenario_ids": [
+    "exports-and-version", "make-factory", "helpers-build-batch", "abstract-factory-errors",
+    "lazy-declarations", "subfactory-selfattribute", "iterator-cycle", "traits-and-maybe",
+    "transformer", "dict-and-list-declarations", "post-generation", "post-generation-method",
+    "helpers-stub", "helpers-generate", "fuzzy-integer", "fuzzy-text-choice", "fuzzy-decimal-float",
+    "fuzzy-dates", "random-state", "faker-declaration", "utils-import-object", "debug-context",
+    "sequence-reset", "nested-overrides", "factory-options", "factory-create-hook", "list-factory",
+    "container-attribute", "error-contracts", "deterministic-repeat"
+  ],
+  "excluded_upstream_files": [
+    "test_django.py", "test_alchemy.py", "test_mongoengine.py",
+    "test_docs_internals.py", "test_version.py"
+  ],
+  "traceability": "Each frozen scenario is named in instruction.md and executes public core behavior through candidate_client."
+}
