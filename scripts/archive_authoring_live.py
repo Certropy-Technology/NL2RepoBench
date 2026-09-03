@@ -88,7 +88,11 @@ def archive_files(worktree: Path, package: str | None = None) -> list[ArchiveFil
     """Return trusted receipts, Agent workspaces, and one source snapshot."""
 
     candidates: list[tuple[Path, str]] = []
-    for relative in (".nl2repo/authoring-handoff.json", ".nl2repo/authoring-claim.json"):
+    for relative in (
+        ".nl2repo/authoring-handoff.json",
+        ".nl2repo/authoring-claim.json",
+        ".nl2repo/authoring-production-gates.json",
+    ):
         path = worktree / relative
         if path.is_file() and not path.is_symlink():
             candidates.append((path, relative))

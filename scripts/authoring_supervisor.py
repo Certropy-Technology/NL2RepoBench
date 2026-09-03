@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """Supervise Package authoring loops, integration, archival, and cleanup.
 
-The supervisor is the single writer for the integration checkout. Workers only
-write their detached worktrees. A task is removed only after its source and
-generated Harbor projection have been validated, committed, pushed, and its
-complete worktree payload has been verified in OSS.
+The supervisor is the single writer for the integration checkout. Workers write
+their detached worktrees and own each task's compile/Oracle/control gate. A task
+is removed only after the agent gate, source and generated Harbor projection
+have been independently validated, committed, pushed, and its complete
+worktree payload has been verified in OSS.
 """
 
 from __future__ import annotations
@@ -1045,11 +1046,34 @@ def _integrate_task(
             "processes": [proc.pid for proc in active],
         }
     source = _source_path(worktree, package)
+    handoff_path = worktree / ".nl2repo/authoring-handoff.json"
+    gate_path = worktree / ".nl2repo/authoring-production-gates.json"
+    try:
+        handoff = _json(handoff_path)
+        gate = _json(gate_path)
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError, ValueError):
+        return {
+            "package": package,
+            "status": "not-ready",
+            "reason": "agent production gate receipt is missing or invalid",
+        }
+    if (
+        handoff.get("task_id") not in {None, package}
+        or handoff.get("status") != "controls-passed"
+        or gate.get("schema_version") != "1.0"
+        or gate.get("task_id") != package
+        or gate.get("status") != "controls-passed"
+    ):
+        return {
+            "package": package,
+            "status": "not-ready",
+            "reason": "agent must complete Oracle and controls before integration",
+        }
     if (
         not (source / "task.toml").is_file()
         or not (source / "instruction.md").is_file()
         or not (source / "production-evidence.json").is_file()
-        or not (worktree / ".nl2repo/authoring-handoff.json").is_file()
+        or not handoff_path.is_file()
     ):
         return {"package": package, "status": "not-ready"}
     if dry_run:

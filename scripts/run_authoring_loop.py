@@ -389,6 +389,18 @@ Every negative control must have reward 0. The offline record must contain
 public_network_available=false. Do not use a hand-written local substitute as
 the official receipt.
 
+Use this execution pattern, adapting only task-local paths and the exact
+upstream hostname: compile the task with `uv run nl2repo harbor compile`; run
+the final compiled task with `uv run --frozen --project harbor-runner harbor
+run -p <compiled-task> -a oracle --allow-agent-host <source-host> ...`; run the
+empty case with `-a nop`; prepare each supported negative control with
+`uv run nl2repo harbor prepare-control <compiled-task> <kind> --output
+<control-root> --toolchain <toolchain>` and run the resulting bundle with
+Harbor's `oracle` agent. Use one run directory per kind and copy the final
+`result.json`, `verifier/grading.json`, `verifier/network.json`, and
+`verifier/reward.json` paths into the receipt. Do not call a local Python
+contract replay an official Harbor Oracle/control run.
+
 The Loop repeats source validation, network lint, production compile, and this
 fresh receipt check before it records the claim as complete. Git source
 acquisition is allowed only inside the Oracle solution, which is uploaded
@@ -754,7 +766,12 @@ def _evidence_path_exists(worktree: Path, value: Any) -> bool:
     path = Path(value)
     if not path.is_absolute():
         path = worktree / path
-    return path.is_file()
+    try:
+        resolved = path.resolve()
+        resolved.relative_to(worktree.resolve())
+    except (OSError, ValueError):
+        return False
+    return path.is_file() and not path.is_symlink()
 
 
 def _run_production_gate_check(worktree: Path, package: str) -> dict[str, Any]:

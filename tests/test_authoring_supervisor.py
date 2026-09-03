@@ -87,7 +87,13 @@ def test_integrate_task_pushes_before_archive_and_removes_worktree(
     (source / "instruction.md").write_text("# Demo\n", encoding="utf-8")
     (source / "production-evidence.json").write_text("{}", encoding="utf-8")
     (worktree / ".nl2repo").mkdir(parents=True)
-    (worktree / ".nl2repo/authoring-handoff.json").write_text("{}", encoding="utf-8")
+    (worktree / ".nl2repo/authoring-handoff.json").write_text(
+        '{"task_id":"demo","status":"controls-passed"}', encoding="utf-8"
+    )
+    (worktree / ".nl2repo/authoring-production-gates.json").write_text(
+        '{"schema_version":"1.0","task_id":"demo","status":"controls-passed"}',
+        encoding="utf-8",
+    )
     compiled = tmp_path / "compiled/demo"
     compiled.mkdir(parents=True)
     (compiled / "task.toml").write_text("task_id = 'demo'", encoding="utf-8")

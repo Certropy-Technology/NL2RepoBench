@@ -72,6 +72,10 @@ def test_author_loop_filters_catalog_and_oss_but_remediates_candidates(tmp_path:
     assert plan["tasks"][2]["remediation_reasons"] == ["risk-adaptation-required:native"]
     assert plan["agent_run_loop"].startswith("separate downstream")
     assert plan["tasks"][0]["handoff_status"] == "authoring-in-progress"
+    assert plan["tasks"][0]["required_production_controls"] == list(
+        loop.REQUIRED_PRODUCTION_CONTROLS
+    )
+    assert "Authoring Agent runs Oracle" in plan["tasks"][0]["agent_run_boundary"]
     assert plan["tasks"][0]["stages"] == list(loop.STAGES)
     assert "environment-remediation" in plan["stages"]
     assert plan["remediation_policy"]["missing_hash_locked_offline_closure"] == "must-remediate"

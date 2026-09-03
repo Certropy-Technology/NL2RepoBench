@@ -2,10 +2,11 @@
 """Plan deterministic Raw Package -> Harbor authoring work for Pi agents.
 
 This controller only creates a bounded batch manifest and source-freeze stage
-artifacts. A worker owns one Package task directory; the integrator owns
-shared datasets, toolchain locks, private artifacts, Oracle/control results,
-and publication. Agent model runs are a separate downstream loop and are never
-started by this authoring controller.
+artifacts. A worker owns one Package task directory and its complete production
+gate: compile, trusted Oracle, and negative/offline controls. The integrator
+owns shared datasets, toolchain locks, independent review, private artifact
+publication, OSS archive, and cleanup. Agent model runs are a separate
+downstream loop and are never started by this authoring controller.
 """
 
 from __future__ import annotations
@@ -30,6 +31,17 @@ STAGES = (
     "oracle-once",
     "controls",
     "review-handoff",
+)
+REQUIRED_PRODUCTION_CONTROLS = (
+    "empty",
+    "stub",
+    "forgery",
+    "install-failure",
+    "panic",
+    "hang",
+    "oversized-output",
+    "background-process",
+    "offline",
 )
 
 REMEDIATION_POLICY = {
@@ -172,9 +184,10 @@ def build_plan(
                 "remediation_required": bool(remediation_reasons),
                 "remediation_reasons": remediation_reasons,
                 "agent_run_boundary": (
-                    "Authoring ends after Oracle/controls/review; downstream Agent Run Loop "
-                    "consumes this catalog task and is not started here."
+                    "Authoring Agent runs Oracle and all controls; downstream Agent Run Loop "
+                    "only evaluates the completed task and is not started here."
                 ),
+                "required_production_controls": list(REQUIRED_PRODUCTION_CONTROLS),
                 "production_gate": (
                     (
                         "Node 24 locked toolchain, AST/test inventory, offline closure, "
@@ -203,7 +216,7 @@ def build_plan(
             candidate_path.read_bytes()
         ).hexdigest(),
         "oss_inventory": str(oss_inventory) if oss_inventory else None,
-        "parallelism": {"workers": min(limit, 3), "shared_integrator_writers": 1},
+        "parallelism": {"workers": min(limit, 24), "shared_integrator_writers": 1},
         "stages": list(STAGES),
         "tasks": tasks,
         "skipped": skipped,

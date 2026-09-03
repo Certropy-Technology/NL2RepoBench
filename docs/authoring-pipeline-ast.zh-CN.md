@@ -6,8 +6,9 @@
 
 Worker 的具体 remediation contract 见
 [`authoring-agent-remediation-guide.zh-CN.md`](authoring-agent-remediation-guide.zh-CN.md)。
-缺 image/lock/build backend 是待完成工作，不是自动 Block；authoring loop
-只到 catalog handoff，Agent Run 由下游独立 loop 执行。Loop 的大文件和 worktree 使用
+缺 image/lock/build backend 是待完成工作，不是自动 Block；authoring worker
+必须完成最终 compile、Oracle 和 controls 后才到 catalog handoff，模型 Agent Run
+仍由下游独立 loop 执行。Loop 的大文件和 worktree 使用
 项目磁盘 `.nl2repo/authoring-work/`，不使用 `/tmp` tmpfs；`/tmp` 只保留有大小和时限的
 短期进程 scratch。
 
@@ -56,10 +57,10 @@ spec skeleton -> semantic draft -> bidirectional traceability
 Harbor package + private verifier + candidate boundary
       │
       ▼
-Oracle x1 -> empty/stub/forgery/hang/offline controls
+Oracle x1 -> empty/stub/forgery/install-failure/panic/hang/output/background-process/offline controls
       │
       ▼
-blind review -> catalog handoff (awaiting-agent-run)
+blind review -> catalog handoff (controls-passed)
 
 Agent Run Loop 独立消费已通过 authoring gate 的 catalog task，运行 GPT/Fable、归档 OSS
 并生成模型报告；它不属于 Raw Package -> Harbor 出题 Loop。

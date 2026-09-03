@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """Keep the direct authoring fleet supplied with versioned discovery lanes.
 
-This process is deliberately separate from the integration supervisor.  The
-integration supervisor owns the checkout, generated projections, OSS archive,
-and worktree removal.  This coordinator owns only discovery lanes and direct
-authoring loop processes.  It never edits catalog sources or generated tasks.
+This process is deliberately separate from the integration supervisor. The
+authoring loop workers own their task package, production compile, trusted
+Oracle, and controls. The integration supervisor owns the checkout, generated
+projections, independent validation, OSS archive, and worktree removal. This
+coordinator owns only discovery lanes and direct authoring loop processes; it
+never edits catalog sources or generated tasks.
 """
 
 from __future__ import annotations
