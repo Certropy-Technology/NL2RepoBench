@@ -1,0 +1,77 @@
+schema_version = "1.0"
+task_id = "go-isatty"
+version = "0.1.0"
+instruction = "instruction.md"
+oracle_bundle = { digest = "sha256:273286a92a013f3ef23bf257d2b05082142cb6f02abe6b3f99aca1620531fe76", size_bytes = 803, media_type = "application/vnd.nl2repobench.oracle-bundle+tar", uri = "artifact://private/sha256:273286a92a013f3ef23bf257d2b05082142cb6f02abe6b3f99aca1620531fe76", visibility = "private" }
+
+[metadata]
+difficulty = "medium"
+category = "go-library"
+tags = ["go", "go-modules", "tty", "file-descriptors", "typed-bridge", "public-api"]
+language = "go"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/mattn/go-isatty"
+revision = "c44dc0b9c702c76577fdb7898032969e0611efc2"
+license_spdx = "MIT"
+source_digest = "sha256:777f5b348771b16c22295784ad7b225254e1408ff983df7827b65ca819c5c3db"
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+runtime_version = "1.26.5"
+base_image = "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+base_image_digest = "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+network_mode = "no-network"
+build_command = "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -mod=vendor ./..."
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "Candidate and separate verifier execution use a private pre-materialized Go module closure and run without network; only the trusted Oracle receives a run-scoped source-host authorization."
+
+[dependencies]
+status = "known"
+installer = "system"
+packages = []
+module_bundle = { digest = "sha256:b554361552d902f2c8142f59144953aaac6371e5b563cd0dbcd79e7e563d16c7", size_bytes = 1024779, media_type = "application/vnd.nl2repobench.go-module-bundle+tar", uri = "artifact://private/sha256:b554361552d902f2c8142f59144953aaac6371e5b563cd0dbcd79e7e563d16c7", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 1
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Recreate the deterministic file-descriptor terminal detection APIs of mattn/go-isatty through a bounded Go bridge."
+keywords = ["go", "go-isatty", "tty", "file-descriptors", "typed-bridge", "public-api"]
+agent_timeout_sec = 900.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "packaged"
+owner = "authoring-go-discover-20260903"
+reason = "Frozen source, API and test inventory, typed file-descriptor bridge, private offline module/verifier/Oracle bundles, and production compile are prepared; official Harbor Oracle and runtime controls remain integrator-owned because this lane cannot start Agent Runs."
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:9461107536ec53fa791702bf3c8cf295f27cb0d57ee20ec4e95bb96548ab56ef", size_bytes = 773, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:9461107536ec53fa791702bf3c8cf295f27cb0d57ee20ec4e95bb96548ab56ef", visibility = "private" }
+entrypoint = "contract.sh"

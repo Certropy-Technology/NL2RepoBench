@@ -1,0 +1,90 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-isatty",
+  "task_version": "0.1.0",
+  "terminal_kind": "intermediate",
+  "status": "packaged",
+  "source_freeze": {
+    "upstream_url": "https://github.com/mattn/go-isatty",
+    "revision": "c44dc0b9c702c76577fdb7898032969e0611efc2",
+    "source_archive_sha256": "sha256:777f5b348771b16c22295784ad7b225254e1408ff983df7827b65ca819c5c3db",
+    "license_spdx": "MIT",
+    "license_sha256": "sha256:08eab1118c80885fa1fa6a6dd7303f65a379fcb3733e063d20d1bbc2c76e6fa1"
+  },
+  "runtime": {
+    "language": "go",
+    "package_manager": "go-modules",
+    "go_version": "1.26.5",
+    "platform": "linux/amd64",
+    "base_image_digest": "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd",
+    "toolchain_lock": "toolchain.go.lock.toml",
+    "toolchain_lock_sha256": "sha256:baa477549dd86ccfe68422aafd900a2ab76f0b091de9a85f9db883f9d6a551a3",
+    "agent_network_mode": "no-network",
+    "verifier_network_mode": "no-network",
+    "verifier_image_digest": "sha256:4751f88c2901a60508200e2bd653ef29b5514ecf59c6f53f5ddc841cd4a5a956"
+  },
+  "artifacts": {
+    "module_bundle": {"digest": "sha256:b554361552d902f2c8142f59144953aaac6371e5b563cd0dbcd79e7e563d16c7", "size_bytes": 1024779},
+    "oracle_bundle": {"digest": "sha256:273286a92a013f3ef23bf257d2b05082142cb6f02abe6b3f99aca1620531fe76", "size_bytes": 803},
+    "verifier_bundle": {"digest": "sha256:9461107536ec53fa791702bf3c8cf295f27cb0d57ee20ec4e95bb96548ab56ef", "size_bytes": 773}
+  },
+  "final_bundle": {
+    "path": ".nl2repo/compiled/go-isatty-final/go-isatty/bundle.manifest.json",
+    "sha256": "sha256:d2065a84bb884ec9e280affef09dac0641e34a72c685ff9a3a6f4b357915ba5a",
+    "canonical_manifest_digest": "sha256:56a4d0c52e024d19ba8db74fc2e3d132a9baab580acc8be097700555436a9c3f",
+    "file_count": 706
+  },
+  "tests": {
+    "framework": "go bridge contract",
+    "protocol": "custom-json-v1",
+    "leaf_id": "contract::public-api",
+    "frozen_total": 1,
+    "upstream_command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -count=1 -json ./...",
+    "upstream_exit_code": 0,
+    "upstream_passed_tests": 2,
+    "candidate_command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -mod=vendor -count=1 ./...",
+    "candidate_exit_code": 0,
+    "bridge_contract_exit_code": 0,
+    "bridge_cases": 5
+  },
+  "commands": [
+    {"command": "git clone --no-checkout https://github.com/mattn/go-isatty .nl2repo/authoring-work/go-isatty/source; git fetch --depth=1 origin c44dc0b9c702c76577fdb7898032969e0611efc2; git checkout --detach c44dc0b9c702c76577fdb7898032969e0611efc2", "exit_code": 0},
+    {"command": "GOWORK=off GOTOOLCHAIN=local GOPROXY=off GOSUMDB=off GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go test -count=1 -json ./...", "exit_code": 0},
+    {"command": "uv run nl2repo task validate-source catalog/sources/go-isatty", "exit_code": 0},
+    {"command": "uv run nl2repo task lint-network --tasks-root catalog/sources --include-generated", "exit_code": 0, "summary": "0 errors; 176 warnings across unrelated/pre-existing sources and one expected go-isatty Oracle-host warning"},
+    {"command": "uv run nl2repo harbor compile catalog/sources/go-isatty --output .nl2repo/compiled/go-isatty-final --toolchain toolchain.go.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "exit_code": 0},
+    {"command": "uv run nl2repo harbor compile catalog/sources/go-isatty --output .nl2repo/compiled/go-isatty-repeat --toolchain toolchain.go.lock.toml --artifact-root .nl2repo/artifacts --allow-private; cmp final and repeat bundle manifests", "exit_code": 0, "summary": "repeat manifest identical; sha256:d2065a84bb884ec9e280affef09dac0641e34a72c685ff9a3a6f4b357915ba5a"},
+    {"command": "gofmt -d bridge.go; bash -n task-local shell scripts; python3 -m py_compile Go verifier runtime; GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go vet -mod=vendor ./...", "exit_code": 0},
+    {"command": "uv run pytest -q -o addopts=-ra tests/test_go_adapter.py", "exit_code": 0, "summary": "9 passed"},
+    {"command": "docker build --platform linux/amd64 -f .nl2repo/compiled/go-isatty-final/go-isatty/tests/Dockerfile -t nl2repobench/go-isatty-verifier:authoring ...", "exit_code": 0, "image_digest": "sha256:4751f88c2901a60508200e2bd653ef29b5514ecf59c6f53f5ddc841cd4a5a956"},
+    {"command": "docker run --rm --network none ... nl2repobench/go-isatty-verifier:authoring /tests/test.sh", "exit_code": 0, "summary": "valid=true, collected=1, passed=1, reward=1.0, public_network_available=false", "grading": {"path": ".nl2repo/authoring-work/go-isatty/offline-replay/verifier/grading.json", "sha256": "sha256:b00d7a553a2fddacea6fa04621bafef45310450fbfe030c859f754ad2e6f6933"}, "network": {"path": ".nl2repo/authoring-work/go-isatty/offline-replay/verifier/network.json", "sha256": "sha256:6a761f28b4d9b32b7cb08b3afea7414622ea361074a87468020c62e5727e9b14"}},
+    {"command": "docker controls smoke: empty, stub, forgery, install-failure, panic, hang, oversized-output, background-process", "exit_code": 0, "summary": "empty/install-failure allowed 0/0 installation exception; all non-empty controls collected 1 leaf and reward 0.0", "artifact": ".nl2repo/authoring-work/go-isatty/control-smoke-final2"}
+  ],
+  "oracle": {
+    "status": "not-run-by-lane-policy",
+    "valid": null,
+    "passed": null,
+    "collected": null,
+    "frozen_total": null,
+    "reward": null,
+    "reason": "This independent authoring lane is forbidden from starting a Harbor Agent/Oracle Run; integrator must run Oracle with the exact source-host authorization."
+  },
+  "controls": {
+    "status": "local-verifier-smoke-complete",
+    "empty": {"valid": true, "reward": 0.0, "collected": 0, "failure_reason": "candidate-installation-failed"},
+    "stub": {"valid": true, "reward": 0.0, "collected": 1, "passed": 0},
+    "forgery": {"valid": true, "reward": 0.0, "collected": 1, "passed": 0},
+    "install-failure": {"valid": true, "reward": 0.0, "collected": 0, "failure_reason": "candidate-installation-failed"},
+    "panic": {"valid": true, "reward": 0.0, "collected": 1, "passed": 0},
+    "hang": {"valid": true, "reward": 0.0, "collected": 1, "passed": 0},
+    "oversized-output": {"valid": true, "reward": 0.0, "collected": 1, "passed": 0},
+    "background-process": {"valid": true, "reward": 0.0, "collected": 1, "passed": 0},
+    "offline_network": {"public_network_available": false}
+  },
+  "residual_risks": [
+    "Official Harbor Oracle and Harbor-native controls remain unexecuted by lane policy and require integrator orchestration.",
+    "The first Go profile freezes one verifier-owned contract leaf; the upstream suite is source-baseline evidence rather than the published denominator.",
+    "The bridge creates a Linux pseudo-terminal and tests TIOCGWINSZ; interactive terminal availability is not assumed.",
+    "Docker reports the non-blocking FromPlatformFlagConstDisallowed warning for the digest-pinned linux/amd64 base image."
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-isatty",
+  "upstream_test_files": 3,
+  "upstream_static_test_functions": 3,
+  "upstream_command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -count=1 -json ./...",
+  "upstream_exit_code": 0,
+  "upstream_results": {"passed": 2, "failed": 0, "skipped": 0},
+  "frozen_leaf": {
+    "id": "contract::public-api",
+    "frozen_total": 1,
+    "framework": "go bridge contract",
+    "private_case_count": 5,
+    "cases": [
+      "ordinary stdin, /dev/null, pipe, and invalid descriptor detection",
+      "positive pseudo-terminal slave detection",
+      "arbitrary invalid descriptor probe",
+      "Cygwin/MSYS2 false result on Linux",
+      "unknown operation and wrong-arity structured errors"
+    ],
+    "collection_source": "fixed verifier-owned contract"
+  }
+}

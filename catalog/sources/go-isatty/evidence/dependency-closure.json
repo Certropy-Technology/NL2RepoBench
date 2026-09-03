@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-isatty",
+  "kind": "go-module-bundle",
+  "module_bundle": {
+    "digest": "sha256:b554361552d902f2c8142f59144953aaac6371e5b563cd0dbcd79e7e563d16c7",
+    "size_bytes": 1024779,
+    "cas_path": ".nl2repo/artifacts/private/sha256/b5/b554361552d902f2c8142f59144953aaac6371e5b563cd0dbcd79e7e563d16c7",
+    "manifest_sha256": "sha256:c7aff1890317a033f75a746d938e6118a1d7d69a0b07a86d68a607c822bffc59"
+  },
+  "direct_dependencies": ["golang.org/x/sys v0.28.0"],
+  "offline": true,
+  "lock_adaptation": "Only the go directive changes from upstream 1.20 to locked 1.26.5; go.sum hashes remain the frozen upstream values.",
+  "closure_validation": "GoModulesPackageManager.validate_offline_store"
+}

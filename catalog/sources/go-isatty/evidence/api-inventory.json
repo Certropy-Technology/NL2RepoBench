@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-isatty",
+  "method": "go doc -all, go list -json, and manual review of platform files",
+  "package": "github.com/mattn/go-isatty",
+  "public_surface": [
+    {"symbol": "IsTerminal", "signature": "func IsTerminal(fd uintptr) bool", "platform": "linux and selected Unix targets"},
+    {"symbol": "IsCygwinTerminal", "signature": "func IsCygwinTerminal(fd uintptr) bool", "platform": "all supported targets"}
+  ],
+  "public_surface_count": 2,
+  "selected_bridge_operations": ["probe_fds", "probe_fd", "probe_cygwin"],
+  "risk_adaptations": [
+    "TTY state is represented through deterministic descriptors created by the bridge.",
+    "Interactive terminal presence is observed but not required for the contract.",
+    "The bridge bounds input to JSON lines and reports invalid requests structurally."
+  ]
+}

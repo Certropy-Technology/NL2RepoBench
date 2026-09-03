@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-isatty",
+  "source_revision": "c44dc0b9c702c76577fdb7898032969e0611efc2",
+  "leaf_id": "contract::public-api",
+  "frozen_total": 1,
+  "public_contract": "instruction.md#api-usage-guide",
+  "traceability": [
+    {"assertion_class": "terminal detection uses descriptor state", "bridge_operation": "probe_pty / probe_fds / probe_fd", "instruction_section": "API Usage Guide"},
+    {"assertion_class": "regular files, pipes, /dev/null, and invalid descriptors are false", "bridge_operation": "probe_fds", "instruction_section": "API Usage Guide"},
+    {"assertion_class": "Cygwin/MSYS2 detector is false on Linux", "bridge_operation": "probe_cygwin / probe_fds", "instruction_section": "API Usage Guide"},
+    {"assertion_class": "malformed operation or arity produces structured error", "bridge_operation": "invalid-operation / malformed-arguments", "instruction_section": "Implementation Notes"}
+  ],
+  "excluded_upstream_behavior": ["Windows Cygwin pipe name inspection", "Plan 9 path inspection", "interactive PTY creation", "benchmarks", "coverage runner"],
+  "exclusion_reason": "The production Go lane is linux/amd64 and the reviewed bounded bridge cannot express platform-specific Windows or Plan 9 kernel behavior without changing the task runtime."
+}

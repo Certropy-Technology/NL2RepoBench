@@ -1,0 +1,8 @@
+Source and dependency remediation record for go-isatty.
+
+- The upstream go.mod declared Go 1.20 and required golang.org/x/sys v0.28.0.
+- Initial offline probe with GOPROXY=off failed because x/sys was not available in the source workspace (exit 1).
+- The exact x/sys v0.28.0 module was already present in the locked local module cache. A temporary import probe generated a vendor closure; the probe source was removed before packaging.
+- The closure contains go.mod, go.sum, vendor/modules.txt, and vendored x/sys source with a file-level SHA-256 manifest. Its module bundle is private CAS digest sha256:b554361552d902f2c8142f59144953aaac6371e5b563cd0dbcd79e7e563d16c7.
+- Oracle and candidate go.mod files use only a directive-only Go 1.26.5 adaptation; dependency versions and go.sum hashes are unchanged.
+- Linux source baseline: GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -count=1 -json ./... exited 0 with 2 passed tests.

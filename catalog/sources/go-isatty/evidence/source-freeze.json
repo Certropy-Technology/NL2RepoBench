@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-isatty",
+  "upstream_url": "https://github.com/mattn/go-isatty",
+  "revision": "c44dc0b9c702c76577fdb7898032969e0611efc2",
+  "commit_date": "2026-07-23T16:45:22Z",
+  "source_archive": {
+    "format": "git-archive-tar",
+    "sha256": "sha256:777f5b348771b16c22295784ad7b225254e1408ff983df7827b65ca819c5c3db",
+    "size_bytes": 30720
+  },
+  "license": {
+    "spdx": "MIT",
+    "path": "LICENSE",
+    "sha256": "sha256:08eab1118c80885fa1fa6a6dd7303f65a379fcb3733e063d20d1bbc2c76e6fa1"
+  },
+  "module": {
+    "path": "github.com/mattn/go-isatty",
+    "upstream_go_directive": "1.20",
+    "external_modules": 1,
+    "go_sum_entries": 2,
+    "dependency": "golang.org/x/sys v0.28.0"
+  },
+  "selected_package": "github.com/mattn/go-isatty",
+  "first_lane_scan": {
+    "cgo": false,
+    "unsafe": false,
+    "plugin": false,
+    "go_generate": false,
+    "go_workspace": false,
+    "external_replace": false,
+    "network": false,
+    "filesystem": true,
+    "tty": true
+  },
+  "acquisition": {
+    "clone": "git clone --no-checkout https://github.com/mattn/go-isatty .nl2repo/authoring-work/go-isatty/source",
+    "fetch": "git fetch --depth=1 origin c44dc0b9c702c76577fdb7898032969e0611efc2",
+    "checkout_exit_code": 0,
+    "resolved_revision": "c44dc0b9c702c76577fdb7898032969e0611efc2"
+  }
+}
