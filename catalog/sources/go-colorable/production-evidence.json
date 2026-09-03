@@ -2,8 +2,8 @@
   "schema_version": "1.0",
   "task_id": "go-colorable",
   "task_version": "0.1.0",
-  "status": "awaiting-agent-run",
-  "terminal_kind": "awaiting-agent-run",
+  "status": "controls-passed",
+  "terminal_kind": "valid",
   "source_freeze": {
     "upstream_url": "https://github.com/mattn/go-colorable",
     "revision": "8bf39a204f13f0cfcf86ab9b297c3d6e0668e54a",
@@ -12,11 +12,11 @@
     "license_sha256": "sha256:88a2379b3ca34bf5c57127aff9dcb802bbb60ece0805cdbda65b3bd115f971d9"
   },
   "environment": {
+    "harbor_version": "0.21.0",
     "go_version": "1.26.5",
     "platform": "linux/amd64",
     "cgo_enabled": false,
     "base_image_digest": "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd",
-    "verifier_image_digest": "sha256:38912d2a4f3e1c2eec104c628162361c1ffe1d3bbc2cddf2eee43c7194cc2ca0",
     "agent_network_mode": "no-network",
     "verifier_network_mode": "no-network"
   },
@@ -25,59 +25,151 @@
     "digest": "sha256:e80546b0cbc56f4ea49ad1d6cd8406226e26b02ed91d6bb54344dece3a75ef36",
     "size_bytes": 1028872,
     "direct_dependencies": ["github.com/mattn/go-isatty v0.0.20", "golang.org/x/sys v0.29.0"],
-    "offline": true,
-    "manifest": ".nl2repo/compiled/go-colorable/go-colorable/environment/go-module-bundle/module.manifest.json"
+    "offline": true
   },
   "frozen_collection": {
     "framework": "go bridge contract",
     "protocol": "custom-json-v1",
     "leaf_ids": ["contract::public-api"],
     "frozen_total": 1,
-    "private_case_count": 13,
-    "upstream_baseline": {"packages": 2, "test_functions": 6, "exit_code": 0}
+    "private_case_count": 13
   },
-  "bundle": {
-    "manifest_path": ".nl2repo/compiled/go-colorable/go-colorable/bundle.manifest.json",
-    "manifest_sha256": "sha256:ca4e5735f1420e52d789e11c43aec2ecdefda93c0d88d049d78ac3f5a2ed6d99",
-    "canonical_manifest_digest": "sha256:ded90f5c67ca006665be68c9d2717664888995989fc455f89a5d032b0632ccb8",
-    "file_count": 726
+  "compiled_bundle": {
+    "path": ".nl2repo/compiled/go-colorable-final-v4/go-colorable",
+    "manifest": ".nl2repo/compiled/go-colorable-final-v4/go-colorable/bundle.manifest.json",
+    "manifest_sha256": "sha256:177d137167941799f4ed4e78c88a8ddd68a74241bccfbbbe4ab05311f2ca5861",
+    "canonical_manifest_digest": "sha256:f666de8d44c1201ee671ed1157d1c511d22b858a1b12e1ddf70d3298809941c2",
+    "file_count": 725
   },
-  "commands": [
-    {"command": "go version", "exit_code": 0, "result": "go1.26.5-X:nodwarf5 linux/amd64"},
-    {"command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -count=1 -json ./...", "exit_code": 0, "result": "6 upstream tests passed across 2 packages", "evidence": ".nl2repo/evidence/go-colorable-upstream-go-test.json"},
-    {"command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go vet ./...", "exit_code": 0, "result": "clean"},
-    {"command": "uv run nl2repo task validate-source catalog/sources/go-colorable", "exit_code": 0, "result": "source status packaged"},
-    {"command": "uv run nl2repo task lint-network --tasks-root catalog/sources", "exit_code": 0, "result": "0 errors; 175 warnings belong to pre-existing other tasks", "evidence": ".nl2repo/evidence/go-colorable-network-lint.txt"},
-    {"command": "uv run nl2repo harbor compile catalog/sources/go-colorable --output .nl2repo/compiled/go-colorable --toolchain toolchain.go.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "exit_code": 0, "result": "production bundle generated"},
-    {"command": "bash -n task, verifier, solution, and control scripts; gofmt -d harbor/tests/bridge.go", "exit_code": 0, "result": "syntax and formatting checks passed"},
-    {"command": "GoModulesPackageManager.validate_offline_store(compiled module bundle)", "exit_code": 0, "result": "manifest and every vendor file hash matched"}
-  ],
   "oracle": {
-    "status": "verifier-smoke-passed; official Harbor Oracle not run by lane policy",
-    "runs": 2,
-    "valid_each_run": true,
-    "passed_each_run": 1,
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/go-colorable-final-v4/go-colorable -a oracle --allow-agent-host github.com --job-name go-colorable-final-v4-oracle-20260904 -o .nl2repo/runs/go-colorable-final-v4/oracle --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "valid": true,
+    "passed": 1,
+    "collected": 1,
     "frozen_total": 1,
-    "reward_each_run": 1.0,
-    "grading": ".nl2repo/authoring-work/go-colorable/oracle-receipt/verifier/grading.json",
-    "second_grading": ".nl2repo/authoring-work/go-colorable/oracle-receipt-2/verifier/grading.json",
-    "source_host_authorization": "github.com only inside Oracle solve; model Agent metadata remains empty",
-    "network": ".nl2repo/authoring-work/go-colorable/oracle-receipt/verifier/network.json"
+    "reward": 1.0,
+    "result": ".nl2repo/runs/go-colorable-final-v4/oracle/go-colorable-final-v4-oracle-20260904/go-colorable__MD2phsX/result.json",
+    "grading": ".nl2repo/runs/go-colorable-final-v4/oracle/go-colorable-final-v4-oracle-20260904/go-colorable__MD2phsX/verifier/grading.json",
+    "network": ".nl2repo/runs/go-colorable-final-v4/oracle/go-colorable-final-v4-oracle-20260904/go-colorable__MD2phsX/verifier/network.json",
+    "reward_record": ".nl2repo/runs/go-colorable-final-v4/oracle/go-colorable-final-v4-oracle-20260904/go-colorable__MD2phsX/verifier/reward.json"
   },
   "controls": {
-    "network_receipts": "all final verifier network.json files report public_network_available=false",
-    "stub": {"valid": true, "reward": 0.0, "grading": ".nl2repo/authoring-work/go-colorable/control-stub-receipt-final/verifier/grading.json"},
-    "forgery": {"valid": true, "reward": 0.0, "trusted_reward_unchanged": true, "grading": ".nl2repo/authoring-work/go-colorable/control-forgery-receipt-final/verifier/grading.json"},
-    "install_failure": {"valid": true, "reward": 0.0, "failure_reason": "candidate-installation-failed"},
-    "panic": {"valid": true, "reward": 0.0, "failure_reason": "candidate-call-failed"},
-    "hang": {"valid": true, "reward": 0.0, "failure_reason": "candidate-call-failed; supervisor timeout"},
-    "oversized_output": {"valid": true, "reward": 0.0, "failure_reason": "candidate-call-failed; supervisor output cap"},
-    "background_process": {"valid": true, "reward": 0.0, "failure_reason": "candidate-call-failed"}
+    "empty": {
+      "valid": true,
+      "passed": 0,
+      "collected": 0,
+      "frozen_total": 1,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "result": ".nl2repo/runs/go-colorable-final-v4/empty/go-colorable-final-v4-empty-20260904/go-colorable__uhQ7cge/result.json",
+      "grading": ".nl2repo/runs/go-colorable-final-v4/empty/go-colorable-final-v4-empty-20260904/go-colorable__uhQ7cge/verifier/grading.json",
+      "network": ".nl2repo/runs/go-colorable-final-v4/empty/go-colorable-final-v4-empty-20260904/go-colorable__uhQ7cge/verifier/network.json",
+      "reward_record": ".nl2repo/runs/go-colorable-final-v4/empty/go-colorable-final-v4-empty-20260904/go-colorable__uhQ7cge/verifier/reward.json",
+      "installation_exception": "allowed empty-workspace exception; verifier emitted zero collected leaves"
+    },
+    "stub": {
+      "valid": true,
+      "passed": 0,
+      "collected": 1,
+      "frozen_total": 1,
+      "reward": 0.0,
+      "result": ".nl2repo/runs/go-colorable-final-v4/stub/go-colorable-final-v4-stub-20260904/go-colorable-stub__9vNhGAn/result.json",
+      "grading": ".nl2repo/runs/go-colorable-final-v4/stub/go-colorable-final-v4-stub-20260904/go-colorable-stub__9vNhGAn/verifier/grading.json",
+      "network": ".nl2repo/runs/go-colorable-final-v4/stub/go-colorable-final-v4-stub-20260904/go-colorable-stub__9vNhGAn/verifier/network.json",
+      "reward_record": ".nl2repo/runs/go-colorable-final-v4/stub/go-colorable-final-v4-stub-20260904/go-colorable-stub__9vNhGAn/verifier/reward.json"
+    },
+    "forgery": {
+      "valid": true,
+      "passed": 0,
+      "collected": 1,
+      "frozen_total": 1,
+      "reward": 0.0,
+      "verifier_owned_reward": true,
+      "result": ".nl2repo/runs/go-colorable-final-v4/forgery/go-colorable-final-v4-forgery-20260904/go-colorable-forgery__p6pxwC9/result.json",
+      "grading": ".nl2repo/runs/go-colorable-final-v4/forgery/go-colorable-final-v4-forgery-20260904/go-colorable-forgery__p6pxwC9/verifier/grading.json",
+      "network": ".nl2repo/runs/go-colorable-final-v4/forgery/go-colorable-final-v4-forgery-20260904/go-colorable-forgery__p6pxwC9/verifier/network.json",
+      "reward_record": ".nl2repo/runs/go-colorable-final-v4/forgery/go-colorable-final-v4-forgery-20260904/go-colorable-forgery__p6pxwC9/verifier/reward.json"
+    },
+    "install-failure": {
+      "valid": true,
+      "passed": 0,
+      "collected": 0,
+      "frozen_total": 1,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "result": ".nl2repo/runs/go-colorable-final-v4/install-failure/go-colorable-final-v4-install-failure-20260904/go-colorable-install-failure__QFDqHYP/result.json",
+      "grading": ".nl2repo/runs/go-colorable-final-v4/install-failure/go-colorable-final-v4-install-failure-20260904/go-colorable-install-failure__QFDqHYP/verifier/grading.json",
+      "network": ".nl2repo/runs/go-colorable-final-v4/install-failure/go-colorable-final-v4-install-failure-20260904/go-colorable-install-failure__QFDqHYP/verifier/network.json",
+      "reward_record": ".nl2repo/runs/go-colorable-final-v4/install-failure/go-colorable-final-v4-install-failure-20260904/go-colorable-install-failure__QFDqHYP/verifier/reward.json",
+      "installation_exception": "allowed install-failure exception; verifier emitted zero collected leaves"
+    },
+    "panic": {
+      "valid": true,
+      "passed": 0,
+      "collected": 1,
+      "frozen_total": 1,
+      "reward": 0.0,
+      "failure_class": "candidate-call-failed",
+      "result": ".nl2repo/runs/go-colorable-final-v4/panic/go-colorable-final-v4-panic-20260904/go-colorable-panic__rBZw3i9/result.json",
+      "grading": ".nl2repo/runs/go-colorable-final-v4/panic/go-colorable-final-v4-panic-20260904/go-colorable-panic__rBZw3i9/verifier/grading.json",
+      "network": ".nl2repo/runs/go-colorable-final-v4/panic/go-colorable-final-v4-panic-20260904/go-colorable-panic__rBZw3i9/verifier/network.json",
+      "reward_record": ".nl2repo/runs/go-colorable-final-v4/panic/go-colorable-final-v4-panic-20260904/go-colorable-panic__rBZw3i9/verifier/reward.json"
+    },
+    "hang": {
+      "valid": true,
+      "passed": 0,
+      "collected": 1,
+      "frozen_total": 1,
+      "reward": 0.0,
+      "failure_class": "candidate-call-failed",
+      "bounded": true,
+      "result": ".nl2repo/runs/go-colorable-final-v4/hang/go-colorable-final-v4-hang-20260904/go-colorable-hang__rbRC6DN/result.json",
+      "grading": ".nl2repo/runs/go-colorable-final-v4/hang/go-colorable-final-v4-hang-20260904/go-colorable-hang__rbRC6DN/verifier/grading.json",
+      "network": ".nl2repo/runs/go-colorable-final-v4/hang/go-colorable-final-v4-hang-20260904/go-colorable-hang__rbRC6DN/verifier/network.json",
+      "reward_record": ".nl2repo/runs/go-colorable-final-v4/hang/go-colorable-final-v4-hang-20260904/go-colorable-hang__rbRC6DN/verifier/reward.json"
+    },
+    "oversized-output": {
+      "valid": true,
+      "passed": 0,
+      "collected": 1,
+      "frozen_total": 1,
+      "reward": 0.0,
+      "failure_class": "candidate-call-failed",
+      "result": ".nl2repo/runs/go-colorable-final-v4/oversized-output/go-colorable-final-v4-oversized-output-20260904/go-colorable-oversized-output__prQjSME/result.json",
+      "grading": ".nl2repo/runs/go-colorable-final-v4/oversized-output/go-colorable-final-v4-oversized-output-20260904/go-colorable-oversized-output__prQjSME/verifier/grading.json",
+      "network": ".nl2repo/runs/go-colorable-final-v4/oversized-output/go-colorable-final-v4-oversized-output-20260904/go-colorable-oversized-output__prQjSME/verifier/network.json",
+      "reward_record": ".nl2repo/runs/go-colorable-final-v4/oversized-output/go-colorable-final-v4-oversized-output-20260904/go-colorable-oversized-output__prQjSME/verifier/reward.json"
+    },
+    "background-process": {
+      "valid": true,
+      "passed": 0,
+      "collected": 1,
+      "frozen_total": 1,
+      "reward": 0.0,
+      "failure_class": "candidate-call-failed",
+      "result": ".nl2repo/runs/go-colorable-final-v4/background-process/go-colorable-final-v4-background-process-20260904/go-colorable-background-process__VZXyNcV/result.json",
+      "grading": ".nl2repo/runs/go-colorable-final-v4/background-process/go-colorable-final-v4-background-process-20260904/go-colorable-background-process__VZXyNcV/verifier/grading.json",
+      "network": ".nl2repo/runs/go-colorable-final-v4/background-process/go-colorable-final-v4-background-process-20260904/go-colorable-background-process__VZXyNcV/verifier/network.json",
+      "reward_record": ".nl2repo/runs/go-colorable-final-v4/background-process/go-colorable-final-v4-background-process-20260904/go-colorable-background-process__VZXyNcV/verifier/reward.json"
+    },
+    "offline": {
+      "valid": true,
+      "passed": 1,
+      "collected": 1,
+      "frozen_total": 1,
+      "reward": 1.0,
+      "public_network_available": false,
+      "result": ".nl2repo/runs/go-colorable-final-v4/offline-authorized/go-colorable-final-v4-offline-authorized-20260904/go-colorable__rQCKCRX/result.json",
+      "grading": ".nl2repo/runs/go-colorable-final-v4/offline-authorized/go-colorable-final-v4-offline-authorized-20260904/go-colorable__rQCKCRX/verifier/grading.json",
+      "network": ".nl2repo/runs/go-colorable-final-v4/offline-authorized/go-colorable-final-v4-offline-authorized-20260904/go-colorable__rQCKCRX/verifier/network.json",
+      "reward_record": ".nl2repo/runs/go-colorable-final-v4/offline-authorized/go-colorable-final-v4-offline-authorized-20260904/go-colorable__rQCKCRX/verifier/reward.json"
+    }
   },
   "residual_risks": [
-    "No Harbor Agent Run was started in this authoring lane; integrator must run the official Oracle/controls orchestration before publication.",
-    "The Linux profile excludes Windows console conversion and benchmark timing; the public contract documents the evaluated platform boundary.",
-    "The Oracle adapts only the Go directive from 1.18 to 1.26.5 and does not alter functional source files."
-  ],
-  "evidence_files": ["evidence/source-freeze.json", "evidence/api-inventory.json", "evidence/test-inventory.json", "evidence/traceability.json", "evidence/provenance.md", "evidence/remediation-validation.txt"]
+    "Linux/amd64 profile excludes Windows console conversion and benchmark timing.",
+    "No model Agent evaluation was run in this authoring lane."
+  ]
 }

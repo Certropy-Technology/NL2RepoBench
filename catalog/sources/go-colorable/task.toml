@@ -65,9 +65,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "packaged"
+status = "controls-passed"
 owner = "go-author-discover-20260903"
-reason = "Source and public behavior are frozen from the v0.1.15 module cache; private bridge contract, Oracle bundle, module closure, validation, and production compile are recorded in task-local evidence."
+reason = "Source and public behavior are frozen from the v0.1.15 module cache; the final production bundle passed the official Harbor Oracle and all required negative/offline controls with fresh receipts in this lane."
 
 [verifier]
 protocol = "custom-json-v1"
