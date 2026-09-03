@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pytest-xdist",
+  "source_revision": "2a0c02df173a8340670b59903426e741811d6ab3",
+  "runtime_modules": 18,
+  "test_modules": 9,
+  "public_surface": [
+    "xdist.__version__",
+    "xdist.get_xdist_worker_id",
+    "xdist.is_xdist_controller",
+    "xdist.is_xdist_master",
+    "xdist.is_xdist_worker",
+    "xdist.plugin.parse_numprocesses",
+    "xdist.plugin.parse_ramp_duration",
+    "xdist.plugin.pytest_addoption",
+    "xdist.plugin.pytest_configure",
+    "xdist.plugin.pytest_cmdline_main",
+    "xdist.newhooks hook specifications",
+    "xdist.workermanage.NodeManager",
+    "xdist.workermanage.HostRSync",
+    "xdist.workermanage.WorkerController",
+    "xdist.scheduler.EachScheduling",
+    "xdist.scheduler.LoadScheduling",
+    "xdist.scheduler.LoadScopeScheduling",
+    "xdist.scheduler.LoadFileScheduling",
+    "xdist.scheduler.LoadGroupScheduling",
+    "xdist.scheduler.WorkStealingScheduling",
+    "worker_id and testrun_uid fixtures"
+  ],
+  "risk_flags": ["multiprocessing", "subprocess", "filesystem", "optional-dependencies", "pytest-plugin"],
+  "adaptation": "The scored contract uses local popen workers and JSON-normalized observations. SSH/socket/loop-on-fail integrations remain documented but are not required for the deterministic offline score."
+}

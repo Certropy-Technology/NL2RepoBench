@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pytest-xdist",
+  "terminal_kind": "authoring-local",
+  "status": "packaged",
+  "source": {
+    "upstream_url": "https://github.com/pytest-dev/pytest-xdist",
+    "revision": "2a0c02df173a8340670b59903426e741811d6ab3",
+    "archive_sha256": "sha256:2dbd281557752aa0463fc18e1eadaee1f5d090e1ae88149687a976afff4622e0",
+    "license": "MIT"
+  },
+  "environment": {
+    "python": "3.12.14",
+    "base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "network_mode": "no-network"
+  },
+  "private_artifacts": {
+    "candidate_lock": "sha256:155fd3476b31cc5986e2ecae1fbd519ef21051401627f0524217bf1dfeab3883",
+    "verifier_bundle": "sha256:01fae030f4da84aa10df94cba47456087bbefba60b887ae10a8934c63498911f",
+    "oracle_bundle": "sha256:1cabafe45a7640054908ea96925ae088b15c25a740b7b0d7be41f83017adc1df"
+  },
+  "local_verifier": {
+    "kind": "direct-separate-verifier-docker-replay",
+    "not_an_official_harbor_run": true,
+    "compiled_bundle": {
+      "path": ".nl2repo/authoring-work/pytest-xdist/compile-final/pytest-xdist/bundle.manifest.json",
+      "sha256": "sha256:f637082488f93bb944a18c27fbfb8958c5643b91bd89d52f31e03bb993347e73"
+    },
+    "oracle": {
+      "exit_code": 0,
+      "collected": 14,
+      "passed": 14,
+      "reward": 1.0,
+      "grading_path": ".nl2repo/authoring-work/pytest-xdist/direct-runs/oracle/logs/verifier/grading.json",
+      "network_path": ".nl2repo/authoring-work/pytest-xdist/direct-runs/oracle/logs/verifier/network.json"
+    },
+    "controls": {
+      "empty": {"collected": 0, "passed": 0, "reward": 0.0, "failure_reason": "candidate-installation-failed"},
+      "stub": {"collected": 14, "passed": 0, "reward": 0.0},
+      "forgery": {"collected": 14, "passed": 0, "reward": 0.0, "verifier_owned_reward": true},
+      "call_hang": {"collected": 14, "passed": 0, "reward": 0.0, "bounded": true},
+      "offline": {"collected": 14, "passed": 0, "reward": 0.0, "public_network_available": false}
+    }
+  },
+  "official_harbor": {
+    "started": false,
+    "reason": "The authoring lane prohibits starting a Harbor Agent Run."
+  }
+}

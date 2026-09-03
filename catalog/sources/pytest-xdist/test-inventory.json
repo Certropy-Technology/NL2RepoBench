@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pytest-xdist",
+  "upstream_revision": "2a0c02df173a8340670b59903426e741811d6ab3",
+  "upstream_collection": {"collected": 237, "command": "pytest testing --collect-only -q", "status": "passed"},
+  "upstream_test_files": [
+    "testing/acceptance_test.py",
+    "testing/test_dsession.py",
+    "testing/test_looponfail.py",
+    "testing/test_newhooks.py",
+    "testing/test_plugin.py",
+    "testing/test_remote.py",
+    "testing/test_workermanage.py"
+  ],
+  "scored_contract": {"expected_total": 14, "source": "private custom-json-v1 collection"},
+  "excluded_upstream_conditions": [
+    "SSH and socket environments require external hosts",
+    "legacy pytest warning hook is skipped on pytest 9",
+    "pexpect-dependent interactive signal test is environment-specific",
+    "filelock extra is installed and exercised only in ground-truth remediation"
+  ]
+}

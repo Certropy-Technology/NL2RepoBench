@@ -1,0 +1,58 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/pytest-xdist"
+version = "1.0.0"
+description = "Build pytest-xdist from an empty workspace and implement its deterministic pytest plugin, worker identity, fixture, hook, and distributed scheduling contract."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "pytest",
+    "distributed-testing",
+    "subprocess",
+    "fixtures",
+    "scheduling",
+]
+
+[metadata]
+difficulty = "hard"
+category = "pytest-plugin"
+tags = [
+    "python",
+    "pytest",
+    "distributed-testing",
+    "subprocess",
+    "fixtures",
+    "scheduling",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 14
+canonical_manifest_digest = "sha256:a3c35102fca40a476b10d8b9d69a5af008010ebc93d87daeaf9dd32533e25fce"
+toolchain_lock_digest = "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366"
+
+[agent]
+timeout_sec = 3600.0
+
+[verifier]
+timeout_sec = 900.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 16384
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192

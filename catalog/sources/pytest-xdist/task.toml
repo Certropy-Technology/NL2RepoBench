@@ -1,0 +1,94 @@
+schema_version = "1.0"
+task_id = "pytest-xdist"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "pytest-plugin"
+tags = ["python", "pytest", "distributed-testing", "subprocess", "fixtures", "scheduling"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/pytest-dev/pytest-xdist"
+revision = "2a0c02df173a8340670b59903426e741811d6ab3"
+license_spdx = "MIT"
+source_digest = "sha256:2dbd281557752aa0463fc18e1eadaee1f5d090e1ae88149687a976afff4622e0"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.14"
+os_name = "debian-12-amd64"
+base_image = "python:3.12-slim-bookworm"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = ["git", "ca-certificates"]
+network_mode = "no-network"
+build_command = "install the hash-locked build and test closure during image build; candidate installation uses pip --target --no-deps"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "Candidate and separate verifier phases are network-isolated. The hash-locked Python closure is installed during image build; only the trusted Oracle receives a run-scoped github.com authorization to fetch and verify the frozen revision."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = [
+  "execnet==2.1.2",
+  "filelock==3.20.0",
+  "psutil==7.1.3",
+  "pytest==9.0.1",
+  "setuptools==80.9.0",
+  "setuptools-scm==9.2.2",
+]
+lock_artifact = { digest = "sha256:155fd3476b31cc5986e2ecae1fbd519ef21051401627f0524217bf1dfeab3883", size_bytes = 4085, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:155fd3476b31cc5986e2ecae1fbd519ef21051401627f0524217bf1dfeab3883", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 14
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:01fae030f4da84aa10df94cba47456087bbefba60b887ae10a8934c63498911f", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:01fae030f4da84aa10df94cba47456087bbefba60b887ae10a8934c63498911f", visibility = "private" }
+entrypoint = "run.py"
+environment = { NL2REPO_CANDIDATE_TOTAL_TIMEOUT_SEC = "420" }
+
+[harbor]
+description = "Build pytest-xdist from an empty workspace and implement its deterministic pytest plugin, worker identity, fixture, hook, and distributed scheduling contract."
+keywords = ["python", "pytest", "distributed-testing", "subprocess", "fixtures", "scheduling"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 900.0
+candidate_install_timeout_sec = 180.0
+candidate_total_timeout_sec = 420.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:1cabafe45a7640054908ea96925ae088b15c25a740b7b0d7be41f83017adc1df"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:1cabafe45a7640054908ea96925ae088b15c25a740b7b0d7be41f83017adc1df"
+visibility = "private"
+
+[lifecycle]
+status = "packaged"
+owner = "python-author-auto-20260903T042241Z/pytest-xdist"
+reason = "Frozen source, repaired filelock test closure, deterministic child-side contract, private verifier, and fixed-revision Oracle solution are authored. Production compile and local controls remain to be run in this attempt; no Harbor Agent Run is permitted in this lane."
