@@ -11,7 +11,7 @@ Environment=PYTHONUNBUFFERED=1
 Environment=TMPDIR=/data/NL2RepoBench-integration-20260827/.nl2repo/authoring-live/tmp
 Environment=NL2REPO_AUTO_COORDINATOR=1
 EnvironmentFile=-/root/.config/itbench/bootstrap-secrets.env
-ExecStart=/data/NL2RepoBench-integration-20260827/.venv/bin/python3 /data/NL2RepoBench-integration-20260827/scripts/authoring_auto_coordinator.py --repository-root /data/NL2RepoBench-integration-20260827 --live-root .nl2repo/authoring-live --discovery-pool reports/authoring-discovery-pool.json --runner /data/pi-tmp/root/c1-runtime/run_authoring_loop.py --max-agents 24 --pending-threshold 20 --discovery-batch-size 4 --discovery-cooldown-seconds 900 --interval-seconds 60 --agent-timeout-seconds 14400 --lease-seconds 18000 --command-timeout-seconds 900 --docker-root /var/lib/docker --docker-min-free-bytes 21474836480
+ExecStart=/data/NL2RepoBench-integration-20260827/.venv/bin/python3 /data/NL2RepoBench-integration-20260827/scripts/authoring_auto_coordinator.py --repository-root /data/NL2RepoBench-integration-20260827 --live-root .nl2repo/authoring-live --discovery-pool reports/authoring-discovery-pool.json --runner /data/pi-tmp/root/c1-runtime/run_authoring_loop.py --max-agents 24 --pending-threshold 20 --discovery-batch-size 4 --discovery-cooldown-seconds 900 --interval-seconds 60 --agent-timeout-seconds 14400 --lease-seconds 18000 --command-timeout-seconds 900 --docker-root /var/lib/docker --docker-min-free-bytes 21474836480 --docker-worker-reserve-bytes 2147483648
 Restart=always
 RestartSec=30
 TimeoutStopSec=30

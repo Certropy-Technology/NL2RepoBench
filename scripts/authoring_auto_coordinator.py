@@ -45,6 +45,7 @@ DEFAULT_LEASE_SECONDS = 18_000
 DEFAULT_MIN_FREE_BYTES = 12 * 1024**3
 DEFAULT_DOCKER_ROOT = Path("/var/lib/docker")
 DEFAULT_DOCKER_MIN_FREE_BYTES = 20 * 1024**3
+DEFAULT_DOCKER_WORKER_RESERVE_BYTES = 2 * 1024**3
 GO_POOL_FALLBACK: dict[str, str] = {
     "go-backoff": "cenkalti/backoff",
     "go-brotli": "andybalholm/brotli",
@@ -721,6 +722,9 @@ def _worker_disk_capacity(root: Path, args: argparse.Namespace) -> dict[str, Any
         "docker_root": str(args.docker_root),
         "docker_free_bytes": None,
         "docker_min_free_bytes": args.docker_min_free_bytes,
+        "docker_worker_reserve_bytes": args.docker_worker_reserve_bytes,
+        "docker_headroom_bytes": None,
+        "worker_slots": 0,
         "reason": None,
     }
     if repository_free < args.min_free_bytes:
@@ -735,8 +739,27 @@ def _worker_disk_capacity(root: Path, args: argparse.Namespace) -> dict[str, Any
     if docker_free < args.docker_min_free_bytes:
         capacity["reason"] = "docker-disk-low"
         return capacity
+    headroom = docker_free - args.docker_min_free_bytes
+    capacity["docker_headroom_bytes"] = headroom
+    capacity["worker_slots"] = headroom // args.docker_worker_reserve_bytes
+    if capacity["worker_slots"] < 1:
+        capacity["reason"] = "docker-headroom-low"
+        return capacity
     capacity["can_start"] = True
     return capacity
+
+
+def _available_worker_slots(
+    args: argparse.Namespace,
+    active: list[tuple[int, str]],
+    lease_slots: int,
+    disk_capacity: dict[str, Any],
+) -> int:
+    agent_slots = max(
+        0,
+        args.max_agents - max(_active_agent_slots(active), lease_slots),
+    )
+    return min(agent_slots, int(disk_capacity.get("worker_slots", 0)))
 
 
 def _start_workers(
@@ -750,9 +773,8 @@ def _start_workers(
     if capacity.get("can_start") is not True:
         return []
     active = _active_workers(root, live)
-    process_slots = _active_agent_slots(active)
     lease_slots = _active_lease_slots(live)
-    available = max(0, args.max_agents - max(process_slots, lease_slots))
+    available = _available_worker_slots(args, active, lease_slots, capacity)
     if available == 0:
         return []
     lanes = _lane_registry(live)
@@ -1026,6 +1048,11 @@ def main() -> int:
         type=int,
         default=DEFAULT_DOCKER_MIN_FREE_BYTES,
     )
+    parser.add_argument(
+        "--docker-worker-reserve-bytes",
+        type=int,
+        default=DEFAULT_DOCKER_WORKER_RESERVE_BYTES,
+    )
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--once", action="store_true")
     args = parser.parse_args()
@@ -1035,12 +1062,14 @@ def main() -> int:
         or args.discovery_batch_size < 1
         or args.min_free_bytes < 0
         or args.docker_min_free_bytes < 0
+        or args.docker_worker_reserve_bytes < 1
     ):
         parser.error(
             f"max-agents must be 1..{DEFAULT_MAX_AGENTS}; "
             "pending-threshold must be non-negative; "
             "discovery-batch-size must be positive; "
-            "disk thresholds must be non-negative"
+            "disk thresholds must be non-negative; "
+            "docker worker reserve must be positive"
         )
     if (
         args.agent_timeout_seconds < 1

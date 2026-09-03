@@ -153,12 +153,14 @@ def test_start_workers_stops_when_docker_disk_is_below_floor(
         min_free_bytes=12 * gib,
         docker_root=docker_root,
         docker_min_free_bytes=20 * gib,
+        docker_worker_reserve_bytes=2 * gib,
     )
 
     capacity = coordinator._worker_disk_capacity(root, args)
     assert capacity["can_start"] is False
     assert capacity["reason"] == "docker-disk-low"
     assert capacity["docker_free_bytes"] == 19 * gib
+    assert capacity["worker_slots"] == 0
     assert coordinator._start_workers(root, live, args) == []
 
 
@@ -179,11 +181,44 @@ def test_worker_disk_capacity_fails_closed_when_docker_root_is_unavailable(
         min_free_bytes=12 * gib,
         docker_root=tmp_path / "missing-docker",
         docker_min_free_bytes=20 * gib,
+        docker_worker_reserve_bytes=2 * gib,
     )
 
     capacity = coordinator._worker_disk_capacity(root, args)
     assert capacity["can_start"] is False
     assert capacity["reason"] == "docker-disk-unavailable"
+
+
+def test_worker_slots_are_capped_by_docker_headroom(tmp_path: Path, monkeypatch) -> None:
+    root = tmp_path / "repo"
+    docker_root = tmp_path / "docker"
+    root.mkdir()
+    docker_root.mkdir()
+    gib = 1024**3
+
+    def disk_usage(path: Path):
+        free = 100 * gib if Path(path) == root else 25 * gib
+        return SimpleNamespace(total=100 * gib, used=100 * gib - free, free=free)
+
+    monkeypatch.setattr(coordinator.shutil, "disk_usage", disk_usage)
+    args = SimpleNamespace(
+        max_agents=24,
+        min_free_bytes=12 * gib,
+        docker_root=docker_root,
+        docker_min_free_bytes=20 * gib,
+        docker_worker_reserve_bytes=2 * gib,
+    )
+
+    capacity = coordinator._worker_disk_capacity(root, args)
+    assert capacity["can_start"] is True
+    assert capacity["worker_slots"] == 2
+    assert coordinator._available_worker_slots(args, [], 0, capacity) == 2
+    assert coordinator._available_worker_slots(
+        args,
+        [(11, "python run_authoring_loop.py --max-concurrency 23")],
+        23,
+        capacity,
+    ) == 1
 
 
 def test_register_lane_preserves_registry_list(tmp_path: Path) -> None:
