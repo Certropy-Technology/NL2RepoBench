@@ -1,0 +1,53 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-govalidator",
+  "source_revision": "3dd3875e2b081a20d6eed935913a482fea14ecd0",
+  "leaf_id": "contract::public-api",
+  "frozen_total": 1,
+  "public_contract": "instruction.md#api-usage-guide",
+  "traceability": [
+    {
+      "assertion_class": "ASCII and Unicode validators, including empty-string rules",
+      "bridge_operation": "validate",
+      "instruction_section": "API Usage Guide / Validators"
+    },
+    {
+      "assertion_class": "URL, URI, email, host, address, port, UUID, JSON, and color syntax",
+      "bridge_operation": "validate",
+      "instruction_section": "API Usage Guide / Validators"
+    },
+    {
+      "assertion_class": "trim, character filtering, control-byte stripping, and regular expressions",
+      "bridge_operation": "transform",
+      "instruction_section": "API Usage Guide / String transformations"
+    },
+    {
+      "assertion_class": "Unicode reversal, case conversion, safe file names, and email normalization",
+      "bridge_operation": "transform",
+      "instruction_section": "API Usage Guide / String transformations"
+    },
+    {
+      "assertion_class": "line splitting and bounded line access",
+      "bridge_operation": "transform",
+      "instruction_section": "API Usage Guide / String transformations"
+    },
+    {
+      "assertion_class": "string, JSON, float, integer, and boolean conversion",
+      "bridge_operation": "convert",
+      "instruction_section": "API Usage Guide / Converters"
+    },
+    {
+      "assertion_class": "malformed requests, argument types, unknown operations, bounds, and panic containment",
+      "bridge_operation": "all",
+      "instruction_section": "API Usage Guide and Implementation Notes"
+    }
+  ],
+  "excluded_upstream_behavior": [
+    "IsExistingEmail DNS lookup",
+    "reflection-based struct validation and mutation",
+    "custom validator and tag-map global registration",
+    "callback, interface, and error aggregation behavior",
+    "benchmarks and timing"
+  ],
+  "exclusion_reason": "The task uses a bounded child-side JSON bridge and no-network execution. The excluded APIs require network access, non-JSON Go values, reflection state, callbacks, mutable globals, or performance measurement."
+}

@@ -1,0 +1,324 @@
+{
+  "bundle": {
+    "handoff_artifacts": {
+      "module_bundle": {
+        "digest": "sha256:6ec73ae163a52b09e0e18a056e10c991074a45d0ed10d77f462dc5a46041efe6",
+        "path": ".nl2repo/artifacts/private/sha256/6e/6ec73ae163a52b09e0e18a056e10c991074a45d0ed10d77f462dc5a46041efe6",
+        "size_bytes": 534
+      },
+      "oracle_bundle": {
+        "digest": "sha256:1e739fa656ee2a65c04122fd92abdb14b02a1131ef0521baefc6b2cc03b6121a",
+        "path": ".nl2repo/artifacts/private/sha256/1e/1e739fa656ee2a65c04122fd92abdb14b02a1131ef0521baefc6b2cc03b6121a",
+        "size_bytes": 682
+      },
+      "production_gate_receipt": ".nl2repo/authoring-production-gates.json",
+      "verifier_bundle": {
+        "digest": "sha256:469cc530fa4be6f6f4466776f6e999f69ba2668e002efbafe434e442265ecc7c",
+        "path": ".nl2repo/artifacts/private/sha256/46/469cc530fa4be6f6f4466776f6e999f69ba2668e002efbafe434e442265ecc7c",
+        "size_bytes": 1993
+      }
+    },
+    "handoff_compiled_bundle": {
+      "canonical_manifest_digest": "sha256:4649b696b1b80099c1654dfe31fcef01c294c5ff86cd045435685bbf4ed3496",
+      "manifest": ".nl2repo/authoring-gate/go-govalidator-final-attempt4/go-govalidator/bundle.manifest.json",
+      "manifest_sha256": "sha256:aad5a5d7c769defb629b1a7252a2bf6525903499355e8f56883267f59ee04f20",
+      "mode": "production",
+      "path": ".nl2repo/authoring-gate/go-govalidator-final-attempt4/go-govalidator",
+      "toolchain_lock": "toolchain.go.lock.toml",
+      "toolchain_lock_digest": "sha256:baa477549dd86ccfe68422aafd900a2ab76f0b091de9a85f9db883f9d6a551a3"
+    }
+  },
+  "commands": [
+    {
+      "command": "git archive --format=tar 3dd3875e2b081a20d6eed935913a482fea14ecd0 | sha256sum",
+      "exit_code": 0,
+      "summary": "source digest matched"
+    },
+    {
+      "command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -count=1 -json ./...",
+      "exit_code": 1,
+      "failure_class": "excluded-network-test",
+      "summary": "195 pass events; only TestIsExistingEmail failed because DNS is unavailable"
+    },
+    {
+      "command": "same upstream command with TestIsExistingEmail excluded",
+      "exit_code": 0,
+      "summary": "195 non-network pass events"
+    },
+    {
+      "command": "typed bridge contract against frozen source",
+      "exit_code": 0,
+      "summary": "66 of 66 cases passed"
+    },
+    {
+      "command": "uv run nl2repo task validate-source catalog/sources/go-govalidator",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "summary": "zero errors; unrelated catalog warnings remain"
+    },
+    {
+      "command": "uv run pytest -q -p no:cacheprovider --no-cov tests/test_go_adapter.py tests/test_custom_verifier.py tests/test_harbor_compiler.py",
+      "exit_code": 0,
+      "summary": "36 passed"
+    },
+    {
+      "command": "uv run ruff check src/nl2repobench/harbor/go_compiler.py tests/test_go_adapter.py",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run pytest -q",
+      "exit_code": 0,
+      "summary": "447 passed; 80.40% coverage"
+    },
+    {
+      "command": "uv run ruff check src tests scripts",
+      "exit_code": 1,
+      "failure_class": "unrelated-pre-existing",
+      "summary": "One E501 at tests/test_authoring_loop_driver.py:253, outside this lane's changed files"
+    },
+    {
+      "command": "uv run mypy src/nl2repobench",
+      "exit_code": 0,
+      "summary": "Success in 81 source files"
+    },
+    {
+      "command": "uv run pytest -q -p no:cacheprovider --no-cov tests/test_no_vendor_install.py",
+      "exit_code": 0,
+      "summary": "1 passed"
+    },
+    {
+      "command": "production compile recorded in .nl2repo/authoring-production-gates.json",
+      "exit_code": 0
+    },
+    {
+      "command": "official Harbor Oracle and nine-control matrix recorded in .nl2repo/authoring-production-gates.json",
+      "exit_code": 0
+    }
+  ],
+  "controls": {
+    "background-process": {
+      "collected": 1,
+      "exit_code": 0,
+      "frozen_total": 1,
+      "grading": ".nl2repo/runs/go-govalidator-final-attempt4-background-process/go-govalidator-final-attempt4-background-process/go-govalidator-background-proces__Yp6LQbr/verifier/grading.json",
+      "network": ".nl2repo/runs/go-govalidator-final-attempt4-background-process/go-govalidator-final-attempt4-background-process/go-govalidator-background-proces__Yp6LQbr/verifier/network.json",
+      "passed": 0,
+      "result": ".nl2repo/runs/go-govalidator-final-attempt4-background-process/go-govalidator-final-attempt4-background-process/go-govalidator-background-proces__Yp6LQbr/result.json",
+      "reward": 0.0,
+      "reward_path": ".nl2repo/runs/go-govalidator-final-attempt4-background-process/go-govalidator-final-attempt4-background-process/go-govalidator-background-proces__Yp6LQbr/verifier/reward.json",
+      "valid": true
+    },
+    "empty": {
+      "allowed_zero_collection": true,
+      "collected": 0,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-gate/go-govalidator-final-attempt4/go-govalidator -a nop --job-name go-govalidator-final-attempt4-empty -o .nl2repo/runs/go-govalidator-final-attempt4-empty --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "failure_reason": "candidate-installation-failed",
+      "frozen_total": 1,
+      "grading": ".nl2repo/runs/go-govalidator-final-attempt4-empty/go-govalidator-final-attempt4-empty/go-govalidator__jTpBVNL/verifier/grading.json",
+      "network": ".nl2repo/runs/go-govalidator-final-attempt4-empty/go-govalidator-final-attempt4-empty/go-govalidator__jTpBVNL/verifier/network.json",
+      "passed": 0,
+      "result": ".nl2repo/runs/go-govalidator-final-attempt4-empty/go-govalidator-final-attempt4-empty/go-govalidator__jTpBVNL/result.json",
+      "reward": 0.0,
+      "reward_path": ".nl2repo/runs/go-govalidator-final-attempt4-empty/go-govalidator-final-attempt4-empty/go-govalidator__jTpBVNL/verifier/reward.json",
+      "valid": true
+    },
+    "forgery": {
+      "collected": 1,
+      "exit_code": 0,
+      "frozen_total": 1,
+      "grading": ".nl2repo/runs/go-govalidator-final-attempt4-forgery/go-govalidator-final-attempt4-forgery/go-govalidator-forgery__GLSD4Uc/verifier/grading.json",
+      "network": ".nl2repo/runs/go-govalidator-final-attempt4-forgery/go-govalidator-final-attempt4-forgery/go-govalidator-forgery__GLSD4Uc/verifier/network.json",
+      "passed": 0,
+      "result": ".nl2repo/runs/go-govalidator-final-attempt4-forgery/go-govalidator-final-attempt4-forgery/go-govalidator-forgery__GLSD4Uc/result.json",
+      "reward": 0.0,
+      "reward_path": ".nl2repo/runs/go-govalidator-final-attempt4-forgery/go-govalidator-final-attempt4-forgery/go-govalidator-forgery__GLSD4Uc/verifier/reward.json",
+      "valid": true
+    },
+    "hang": {
+      "collected": 1,
+      "exit_code": 0,
+      "frozen_total": 1,
+      "grading": ".nl2repo/runs/go-govalidator-final-attempt4-hang/go-govalidator-final-attempt4-hang/go-govalidator-hang__6sJ3KnA/verifier/grading.json",
+      "network": ".nl2repo/runs/go-govalidator-final-attempt4-hang/go-govalidator-final-attempt4-hang/go-govalidator-hang__6sJ3KnA/verifier/network.json",
+      "passed": 0,
+      "result": ".nl2repo/runs/go-govalidator-final-attempt4-hang/go-govalidator-final-attempt4-hang/go-govalidator-hang__6sJ3KnA/result.json",
+      "reward": 0.0,
+      "reward_path": ".nl2repo/runs/go-govalidator-final-attempt4-hang/go-govalidator-final-attempt4-hang/go-govalidator-hang__6sJ3KnA/verifier/reward.json",
+      "valid": true
+    },
+    "install-failure": {
+      "allowed_zero_collection": true,
+      "collected": 0,
+      "exit_code": 0,
+      "failure_reason": "candidate-installation-failed",
+      "frozen_total": 1,
+      "grading": ".nl2repo/runs/go-govalidator-final-attempt4-install-failure/go-govalidator-final-attempt4-install-failure/go-govalidator-install-failure__HoMi9zq/verifier/grading.json",
+      "network": ".nl2repo/runs/go-govalidator-final-attempt4-install-failure/go-govalidator-final-attempt4-install-failure/go-govalidator-install-failure__HoMi9zq/verifier/network.json",
+      "passed": 0,
+      "result": ".nl2repo/runs/go-govalidator-final-attempt4-install-failure/go-govalidator-final-attempt4-install-failure/go-govalidator-install-failure__HoMi9zq/result.json",
+      "reward": 0.0,
+      "reward_path": ".nl2repo/runs/go-govalidator-final-attempt4-install-failure/go-govalidator-final-attempt4-install-failure/go-govalidator-install-failure__HoMi9zq/verifier/reward.json",
+      "valid": true
+    },
+    "offline": {
+      "collected": 1,
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-gate/go-govalidator-final-attempt4/go-govalidator -a oracle --allow-agent-host github.com --job-name go-govalidator-final-attempt4-offline -o .nl2repo/runs/go-govalidator-final-attempt4-offline --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "frozen_total": 1,
+      "grading": ".nl2repo/runs/go-govalidator-final-attempt4-offline/go-govalidator-final-attempt4-offline/go-govalidator__H23aKLz/verifier/grading.json",
+      "network": ".nl2repo/runs/go-govalidator-final-attempt4-offline/go-govalidator-final-attempt4-offline/go-govalidator__H23aKLz/verifier/network.json",
+      "passed": 1,
+      "public_network_available": false,
+      "result": ".nl2repo/runs/go-govalidator-final-attempt4-offline/go-govalidator-final-attempt4-offline/go-govalidator__H23aKLz/result.json",
+      "reward": 1.0,
+      "reward_path": ".nl2repo/runs/go-govalidator-final-attempt4-offline/go-govalidator-final-attempt4-offline/go-govalidator__H23aKLz/verifier/reward.json",
+      "valid": true
+    },
+    "oversized-output": {
+      "collected": 1,
+      "exit_code": 0,
+      "frozen_total": 1,
+      "grading": ".nl2repo/runs/go-govalidator-final-attempt4-oversized-output/go-govalidator-final-attempt4-oversized-output/go-govalidator-oversized-output__YixXHyN/verifier/grading.json",
+      "network": ".nl2repo/runs/go-govalidator-final-attempt4-oversized-output/go-govalidator-final-attempt4-oversized-output/go-govalidator-oversized-output__YixXHyN/verifier/network.json",
+      "passed": 0,
+      "result": ".nl2repo/runs/go-govalidator-final-attempt4-oversized-output/go-govalidator-final-attempt4-oversized-output/go-govalidator-oversized-output__YixXHyN/result.json",
+      "reward": 0.0,
+      "reward_path": ".nl2repo/runs/go-govalidator-final-attempt4-oversized-output/go-govalidator-final-attempt4-oversized-output/go-govalidator-oversized-output__YixXHyN/verifier/reward.json",
+      "valid": true
+    },
+    "panic": {
+      "collected": 1,
+      "exit_code": 0,
+      "frozen_total": 1,
+      "grading": ".nl2repo/runs/go-govalidator-final-attempt4-panic/go-govalidator-final-attempt4-panic/go-govalidator-panic__NbpAcRj/verifier/grading.json",
+      "network": ".nl2repo/runs/go-govalidator-final-attempt4-panic/go-govalidator-final-attempt4-panic/go-govalidator-panic__NbpAcRj/verifier/network.json",
+      "passed": 0,
+      "result": ".nl2repo/runs/go-govalidator-final-attempt4-panic/go-govalidator-final-attempt4-panic/go-govalidator-panic__NbpAcRj/result.json",
+      "reward": 0.0,
+      "reward_path": ".nl2repo/runs/go-govalidator-final-attempt4-panic/go-govalidator-final-attempt4-panic/go-govalidator-panic__NbpAcRj/verifier/reward.json",
+      "valid": true
+    },
+    "stub": {
+      "collected": 1,
+      "exit_code": 0,
+      "frozen_total": 1,
+      "grading": ".nl2repo/runs/go-govalidator-final-attempt4-stub/go-govalidator-final-attempt4-stub/go-govalidator-stub__BfFQKQj/verifier/grading.json",
+      "network": ".nl2repo/runs/go-govalidator-final-attempt4-stub/go-govalidator-final-attempt4-stub/go-govalidator-stub__BfFQKQj/verifier/network.json",
+      "passed": 0,
+      "result": ".nl2repo/runs/go-govalidator-final-attempt4-stub/go-govalidator-final-attempt4-stub/go-govalidator-stub__BfFQKQj/result.json",
+      "reward": 0.0,
+      "reward_path": ".nl2repo/runs/go-govalidator-final-attempt4-stub/go-govalidator-final-attempt4-stub/go-govalidator-stub__BfFQKQj/verifier/reward.json",
+      "valid": true
+    }
+  },
+  "dependency_closure": {
+    "installer": "system",
+    "module_bundle": {
+      "digest": "sha256:6ec73ae163a52b09e0e18a056e10c991074a45d0ed10d77f462dc5a46041efe6",
+      "size_bytes": 534,
+      "uri": "artifact://private/sha256:6ec73ae163a52b09e0e18a056e10c991074a45d0ed10d77f462dc5a46041efe6",
+      "visibility": "private"
+    },
+    "packages": [],
+    "status": "known"
+  },
+  "environment": {
+    "base_image": "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd",
+    "base_image_digest": "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd",
+    "network_mode": "no-network",
+    "network_policy": {
+      "mode": "no-network",
+      "offline_dependencies": "private-artifact",
+      "reason": "The candidate and verifier run without network; the standard-library module closure is materialized before the run, and only the trusted Oracle receives a run-scoped source-host override.",
+      "reference_source_fetch": "forbidden"
+    },
+    "os_name": "debian-bookworm",
+    "runtime_version": "1.26.5",
+    "status": "known"
+  },
+  "frozen_collection": {
+    "handoff_collection": null,
+    "handoff_frozen_tests": {
+      "bridge_cases": 66,
+      "frozen_total": 1,
+      "leaf_ids": [
+        "contract::public-api"
+      ],
+      "protocol": "custom-json-v1",
+      "upstream_non_network_pass_events": 195
+    },
+    "handoff_inventory": {
+      "bridge_cases": 66,
+      "contract_functions": 56,
+      "excluded_network_test": "TestIsExistingEmail",
+      "go_files": 25,
+      "go_test_files": 16,
+      "module_path": "github.com/asaskevich/govalidator/v12",
+      "static_benchmarks": 168,
+      "static_examples": 56,
+      "static_test_functions": 152,
+      "tracked_files": 40
+    },
+    "tests": {
+      "commands": [
+        "custom-json-v1"
+      ],
+      "expected_total": 1,
+      "expected_total_source": "frozen-collection",
+      "framework": "pytest"
+    }
+  },
+  "final_bundle": {
+    "path": ".nl2repo/authoring-gate/go-govalidator-final-attempt4/go-govalidator/bundle.manifest.json",
+    "sha256": "sha256:aad5a5d7c769defb629b1a7252a2bf6525903499355e8f56883267f59ee04f20",
+    "canonical_manifest_digest": "sha256:4649b696b1b80099c1654dfe31fcef01c294c5ff86cd045435685bbf4ed3496"
+  },
+  "integrator_repair": {
+    "input_handoff": "/data/NL2RepoBench-integration-20260827/.nl2repo/authoring-live/worktrees/go-packaged-repair-20260903T2118Z/go-govalidator/.nl2repo/authoring-handoff.json",
+    "kind": "production-evidence-from-authored-handoff",
+    "official_controls_created": false,
+    "official_oracle_created": false,
+    "recorded_at": "2026-09-03T16:43:54.508316+00:00",
+    "source": "agent-production-gate-receipt"
+  },
+  "lifecycle": {
+    "owner": "go-author-wave2-20260828-c2",
+    "reason": "The final compiled bundle passed one official Harbor Oracle run plus empty, stub, forgery, install-failure, panic, hang, oversized-output, background-process, and offline controls; awaiting integrator review.",
+    "status": "controls-passed"
+  },
+  "oracle": {
+    "collected": 1,
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-gate/go-govalidator-final-attempt4/go-govalidator -a oracle --allow-agent-host github.com --job-name go-govalidator-final-attempt4-oracle -o .nl2repo/runs/go-govalidator-final-attempt4-oracle --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "frozen_total": 1,
+    "grading": ".nl2repo/runs/go-govalidator-final-attempt4-oracle/go-govalidator-final-attempt4-oracle/go-govalidator__6m8icDP/verifier/grading.json",
+    "harbor_version": "0.21.0",
+    "network": ".nl2repo/runs/go-govalidator-final-attempt4-oracle/go-govalidator-final-attempt4-oracle/go-govalidator__6m8icDP/verifier/network.json",
+    "passed": 1,
+    "result": ".nl2repo/runs/go-govalidator-final-attempt4-oracle/go-govalidator-final-attempt4-oracle/go-govalidator__6m8icDP/result.json",
+    "reward": 1.0,
+    "reward_path": ".nl2repo/runs/go-govalidator-final-attempt4-oracle/go-govalidator-final-attempt4-oracle/go-govalidator__6m8icDP/verifier/reward.json",
+    "valid": true
+  },
+  "residual_risks": [
+    "The no-network task intentionally excludes IsExistingEmail and other APIs that require DNS, callbacks, reflection state, mutable global registration, or non-JSON Go values.",
+    "The local nl2repobench/openhands-sdk-fork:930e9b1da-bookworm tag resolved to sha256:3b9288ec42f69da761f0aedb9a72c6888376e9395f9122192aca67e81d913c79, while the shared toolchain lock records sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f. The image labels still match fork commit 930e9b1daee0f5d2c7f3b261f045527a0ddae87d and LiteLLM 1.93.0. Integrator must reconcile the shared image lock before publication.",
+    "Repository-wide Ruff has one unrelated E501 at tests/test_authoring_loop_driver.py:253. Ruff passes for this lane's changed Python files.",
+    "Configured Python LSP diagnostics could not run because the ty executable is missing. Ruff and focused pytest checks passed."
+  ],
+  "schema_version": "1.0",
+  "source_freeze": {
+    "license_spdx": "MIT",
+    "revision": "3dd3875e2b081a20d6eed935913a482fea14ecd0",
+    "source_digest": "sha256:a96caf17ed4882595950607d2567b4da764725c0de74b9ba60459a5f54f8090d",
+    "upstream_url": "https://github.com/asaskevich/govalidator"
+  },
+  "status": "controls-passed",
+  "task_id": "go-govalidator",
+  "task_version": "0.1.0",
+  "terminal_kind": "valid"
+}

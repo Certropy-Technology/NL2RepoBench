@@ -1,0 +1,36 @@
+go-govalidator authoring remediation record
+
+Source and environment
+- Frozen upstream: https://github.com/asaskevich/govalidator at 3dd3875e2b081a20d6eed935913a482fea14ecd0.
+- `git archive --format=tar` SHA-256: a96caf17ed4882595950607d2567b4da764725c0de74b9ba60459a5f54f8090d.
+- MIT LICENSE SHA-256: 2a563618ea15afe8a1cc6a1ef61b5165f39923a21734ee06c79b61d39d5530ae.
+- Runtime: Go 1.26.5, linux/amd64, CGO disabled, private standard-library-only module bundle, no network.
+- Base image: docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd.
+
+Upstream and bridge checks
+- The full offline-configured upstream test run produced 195 passing test events and one failure, TestIsExistingEmail, because it requires DNS. The bounded task excludes that network API.
+- All 195 non-network upstream test events passed when TestIsExistingEmail was omitted.
+- The typed bridge and private contract passed all 66 cases against the frozen source.
+- The bridge now decodes StripLow's third JSON argument as a boolean before calling the package API.
+
+Control remediation
+- Initial official controls generated go.mod but failed to copy control_package.go into the Oracle solution upload. Stub, forgery, panic, hang, oversized-output, and background-process therefore stopped at candidate installation with 0 collected tests.
+- GoHarborCompiler.prepare_control_bundle now copies an optional regular controls/control_package.go into solution/control_package.go. The task-local control scripts read that uploaded helper.
+- Focused compiler and verifier tests passed: 36 passed.
+- Full pytest passed: 447 tests, 80.40% coverage. Mypy passed for 81 source files, and the no-vendor-install gate passed.
+- Repository-wide Ruff found one unrelated pre-existing E501 at tests/test_authoring_loop_driver.py:253. Ruff passed for the files changed by this lane.
+
+Final gates
+- Source validation: exit 0, lifecycle controls-passed.
+- Network lint for go-govalidator: zero errors and zero warnings. Full catalog network lint: exit 0.
+- Production compile: exit 0. Bundle manifest SHA-256: aad5a5d7c769defb629b1a7252a2bf6525903499355e8f56883267f59ee04f20.
+- Official Harbor 0.21.0 Oracle: valid=true, passed=1, collected=1, frozen_total=1, reward=1.0.
+- Empty and install-failure: valid=true, explicit candidate-installation-failed 0/0 exception, reward=0.0.
+- Stub, forgery, panic, hang, oversized-output, and background-process: valid=true, passed=0, collected=1, frozen_total=1, reward=0.0.
+- Offline: valid=true, passed=1, collected=1, reward=1.0, public_network_available=false.
+- Canonical run paths are recorded in .nl2repo/authoring-production-gates.json.
+
+Observed toolchain drift
+- toolchain.go.lock.toml records the OpenHands runtime image ID sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f.
+- The local tag used by the official Harbor runs resolved to sha256:3b9288ec42f69da761f0aedb9a72c6888376e9395f9122192aca67e81d913c79. The image still reports fork commit 930e9b1daee0f5d2c7f3b261f045527a0ddae87d and LiteLLM 1.93.0.
+- This shared toolchain/image-tag drift is left for integrator review. This lane did not modify the shared toolchain lock.

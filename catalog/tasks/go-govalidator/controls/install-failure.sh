@@ -4,8 +4,12 @@ cat > go.mod <<'MOD'
 module github.com/asaskevich/govalidator/v12
 
 go 1.26.5
+
+replace example.invalid/broken => ./missing
 MOD
 : > go.sum
 mkdir -p vendor
 : > vendor/modules.txt
-cp "$(dirname "$0")/control_package.go" govalidator.go
+cat > govalidator.go <<'GO'
+package govalidator
+GO

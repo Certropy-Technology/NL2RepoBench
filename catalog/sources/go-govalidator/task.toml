@@ -2,7 +2,7 @@ schema_version = "1.0"
 task_id = "go-govalidator"
 version = "0.1.0"
 instruction = "instruction.md"
-oracle_bundle = { digest = "sha256:a89cb46ff808fa4533c84f62f60b6785e2a92061add1c2271b00157c22682fbb", size_bytes = 10240, uri = "artifact://private/sha256:a89cb46ff808fa4533c84f62f60b6785e2a92061add1c2271b00157c22682fbb", visibility = "private" }
+oracle_bundle = { digest = "sha256:1e739fa656ee2a65c04122fd92abdb14b02a1131ef0521baefc6b2cc03b6121a", size_bytes = 682, uri = "artifact://private/sha256:1e739fa656ee2a65c04122fd92abdb14b02a1131ef0521baefc6b2cc03b6121a", visibility = "private" }
 
 [metadata]
 difficulty = "hard"
@@ -35,7 +35,7 @@ reason = "The candidate and verifier run without network; the standard-library m
 status = "known"
 installer = "system"
 packages = []
-module_bundle = { digest = "sha256:a317d89249a4dc6d2fc63bd79c0dc557afef0bde7d0062f5514649ac1ea03439", size_bytes = 10240, uri = "artifact://private/sha256:a317d89249a4dc6d2fc63bd79c0dc557afef0bde7d0062f5514649ac1ea03439", visibility = "private" }
+module_bundle = { digest = "sha256:6ec73ae163a52b09e0e18a056e10c991074a45d0ed10d77f462dc5a46041efe6", size_bytes = 534, uri = "artifact://private/sha256:6ec73ae163a52b09e0e18a056e10c991074a45d0ed10d77f462dc5a46041efe6", visibility = "private" }
 
 [tests]
 framework = "pytest"
@@ -60,16 +60,16 @@ candidate_total_timeout_sec = 300.0
 agent_network_mode = "no-network"
 verifier_network_mode = "no-network"
 cpus = 1
-memory_mb = 1024
+memory_mb = 4096
 storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "packaged"
+status = "controls-passed"
 owner = "go-author-wave2-20260828-c2"
-reason = "Source, deterministic API contract, offline module closure, verifier, and Oracle/control evidence are authored in this lane; awaiting final gates and integrator review."
+reason = "The final compiled bundle passed one official Harbor Oracle run plus empty, stub, forgery, install-failure, panic, hang, oversized-output, background-process, and offline controls; awaiting integrator review."
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:353d464ede65cb48a0811fbaac890f9a668f67f8a8b965cd74ec258c01013b17", size_bytes = 10240, uri = "artifact://private/sha256:353d464ede65cb48a0811fbaac890f9a668f67f8a8b965cd74ec258c01013b17", visibility = "private" }
+bundle = { digest = "sha256:469cc530fa4be6f6f4466776f6e999f69ba2668e002efbafe434e442265ecc7c", size_bytes = 1993, uri = "artifact://private/sha256:469cc530fa4be6f6f4466776f6e999f69ba2668e002efbafe434e442265ecc7c", visibility = "private" }
 entrypoint = "contract.sh"

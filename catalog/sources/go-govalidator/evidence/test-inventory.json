@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-govalidator",
+  "source_revision": "3dd3875e2b081a20d6eed935913a482fea14ecd0",
+  "upstream": {
+    "test_files": 16,
+    "static_test_functions": 152,
+    "static_examples": 56,
+    "static_benchmarks": 168,
+    "full_test_command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -count=1 -json ./...",
+    "full_test_exit_code": 1,
+    "full_test_result": "195 test pass events and one failed network-dependent TestIsExistingEmail; the package failed because runtime DNS access was unavailable",
+    "offline_contract_test_exit_code": 0,
+    "offline_contract_test_result": "All 195 non-network test pass events completed after excluding TestIsExistingEmail"
+  },
+  "frozen_collection": {
+    "framework": "go bridge contract",
+    "protocol": "custom-json-v1",
+    "leaf_ids": ["contract::public-api"],
+    "frozen_total": 1,
+    "private_case_count": 66,
+    "case_groups": {
+      "validator_examples": 37,
+      "transforms": 17,
+      "converter_examples": 7,
+      "structured_errors": 5
+    },
+    "collection_source": "fixed verifier-owned contract"
+  },
+  "excluded_tests": [
+    {
+      "name": "TestIsExistingEmail",
+      "reason": "The API performs DNS lookup and conflicts with the no-network deterministic task contract."
+    }
+  ]
+}

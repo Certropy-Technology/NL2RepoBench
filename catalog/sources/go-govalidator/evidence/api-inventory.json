@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-govalidator",
+  "source_revision": "3dd3875e2b081a20d6eed935913a482fea14ecd0",
+  "module_path": "github.com/asaskevich/govalidator/v12",
+  "adapter": "newline-delimited JSON typed Go bridge",
+  "public_contract": {
+    "validator_count": 35,
+    "validators": [
+      "IsEmail", "IsURL", "IsRequestURL", "IsRequestURI", "IsAlpha",
+      "IsUTFLetter", "IsAlphanumeric", "IsUTFLetterNumeric", "IsNumeric",
+      "IsUTFNumeric", "IsUTFDigit", "IsInt", "IsFloat", "IsNull",
+      "IsNotNull", "IsASCII", "IsPrintableASCII", "IsBase64", "IsDNSName",
+      "IsIP", "IsIPv4", "IsIPv6", "IsPort", "IsMAC", "IsHost", "IsUUID",
+      "IsUUIDv3", "IsUUIDv4", "IsUUIDv5", "IsJSON", "IsHexadecimal",
+      "IsHexcolor", "IsRGBcolor", "IsLatitude", "IsLongitude"
+    ],
+    "transform_count": 16,
+    "transforms": [
+      "Contains", "Matches", "Trim", "LeftTrim", "RightTrim", "BlackList",
+      "WhiteList", "StripLow", "ReplacePattern", "CamelCaseToUnderscore",
+      "UnderscoreToCamelCase", "Reverse", "SafeFileName", "NormalizeEmail",
+      "GetLines", "GetLine"
+    ],
+    "converter_count": 5,
+    "converters": ["ToString", "ToJSON", "ToFloat", "ToInt", "ToBoolean"]
+  },
+  "source_inventory": {
+    "go_files": 25,
+    "go_test_files": 16
+  },
+  "adapter_boundary": "The verifier covers deterministic JSON-serializable string, scalar, slice, and map behavior. Struct validation, callback registration, custom validators, reflection-driven mutation, and IsExistingEmail are outside this task.",
+  "network_behavior": "URL, host, IP, DNS-name, and email syntax checks do not perform I/O. IsExistingEmail is excluded because it performs DNS lookup."
+}
