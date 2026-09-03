@@ -377,11 +377,55 @@ def command_reconcile(args: argparse.Namespace) -> int:
     return 0
 
 
+def command_retry(args: argparse.Namespace) -> int:
+    """Return an infrastructure-exhausted candidate to the pending queue."""
+
+    with locked_state(args.state) as state:
+        items = sync_queue(state, args.queue)
+        record = items.get(args.candidate_id)
+        if record is None:
+            raise ValueError(f"unknown candidate: {args.candidate_id}")
+        if record.get("status") != "retry-exhausted":
+            raise ValueError(f"{args.candidate_id} is not retry-exhausted")
+        if record.get("failure_class") != "infrastructure":
+            raise ValueError(f"{args.candidate_id} failure is not infrastructure")
+        attempts = int(record.get("attempts", 0))
+        if attempts < 1:
+            raise ValueError(f"{args.candidate_id} has no attempt to refund")
+        history = record.setdefault("operator_retries", [])
+        if not isinstance(history, list):
+            raise ValueError(f"{args.candidate_id} has invalid operator retry history")
+        history.append(
+            {
+                "reason": args.reason,
+                "previous_attempts": attempts,
+                "previous_reason": record.get("reason"),
+                "previous_release_reason": record.get("release_reason"),
+                "recorded_at": now(),
+            }
+        )
+        record.update(
+            {
+                "status": "pending",
+                "attempts": attempts - 1,
+                "owner": None,
+                "lease_expires_at": None,
+                "reason": None,
+                "release_reason": None,
+                "failure_class": None,
+                "updated_at": now(),
+            }
+        )
+        output = dict(record)
+    print(json.dumps(output, ensure_ascii=False, sort_keys=True, indent=2))
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(dest="command", required=True)
 
-    for name in ("init", "status", "claim", "record", "release", "reconcile"):
+    for name in ("init", "status", "claim", "record", "release", "reconcile", "retry"):
         sub = subparsers.add_parser(name)
         sub.add_argument("--queue", type=Path, required=True)
         sub.add_argument("--state", type=Path, default=Path(".nl2repo/package-queue/state.json"))
@@ -424,6 +468,10 @@ def build_parser() -> argparse.ArgumentParser:
             sub.add_argument("--failure-class")
             sub.add_argument("--artifact", action="append", default=[])
             continue
+        if name == "retry":
+            sub.add_argument("candidate_id")
+            sub.add_argument("--reason", required=True)
+            continue
         if name == "record":
             sub.add_argument("--status", required=True, choices=sorted(TERMINAL))
             sub.add_argument("--reason")
@@ -442,6 +490,7 @@ def main() -> int:
             "record": command_record,
             "release": command_release,
             "reconcile": command_reconcile,
+            "retry": command_retry,
         }[args.command](args)
     except (OSError, ValueError, json.JSONDecodeError) as exc:
         print(f"package queue failed: {exc}", file=sys.stderr)

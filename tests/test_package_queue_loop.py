@@ -199,3 +199,76 @@ def test_queue_release_returns_claim_without_consuming_attempt(tmp_path: Path) -
     with loop.locked_state(state) as payload:
         assert payload["items"]["python-demo"]["status"] == "pending"
         assert payload["items"]["python-demo"]["attempts"] == 1
+
+
+def test_queue_operator_retry_refunds_infrastructure_exhaustion(tmp_path: Path) -> None:
+    queue = tmp_path / "queue.json"
+    state = tmp_path / "state.json"
+    _queue(queue)
+    loop.command_init(_args(queue=queue, state=state))
+    with loop.locked_state(state) as payload:
+        payload["items"]["python-demo"].update(
+            {
+                "status": "retry-exhausted",
+                "attempts": 3,
+                "reason": "stream_read_error",
+                "release_reason": "stream_read_error",
+                "failure_class": "infrastructure",
+            }
+        )
+
+    assert loop.command_retry(
+        _args(
+            queue=queue,
+            state=state,
+            candidate_id="python-demo",
+            reason="provider recovered after outage",
+        )
+    ) == 0
+
+    with loop.locked_state(state) as payload:
+        record = payload["items"]["python-demo"]
+        assert record["status"] == "pending"
+        assert record["attempts"] == 2
+        assert record["owner"] is None
+        assert record["lease_expires_at"] is None
+        assert record["reason"] is None
+        assert record["failure_class"] is None
+        assert record["operator_retries"][-1]["previous_attempts"] == 3
+        assert record["operator_retries"][-1]["previous_reason"] == "stream_read_error"
+        assert record["operator_retries"][-1]["reason"] == "provider recovered after outage"
+
+
+@pytest.mark.parametrize(
+    ("status", "failure_class", "message"),
+    [
+        ("pending", "infrastructure", "not retry-exhausted"),
+        ("retry-exhausted", "model", "not infrastructure"),
+    ],
+)
+def test_queue_operator_retry_rejects_unsafe_transition(
+    tmp_path: Path, status: str, failure_class: str, message: str
+) -> None:
+    queue = tmp_path / "queue.json"
+    state = tmp_path / "state.json"
+    _queue(queue)
+    loop.command_init(_args(queue=queue, state=state))
+    with loop.locked_state(state) as payload:
+        payload["items"]["python-demo"].update(
+            {
+                "status": status,
+                "attempts": 3,
+                "reason": "failed",
+                "failure_class": failure_class,
+            }
+        )
+
+    with pytest.raises(ValueError, match=message):
+        loop.command_retry(
+            _args(
+                queue=queue,
+                state=state,
+                candidate_id="python-demo",
+                reason="operator retry",
+            )
+        )
