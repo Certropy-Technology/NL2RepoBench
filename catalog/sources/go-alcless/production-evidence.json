@@ -1,0 +1,48 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-alcless",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "verifier",
+    "next_step": "Approve or reject a deterministic host-fixture/CLI adapter for user, sudo, rsync, Homebrew, external-process, filesystem, and TTY behavior; then freeze the complete Go module closure and add public-behavior tests before attempting production compile.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/AkihiroSuda/alcless",
+      "revision": "0a1a474ef54f4bc995ecb15f2814202129273ae7",
+      "source_digest": "sha256:d22a70ed3ec9889122b61b45af8e5508b73e64170c0111a06ed4e659bd8764df",
+      "license_spdx": "Apache-2.0",
+      "license_digest": "sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    "commands": [
+      {
+        "command": "git fetch --depth 1 origin 0a1a474ef54f4bc995ecb15f2814202129273ae7 && git checkout --detach FETCH_HEAD && git rev-parse HEAD && git archive --format=tar HEAD | sha256sum",
+        "tool_version": "git",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/go-alcless/evidence/source-freeze.log",
+          "sha256": "sha256:8155799541c04728567f16c63b6cce8731b53d4ad500b42145c403519aa73f5d"
+        }
+      },
+      {
+        "command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -json ./...",
+        "tool_version": "go1.26.5-X:nodwarf5 linux/amd64",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/go-alcless/evidence/dependency-probe.log",
+          "sha256": "sha256:cda644011c9d265280c6e8a41a511c507274354d04f176e536747f29006461b5"
+        }
+      },
+      {
+        "command": "static Go API and test inventory plus typed-bridge assessment",
+        "tool_version": "Go source inspection at revision 0a1a474ef54f4bc995ecb15f2814202129273ae7",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/go-alcless/evidence/adapter-assessment.md",
+          "sha256": "sha256:7b11abd6348b261a629e81093bc492e3f819197064b8cf637855c52294f32bed"
+        }
+      }
+    ],
+    "test_inventory": "catalog/sources/go-alcless/evidence/test-inventory.json",
+    "api_inventory": "catalog/sources/go-alcless/evidence/api-inventory.json"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-alcless",
+  "source_revision": "0a1a474ef54f4bc995ecb15f2814202129273ae7",
+  "framework": "go-test",
+  "test_files": [
+    "cmd/alclessctl/commands/create/create_test.go"
+  ],
+  "test_functions": [
+    {
+      "name": "TestResolveInstName",
+      "package": "create",
+      "source": "cmd/alclessctl/commands/create/create_test.go",
+      "asserted_behavior": [
+        "default instance name",
+        "explicit positional and flag names",
+        "template://default",
+        "unknown template rejection",
+        "slash rejection",
+        "conflicting positional and flag names"
+      ],
+      "public_api": false
+    }
+  ],
+  "static_test_count": 1,
+  "public_api_assertion_count": 0,
+  "collection_status": "not-collected",
+  "expected_total": 1
+}

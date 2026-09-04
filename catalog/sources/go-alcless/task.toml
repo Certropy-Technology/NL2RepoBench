@@ -1,0 +1,51 @@
+schema_version = "1.0"
+task_id = "go-alcless"
+version = "0.1.0"
+instruction = "blocked.md"
+
+[metadata]
+difficulty = "easy"
+category = "go-cli"
+tags = ["go", "go-modules", "cli", "sandbox", "blocked"]
+language = "go"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/AkihiroSuda/alcless"
+revision = "0a1a474ef54f4bc995ecb15f2814202129273ae7"
+license_spdx = "Apache-2.0"
+source_digest = "sha256:d22a70ed3ec9889122b61b45af8e5508b73e64170c0111a06ed4e659bd8764df"
+
+[environment]
+status = "unknown"
+os_name = "debian-bookworm"
+runtime_version = "1.26.5"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "The candidate dependency closure was not materialized, and the package's functional behavior requires host user, sudo, rsync, Homebrew, and TTY facilities that are outside the current typed Go bridge contract."
+
+[dependencies]
+status = "unknown"
+installer = "unknown"
+
+[tests]
+framework = "pytest"
+expected_total = 1
+expected_total_source = "unknown"
+commands = ["GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -json ./..."]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[lifecycle]
+status = "blocked"
+owner = "go-alcless-33d282c9"
+reason = "The only executable test covers an unexported helper, while the public surface requires unsupported host-user, privilege, filesystem-sync, Homebrew, and TTY behavior; the no-network dependency probe also failed before collection."

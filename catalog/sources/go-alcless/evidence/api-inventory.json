@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-alcless",
+  "source_revision": "0a1a474ef54f4bc995ecb15f2814202129273ae7",
+  "language": "go",
+  "module_path": "github.com/AkihiroSuda/alcless",
+  "implementation_files": 15,
+  "implementation_sloc": 1078,
+  "public_symbols_observed": 32,
+  "cli_entries": [
+    "alclessctl create [INSTANCE]",
+    "alclessctl delete INSTANCE",
+    "alclessctl list",
+    "alclessctl shell INSTANCE COMMAND [ARGS...]"
+  ],
+  "public_packages": [
+    "cmd/alclessctl/commands/create",
+    "cmd/alclessctl/commands/delete",
+    "cmd/alclessctl/commands/list",
+    "cmd/alclessctl/commands/shell",
+    "pkg/brew",
+    "pkg/cmdutil",
+    "pkg/envutil",
+    "pkg/rsync",
+    "pkg/store",
+    "pkg/sudo",
+    "pkg/userutil"
+  ],
+  "host_facilities": [
+    "user database",
+    "sudo and su",
+    "rsync",
+    "Homebrew",
+    "TTY/PTY",
+    "filesystem and working directory",
+    "external child processes",
+    "GitHub checkout in Homebrew installation path"
+  ],
+  "risk_flags": [
+    "host-user-state",
+    "privilege-boundary",
+    "external-process",
+    "filesystem-side-effect",
+    "tty-dependent",
+    "network-dependent-install-path",
+    "platform-specific-darwin-linux"
+  ],
+  "typed_bridge_status": "unsupported-without-approved-task-adapter"
+}
