@@ -338,9 +338,12 @@ RUN python -m pip install \
 COPY runtime/nl2repobench /usr/local/lib/python{python_minor}/site-packages/nl2repobench
 COPY command-plan.json /tests/command-plan.json
 COPY --chmod=0555 test.sh /tests/test.sh
-"""
+        """
         if custom_verifier:
-            dockerfile += "COPY --chmod=0500 verifier /tests/verifier\n"
+            # Candidate-side adapters are launched by the root verifier through
+            # runuser, so they must be readable but remain root-owned and
+            # unwritable by the candidate.
+            dockerfile += "COPY --chmod=0555 verifier /tests/verifier\n"
         else:
             dockerfile += "COPY --chmod=0500 private /tests/private\n"
         dockerfile += f"""

@@ -500,7 +500,7 @@ def test_production_compiler_emits_custom_verifier_bundle(tmp_path) -> None:
 
     assert (output / "tests/verifier/run.py").is_file()
     assert "custom_verifier" in (output / "tests/test.sh").read_text(encoding="utf-8")
-    assert "COPY --chmod=0500 verifier /tests/verifier" in (output / "tests/Dockerfile").read_text(
+    assert "COPY --chmod=0555 verifier /tests/verifier" in (output / "tests/Dockerfile").read_text(
         encoding="utf-8"
     )
     assert "COPY dependencies" not in (output / "tests/Dockerfile").read_text(encoding="utf-8")
