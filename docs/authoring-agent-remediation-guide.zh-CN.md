@@ -120,6 +120,8 @@ package/export 形状，但让核心构造或调用稳定失败，再重新 comp
 control script 或 lifecycle 变化后，旧 Oracle/control receipt 全部失效，必须对新 final
 manifest 重跑 Oracle 和完整 control matrix。forgery 还必须在 candidate workspace 写入
 伪造 reward/grading 文件，并证明最终评分仍由 verifier 独立产生。
+每个 control script 必须可作为 `prepare-control <kind>` 生成的独立 solution 执行；不要
+通过相对路径调用同目录的另一个 control，因为生成 bundle 只保证包含当前 kind 的入口。
 
 只要 verifier/image/build 自身失败，分类为 `verifier`/`environment`/`infrastructure`，
 不能当作模型 0 分；只有 candidate workspace/install/behavior 已真实执行后才分类为
