@@ -1,0 +1,148 @@
+{
+  "schema_version": "1.0",
+  "wave": "wave5",
+  "dispatch_id": "wave5-20260904-12-go",
+  "created_at": "2026-09-04T20:28:00Z",
+  "base_commit": "ce0eabf5ed4fb71405fa25f42ee0a65261a32966",
+  "queue_path": ".nl2repo/authoring-live/discovery/wave5/queue.json",
+  "queue_sha256": "sha256:14df46f4d3063a469359efeea0c365edb392ff0b2897f62890e38e848dd88cac",
+  "selection_rule": "first 12 queue records with status candidate or needs-evidence, excluding existing and rejected",
+  "worker_agent": "worker",
+  "worker_model": "z-open-api-gpt-openai-responses/gpt-5.6-luna",
+  "isolation": "worktree",
+  "worker_cwd": "/data/NL2RepoBench-integration-20260827",
+  "tasks": [
+    {
+      "slot": 1,
+      "task_id": "go-bild",
+      "candidate_id": "https-github-com-anthonynsimon-bild-92b723dced58",
+      "language": "go",
+      "status_at_dispatch": "candidate",
+      "revision": "3bef4b08d12a23a2f8c87ac6b52901ec6492d09b",
+      "upstream_url": "https://github.com/anthonynsimon/bild",
+      "identity": "https://github.com/anthonynsimon/bild",
+      "worktree_owner": "wave5-01-go-bild"
+    },
+    {
+      "slot": 2,
+      "task_id": "go-bumblebee",
+      "candidate_id": "https-github-com-perplexityai-bumblebee-41e7c0b0c692",
+      "language": "go",
+      "status_at_dispatch": "candidate",
+      "revision": "d76e369a0b34d6506dc249b4d573f7859cac7a19",
+      "upstream_url": "https://github.com/perplexityai/bumblebee",
+      "identity": "https://github.com/perplexityai/bumblebee",
+      "worktree_owner": "wave5-02-go-bumblebee"
+    },
+    {
+      "slot": 3,
+      "task_id": "go-buntdb",
+      "candidate_id": "https-github-com-tidwall-buntdb-04b7d892addb",
+      "language": "go",
+      "status_at_dispatch": "candidate",
+      "revision": "0dbc8c18459aed4e4179bccbe0322bbd6019733f",
+      "upstream_url": "https://github.com/tidwall/buntdb",
+      "identity": "https://github.com/tidwall/buntdb",
+      "worktree_owner": "wave5-03-go-buntdb"
+    },
+    {
+      "slot": 4,
+      "task_id": "go-burrow",
+      "candidate_id": "https-github-com-linkedin-burrow-b458d3cc9471",
+      "language": "go",
+      "status_at_dispatch": "candidate",
+      "revision": "66bdb0566fdeb14251a53eb7f6cb4ed4036d16ed",
+      "upstream_url": "https://github.com/linkedin/Burrow",
+      "identity": "https://github.com/linkedin/Burrow",
+      "worktree_owner": "wave5-04-go-burrow"
+    },
+    {
+      "slot": 5,
+      "task_id": "go-caddy-docker-proxy",
+      "candidate_id": "https-github-com-lucaslorentz-caddy-docker-proxy-00e330917d1f",
+      "language": "go",
+      "status_at_dispatch": "candidate",
+      "revision": "d246679c72e1c3d2ef0e610503e1c2f74581978b",
+      "upstream_url": "https://github.com/lucaslorentz/caddy-docker-proxy",
+      "identity": "https://github.com/lucaslorentz/caddy-docker-proxy",
+      "worktree_owner": "wave5-05-go-caddy-docker-proxy"
+    },
+    {
+      "slot": 6,
+      "task_id": "go-cli",
+      "candidate_id": "https-github-com-smallstep-cli-f5d66f577051",
+      "language": "go",
+      "status_at_dispatch": "candidate",
+      "revision": "eb1901e52427e629b5932b087f06807ce0dcc8ab",
+      "upstream_url": "https://github.com/smallstep/cli",
+      "identity": "https://github.com/smallstep/cli",
+      "worktree_owner": "wave5-06-go-cli"
+    },
+    {
+      "slot": 7,
+      "task_id": "go-codesearch",
+      "candidate_id": "https-github-com-google-codesearch-b8bcdf9ac884",
+      "language": "go",
+      "status_at_dispatch": "candidate",
+      "revision": "74a12a911a79b901d1158c48d011b2da1b090fc9",
+      "upstream_url": "https://github.com/google/codesearch",
+      "identity": "https://github.com/google/codesearch",
+      "worktree_owner": "wave5-07-go-codesearch"
+    },
+    {
+      "slot": 8,
+      "task_id": "go-concurrent-map",
+      "candidate_id": "https-github-com-orcaman-concurrent-map-ad14651af793",
+      "language": "go",
+      "status_at_dispatch": "candidate",
+      "revision": "85296bce05256a80153a9e0c2bf6f4e167a4fe8d",
+      "upstream_url": "https://github.com/orcaman/concurrent-map",
+      "identity": "https://github.com/orcaman/concurrent-map",
+      "worktree_owner": "wave5-08-go-concurrent-map"
+    },
+    {
+      "slot": 9,
+      "task_id": "go-dig",
+      "candidate_id": "https-github-com-uber-go-dig-bfdbe055255c",
+      "language": "go",
+      "status_at_dispatch": "candidate",
+      "revision": "770912487056bfe8bc9bd5879a4e049f68989ab0",
+      "upstream_url": "https://github.com/uber-go/dig",
+      "identity": "https://github.com/uber-go/dig",
+      "worktree_owner": "wave5-09-go-dig"
+    },
+    {
+      "slot": 10,
+      "task_id": "go-docker-volume-backup",
+      "candidate_id": "https-github-com-offen-docker-volume-backup-f0a959cbfaa0",
+      "language": "go",
+      "status_at_dispatch": "candidate",
+      "revision": "bd50ba96c439e6003b982cf6b371278eff946669",
+      "upstream_url": "https://github.com/offen/docker-volume-backup",
+      "identity": "https://github.com/offen/docker-volume-backup",
+      "worktree_owner": "wave5-10-go-docker-volume-backup"
+    },
+    {
+      "slot": 11,
+      "task_id": "go-echoip",
+      "candidate_id": "https-github-com-mpolden-echoip-bda1ea2679dd",
+      "language": "go",
+      "status_at_dispatch": "candidate",
+      "revision": "746db5ebf42f87da5d487de444dccc884f9d1c39",
+      "upstream_url": "https://github.com/mpolden/echoip",
+      "identity": "https://github.com/mpolden/echoip",
+      "worktree_owner": "wave5-11-go-echoip"
+    },
+    {
+      "slot": 12,
+      "task_id": "go-freeze",
+      "candidate_id": "https-github-com-charmbracelet-freeze-51234202508e",
+      "language": "go",
+      "status_at_dispatch": "candidate",
+      "revision": "f4276107b7b7a1ad33882cb26baf2102f90887b0",
+      "upstream_url": "https://github.com/charmbracelet/freeze",
+      "identity": "https://github.com/charmbracelet/freeze",
+      "worktree_owner": "wave5-12-go-freeze"
+    }
+  ]
+}

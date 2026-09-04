@@ -1,0 +1,3283 @@
+{
+  "counts": {
+    "candidate": 48,
+    "existing": 2,
+    "needs-evidence": 22,
+    "rejected": 28
+  },
+  "observed_at": "2026-09-04T20:25:00Z",
+  "queue": [
+    {
+      "candidate_id": "https-github-com-anthonynsimon-bild-92b723dced58",
+      "category": "go-library",
+      "conflicts": [],
+      "difficulty": "hard",
+      "identity": "https://github.com/anthonynsimon/bild",
+      "language": "go",
+      "last_activity": "2026-08-01T09:45:40Z",
+      "license_evidence": "https://github.com/anthonynsimon/bild/blob/3bef4b08d12a23a2f8c87ac6b52901ec6492d09b/LICENSE",
+      "license_spdx": "MIT",
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "go-bild",
+      "revision": "3bef4b08d12a23a2f8c87ac6b52901ec6492d09b",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/go-bild.json",
+          "report_sha256": "sha256:9c40b8553e47c8015a009fb03eb3e3f4c05701e347dac423575f78799cf27047",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "go-modules",
+      "source_sloc": 3513,
+      "stars": 4211,
+      "status": "candidate",
+      "test_count": 128,
+      "test_files": 26,
+      "upstream_url": "https://github.com/anthonynsimon/bild"
+    },
+    {
+      "candidate_id": "https-github-com-perplexityai-bumblebee-41e7c0b0c692",
+      "category": "go-library",
+      "conflicts": [],
+      "difficulty": "hard",
+      "identity": "https://github.com/perplexityai/bumblebee",
+      "language": "go",
+      "last_activity": "2026-08-07T17:19:42Z",
+      "license_evidence": "https://github.com/perplexityai/bumblebee/blob/d76e369a0b34d6506dc249b4d573f7859cac7a19/LICENSE",
+      "license_spdx": "Apache-2.0",
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "go-bumblebee",
+      "revision": "d76e369a0b34d6506dc249b4d573f7859cac7a19",
+      "risk_flags": [
+        "network-or-external-io"
+      ],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/go-bumblebee.json",
+          "report_sha256": "sha256:b7f88e006b011e729a6dd7ef253024183ba6e68fe3c87df6c64da2bc7c1f9e95",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "go-modules",
+      "source_sloc": 6331,
+      "stars": 4984,
+      "status": "candidate",
+      "test_count": 216,
+      "test_files": 28,
+      "upstream_url": "https://github.com/perplexityai/bumblebee"
+    },
+    {
+      "candidate_id": "https-github-com-tidwall-buntdb-04b7d892addb",
+      "category": "go-library",
+      "conflicts": [],
+      "difficulty": "medium",
+      "identity": "https://github.com/tidwall/buntdb",
+      "language": "go",
+      "last_activity": "2026-05-19T13:29:56Z",
+      "license_evidence": "https://github.com/tidwall/buntdb/blob/0dbc8c18459aed4e4179bccbe0322bbd6019733f/LICENSE",
+      "license_spdx": "MIT",
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "go-buntdb",
+      "revision": "0dbc8c18459aed4e4179bccbe0322bbd6019733f",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/go-buntdb.json",
+          "report_sha256": "sha256:a9fb2165347bf6f6681f63285fa23820110aef3a33aeec9d73af554c96cde203",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "go-modules",
+      "source_sloc": 1691,
+      "stars": 4866,
+      "status": "candidate",
+      "test_count": 70,
+      "test_files": 1,
+      "upstream_url": "https://github.com/tidwall/buntdb"
+    },
+    {
+      "candidate_id": "https-github-com-linkedin-burrow-b458d3cc9471",
+      "category": "go-library",
+      "conflicts": [],
+      "difficulty": "hard",
+      "identity": "https://github.com/linkedin/Burrow",
+      "language": "go",
+      "last_activity": "2026-08-21T16:01:43Z",
+      "license_evidence": "https://github.com/linkedin/Burrow/blob/66bdb0566fdeb14251a53eb7f6cb4ed4036d16ed/LICENSE",
+      "license_spdx": "Apache-2.0",
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "go-burrow",
+      "revision": "66bdb0566fdeb14251a53eb7f6cb4ed4036d16ed",
+      "risk_flags": [
+        "network-or-external-io"
+      ],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/go-burrow.json",
+          "report_sha256": "sha256:0adf327afdd05bf562ad0861e6a1b43b0635136fec86b2574f630ce70374a9d3",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "go-modules",
+      "source_sloc": 6300,
+      "stars": 3960,
+      "status": "candidate",
+      "test_count": 238,
+      "test_files": 26,
+      "upstream_url": "https://github.com/linkedin/Burrow"
+    },
+    {
+      "candidate_id": "https-github-com-lucaslorentz-caddy-docker-proxy-00e330917d1f",
+      "category": "go-library",
+      "conflicts": [],
+      "difficulty": "medium",
+      "identity": "https://github.com/lucaslorentz/caddy-docker-proxy",
+      "language": "go",
+      "last_activity": "2026-08-20T20:43:16Z",
+      "license_evidence": "https://github.com/lucaslorentz/caddy-docker-proxy/blob/d246679c72e1c3d2ef0e610503e1c2f74581978b/LICENSE",
+      "license_spdx": "MIT",
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "go-caddy-docker-proxy",
+      "revision": "d246679c72e1c3d2ef0e610503e1c2f74581978b",
+      "risk_flags": [
+        "network-or-external-io"
+      ],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/go-caddy-docker-proxy.json",
+          "report_sha256": "sha256:21e3c05405305bb4e7643feaa87a57c4990a1a765f46474ee30327c38897a074",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "go-modules",
+      "source_sloc": 1893,
+      "stars": 4637,
+      "status": "candidate",
+      "test_count": 50,
+      "test_files": 13,
+      "upstream_url": "https://github.com/lucaslorentz/caddy-docker-proxy"
+    },
+    {
+      "candidate_id": "https-github-com-smallstep-cli-f5d66f577051",
+      "category": "go-library",
+      "conflicts": [],
+      "difficulty": "hard",
+      "identity": "https://github.com/smallstep/cli",
+      "language": "go",
+      "last_activity": "2026-09-02T11:09:37Z",
+      "license_evidence": "https://github.com/smallstep/cli/blob/eb1901e52427e629b5932b087f06807ce0dcc8ab/LICENSE",
+      "license_spdx": "Apache-2.0",
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "go-cli",
+      "revision": "eb1901e52427e629b5932b087f06807ce0dcc8ab",
+      "risk_flags": [
+        "network-or-external-io"
+      ],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/go-cli.json",
+          "report_sha256": "sha256:6f21e78c4a236862493b97d6271da51d5ce45202e6ad768a5aab1926bfb5baeb",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "go-modules",
+      "source_sloc": 31719,
+      "stars": 4323,
+      "status": "candidate",
+      "test_count": 102,
+      "test_files": 32,
+      "upstream_url": "https://github.com/smallstep/cli"
+    },
+    {
+      "candidate_id": "https-github-com-google-codesearch-b8bcdf9ac884",
+      "category": "go-library",
+      "conflicts": [],
+      "difficulty": "easy",
+      "identity": "https://github.com/google/codesearch",
+      "language": "go",
+      "last_activity": "2026-08-30T19:49:57Z",
+      "license_evidence": "https://github.com/google/codesearch/blob/74a12a911a79b901d1158c48d011b2da1b090fc9/LICENSE",
+      "license_spdx": "BSD-3-Clause",
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "go-codesearch",
+      "revision": "74a12a911a79b901d1158c48d011b2da1b090fc9",
+      "risk_flags": [
+        "network-or-external-io",
+        "unsafe"
+      ],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/go-codesearch.json",
+          "report_sha256": "sha256:b20814561d898a15ad91f287dd6cb57f57833961a40a2e85072ae152797aa8cc",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "go-modules",
+      "source_sloc": 4236,
+      "stars": 4003,
+      "status": "candidate",
+      "test_count": 15,
+      "test_files": 7,
+      "upstream_url": "https://github.com/google/codesearch"
+    },
+    {
+      "candidate_id": "https-github-com-orcaman-concurrent-map-ad14651af793",
+      "category": "go-library",
+      "conflicts": [],
+      "difficulty": "medium",
+      "identity": "https://github.com/orcaman/concurrent-map",
+      "language": "go",
+      "last_activity": "2024-05-22T08:17:29Z",
+      "license_evidence": "https://github.com/orcaman/concurrent-map/blob/85296bce05256a80153a9e0c2bf6f4e167a4fe8d/LICENSE",
+      "license_spdx": "MIT",
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "go-concurrent-map",
+      "revision": "85296bce05256a80153a9e0c2bf6f4e167a4fe8d",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/go-concurrent-map.json",
+          "report_sha256": "sha256:9dc5ee206d1b4bc6a8585b03a0df3c50e479eddb1294066626ca4f50c6b631fa",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "go-modules",
+      "source_sloc": 262,
+      "stars": 4528,
+      "status": "candidate",
+      "test_count": 53,
+      "test_files": 2,
+      "upstream_url": "https://github.com/orcaman/concurrent-map"
+    },
+    {
+      "candidate_id": "https-github-com-uber-go-dig-bfdbe055255c",
+      "category": "go-library",
+      "conflicts": [],
+      "difficulty": "hard",
+      "identity": "https://github.com/uber-go/dig",
+      "language": "go",
+      "last_activity": "2025-05-13T20:09:41Z",
+      "license_evidence": "https://github.com/uber-go/dig/blob/770912487056bfe8bc9bd5879a4e049f68989ab0/LICENSE",
+      "license_spdx": "MIT",
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "go-dig",
+      "revision": "770912487056bfe8bc9bd5879a4e049f68989ab0",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/go-dig.json",
+          "report_sha256": "sha256:3781362767910181a7f382d3c6d7036de14629b9350fe9be8e130a1303739e1b",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "go-modules",
+      "source_sloc": 3312,
+      "stars": 4499,
+      "status": "candidate",
+      "test_count": 89,
+      "test_files": 21,
+      "upstream_url": "https://github.com/uber-go/dig"
+    },
+    {
+      "candidate_id": "https-github-com-offen-docker-volume-backup-f0a959cbfaa0",
+      "category": "go-library",
+      "conflicts": [],
+      "difficulty": "easy",
+      "identity": "https://github.com/offen/docker-volume-backup",
+      "language": "go",
+      "last_activity": "2026-09-01T05:49:58Z",
+      "license_evidence": "https://github.com/offen/docker-volume-backup/blob/bd50ba96c439e6003b982cf6b371278eff946669/LICENSE",
+      "license_spdx": "MPL-2.0",
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "go-docker-volume-backup",
+      "revision": "bd50ba96c439e6003b982cf6b371278eff946669",
+      "risk_flags": [
+        "network-or-external-io",
+        "toolchain-directive"
+      ],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/go-docker-volume-backup.json",
+          "report_sha256": "sha256:5b03925d5f74f58b8cf256da1fe666f07aeb8cbe35e10612fe21d5a42f69ebda",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "go-modules",
+      "source_sloc": 3576,
+      "stars": 3998,
+      "status": "candidate",
+      "test_count": 2,
+      "test_files": 2,
+      "upstream_url": "https://github.com/offen/docker-volume-backup"
+    },
+    {
+      "candidate_id": "https-github-com-mpolden-echoip-bda1ea2679dd",
+      "category": "go-library",
+      "conflicts": [],
+      "difficulty": "easy",
+      "identity": "https://github.com/mpolden/echoip",
+      "language": "go",
+      "last_activity": "2026-02-28T18:58:11Z",
+      "license_evidence": "https://github.com/mpolden/echoip/blob/746db5ebf42f87da5d487de444dccc884f9d1c39/LICENSE",
+      "license_spdx": "BSD-3-Clause",
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "go-echoip",
+      "revision": "746db5ebf42f87da5d487de444dccc884f9d1c39",
+      "risk_flags": [
+        "network-or-external-io"
+      ],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/go-echoip.json",
+          "report_sha256": "sha256:ecd6230ace926012c0d7e492667d1e8b3a96b92e8a68a5ec005fb36f34a9cfa1",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "go-modules",
+      "source_sloc": 907,
+      "stars": 4349,
+      "status": "candidate",
+      "test_count": 14,
+      "test_files": 5,
+      "upstream_url": "https://github.com/mpolden/echoip"
+    },
+    {
+      "candidate_id": "https-github-com-charmbracelet-freeze-51234202508e",
+      "category": "go-library",
+      "conflicts": [],
+      "difficulty": "easy",
+      "identity": "https://github.com/charmbracelet/freeze",
+      "language": "go",
+      "last_activity": "2026-09-01T05:43:30Z",
+      "license_evidence": "https://github.com/charmbracelet/freeze/blob/f4276107b7b7a1ad33882cb26baf2102f90887b0/LICENSE",
+      "license_spdx": "MIT",
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "go-freeze",
+      "revision": "f4276107b7b7a1ad33882cb26baf2102f90887b0",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/go-freeze.json",
+          "report_sha256": "sha256:452738e6fdd4ba55619fd469403fa7b3a93aa4f97c93c1a019d29696c26078b1",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "go-modules",
+      "source_sloc": 1372,
+      "stars": 4820,
+      "status": "candidate",
+      "test_count": 8,
+      "test_files": 3,
+      "upstream_url": "https://github.com/charmbracelet/freeze"
+    },
+    {
+      "candidate_id": "https-github-com-kashav-fsql-7c5aafb5736d",
+      "category": "go-library",
+      "conflicts": [],
+      "difficulty": "medium",
+      "identity": "https://github.com/kashav/fsql",
+      "language": "go",
+      "last_activity": "2026-07-25T22:00:12Z",
+      "license_evidence": "https://github.com/kashav/fsql/blob/5cfe17e9b3c69aee6e65cc5d73b7c40cc1ffa87e/LICENSE",
+      "license_spdx": "MIT",
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "go-fsql",
+      "revision": "5cfe17e9b3c69aee6e65cc5d73b7c40cc1ffa87e",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/go-fsql.json",
+          "report_sha256": "sha256:dcc7d4206a680d04d221349fb4c853e2c638e83526f2c7cdb21286a817516098",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "go-modules",
+      "source_sloc": 1765,
+      "stars": 3987,
+      "status": "candidate",
+      "test_count": 52,
+      "test_files": 20,
+      "upstream_url": "https://github.com/kashav/fsql"
+    },
+    {
+      "candidate_id": "https-github-com-google-go-cmp-48bb45db2c77",
+      "category": "go-library",
+      "conflicts": [],
+      "difficulty": "hard",
+      "identity": "https://github.com/google/go-cmp",
+      "language": "go",
+      "last_activity": "2026-06-18T07:33:22Z",
+      "license_evidence": "https://github.com/google/go-cmp/blob/b133f1f1932e48f466f597a3346ce6f5a49a0dc1/LICENSE",
+      "license_spdx": "BSD-3-Clause",
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "go-go-cmp",
+      "revision": "b133f1f1932e48f466f597a3346ce6f5a49a0dc1",
+      "risk_flags": [
+        "unsafe"
+      ],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/go-go-cmp.json",
+          "report_sha256": "sha256:1993465c6016aceb74af86ad1f902b4966c43c8069db6ade49cd4eb13a619ea5",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "go-modules",
+      "source_sloc": 4679,
+      "stars": 4677,
+      "status": "candidate",
+      "test_count": 22,
+      "test_files": 10,
+      "upstream_url": "https://github.com/google/go-cmp"
+    },
+    {
+      "candidate_id": "https-github-com-thoas-go-funk-0544c2e30ae8",
+      "category": "go-library",
+      "conflicts": [],
+      "difficulty": "hard",
+      "identity": "https://github.com/thoas/go-funk",
+      "language": "go",
+      "last_activity": "2024-07-24T11:49:17Z",
+      "license_evidence": "https://github.com/thoas/go-funk/blob/045ef11f8f9f4d83a03adbd0eea420773c6c68bc/LICENSE",
+      "license_spdx": "MIT",
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "go-go-funk",
+      "revision": "045ef11f8f9f4d83a03adbd0eea420773c6c68bc",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/go-go-funk.json",
+          "report_sha256": "sha256:a8bb4b227b58e669c5e0c9a45e4733f0ef282b09367e1125978b44cd3756f02e",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "go-modules",
+      "source_sloc": 3711,
+      "stars": 4931,
+      "status": "candidate",
+      "test_count": 230,
+      "test_files": 31,
+      "upstream_url": "https://github.com/thoas/go-funk"
+    },
+    {
+      "candidate_id": "https-github-com-dustin-go-humanize-96a300515aa2",
+      "category": "go-library",
+      "conflicts": [],
+      "difficulty": "medium",
+      "identity": "https://github.com/dustin/go-humanize",
+      "language": "go",
+      "last_activity": "2026-03-02T20:56:06Z",
+      "license_evidence": "https://github.com/dustin/go-humanize/blob/4d1d9082551ec085912e7d2253a33ae547fca000/LICENSE",
+      "license_spdx": "MIT",
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "go-go-humanize",
+      "revision": "4d1d9082551ec085912e7d2253a33ae547fca000",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/go-go-humanize.json",
+          "report_sha256": "sha256:fe97070d8aea68084e6f13b28391f8156bd75fe10e2263902d1e9d83d2bfcc88",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "go-modules",
+      "source_sloc": 817,
+      "stars": 4815,
+      "status": "candidate",
+      "test_count": 47,
+      "test_files": 12,
+      "upstream_url": "https://github.com/dustin/go-humanize"
+    },
+    {
+      "candidate_id": "https-github-com-go-mysql-org-go-mysql-bc3eb824bc1b",
+      "category": "go-library",
+      "conflicts": [],
+      "difficulty": "hard",
+      "identity": "https://github.com/go-mysql-org/go-mysql",
+      "language": "go",
+      "last_activity": "2026-09-02T13:14:36Z",
+      "license_evidence": "https://github.com/go-mysql-org/go-mysql/blob/9ed3a7186e2b591989d8af214de2120e7a26008a/LICENSE",
+      "license_spdx": "MIT",
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "go-go-mysql",
+      "revision": "9ed3a7186e2b591989d8af214de2120e7a26008a",
+      "risk_flags": [
+        "network-or-external-io",
+        "unsafe"
+      ],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/go-go-mysql.json",
+          "report_sha256": "sha256:e67673bf7d16f8c51671dc86d93a510b539c3b4f5e993f2597c3022b70a2caab",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "go-modules",
+      "source_sloc": 18179,
+      "stars": 4964,
+      "status": "candidate",
+      "test_count": 301,
+      "test_files": 59,
+      "upstream_url": "https://github.com/go-mysql-org/go-mysql"
+    },
+    {
+      "candidate_id": "https-github-com-csstools-postcss-plugins-6d3fa81382b9",
+      "conflicts": [],
+      "identity": "https://github.com/csstools/postcss-plugins",
+      "language": "node",
+      "last_activity": "2026-08-15T16:45:53.348Z",
+      "license_evidence": "https://www.npmjs.com/package/@csstools/postcss-progressive-custom-properties",
+      "license_spdx": "MIT-0",
+      "monthly_downloads": 28479229,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "@csstools/postcss-progressive-custom-properties",
+      "revision": "c55f9afa26005f083703dd79659b3b7d198ccd37",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/node-at-csstools-postcss-progressive-custom-properties.json",
+          "report_sha256": "sha256:1a5618811f3a1d304049dec10fbbeb0b873b2d16607ab63c8031c99ea7e96142",
+          "shape": "candidates"
+        },
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave5/node-at-csstools-postcss-progressive-custom-properties.json",
+          "report_sha256": "sha256:0a31335dec3a775164626faabe02c16d6f45e7aa3ed66dc9b003e506933e6870",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/csstools/postcss-plugins"
+    },
+    {
+      "candidate_id": "https-github-com-cypress-io-request-18ec325255be",
+      "conflicts": [],
+      "identity": "https://github.com/cypress-io/request",
+      "language": "node",
+      "last_activity": "2026-05-28T13:26:21.179Z",
+      "license_evidence": "https://www.npmjs.com/package/@cypress/request",
+      "license_spdx": "Apache-2.0",
+      "monthly_downloads": 31392409,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "@cypress/request",
+      "revision": "c1d4c52354202e38bb465d717dfcbb0552b4f626",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/node-at-cypress-request.json",
+          "report_sha256": "sha256:0ffbc7e17f378c6f2c8b2adec3d411342b15c19da3cf7006dc8ac677ccb35b78",
+          "shape": "candidates"
+        },
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave5/node-at-cypress-request.json",
+          "report_sha256": "sha256:633c507d7c83b08cc86bf616293242017ed83b0a5cbda26b3db4d0509a794f1f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/cypress-io/request"
+    },
+    {
+      "candidate_id": "https-github-com-fastify-fastify-error-814e27a28697",
+      "conflicts": [],
+      "identity": "https://github.com/fastify/fastify-error",
+      "language": "node",
+      "last_activity": "2025-06-01T07:56:14.569Z",
+      "license_evidence": "https://www.npmjs.com/package/@fastify/error",
+      "license_spdx": "MIT",
+      "monthly_downloads": 45990205,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "@fastify/error",
+      "revision": "9470f997a06035d7e1dec2e2eceb7d2a3cca68e5",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/node-at-fastify-error.json",
+          "report_sha256": "sha256:ce65c673026f69d5bffe95b1f670e1338273c296d52c318d55394a5ce4149305",
+          "shape": "candidates"
+        },
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave5/node-at-fastify-error.json",
+          "report_sha256": "sha256:56eb3a74912cfba4c52908e1932c0aa8b2c16bf87b9000ba3c3cc0e9273e21cd",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/fastify/fastify-error"
+    },
+    {
+      "candidate_id": "https-github-com-sindresorhus-is-cc8131aaa30a",
+      "conflicts": [],
+      "identity": "https://github.com/sindresorhus/is",
+      "language": "node",
+      "last_activity": "2026-05-11T11:22:36.268Z",
+      "license_evidence": "https://www.npmjs.com/package/@sindresorhus/is",
+      "license_spdx": "MIT",
+      "monthly_downloads": 239877373,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "@sindresorhus/is",
+      "revision": "7821031c66cdeb7256a0feb2d506535f9e84fcaf",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/node-at-sindresorhus-is.json",
+          "report_sha256": "sha256:b656238bd404b0ac7cccb41869ca9dbe4eb65118fe0f2be11601339817ee5bc3",
+          "shape": "candidates"
+        },
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave5/node-at-sindresorhus-is.json",
+          "report_sha256": "sha256:d628c0ca664396bcdfdffacfdd25acb1ccc6ca1c2d5e5d3263fd9e76e1112938",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/sindresorhus/is"
+    },
+    {
+      "candidate_id": "https-github-com-inxilpro-node-app-root-path-1302ef90968d",
+      "conflicts": [],
+      "identity": "https://github.com/inxilpro/node-app-root-path",
+      "language": "node",
+      "last_activity": "2022-08-16T03:27:51.632Z",
+      "license_evidence": "https://www.npmjs.com/package/app-root-path",
+      "license_spdx": "MIT",
+      "monthly_downloads": 23555257,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "app-root-path",
+      "revision": "baf711a6ec61acf50aeb42fb6e5118e899bcbe4b",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/node-app-root-path.json",
+          "report_sha256": "sha256:9345d9bf6f8aaeec63d94d02dbb23a8ce6d1b1e42d3572ec71a87883baca3b15",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "rejected",
+      "upstream_url": "https://github.com/inxilpro/node-app-root-path"
+    },
+    {
+      "candidate_id": "https-github-com-jonschlinkert-arr-union-e3f10720a9ee",
+      "conflicts": [],
+      "identity": "https://github.com/jonschlinkert/arr-union",
+      "language": "node",
+      "last_activity": "2016-02-23T12:54:40.819Z",
+      "license_evidence": "https://www.npmjs.com/package/arr-union",
+      "license_spdx": "MIT",
+      "monthly_downloads": 59531881,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "arr-union",
+      "revision": "ede857f5d5082467534e372fd3da45ce5e782e93",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/node-arr-union.json",
+          "report_sha256": "sha256:a2e8fb3e3fb4be7f5fd70a4f6562e1370594e2dd5c912b80ffa5e3d92510b943",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "rejected",
+      "upstream_url": "https://github.com/jonschlinkert/arr-union"
+    },
+    {
+      "candidate_id": "https-github-com-visionmedia-bytes-js-1044f75f3199",
+      "conflicts": [],
+      "identity": "https://github.com/visionmedia/bytes.js",
+      "language": "node",
+      "last_activity": "2022-01-28T05:02:37.661Z",
+      "license_evidence": "https://www.npmjs.com/package/bytes",
+      "license_spdx": "MIT",
+      "monthly_downloads": 499912501,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "bytes",
+      "revision": "9ddc13b6c66e0cb293616fba246e05db4b6cef4d",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/node-bytes.json",
+          "report_sha256": "sha256:a170caa489cd1fc3267633396ccdd06e2629acf109d705df39116960fc63d344",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "rejected",
+      "upstream_url": "https://github.com/visionmedia/bytes.js"
+    },
+    {
+      "candidate_id": "https-github-com-jedwatson-classnames-7fe945ebfd8b",
+      "conflicts": [],
+      "identity": "https://github.com/JedWatson/classnames",
+      "language": "node",
+      "last_activity": "2023-12-29T15:55:16.013Z",
+      "license_evidence": "https://www.npmjs.com/package/classnames",
+      "license_spdx": "MIT",
+      "monthly_downloads": 132139043,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "classnames",
+      "revision": "abd6314010de053a09df5acc53e474ff65cea470",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/node-classnames.json",
+          "report_sha256": "sha256:8762196d3f940a8917ff2fed16c66fcc6656db03ba19da5b45c41b41efd6de1d",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/JedWatson/classnames"
+    },
+    {
+      "candidate_id": "https-github-com-sindresorhus-cli-cursor-000ca81d96ee",
+      "conflicts": [],
+      "identity": "https://github.com/sindresorhus/cli-cursor",
+      "language": "node",
+      "last_activity": "2024-07-26T14:02:26.233Z",
+      "license_evidence": "https://www.npmjs.com/package/cli-cursor",
+      "license_spdx": "MIT",
+      "monthly_downloads": 480965210,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "cli-cursor",
+      "revision": "b97e13ef5de9b735fe7cb84eb5550a47f2296664",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/node-cli-cursor.json",
+          "report_sha256": "sha256:826724d81cad7fce5b4b1cd0b25b8ffbb0e9bc815d7dba1462bb802d7a8ced31",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/sindresorhus/cli-cursor"
+    },
+    {
+      "candidate_id": "https-github-com-npkgz-cli-progress-4e683c6aff8f",
+      "conflicts": [],
+      "identity": "https://github.com/npkgz/cli-progress",
+      "language": "node",
+      "last_activity": "2023-02-19T11:24:29.315Z",
+      "license_evidence": "https://www.npmjs.com/package/cli-progress",
+      "license_spdx": "MIT",
+      "monthly_downloads": 43766509,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "cli-progress",
+      "revision": "e2347a35a6c0922cfb0a077cf5ed21696fba46da",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/node-cli-progress.json",
+          "report_sha256": "sha256:7e17e884e3acf6387899fe05bfba8885c43de0676148cece424a73495ba1d57d",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "rejected",
+      "upstream_url": "https://github.com/npkgz/cli-progress"
+    },
+    {
+      "candidate_id": "https-github-com-ssh-git-github-com-moxystudio-node-cross-spawn-7ed1026ad3ca",
+      "conflicts": [],
+      "identity": "https://github.com/ssh://git@github.com/moxystudio/node-cross-spawn",
+      "language": "node",
+      "last_activity": "2024-11-18T13:59:52.129Z",
+      "license_evidence": "https://www.npmjs.com/package/cross-spawn",
+      "license_spdx": "MIT",
+      "monthly_downloads": 969248606,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "cross-spawn",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/node-cross-spawn.json",
+          "report_sha256": "sha256:3bb8af4b06f571fa577c204c9abfe80a28e5fbeb4569a6c81be67e1404ff2318",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/ssh://git@github.com/moxystudio/node-cross-spawn"
+    },
+    {
+      "candidate_id": "https-github-com-syntax-tree-esast-util-from-estree-a9b322752467",
+      "conflicts": [],
+      "identity": "https://github.com/syntax-tree/esast-util-from-estree",
+      "language": "node",
+      "last_activity": "2023-07-31T08:38:02.278Z",
+      "license_evidence": "https://www.npmjs.com/package/esast-util-from-estree",
+      "license_spdx": "MIT",
+      "monthly_downloads": 30982312,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "esast-util-from-estree",
+      "revision": "c84ab4b1b6c7a601159f70b86f0e4cabd641b065",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/node-esast-util-from-estree.json",
+          "report_sha256": "sha256:b58ce498b84bb060b1cceab3b90bde300c81a0b675f9c3f31601995b9c11fb92",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "rejected",
+      "upstream_url": "https://github.com/syntax-tree/esast-util-from-estree"
+    },
+    {
+      "candidate_id": "https-github-com-syntax-tree-esast-util-from-js-942cb5d5b010",
+      "conflicts": [],
+      "identity": "https://github.com/syntax-tree/esast-util-from-js",
+      "language": "node",
+      "last_activity": "2023-07-31T08:41:46.875Z",
+      "license_evidence": "https://www.npmjs.com/package/esast-util-from-js",
+      "license_spdx": "MIT",
+      "monthly_downloads": 33568055,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "esast-util-from-js",
+      "revision": "57b7fb7d3697cec0445d2dbae8f73d98fdbc70f9",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/node-esast-util-from-js.json",
+          "report_sha256": "sha256:bf1ae2b5339fac8bcd99f6845f31851f261ea04395e13441eaf5a841fda9bbdc",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "rejected",
+      "upstream_url": "https://github.com/syntax-tree/esast-util-from-js"
+    },
+    {
+      "candidate_id": "https-github-com-sindresorhus-escape-goat-d36c4162cda4",
+      "conflicts": [],
+      "identity": "https://github.com/sindresorhus/escape-goat",
+      "language": "node",
+      "last_activity": "2021-04-16T05:16:18.770Z",
+      "license_evidence": "https://www.npmjs.com/package/escape-goat",
+      "license_spdx": "MIT",
+      "monthly_downloads": 56695787,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "escape-goat",
+      "revision": "29ce81bb36f042700c801ea6c39d636365c45c26",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/node-escape-goat.json",
+          "report_sha256": "sha256:a134bec927d0beb8421f80e1a14387553a364ad922b9490758db1af1910b721c",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "rejected",
+      "upstream_url": "https://github.com/sindresorhus/escape-goat"
+    },
+    {
+      "candidate_id": "https-github-com-component-escape-html-ed8c556fae32",
+      "conflicts": [],
+      "identity": "https://github.com/component/escape-html",
+      "language": "node",
+      "last_activity": "2015-09-01T04:47:22.713Z",
+      "license_evidence": "https://www.npmjs.com/package/escape-html",
+      "license_spdx": "MIT",
+      "monthly_downloads": 442138330,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "escape-html",
+      "revision": "b42947eefa79efff01b3fe988c4c7e7b051ec8d8",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/node-escape-html.json",
+          "report_sha256": "sha256:f200c0f20bbb7bb6579dae44331ecf67ef50d70a1865262d784c0d25481ee000",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "rejected",
+      "upstream_url": "https://github.com/component/escape-html"
+    },
+    {
+      "candidate_id": "https-github-com-syntax-tree-estree-util-to-js-39d7e6fa19c8",
+      "conflicts": [],
+      "identity": "https://github.com/syntax-tree/estree-util-to-js",
+      "language": "node",
+      "last_activity": "2023-07-31T10:25:17.852Z",
+      "license_evidence": "https://www.npmjs.com/package/estree-util-to-js",
+      "license_spdx": "MIT",
+      "monthly_downloads": 37399515,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "estree-util-to-js",
+      "revision": "1ffa93f86d69e9d94e0a82d65d78afa2e6296aaa",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/node-estree-util-to-js.json",
+          "report_sha256": "sha256:cedd0a9cf24b3f5692b29732d72625f5fcbef565a8ccac2022fdb3811910ba4c",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "rejected",
+      "upstream_url": "https://github.com/syntax-tree/estree-util-to-js"
+    },
+    {
+      "candidate_id": "https-github-com-syntax-tree-estree-util-visit-49fb2a87a10b",
+      "conflicts": [],
+      "identity": "https://github.com/syntax-tree/estree-util-visit",
+      "language": "node",
+      "last_activity": "2023-07-19T12:35:15.970Z",
+      "license_evidence": "https://www.npmjs.com/package/estree-util-visit",
+      "license_spdx": "MIT",
+      "monthly_downloads": 48492444,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "estree-util-visit",
+      "revision": "eaf95f5ae0d28a3245cdc9ad3cbdba4130d1694f",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/node-estree-util-visit.json",
+          "report_sha256": "sha256:fe08bd8ee7a7a155e57dbd8374e986f3f8fd08e519f10f47bda5f15164e28984",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "rejected",
+      "upstream_url": "https://github.com/syntax-tree/estree-util-visit"
+    },
+    {
+      "candidate_id": "https-github-com-jonschlinkert-extend-shallow-300f1fd8ea23",
+      "conflicts": [],
+      "identity": "https://github.com/jonschlinkert/extend-shallow",
+      "language": "node",
+      "last_activity": "2017-12-20T19:11:38.344Z",
+      "license_evidence": "https://www.npmjs.com/package/extend-shallow",
+      "license_spdx": "MIT",
+      "monthly_downloads": 271379256,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "extend-shallow",
+      "revision": "33698c3df7804f0d0e3ea98caa64d53f09c37bd4",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/node-extend-shallow.json",
+          "report_sha256": "sha256:951f24afdb1be068564dea6b817a435f42e21873a224cfb1c709796cac5c55c9",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "rejected",
+      "upstream_url": "https://github.com/jonschlinkert/extend-shallow"
+    },
+    {
+      "candidate_id": "https-github-com-ssh-git-github-com-facebook-watchman-d06d60e56924",
+      "conflicts": [],
+      "identity": "https://github.com/ssh://git@github.com/facebook/watchman",
+      "language": "node",
+      "last_activity": "2022-09-21T19:53:18.615Z",
+      "license_evidence": "https://www.npmjs.com/package/fb-watchman",
+      "license_spdx": "Apache-2.0",
+      "monthly_downloads": 190516951,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "fb-watchman",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/node-fb-watchman.json",
+          "report_sha256": "sha256:ee381fb71f58da2ab261c0e3bc1e3da24bbd16aadd45a14f93cc3943c7763491",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/ssh://git@github.com/facebook/watchman"
+    },
+    {
+      "candidate_id": "https-github-com-mde-filelist-ea7c634c7f41",
+      "conflicts": [],
+      "identity": "https://github.com/mde/filelist",
+      "language": "node",
+      "last_activity": "2026-04-11T21:11:27.304Z",
+      "license_evidence": "https://www.npmjs.com/package/filelist",
+      "license_spdx": "Apache-2.0",
+      "monthly_downloads": 115684201,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "filelist",
+      "revision": "0c2b78cb425f292b353b5a2bac4a27bebf90c5a9",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/node-filelist.json",
+          "report_sha256": "sha256:6a85f9ff9d0d72c6e0e104f77e8fdd3a9f8754441c2168eaa236ccc4d5328b8f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/mde/filelist"
+    },
+    {
+      "candidate_id": "https-github-com-ssh-git-github-com-follow-redirects-follow-redirects-9fd33e3a2399",
+      "conflicts": [],
+      "identity": "https://github.com/ssh://git@github.com/follow-redirects/follow-redirects",
+      "language": "node",
+      "last_activity": "2026-04-13T11:03:45.228Z",
+      "license_evidence": "https://www.npmjs.com/package/follow-redirects",
+      "license_spdx": "MIT",
+      "monthly_downloads": 402089673,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "follow-redirects",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/node-follow-redirects.json",
+          "report_sha256": "sha256:c3fbf67b9a3743f772bf2031432b9e1001ff0d3b8f9e1b1bbc6f669b01684f03",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/ssh://git@github.com/follow-redirects/follow-redirects"
+    },
+    {
+      "candidate_id": "https-github-com-jonschlinkert-has-values-24f1dcf61d1b",
+      "conflicts": [],
+      "identity": "https://github.com/jonschlinkert/has-values",
+      "language": "node",
+      "last_activity": "2018-01-31T01:03:10.470Z",
+      "license_evidence": "https://www.npmjs.com/package/has-values",
+      "license_spdx": "MIT",
+      "monthly_downloads": 81022931,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "has-values",
+      "revision": "ceb17a3eef912a7cacbf49de607ec164e9f713b0",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/node-has-values.json",
+          "report_sha256": "sha256:9c5f19639b199edb3af51af7df195bdf40c67040866c3d70cf25c92fb2fd76f6",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "rejected",
+      "upstream_url": "https://github.com/jonschlinkert/has-values"
+    },
+    {
+      "candidate_id": "https-github-com-syntax-tree-hast-util-from-dom-ce8712b0f3d0",
+      "conflicts": [],
+      "identity": "https://github.com/syntax-tree/hast-util-from-dom",
+      "language": "node",
+      "last_activity": "2024-11-19T09:18:30.519Z",
+      "license_evidence": "https://www.npmjs.com/package/hast-util-from-dom",
+      "license_spdx": "ISC",
+      "monthly_downloads": 30527578,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "hast-util-from-dom",
+      "revision": "a00e71765db75da0fbae2e86c90215aac2901335",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/node-hast-util-from-dom.json",
+          "report_sha256": "sha256:1d78ff453973b762847520003459f2ca98ab29fce2d35d2a75cfa82363232e1c",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/syntax-tree/hast-util-from-dom"
+    },
+    {
+      "candidate_id": "https-github-com-syntax-tree-hast-util-from-html-ad7eb8ae97f7",
+      "conflicts": [],
+      "identity": "https://github.com/syntax-tree/hast-util-from-html",
+      "language": "node",
+      "last_activity": "2024-09-17T11:10:50.098Z",
+      "license_evidence": "https://www.npmjs.com/package/hast-util-from-html",
+      "license_spdx": "MIT",
+      "monthly_downloads": 55603179,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "hast-util-from-html",
+      "revision": "1ade8935dea8d293196f4cfc0463d3e91eb8a49e",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/node-hast-util-from-html.json",
+          "report_sha256": "sha256:7cba85349fe7b968e8b67bbf91652fc8587bda8ae27f949c89ec9da66f7ac57b",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/syntax-tree/hast-util-from-html"
+    },
+    {
+      "candidate_id": "https-github-com-syntax-tree-hast-util-from-html-isomorphic-e4206ae711f3",
+      "conflicts": [],
+      "identity": "https://github.com/syntax-tree/hast-util-from-html-isomorphic",
+      "language": "node",
+      "last_activity": "2023-08-08T13:09:03.725Z",
+      "license_evidence": "https://www.npmjs.com/package/hast-util-from-html-isomorphic",
+      "license_spdx": "MIT",
+      "monthly_downloads": 25963864,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "hast-util-from-html-isomorphic",
+      "revision": "40747b5cd8c907fa773f8915ab3248cde06c3549",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/node-hast-util-from-html-isomorphic.json",
+          "report_sha256": "sha256:8f0002c63986566fa82860ce0f112fd9c359eb00f005502d76e5dc4653a3ab6e",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/syntax-tree/hast-util-from-html-isomorphic"
+    },
+    {
+      "candidate_id": "https-github-com-syntax-tree-hast-util-from-parse5-550556e18c6c",
+      "conflicts": [],
+      "identity": "https://github.com/syntax-tree/hast-util-from-parse5",
+      "language": "node",
+      "last_activity": "2025-02-19T14:42:45.779Z",
+      "license_evidence": "https://www.npmjs.com/package/hast-util-from-parse5",
+      "license_spdx": "MIT",
+      "monthly_downloads": 92191184,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "hast-util-from-parse5",
+      "revision": "6fd23c9a4b53a6bce106ebc842de6f1727792954",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/node-hast-util-from-parse5.json",
+          "report_sha256": "sha256:4368dc95b234807f30bc6b8809343cd3b33b3dd5c35d74e705e3903540013eb5",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/syntax-tree/hast-util-from-parse5"
+    },
+    {
+      "candidate_id": "https-github-com-syntax-tree-hast-util-has-property-b4118dfee7c3",
+      "conflicts": [],
+      "identity": "https://github.com/syntax-tree/hast-util-has-property",
+      "language": "node",
+      "last_activity": "2023-08-01T08:58:14.361Z",
+      "license_evidence": "https://www.npmjs.com/package/hast-util-has-property",
+      "license_spdx": "MIT",
+      "monthly_downloads": 21440292,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "hast-util-has-property",
+      "revision": "249a209f4b3b721062871cbe151f47fdf35b7faf",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/node-hast-util-has-property.json",
+          "report_sha256": "sha256:16b959d317c69a932067d7e246f1f10259e827c784a864ced8b373c74e686387",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "rejected",
+      "upstream_url": "https://github.com/syntax-tree/hast-util-has-property"
+    },
+    {
+      "candidate_id": "https-github-com-syntax-tree-hast-util-heading-rank-fd0a1e3de4d4",
+      "conflicts": [],
+      "identity": "https://github.com/syntax-tree/hast-util-heading-rank",
+      "language": "node",
+      "last_activity": "2023-08-02T13:17:51.787Z",
+      "license_evidence": "https://www.npmjs.com/package/hast-util-heading-rank",
+      "license_spdx": "MIT",
+      "monthly_downloads": 14030666,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "hast-util-heading-rank",
+      "revision": "820f0b315aa86eb33b4bdd193b5c5ba8d0548d71",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/node-hast-util-heading-rank.json",
+          "report_sha256": "sha256:f131a7f31ccaf90be5b20a0225f69c1c0762516ad4e85e0489699c9729b663d4",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "rejected",
+      "upstream_url": "https://github.com/syntax-tree/hast-util-heading-rank"
+    },
+    {
+      "candidate_id": "https-github-com-syntax-tree-hast-util-is-element-6009fdbbd9ac",
+      "conflicts": [],
+      "identity": "https://github.com/syntax-tree/hast-util-is-element",
+      "language": "node",
+      "last_activity": "2023-07-31T15:09:01.219Z",
+      "license_evidence": "https://www.npmjs.com/package/hast-util-is-element",
+      "license_spdx": "MIT",
+      "monthly_downloads": 64243310,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "hast-util-is-element",
+      "revision": "e98fc840d5178d57d04ba34894506ca2aa88f78b",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/node-hast-util-is-element.json",
+          "report_sha256": "sha256:2182dcfe2539fdf96ad4cfbff8c30dbf08518416cb8d1905e2ffec0facfd6151",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "rejected",
+      "upstream_url": "https://github.com/syntax-tree/hast-util-is-element"
+    },
+    {
+      "candidate_id": "https-github-com-syntax-tree-hast-util-parse-selector-d6393c5313aa",
+      "conflicts": [],
+      "identity": "https://github.com/syntax-tree/hast-util-parse-selector",
+      "language": "node",
+      "last_activity": "2023-08-01T11:57:16.332Z",
+      "license_evidence": "https://www.npmjs.com/package/hast-util-parse-selector",
+      "license_spdx": "MIT",
+      "monthly_downloads": 120906633,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "hast-util-parse-selector",
+      "revision": "d61860a994d741af3c7af3a644b6bb03e43cf6f1",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/node-hast-util-parse-selector.json",
+          "report_sha256": "sha256:3a404c87d8da6342e87066399743d5ed43a7190f0ee2c49ce612ace0153d88ce",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "rejected",
+      "upstream_url": "https://github.com/syntax-tree/hast-util-parse-selector"
+    },
+    {
+      "candidate_id": "https-github-com-syntax-tree-hast-util-raw-8c9c82317a2f",
+      "conflicts": [],
+      "identity": "https://github.com/syntax-tree/hast-util-raw",
+      "language": "node",
+      "last_activity": "2024-11-14T16:02:23.969Z",
+      "license_evidence": "https://www.npmjs.com/package/hast-util-raw",
+      "license_spdx": "MIT",
+      "monthly_downloads": 72250972,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "hast-util-raw",
+      "revision": "ad15a52350463223504999a6c4c763e1994522d4",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/node-hast-util-raw.json",
+          "report_sha256": "sha256:b4ca12131d4d335fa5b3f9a747d2b174900996ef3f8e9d0e2e8a08fdcaf97e13",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/syntax-tree/hast-util-raw"
+    },
+    {
+      "candidate_id": "https-github-com-syntax-tree-hast-util-sanitize-264f6a90d3ba",
+      "conflicts": [],
+      "identity": "https://github.com/syntax-tree/hast-util-sanitize",
+      "language": "node",
+      "last_activity": "2024-10-25T13:36:27.148Z",
+      "license_evidence": "https://www.npmjs.com/package/hast-util-sanitize",
+      "license_spdx": "MIT",
+      "monthly_downloads": 41272058,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "hast-util-sanitize",
+      "revision": "7f30d9e6261583efc544ff6a93ba54ca6e53e1b5",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/node-hast-util-sanitize.json",
+          "report_sha256": "sha256:efe1d4b6dfe4b9f1921789e0a74b1e3fb016819f8a47917f242ba646dc2a12eb",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/syntax-tree/hast-util-sanitize"
+    },
+    {
+      "candidate_id": "https-github-com-syntax-tree-hast-util-to-estree-d644470cf1a1",
+      "conflicts": [],
+      "identity": "https://github.com/syntax-tree/hast-util-to-estree",
+      "language": "node",
+      "last_activity": "2025-03-03T10:37:54.036Z",
+      "license_evidence": "https://www.npmjs.com/package/hast-util-to-estree",
+      "license_spdx": "MIT",
+      "monthly_downloads": 39392288,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "hast-util-to-estree",
+      "revision": "e5ccb97e9f42bba90359ea6d0f83a11d74e0dad6",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/node-hast-util-to-estree.json",
+          "report_sha256": "sha256:b331de1483d9ec8d852de0d1cb338d90fa00df70d0798ce2081d88256e6a865b",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/syntax-tree/hast-util-to-estree"
+    },
+    {
+      "candidate_id": "https-github-com-syntax-tree-hast-util-to-html-b8daac5ef5ae",
+      "conflicts": [],
+      "identity": "https://github.com/syntax-tree/hast-util-to-html",
+      "language": "node",
+      "last_activity": "2025-02-19T13:34:47.133Z",
+      "license_evidence": "https://www.npmjs.com/package/hast-util-to-html",
+      "license_spdx": "MIT",
+      "monthly_downloads": 79409513,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "hast-util-to-html",
+      "revision": "d115f5beab200c819699e1db9d7eb7b5b1009a21",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/node-hast-util-to-html.json",
+          "report_sha256": "sha256:0ba4a605b4073f03b0000d0dbdcd8b1fc4bdf8b6db9e67cbe036e468873169ef",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/syntax-tree/hast-util-to-html"
+    },
+    {
+      "candidate_id": "https-github-com-syntax-tree-hast-util-to-parse5-07d2f72187a2",
+      "conflicts": [],
+      "identity": "https://github.com/syntax-tree/hast-util-to-parse5",
+      "language": "node",
+      "last_activity": "2025-12-04T16:34:30.916Z",
+      "license_evidence": "https://www.npmjs.com/package/hast-util-to-parse5",
+      "license_spdx": "MIT",
+      "monthly_downloads": 72124409,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "hast-util-to-parse5",
+      "revision": "cba581a04ae64a103c53cf651db790cf495ba4d4",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/node-hast-util-to-parse5.json",
+          "report_sha256": "sha256:051d976ffdce35d198bc307b414018d33de57cadb4cd4d19a6dc6ba2f00c616b",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/syntax-tree/hast-util-to-parse5"
+    },
+    {
+      "candidate_id": "https-github-com-rehypejs-rehype-minify-git-main-5b64d47c8559",
+      "conflicts": [],
+      "identity": "https://github.com/rehypejs/rehype-minify.git#main",
+      "language": "node",
+      "last_activity": "2024-09-27T11:49:09.914Z",
+      "license_evidence": "https://www.npmjs.com/package/hast-util-to-string",
+      "license_spdx": "MIT",
+      "monthly_downloads": 25187688,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "hast-util-to-string",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/node-hast-util-to-string.json",
+          "report_sha256": "sha256:8dc20a9fd30be6cec62fb9995b16c696da4d120253dfdd41c0da5b08b07a6ada",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/rehypejs/rehype-minify.git#main"
+    },
+    {
+      "candidate_id": "https-github-com-syntax-tree-hast-util-to-text-cc55dc7c31bc",
+      "conflicts": [],
+      "identity": "https://github.com/syntax-tree/hast-util-to-text",
+      "language": "node",
+      "last_activity": "2024-04-16T10:33:12.922Z",
+      "license_evidence": "https://www.npmjs.com/package/hast-util-to-text",
+      "license_spdx": "MIT",
+      "monthly_downloads": 52265141,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "hast-util-to-text",
+      "revision": "d83363ab0ceafadabbd50d5373a881c3f8f3e1c9",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/node-hast-util-to-text.json",
+          "report_sha256": "sha256:da0a7ec38720c63651c7011dc9567c0edca4f46093c9311cb02e3e0f80e0875f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/syntax-tree/hast-util-to-text"
+    },
+    {
+      "candidate_id": "https-github-com-syntax-tree-hastscript-eb8d9ca4b040",
+      "conflicts": [],
+      "identity": "https://github.com/syntax-tree/hastscript",
+      "language": "node",
+      "last_activity": "2025-02-19T13:18:00.722Z",
+      "license_evidence": "https://www.npmjs.com/package/hastscript",
+      "license_spdx": "MIT",
+      "monthly_downloads": 122632357,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "hastscript",
+      "revision": "1284c85bfa93adbf1b24e791caa2946f0ee6378b",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/node-hastscript.json",
+          "report_sha256": "sha256:285206fa60cf9637e0aa52d87c66228a0b1ebc1eaef88c14f51e8133efc1141c",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/syntax-tree/hastscript"
+    },
+    {
+      "candidate_id": "https-github-com-syntax-tree-mdast-util-definitions-426bc7a28cdb",
+      "conflicts": [],
+      "identity": "https://github.com/syntax-tree/mdast-util-definitions",
+      "language": "node",
+      "last_activity": "2023-07-08T09:56:21.492Z",
+      "license_evidence": "https://www.npmjs.com/package/mdast-util-definitions",
+      "license_spdx": "MIT",
+      "monthly_downloads": 35237090,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "mdast-util-definitions",
+      "revision": "9032189f17494e70675b38ba5eb3881b430d3a12",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/node-mdast-util-definitions.json",
+          "report_sha256": "sha256:37ed4731414da85ad25af8e99a1673a48d59c2a16aa4bf01578d2140b454570e",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "rejected",
+      "upstream_url": "https://github.com/syntax-tree/mdast-util-definitions"
+    },
+    {
+      "candidate_id": "https-github-com-syntax-tree-mdast-util-directive-9b6e053e45f6",
+      "conflicts": [],
+      "identity": "https://github.com/syntax-tree/mdast-util-directive",
+      "language": "node",
+      "last_activity": "2025-01-22T14:54:37.720Z",
+      "license_evidence": "https://www.npmjs.com/package/mdast-util-directive",
+      "license_spdx": "MIT",
+      "monthly_downloads": 19775140,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "mdast-util-directive",
+      "revision": "a683327fafc4e48f81caf8d09d15fef8dd42a627",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/node-mdast-util-directive.json",
+          "report_sha256": "sha256:17e2b204758f6e2731e21eab96bc93df1ca49727323074883f3ab2bf8e9130a3",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/syntax-tree/mdast-util-directive"
+    },
+    {
+      "candidate_id": "https-github-com-syntax-tree-mdast-util-frontmatter-bbd3cc1a8728",
+      "conflicts": [],
+      "identity": "https://github.com/syntax-tree/mdast-util-frontmatter",
+      "language": "node",
+      "last_activity": "2023-09-14T12:24:07.538Z",
+      "license_evidence": "https://www.npmjs.com/package/mdast-util-frontmatter",
+      "license_spdx": "MIT",
+      "monthly_downloads": 26277271,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "mdast-util-frontmatter",
+      "revision": "d76616b88bdafdbbcd97247c4d3a8a41cc71ae48",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/node-mdast-util-frontmatter.json",
+          "report_sha256": "sha256:07e1c9519380b6936de5bba8d365e40b3118af5e531ede514c5b46cfd13d2f95",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/syntax-tree/mdast-util-frontmatter"
+    },
+    {
+      "candidate_id": "https-github-com-syntax-tree-mdast-util-gfm-b28afde2f511",
+      "conflicts": [],
+      "identity": "https://github.com/syntax-tree/mdast-util-gfm",
+      "language": "node",
+      "last_activity": "2025-02-10T12:33:52.269Z",
+      "license_evidence": "https://www.npmjs.com/package/mdast-util-gfm",
+      "license_spdx": "MIT",
+      "monthly_downloads": 148940364,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "mdast-util-gfm",
+      "revision": "6b34bb2868c38c0b2909fa69c78534d5e44dc309",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/node-mdast-util-gfm.json",
+          "report_sha256": "sha256:46e422dced2eb8c099d880ccd03306c7b81b74d56a9391d2eaa7ac19ca586199",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/syntax-tree/mdast-util-gfm"
+    },
+    {
+      "candidate_id": "https-github-com-syntax-tree-mdast-util-gfm-autolink-literal-9d158cbbb94f",
+      "conflicts": [],
+      "identity": "https://github.com/syntax-tree/mdast-util-gfm-autolink-literal",
+      "language": "node",
+      "last_activity": "2024-08-19T09:42:23.383Z",
+      "license_evidence": "https://www.npmjs.com/package/mdast-util-gfm-autolink-literal",
+      "license_spdx": "MIT",
+      "monthly_downloads": 153080094,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "mdast-util-gfm-autolink-literal",
+      "revision": "520dbcdce5cf3adaa8540362c87c248863e9b530",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/node-mdast-util-gfm-autolink-literal.json",
+          "report_sha256": "sha256:a1aafd15bc9e2ffbd80e1065ed0d6bed9de3f8aa0bc2303b4ac39dd0dfa6394c",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/syntax-tree/mdast-util-gfm-autolink-literal"
+    },
+    {
+      "candidate_id": "https-github-com-syntax-tree-mdast-util-gfm-footnote-0199f8558307",
+      "conflicts": [],
+      "identity": "https://github.com/syntax-tree/mdast-util-gfm-footnote",
+      "language": "node",
+      "last_activity": "2025-02-10T11:52:23.193Z",
+      "license_evidence": "https://www.npmjs.com/package/mdast-util-gfm-footnote",
+      "license_spdx": "MIT",
+      "monthly_downloads": 145850997,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "mdast-util-gfm-footnote",
+      "revision": "fd27b4ea62d177b8ca69f4c063f1a37f9054a053",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/node-mdast-util-gfm-footnote.json",
+          "report_sha256": "sha256:98ebf2fb4fea87f523853d62508d2b519b0e8b2e67201d495597ab8eec246561",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/syntax-tree/mdast-util-gfm-footnote"
+    },
+    {
+      "candidate_id": "https-github-com-syntax-tree-mdast-util-gfm-strikethrough-50154d04be6a",
+      "conflicts": [],
+      "identity": "https://github.com/syntax-tree/mdast-util-gfm-strikethrough",
+      "language": "node",
+      "last_activity": "2023-07-10T14:37:12.146Z",
+      "license_evidence": "https://www.npmjs.com/package/mdast-util-gfm-strikethrough",
+      "license_spdx": "MIT",
+      "monthly_downloads": 155263389,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "mdast-util-gfm-strikethrough",
+      "revision": "b0e933bef1384a4dbf628dc5db3f0f8ba1130ea8",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/node-mdast-util-gfm-strikethrough.json",
+          "report_sha256": "sha256:a3703f05d08f48094ca808affe258dcdcabc95340af48da15aa43dec09e783d9",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "rejected",
+      "upstream_url": "https://github.com/syntax-tree/mdast-util-gfm-strikethrough"
+    },
+    {
+      "candidate_id": "https-github-com-syntax-tree-mdast-util-gfm-table-f44ef6f155ca",
+      "conflicts": [],
+      "identity": "https://github.com/syntax-tree/mdast-util-gfm-table",
+      "language": "node",
+      "last_activity": "2023-07-10T15:15:32.984Z",
+      "license_evidence": "https://www.npmjs.com/package/mdast-util-gfm-table",
+      "license_spdx": "MIT",
+      "monthly_downloads": 157443411,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "mdast-util-gfm-table",
+      "revision": "d0d2278cb624b8258dfc8c9dfbdfdf944df9b3cd",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/node-mdast-util-gfm-table.json",
+          "report_sha256": "sha256:60e80d0fc062493dbe7c3676584415f74aa04d61c05aa97834073ca8fae25deb",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "rejected",
+      "upstream_url": "https://github.com/syntax-tree/mdast-util-gfm-table"
+    },
+    {
+      "candidate_id": "https-github-com-syntax-tree-mdast-util-gfm-task-list-item-87131c414372",
+      "conflicts": [],
+      "identity": "https://github.com/syntax-tree/mdast-util-gfm-task-list-item",
+      "language": "node",
+      "last_activity": "2023-07-10T11:50:53.684Z",
+      "license_evidence": "https://www.npmjs.com/package/mdast-util-gfm-task-list-item",
+      "license_spdx": "MIT",
+      "monthly_downloads": 155078777,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "mdast-util-gfm-task-list-item",
+      "revision": "ef2d59f69f6d0da6147b24af37f671a1b5a6803f",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/node-mdast-util-gfm-task-list-item.json",
+          "report_sha256": "sha256:09eda9598e81986adec82be6cf9c08ca3373ed69384c2eed761fa216e2acd9b8",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "rejected",
+      "upstream_url": "https://github.com/syntax-tree/mdast-util-gfm-task-list-item"
+    },
+    {
+      "candidate_id": "https-github-com-syntax-tree-mdast-util-math-04f53014d58f",
+      "conflicts": [],
+      "identity": "https://github.com/syntax-tree/mdast-util-math",
+      "language": "node",
+      "last_activity": "2023-07-16T11:25:47.253Z",
+      "license_evidence": "https://www.npmjs.com/package/mdast-util-math",
+      "license_spdx": "MIT",
+      "monthly_downloads": 36234695,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "mdast-util-math",
+      "revision": "23647664692ae59be25896d0099ba3f7157d6a76",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/node-mdast-util-math.json",
+          "report_sha256": "sha256:4ebd86503ef02c4afacfdc57d3942c859407a31fe2beacd78eac7c3baba31608",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "rejected",
+      "upstream_url": "https://github.com/syntax-tree/mdast-util-math"
+    },
+    {
+      "candidate_id": "https-github-com-syntax-tree-mdast-util-mdx-6ecddbebc1e7",
+      "conflicts": [],
+      "identity": "https://github.com/syntax-tree/mdast-util-mdx",
+      "language": "node",
+      "last_activity": "2023-07-12T08:30:04.157Z",
+      "license_evidence": "https://www.npmjs.com/package/mdast-util-mdx",
+      "license_spdx": "MIT",
+      "monthly_downloads": 48113579,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "mdast-util-mdx",
+      "revision": "9a8c096cf9cf48ec5be34514c7ceabfcbf0ddfff",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/node-mdast-util-mdx.json",
+          "report_sha256": "sha256:69c0df36a49e100c026c12f6358e5a238e8c7847d936a2bd0f2e8d30061b58d4",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "rejected",
+      "upstream_url": "https://github.com/syntax-tree/mdast-util-mdx"
+    },
+    {
+      "candidate_id": "https-github-com-syntax-tree-mdast-util-mdx-expression-ab30eb56e575",
+      "conflicts": [],
+      "identity": "https://github.com/syntax-tree/mdast-util-mdx-expression",
+      "language": "node",
+      "last_activity": "2024-09-13T10:36:30.801Z",
+      "license_evidence": "https://www.npmjs.com/package/mdast-util-mdx-expression",
+      "license_spdx": "MIT",
+      "monthly_downloads": 145263290,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "mdast-util-mdx-expression",
+      "revision": "7c04918301539bd9bdf624bd7271127c3064ca22",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/node-mdast-util-mdx-expression.json",
+          "report_sha256": "sha256:19fbbf958ed45e8f47d93aeab3ab6b1b9ae46266a7b82acd8bd9c1268935fcbb",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/syntax-tree/mdast-util-mdx-expression"
+    },
+    {
+      "candidate_id": "https-github-com-syntax-tree-mdast-util-mdx-jsx-ae86802dcca9",
+      "conflicts": [],
+      "identity": "https://github.com/syntax-tree/mdast-util-mdx-jsx",
+      "language": "node",
+      "last_activity": "2025-01-13T10:46:33.489Z",
+      "license_evidence": "https://www.npmjs.com/package/mdast-util-mdx-jsx",
+      "license_spdx": "MIT",
+      "monthly_downloads": 154928395,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "mdast-util-mdx-jsx",
+      "revision": "998d98d0aa29fe9ed12c636ddf1ed39f9a018096",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/node-mdast-util-mdx-jsx.json",
+          "report_sha256": "sha256:a1d19353a2122863047501892fb977a54ec87f6edaae0e55293b362c3443bf08",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/syntax-tree/mdast-util-mdx-jsx"
+    },
+    {
+      "candidate_id": "https-github-com-syntax-tree-mdast-util-to-string-a34ffd8afccf",
+      "conflicts": [],
+      "identity": "https://github.com/syntax-tree/mdast-util-to-string",
+      "language": "node",
+      "last_activity": "2023-07-07T16:19:50.488Z",
+      "license_evidence": "https://www.npmjs.com/package/mdast-util-to-string",
+      "license_spdx": "MIT",
+      "monthly_downloads": 222700821,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "mdast-util-to-string",
+      "revision": "91a3f931b82b5493e4c4e4f4f9e1487a516003d4",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/node-mdast-util-to-string.json",
+          "report_sha256": "sha256:a6a6243cc7bc770aada93da153917af98b0c4ece14b6e725f16157d79ad9e32d",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "rejected",
+      "upstream_url": "https://github.com/syntax-tree/mdast-util-to-string"
+    },
+    {
+      "candidate_id": "https-github-com-maraisr-meros-7c2a0424caad",
+      "conflicts": [],
+      "identity": "https://github.com/maraisr/meros",
+      "language": "node",
+      "last_activity": "2025-09-12T03:11:02.151Z",
+      "license_evidence": "https://www.npmjs.com/package/meros",
+      "license_spdx": "MIT",
+      "monthly_downloads": 34561086,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "meros",
+      "revision": "87ed69fe97f5a250ee6e8bec1a9ba458e16655f9",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/node-meros.json",
+          "report_sha256": "sha256:7567974678234d8db1661b8fdac19038a1b8612efcde6aaaf424c02853004772",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/maraisr/meros"
+    },
+    {
+      "candidate_id": "https-github-com-micromark-micromark-git-main-ecfcfb651dbd",
+      "conflicts": [
+        "last_activity",
+        "license_evidence",
+        "monthly_downloads",
+        "package"
+      ],
+      "identity": "https://github.com/micromark/micromark.git#main",
+      "language": "node",
+      "last_activity": "2024-11-12T11:17:17.117Z",
+      "license_evidence": "https://www.npmjs.com/package/micromark-util-chunked",
+      "license_spdx": "MIT",
+      "monthly_downloads": 188406495,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "micromark-util-chunked",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/node-micromark-util-chunked.json",
+          "report_sha256": "sha256:4f6541f4e28848567329630624068d8ddf9cf3acdea7338a3a89f54bf9ff15f9",
+          "shape": "candidates"
+        },
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/node-micromark-util-classify-character.json",
+          "report_sha256": "sha256:9829b595ac48f5659d78342c86750b2ffdb7bea5f259f4e6d8cecad6b41ba7f7",
+          "shape": "candidates"
+        },
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/node-micromark-util-combine-extensions.json",
+          "report_sha256": "sha256:c0b8b815e69e3824243d2a489e469fd785e4496477789a82b9bba5584d506cdb",
+          "shape": "candidates"
+        },
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave5/node-micromark-util-decode-numeric-character-reference.json",
+          "report_sha256": "sha256:100d979ca843f561b2623d6090e9588cb8491a4851f3be4ef274128e314fd986",
+          "shape": "candidates"
+        },
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave5/node-micromark-util-decode-string.json",
+          "report_sha256": "sha256:68da18352f81a544d72ee98e4fa362c2885f9db0f670e57743064a92331ed0b1",
+          "shape": "candidates"
+        },
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave5/node-micromark-util-encode.json",
+          "report_sha256": "sha256:2446b451292324db05763ad042763243408d124a0a39347f365465e2176efbee",
+          "shape": "candidates"
+        },
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave5/node-micromark-util-html-tag-name.json",
+          "report_sha256": "sha256:3c9c38e5463c5b7fc28a0d5dcf62418d48415912a822e80fdd9e2dbd79f6c69a",
+          "shape": "candidates"
+        },
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave5/node-micromark-util-normalize-identifier.json",
+          "report_sha256": "sha256:6df5f04316d999d22304d47a2929843c6902976913a1ae29b82f27b59cb8dcac",
+          "shape": "candidates"
+        },
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave5/node-micromark-util-resolve-all.json",
+          "report_sha256": "sha256:69c96e80b9512eaa64d7f193d6995ed085a99954f17c35c413dbc09963f4a5cd",
+          "shape": "candidates"
+        },
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave5/node-micromark-util-sanitize-uri.json",
+          "report_sha256": "sha256:accbccf1ddd4d32b7cee9b2b6b5979b91afbd5ec67f269376115ce5b5843e0c6",
+          "shape": "candidates"
+        },
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave5/node-micromark-util-subtokenize.json",
+          "report_sha256": "sha256:a9ffd408f707dfa553a228ee131040c354a562b264d3d31bea7cb77182648670",
+          "shape": "candidates"
+        },
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave5/node-micromark-util-symbol.json",
+          "report_sha256": "sha256:ebf485438ce83b9bd59a81a6648b97d58189b2064f610fbebc86b1d7b6cbc747",
+          "shape": "candidates"
+        },
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave5/node-micromark-util-types.json",
+          "report_sha256": "sha256:13ab1b0a89bb2a933a35439482f22a3bceb53f3b733019d6416f281ee99a9f7b",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/micromark/micromark.git#main"
+    },
+    {
+      "candidate_id": "https-github-com-syntax-tree-nlcst-to-string-9056247f5faf",
+      "conflicts": [],
+      "identity": "https://github.com/syntax-tree/nlcst-to-string",
+      "language": "node",
+      "last_activity": "2023-07-17T11:35:24.826Z",
+      "license_evidence": "https://www.npmjs.com/package/nlcst-to-string",
+      "license_spdx": "MIT",
+      "monthly_downloads": 20727762,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "nlcst-to-string",
+      "revision": "52b143b3646e13356abe2c48b232d22299d7feed",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave5/node-nlcst-to-string.json",
+          "report_sha256": "sha256:b8530e11275c96c1ddeaa6e510e229db7dd309554eb142d442a0b0933a9e7df3",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "rejected",
+      "upstream_url": "https://github.com/syntax-tree/nlcst-to-string"
+    },
+    {
+      "candidate_id": "https-github-com-jamestalmage-normalize-range-ef3b0bd2f1b1",
+      "conflicts": [],
+      "identity": "https://github.com/jamestalmage/normalize-range",
+      "language": "node",
+      "last_activity": "2015-09-13T05:20:04.639Z",
+      "license_evidence": "https://www.npmjs.com/package/normalize-range",
+      "license_spdx": "MIT",
+      "monthly_downloads": 94894079,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "normalize-range",
+      "revision": "0de8d74b1a932149133a878374b029fd84d21789",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave5/node-normalize-range.json",
+          "report_sha256": "sha256:fd9a982366a705e996548cb3e8afe999ca70c0cddfb886961a2b4bdbb19c3ec7",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "rejected",
+      "upstream_url": "https://github.com/jamestalmage/normalize-range"
+    },
+    {
+      "candidate_id": "https-github-com-mermade-oas-kit-86c1aa69fc53",
+      "conflicts": [],
+      "identity": "https://github.com/Mermade/oas-kit",
+      "language": "node",
+      "last_activity": "2020-03-29T07:09:37.853Z",
+      "license_evidence": "https://www.npmjs.com/package/oas-kit-common",
+      "license_spdx": "BSD-3-Clause",
+      "monthly_downloads": 18427483,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "oas-kit-common",
+      "revision": "b1bba3fc5007e96a991bf2a015cf0534ac36b88b",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave5/node-oas-kit-common.json",
+          "report_sha256": "sha256:e8bc2ac06c603d16334bee668df06861949b57c736112e2f9f244ba4529788f6",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "rejected",
+      "upstream_url": "https://github.com/Mermade/oas-kit"
+    },
+    {
+      "candidate_id": "https-github-com-sindresorhus-ow-1d1125bc4c0f",
+      "conflicts": [],
+      "identity": "https://github.com/sindresorhus/ow",
+      "language": "node",
+      "last_activity": "2025-10-16T17:10:10.817Z",
+      "license_evidence": "https://www.npmjs.com/package/ow",
+      "license_spdx": "MIT",
+      "monthly_downloads": 12574591,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "ow",
+      "revision": "3975eab08762ba1823f07e2aa3cb05f20c86296c",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave5/node-ow.json",
+          "report_sha256": "sha256:39efd75104f8af0c0d7e75a2ae67b3f0cd84dd69ac7c8511b91a23b29e1c7573",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "candidate",
+      "upstream_url": "https://github.com/sindresorhus/ow"
+    },
+    {
+      "candidate_id": "https-github-com-sindresorhus-path-exists-602ae6ff51ba",
+      "conflicts": [],
+      "identity": "https://github.com/sindresorhus/path-exists",
+      "language": "node",
+      "last_activity": "2021-08-12T10:43:19.346Z",
+      "license_evidence": "https://www.npmjs.com/package/path-exists",
+      "license_spdx": "MIT",
+      "monthly_downloads": 890980881,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "path-exists",
+      "revision": "7c95f5c1f5f811c7f4dac78ab5b9e258491f03af",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave5/node-path-exists.json",
+          "report_sha256": "sha256:91c634266db87e95f2b1d7db5dbb91eb72f86e7e8ad938fb3c37d349d3c31a3e",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "rejected",
+      "upstream_url": "https://github.com/sindresorhus/path-exists"
+    },
+    {
+      "candidate_id": "https-github-com-sindresorhus-path-key-3f9b43c2f8d8",
+      "conflicts": [],
+      "identity": "https://github.com/sindresorhus/path-key",
+      "language": "node",
+      "last_activity": "2021-04-09T12:04:51.822Z",
+      "license_evidence": "https://www.npmjs.com/package/path-key",
+      "license_spdx": "MIT",
+      "monthly_downloads": 1102361807,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "path-key",
+      "revision": "7337c2a76f5b50a770d275edd57eeaebe9c25c51",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave5/node-path-key.json",
+          "report_sha256": "sha256:db31410a5dc9c509c45cf7c8bedff38ebacf8364819518ea02fef7330bc4f61a",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "npm",
+      "status": "rejected",
+      "upstream_url": "https://github.com/sindresorhus/path-key"
+    },
+    {
+      "candidate_id": "https-github-com-aio-libs-aiohttp-9ffbda493d73",
+      "conflicts": [],
+      "identity": "https://github.com/aio-libs/aiohttp",
+      "language": "python",
+      "last_activity": "2026-07-23T01:57:27.037320Z",
+      "license_evidence": "https://pypi.org/project/aiohttp/",
+      "license_spdx": "Apache-2.0 AND MIT",
+      "monthly_downloads": 587310674,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "aiohttp",
+      "revision": "25522ad29937a6b586cb4dbe906c96db45fdc672",
+      "risk_flags": [
+        "native-optional",
+        "network"
+      ],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/python-aiohttp.json",
+          "report_sha256": "sha256:fdb8b37874fe68dbb1a06eabf6acdd879791714007a9c5d20a90282d41b40564",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "candidate",
+      "upstream_url": "https://github.com/aio-libs/aiohttp"
+    },
+    {
+      "candidate_id": "https-github-com-agronholm-anyio-464b3b4383f0",
+      "conflicts": [],
+      "identity": "https://github.com/agronholm/anyio",
+      "language": "python",
+      "last_activity": "2026-09-02T21:46:36.957728Z",
+      "license_evidence": "https://pypi.org/project/anyio/",
+      "monthly_downloads": 994609550,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "anyio",
+      "revision": "928366259543412a2deb1e2ba09ea45ffa92ef4f",
+      "risk_flags": [
+        "async",
+        "timing"
+      ],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/python-anyio.json",
+          "report_sha256": "sha256:239fdd82d680cc75b9f506d9364476952611a89299e69580109a923bec6a5f39",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/agronholm/anyio"
+    },
+    {
+      "candidate_id": "https-github-com-psf-cachecontrol-a4fd77c1aa01",
+      "conflicts": [],
+      "identity": "https://github.com/psf/cachecontrol",
+      "language": "python",
+      "last_activity": "2025-11-14T04:32:13.138623Z",
+      "license_evidence": "https://pypi.org/project/cachecontrol/",
+      "monthly_downloads": 110065754,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "cachecontrol",
+      "revision": "9ff6af2c397bdfbddb57567b2350c202fed45356",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/python-cachecontrol.json",
+          "report_sha256": "sha256:aca776147c9e75e61435232411bf30f6dbe4e47a33dd749ae2de3acced1c5ecb",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/psf/cachecontrol"
+    },
+    {
+      "candidate_id": "https-github-com-python-cffi-cffi-fb781c52f4c0",
+      "conflicts": [],
+      "identity": "https://github.com/python-cffi/cffi",
+      "language": "python",
+      "last_activity": "2026-08-03T21:21:18.939988Z",
+      "license_evidence": "https://pypi.org/project/cffi/",
+      "monthly_downloads": 1183663449,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "cffi",
+      "revision": "61fe449bd5bf9ae48211e822a7eefa5cb07c11d3",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/python-cffi.json",
+          "report_sha256": "sha256:7c5f10f5e2bd91e6f0871001fc611d3d4ae72077c12e2dd4d3cc4f8e47f24000",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/python-cffi/cffi"
+    },
+    {
+      "candidate_id": "https-github-com-jawah-charset-normalizer-84345ac5e7b7",
+      "conflicts": [],
+      "identity": "https://github.com/jawah/charset_normalizer",
+      "language": "python",
+      "last_activity": "2026-08-15T08:20:44.807628Z",
+      "license_evidence": "https://pypi.org/project/charset-normalizer/",
+      "license_spdx": "MIT",
+      "monthly_downloads": 1573348838,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "charset-normalizer",
+      "revision": "e239bdc5cc1eb1f0db08d4046ad531f805dbea71",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/python-charset-normalizer.json",
+          "report_sha256": "sha256:43aa8f7fd5554a04fc461a1b362b376d167f1ad41c56f8581a94140cf51522f6",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "candidate",
+      "upstream_url": "https://github.com/jawah/charset_normalizer"
+    },
+    {
+      "candidate_id": "https-github-com-pyca-cryptography-f60931123e54",
+      "conflicts": [],
+      "identity": "https://github.com/pyca/cryptography",
+      "language": "python",
+      "last_activity": "2026-08-25T19:45:45.499357Z",
+      "license_evidence": "https://pypi.org/project/cryptography/",
+      "monthly_downloads": 1343686020,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "cryptography",
+      "revision": "8079ae9f8cf134dbb2a466a53d0d3f8b8880118a",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/python-cryptography.json",
+          "report_sha256": "sha256:19e3d37b4f765c8750c0f275e908ffec36e65146ffc87aae2e6b01083c9ad586",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/pyca/cryptography"
+    },
+    {
+      "candidate_id": "https-github-com-fastapi-fastapi-f9ecc9a5597b",
+      "conflicts": [],
+      "identity": "https://github.com/fastapi/fastapi",
+      "language": "python",
+      "last_activity": "2026-07-29T17:18:05.568608Z",
+      "license_evidence": "https://pypi.org/project/fastapi/",
+      "monthly_downloads": 523238850,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "fastapi",
+      "revision": "50113da16fec53b66b80d75e80a89296de4fa5a5",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/python-fastapi.json",
+          "report_sha256": "sha256:796319e926cebdc0cce76915c32c0dccaf4c1779ee479f9cb7167071e24168fa",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/fastapi/fastapi"
+    },
+    {
+      "candidate_id": "https-github-com-python-greenlet-greenlet-312f6ee7b8b0",
+      "conflicts": [],
+      "identity": "https://github.com/python-greenlet/greenlet",
+      "language": "python",
+      "last_activity": "2026-08-10T15:09:36.136190Z",
+      "license_evidence": "https://pypi.org/project/greenlet/",
+      "monthly_downloads": 451584582,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "greenlet",
+      "revision": "6aaf3af698aa7789075a904e5bbb70e24df06553",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/python-greenlet.json",
+          "report_sha256": "sha256:e5fe357689ed8db933e4eff438ffa0e72d6c96a9bfef3cca9baebf9077ff9e6f",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/python-greenlet/greenlet"
+    },
+    {
+      "candidate_id": "https-github-com-more-itertools-more-itertools-0602c9748b3c",
+      "conflicts": [],
+      "identity": "https://github.com/more-itertools/more-itertools",
+      "language": "python",
+      "last_activity": "2026-05-22T14:14:29.909370Z",
+      "license_evidence": "https://pypi.org/project/more-itertools/",
+      "monthly_downloads": 291713220,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "more-itertools",
+      "revision": "d92f081a089714e0aa92434c797fdd1a06da1290",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/python-more-itertools.json",
+          "report_sha256": "sha256:1714fb3f24ed8083cd2ae5cf1ce8f0e91791961395cf1f364fa077d9e0909fa6",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "existing",
+      "upstream_url": "https://github.com/more-itertools/more-itertools"
+    },
+    {
+      "candidate_id": "https-github-com-aio-libs-multidict-e270d2de95c3",
+      "conflicts": [],
+      "identity": "https://github.com/aio-libs/multidict",
+      "language": "python",
+      "last_activity": "2026-01-26T02:46:45.979236Z",
+      "license_evidence": "https://pypi.org/project/multidict/",
+      "license_spdx": "Apache License 2.0",
+      "monthly_downloads": 564903534,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "multidict",
+      "revision": "86351873dcc36edb11ba1a27035f2ce2e9ff8f4e",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/python-multidict.json",
+          "report_sha256": "sha256:d448eb4ff083d05545f4b572a41431c5e852929ce326707a44b6e0287aef9822",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "candidate",
+      "upstream_url": "https://github.com/aio-libs/multidict"
+    },
+    {
+      "candidate_id": "https-github-com-open-telemetry-opentelemetry-python-caab43798bb0",
+      "conflicts": [],
+      "identity": "https://github.com/open-telemetry/opentelemetry-python",
+      "language": "python",
+      "last_activity": "2026-07-16T15:25:46.902651Z",
+      "license_evidence": "https://pypi.org/project/opentelemetry-semantic-conventions/",
+      "monthly_downloads": 477619577,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "opentelemetry-semantic-conventions",
+      "revision": "96df63add12f6e0453b265ac34c5c07ec7b9267e",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/python-opentelemetry-semantic-conventions.json",
+          "report_sha256": "sha256:d7b51d89cfd9975fc26b267e0184e145b34ecdc3c7d3144cf6613f6e338dd367",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/open-telemetry/opentelemetry-python"
+    },
+    {
+      "candidate_id": "https-github-com-python-pillow-pillow-a3debda18872",
+      "conflicts": [],
+      "identity": "https://github.com/python-pillow/Pillow",
+      "language": "python",
+      "last_activity": "2026-07-01T11:56:38.965595Z",
+      "license_evidence": "https://pypi.org/project/pillow/",
+      "monthly_downloads": 507689320,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "pillow",
+      "revision": "11de4b9ae7d5a6553a3561b2de210647e5e78f98",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/python-pillow.json",
+          "report_sha256": "sha256:bbc520260bffe39b18e3315a7273520cb1e9789c5fd49db17c370a1f708aa5df",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/python-pillow/Pillow"
+    },
+    {
+      "candidate_id": "https-github-com-pypa-pip-ffef1d38feb4",
+      "conflicts": [],
+      "identity": "https://github.com/pypa/pip",
+      "language": "python",
+      "last_activity": "2026-08-04T22:51:14.148997Z",
+      "license_evidence": "https://pypi.org/project/pip/",
+      "monthly_downloads": 624210278,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "pip",
+      "revision": "173eb9b290e2924f0cd42b7714645b38b4df2e81",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/python-pip.json",
+          "report_sha256": "sha256:fcfc2e1631cef1b6d78b705c735c27c7167f7961933399f4c891bf4d9d22fdb3",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/pypa/pip"
+    },
+    {
+      "candidate_id": "https-github-com-wolph-portalocker-524147f62be8",
+      "conflicts": [],
+      "identity": "https://github.com/wolph/portalocker",
+      "language": "python",
+      "last_activity": "2026-08-25T18:05:20.267181Z",
+      "license_evidence": "https://pypi.org/project/portalocker/",
+      "monthly_downloads": 58870171,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "portalocker",
+      "revision": "c86f80c2505de8e44fb9d2493eb94ab96201fef6",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/python-portalocker.json",
+          "report_sha256": "sha256:2404262061c46f95a7086c34a6e1c789c192a6df400b7847ec940a2ae3386343",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/wolph/portalocker"
+    },
+    {
+      "candidate_id": "https-github-com-apache-arrow-733392686f48",
+      "conflicts": [],
+      "identity": "https://github.com/apache/arrow",
+      "language": "python",
+      "last_activity": "2026-08-10T12:40:53.904635Z",
+      "license_evidence": "https://pypi.org/project/pyarrow/",
+      "monthly_downloads": 412477811,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "pyarrow",
+      "revision": "287c749468bb0254ca910a9053efd04834ec32d6",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/python-pyarrow.json",
+          "report_sha256": "sha256:313002143e53325936e371b57bee517ce003c7ecb3da2cdf32253c02fd2324a9",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/apache/arrow"
+    },
+    {
+      "candidate_id": "https-github-com-pyasn1-pyasn1-592dc9594e82",
+      "conflicts": [],
+      "identity": "https://github.com/pyasn1/pyasn1",
+      "language": "python",
+      "last_activity": "2026-07-09T01:12:33.988388Z",
+      "license_evidence": "https://pypi.org/project/pyasn1/",
+      "license_spdx": "BSD-2-Clause",
+      "monthly_downloads": 517985542,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "pyasn1",
+      "revision": "8003397013f6c0e0eabbd2605770477acbc2dc44",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/python-pyasn1.json",
+          "report_sha256": "sha256:f7b6f1a9ed1e30429b9afce1de253ee9de235f39cd02c137b77c21c47fddf4c7",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "candidate",
+      "upstream_url": "https://github.com/pyasn1/pyasn1"
+    },
+    {
+      "candidate_id": "https-github-com-pytest-dev-pytest-bf36fcc7f588",
+      "conflicts": [],
+      "identity": "https://github.com/pytest-dev/pytest",
+      "language": "python",
+      "last_activity": "2026-06-19T10:58:32.857420Z",
+      "license_evidence": "https://pypi.org/project/pytest/",
+      "monthly_downloads": 974636638,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "pytest",
+      "revision": "51e9a9f148cd2509a31e3fa0d2b1b3204c2b0dd7",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/python-pytest.json",
+          "report_sha256": "sha256:81ea164c64724b6f8bf5101560d6c7ff7827b563df1bdfd3d45523902fbba020",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/pytest-dev/pytest"
+    },
+    {
+      "candidate_id": "https-github-com-pytest-dev-pytest-asyncio-e59f4400cc25",
+      "conflicts": [],
+      "identity": "https://github.com/pytest-dev/pytest-asyncio",
+      "language": "python",
+      "last_activity": "2026-05-26T09:56:04.083461Z",
+      "license_evidence": "https://pypi.org/project/pytest-asyncio/",
+      "monthly_downloads": 271581118,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "pytest-asyncio",
+      "revision": "dcd61c25ec3bdf99d0868b8893a29963279b3c35",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/python-pytest-asyncio.json",
+          "report_sha256": "sha256:bf3e7aaef31499325518a2a5e0b0c9c6f068b407ef20754b9a2570ec723d8224",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/pytest-dev/pytest-asyncio"
+    },
+    {
+      "candidate_id": "https-github-com-nhairs-python-json-logger-62b1feb46861",
+      "conflicts": [],
+      "identity": "https://github.com/nhairs/python-json-logger",
+      "language": "python",
+      "last_activity": "2026-08-15T11:36:38.232576Z",
+      "license_evidence": "https://pypi.org/project/python-json-logger/",
+      "monthly_downloads": 110178810,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "python-json-logger",
+      "revision": "806dba9d9642fbec4c8538b625494c96b288ce59",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/python-python-json-logger.json",
+          "report_sha256": "sha256:7564782a96d9f91d5e65c7290e4c3389a1f54cd490a0d470c445168ccd81f00e",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/nhairs/python-json-logger"
+    },
+    {
+      "candidate_id": "https-github-com-crate-py-rpds-2aa8c2067228",
+      "conflicts": [],
+      "identity": "https://github.com/crate-py/rpds",
+      "language": "python",
+      "last_activity": "2026-06-30T07:17:53.009498Z",
+      "license_evidence": "https://pypi.org/project/rpds-py/",
+      "monthly_downloads": 579611527,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "rpds-py",
+      "revision": "0c6a30b4016cd3738bc0dd19caba1b004bbee15c",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/python-rpds-py.json",
+          "report_sha256": "sha256:35c1738148518ed8b77e69cd3bf05ad1453e7fea38182ac52602057ef7eb5146",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/crate-py/rpds"
+    },
+    {
+      "candidate_id": "https-github-com-pypa-setuptools-8e1c54267d8d",
+      "conflicts": [],
+      "identity": "https://github.com/pypa/setuptools",
+      "language": "python",
+      "last_activity": "2026-08-08T18:27:58.365696Z",
+      "license_evidence": "https://pypi.org/project/setuptools/",
+      "monthly_downloads": 1377445118,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "setuptools",
+      "revision": "7d531288b7c8708d4cc186213da93eaf5d11833d",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/python-setuptools.json",
+          "report_sha256": "sha256:b2d522e1f7f5eb2aa56f57d5b01cdb6ffc5b1907eb3242bd9e428581d91e4bda",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/pypa/setuptools"
+    },
+    {
+      "candidate_id": "https-github-com-python-typing-extensions-de4544437cb5",
+      "conflicts": [],
+      "identity": "https://github.com/python/typing_extensions",
+      "language": "python",
+      "last_activity": "2026-07-02T08:40:05.920538Z",
+      "license_evidence": "https://pypi.org/project/typing-extensions/",
+      "monthly_downloads": 1735969631,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "typing-extensions",
+      "revision": "3ae9b7553a5c560dc09b484078d98ece2985eecd",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/python-typing-extensions.json",
+          "report_sha256": "sha256:328025f8ffdfd9d5121b86422667b3f512d7d315017db595c9cbbdad5ee231cd",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "existing",
+      "upstream_url": "https://github.com/python/typing_extensions"
+    },
+    {
+      "candidate_id": "https-github-com-pypa-wheel-9276505b6ab1",
+      "conflicts": [],
+      "identity": "https://github.com/pypa/wheel",
+      "language": "python",
+      "last_activity": "2026-08-11T22:02:27.327210Z",
+      "license_evidence": "https://pypi.org/project/wheel/",
+      "monthly_downloads": 514662420,
+      "observed_at": "2026-09-04T20:25:00Z",
+      "package": "wheel",
+      "revision": "b25c3c2ef5c789116b0545889aea68f5f65185a7",
+      "risk_flags": [],
+      "selection_sources": [
+        {
+          "report": ".nl2repo/authoring-live/discovery/wave4/python-wheel.json",
+          "report_sha256": "sha256:587ee1b27d706b6160459b34aff3ab527d2fa9474f4e4932e55cdc2304edc81c",
+          "shape": "candidates"
+        }
+      ],
+      "source_kind": "pypi",
+      "status": "needs-evidence",
+      "upstream_url": "https://github.com/pypa/wheel"
+    }
+  ],
+  "queue_id": "package-discovery-2026-09-04",
+  "schema_version": "1.0",
+  "source_reports": [
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/go-authboss.json",
+      "sha256": "sha256:617e88f324d3f4ba76e2ec972aa08123bdd611efc92b493c181682b49b32e796"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/go-automaxprocs.json",
+      "sha256": "sha256:65c32ab36c994f3f06aaae485ea01a05c62119ea859216aea666bf60a95f3e52"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/go-bild.json",
+      "sha256": "sha256:9c40b8553e47c8015a009fb03eb3e3f4c05701e347dac423575f78799cf27047"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/go-blockchain-go.json",
+      "sha256": "sha256:920b26fb77d291608d21feb6a91ca3d54b31c7ea55cbde4c1443b7ab093bacef"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/go-bumblebee.json",
+      "sha256": "sha256:b7f88e006b011e729a6dd7ef253024183ba6e68fe3c87df6c64da2bc7c1f9e95"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/go-bun.json",
+      "sha256": "sha256:7b7db34904126ca0ad293db64fb170c8228316f7a180fdcfcb96927fb5782da6"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/go-buntdb.json",
+      "sha256": "sha256:a9fb2165347bf6f6681f63285fa23820110aef3a33aeec9d73af554c96cde203"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/go-burrow.json",
+      "sha256": "sha256:0adf327afdd05bf562ad0861e6a1b43b0635136fec86b2574f630ce70374a9d3"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/go-caddy-docker-proxy.json",
+      "sha256": "sha256:21e3c05405305bb4e7643feaa87a57c4990a1a765f46474ee30327c38897a074"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/go-cast.json",
+      "sha256": "sha256:1aa06139b8cacc67e1c96fdce91ba2240e40d88fd5d407491581323a55f53fdf"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/go-cli.json",
+      "sha256": "sha256:6f21e78c4a236862493b97d6271da51d5ce45202e6ad768a5aab1926bfb5baeb"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/go-cliamp.json",
+      "sha256": "sha256:71c9fe794e3eb3c538268d3a272161bd8fd188d44c2ee7f022f5bd100e1ba473"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/go-cloak.json",
+      "sha256": "sha256:9d332bd225adca39f9763b93e230b242d7903365ef7c5bc1865c29e0c8e4f601"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/go-code.json",
+      "sha256": "sha256:a882c049878b8fb528a0065e0cbfc6400cad24c602606d2c083be84d31f2ee9d"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/go-codesearch.json",
+      "sha256": "sha256:b20814561d898a15ad91f287dd6cb57f57833961a40a2e85072ae152797aa8cc"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/go-concurrent-map.json",
+      "sha256": "sha256:9dc5ee206d1b4bc6a8585b03a0df3c50e479eddb1294066626ca4f50c6b631fa"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/go-connect-go.json",
+      "sha256": "sha256:9e842ed66251741d91dd042a674708c78fe1049dae3c36ff6352b7b8bb9b7931"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/go-container-use.json",
+      "sha256": "sha256:fabf7cf9b8ac101cc2d20593fad27c1e9539548eaa00bac50a9466b58a220b6e"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/go-devzat.json",
+      "sha256": "sha256:d4375b86a5f87fd397198795e0a702dc8ae8984a2fd6968a295eef07b7fda306"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/go-dig.json",
+      "sha256": "sha256:3781362767910181a7f382d3c6d7036de14629b9350fe9be8e130a1303739e1b"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/go-docker-gen.json",
+      "sha256": "sha256:aa573f8f705f7b88471a4d5f5b2cb88d2d04aa9c5dec926eb91c92eebd0d04ac"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/go-docker-volume-backup.json",
+      "sha256": "sha256:5b03925d5f74f58b8cf256da1fe666f07aeb8cbe35e10612fe21d5a42f69ebda"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/go-dockertest.json",
+      "sha256": "sha256:3ee628d52251418f28f847280319671a9a140df440597f43931904d00f4c868e"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/go-easyjson.json",
+      "sha256": "sha256:64bf7db232cbfa20c0e482efae9f709b9b600ac87acd829d760713f0e5d3d25c"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/go-echoip.json",
+      "sha256": "sha256:ecd6230ace926012c0d7e492667d1e8b3a96b92e8a68a5ec005fb36f34a9cfa1"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/go-examples.json",
+      "sha256": "sha256:40e9ee2753e2ad5510db63560d315c91a14c130f115ca7e2b2177b89afc98118"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/go-freeze.json",
+      "sha256": "sha256:452738e6fdd4ba55619fd469403fa7b3a93aa4f97c93c1a019d29696c26078b1"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/go-fsql.json",
+      "sha256": "sha256:dcc7d4206a680d04d221349fb4c853e2c638e83526f2c7cdb21286a817516098"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/go-gameboy-live.json",
+      "sha256": "sha256:75771972de947d0956d4227970f0af40926739baeff6664b5430d05dcac4c505"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/go-git-sizer.json",
+      "sha256": "sha256:f3e432ff59599cb0ef16bf54e5595824a216ae514169d36190c179a9aa9c9d2a"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/go-go-cmp.json",
+      "sha256": "sha256:1993465c6016aceb74af86ad1f902b4966c43c8069db6ade49cd4eb13a619ea5"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/go-go-funk.json",
+      "sha256": "sha256:a8bb4b227b58e669c5e0c9a45e4733f0ef282b09367e1125978b44cd3756f02e"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/go-go-fuzz.json",
+      "sha256": "sha256:91a1e982a48e9463529da3ee44ad4d780251a81da2f99516b0cef9bfa37a6ee9"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/go-go-humanize.json",
+      "sha256": "sha256:fe97070d8aea68084e6f13b28391f8156bd75fe10e2263902d1e9d83d2bfcc88"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/go-go-mysql.json",
+      "sha256": "sha256:e67673bf7d16f8c51671dc86d93a510b539c3b4f5e993f2597c3022b70a2caab"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/go-go-stress-testing.json",
+      "sha256": "sha256:44a671f0bf6034d66b0eaa2e15958577bf3b14f862f05b6fead5d3823d90eaf8"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/go-go-uuid.json",
+      "sha256": "sha256:7059b3182ca2ec244cda6c1804bc5ce2ecdaa378576cbcce4c002b8dbc9622f8"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/go-gocode.json",
+      "sha256": "sha256:9ae62ff06902deab9002c4277dbb7684cf762c197249decdcfb5a98e58c75f72"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/go-gocryptfs.json",
+      "sha256": "sha256:ae6842931dd45a19a230c0d545741cbf22a888536b21129f32040d7ffb652c5b"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/go-gofumpt.json",
+      "sha256": "sha256:a4622617cd0d84228d83b3ca5c9401ccb70a6eb4c178b5bd4cc3c6213577ec4d"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/node-app-root-path.json",
+      "sha256": "sha256:9345d9bf6f8aaeec63d94d02dbb23a8ce6d1b1e42d3572ec71a87883baca3b15"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/node-arr-union.json",
+      "sha256": "sha256:a2e8fb3e3fb4be7f5fd70a4f6562e1370594e2dd5c912b80ffa5e3d92510b943"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/node-at-csstools-postcss-progressive-custom-properties.json",
+      "sha256": "sha256:1a5618811f3a1d304049dec10fbbeb0b873b2d16607ab63c8031c99ea7e96142"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/node-at-cypress-request.json",
+      "sha256": "sha256:0ffbc7e17f378c6f2c8b2adec3d411342b15c19da3cf7006dc8ac677ccb35b78"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/node-at-fastify-error.json",
+      "sha256": "sha256:ce65c673026f69d5bffe95b1f670e1338273c296d52c318d55394a5ce4149305"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/node-at-sindresorhus-is.json",
+      "sha256": "sha256:b656238bd404b0ac7cccb41869ca9dbe4eb65118fe0f2be11601339817ee5bc3"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/node-bytes.json",
+      "sha256": "sha256:a170caa489cd1fc3267633396ccdd06e2629acf109d705df39116960fc63d344"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/node-classnames.json",
+      "sha256": "sha256:8762196d3f940a8917ff2fed16c66fcc6656db03ba19da5b45c41b41efd6de1d"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/node-cli-cursor.json",
+      "sha256": "sha256:826724d81cad7fce5b4b1cd0b25b8ffbb0e9bc815d7dba1462bb802d7a8ced31"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/node-cli-progress.json",
+      "sha256": "sha256:7e17e884e3acf6387899fe05bfba8885c43de0676148cece424a73495ba1d57d"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/node-cross-spawn.json",
+      "sha256": "sha256:3bb8af4b06f571fa577c204c9abfe80a28e5fbeb4569a6c81be67e1404ff2318"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/node-esast-util-from-estree.json",
+      "sha256": "sha256:b58ce498b84bb060b1cceab3b90bde300c81a0b675f9c3f31601995b9c11fb92"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/node-esast-util-from-js.json",
+      "sha256": "sha256:bf1ae2b5339fac8bcd99f6845f31851f261ea04395e13441eaf5a841fda9bbdc"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/node-escape-goat.json",
+      "sha256": "sha256:a134bec927d0beb8421f80e1a14387553a364ad922b9490758db1af1910b721c"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/node-escape-html.json",
+      "sha256": "sha256:f200c0f20bbb7bb6579dae44331ecf67ef50d70a1865262d784c0d25481ee000"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/node-estree-util-to-js.json",
+      "sha256": "sha256:cedd0a9cf24b3f5692b29732d72625f5fcbef565a8ccac2022fdb3811910ba4c"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/node-estree-util-visit.json",
+      "sha256": "sha256:fe08bd8ee7a7a155e57dbd8374e986f3f8fd08e519f10f47bda5f15164e28984"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/node-extend-shallow.json",
+      "sha256": "sha256:951f24afdb1be068564dea6b817a435f42e21873a224cfb1c709796cac5c55c9"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/node-fb-watchman.json",
+      "sha256": "sha256:ee381fb71f58da2ab261c0e3bc1e3da24bbd16aadd45a14f93cc3943c7763491"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/node-filelist.json",
+      "sha256": "sha256:6a85f9ff9d0d72c6e0e104f77e8fdd3a9f8754441c2168eaa236ccc4d5328b8f"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/node-follow-redirects.json",
+      "sha256": "sha256:c3fbf67b9a3743f772bf2031432b9e1001ff0d3b8f9e1b1bbc6f669b01684f03"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/node-has-values.json",
+      "sha256": "sha256:9c5f19639b199edb3af51af7df195bdf40c67040866c3d70cf25c92fb2fd76f6"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/node-hast-util-from-dom.json",
+      "sha256": "sha256:1d78ff453973b762847520003459f2ca98ab29fce2d35d2a75cfa82363232e1c"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/node-hast-util-from-html-isomorphic.json",
+      "sha256": "sha256:8f0002c63986566fa82860ce0f112fd9c359eb00f005502d76e5dc4653a3ab6e"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/node-hast-util-from-html.json",
+      "sha256": "sha256:7cba85349fe7b968e8b67bbf91652fc8587bda8ae27f949c89ec9da66f7ac57b"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/node-hast-util-from-parse5.json",
+      "sha256": "sha256:4368dc95b234807f30bc6b8809343cd3b33b3dd5c35d74e705e3903540013eb5"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/node-hast-util-has-property.json",
+      "sha256": "sha256:16b959d317c69a932067d7e246f1f10259e827c784a864ced8b373c74e686387"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/node-hast-util-heading-rank.json",
+      "sha256": "sha256:f131a7f31ccaf90be5b20a0225f69c1c0762516ad4e85e0489699c9729b663d4"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/node-hast-util-is-element.json",
+      "sha256": "sha256:2182dcfe2539fdf96ad4cfbff8c30dbf08518416cb8d1905e2ffec0facfd6151"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/node-hast-util-parse-selector.json",
+      "sha256": "sha256:3a404c87d8da6342e87066399743d5ed43a7190f0ee2c49ce612ace0153d88ce"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/node-hast-util-raw.json",
+      "sha256": "sha256:b4ca12131d4d335fa5b3f9a747d2b174900996ef3f8e9d0e2e8a08fdcaf97e13"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/node-hast-util-sanitize.json",
+      "sha256": "sha256:efe1d4b6dfe4b9f1921789e0a74b1e3fb016819f8a47917f242ba646dc2a12eb"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/node-hast-util-to-estree.json",
+      "sha256": "sha256:b331de1483d9ec8d852de0d1cb338d90fa00df70d0798ce2081d88256e6a865b"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/node-hast-util-to-html.json",
+      "sha256": "sha256:0ba4a605b4073f03b0000d0dbdcd8b1fc4bdf8b6db9e67cbe036e468873169ef"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/node-hast-util-to-parse5.json",
+      "sha256": "sha256:051d976ffdce35d198bc307b414018d33de57cadb4cd4d19a6dc6ba2f00c616b"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/node-hast-util-to-string.json",
+      "sha256": "sha256:8dc20a9fd30be6cec62fb9995b16c696da4d120253dfdd41c0da5b08b07a6ada"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/node-hast-util-to-text.json",
+      "sha256": "sha256:da0a7ec38720c63651c7011dc9567c0edca4f46093c9311cb02e3e0f80e0875f"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/node-hastscript.json",
+      "sha256": "sha256:285206fa60cf9637e0aa52d87c66228a0b1ebc1eaef88c14f51e8133efc1141c"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/node-mdast-util-definitions.json",
+      "sha256": "sha256:37ed4731414da85ad25af8e99a1673a48d59c2a16aa4bf01578d2140b454570e"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/node-mdast-util-directive.json",
+      "sha256": "sha256:17e2b204758f6e2731e21eab96bc93df1ca49727323074883f3ab2bf8e9130a3"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/node-mdast-util-frontmatter.json",
+      "sha256": "sha256:07e1c9519380b6936de5bba8d365e40b3118af5e531ede514c5b46cfd13d2f95"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/node-mdast-util-gfm-autolink-literal.json",
+      "sha256": "sha256:a1aafd15bc9e2ffbd80e1065ed0d6bed9de3f8aa0bc2303b4ac39dd0dfa6394c"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/node-mdast-util-gfm-footnote.json",
+      "sha256": "sha256:98ebf2fb4fea87f523853d62508d2b519b0e8b2e67201d495597ab8eec246561"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/node-mdast-util-gfm-strikethrough.json",
+      "sha256": "sha256:a3703f05d08f48094ca808affe258dcdcabc95340af48da15aa43dec09e783d9"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/node-mdast-util-gfm-table.json",
+      "sha256": "sha256:60e80d0fc062493dbe7c3676584415f74aa04d61c05aa97834073ca8fae25deb"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/node-mdast-util-gfm-task-list-item.json",
+      "sha256": "sha256:09eda9598e81986adec82be6cf9c08ca3373ed69384c2eed761fa216e2acd9b8"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/node-mdast-util-gfm.json",
+      "sha256": "sha256:46e422dced2eb8c099d880ccd03306c7b81b74d56a9391d2eaa7ac19ca586199"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/node-mdast-util-math.json",
+      "sha256": "sha256:4ebd86503ef02c4afacfdc57d3942c859407a31fe2beacd78eac7c3baba31608"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/node-mdast-util-mdx-expression.json",
+      "sha256": "sha256:19fbbf958ed45e8f47d93aeab3ab6b1b9ae46266a7b82acd8bd9c1268935fcbb"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/node-mdast-util-mdx-jsx.json",
+      "sha256": "sha256:a1d19353a2122863047501892fb977a54ec87f6edaae0e55293b362c3443bf08"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/node-mdast-util-mdx.json",
+      "sha256": "sha256:69c0df36a49e100c026c12f6358e5a238e8c7847d936a2bd0f2e8d30061b58d4"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/node-mdast-util-to-string.json",
+      "sha256": "sha256:a6a6243cc7bc770aada93da153917af98b0c4ece14b6e725f16157d79ad9e32d"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/node-meros.json",
+      "sha256": "sha256:7567974678234d8db1661b8fdac19038a1b8612efcde6aaaf424c02853004772"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/node-micromark-util-chunked.json",
+      "sha256": "sha256:4f6541f4e28848567329630624068d8ddf9cf3acdea7338a3a89f54bf9ff15f9"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/node-micromark-util-classify-character.json",
+      "sha256": "sha256:9829b595ac48f5659d78342c86750b2ffdb7bea5f259f4e6d8cecad6b41ba7f7"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/node-micromark-util-combine-extensions.json",
+      "sha256": "sha256:c0b8b815e69e3824243d2a489e469fd785e4496477789a82b9bba5584d506cdb"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/python-aiohttp.json",
+      "sha256": "sha256:fdb8b37874fe68dbb1a06eabf6acdd879791714007a9c5d20a90282d41b40564"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/python-anyio.json",
+      "sha256": "sha256:239fdd82d680cc75b9f506d9364476952611a89299e69580109a923bec6a5f39"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/python-cachecontrol.json",
+      "sha256": "sha256:aca776147c9e75e61435232411bf30f6dbe4e47a33dd749ae2de3acced1c5ecb"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/python-cffi.json",
+      "sha256": "sha256:7c5f10f5e2bd91e6f0871001fc611d3d4ae72077c12e2dd4d3cc4f8e47f24000"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/python-charset-normalizer.json",
+      "sha256": "sha256:43aa8f7fd5554a04fc461a1b362b376d167f1ad41c56f8581a94140cf51522f6"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/python-cryptography.json",
+      "sha256": "sha256:19e3d37b4f765c8750c0f275e908ffec36e65146ffc87aae2e6b01083c9ad586"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/python-fastapi.json",
+      "sha256": "sha256:796319e926cebdc0cce76915c32c0dccaf4c1779ee479f9cb7167071e24168fa"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/python-googleapis-common-protos.json",
+      "sha256": "sha256:ca61553d8666d38db1e61d6feb6d436674b2d628e66832421c854cfd890e17c8"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/python-greenlet.json",
+      "sha256": "sha256:e5fe357689ed8db933e4eff438ffa0e72d6c96a9bfef3cca9baebf9077ff9e6f"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/python-grpcio-status.json",
+      "sha256": "sha256:1fb128cc665da0a9ffd3ed09c6dfe8fb983ba1cc20cfae938ed5e8fd1918b0e1"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/python-grpcio.json",
+      "sha256": "sha256:39dd51c066a023afb53bdaf9f51fff32fbde6c17573f65ecab3d0d2e862757fd"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/python-iniconfig.json",
+      "sha256": "sha256:eb870c3e900fa316d9f0a37381b15d18834a55cc9267563af2df8ef0593b9c3e"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/python-litellm.json",
+      "sha256": "sha256:36c5fa5f9154d80493beb4058283b0612b65e9fed05af7a1d97566b5e740340d"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/python-more-itertools.json",
+      "sha256": "sha256:1714fb3f24ed8083cd2ae5cf1ce8f0e91791961395cf1f364fa077d9e0909fa6"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/python-multidict.json",
+      "sha256": "sha256:d448eb4ff083d05545f4b572a41431c5e852929ce326707a44b6e0287aef9822"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/python-numpy.json",
+      "sha256": "sha256:24fe74e0629afce931fdf87a86da1520c77b54d19cfa7dc0b69c404658ebb035"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/python-opentelemetry-api.json",
+      "sha256": "sha256:45433583aea907600c156647bd38a6a7f1d615419f3de62a9f9edc19369109d5"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/python-opentelemetry-sdk.json",
+      "sha256": "sha256:63e54c931298dc4134c9054ef5e8e354288ea61880bc4b1fae59b0db7bd3b4f8"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/python-opentelemetry-semantic-conventions.json",
+      "sha256": "sha256:d7b51d89cfd9975fc26b267e0184e145b34ecdc3c7d3144cf6613f6e338dd367"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/python-pandas.json",
+      "sha256": "sha256:950ca4cecafb75ed1d2d2cc0dd2675ed15f1e0ab9aa6fa8bb565aa706a88fa55"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/python-pillow.json",
+      "sha256": "sha256:bbc520260bffe39b18e3315a7273520cb1e9789c5fd49db17c370a1f708aa5df"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/python-pip.json",
+      "sha256": "sha256:fcfc2e1631cef1b6d78b705c735c27c7167f7961933399f4c891bf4d9d22fdb3"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/python-portalocker.json",
+      "sha256": "sha256:2404262061c46f95a7086c34a6e1c789c192a6df400b7847ec940a2ae3386343"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/python-protobuf.json",
+      "sha256": "sha256:aec96567ab865beefeee8c92bd30c797e50979d15aa0b2c0da7fbfa156e2a999"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/python-pyarrow.json",
+      "sha256": "sha256:313002143e53325936e371b57bee517ce003c7ecb3da2cdf32253c02fd2324a9"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/python-pyasn1.json",
+      "sha256": "sha256:f7b6f1a9ed1e30429b9afce1de253ee9de235f39cd02c137b77c21c47fddf4c7"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/python-pydantic-core.json",
+      "sha256": "sha256:84da2061cc775cf9a128b61c3aeb9e6dcee3a79674a8ca1085e2fb3ea840c990"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/python-pytest-asyncio.json",
+      "sha256": "sha256:bf3e7aaef31499325518a2a5e0b0c9c6f068b407ef20754b9a2570ec723d8224"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/python-pytest.json",
+      "sha256": "sha256:81ea164c64724b6f8bf5101560d6c7ff7827b563df1bdfd3d45523902fbba020"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/python-python-json-logger.json",
+      "sha256": "sha256:7564782a96d9f91d5e65c7290e4c3389a1f54cd490a0d470c445168ccd81f00e"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/python-rpds-py.json",
+      "sha256": "sha256:35c1738148518ed8b77e69cd3bf05ad1453e7fea38182ac52602057ef7eb5146"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/python-s3transfer.json",
+      "sha256": "sha256:ce22ab014fb11f6b95f5e31d21ed3f56393f8c1cf05cb7f61eeddeb55f6b089f"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/python-setuptools.json",
+      "sha256": "sha256:b2d522e1f7f5eb2aa56f57d5b01cdb6ffc5b1907eb3242bd9e428581d91e4bda"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/python-typing-extensions.json",
+      "sha256": "sha256:328025f8ffdfd9d5121b86422667b3f512d7d315017db595c9cbbdad5ee231cd"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/python-wheel.json",
+      "sha256": "sha256:587ee1b27d706b6160459b34aff3ab527d2fa9474f4e4932e55cdc2304edc81c"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave4/queue.json",
+      "sha256": "sha256:8357c0a8d3240a0349432a6bf91f57986d9427c4ed93eb8d331759575ad74ab8"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave5/go-authboss.json",
+      "sha256": "sha256:f4c5e9c5e9484c4ed54aba0bc6209d89e03aac1ad04d6d6612feb3499647282f"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave5/go-automaxprocs.json",
+      "sha256": "sha256:17af6f822d3667272ef6fc2eab8271dee7143ff54c07a79b074a84166659c71f"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave5/go-bild.json",
+      "sha256": "sha256:abfb4be0462f88b280a12903823f372aac50d595975c997b0bb8c28ee587a2d2"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave5/go-blockchain-go.json",
+      "sha256": "sha256:84ccc89e6fbdcc2e6da45fe4774038b2c252f910f964f5d31158264074465ce3"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave5/go-bumblebee.json",
+      "sha256": "sha256:29eef00b02069fccee512db6bfb94b9bc7183bbb2dab494a1bb34067b233528a"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave5/go-bun.json",
+      "sha256": "sha256:9dd67b9d96a69cc68418acd029738a14d59cd012318f8dd5e2a007524e8fe773"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave5/go-buntdb.json",
+      "sha256": "sha256:7afb08139f0fa8ecf90f566fce8fb133b320e1bd8f10243aa29553cbbcadc34b"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave5/go-burrow.json",
+      "sha256": "sha256:708ca752de3c4b91bae1d23bafd74269f3e35a8eaf560d4429148ccad7d5a4e2"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave5/go-caddy-docker-proxy.json",
+      "sha256": "sha256:d0fd0e29e9449593bde0b8070578a9ea932400ca424043b8ffbc989066960277"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave5/go-cast.json",
+      "sha256": "sha256:6cb82c0fa05dfd113415d87afaf1b314c4481a404824aa22f1004e99e2d52e92"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave5/go-cli.json",
+      "sha256": "sha256:64b78a531b6c333ae1a564b2e87f5a3a7041ec330f2be4baa7de24e757240d84"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave5/go-cliamp.json",
+      "sha256": "sha256:704d8c06407d1a61eb443e3513b33cbedc589f9edae8a29bece17b24f430f76a"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave5/go-cloak.json",
+      "sha256": "sha256:b111d765aff4a7661b64f6fb35f1e53489690b2af2f6ae261fa9c531f6865798"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave5/go-code.json",
+      "sha256": "sha256:4bd04a3e915cfae927815204c65a2fedfdd8d1d0bfd1ea5086c2ce0d5a937e88"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave5/go-codesearch.json",
+      "sha256": "sha256:304170e40584640f8c351fc6377e2b1efdd12235a28b59aed779b58d4a0e4b0c"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave5/go-concurrent-map.json",
+      "sha256": "sha256:a0d1d9d34e1c3c60fab3269a820fb775957abed46dc5302c738e19c1cd233453"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave5/go-connect-go.json",
+      "sha256": "sha256:659a56a43ec73341b7da566bb4b958d932f3db438b77347ab89d2e49009c5c96"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave5/go-container-use.json",
+      "sha256": "sha256:7bfcb866319d005de0770cf723e53e88af6e4b212c6b570cb0600b041e319750"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave5/go-devzat.json",
+      "sha256": "sha256:2f7b2d49fe49b47538f700a1eddac3183cd6bb01f65fa7084d4d323fad7db133"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave5/go-dig.json",
+      "sha256": "sha256:502c962ac66446a09e4dd6b01d4f141385acbe66aa1d68e010214caed8f8d6ba"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave5/node-at-csstools-postcss-progressive-custom-properties.json",
+      "sha256": "sha256:0a31335dec3a775164626faabe02c16d6f45e7aa3ed66dc9b003e506933e6870"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave5/node-at-cypress-request.json",
+      "sha256": "sha256:633c507d7c83b08cc86bf616293242017ed83b0a5cbda26b3db4d0509a794f1f"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave5/node-at-fastify-error.json",
+      "sha256": "sha256:56eb3a74912cfba4c52908e1932c0aa8b2c16bf87b9000ba3c3cc0e9273e21cd"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave5/node-at-sindresorhus-is.json",
+      "sha256": "sha256:d628c0ca664396bcdfdffacfdd25acb1ccc6ca1c2d5e5d3263fd9e76e1112938"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave5/node-micromark-util-decode-numeric-character-reference.json",
+      "sha256": "sha256:100d979ca843f561b2623d6090e9588cb8491a4851f3be4ef274128e314fd986"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave5/node-micromark-util-decode-string.json",
+      "sha256": "sha256:68da18352f81a544d72ee98e4fa362c2885f9db0f670e57743064a92331ed0b1"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave5/node-micromark-util-encode.json",
+      "sha256": "sha256:2446b451292324db05763ad042763243408d124a0a39347f365465e2176efbee"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave5/node-micromark-util-html-tag-name.json",
+      "sha256": "sha256:3c9c38e5463c5b7fc28a0d5dcf62418d48415912a822e80fdd9e2dbd79f6c69a"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave5/node-micromark-util-normalize-identifier.json",
+      "sha256": "sha256:6df5f04316d999d22304d47a2929843c6902976913a1ae29b82f27b59cb8dcac"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave5/node-micromark-util-resolve-all.json",
+      "sha256": "sha256:69c96e80b9512eaa64d7f193d6995ed085a99954f17c35c413dbc09963f4a5cd"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave5/node-micromark-util-sanitize-uri.json",
+      "sha256": "sha256:accbccf1ddd4d32b7cee9b2b6b5979b91afbd5ec67f269376115ce5b5843e0c6"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave5/node-micromark-util-subtokenize.json",
+      "sha256": "sha256:a9ffd408f707dfa553a228ee131040c354a562b264d3d31bea7cb77182648670"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave5/node-micromark-util-symbol.json",
+      "sha256": "sha256:ebf485438ce83b9bd59a81a6648b97d58189b2064f610fbebc86b1d7b6cbc747"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave5/node-micromark-util-types.json",
+      "sha256": "sha256:13ab1b0a89bb2a933a35439482f22a3bceb53f3b733019d6416f281ee99a9f7b"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave5/node-nlcst-to-string.json",
+      "sha256": "sha256:b8530e11275c96c1ddeaa6e510e229db7dd309554eb142d442a0b0933a9e7df3"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave5/node-normalize-range.json",
+      "sha256": "sha256:fd9a982366a705e996548cb3e8afe999ca70c0cddfb886961a2b4bdbb19c3ec7"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave5/node-oas-kit-common.json",
+      "sha256": "sha256:e8bc2ac06c603d16334bee668df06861949b57c736112e2f9f244ba4529788f6"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave5/node-ow.json",
+      "sha256": "sha256:39efd75104f8af0c0d7e75a2ae67b3f0cd84dd69ac7c8511b91a23b29e1c7573"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave5/node-path-exists.json",
+      "sha256": "sha256:91c634266db87e95f2b1d7db5dbb91eb72f86e7e8ad938fb3c37d349d3c31a3e"
+    },
+    {
+      "path": ".nl2repo/authoring-live/discovery/wave5/node-path-key.json",
+      "sha256": "sha256:db31410a5dc9c509c45cf7c8bedff38ebacf8364819518ea02fef7330bc4f61a"
+    }
+  ],
+  "threshold": {
+    "max_activity_age_months": 36,
+    "min_stars_or_monthly_downloads": {
+      "monthly_downloads": 1000,
+      "stars": 100
+    }
+  }
+}
