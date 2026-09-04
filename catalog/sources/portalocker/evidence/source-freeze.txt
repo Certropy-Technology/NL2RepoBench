@@ -1,0 +1,9 @@
+command: git clone --no-checkout https://github.com/wolph/portalocker /data/NL2RepoBench-integration-20260827/.nl2repo/authoring-live/handoffs/wave10/portalocker/work/source
+command: git fetch --depth=1 origin c86f80c2505de8e44fb9d2493eb94ab96201fef6
+command: git checkout --detach c86f80c2505de8e44fb9d2493eb94ab96201fef6
+exit_code: 0
+revision: c86f80c2505de8e44fb9d2493eb94ab96201fef6
+tree: 5d1d209fea107a443ab3e6adf1424d35836123fa
+archive_sha256: b38150745012d3fa9086c1df4a4ac6a2c633914796ec8bc5509bd651f1c6ccac
+license_spdx: BSD-3-Clause
+license_sha256: a50570fa3b3102a42d7babb0569238b0b3c0aedce0063c8e4d65060dfd3f7293

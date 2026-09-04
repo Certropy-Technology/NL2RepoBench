@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "task_id": "portalocker",
+  "public_modules": ["portalocker", "portalocker.constants", "portalocker.exceptions", "portalocker.portalocker", "portalocker.types", "portalocker.utils"],
+  "contract_groups": [
+    {"group":"exports-and-flags","apis":["__version__","LockFlags","LOCK_EX","LOCK_SH","LOCK_NB","LOCK_UN","lock","unlock","AlreadyLocked","LockException"]},
+    {"group":"file-locks","apis":["Lock","RLock","TemporaryFileLock","PidFileLock"]},
+    {"group":"coordination","apis":["BoundedSemaphore","NamedBoundedSemaphore"]},
+    {"group":"atomic-write","apis":["open_atomic"]}
+  ],
+  "excluded_capabilities": ["portalocker.redis.RedisLock and Redis server integration", "Windows msvcrt and pywin32 branches", "CLI combine output", "type-checker-only contracts"]
+}

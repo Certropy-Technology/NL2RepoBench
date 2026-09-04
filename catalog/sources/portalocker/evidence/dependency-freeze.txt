@@ -1,0 +1,5 @@
+command: uv pip compile /data/NL2RepoBench-integration-20260827/.nl2repo/authoring-live/handoffs/wave10/portalocker/work/requirements.in --python-version 3.12 --generate-hashes --output-file requirements.lock.txt
+exit_code: 0
+runtime_dependencies: none
+build_dependencies: uv-build==0.12.9
+lock_sha256: b5252c4cddd7dde66d8dba59f01ec900f162f60a41aabfb80eea124a5494bb91

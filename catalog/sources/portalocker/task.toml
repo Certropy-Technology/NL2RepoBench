@@ -1,0 +1,86 @@
+schema_version = "1.0"
+task_id = "portalocker"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "file-locking-and-concurrency"
+tags = ["python", "file-locking", "fcntl", "multiprocessing", "atomic-write", "semaphores", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/wolph/portalocker"
+revision = "c86f80c2505de8e44fb9d2493eb94ab96201fef6"
+license_spdx = "BSD-3-Clause"
+source_digest = "sha256:b38150745012d3fa9086c1df4a4ac6a2c633914796ec8bc5509bd651f1c6ccac"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.14"
+os_name = "debian-12-amd64"
+base_image = "python:3.12.14-slim-bookworm"
+base_image_digest = "sha256:782412e85d0f0984994c290652577d4018aff08145c85b262bb63dc0c7522254"
+system_packages = []
+network_mode = "no-network"
+build_command = "Install uv-build from the private hash-locked build lock during image build; candidate installation uses pip --target --no-deps --no-build-isolation."
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The pure-Python build backend is installed from a private hash-locked lock during image build. Candidate, verifier, Oracle, controls, and Agent execution use network_mode=no-network; the Oracle restores a digest-checked source archive."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = ["uv-build==0.12.9"]
+lock_artifact = { digest = "sha256:b5252c4cddd7dde66d8dba59f01ec900f162f60a41aabfb80eea124a5494bb91", size_bytes = 1836, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:b5252c4cddd7dde66d8dba59f01ec900f162f60a41aabfb80eea124a5494bb91", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 32
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:f46b7e8df799c60840491fd6f858ed2bb858cd529c81fe342562c2672b4469d9", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:f46b7e8df799c60840491fd6f858ed2bb858cd529c81fe342562c2672b4469d9", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
+
+[harbor]
+description = "Build portalocker from an empty workspace and reproduce deterministic POSIX file-locking, contention, lifecycle, atomic-write, PID-file, and bounded-semaphore behavior through a separate subprocess verifier."
+keywords = ["python", "file-locking", "fcntl", "multiprocessing", "atomic-write", "semaphores", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 900.0
+candidate_install_timeout_sec = 180.0
+candidate_total_timeout_sec = 600.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:7408a4a90b3641ab2877f26b58d04d7681c37264ac52b76baf751cfd93c9d1bf"
+size_bytes = 1249280
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:7408a4a90b3641ab2877f26b58d04d7681c37264ac52b76baf751cfd93c9d1bf"
+visibility = "private"
+
+[lifecycle]
+status = "controls-passed"
+owner = "python-author-wave10-portalocker"
+reason = "The final NoNetwork task uses a digest-checked source payload, clean hash-locked build closure, and UID-isolated POSIX child verifier. Oracle passes 32/32; installable stub and forgery controls collect all 32 leaves and score 0."

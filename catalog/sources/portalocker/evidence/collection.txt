@@ -1,0 +1,5 @@
+framework: custom-json-v1
+expected_total: 32
+collection_source: one fixed leaf per child-process scenario
+excluded: Redis server integration; Windows msvcrt/pywin32; CLI combine; type-checker-only tests
+network_mode: no-network

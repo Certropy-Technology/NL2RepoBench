@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "task_id": "portalocker",
+  "mappings": [
+    {"leaves":["exports-version-flags","package-metadata","module-exports"],"spec":["Package exports and flags"]},
+    {"leaves":["lock-context-persistence","lock-write-read","nonblocking-contention","timeout-contention","blocking-contention","lock-release","lock_exception","lock_file_open_kwargs","lock_timeout_defaults","low-level-lock","shared-lock","flags-validation"],"spec":["Lock","Package exports and flags"]},
+    {"leaves":["rlock-reentry","rlock_overrelease"],"spec":["RLock"]},
+    {"leaves":["temporary-file-lock","pid-file-lock","pid-file-read-missing","pidfile_cleanup"],"spec":["Temporary and PID locks"]},
+    {"leaves":["semaphore-slots","named-semaphore","semaphore_invalid","semaphore_filename"],"spec":["Semaphores"]},
+    {"leaves":["open-atomic-binary","open-atomic-text","open-atomic-existing","open-atomic-cleanup"],"spec":["open_atomic"]},
+    {"leaves":["deterministic-repeated","candidate-isolation","network-false"],"spec":["Implementation Notes"]}
+  ],
+  "uncovered_public_behaviors": ["Redis integration", "Windows-only locking", "CLI combine"],
+  "coverage_statement": "Every frozen verifier leaf maps to a public behavior above; excluded capabilities are explicitly outside the Linux task contract."
+}
