@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-go-funk",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "verifier",
+    "next_step": "Materialize and hash-lock the testify dependency closure, approve a deterministic child-side protocol for typed dynamic values/callbacks/mutation, then freeze public behavior and rerun collection, compile, Oracle, and controls.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/thoas/go-funk",
+      "revision": "045ef11f8f9f4d83a03adbd0eea420773c6c68bc",
+      "source_digest": "sha256:f9885f4e1c771a41afc50dcec82b8df49292cfffc9296bf092538980d10aa922",
+      "license_spdx": "MIT",
+      "license_digest": "sha256:ab1d9bc52e58c23d7be727e33ddb9498014dc273522525b7a5d639483e104845"
+    },
+    "commands": [
+      {
+        "command": "git checkout --detach 045ef11f8f9f4d83a03adbd0eea420773c6c68bc && git rev-parse HEAD && git archive --format=tar HEAD | sha256sum && sha256sum LICENSE",
+        "tool_version": "git 2.x",
+        "exit_code": 0,
+        "log": {"path": "catalog/sources/go-go-funk/evidence/source-freeze.log", "sha256": "sha256:e8e733d726f36fca1279e20fbd90747031931077eeecdafcbb2bebec8e6744e2"}
+      },
+      {
+        "command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local GOMODCACHE=/tmp/go-funk-empty-modcache GOCACHE=/tmp/go-funk-empty-cache go test -json ./...",
+        "tool_version": "go1.26.5-X:nodwarf5 linux/amd64",
+        "exit_code": 1,
+        "log": {"path": "catalog/sources/go-go-funk/evidence/dependency-probe.log", "sha256": "sha256:3de43bc8fa2fb595cd61027f732e750247e3eb683fb8acc16be629265b535e2d"}
+      },
+      {
+        "command": "static API inventory and separate-verifier adapter assessment",
+        "tool_version": "Go source inspection at revision 045ef11f8f9f4d83a03adbd0eea420773c6c68bc",
+        "exit_code": 1,
+        "log": {"path": "catalog/sources/go-go-funk/evidence/adapter-assessment.md", "sha256": "sha256:cb63f71fb49da342ab012e07aa950983e7eee89022f25204cf4e508e37301b31"}
+      }
+    ],
+    "test_inventory": "catalog/sources/go-go-funk/evidence/test-inventory.json",
+    "api_inventory": "catalog/sources/go-go-funk/evidence/api-inventory.json",
+    "remediation": "catalog/sources/go-go-funk/blocked.md"
+  }
+}

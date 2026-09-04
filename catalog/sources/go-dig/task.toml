@@ -1,0 +1,72 @@
+schema_version = "1.0"
+task_id = "go-dig"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "go-library"
+tags = ["go", "go-modules", "dependency-injection", "reflection", "typed-bridge", "public-api"]
+language = "go"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/uber-go/dig"
+revision = "770912487056bfe8bc9bd5879a4e049f68989ab0"
+license_spdx = "MIT"
+source_digest = "sha256:6c5890219e8b3bae095197f54e66e369d78e3058cf88b322415011b8a218cef0"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+network_mode = "no-network"
+runtime_version = "1.26.5"
+base_image = "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+base_image_digest = "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+build_command = "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -mod=vendor ./..."
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "Candidate and separate verifier execution use a private zero-runtime-dependency Go module closure and run without network; only the trusted Oracle receives a run-scoped source authorization."
+
+[dependencies]
+status = "unknown"
+installer = "unknown"
+packages = []
+
+[tests]
+framework = "pytest"
+expected_total = 0
+expected_total_source = "unknown"
+commands = ["GOWORK=off GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local GOCACHE=/tmp/go-dig-empty-cache GOMODCACHE=/tmp/go-dig-empty-modcache go test -json ./..."]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Recreate the deterministic dependency graph, constructor invocation, named/grouped values, scopes, decorators, options, and error behavior of go.uber.org/dig through a typed Go bridge."
+keywords = ["go", "go-dig", "dependency-injection", "reflection", "typed-bridge", "public-api"]
+agent_timeout_sec = 900.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 2048
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "blocked"
+owner = "go-author-wave5-20260904-12"
+reason = "Blocked: upstream TestProvideLocation is environment-path dependent and failed in the frozen checkout; testify and its transitive modules are not yet materialized as a private offline Go closure; no trusted verifier or Oracle receipts exist."
+

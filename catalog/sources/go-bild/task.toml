@@ -1,0 +1,72 @@
+schema_version = "1.0"
+task_id = "go-bild"
+version = "0.1.0"
+instruction = "blocked.md"
+
+[metadata]
+difficulty = "hard"
+category = "go-image-processing"
+tags = ["go", "go-modules", "image-processing", "codecs", "filesystem", "blocked"]
+language = "go"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/anthonynsimon/bild"
+revision = "3bef4b08d12a23a2f8c87ac6b52901ec6492d09b"
+license_spdx = "MIT"
+source_digest = "sha256:f287180ea998e43c2ecd7cff6c26344638d64647fc27a27b6ca4ddfe7b3e628d"
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+runtime_version = "1.26.5"
+base_image = "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+base_image_digest = "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "The frozen module declares nativewebp, Cobra, and golang.org/x/image dependencies whose private offline closure is not materialized. The package also exposes filesystem codecs, CLI, and image operations that require a reviewed deterministic child adapter."
+
+[dependencies]
+status = "unknown"
+installer = "system"
+packages = [
+  "github.com/HugoSmits86/nativewebp@v1.3.0",
+  "github.com/spf13/cobra@v1.10.2",
+  "golang.org/x/image@v0.44.0",
+]
+
+[tests]
+framework = "pytest"
+expected_total = 0
+expected_total_source = "unknown"
+commands = ["GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -json ./..."]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Recreate the public pure-Go image processing and codec APIs of anthonynsimon/bild through a deterministic typed bridge."
+keywords = ["go", "go-modules", "image-processing", "codecs", "filesystem", "typed-bridge"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "blocked"
+owner = "go-bild-wave6-r2"
+reason = "The immutable source and MIT license are frozen, but the full module cannot be collected offline without a private dependency closure. A faithful separate verifier also requires a reviewed image/codec/filesystem adapter for the broad public surface; no Oracle, controls, or runtime projection is claimed."

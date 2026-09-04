@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-go-mysql",
+  "source_revision": "9ed3a7186e2b591989d8af214de2120e7a26008a",
+  "module_path": "github.com/go-mysql-org/go-mysql",
+  "packages": ["canal", "client", "compress", "driver", "dump", "mysql", "packet", "replication", "schema", "serialization", "server", "stmt", "utils"],
+  "public_surface": [
+    "client.Connect and client.Conn query, transaction, authentication, TLS, local-infile, and prepared-statement APIs",
+    "mysql result, field, GTID, position, interval, and protocol encoding/decoding APIs",
+    "packet.Conn packet framing and compression APIs",
+    "replication.BinlogSyncer and event parsing APIs",
+    "canal incremental dump and event-handler APIs",
+    "server fake-MySQL protocol and authentication APIs",
+    "driver database/sql connector APIs",
+    "dump SQL dump parsing and writing APIs"
+  ],
+  "external_boundaries": [
+    "TCP or Unix-socket MySQL server",
+    "MySQL/MariaDB authentication, TLS, compression, query, and binlog protocols",
+    "mysqldump executable and filesystem",
+    "database/sql driver integration",
+    "replication and canal downstream services"
+  ],
+  "module_requirements": 24,
+  "bridge_assessment": "No reviewed deterministic child-side adapter exists for the live-server and protocol state required by the broad public surface."
+}

@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-bild",
+  "source_revision": "3bef4b08d12a23a2f8c87ac6b52901ec6492d09b",
+  "source_digest": "sha256:f287180ea998e43c2ecd7cff6c26344638d64647fc27a27b6ca4ddfe7b3e628d",
+  "module": "github.com/anthonynsimon/bild",
+  "go_files": 67,
+  "test_files": 26,
+  "test_functions": 96,
+  "packages": ["adjust", "blend", "blur", "channel", "clone", "convolution", "effect", "fcolor", "histogram", "imgio", "math/f64", "math/integer", "noise", "paint", "parallel", "perlin", "segment", "transform", "util", "cmd"],
+  "public_groups": {
+    "image_processing": ["adjust", "blend", "blur", "channel", "clone", "convolution", "effect", "histogram", "noise", "paint", "segment", "transform"],
+    "support": ["fcolor", "math/f64", "math/integer", "parallel", "perlin", "util"],
+    "io_and_cli": ["imgio", "cmd"]
+  },
+  "declared_dependencies": [
+    "github.com/HugoSmits86/nativewebp@v1.3.0",
+    "github.com/spf13/cobra@v1.10.2",
+    "golang.org/x/image@v0.44.0"
+  ],
+  "risk_flags": {
+    "filesystem": true,
+    "native_dependency": true,
+    "random_state": true,
+    "codec_fixtures": true,
+    "cli": true,
+    "json_serializable_image_values": false
+  }
+}

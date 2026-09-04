@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-echoip",
+  "revision": "746db5ebf42f87da5d487de444dccc884f9d1c39",
+  "upstream_tests": [
+    {"path":"cmd/echoip/main_test.go","tests":1,"status":"pass"},
+    {"path":"http/cache_test.go","tests":3,"status":"not collected in empty-cache probe"},
+    {"path":"http/http_test.go","tests":8,"status":"not collected in empty-cache probe"},
+    {"path":"iputil/iputil_test.go","tests":1,"status":"pass"},
+    {"path":"useragent/useragent_test.go","tests":1,"status":"pass"}
+  ],
+  "collection": {"expected_total":"unknown","reason":"No production denominator is claimed while geoip2 dependency closure and service adapter are unresolved."}
+}

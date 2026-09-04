@@ -1,0 +1,54 @@
+schema_version = "1.0"
+task_id = "go-fsql"
+version = "0.1.0"
+instruction = "blocked.md"
+
+[metadata]
+difficulty = "medium"
+category = "go-cli"
+tags = ["go", "go-modules", "filesystem", "sql", "cli", "terminal", "blocked"]
+language = "go"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/kashav/fsql"
+revision = "5cfe17e9b3c69aee6e65cc5d73b7c40cc1ffa87e"
+license_spdx = "MIT"
+source_digest = "sha256:52a1d205d660c7b3cec7e3e8d40502502f6425e7669de46b8ebf63a0e60b4897"
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+runtime_version = "1.26.5"
+base_image = "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+base_image_digest = "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "The frozen revision needs four third-party Go modules that were absent from the clean offline cache. Its public behavior also requires a deterministic filesystem, metadata, home-directory, hash, pager, and terminal fixture that is not currently provided by the reviewed typed Go bridge."
+
+[dependencies]
+status = "unknown"
+installer = "system"
+packages = ["github.com/oleiade/lane@v1.0.1", "golang.org/x/crypto@v0.17.0", "golang.org/x/sys@v0.15.0", "golang.org/x/term@v0.15.0"]
+
+[tests]
+framework = "pytest"
+expected_total = 52
+expected_total_source = "unknown"
+commands = ["GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -json ./..."]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[lifecycle]
+status = "blocked"
+owner = "go-fsql-3dd82b6f"
+reason = "The revision and source tests are frozen, but production authoring is blocked by missing offline module closure and the absence of a reviewed separate-verifier adapter for filesystem traversal, metadata/time/hash evaluation, glob/home expansion, pager execution, and interactive terminal behavior."

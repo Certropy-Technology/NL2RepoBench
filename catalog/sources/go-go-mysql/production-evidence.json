@@ -1,0 +1,48 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-go-mysql",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "verifier",
+    "next_step": "Approve a deterministic child-side MySQL protocol fixture and scope the public contract to testable packet, result, authentication, and replication behavior; materialize and hash-lock the complete Go module closure; then add a fixed public-behavior denominator and rerun collection, compile, Oracle, and controls.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/go-mysql-org/go-mysql",
+      "revision": "9ed3a7186e2b591989d8af214de2120e7a26008a",
+      "source_digest": "sha256:8e3395301f659b71e515f64f378c4c1dbdb5b8da8a6c76e4d8550afa1b4a6b3b",
+      "license_spdx": "Apache-2.0",
+      "license_digest": "sha256:73779e64d779249a335d2d7547541ab74b4901e1a9a112c7514b369b06ad1cf4"
+    },
+    "commands": [
+      {
+        "command": "git checkout --detach 9ed3a7186e2b591989d8af214de2120e7a26008a && git rev-parse HEAD && git archive --format=tar HEAD | sha256sum && git show HEAD:LICENSE | sha256sum",
+        "tool_version": "git 2.x",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/go-go-mysql/evidence/source-freeze.log",
+          "sha256": "sha256:7207c319cc7b54be806619d160fe65f3bc8b7c95ddf4cca6110f8c79a48abe8f"
+        }
+      },
+      {
+        "command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local GOMODCACHE=/tmp/go-go-mysql-empty-modcache GOCACHE=/tmp/go-go-mysql-empty-cache go test -json ./...",
+        "tool_version": "go1.26.5-X:nodwarf5 linux/amd64",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/go-go-mysql/evidence/dependency-probe.log",
+          "sha256": "sha256:7adf87589da72f76d59da6a222ad5461c3a7c13e762fd9a21dc7d2ff0ae85d03"
+        }
+      },
+      {
+        "command": "static Go API, test, network, MySQL protocol, replication, and child-side adapter assessment",
+        "tool_version": "Go source inspection at revision 9ed3a7186e2b591989d8af214de2120e7a26008a",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/go-go-mysql/evidence/adapter-assessment.md",
+          "sha256": "sha256:0414bfd52ac64250b35f8c1e431c25d7b7dc784224e1de1da2f71fc45801e509"
+        }
+      }
+    ],
+    "test_inventory": "catalog/sources/go-go-mysql/evidence/test-inventory.json",
+    "api_inventory": "catalog/sources/go-go-mysql/evidence/api-inventory.json"
+  }
+}

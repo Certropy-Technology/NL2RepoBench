@@ -1,0 +1,54 @@
+schema_version = "1.0"
+task_id = "go-go-funk"
+version = "0.1.0"
+instruction = "blocked.md"
+
+[metadata]
+difficulty = "hard"
+category = "go-library"
+tags = ["go", "go-modules", "reflection", "callbacks", "generics", "typed-bridge", "blocked"]
+language = "go"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/thoas/go-funk"
+revision = "045ef11f8f9f4d83a03adbd0eea420773c6c68bc"
+license_spdx = "MIT"
+source_digest = "sha256:f9885f4e1c771a41afc50dcec82b8df49292cfffc9296bf092538980d10aa922"
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+runtime_version = "1.26.5"
+base_image = "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+base_image_digest = "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "Candidate and verifier execution would require a private hash-locked Go module closure; the source dependency probe fails with an empty offline module cache."
+
+[dependencies]
+status = "unknown"
+installer = "unknown"
+packages = ["github.com/stretchr/testify@v1.4.0"]
+
+[tests]
+framework = "pytest"
+expected_total = 230
+expected_total_source = "unknown"
+commands = ["GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -json ./..."]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[lifecycle]
+status = "blocked"
+owner = "wave6-r2-09-go-go-funk"
+reason = "The frozen package accepts arbitrary interface{} values and reflection callbacks, function predicates, generic reducers, mutable builder chains, path mutation, and reflect.Value joins. No reviewed separate-verifier child-side protocol can preserve these semantics through the current bounded JSON bridge, and the empty offline module probe fails on testify before collection."

@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-go-funk",
+  "source_revision": "045ef11f8f9f4d83a03adbd0eea420773c6c68bc",
+  "language": "go",
+  "module_path": "github.com/thoas/go-funk",
+  "implementation_files": 31,
+  "test_files": 31,
+  "public_api_shape": "reflection-and-interface-driven utility library",
+  "public_symbol_families": [
+    "Filter/Find/FindKey/Contains/Every/Some/IndexOf",
+    "Map/FlatMap/Reduce/ForEach/ForEachRight",
+    "Chunk/Drop/Head/Tail/Initial/Reverse/Shuffle/Uniq",
+    "Compact/Flatten/FlattenDeep/Fill/Zip/Join",
+    "Difference/Intersect/Union/Without",
+    "Sum/Product/Max/Min",
+    "Chain/LazyChain/LazyChainWith and mutable builder methods",
+    "Set/MustSet/Get/GetOrElse",
+    "IsCollection/IsFunction/IsPredicate/IsIteratee/IsType/IsZero",
+    "typed primitive variants for bool, integer, unsigned, float, and string",
+    "reflect.Value join and arbitrary callback signatures"
+  ],
+  "dynamic_contracts": [
+    "arbitrary interface{} values",
+    "function callbacks and predicates",
+    "reflection and reflect.Value",
+    "nested pointer/map/slice mutation",
+    "stateful builder chains",
+    "panic and error behavior for invalid dynamic types"
+  ],
+  "typed_bridge_status": "unsupported-without-approved-task-adapter"
+}

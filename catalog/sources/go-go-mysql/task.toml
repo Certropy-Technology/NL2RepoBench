@@ -1,0 +1,54 @@
+schema_version = "1.0"
+task_id = "go-go-mysql"
+version = "0.1.0"
+instruction = "blocked.md"
+
+[metadata]
+difficulty = "hard"
+category = "go-library"
+tags = ["go", "go-modules", "mysql", "protocol", "replication", "network", "blocked"]
+language = "go"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/go-mysql-org/go-mysql"
+revision = "9ed3a7186e2b591989d8af214de2120e7a26008a"
+license_spdx = "Apache-2.0"
+source_digest = "sha256:8e3395301f659b71e515f64f378c4c1dbdb5b8da8a6c76e4d8550afa1b4a6b3b"
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+runtime_version = "1.26.5"
+base_image = "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+base_image_digest = "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "The frozen package requires a large Go module closure and its public behavior includes live MySQL, binlog, TLS, mysqldump, and external service interactions. No reviewed deterministic child-side MySQL protocol fixture or private module bundle is available for this lane."
+
+[dependencies]
+status = "unknown"
+installer = "system"
+packages = []
+
+[tests]
+framework = "pytest"
+expected_total = 1
+expected_total_source = "unknown"
+commands = ["GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local GOMODCACHE=/tmp/go-go-mysql-empty-modcache GOCACHE=/tmp/go-go-mysql-empty-cache go test -json ./..."]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[lifecycle]
+status = "blocked"
+owner = "go-go-mysql-20260904"
+reason = "The package cannot enter the current Go production profile without a complete offline module closure and a reviewed separate-verifier adapter for live MySQL protocol, authentication, TLS, replication/binlog, mysqldump, filesystem, and external service behavior."

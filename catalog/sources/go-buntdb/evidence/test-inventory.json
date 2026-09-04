@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-buntdb",
+  "revision": "0dbc8c18459aed4e4179bccbe0322bbd6019733f",
+  "framework": "go-test",
+  "test_file": "buntdb_test.go",
+  "test_function_count": 39,
+  "expected_total": 39,
+  "collection_status": "not-collected",
+  "test_functions": [
+    "TestBackgroundOperations", "TestSaveLoad", "TestMutatingIterator", "TestCaseInsensitiveIndex", "TestIndexTransaction", "TestDeleteAll", "TestAscendEqual", "TestDescendEqual", "TestVariousTx", "TestNearby", "TestNoExpiringItem", "TestAutoShrink", "TestDatabaseFormat", "TestInsertsAndDeleted", "TestInsertDoesNotMisuseIndex", "TestDeleteDoesNotMisuseIndex", "TestIndexCompare", "TestOpeningAFolder", "TestOpeningInvalidDatabaseFile", "TestOpeningClosedDatabase", "TestShrink", "TestVariousIndexOperations", "TestBasic", "TestIndexAscend", "TestRectStrings", "TestTTLReOpen", "TestTTL", "TestConfig", "TestCoverCloseAlreadyClosed", "TestCoverConfigClosed", "TestCoverShrinkShrink", "TestPreviousItem", "TestJSONIndex", "TestOnExpiredSync", "TestTransactionLeak", "TestReloadNotInvalid", "TestEstSize", "TestWrappedError", "TestIssue112"
+  ],
+  "collection_error": "module lookup disabled by GOPROXY=off before test collection",
+  "source_only": true
+}

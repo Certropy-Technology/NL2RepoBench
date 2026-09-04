@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-echoip",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "verifier",
+    "next_step": "Materialize and hash-lock the complete Go module closure, approve a deterministic child-side adapter for MaxMind fixtures, DNS, TCP probes, HTTP routes, templates, and profiling, then freeze a positive denominator and rerun compile, Oracle, and controls.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/mpolden/echoip",
+      "revision": "746db5ebf42f87da5d487de444dccc884f9d1c39",
+      "source_digest": "sha256:4236ef8964caf9476e5997f5e878294b0de0e40cdcec483d668feba7b0719f2c",
+      "license_spdx": "BSD-3-Clause",
+      "license_digest": "sha256:685758da70e311d93a261783844a7c4d3ccbbc25ef280fb08cbc57c61edf9c55"
+    },
+    "commands": [
+      {
+        "command": "git rev-parse HEAD; git archive --format=tar HEAD | sha256sum; git show HEAD:LICENSE | sha256sum",
+        "tool_version": "git 2.x",
+        "exit_code": 0,
+        "log": {"path":"catalog/sources/go-echoip/evidence/source-freeze.log","sha256":"sha256:082fd5cfdb060d0fa2ea4d6ac015f97d09a9add9e2037727eda5e0f24797b83a"}
+      },
+      {
+        "command": "GOMODCACHE=/tmp/echoip-empty-modcache GOCACHE=/tmp/echoip-empty-gocache GOPROXY=off GOSUMDB=off GOWORK=off GOTOOLCHAIN=local GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go test -json ./...",
+        "tool_version": "go1.26.5 linux/amd64",
+        "exit_code": 1,
+        "log": {"path":"catalog/sources/go-echoip/evidence/dependency-probe.log","sha256":"sha256:a9faeab598a94953b0998fc1da7592ecc4c55a35ccd2bbf563c3bcca876910ca"}
+      },
+      {
+        "command": "static API, test, dependency, and typed-bridge assessment",
+        "tool_version": "Go source inspection at revision 746db5ebf42f87da5d487de444dccc884f9d1c39",
+        "exit_code": 1,
+        "log": {"path":"catalog/sources/go-echoip/evidence/adapter-assessment.md","sha256":"sha256:df653bf224e2a233d19015901292dc27448532e7fe7a94f84c1634b806f5dd61"}
+      }
+    ],
+    "test_inventory": "catalog/sources/go-echoip/evidence/test-inventory.json",
+    "api_inventory": "catalog/sources/go-echoip/evidence/api-inventory.json"
+  }
+}

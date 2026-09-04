@@ -1,0 +1,51 @@
+schema_version = "1.0"
+task_id = "go-codesearch"
+version = "0.1.0"
+instruction = "blocked.md"
+
+[metadata]
+difficulty = "hard"
+category = "go-library"
+tags = ["go", "go-modules", "search", "filesystem", "mmap", "blocked"]
+language = "go"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/google/codesearch"
+revision = "74a12a911a79b901d1158c48d011b2da1b090fc9"
+license_spdx = "BSD-3-Clause"
+source_digest = "sha256:46f0d91b8e5b9b62ef6e943c778045dfeaddaeee9c15596b76a9cefb293365f3"
+
+[environment]
+status = "unknown"
+os_name = "debian-bookworm"
+runtime_version = "1.26.5"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "The prior partial patch referenced private verifier/module artifacts that are not available in the CAS, and the public CLI and index require filesystem, mmap, ZIP, and HTTP behavior that needs a reviewed child-side adapter."
+
+[dependencies]
+status = "unknown"
+installer = "unknown"
+
+[tests]
+framework = "pytest"
+expected_total = 0
+expected_total_source = "unknown"
+commands = ["GOWORK=off GOTOOLCHAIN=local GOPROXY=off GOSUMDB=off CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go test -count=1 -json ./..."]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[lifecycle]
+status = "blocked"
+owner = "go-codesearch-7b6bf92"
+reason = "The immutable source and license are verified, but no private module/verifier artifacts from the prior partial patch are present and no reviewed separate-verifier adapter faithfully covers the CLI filesystem tree, mmap portability, ZIP indexing, HTTP server, and external file reads."

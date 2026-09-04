@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-codesearch",
+  "packages": {
+    "github.com/google/codesearch/index": ["RegexpQuery", "MakePath", "Create", "Open", "IndexWriter.Add", "IndexWriter.Flush", "Index.Check", "Index.Name", "Index.PostingQuery"],
+    "github.com/google/codesearch/regexp": ["Compile", "Regexp.MatchString"],
+    "github.com/google/codesearch/sparse": ["NewSet", "Set.Add", "Set.Has", "Set.Dense", "Set.Len"]
+  },
+  "commands": ["go list ./...", "go doc ./index", "go doc ./regexp", "go doc ./sparse"],
+  "out_of_scope": ["cmd/cgrep", "cmd/cindex", "cmd/csearch", "cmd/csweb", "arbitrary filesystem trees", "ZIP indexing", "HTTP server", "platform-specific mmap behavior", "concurrent use"]
+}

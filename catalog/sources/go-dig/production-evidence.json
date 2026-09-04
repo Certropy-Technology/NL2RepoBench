@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-dig",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "environment",
+    "next_step": "Reproduce TestProvideLocation with its expected repository-relative checkout path or obtain a reviewed source-only relaxation, then freeze testify and transitive Go modules as a private offline closure and author separate verifier/Oracle artifacts.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/uber-go/dig",
+      "revision": "770912487056bfe8bc9bd5879a4e049f68989ab0",
+      "source_digest": "sha256:6c5890219e8b3bae095197f54e66e369d78e3058cf88b322415011b8a218cef0",
+      "license_spdx": "MIT",
+      "license_digest": "sha256:5cce09a0a02e15f476aa4385bf23d13ec8447de58a7057523a82dcc80f0aff04"
+    },
+    "commands": [
+      {"command": "git checkout --detach 770912487056bfe8bc9bd5879a4e049f68989ab0 && git rev-parse HEAD && git archive --format=tar HEAD | sha256sum && git show HEAD:LICENSE | sha256sum", "tool_version": "git", "exit_code": 0, "log": {"path": "catalog/sources/go-dig/evidence/source-freeze.log", "sha256": "sha256:4e5fba9776d756683486aef6a929227b0e94526ecca356c527f837f0da156cc7"}},
+      {"command": "GOWORK=off GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local GOCACHE=/tmp/go-dig-empty-cache GOMODCACHE=/tmp/go-dig-empty-modcache go test -json ./...", "tool_version": "go1.26.5 linux/amd64", "exit_code": 1, "log": {"path": "catalog/sources/go-dig/evidence/dependency-probe.log", "sha256": "sha256:3359460514f0211d65eb4d6c21e0157ea7933cf41ee663d4d880ddcb9e48bb08"}},
+      {"command": "static Go API/test inventory and child-side adapter assessment", "tool_version": "Go source inspection at revision 770912487056bfe8bc9bd5879a4e049f68989ab0", "exit_code": 1, "log": {"path": "catalog/sources/go-dig/evidence/adapter-assessment.md", "sha256": "sha256:9b0a0adca2fa11d94d73a25e7314c1a090c71457423ace39d2377bacd2f4cf7f"}},
+      {"command": "git archive HEAD | tar -x -C /tmp/go-dig-layout/dig && GOWORK=off GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOCACHE=/tmp/go-dig-full-cache GOMODCACHE=/tmp/go-dig-full-modcache go test ./...", "tool_version": "go1.26.5 linux/amd64 with previously downloaded modules", "exit_code": 0, "log": {"path": "catalog/sources/go-dig/evidence/checkout-layout.log", "sha256": "sha256:6d4187de52ee8a31cff661a1ffd9d379ad9c992e51d8b3b212cdbd16ab104d5f"}}
+    ],
+    "test_inventory": "catalog/sources/go-dig/evidence/test-inventory.json",
+    "api_inventory": "catalog/sources/go-dig/evidence/api-inventory.json"
+  }
+}

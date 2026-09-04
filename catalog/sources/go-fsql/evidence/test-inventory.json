@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-fsql",
+  "revision": "5cfe17e9b3c69aee6e65cc5d73b7c40cc1ffa87e",
+  "test_files": 20,
+  "test_functions": 52,
+  "source_test_events": {"run": 52, "pass": 59, "skip": 3, "packages": 10},
+  "test_packages": ["github.com/kashav/fsql", "github.com/kashav/fsql/evaluate", "github.com/kashav/fsql/parser", "github.com/kashav/fsql/query", "github.com/kashav/fsql/terminal", "github.com/kashav/fsql/tokenizer", "github.com/kashav/fsql/transform"],
+  "coverage": ["query tokenizer and parser", "condition evaluation", "size/time/mode/hash comparisons", "name/size/time/path/hash formatting", "filesystem source aliases and exclusions", "CLI output for all/name/size/time/mode/hash queries", "interactive terminal run"],
+  "denominator_note": "52 source test functions are an audit baseline only. No production fixed denominator or Harbor collection is claimed because the separate verifier adapter is not implemented."
+}

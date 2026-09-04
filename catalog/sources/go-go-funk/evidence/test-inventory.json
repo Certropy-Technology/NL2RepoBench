@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-go-funk",
+  "source_revision": "045ef11f8f9f4d83a03adbd0eea420773c6c68bc",
+  "framework": "go-test",
+  "test_files": 31,
+  "test_leaves_observed_static": 230,
+  "test_collection_status": "not-collected-dependency-probe-failed",
+  "expected_total": 230,
+  "test_groups": [
+    {"scope": "presence/filter/map/reduce", "coverage": ["reflection-based collection operations", "predicates", "typed primitive variants"]},
+    {"scope": "builder/chain_builder/lazy_builder", "coverage": ["stateful chaining", "callbacks", "mutation and terminal values"]},
+    {"scope": "assign/retrieve", "coverage": ["nested path mutation", "pointer and interface values", "error and panic cases"]},
+    {"scope": "join/zip/intersection/union/subtraction", "coverage": ["dynamic joins", "callback comparators", "typed variants"]},
+    {"scope": "helpers/typesafe", "coverage": ["reflection predicates", "type checks", "conversion and zero values"]}
+  ],
+  "note": "Static source inventory only; the empty offline module probe failed before Go test collection because testify v1.4.0 was unavailable."
+}

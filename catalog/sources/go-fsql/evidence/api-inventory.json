@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-fsql",
+  "revision": "5cfe17e9b3c69aee6e65cc5d73b7c40cc1ffa87e",
+  "module": "github.com/kashav/fsql",
+  "public_api": [
+    {"package": "fsql", "symbol": "Run", "signature": "func Run(input string) error", "behavior": "Parse a SQL-esque filesystem query, walk sources, evaluate conditions, and print tab-separated results."},
+    {"package": "parser", "symbol": "Run", "signature": "func Run(input string) (*query.Query, error)", "behavior": "Parse SELECT/FROM/WHERE clauses, sources, aliases, conditions, modifiers, and errors."},
+    {"package": "query", "symbol": "Query", "signature": "type Query struct", "behavior": "Stores attributes, modifiers, included/excluded sources, aliases, and a condition tree; Execute walks the filesystem."},
+    {"package": "query", "symbol": "NewQuery", "signature": "func NewQuery() *Query", "behavior": "Return an empty query with initialized maps and source lists."},
+    {"package": "query", "symbol": "HasAttribute", "signature": "func (q *Query) HasAttribute(attributes ...string) bool", "behavior": "Report whether selected attributes contain any requested name."},
+    {"package": "query", "symbol": "Execute", "signature": "func (q *Query) Execute(workFunc interface{}) error", "behavior": "Walk included filesystem sources, apply excludes and condition tree, then invoke the callback for matching files."},
+    {"package": "tokenizer", "symbol": "NewTokenizer", "signature": "func NewTokenizer(input string) *Tokenizer", "behavior": "Create a stateful tokenizer for query input."},
+    {"package": "tokenizer", "symbol": "Tokenizer", "signature": "type Tokenizer struct", "behavior": "Expose Next and All tokenization behavior with token type/string representations."},
+    {"package": "transform", "symbol": "Parse", "signature": "func Parse(p *ParseParams) (interface{}, error)", "behavior": "Parse modifier values including FORMAT, UPPER, LOWER, and SHA1 with filesystem-dependent hashing."},
+    {"package": "transform", "symbol": "Format", "signature": "func Format(p *FormatParams) (interface{}, error)", "behavior": "Format name, size, time, path, and hash values from filesystem metadata."},
+    {"package": "evaluate", "symbol": "Evaluate", "signature": "func Evaluate(o *Opts) (bool, error)", "behavior": "Evaluate name, size, time, mode, and hash conditions against os.FileInfo and paths."},
+    {"package": "meta", "symbol": "Meta", "signature": "func Meta() string", "behavior": "Return version metadata used by the CLI."},
+    {"package": "terminal", "symbol": "Start", "signature": "func Start() error", "behavior": "Run the interactive terminal prompt and pager-backed output."},
+    {"package": "terminal/pager", "symbol": "CommandExists", "signature": "func CommandExists() bool", "behavior": "Check whether the configured external pager exists on PATH."},
+    {"package": "terminal/pager", "symbol": "New", "signature": "func New(in []byte) error", "behavior": "Invoke the configured external pager with generated output."}
+  ],
+  "cli": {"entrypoint": "cmd/fsql/main.go", "flags": ["-v", "-version"], "query_sources": ["positional arguments", "stdin interactive mode"], "side_effects": ["filesystem traversal", "stdout output", "external pager", "TTY terminal"]}
+}

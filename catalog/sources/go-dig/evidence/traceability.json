@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-dig",
+  "verifier_protocol": "custom-json-v1",
+  "contract_leaf": {"id": "contract::public-api", "frozen_total": 1, "instruction_sections": ["Project Description", "Supports", "API Usage Guide", "Implementation Notes"]},
+  "mappings": [
+    {"assertion": "constructor values are cached", "instruction": "API Usage Guide#constructor semantics", "bridge": "basic.constructor_calls"},
+    {"assertion": "named/grouped/optional injection", "instruction": "API Usage Guide#dig.In", "bridge": "named, grouped, optional_missing_is_nil"},
+    {"assertion": "result objects and child scopes", "instruction": "API Usage Guide#dig.Out and Scope", "bridge": "result_object, scope"},
+    {"assertion": "decorators and info options", "instruction": "API Usage Guide#Decorate and options", "bridge": "decorate, info"},
+    {"assertion": "missing dependency/cycle/panic errors", "instruction": "API Usage Guide#error behavior", "bridge": "errors, recover_panic"}
+  ]
+}

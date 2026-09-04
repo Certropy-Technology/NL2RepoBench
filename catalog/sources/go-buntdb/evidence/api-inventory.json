@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-buntdb",
+  "revision": "0dbc8c18459aed4e4179bccbe0322bbd6019733f",
+  "package": "github.com/tidwall/buntdb",
+  "public_types": ["DB", "SyncPolicy", "Config", "Tx", "SetOptions", "IndexOptions"],
+  "public_functions": [
+    "Open", "Match", "Rect", "Point", "IndexRect", "IndexString", "IndexBinary", "IndexInt", "IndexUint", "IndexFloat", "IndexJSON", "IndexJSONCaseSensitive", "Desc"
+  ],
+  "db_methods": ["Close", "Save", "Load", "CreateIndex", "ReplaceIndex", "CreateSpatialIndex", "ReplaceSpatialIndex", "DropIndex", "Indexes", "ReadConfig", "SetConfig", "View", "Update"],
+  "transaction_methods": ["DeleteAll", "Begin", "Commit", "Rollback", "GetLess", "GetRect", "Set", "Get", "Delete", "TTL", "AscendKeys", "DescendKeys", "Ascend", "AscendGreaterOrEqual", "AscendLessThan", "AscendRange", "Descend", "DescendGreaterThan", "DescendLessOrEqual", "DescendRange", "AscendEqual", "DescendEqual", "Nearby", "Intersects", "Len", "CreateIndex", "CreateIndexOptions", "CreateSpatialIndex", "CreateSpatialIndexOptions", "DropIndex", "Indexes"],
+  "unsupported_or_unverified_boundaries": ["filesystem persistence", "TTL expiration callbacks", "JSON and spatial indexes", "concurrent workloads", "full dependency closure"],
+  "source_files": ["buntdb.go", "buntdb_test.go", "go.mod", "go.sum", "LICENSE"]
+}

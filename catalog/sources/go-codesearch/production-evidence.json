@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-codesearch",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "verifier",
+    "next_step": "Approve a narrow deterministic package contract or fixture the complete public filesystem/CLI behavior, then materialize private module, verifier, and Oracle artifacts and rerun collection, compile, Oracle, and controls.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/google/codesearch",
+      "revision": "74a12a911a79b901d1158c48d011b2da1b090fc9",
+      "source_digest": "sha256:46f0d91b8e5b9b62ef6e943c778045dfeaddaeee9c15596b76a9cefb293365f3",
+      "license_spdx": "BSD-3-Clause",
+      "license_digest": "sha256:c748b057df439896fa811a9523e38e03ec517c326ee443dd4e2f9c3c90e703a6"
+    },
+    "commands": [
+      {
+        "command": "git clone --filter=blob:none --no-checkout https://github.com/google/codesearch /tmp/codesearch-audit && git checkout --detach 74a12a911a79b901d1158c48d011b2da1b090fc9 && git rev-parse HEAD && git archive --format=tar HEAD | sha256sum && git show HEAD:LICENSE | sha256sum",
+        "tool_version": "git 2.x",
+        "exit_code": 0,
+        "log": {"path": "catalog/sources/go-codesearch/evidence/source-freeze.log", "sha256": "sha256:dd7654a3721ddc69b1c6f051db812e9435f42b7e8bf315958b5496655b85d7f7"}
+      },
+      {
+        "command": "GOWORK=off GOTOOLCHAIN=local GOPROXY=off GOSUMDB=off CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go test -count=1 -json ./...",
+        "tool_version": "go1.26.5 linux/amd64",
+        "exit_code": 0,
+        "log": {"path": "catalog/sources/go-codesearch/evidence/dependency-probe.log", "sha256": "sha256:b89afbb38a88f22973606ca9e05939902e615db2ecd46f38bda9d23d8ce61f9c"}
+      },
+      {
+        "command": "static source, CLI/filesystem, platform, and separate-verifier adapter assessment",
+        "tool_version": "Go source inspection at revision 74a12a911a79b901d1158c48d011b2da1b090fc9",
+        "exit_code": 1,
+        "log": {"path": "catalog/sources/go-codesearch/evidence/adapter-assessment.md", "sha256": "sha256:c5f86b2b875537bf8c41ffda3430e862a4c949cf98e16e5932d04549772b4cfb"}
+      }
+    ],
+    "test_inventory": "catalog/sources/go-codesearch/evidence/test-inventory.json",
+    "api_inventory": "catalog/sources/go-codesearch/evidence/api-inventory.json",
+    "traceability": "catalog/sources/go-codesearch/evidence/traceability.json",
+    "remediation": "catalog/sources/go-codesearch/blocked.md"
+  }
+}

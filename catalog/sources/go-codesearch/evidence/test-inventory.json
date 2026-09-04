@@ -1,0 +1,9 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-codesearch",
+  "upstream_test_command": "GOWORK=off GOTOOLCHAIN=local GOPROXY=off GOSUMDB=off CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go test -count=1 -json ./...",
+  "upstream_exit_code": 0,
+  "upstream_packages": ["github.com/google/codesearch/index", "github.com/google/codesearch/regexp", "github.com/google/codesearch/sparse"],
+  "upstream_test_files": ["index/delta_test.go", "index/merge_test.go", "index/read_test.go", "index/regexp_test.go", "index/write_test.go", "regexp/regexp_test.go"],
+  "frozen_collection": {"framework": "not collected", "frozen_total": "unknown", "reason": "No reviewed verifier adapter or private test bundle exists."}
+}

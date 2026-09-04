@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-bild",
+  "source_revision": "3bef4b08d12a23a2f8c87ac6b52901ec6492d09b",
+  "framework": "go test",
+  "test_files": 26,
+  "test_functions": 96,
+  "collection": {
+    "command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test ./...",
+    "exit_code": 1,
+    "collection_error": "root, cmd, and imgio setup failed because module lookup was disabled and the private dependency closure was absent",
+    "full_module_collected": false
+  },
+  "passing_packages_in_probe": ["adjust", "blend", "blur", "channel", "clone", "convolution", "effect", "fcolor", "histogram", "math/f64", "math/integer", "noise", "paint", "parallel", "segment", "transform", "util"],
+  "failing_packages_in_probe": ["github.com/anthonynsimon/bild", "cmd", "imgio"],
+  "frozen_total": "unknown",
+  "denominator_status": "not frozen",
+  "note": "Source health output is not a Harbor public behavior denominator; no Oracle, controls, reward, or generated runtime is claimed."
+}

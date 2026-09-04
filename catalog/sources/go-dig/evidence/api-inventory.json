@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-dig",
+  "public_contract": "custom-json-v1",
+  "bridge_operations": ["suite"],
+  "behavior_groups": [
+    {"group": "container construction and caching", "apis": ["New", "Container.Provide", "Container.Invoke"], "assertions": ["basic", "chain"]},
+    {"group": "named/grouped/optional values", "apis": ["Name", "Group", "dig.In", "Container.Provide", "Container.Invoke"], "assertions": ["named", "grouped", "optional"]},
+    {"group": "result objects and scopes", "apis": ["dig.Out", "Container.Scope", "Scope.Provide", "Scope.Invoke"], "assertions": ["result_object", "scope"]},
+    {"group": "decoration and introspection", "apis": ["Container.Decorate", "FillProvideInfo", "FillInvokeInfo"], "assertions": ["decorate", "info"]},
+    {"group": "failure and panic policy", "apis": ["IsCycleDetected", "DeferAcyclicVerification", "RecoverFromPanics"], "assertions": ["errors", "recover_panic"]}
+  ],
+  "excluded": ["Visualize and arbitrary io.Writer output", "callbacks with caller-owned state", "private internal packages", "arbitrary non-JSON reflection values"],
+  "adaptations": ["All candidate calls execute in the child-side Go bridge; trusted verifier never imports candidate code.", "The bridge sorts grouped strings because upstream group iteration order is unspecified.", "Reflection is exercised only through fixed typed constructors and dig.In/dig.Out structs."]
+}

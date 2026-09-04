@@ -1,0 +1,58 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-fsql",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "verifier",
+    "next_step": "Materialize and hash-lock the four Go module dependencies, define a deterministic virtual filesystem and metadata fixture, and approve a child-side CLI adapter covering query parsing, glob/home expansion, file walking, size/time/mode/hash evaluation, output ordering, pager execution, and interactive terminal behavior. Then add public-behavior tests, compile, collect a fixed denominator, and run Oracle and controls.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/kashav/fsql",
+      "revision": "5cfe17e9b3c69aee6e65cc5d73b7c40cc1ffa87e",
+      "source_digest": "sha256:52a1d205d660c7b3cec7e3e8d40502502f6425e7669de46b8ebf63a0e60b4897",
+      "license_spdx": "MIT",
+      "license_digest": "sha256:694c91613d9a32941e2548472f6c1a8099eb54078273d8782f7829da0bb8c266"
+    },
+    "commands": [
+      {
+        "command": "git -C /tmp/go-fsql-upstream rev-parse HEAD; test \"$(git -C /tmp/go-fsql-upstream rev-parse HEAD)\" = 5cfe17e9b3c69aee6e65cc5d73b7c40cc1ffa87e; git -C /tmp/go-fsql-upstream archive --format=tar HEAD | sha256sum; sha256sum /tmp/go-fsql-upstream/LICENSE",
+        "tool_version": "git 2.x",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/go-fsql/evidence/source-freeze.log",
+          "sha256": "sha256:9c450b6390a8bd0353d60441ffb04a9c8877ac4aa9cd6e11b47459d49fd26ce0"
+        }
+      },
+      {
+        "command": "GOMODCACHE=/tmp/go-fsql-empty-modcache GOCACHE=/tmp/go-fsql-empty-cache GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -json ./...",
+        "tool_version": "go1.26.5-X:nodwarf5 linux/amd64",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/go-fsql/evidence/dependency-probe.log",
+          "sha256": "sha256:e6c6a916726b9ca3ef726036516c2ac8d94a9e4c69e6a560a46a0dd259930fce"
+        }
+      },
+      {
+        "command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -json ./...",
+        "tool_version": "go1.26.5-X:nodwarf5 linux/amd64",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/go-fsql/evidence/source-test-baseline.log",
+          "sha256": "sha256:2c7b9ccdee9147c4cb35e36810e309086a9dd750fa72dae74f773fefa72ac7d5"
+        }
+      },
+      {
+        "command": "static Go API, CLI, filesystem, terminal, and separate-verifier adapter assessment",
+        "tool_version": "Go source inspection at revision 5cfe17e9b3c69aee6e65cc5d73b7c40cc1ffa87e",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/go-fsql/evidence/adapter-assessment.md",
+          "sha256": "sha256:d081910f49ae51bfea363c5a525ae6c9ccaa266aa377f68791f7da826bfc20bc"
+        }
+      }
+    ],
+    "test_inventory": "catalog/sources/go-fsql/evidence/test-inventory.json",
+    "api_inventory": "catalog/sources/go-fsql/evidence/api-inventory.json",
+    "remediation": "catalog/sources/go-fsql/blocked.md"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-dig",
+  "upstream_url": "https://github.com/uber-go/dig",
+  "revision": "770912487056bfe8bc9bd5879a4e049f68989ab0",
+  "resolved_revision": "770912487056bfe8bc9bd5879a4e049f68989ab0",
+  "license_spdx": "MIT",
+  "license_sha256": "sha256:5cce09a0a02e15f476aa4385bf23d13ec8447de58a7057523a82dcc80f0aff04",
+  "module_path": "go.uber.org/dig",
+  "commands": [
+    {"command": "git clone https://github.com/uber-go/dig /tmp/go-dig-upstream && git -C /tmp/go-dig-upstream checkout --detach 770912487056bfe8bc9bd5879a4e049f68989ab0", "exit_code": 0, "result": "Resolved immutable revision."},
+    {"command": "git -C /tmp/go-dig-upstream archive --format=tar HEAD | sha256sum", "exit_code": 0, "result": "Frozen source archive generated for private Oracle input."},
+    {"command": "GOWORK=off go test ./...", "exit_code": 1, "result": "TestProvideLocation failed because its source-path assertion expected dig/dig_test.go while the frozen checkout was /tmp/go-dig-upstream/dig_test.go; testify was downloaded during the probe."}
+  ]
+}

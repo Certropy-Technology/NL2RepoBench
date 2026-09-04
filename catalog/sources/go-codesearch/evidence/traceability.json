@@ -1,0 +1,8 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-codesearch",
+  "status": "blocked",
+  "reason": "No approved deterministic child-side adapter and no private artifact closure.",
+  "candidate_surface": ["index", "regexp", "sparse", "cmd/cgrep", "cmd/cindex", "cmd/csearch", "cmd/csweb"],
+  "uncovered_behavior": ["filesystem traversal", "external file reads", "ZIP indexing", "HTTP server", "platform-specific mmap", "unsafe Windows mapping"]
+}

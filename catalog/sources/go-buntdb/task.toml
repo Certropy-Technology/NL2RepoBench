@@ -1,0 +1,64 @@
+schema_version = "1.0"
+task_id = "go-buntdb"
+version = "0.1.0"
+instruction = "blocked.md"
+
+[metadata]
+difficulty = "medium"
+category = "go-database"
+tags = ["go", "go-modules", "key-value", "transactions", "indexes", "persistence", "blocked"]
+language = "go"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/tidwall/buntdb"
+revision = "0dbc8c18459aed4e4179bccbe0322bbd6019733f"
+license_spdx = "MIT"
+source_digest = "sha256:739a637fe699cfbe0a08e8a0ce8d7afed3ae76efe598ba4b3096f36fcc7008eb"
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+runtime_version = "1.26.5"
+base_image = "docker.io/library/golang"
+base_image_digest = "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "The frozen module imports nine tidwall modules that are absent from the clean offline module cache. BuntDB also exposes persistence, expiration callbacks, regular-expression indexes, JSON indexes, and spatial indexes that require a reviewed deterministic adapter before production packaging."
+
+[dependencies]
+status = "unknown"
+installer = "unknown"
+packages = [
+  "github.com/tidwall/assert@v0.1.0",
+  "github.com/tidwall/btree@v1.4.2",
+  "github.com/tidwall/gjson@v1.14.3",
+  "github.com/tidwall/grect@v0.1.4",
+  "github.com/tidwall/lotsa@v1.0.2",
+  "github.com/tidwall/match@v1.1.1",
+  "github.com/tidwall/rtred@v0.1.2",
+  "github.com/tidwall/pretty@v1.2.0",
+  "github.com/tidwall/tinyqueue@v0.1.1",
+]
+
+[tests]
+framework = "pytest"
+expected_total = 39
+expected_total_source = "unknown"
+commands = ["GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -json ./..."]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = ["skipped"]
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[lifecycle]
+status = "blocked"
+owner = "go-buntdb-wave6-r2-02"
+reason = "The immutable source and license are frozen, but the clean no-network dependency probe fails before collection because the private Go module closure is not materialized. The public API also spans persistence, expiration, indexing, and callbacks without a reviewed deterministic child-side adapter."

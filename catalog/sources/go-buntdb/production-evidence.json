@@ -1,0 +1,48 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-buntdb",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "environment",
+    "next_step": "Materialize the hash-locked private Go module closure, approve a bounded child-side adapter for the supported in-memory and index subset, then add public-behavior tests and rerun collection, compile, Oracle, and controls.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/tidwall/buntdb",
+      "revision": "0dbc8c18459aed4e4179bccbe0322bbd6019733f",
+      "source_digest": "sha256:739a637fe699cfbe0a08e8a0ce8d7afed3ae76efe598ba4b3096f36fcc7008eb",
+      "license_spdx": "MIT",
+      "license_digest": "sha256:be83ad53208d03a9fe08c7fac231cabf79422989ef5706bff217bd35104ebf07"
+    },
+    "commands": [
+      {
+        "command": "git rev-parse HEAD; git archive --format=tar HEAD | sha256sum; sha256sum LICENSE",
+        "tool_version": "git 2.x",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/go-buntdb/evidence/source-freeze.log",
+          "sha256": "sha256:bf4d0fd6d1244d172747a5ce17b25e8a2a4477629f9597047eab57f87f582a31"
+        }
+      },
+      {
+        "command": "GOMODCACHE=/tmp/buntdb-empty-cache2 GOCACHE=/tmp/buntdb-empty-go-cache2 GOPROXY=off GOSUMDB=off GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOTOOLCHAIN=local go test -json ./...",
+        "tool_version": "go1.26.5 linux/amd64",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/go-buntdb/evidence/dependency-probe.log",
+          "sha256": "sha256:8b0c7f4d68a5566349711a24dddb19cd1c67da75e0d05ba559e6510e7135d398"
+        }
+      },
+      {
+        "command": "static Go API, test, dependency, and typed child-side adapter assessment",
+        "tool_version": "Go source inspection at revision 0dbc8c18459aed4e4179bccbe0322bbd6019733f",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/go-buntdb/evidence/adapter-assessment.md",
+          "sha256": "sha256:6dfdb22bb3ccb806d93b469328180b5b73dbe2455dbc874ae3b006fd8ab12ea6"
+        }
+      }
+    ],
+    "test_inventory": "catalog/sources/go-buntdb/evidence/test-inventory.json",
+    "api_inventory": "catalog/sources/go-buntdb/evidence/api-inventory.json"
+  }
+}

@@ -1,0 +1,51 @@
+schema_version = "1.0"
+task_id = "go-echoip"
+version = "0.1.0"
+instruction = "blocked.md"
+
+[metadata]
+difficulty = "medium"
+category = "go-http-service"
+tags = ["go", "go-modules", "http", "geoip", "network", "blocked"]
+language = "go"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/mpolden/echoip"
+revision = "746db5ebf42f87da5d487de444dccc884f9d1c39"
+license_spdx = "BSD-3-Clause"
+source_digest = "sha256:4236ef8964caf9476e5997f5e878294b0de0e40cdcec483d668feba7b0719f2c"
+
+[environment]
+status = "unknown"
+os_name = "debian-bookworm"
+runtime_version = "1.26.5"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "The complete geoip2 Go module closure and deterministic MaxMind/DNS/TCP/HTTP fixtures are not yet materialized for the separate verifier."
+
+[dependencies]
+status = "unknown"
+installer = "system"
+
+[tests]
+framework = "pytest"
+expected_total = 0
+expected_total_source = "unknown"
+commands = ["GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -json ./..."]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[lifecycle]
+status = "blocked"
+owner = "go-echoip-5514bc2"
+reason = "The no-network dependency probe fails before service-package collection because geoip2-golang is absent from the empty module cache. Faithful verifier support for MaxMind files, reverse DNS, TCP port probes, HTTP routes, templates, and profiling is also unresolved; no runtime, Oracle, controls, or reward is claimed."

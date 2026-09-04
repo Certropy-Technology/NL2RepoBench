@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-bild",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "verifier",
+    "next_step": "Materialize and hash-lock the full Go dependency closure, decide the supported pure image subset versus complete CLI/codec surface, and approve a deterministic child-side image/codec/filesystem adapter before freezing public tests and attempting compile.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/anthonynsimon/bild",
+      "revision": "3bef4b08d12a23a2f8c87ac6b52901ec6492d09b",
+      "source_digest": "sha256:f287180ea998e43c2ecd7cff6c26344638d64647fc27a27b6ca4ddfe7b3e628d",
+      "license_spdx": "MIT",
+      "license_digest": "sha256:0c5184b0a2ce22abc964669a76795398a9f34f234a09975621113f5fc9db05a5"
+    },
+    "commands": [
+      {
+        "command": "git -C /tmp/go-bild-author rev-parse HEAD; git -C /tmp/go-bild-author archive --format=tar HEAD | sha256sum; git -C /tmp/go-bild-author archive --format=tar HEAD | wc -c; git -C /tmp/go-bild-author show HEAD:LICENSE | sha256sum; git -C /tmp/go-bild-author show HEAD:LICENSE | wc -c; git -C /tmp/go-bild-author ls-tree -r --name-only HEAD | awk '$0 ~ /\\.go$/ {go++; if ($0 ~ /_test\\.go$/) test++} END {print \"go_files=\"go,\"test_files=\"test}'",
+        "tool_version": "git 2.x",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/go-bild/evidence/source-freeze.log",
+          "sha256": "sha256:8a5dbbfd4980b3c7aaf1f0061b9e4adacc060def62fcc037d68fe9d84d055925"
+        }
+      },
+      {
+        "command": "cd /tmp/go-bild-author && GOMODCACHE=/tmp/go-bild-empty-modcache GOCACHE=/tmp/go-bild-empty-cache GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go test ./... 2>&1 | tail -n 35",
+        "tool_version": "go1.26.5 linux/amd64",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/go-bild/evidence/dependency-probe.log",
+          "sha256": "sha256:d029380447b15ad16228bfeab4789125306216a738c2842d6b237376a560a8a3"
+        }
+      },
+      {
+        "command": "static Go API, dependency, filesystem, codec, random-state, and child-side adapter assessment",
+        "tool_version": "Go source inspection at revision 3bef4b08d12a23a2f8c87ac6b52901ec6492d09b",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/go-bild/evidence/adapter-assessment.md",
+          "sha256": "sha256:292a9298c4c646e5fb948b71f7080c00815f849f2193cf987d2f8fc8ca82620d"
+        }
+      }
+    ],
+    "test_inventory": "catalog/sources/go-bild/evidence/test-inventory.json",
+    "api_inventory": "catalog/sources/go-bild/evidence/api-inventory.json",
+    "remediation": "catalog/sources/go-bild/blocked.md"
+  }
+}

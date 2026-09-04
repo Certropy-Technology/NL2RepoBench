@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-echoip",
+  "revision": "746db5ebf42f87da5d487de444dccc884f9d1c39",
+  "packages": [
+    {"import_path":"github.com/mpolden/echoip/iputil","symbols":["ToDecimal(net.IP) *big.Int","LookupAddr(net.IP) (string, error)","LookupPort(net.IP, uint64) error"]},
+    {"import_path":"github.com/mpolden/echoip/useragent","symbols":["Parse(string) UserAgent"]},
+    {"import_path":"github.com/mpolden/echoip/http","symbols":["New(geo.Reader, *Cache, bool) *Server","(*Server).Handler() net/http.Handler"]},
+    {"import_path":"github.com/mpolden/echoip/iputil/geo","symbols":["Open(string, string, string) (Reader, error)","Reader.Country(net.IP)","Reader.City(net.IP)","Reader.ASN(net.IP)"]}
+  ],
+  "boundary_flags": ["filesystem","maxmind-database","reverse-dns","tcp-network","http-server","templates","profiling"]
+}

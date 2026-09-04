@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-go-mysql",
+  "source_revision": "9ed3a7186e2b591989d8af214de2120e7a26008a",
+  "upstream_test_files": 59,
+  "upstream_static_test_functions": 282,
+  "upstream_command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local GOMODCACHE=/tmp/go-go-mysql-empty-modcache GOCACHE=/tmp/go-go-mysql-empty-cache go test -json ./...",
+  "upstream_exit_code": 1,
+  "collection_status": "blocked-before-complete-collection",
+  "live_service_test_boundaries": ["MySQL server", "TLS certificates", "mysqldump", "network sockets", "replication/binlog stream"],
+  "frozen_leaf": {"id": "blocked::public-contract", "frozen_total": "unknown", "framework": "Go child-side bridge not available", "private_case_count": 0}
+}
