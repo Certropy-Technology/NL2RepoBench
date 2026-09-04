@@ -1,0 +1,125 @@
+{
+  "schema_version": "1.0",
+  "dispatch_id": "authoring-wave3-20260904-12",
+  "source_queue": ".nl2repo/authoring-live/discovery/wave3/queue.json",
+  "source_queue_sha256": "sha256:7d15df72d268ccf5c4dd44843bde56c0972c17cbc63b361b5e139be2cc428127",
+  "base_commit": "3f4e963414f4173db2003227c7c4d3e1cb207218",
+  "worker_count": 12,
+  "concurrency": 12,
+  "selection_policy": "Dispatch non-rejected, non-existing catalog records. candidate records require normal authoring validation; needs-evidence records are explicitly assigned to workers for evidence completion and may end blocked. Do not promote records by editing status manually.",
+  "ownership_policy": "One task-local isolated worktree per worker. Workers do not edit shared catalog/tasks, shared CAS indexes, queues, or other tasks; workers do not commit or push. Parent owns review, merge, projection synchronization, commit, and push.",
+  "candidates": [
+    {
+      "package": "aiohttp",
+      "language": "python",
+      "status_at_dispatch": "candidate",
+      "upstream_url": "https://github.com/aio-libs/aiohttp",
+      "revision": "d4c1903db13d3804ca9f1ebd70bb3af731365d82",
+      "license_spdx": "Apache-2.0 AND MIT",
+      "difficulty": "hard"
+    },
+    {
+      "package": "anyio",
+      "language": "python",
+      "status_at_dispatch": "needs-evidence",
+      "upstream_url": "https://github.com/agronholm/anyio",
+      "revision": "928366259543412a2deb1e2ba09ea45ffa92ef4f",
+      "license_spdx": null,
+      "difficulty": "medium"
+    },
+    {
+      "package": "cffi",
+      "language": "python",
+      "status_at_dispatch": "needs-evidence",
+      "upstream_url": "https://github.com/python-cffi/cffi",
+      "revision": "61fe449bd5bf9ae48211e822a7eefa5cb07c11d3",
+      "license_spdx": null,
+      "difficulty": "hard"
+    },
+    {
+      "package": "charset-normalizer",
+      "language": "python",
+      "status_at_dispatch": "candidate",
+      "upstream_url": "https://github.com/jawah/charset_normalizer",
+      "revision": "e239bdc5cc1eb1f0db08d4046ad531f805dbea71",
+      "license_spdx": "MIT",
+      "difficulty": "medium"
+    },
+    {
+      "package": "@csstools/postcss-progressive-custom-properties",
+      "language": "node",
+      "status_at_dispatch": "candidate",
+      "upstream_url": "https://github.com/csstools/postcss-plugins",
+      "revision": "c55f9afa26005f083703dd79659b3b7d198ccd37",
+      "license_spdx": "MIT-0",
+      "difficulty": "medium"
+    },
+    {
+      "package": "@cypress/request",
+      "language": "node",
+      "status_at_dispatch": "candidate",
+      "upstream_url": "https://github.com/cypress-io/request",
+      "revision": "c1d4c52354202e38bb465d717dfcbb0552b4f626",
+      "license_spdx": "Apache-2.0",
+      "difficulty": "medium"
+    },
+    {
+      "package": "@fastify/error",
+      "language": "node",
+      "status_at_dispatch": "candidate",
+      "upstream_url": "https://github.com/fastify/fastify-error",
+      "revision": "9470f997a06035d7e1dec2e2eceb7d2a3cca68e5",
+      "license_spdx": "MIT",
+      "difficulty": "easy"
+    },
+    {
+      "package": "@sindresorhus/is",
+      "language": "node",
+      "status_at_dispatch": "candidate",
+      "upstream_url": "https://github.com/sindresorhus/is",
+      "revision": "7821031c66cdeb7256a0feb2d506535f9e84fcaf",
+      "license_spdx": "MIT",
+      "difficulty": "medium"
+    },
+    {
+      "package": "go-bild",
+      "language": "go",
+      "status_at_dispatch": "candidate",
+      "upstream_url": "https://github.com/anthonynsimon/bild",
+      "repository": "anthonynsimon/bild",
+      "revision": "3bef4b08d12a23a2f8c87ac6b52901ec6492d09b",
+      "license_spdx": "MIT",
+      "difficulty": "hard"
+    },
+    {
+      "package": "go-bumblebee",
+      "language": "go",
+      "status_at_dispatch": "candidate",
+      "upstream_url": "https://github.com/perplexityai/bumblebee",
+      "repository": "perplexityai/bumblebee",
+      "revision": "d76e369a0b34d6506dc249b4d573f7859cac7a19",
+      "license_spdx": "Apache-2.0",
+      "difficulty": "hard"
+    },
+    {
+      "package": "go-buntdb",
+      "language": "go",
+      "status_at_dispatch": "candidate",
+      "upstream_url": "https://github.com/tidwall/buntdb",
+      "repository": "tidwall/buntdb",
+      "revision": "0dbc8c18459aed4e4179bccbe0322bbd6019733f",
+      "license_spdx": "MIT",
+      "difficulty": "medium"
+    },
+    {
+      "package": "go-burrow",
+      "language": "go",
+      "status_at_dispatch": "candidate",
+      "upstream_url": "https://github.com/linkedin/Burrow",
+      "repository": "linkedin/Burrow",
+      "revision": "66bdb0566fdeb14251a53eb7f6cb4ed4036d16ed",
+      "license_spdx": "Apache-2.0",
+      "difficulty": "hard"
+    }
+  ]
+}
