@@ -1,0 +1,88 @@
+import {readFileSync} from 'node:fs';
+import {join} from 'node:path';
+import {pathToFileURL} from 'node:url';
+
+const site = process.env.NODE_CANDIDATE_SITE;
+if (!site) throw new Error('candidate site is not configured');
+const packageRoot = join(site, 'node_modules', 'remeda');
+const manifest = JSON.parse(readFileSync(join(packageRoot, 'package.json'), 'utf8'));
+const rootExport = manifest.exports?.['.'];
+const entry = typeof rootExport === 'string' ? rootExport : rootExport?.import;
+if (typeof entry !== 'string' || !entry.startsWith('./') || entry.includes('..')) throw new Error('package has no safe ESM root export');
+const moduleUrl = pathToFileURL(join(packageRoot, entry)).href;
+const api = await import(moduleUrl);
+
+function callback(spec) {
+  if (!spec || typeof spec !== 'object') return (value) => value;
+  if (spec.kind === 'identity') return (value) => value;
+  if (spec.kind === 'property') return (value) => value?.[spec.key];
+  if (spec.kind === 'length') return (value) => value?.length;
+  if (spec.kind === 'remainder') return (value) => value % spec.divisor;
+  if (spec.kind === 'greaterThan') return (value) => value > spec.value;
+  if (spec.kind === 'lessThan') return (value) => value < spec.value;
+  if (spec.kind === 'even') return (value) => value % 2 === 0;
+  throw new Error('callback descriptor is not allowlisted');
+}
+
+function json(value) {
+  if (value === undefined) return {type: 'undefined'};
+  return value;
+}
+
+function call(name, args) {
+  if (name === 'map' || name === 'filter' || name === 'groupBy' || name === 'indexBy' || name === 'partition') {
+    const fn = callback(args[1]);
+    return api[name](args[0], fn);
+  }
+  if (name === 'sortBy') {
+    const rules = (args[1] ?? []).map((rule) => Array.isArray(rule) ? [callback(rule[0]), rule[1]] : callback(rule));
+    return api.sortBy(args[0], ...rules);
+  }
+  if (name === 'pipe') {
+    let value = args[0];
+    for (const step of args[1] ?? []) value = call(step.name, [value, ...(step.args ?? [])]);
+    return value;
+  }
+  if (name === 'pick' || name === 'omit') return api[name](args[0], args[1]);
+  if (name === 'merge' || name === 'mergeDeep' || name === 'difference' || name === 'zip') return api[name](args[0], args[1]);
+  if (name === 'range') return api.range(...args);
+  if (name === 'truncate') return api.truncate(...args);
+  if (typeof api[name] !== 'function') throw new Error('export is not allowlisted');
+  return api[name](...args);
+}
+
+function callLast(name, args) {
+  if (name === 'map' || name === 'filter' || name === 'groupBy' || name === 'indexBy' || name === 'partition') {
+    return api[name](callback(args[1]))(args[0]);
+  }
+  if (name === 'sortBy') {
+    const rules = (args[1] ?? []).map((rule) => Array.isArray(rule) ? [callback(rule[0]), rule[1]] : callback(rule));
+    return api.sortBy(...rules)(args[0]);
+  }
+  if (name === 'pick' || name === 'omit') return api[name](args[1])(args[0]);
+  if (name === 'merge' || name === 'mergeDeep' || name === 'difference' || name === 'zip') return api[name](args[1])(args[0]);
+  if (name === 'range') return api.range(args[1])(args[0]);
+  if (name === 'add' || name === 'multiply') return api[name](args[1])(args[0]);
+  if (name === 'take' || name === 'drop') return api[name](args[1])(args[0]);
+  if (name === 'reverse' || name === 'unique' || name === 'sum' || name === 'mean') return api[name]()(args[0]);
+  if (typeof api[name] !== 'function') throw new Error('export is not allowlisted');
+  return api[name](...args)(args[0]);
+}
+
+const request = JSON.parse(readFileSync(0, 'utf8'));
+try {
+  let value;
+  if (request.operation === 'inventory') {
+    value = {name: manifest.name, version: manifest.version, type: manifest.type, rootExport, exports: Object.keys(api).sort()};
+  } else if (request.operation === 'call') {
+    value = call(request.name, request.args ?? []);
+  } else if (request.operation === 'call-last') {
+    value = callLast(request.name, request.args ?? []);
+  } else {
+    throw new Error('operation is not allowlisted');
+  }
+  process.stdout.write(JSON.stringify({id: request.id, ok: true, value: json(value)}) + '\n');
+} catch (error) {
+  process.stdout.write(JSON.stringify({id: request.id, ok: false, error_type: error?.constructor?.name ?? 'Error', message: String(error?.message ?? error)}) + '\n');
+  process.exitCode = 1;
+}

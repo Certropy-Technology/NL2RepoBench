@@ -1,0 +1,10 @@
+{
+  "schema_version": "1.0",
+  "task_id": "remeda",
+  "status": "implemented",
+  "purpose": "Keep candidate ESM code out of the trusted node:test process while exercising a bounded JSON operation DSL in a UID-isolated child.",
+  "transport": {"mode": "one-shot-json", "encoding": "utf-8", "request_limit_bytes": 65536, "response_limit_bytes": 262144, "candidate_uid": 10001, "timeout_seconds": 30, "network": "none"},
+  "operations": {"inventory": "Child reads package metadata and sorted export names.", "call": "Child invokes one allowlisted Remeda export with JSON values and callback descriptors."},
+  "in_scope_values": ["JSON null, booleans, numbers, strings, arrays, and plain objects", "identity/property/length/remainder/comparison callback descriptors"],
+  "forbidden_candidate_capabilities": ["network", "native addons", "custom loaders", "unbounded output", "trusted-process import", "filesystem access beyond package loading"]
+}

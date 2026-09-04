@@ -1,0 +1,10 @@
+{
+  "schema_version": "1.0",
+  "task_id": "remeda",
+  "package": "remeda",
+  "version": "2.0.0",
+  "runtime_entry": "dist/index.js",
+  "public_exports": ["add", "capitalize", "chunk", "clamp", "difference", "drop", "filter", "groupBy", "identity", "indexBy", "isDeepEqual", "isNullish", "isNumber", "isString", "map", "mean", "merge", "mergeDeep", "multiply", "omit", "partition", "pick", "pipe", "range", "reverse", "sortBy", "sum", "take", "toCamelCase", "toKebabCase", "toSnakeCase", "truncate", "uncapitalize", "unique", "zip"],
+  "excluded_exports": "Other upstream exports, TypeScript-only inference, lazy iterator internals, random/time APIs, callback side effects, and non-JSON values are outside the fixed adapter contract.",
+  "adapter": "Private child-side JSON adapter maps bounded callback descriptors to functions and serializes only JSON-compatible results."
+}

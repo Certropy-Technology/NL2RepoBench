@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0",
+  "task_id": "remeda",
+  "task_version": "2.0.0-r1",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/remeda/remeda",
+    "revision": "ebd0be24a3407315c8b2242eebae504e0d06f8c8",
+    "source_digest": "sha256:85f61d4b725ba3d0bf1f1c7081040d06632ec3e12800427bef7a4403f1acd383",
+    "license_spdx": "MIT"
+  },
+  "environment": {
+    "runtime": "node 24.19.0",
+    "package_manager": "npm 11.17.0",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "network_policy": "no-network"
+  },
+  "private_artifacts": {
+    "dependency_bundle": {"digest": "sha256:9d8f7fc505117eab7f08e2858666037617466111444e90d937d4a9f98144fae8", "size_bytes": 10240},
+    "commands_bundle": {"digest": "sha256:bfc3ee21d499be593ba1d4113a887121a709fc27dd0cca8949b0ccf6b8386b3d", "size_bytes": 10240},
+    "test_bundle": {"digest": "sha256:71a24c81d05194a8e1098096e8d5e73a0de93dcaf8ce274f4754065dfdd2d3b5", "size_bytes": 20480},
+    "oracle_bundle": {"digest": "sha256:fd2523607cc4b4891d973604a812ac2b52db1591d6332c005f8c0cce56aed2d4", "size_bytes": 6645760}
+  },
+  "tests": {"framework": "node:test", "report_format": "node-test-json-v1", "frozen_total": 11, "candidate_uid": 10001, "separate_verifier": true},
+  "bundle": {"status": "bound-final", "path": ".nl2repo/remeda-final/remeda/bundle.manifest.json", "sha256": "sha256:859126af72b30eb7a52a76a80cb461c767d8ea027e032d8993792a047ba8fb29"},
+  "oracle": {"valid": true, "collected": 11, "passed": 11, "reward": 1.0, "grading": {"path": ".nl2repo/remeda-final-runs/oracle/remeda-final-oracle-20260905/remeda__bDkvBrK/verifier/grading.json", "sha256": "sha256:1fd88eefaffdbd57750fafe48dc7eb271ca235e5ef40ec9a65affeb3cc5527c6"}, "network": {"path": ".nl2repo/remeda-final-runs/oracle/remeda-final-oracle-20260905/remeda__bDkvBrK/verifier/network.json", "sha256": "sha256:411ac680a1b9178d5d57ae60404bc141c3141b959c1639e7af1926d1aa6ccc91"}, "public_network_available": false},
+  "controls": {
+    "empty": {"valid": true, "collected": 0, "passed": 0, "reward": 0.0, "failure_reason": "candidate-installation-failed", "grading": {"path": ".nl2repo/remeda-final-runs/empty/remeda-final-empty-20260905/remeda-empty__xfy5cCf/verifier/grading.json", "sha256": "sha256:088eebbe90ef0480e02e6125841e75dfe6dcffaa574368e70e3104a36fea413c"}, "network": {"path": ".nl2repo/remeda-final-runs/empty/remeda-final-empty-20260905/remeda-empty__xfy5cCf/verifier/network.json", "sha256": "sha256:ddee81d173ac148e60f2488fb19c0fac5dc9bc1eb7817fdf358dfcadf204841d"}},
+    "stub": {"valid": true, "collected": 11, "passed": 0, "reward": 0.0, "grading": {"path": ".nl2repo/remeda-final-runs/stub/remeda-final-stub-20260905/remeda-stub__zFGuWaJ/verifier/grading.json", "sha256": "sha256:febfb84e964b710e735cd8e14147cfa8802c6062dfdf4d1ea0c9fbd733f9e280"}, "network": {"path": ".nl2repo/remeda-final-runs/stub/remeda-final-stub-20260905/remeda-stub__zFGuWaJ/verifier/network.json", "sha256": "sha256:411ac680a1b9178d5d57ae60404bc141c3141b959c1639e7af1926d1aa6ccc91"}},
+    "forgery": {"valid": true, "collected": 11, "passed": 0, "reward": 0.0, "verifier_owned_reward": true, "workspace_forged_reward": 1.0, "grading": {"path": ".nl2repo/remeda-final-runs/forgery/remeda-final-forgery-20260905/remeda-forgery__ghAATwi/verifier/grading.json", "sha256": "sha256:febfb84e964b710e735cd8e14147cfa8802c6062dfdf4d1ea0c9fbd733f9e280"}, "network": {"path": ".nl2repo/remeda-final-runs/forgery/remeda-final-forgery-20260905/remeda-forgery__ghAATwi/verifier/network.json", "sha256": "sha256:ddee81d173ac148e60f2488fb19c0fac5dc9bc1eb7817fdf358dfcadf204841d"}},
+    "offline": {"completed": true, "public_network_available": false}
+  },
+  "residual_risks": [
+    "The verifier covers a bounded JSON-compatible subset of Remeda's public runtime utilities rather than TypeScript-only inference behavior.",
+    "Blind review and model pilot remain separate publication gates."
+  ]
+}

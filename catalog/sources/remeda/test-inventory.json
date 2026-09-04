@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "task_id": "remeda",
+  "framework": "node:test",
+  "report_format": "node-test-json-v1",
+  "frozen_total": 11,
+  "groups": {
+    "package_shape": 1,
+    "array_data_first": 3,
+    "array_data_last": 2,
+    "numeric_and_objects": 2,
+    "predicates_and_strings": 1,
+    "errors_and_immutability": 2
+  },
+  "adapter": "candidate_adapter.mjs executes bounded JSON requests in a UID-isolated child process."
+}

@@ -1,0 +1,7 @@
+command=npm ci --ignore-scripts --no-audit --no-fund
+command=npm run build --workspace remeda
+package=remeda@2.0.0
+package_tarball_size_bytes=466560
+package_tarball_sha256=b2181bf19230ddc0a7d61cb62b58538fce5aa9ecf2fa4f2419d58043ceb29840
+runtime_dependencies=none
+build_output=packages/remeda/dist/index.js,packages/remeda/dist/index.cjs,packages/remeda/dist/index.d.ts

@@ -1,0 +1,67 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/remeda"
+version = "2.0.0-r1"
+description = "Build the Remeda functional utility library from an empty workspace and implement deterministic data-first and data-last array, object, string, numeric, and predicate operations."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "node",
+    "npm",
+    "esm",
+    "typescript",
+    "functional",
+    "arrays",
+    "objects",
+    "separate-verifier",
+]
+
+[metadata]
+difficulty = "hard"
+category = "functional-utility-library"
+tags = [
+    "node",
+    "npm",
+    "esm",
+    "typescript",
+    "data-first",
+    "data-last",
+    "arrays",
+    "objects",
+]
+language = "node"
+runtime = "node"
+runtime_version = "24.19.0"
+package_manager = "npm"
+test_framework = "node:test"
+metric_contract = "node-test-leaf-pass-rate-v1"
+expected_test_count = 11
+canonical_manifest_digest = "sha256:03725292193687c0f7d52670c6de72722e00f66edcf53ece69d4f9aa7f3b61b1"
+toolchain_lock_digest = "sha256:aac76d5c1a423cd3c5c9c96870198475e0fed151793b60eeb830a7c053692dc8"
+
+[agent]
+timeout_sec = 3600.0
+
+[verifier]
+timeout_sec = 900.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 16384
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192

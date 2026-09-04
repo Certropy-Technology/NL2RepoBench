@@ -1,0 +1,25 @@
+Private artifact staging root: /tmp/remeda-artifacts
+
+dependencies.tar
+  digest=sha256:9d8f7fc505117eab7f08e2858666037617466111444e90d937d4a9f98144fae8
+  size_bytes=10240
+  contents=bundle.manifest.json, package-lock.json, npm-cache/
+
+commands.tar
+  digest=sha256:bfc3ee21d499be593ba1d4113a887121a709fc27dd0cca8949b0ccf6b8386b3d
+  size_bytes=10240
+  contents=commands.json
+
+tests.tar
+  digest=sha256:71a24c81d05194a8e1098096e8d5e73a0de93dcaf8ce274f4754065dfdd2d3b5
+  size_bytes=20480
+  contents=candidate_adapter.txt, test_client.mjs, contract.test.mjs
+
+oracle.tar
+  digest=sha256:34170b8524dd3b363eed45354cc80812bcf08c238b251feefede2aeeedebf4be
+  size_bytes=6635520
+  contents=remeda-2.0.0.tgz, source.tar, solve.sh
+
+All four artifacts are private, hash-locked, and must be registered in the
+integrator's CAS before production compilation. Runtime network access is
+forbidden for agent, candidate, verifier, Oracle, and controls.
