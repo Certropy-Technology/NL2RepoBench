@@ -1,0 +1,10 @@
+reference-contract timestamp=2026-09-04
+source revision=50113da16fec53b66b80d75e80a89296de4fa5a5
+python=CPython 3.12.11
+candidate site=isolated target install of exact frozen source
+dependencies=exact hash-locked 12-package closure
+protocol=one fresh child process per trusted JSON-compatible scenario
+collected=30
+passed=30
+failed=0
+exit_code=0

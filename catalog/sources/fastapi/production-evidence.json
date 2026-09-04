@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.0",
+  "task_id": "fastapi",
+  "task_version": "1.0.0",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/fastapi/fastapi",
+    "revision": "50113da16fec53b66b80d75e80a89296de4fa5a5",
+    "git_tree": "13b7e52ad340d6524b0caf60feec7a5b2e55b58d",
+    "source_digest": "sha256:93b5db4f6487b38ff1acfbbd66d8a775654fc7014da277240916efe5bae66d06",
+    "license_spdx": "MIT",
+    "license_path": "LICENSE",
+    "license_sha256": "sha256:4ec89ffc81485b97fec584b2d4a961032eeffe834453894fd9c1274906cc744e"
+  },
+  "environment": {
+    "runtime": "CPython 3.12.11",
+    "os": "debian-12-amd64",
+    "base_image": "python:3.12-slim-bookworm@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "uv": "0.11.32",
+    "network_policy": "no-network",
+    "agent_allowed_hosts": [],
+    "verifier_network_mode": "no-network"
+  },
+  "private_artifacts": {
+    "dependency_lock": {"digest": "sha256:8914f4ed51ca932d3d2d867ccaf68a0e63725d713d97b71e734e0b11ecbbc853", "size_bytes": 13050, "path": "handoffs/wave10/fastapi/requirements.lock.txt", "visibility": "private"},
+    "verifier_bundle": {"digest": "sha256:f34ee54461d223107071914b027e5335b047d4973e8e486526239105d76dde6a", "size_bytes": 20480, "path": "handoffs/wave10/fastapi/verifier-bundle.tar", "visibility": "private"},
+    "oracle_bundle": {"digest": "sha256:8d62af7e5c67e733d1b928b56f9376c9992d493ded030da98490fce569d177cd", "size_bytes": 36997120, "path": "handoffs/wave10/fastapi/oracle-bundle.tar", "visibility": "private"}
+  },
+  "tests": {
+    "framework": "custom-json-v1",
+    "expected_total": 30,
+    "collection_source": "private verifier CASES list",
+    "local_reference_probe": {"collected": 30, "passed": 30, "failed": 0, "exit_code": 0},
+    "candidate_uid": 10001,
+    "separate_verifier": true
+  },
+  "commands": [
+    {"command": "git fetch origin 50113da16fec53b66b80d75e80a89296de4fa5a5; git checkout --detach FETCH_HEAD; git archive --format=tar HEAD", "exit_code": 0, "log": "catalog/sources/fastapi/evidence/source-freeze.txt"},
+    {"command": "uv pip compile requirements.in --python-version 3.12 --generate-hashes --output-file requirements.lock.txt", "exit_code": 0, "log": "catalog/sources/fastapi/evidence/dependency-freeze.txt"},
+    {"command": "uv pip install --python clean-venv --require-hashes -r requirements.lock.txt", "exit_code": 0, "log": "catalog/sources/fastapi/evidence/dependency-freeze.txt"},
+    {"command": "uv pip install --target candidate-site --no-deps --no-build-isolation frozen-source", "exit_code": 0, "log": "catalog/sources/fastapi/evidence/dependency-freeze.txt"},
+    {"command": "30 deterministic child-side JSON scenarios against exact frozen source", "exit_code": 0, "collected": 30, "passed": 30, "log": "catalog/sources/fastapi/evidence/reference-contract.txt"}
+  ],
+  "bundle": {"status": "bound-final", "path": ".nl2repo/fastapi-final/fastapi/bundle.manifest.json", "sha256": "sha256:9cb88a8e12a2096d6cc0472f0290a7e87e9f6488dceca0cea169af1f7dfb5dcf"},
+  "oracle": {"valid": true, "collected": 30, "passed": 30, "reward": 1.0, "grading": {"path": ".nl2repo/fastapi-final-runs/oracle/fastapi-final-oracle-20260905/fastapi__cpy8Ndg/verifier/grading.json", "sha256": "sha256:c460be21a1670da7da0964291d4a79d1a4539f1db6121f884a4261271632008e"}, "network": {"path": ".nl2repo/fastapi-final-runs/oracle/fastapi-final-oracle-20260905/fastapi__cpy8Ndg/verifier/network.json", "sha256": "sha256:411ac680a1b9178d5d57ae60404bc141c3141b959c1639e7af1926d1aa6ccc91"}, "public_network_available": false},
+  "controls": {
+    "empty": {"valid": true, "collected": 0, "passed": 0, "reward": 0.0, "failure_reason": "candidate-installation-failed", "grading": {"path": ".nl2repo/fastapi-final-runs/empty/fastapi-final-empty-20260905/fastapi-empty__ya5kaqK/verifier/grading.json", "sha256": "sha256:bce04a181a9aedbba0ae7a4f5b1d89c64bb2d469fecf8219b8b750541760851e"}, "network": {"path": ".nl2repo/fastapi-final-runs/empty/fastapi-final-empty-20260905/fastapi-empty__ya5kaqK/verifier/network.json", "sha256": "sha256:411ac680a1b9178d5d57ae60404bc141c3141b959c1639e7af1926d1aa6ccc91"}},
+    "stub": {"valid": true, "collected": 30, "passed": 1, "reward": 0.03333333333333333, "grading": {"path": ".nl2repo/fastapi-final-runs/stub/fastapi-final-stub-20260905/fastapi-stub__d78yN7z/verifier/grading.json", "sha256": "sha256:4bc41f9aad846f9a929cf37bc4fae0cb3fafa804f3f562a31c1a8bee5604bd66"}, "network": {"path": ".nl2repo/fastapi-final-runs/stub/fastapi-final-stub-20260905/fastapi-stub__d78yN7z/verifier/network.json", "sha256": "sha256:411ac680a1b9178d5d57ae60404bc141c3141b959c1639e7af1926d1aa6ccc91"}},
+    "forgery": {"valid": true, "collected": 30, "passed": 1, "reward": 0.03333333333333333, "verifier_owned_reward": true, "workspace_forged_reward": 1.0, "grading": {"path": ".nl2repo/fastapi-final-runs/forgery/fastapi-final-forgery-20260905/fastapi-forgery__yY8k99F/verifier/grading.json", "sha256": "sha256:4bc41f9aad846f9a929cf37bc4fae0cb3fafa804f3f562a31c1a8bee5604bd66"}, "network": {"path": ".nl2repo/fastapi-final-runs/forgery/fastapi-final-forgery-20260905/fastapi-forgery__yY8k99F/verifier/network.json", "sha256": "sha256:ddee81d173ac148e60f2488fb19c0fac5dc9bc1eb7817fdf358dfcadf204841d"}},
+    "offline": {"completed": true, "public_network_available": false}
+  },
+  "residual_risks": [
+    "The scored contract is a deterministic in-memory subset of FastAPI; live transports, optional integrations, and external services are excluded.",
+    "Blind review and model pilot remain separate publication gates.",
+    "No Harbor model Agent Run, blind review, pilot, or publication was performed by this worker."
+  ]
+}

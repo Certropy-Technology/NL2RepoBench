@@ -1,0 +1,100 @@
+schema_version = "1.0"
+task_id = "fastapi"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "asgi-web-framework"
+tags = ["python", "asgi", "openapi", "validation", "security", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/fastapi/fastapi"
+revision = "50113da16fec53b66b80d75e80a89296de4fa5a5"
+license_spdx = "MIT"
+source_digest = "sha256:93b5db4f6487b38ff1acfbbd66d8a775654fc7014da277240916efe5bae66d06"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.11"
+os_name = "debian-12-amd64"
+base_image = "python:3.12-slim-bookworm"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
+network_mode = "no-network"
+build_command = "install the exact hash-locked FastAPI runtime and PDM build closure during Docker image build"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The exact runtime and build closure is installed from a private hash lock during image construction. Agent, Oracle, candidate, verifier, and controls execute with no network access; the Oracle restores a digest-checked frozen source archive."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = [
+  "annotated-doc==0.0.5",
+  "annotated-types==0.7.0",
+  "anyio==4.12.1",
+  "idna==3.18",
+  "pdm-backend==2.4.9",
+  "pydantic==2.13.4",
+  "pydantic-core==2.46.4",
+  "setuptools==80.10.2",
+  "starlette==1.6.0",
+  "typing-extensions==4.16.0",
+  "typing-inspection==0.4.4",
+  "wheel==0.45.1",
+]
+lock_artifact = { digest = "sha256:8914f4ed51ca932d3d2d867ccaf68a0e63725d713d97b71e734e0b11ecbbc853", size_bytes = 13050, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:8914f4ed51ca932d3d2d867ccaf68a0e63725d713d97b71e734e0b11ecbbc853", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 30
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:f34ee54461d223107071914b027e5335b047d4973e8e486526239105d76dde6a", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:f34ee54461d223107071914b027e5335b047d4973e8e486526239105d76dde6a", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
+
+[harbor]
+description = "Build FastAPI 0.141.1 from an empty workspace and reproduce deterministic parameter, encoding, routing, OpenAPI, security, SSE, response, and middleware behavior through an isolated subprocess verifier."
+keywords = ["python", "asgi", "openapi", "validation", "security", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 900.0
+candidate_install_timeout_sec = 240.0
+candidate_total_timeout_sec = 590.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:8d62af7e5c67e733d1b928b56f9376c9992d493ded030da98490fce569d177cd"
+size_bytes = 36997120
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:8d62af7e5c67e733d1b928b56f9376c9992d493ded030da98490fce569d177cd"
+visibility = "private"
+
+[lifecycle]
+status = "controls-passed"
+owner = "wave10-04-fastapi"
+reason = "The final NoNetwork task uses an exact dependency lock and separate child-process verifier. Oracle passes 30/30; empty, installable stub, and forgery controls are valid and remain below the 0.20 reward ceiling."

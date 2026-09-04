@@ -1,0 +1,12 @@
+dependency-freeze timestamp=2026-09-04
+python=CPython 3.12.11
+uv=0.11.32
+command=uv pip compile requirements.in --python-version 3.12 --generate-hashes --output-file requirements.lock.txt
+exit_code=0
+requirements.lock.txt sha256=8914f4ed51ca932d3d2d867ccaf68a0e63725d713d97b71e734e0b11ecbbc853
+requirements.lock.txt size_bytes=13050
+packages=annotated-doc==0.0.5,annotated-types==0.7.0,anyio==4.12.1,idna==3.18,pdm-backend==2.4.9,pydantic==2.13.4,pydantic-core==2.46.4,setuptools==80.10.2,starlette==1.6.0,typing-extensions==4.16.0,typing-inspection==0.4.4,wheel==0.45.1
+clean-install-command=uv pip install --python <clean-venv> --require-hashes -r requirements.lock.txt
+clean-install-exit_code=0
+candidate-install-command=uv pip install --target candidate-site --no-deps --no-build-isolation <frozen-source>
+candidate-install-exit_code=0

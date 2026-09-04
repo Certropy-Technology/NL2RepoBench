@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "task_id": "fastapi",
+  "revision": "50113da16fec53b66b80d75e80a89296de4fa5a5",
+  "scanner": "python-ast-stdlib-plus-manual-public-review",
+  "package_version": "0.141.1",
+  "package_python_files": 48,
+  "scope": "deterministic framework construction, metadata, encoding, OpenAPI, security, SSE, and re-exports",
+  "scored_symbols": {
+    "fastapi": ["FastAPI", "APIRouter", "Depends", "Security", "Path", "Query", "Header", "Cookie", "Body", "Form", "File", "HTTPException", "BackgroundTasks"],
+    "fastapi.encoders": ["jsonable_encoder"],
+    "fastapi.datastructures": ["Default", "DefaultPlaceholder"],
+    "fastapi.exceptions": ["RequestValidationError", "WebSocketRequestValidationError", "ResponseValidationError"],
+    "fastapi.security": ["APIKeyHeader", "HTTPBasic", "HTTPBearer", "OAuth2PasswordRequestForm", "SecurityScopes"],
+    "fastapi.security.utils": ["get_authorization_scheme_param"],
+    "fastapi.sse": ["ServerSentEvent", "format_sse_event", "KEEPALIVE_COMMENT"],
+    "fastapi.utils": ["is_body_allowed_for_status_code", "get_path_param_names", "deep_dict_update", "get_value_or_default"],
+    "fastapi.responses": ["Response", "JSONResponse", "HTMLResponse", "PlainTextResponse", "RedirectResponse", "StreamingResponse", "FileResponse"],
+    "fastapi.middleware": ["CORSMiddleware", "GZipMiddleware", "HTTPSRedirectMiddleware", "TrustedHostMiddleware", "WSGIMiddleware"]
+  },
+  "risk_flags": ["asgi", "asyncio", "callbacks", "pydantic-native-extension", "filesystem-optional", "multipart-optional", "external-service-optional"],
+  "excluded_surface": ["live sockets and servers", "TestClient transport", "WebSockets", "multipart parsing", "templates", "filesystem delivery", "CLI/cloud commands", "databases and external identity providers"]
+}

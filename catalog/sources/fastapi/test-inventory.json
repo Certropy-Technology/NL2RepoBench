@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "task_id": "fastapi",
+  "revision": "50113da16fec53b66b80d75e80a89296de4fa5a5",
+  "upstream_test_files": 493,
+  "upstream_mode": "broad framework suite with optional integrations, docs examples, browser tooling, native dependencies, and live transport fixtures",
+  "adapted_leaf_count": 30,
+  "framework": "custom-json-v1 wrapped as verifier-owned JUnit",
+  "collection_source": "private task-specific verifier CASES list",
+  "cases": ["exports-version", "jsonable-primitives", "jsonable-custom-encoder", "jsonable-include-exclude", "params-query", "params-path", "params-body-form-file", "depends-security-marker", "default-placeholder", "exceptions", "security-header", "security-header-missing", "security-http-basic", "security-bearer", "security-oauth-form", "app-registration", "router-prefix", "openapi-basic", "openapi-cache", "openapi-tags-servers", "url-for", "operation-id", "body-status-utils", "authorization-parse", "sse-format", "sse-validation", "response-aliases", "middleware-aliases", "background-order", "determinism"],
+  "collection_policy": "Every case emits exactly one unique leaf; missing, duplicate, extra, or malformed leaves invalidate grading.",
+  "reference_replay": {"python": "3.12.11", "collected": 30, "passed": 30, "failed": 0},
+  "excluded_reasons": ["Live transport and TestClient behavior require a broader HTTP client harness.", "Multipart, templates, filesystem, CLI/cloud, databases, and external identity providers need optional dependencies or host resources outside the bounded NoNetwork contract."]
+}
