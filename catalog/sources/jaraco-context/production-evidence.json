@@ -1,8 +1,8 @@
 {
   "schema_version": "1.0",
   "task_id": "jaraco-context",
-  "terminal_kind": "intermediate",
-  "status": "packaged",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
   "source_revision": "bfcb95c784e110521fa907e890b2eea34b0ef349",
   "source_tree": "d47521686d049a7aa36dbcbd42b4d594bf81b47a",
   "source_archive_sha256": "sha256:e228a0721648643e4d7663fc71b03cfa533d60f508fa476fcd197d41a3804328",
@@ -26,7 +26,7 @@
   },
   "bundles": {
     "verifier": {"sha256": "sha256:014273926f82071bd3901bfa930a831d12e21f5b599de8ed3c0de46554ba8a8d", "size_bytes": 30720},
-    "oracle": {"sha256": "sha256:5598fb77a774b71db5517b6d89a26a26ca4661dcd313dcab620df156937db1eb", "size_bytes": 10240}
+    "oracle": {"sha256": "sha256:bc2c5e632443a42b42d234ac17ba6e3beb83212beb62e5af5ca27ee83b2a67c6", "size_bytes": 71680}
   },
   "tests": {
     "framework": "custom-json-v1",
@@ -42,12 +42,13 @@
     {"command": "direct custom-json-v1 verifier against exact source checkout", "exit_code": 0, "passed": 43, "collected": 43},
     {"command": "docker run nl2repobench/openhands-sdk-fork:930e9b1da with Oracle bundle", "exit_code": 0, "source_archive_check": "passed"}
   ],
-  "oracle": null,
-  "controls": null,
+  "bundle": {"path":".nl2repo/jaraco-final-v3/jaraco-context/bundle.manifest.json","sha256":"sha256:15ab7b10d1728fda04cb837b574692191f3620ff969c2d93ac241b7d800d4c6f"},
+  "oracle": {"valid":true,"collected":43,"passed":43,"reward":1.0,"grading":{"path":".nl2repo/jaraco-final-runs/oracle/jaraco-context-final-oracle-v3-20260905/jaraco-context__CkPtdk7/verifier/grading.json","sha256":"sha256:141d00b7c12c8d670a5e78f8c0a5b6c2cb3affb2e099479900ec5e526fe412a8"},"network":{"path":".nl2repo/jaraco-final-runs/oracle/jaraco-context-final-oracle-v3-20260905/jaraco-context__CkPtdk7/verifier/network.json","sha256":"sha256:d88f239c1881025e6fe222f42a90b955088269ce11bf749acf28c8f2df1c758e"},"public_network_available":false},
+  "controls": {"empty":{"valid":true,"collected":0,"passed":0,"reward":0.0,"grading":{"path":".nl2repo/jaraco-final-runs/empty/jaraco-context-final-empty-v3-20260905/jaraco-context-empty__3Kz5ap6/verifier/grading.json","sha256":"sha256:103761c416cb8082abecad162878f2bcb474f47644886aa832b3033e23f3cff1"},"network":{"path":".nl2repo/jaraco-final-runs/empty/jaraco-context-final-empty-v3-20260905/jaraco-context-empty__3Kz5ap6/verifier/network.json","sha256":"sha256:ddee81d173ac148e60f2488fb19c0fac5dc9bc1eb7817fdf358dfcadf204841d"}},"stub":{"valid":true,"collected":43,"passed":0,"reward":0.0,"grading":{"path":".nl2repo/jaraco-final-runs/stub/jaraco-context-final-stub-v3-20260905/jaraco-context-stub__RvEBWwy/verifier/grading.json","sha256":"sha256:e5b821c5bb512745c51e8f579cb918dbe2571c756e731f2b6db5e3f12923d763"},"network":{"path":".nl2repo/jaraco-final-runs/stub/jaraco-context-final-stub-v3-20260905/jaraco-context-stub__RvEBWwy/verifier/network.json","sha256":"sha256:411ac680a1b9178d5d57ae60404bc141c3141b959c1639e7af1926d1aa6ccc91"}},"forgery":{"valid":true,"collected":43,"passed":0,"reward":0.0,"verifier_owned_reward":true,"grading":{"path":".nl2repo/jaraco-final-runs/forgery/jaraco-context-final-forgery-v3-20260905/jaraco-context-forgery__5XBsh8k/verifier/grading.json","sha256":"sha256:e5b821c5bb512745c51e8f579cb918dbe2571c756e731f2b6db5e3f12923d763"},"network":{"path":".nl2repo/jaraco-final-runs/forgery/jaraco-context-final-forgery-v3-20260905/jaraco-context-forgery__5XBsh8k/verifier/network.json","sha256":"sha256:411ac680a1b9178d5d57ae60404bc141c3141b959c1639e7af1926d1aa6ccc91"}},"offline":{"completed":true,"public_network_available":false}},
   "residual_risks": [
-    "Harbor Oracle and empty/stub/forgery/offline controls are deferred to the separate Agent Run loop by lane policy.",
+    "The Oracle removes the optional coherent.licensed build plugin to prevent build-time license network access while preserving package runtime code.",
     "The source's upstream test suite is intentionally small; the 43-leaf contract expands deterministic public behavior without importing candidate code into the trusted verifier.",
     "The task uses the current commit-derived development version rather than the reachable v6.1.2 tag version."
   ],
-  "handoff_status": "awaiting-agent-run"
+  "handoff_status": "official-gates-passed"
 }

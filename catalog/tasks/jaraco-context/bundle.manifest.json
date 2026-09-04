@@ -1,9 +1,9 @@
 {
-  "canonical_manifest_digest": "sha256:309a36c8947db8b59de732ace91aff8e8799bd49f9a1a7131746e4347a042ef0",
+  "canonical_manifest_digest": "sha256:2b0ca3c26614dd56435a1613e485a054fc0b223cc0fd3ccdb41514fe8f452308",
   "files": [
     {
       "path": "README.md",
-      "sha256": "85c9c0d57e5fc24f5f5320f0aab9fcb362bfdfcd9ba8e88a1b8d7548c9017ca0",
+      "sha256": "c1fbeeefea2e46dcd128c62f2dfb14ceb28a597e3f5a7d2108409ff62f5fbd68",
       "size_bytes": 519
     },
     {
@@ -43,18 +43,23 @@
     },
     {
       "path": "solution/solve.sh",
-      "sha256": "84b9398b0542d66173eeb458a8f46bd5756ece3489964b92e6af30654e09f105",
-      "size_bytes": 1489
+      "sha256": "84f41d0390cb68055e57e1e8616f652c0a7b449b616a078e2530a76cf5191262",
+      "size_bytes": 1166
+    },
+    {
+      "path": "solution/source.tar",
+      "sha256": "e228a0721648643e4d7663fc71b03cfa533d60f508fa476fcd197d41a3804328",
+      "size_bytes": 61440
     },
     {
       "path": "task.toml",
-      "sha256": "75170b14eb470755b6559ea89078e6e1ccffec8050ebbdcae29f531249c1a276",
+      "sha256": "916c86e61e371a74e2313dc922fb131e778c9007d262777d127f200f9594980e",
       "size_bytes": 1337
     },
     {
       "path": "tests/Dockerfile",
-      "sha256": "0c0c34ffe647a9b3fba980cfb7a360042d7f49d4638ad622730557e131ef888f",
-      "size_bytes": 989
+      "sha256": "14f2f85d424f23899231c80fdf2db7c24a5b1c20260ae3481d192aee5923c4d2",
+      "size_bytes": 1097
     },
     {
       "path": "tests/candidate-requirements.lock.txt",
@@ -138,8 +143,8 @@
     },
     {
       "path": "tests/runtime/nl2repobench/verification/candidate_install.py",
-      "sha256": "a49314a0ad250d9fd5efcda2d15f9d62d9b882c9b2d9bbf813315c14c73ce76a",
-      "size_bytes": 6556
+      "sha256": "4f714f3af9bc9f633bf41bf76f821e087141b53fcf5920cf2e3a9e60a0249d06",
+      "size_bytes": 7451
     },
     {
       "path": "tests/runtime/nl2repobench/verification/candidate_runner.py",
@@ -283,8 +288,8 @@
     },
     {
       "path": "tests/test.sh",
-      "sha256": "10e8231764d9ee7aad42139bf7e9819697473ba68a5d14ed5b22fe6b099b781e",
-      "size_bytes": 2169
+      "sha256": "6bcad85f0740f524111c07669b5dd791800b2e64e32306d310a77345705ac7e4",
+      "size_bytes": 2241
     },
     {
       "path": "tests/verifier/adapter.py",

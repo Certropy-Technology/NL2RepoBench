@@ -31,7 +31,7 @@ build_command = "Install the hash-locked setuptools/setuptools_scm/coherent.lice
 mode = "no-network"
 offline_dependencies = "preinstalled-image"
 reference_source_fetch = "forbidden"
-reason = "The build backend closure is installed from the private hash lock during image build. Agent and separate verifier execution are offline; only the trusted Oracle receives a run-scoped GitHub source-host exception and verifies the local archive digest before restoring it."
+reason = "The build backend closure is installed from the private hash lock during image build, and the trusted Oracle restores the frozen source from a private digest-checked archive. Agent, Oracle, candidate, verifier, and controls execute without network access."
 
 [dependencies]
 status = "known"
@@ -80,13 +80,13 @@ storage_mb = 6144
 workspace_artifact = "/workspace"
 
 [oracle_bundle]
-digest = "sha256:5598fb77a774b71db5517b6d89a26a26ca4661dcd313dcab620df156937db1eb"
-size_bytes = 10240
+digest = "sha256:bc2c5e632443a42b42d234ac17ba6e3beb83212beb62e5af5ca27ee83b2a67c6"
+size_bytes = 71680
 media_type = "application/vnd.nl2repobench.private-bundle+tar"
-uri = "artifact://private/sha256:5598fb77a774b71db5517b6d89a26a26ca4661dcd313dcab620df156937db1eb"
+uri = "artifact://private/sha256:bc2c5e632443a42b42d234ac17ba6e3beb83212beb62e5af5ca27ee83b2a67c6"
 visibility = "private"
 
 [lifecycle]
 status = "packaged"
 owner = "python-author-wave2-20260828"
-reason = "The frozen source, hash-locked build closure, private custom verifier, digest-checked Oracle, and controls are authored; direct reference and image probes passed. Harbor Oracle and controls remain for the separate Agent Run loop."
+reason = "The final NoNetwork task uses an offline digest-checked source archive, hash-locked build closure, and separate verifier. Oracle passes 43/43; empty, stub, and forgery controls are valid with reward 0.0 and no public network."
