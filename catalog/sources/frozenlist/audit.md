@@ -37,9 +37,9 @@ Docker image build. The selected image is
 No runtime package dependency is declared by frozenlist itself.
 
 The candidate install is bounded and uses the compiler's `pip-target-no-deps-v1`
-child boundary. Runtime agent and verifier network policy is `no-network` with
-no task-local allowed hosts. Only a trusted Oracle invocation receives the
-exact upstream host override to restore the frozen source.
+child boundary. Agent, Oracle, candidate, verifier, and control execution use
+`no-network` with no task-local allowed hosts. The trusted Oracle restores the
+frozen source from a private digest-checked archive.
 
 ## Verifier boundary
 

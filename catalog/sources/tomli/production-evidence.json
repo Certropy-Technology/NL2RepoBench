@@ -1,138 +1,46 @@
 {
   "schema_version": "1.0",
   "task_id": "tomli",
-  "terminal_kind": "intermediate",
-  "status": "awaiting-agent-run",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
   "source_freeze": {
     "upstream_url": "https://github.com/hukkin/tomli",
     "revision": "5a77b12a7a9f052ce5a20c335d2825658f6aea52",
-    "source_archive_sha256": "sha256:200b6c7f01286ef30a889ff4742c93e333049821badb15b53b8d2c3af584e322",
-    "license_spdx": "MIT",
-    "license_sha256": "sha256:b80816b0d530b8accb4c2211783790984a6e3b61922c2b5ee92f3372ab2742fe",
     "source_digest": "sha256:200b6c7f01286ef30a889ff4742c93e333049821badb15b53b8d2c3af584e322",
-    "tree": "e529ffa3388ab50d261dbba463f30b03d5d40014"
-  },
-  "bundle": {
-    "mode": "production",
-    "path": ".nl2repo/compiled/tomli-production/tomli/bundle.manifest.json",
-    "sha256": "sha256:0b775ed383a862e3c3bea7cff89c94ab207c9086067ddc7f166e906168648d72",
-    "canonical_manifest_digest": "sha256:2c861e018b1884b0987fa34c2fcefd98b651cc0f413e46dc19c5dd753f840648",
-    "file_count": 59,
-    "manifest_file_audit": "passed; 59 manifest entries and no missing or mismatched files"
+    "license_spdx": "MIT",
+    "license_digest": "sha256:b80816b0d530b8accb4c2211783790984a6e3b61922c2b5ee92f3372ab2742fe"
   },
   "environment": {
     "python": "3.12.11",
-    "authoring_python": "3.14.6",
-    "os": "debian-12-amd64",
-    "base_image": "python:3.12-slim@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
-    "verifier_image": "nl2repo-tomli-verifier:production",
-    "verifier_image_id": "sha256:1f3d954b00542085e42c4a9dc02d7b006b259f9d1eaa195e22dc52b833ee54e2",
-    "network_policy": "no-network",
-    "agent_allowed_hosts": [],
-    "verifier_network": "network-none; public_network_available=false"
+    "base_image": "python:3.12-slim",
+    "base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "network_mode": "no-network"
   },
-  "dependencies": {
-    "installer": "pip",
-    "packages": ["flit-core==3.12.0"],
-    "lock_artifact": "artifact://private/sha256:bf21ffad864a51909b293fe7d43e8c7643a89bf2b3606f2072f47a1418be85d6",
-    "lock_sha256": "sha256:bf21ffad864a51909b293fe7d43e8c7643a89bf2b3606f2072f47a1418be85d6",
-    "lock_size_bytes": 254,
-    "vendor_wheels": false
+  "artifacts": {
+    "dependency_lock": {"digest": "sha256:bf21ffad864a51909b293fe7d43e8c7643a89bf2b3606f2072f47a1418be85d6", "size_bytes": 254},
+    "verifier_bundle": {"digest": "sha256:4e9ce0be18dfc472ddd6b20050fd886b1cc5ff94ef144808bff0f127baf5f934", "size_bytes": 20480},
+    "oracle_bundle": {"digest": "sha256:f49d1b7febad852ca0e23d7f91dcb42bb9f6838b900c9cba71024e01fa099217", "size_bytes": 1187840}
   },
-  "verifier": {
-    "protocol": "custom-json-v1",
-    "bundle": "artifact://private/sha256:4e9ce0be18dfc472ddd6b20050fd886b1cc5ff94ef144808bff0f127baf5f934",
-    "bundle_sha256": "sha256:4e9ce0be18dfc472ddd6b20050fd886b1cc5ff94ef144808bff0f127baf5f934",
-    "frozen_total": 32,
-    "candidate_boundary": "UID-10001 subprocess",
-    "integrity": "passed; verifier syntax and generated bundle hash audit"
-  },
-  "commands": [
-    {
-      "command": "uv run nl2repo task validate-source catalog/sources/tomli",
-      "exit_code": 0,
-      "result": "packaged; source digest sha256:7772630eeb8ece5cb86d5ba2749fa35678a33cdc94d4ec7a20ac1beaa8fe3a7e"
-    },
-    {
-      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
-      "exit_code": 0,
-      "result": "378 tasks scanned, 0 errors; tomli only has the expected Oracle source-host warning"
-    },
-    {
-      "command": "uv run nl2repo task lint-network --include-generated",
-      "exit_code": 0,
-      "result": "0 errors"
-    },
-    {
-      "command": "uv run nl2repo harbor compile catalog/sources/tomli --output .nl2repo/compiled/tomli-production --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
-      "exit_code": 0,
-      "artifact": ".nl2repo/compiled/tomli-production/tomli/bundle.manifest.json"
-    },
-    {
-      "command": "docker build --pull -t nl2repo-tomli-verifier:production .nl2repo/compiled/tomli-production/tomli/tests",
-      "exit_code": 0,
-      "result": "generated verifier image built; Docker emitted only the constant FROM platform warning"
-    },
-    {
-      "command": "python -m unittest discover -v",
-      "exit_code": 0,
-      "result": "18 methods; 17 passed, 1 skipped because it requires Python 3.15+"
-    },
-    {
-      "command": "docker run --rm --network none ... nl2repo-tomli-verifier:production /tests/test.sh",
-      "exit_code": 0,
-      "result": "Oracle direct replay: 32 collected, 32 passed, 0 failed, reward 1.0"
-    },
-    {
-      "command": "bash -n catalog/sources/tomli/harbor/solution/solve.sh catalog/sources/tomli/harbor/controls/*.sh",
-      "exit_code": 0,
-      "result": "solution and controls scripts parse successfully"
-    },
-    {
-      "command": "python3 -m py_compile tests/verifier/run.py from verifier bundle",
-      "exit_code": 0,
-      "result": "custom verifier syntax check passed"
-    }
-  ],
+  "bundle": {"status": "bound-final", "path": ".nl2repo/source-repair-final/tomli/bundle.manifest.json", "sha256": "sha256:f3c45657e6d27e4eb813109789f887f2ba56bd56e6a496acac8535242ae6f488"},
   "oracle": {
-    "mode": "direct-docker-verifier-replay",
-    "official_harbor_run_started": false,
+    "command": "official Harbor Oracle, NoNetwork",
+    "exit_code": 0,
     "valid": true,
     "collected": 32,
     "passed": 32,
     "reward": 1.0,
-    "grading": ".nl2repo/runs/tomli/direct/oracle/verifier-logs/verifier/grading.json",
-    "grading_sha256": "sha256:ed8ab851e2ea24f333cb184dd852a9c434e1f4b33761a502bcdece1ed5f22558",
-    "collection": ".nl2repo/runs/tomli/direct/oracle/verifier-logs/verifier/collection.json",
-    "junit": ".nl2repo/runs/tomli/direct/oracle/verifier-logs/verifier/junit.xml",
-    "network": ".nl2repo/runs/tomli/direct/oracle/verifier-logs/verifier/network.json",
-    "network_sha256": "sha256:5bbe9932d602060aaf0e3bee012c4df291c9e498cdd1e15eda91ee7704ae0a5e",
-    "source_restore": "solve.sh fetched github.com, asserted the exact commit, and verified the archive digest"
+    "grading": {"path": ".nl2repo/source-repair-final-runs/tomli/oracle-retry/tomli-final-oracle-retry-20260905/tomli__dJ4VNYU/verifier/grading.json", "sha256": "sha256:ed8ab851e2ea24f333cb184dd852a9c434e1f4b33761a502bcdece1ed5f22558"},
+    "network": {"path": ".nl2repo/source-repair-final-runs/tomli/oracle-retry/tomli-final-oracle-retry-20260905/tomli__dJ4VNYU/verifier/network.json", "sha256": "sha256:500e8d18ae1228e46e9b829535c9f8c336c49a0e38dcf75981be1cd007606585"},
+    "public_network_available": false
   },
   "controls": {
-    "stub": {"valid": true, "collected": 32, "passed": 3, "reward": 0.09375, "grading": ".nl2repo/runs/tomli/direct/controls/stub/logs/verifier/grading.json"},
-    "forgery": {"valid": true, "collected": 32, "passed": 3, "reward": 0.09375, "grading": ".nl2repo/runs/tomli/direct/controls/forgery/logs/verifier/grading.json", "verifier_owned_reward": true},
-    "workspace-invalid": {"valid": true, "collected": 0, "passed": 0, "reward": 0.0, "failure_class": "model", "failure_reason": "candidate-workspace-rejected", "grading": ".nl2repo/runs/tomli/direct/controls/workspace-invalid/logs/verifier/grading.json"},
-    "install-hang": {"valid": true, "collected": 0, "passed": 0, "reward": 0.0, "failure_class": "model", "failure_reason": "candidate-installation-failed", "grading": ".nl2repo/runs/tomli/direct/controls/install-hang/logs/verifier/grading.json", "candidate_install": ".nl2repo/runs/tomli/direct/controls/install-hang/logs/verifier/candidate-install.json"},
-    "call-hang": {"valid": true, "collected": 32, "passed": 2, "reward": 0.0625, "grading": ".nl2repo/runs/tomli/direct/controls/call-hang/logs/verifier/grading.json"},
-    "offline": {"completed": true, "public_network_available": false, "network": ".nl2repo/runs/tomli/direct/oracle/verifier-logs/verifier/network.json"}
+    "empty": {"valid": true, "collected": 0, "passed": 0, "reward": 0.0, "grading": {"path": ".nl2repo/source-repair-final-runs/tomli/empty/tomli-final-empty-20260905/tomli-empty__TPUSgKt/verifier/grading.json", "sha256": "sha256:30351f6b00d9689bcf82558d2718c58f89d4da8201f84841e167c82dd271aac4"}, "network": {"path": ".nl2repo/source-repair-final-runs/tomli/empty/tomli-final-empty-20260905/tomli-empty__TPUSgKt/verifier/network.json", "sha256": "sha256:500e8d18ae1228e46e9b829535c9f8c336c49a0e38dcf75981be1cd007606585"}},
+    "stub": {"valid": true, "collected": 32, "passed": 3, "reward": 0.09375, "grading": {"path": ".nl2repo/source-repair-final-runs/tomli/stub/tomli-final-stub-20260905/tomli-stub__pUviWdF/verifier/grading.json", "sha256": "sha256:f262c0eb49ed676fbbc10b157032ad918f639422bd6232cb69c4d2cc63006df2"}, "network": {"path": ".nl2repo/source-repair-final-runs/tomli/stub/tomli-final-stub-20260905/tomli-stub__pUviWdF/verifier/network.json", "sha256": "sha256:b833cb402653a2bf0c75cd360c57b02b53493c6c0f9abd2011a30659aa0f2a33"}},
+    "forgery": {"valid": true, "collected": 32, "passed": 3, "reward": 0.09375, "verifier_owned_reward": true, "grading": {"path": ".nl2repo/source-repair-final-runs/tomli/forgery/tomli-final-forgery-20260905/tomli-forgery__AtAP3vD/verifier/grading.json", "sha256": "sha256:f262c0eb49ed676fbbc10b157032ad918f639422bd6232cb69c4d2cc63006df2"}, "network": {"path": ".nl2repo/source-repair-final-runs/tomli/forgery/tomli-final-forgery-20260905/tomli-forgery__AtAP3vD/verifier/network.json", "sha256": "sha256:500e8d18ae1228e46e9b829535c9f8c336c49a0e38dcf75981be1cd007606585"}},
+    "offline": {"completed": true, "public_network_available": false, "network": {"path": ".nl2repo/source-repair-final-runs/tomli/oracle-retry/tomli-final-oracle-retry-20260905/tomli__dJ4VNYU/verifier/network.json", "sha256": "sha256:500e8d18ae1228e46e9b829535c9f8c336c49a0e38dcf75981be1cd007606585"}}
   },
   "residual_risks": [
-    {
-      "failure_class": "infrastructure",
-      "reason": "toolchain.lock.toml requires agent image sha256:70525a5fbee81f4d202b7f7de14857fe78f961ce2ec3995efd1a4850e45c7ea5, but the local tag resolves to sha256:dbfa15a345a0ab167aa205e895b02c5a581c569fea71941ab64c3df4569ec123",
-      "next_step": "Restore or import the locked agent image before the official Harbor Oracle/model run."
-    },
-    {
-      "failure_class": "process-boundary",
-      "reason": "Direct Docker replay is not an official Harbor receipt.",
-      "next_step": "Integrator runs the official Harbor Oracle and model loop and binds those receipts before controls-passed or published status."
-    }
-  ],
-  "artifacts": {
-    "dependency_lock": "artifact://private/sha256:bf21ffad864a51909b293fe7d43e8c7643a89bf2b3606f2072f47a1418be85d6",
-    "verifier_bundle": "artifact://private/sha256:4e9ce0be18dfc472ddd6b20050fd886b1cc5ff94ef144808bff0f127baf5f934",
-    "oracle_bundle": "artifact://private/sha256:c08e1b7633c41eb1fb95fa5c93127c686edb66716f27c6446fd5121c2f3402da",
-    "direct_replay_root": ".nl2repo/runs/tomli/direct"
-  }
+    "The fixed verifier covers 32 public parsing and error scenarios rather than every upstream test.",
+    "Blind review and model pilot remain separate publication gates."
+  ]
 }

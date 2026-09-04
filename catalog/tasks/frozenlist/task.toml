@@ -4,36 +4,35 @@ artifacts = [
 ]
 
 [task]
-name = "nl2repobench/tomli"
-version = "0.1.0"
-description = "Build the pure-Python tomli TOML parser from an empty workspace and satisfy a deterministic JSON contract for parsing, types, files, and syntax errors."
+name = "nl2repobench/frozenlist"
+version = "1.0.0"
+description = "Build the pinned frozenlist sequence library from an empty workspace and satisfy a deterministic public API contract through a separate child-side verifier."
 authors = [
     { name = "NL2RepoBench" },
 ]
 keywords = [
     "python",
-    "parser",
-    "toml",
-    "datetime",
-    "errors",
+    "mutable-sequence",
+    "cython",
+    "typing",
+    "copy",
     "separate-verifier",
 ]
 
 [metadata]
 difficulty = "medium"
-category = "toml-parser"
+category = "sequence-library"
 tags = [
     "python",
-    "parser",
-    "toml",
-    "datetime",
-    "errors",
-    "typed",
+    "mutable-sequence",
+    "cython",
+    "typing",
+    "copy",
     "separate-verifier",
 ]
 metric_contract = "fixed-test-pass-rate-v1"
-expected_test_count = 32
-canonical_manifest_digest = "sha256:76df11da3c55ac381687950a6f64937cef5de42645414f5a8358f5b1a40eca1a"
+expected_test_count = 21
+canonical_manifest_digest = "sha256:1a05a096fddeb8225b1bd1f3c9fad745d7869898e4dc917d807d74950be7623b"
 toolchain_lock_digest = "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366"
 
 [agent]

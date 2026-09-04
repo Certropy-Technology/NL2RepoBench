@@ -1,75 +1,65 @@
 {
-  "canonical_manifest_digest": "sha256:76df11da3c55ac381687950a6f64937cef5de42645414f5a8358f5b1a40eca1a",
+  "canonical_manifest_digest": "sha256:1a05a096fddeb8225b1bd1f3c9fad745d7869898e4dc917d807d74950be7623b",
   "files": [
     {
       "path": "README.md",
-      "sha256": "087a0f35ced138605ddc07f937e5c4c41a9a9c9d9dfbf3d6e3dfe3a87b555b22",
-      "size_bytes": 510
-    },
-    {
-      "path": "controls/call-hang.sh",
-      "sha256": "88ea4accf59d1ae282de32b0c150de42e28c49624c36922d5308e5d6937a86fa",
-      "size_bytes": 582
+      "sha256": "1b886ff2ca661df757180146ca8a34fcb74d2ff30febca835eed37f67483b42a",
+      "size_bytes": 515
     },
     {
       "path": "controls/forgery.sh",
-      "sha256": "ad50b0a0923e3fe757faf9fa8580ad56acd61eab983fa139e3a9347a8d907f2d",
-      "size_bytes": 741
+      "sha256": "6bf3124f70f807a430023535f762a92a59d89f441cb217b2e3b08b7e59168168",
+      "size_bytes": 813
     },
     {
-      "path": "controls/install-hang.sh",
-      "sha256": "364f61cd9daf9651cad252adb16d50716ff96a9e24f8a1092fce549a02891239",
-      "size_bytes": 591
+      "path": "controls/hang.sh",
+      "sha256": "1f85089b5a9560c9cd853ecc1d1a7caa89b9637d3880af0bd86c693fabdafc1e",
+      "size_bytes": 778
     },
     {
       "path": "controls/stub.sh",
-      "sha256": "02c991c4b0f70ea78c535d2aededb153ef4427c71e2db8ec909a441985327eaf",
-      "size_bytes": 586
-    },
-    {
-      "path": "controls/workspace-invalid.sh",
-      "sha256": "9db74ec6aeadebcd9dde2c3774a01402f2c3a43809a59c201a7cd321fc149ed9",
-      "size_bytes": 112
+      "sha256": "a6ec73aedfce07a7ef901e0f7a9c9b63b3d474e7a4577ed59c845da2a760dde4",
+      "size_bytes": 853
     },
     {
       "path": "environment/Dockerfile",
-      "sha256": "287adc4e1040302ebea3fc5c3056fdcfa3224ea5c9552f702595a34f9623c9ee",
-      "size_bytes": 766
+      "sha256": "c9f192acba935637ca30425e287cca0d67f4913db439586932b1637b73ae8902",
+      "size_bytes": 762
     },
     {
       "path": "environment/candidate-requirements.lock.txt",
-      "sha256": "bf21ffad864a51909b293fe7d43e8c7643a89bf2b3606f2072f47a1418be85d6",
-      "size_bytes": 254
+      "sha256": "0e67ed06724c0147acd72530d244bcb23a766985b2378c07543578fa2fd1d8fc",
+      "size_bytes": 15460
     },
     {
       "path": "instruction.md",
-      "sha256": "3a604742beb2448e5bba81d98f4ce6c44f3f5ff1b6b4b61f69f47830f73f23f5",
-      "size_bytes": 3643
+      "sha256": "6aad7909ca09d4883bd14896e819c3d320a94b00c303c1e7d4fdb96a4c212f90",
+      "size_bytes": 4239
     },
     {
       "path": "solution/solve.sh",
-      "sha256": "89221403aaa84dbded5413cca261d2cce66cf9c556d4da77cdeaaff8dc52815e",
-      "size_bytes": 449
+      "sha256": "a6383b8ff52aab3712b41a0464bf107cc549f2115d80f27068cc14f68889f823",
+      "size_bytes": 616
     },
     {
       "path": "solution/source.tar",
-      "sha256": "200b6c7f01286ef30a889ff4742c93e333049821badb15b53b8d2c3af584e322",
-      "size_bytes": 1177600
+      "sha256": "0fa249ef870bbbd9267b5427dbcbe7d5a3dc92d439ab677c1f9f6f84717f9b5b",
+      "size_bytes": 286720
     },
     {
       "path": "task.toml",
-      "sha256": "8ed94c72c06eb21539401fcfe48d88e0bb04b537655451eb9e876aadc51d8e02",
-      "size_bytes": 1237
+      "sha256": "2a7947dc58dfb8250f20b3adc6fa1e8dca38704e98cfafea257a31be56504275",
+      "size_bytes": 1255
     },
     {
       "path": "tests/Dockerfile",
-      "sha256": "03a47cbcfcaecc123d2972ad246dff2d5d80570a45fb5a048da7835700635d8a",
-      "size_bytes": 1102
+      "sha256": "8fdd3bc2b4b9c726f494b8c5197679901ba9e197df22912b3bc41a23cd8167e6",
+      "size_bytes": 1110
     },
     {
       "path": "tests/candidate-requirements.lock.txt",
-      "sha256": "bf21ffad864a51909b293fe7d43e8c7643a89bf2b3606f2072f47a1418be85d6",
-      "size_bytes": 254
+      "sha256": "0e67ed06724c0147acd72530d244bcb23a766985b2378c07543578fa2fd1d8fc",
+      "size_bytes": 15460
     },
     {
       "path": "tests/command-plan.json",
@@ -293,18 +283,23 @@
     },
     {
       "path": "tests/test.sh",
-      "sha256": "903f802265a587b4eb5b596cd8b2ce799b10625efdcf2151003c736297d9506f",
+      "sha256": "c21eb8abed8fdf2ae54fddf83346ba00b2dc56ff57289a90cc036f394e11e444",
       "size_bytes": 2169
     },
     {
+      "path": "tests/verifier/adapter.py",
+      "sha256": "55e113eadc65abe3a42e466fe9e69c312361cf24254991b99981a2d550903767",
+      "size_bytes": 9871
+    },
+    {
       "path": "tests/verifier/run.py",
-      "sha256": "a94bfee2e75d5fb052d94e2db716ee0127d3bb54310e7cbc9179a5a2a617900d",
-      "size_bytes": 9029
+      "sha256": "9c7dcee30f08460b8b18b8297e07287395b2d9379c8115e14a0d7e9631a61576",
+      "size_bytes": 7256
     }
   ],
   "mode": "production",
   "schema_version": "1.0",
-  "task_id": "tomli",
-  "task_version": "0.1.0",
+  "task_id": "frozenlist",
+  "task_version": "1.0.0",
   "toolchain_lock_digest": "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366"
 }

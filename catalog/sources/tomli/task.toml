@@ -31,7 +31,7 @@ build_command = "python -m pip install --no-cache-dir --require-hashes -r candid
 mode = "no-network"
 offline_dependencies = "preinstalled-image"
 reference_source_fetch = "forbidden"
-reason = "The pure-Python candidate and separate verifier build closures are installed during image build from a private hash lock. Agent and verifier runs have no egress; only the trusted Oracle receives a run-scoped github.com authorization to fetch the fixed revision."
+reason = "The pure-Python candidate and separate verifier build closures are installed during image build from a private hash lock, and the trusted Oracle restores the frozen source from a private digest-checked archive. Agent, Oracle, candidate, verifier, and controls execute without network access."
 
 [dependencies]
 status = "known"
@@ -75,13 +75,13 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [oracle_bundle]
-digest = "sha256:c08e1b7633c41eb1fb95fa5c93127c686edb66716f27c6446fd5121c2f3402da"
-size_bytes = 10240
+digest = "sha256:f49d1b7febad852ca0e23d7f91dcb42bb9f6838b900c9cba71024e01fa099217"
+size_bytes = 1187840
 media_type = "application/vnd.nl2repobench.private-bundle+tar"
-uri = "artifact://private/sha256:c08e1b7633c41eb1fb95fa5c93127c686edb66716f27c6446fd5121c2f3402da"
+uri = "artifact://private/sha256:f49d1b7febad852ca0e23d7f91dcb42bb9f6838b900c9cba71024e01fa099217"
 visibility = "private"
 
 [lifecycle]
-status = "packaged"
+status = "controls-passed"
 owner = "python-author-wave2-20260828-tomli"
-reason = "Frozen tomli source, hash-locked Flit build dependency, task-local custom verifier, and digest-checked Oracle bundle are prepared. Production compile and Oracle/control gates are recorded in production-evidence.json; model Agent Run and integrator review remain separate."
+reason = "The final NoNetwork task uses an offline digest-checked source archive, hash-locked Flit build dependency, and separate child-side verifier. Oracle passes 32/32; empty, stub, and forgery controls are valid and remain below the 0.20 reward ceiling."
