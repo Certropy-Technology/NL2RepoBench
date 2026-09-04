@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "package": "hast-util-to-estree",
+  "package_version": "3.1.3",
+  "module_kind": "esm",
+  "runtime_entry": "index.js",
+  "public_exports": ["defaultHandlers", "toEstree"],
+  "toEstree": {
+    "signature": "toEstree(tree, options?) -> Program",
+    "tree_types": ["root", "element", "text", "comment", "doctype", "mdxFlowExpression", "mdxTextExpression", "mdxJsxFlowElement", "mdxJsxTextElement", "mdxjsEsm"],
+    "options": ["elementAttributeNameCase", "handlers", "space", "stylePropertyNameCase", "tableCellAlignToStyle"],
+    "return_type": "ESTree Program with ESTree-JSX nodes"
+  },
+  "default_handler_names": ["comment", "doctype", "element", "mdxFlowExpression", "mdxJsxFlowElement", "mdxJsxTextElement", "mdxTextExpression", "mdxjsEsm", "root", "text"],
+  "covered_modules": ["index.js", "lib/index.js", "lib/state.js", "lib/handlers/*.js"],
+  "excluded_verifier_surfaces": ["function-valued custom handlers", "non-JSON prototypes", "cycles", "shared object identity", "undefined", "NaN input transport"]
+}

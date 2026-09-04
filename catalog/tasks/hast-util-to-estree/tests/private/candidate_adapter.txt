@@ -1,0 +1,30 @@
+import {createRequire} from 'node:module'
+import {readFileSync} from 'node:fs'
+import {join} from 'node:path'
+import {pathToFileURL} from 'node:url'
+
+const input = JSON.parse(readFileSync(0, 'utf8'))
+const id = input.id
+try {
+  const require = createRequire(pathToFileURL(`${process.cwd()}/package.json`))
+  const root = join(process.cwd(), 'node_modules', 'hast-util-to-estree')
+  const manifest = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
+  const entry = typeof manifest.exports === 'string' ? manifest.exports : './index.js'
+  const mod = await import(pathToFileURL(join(root, entry)).href)
+  if (input.operation === 'inventory') {
+    process.stdout.write(JSON.stringify({id, ok: true, value: {
+      packageName: manifest.name,
+      packageVersion: manifest.version,
+      packageShape: manifest.type === 'module' && typeof manifest.exports === 'string',
+      exportNames: Object.keys(mod).sort(),
+      toEstree: typeof mod.toEstree === 'function',
+      defaultHandlers: typeof mod.defaultHandlers === 'object',
+      handlerNames: Object.keys(mod.defaultHandlers || {}).sort()
+    }}) + '\n')
+  } else {
+    const value = await mod[input.payload.export](...(input.payload.args || []))
+    process.stdout.write(JSON.stringify({id, ok: true, value}) + '\n')
+  }
+} catch (error) {
+  process.stdout.write(JSON.stringify({id, ok: false, error_type: error?.constructor?.name || 'Error', message: String(error?.message || error).slice(0, 4096)}) + '\n')
+}

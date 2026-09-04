@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "status": "production-json-boundary",
+  "transport": "one bounded JSON request on stdin and one JSON response on stdout per isolated child",
+  "operations": ["inventory", "toEstree"],
+  "limits": {"request_bytes": 262144, "response_bytes": 1048576, "timeout_seconds": 30, "json_depth": 32},
+  "candidate_uid": 10001,
+  "network": "none",
+  "trusted_process_imports_candidate": false,
+  "supported_values": "plain JSON-compatible HAST, options, and ESTree values",
+  "excluded_values": ["callbacks", "functions", "symbols", "BigInt", "cycles", "prototypes", "shared identity", "VFile instances"],
+  "reports": "verifier-owned; candidate stdout is parsed only as the bounded protocol response"
+}

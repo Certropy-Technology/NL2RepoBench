@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "frozen_total": 33,
+  "contract_to_test_families": {
+    "exports-and-handlers": ["package-shape", "default-handlers"],
+    "errors": ["non-node-error", "unknown-node-error"],
+    "basic-node-transform": ["empty-element", "root-fragment", "empty-root", "doctype", "text", "comment", "nested-element"],
+    "properties": ["boolean-property", "literal-property", "omitted-property", "space-list", "comma-list", "non-identifier-property"],
+    "style": ["dom-style", "css-style", "invalid-style", "table-align"],
+    "space-and-casing": ["svg-space", "table-whitespace", "html-attribute-case"],
+    "metadata": ["position", "data", "determinism"],
+    "mdx": ["mdx-expression", "mdx-jsx", "mdx-esm"]
+  },
+  "reverse_review": "Every scored leaf maps to behavior stated in instruction.md. Function-valued custom handlers and non-JSON values are explicitly excluded from the subprocess boundary."
+}

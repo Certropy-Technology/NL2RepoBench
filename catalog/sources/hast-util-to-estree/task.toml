@@ -1,0 +1,93 @@
+schema_version = "2.0"
+task_id = "hast-util-to-estree"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "hast-estree-transformer"
+tags = ["node", "npm", "esm", "hast", "estree", "jsx", "mdx", "ast"]
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/syntax-tree/hast-util-to-estree"
+revision = "e5ccb97e9f42bba90359ea6d0f83a11d74e0dad6"
+license_spdx = "MIT"
+source_digest = "sha256:9bfe21be4d1bae94b427be9a050b58d4b707ba25fc7038ad076c0cb3b870a6e7"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm-amd64"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "Agent, candidate, verifier, Oracle, and control runtime phases are offline. Source, npm closure, tests, verifier, and Oracle payloads are frozen and injected through private digest-checked artifacts."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = ["@types/estree", "@types/estree-jsx", "@types/hast", "comma-separated-tokens", "devlop", "estree-util-attach-comments", "estree-util-is-identifier-name", "hast-util-whitespace", "mdast-util-mdx-expression", "mdast-util-mdx-jsx", "mdast-util-mdxjs-esm", "property-information", "space-separated-tokens", "style-to-js", "unist-util-position", "zwitch"]
+artifact = { digest = "sha256:9a52f514e3de89661c982eaf249cc4fb04158543bf92522b12250bb769e8c864", size_bytes = 5120000, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:9a52f514e3de89661c982eaf249cc4fb04158543bf92522b12250bb769e8c864", visibility = "private" }
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 33
+expected_total_source = "frozen-collection"
+commands_artifact = { digest = "sha256:fc7f4bf92ca433b79db9d554d5464649ee6275c8122a0637e8e751d860d3f578", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:fc7f4bf92ca433b79db9d554d5464649ee6275c8122a0637e8e751d860d3f578", visibility = "private" }
+test_bundle = { digest = "sha256:3e2502cf13e66676c4aeeee4ca7ee46407e0cfdf57654a27593ca4ae4e4bbed2", size_bytes = 20480, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:3e2502cf13e66676c4aeeee4ca7ee46407e0cfdf57654a27593ca4ae4e4bbed2", visibility = "private" }
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build hast-util-to-estree, an ESM utility that transforms JSON HAST trees into deterministic ESTree JSX programs."
+keywords = ["node", "npm", "esm", "hast", "estree", "jsx", "mdx"]
+agent_timeout_sec = 2400.0
+verifier_timeout_sec = 900.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 600.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 2048
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "wave8-16-04-hast-util-to-estree"
+reason = "The final NoNetwork task uses frozen source and npm closures with a separate subprocess verifier. Oracle passes 33/33; empty, stub, and forgery controls are valid and remain below the 0.20 reward ceiling."
+
+[oracle_bundle]
+digest = "sha256:c35038c03e636793f8176aaa836f64eba314454ae9e6ebeba8feed9772592d56"
+size_bytes = 163840
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:c35038c03e636793f8176aaa836f64eba314454ae9e6ebeba8feed9772592d56"
+visibility = "private"

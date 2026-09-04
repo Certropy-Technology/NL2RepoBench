@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.0",
+  "task_id": "hast-util-to-estree",
+  "task_version": "1.0.0",
+  "status": "controls-passed",
+  "handoff_status": "official_gates_passed",
+  "agent_run_started": false,
+  "source": {
+    "upstream_url": "https://github.com/syntax-tree/hast-util-to-estree",
+    "revision": "e5ccb97e9f42bba90359ea6d0f83a11d74e0dad6",
+    "package": "hast-util-to-estree@3.1.3",
+    "license_spdx": "MIT",
+    "license_sha256": "sha256:dd1081884a92952802f4803110a6bb543acea9a814c786d58605b4c1219b5ebb",
+    "raw_archive_sha256": "sha256:9bfe21be4d1bae94b427be9a050b58d4b707ba25fc7038ad076c0cb3b870a6e7",
+    "oracle_source_archive_sha256": "sha256:578576dbfe111acfdf96ae5579e63febb5e668e3828b9f9f259356d1d609a00b",
+    "oracle_source_archive_size_bytes": 112640,
+    "tracked_file_count": 22,
+    "checkout_clean": true
+  },
+  "environment": {
+    "platform": "linux/amd64",
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "node": "24.19.0",
+    "npm": "11.17.0",
+    "network_policy": {
+      "mode": "no-network",
+      "agent_allowed_hosts": [],
+      "reference_source_fetch": "forbidden",
+      "runtime_github_npm_registry_access": false
+    }
+  },
+  "private_artifacts": {
+    "dependencies": {"digest": "sha256:9a52f514e3de89661c982eaf249cc4fb04158543bf92522b12250bb769e8c864", "size_bytes": 5120000, "path": "/tmp/hast-util-to-estree-author/bundles/npm.tar"},
+    "commands": {"digest": "sha256:fc7f4bf92ca433b79db9d554d5464649ee6275c8122a0637e8e751d860d3f578", "size_bytes": 10240, "path": "/tmp/hast-util-to-estree-author/bundles/commands.tar"},
+    "tests": {"digest": "sha256:3e2502cf13e66676c4aeeee4ca7ee46407e0cfdf57654a27593ca4ae4e4bbed2", "size_bytes": 20480, "path": "/tmp/hast-util-to-estree-author/bundles/tests.tar"},
+    "oracle": {"digest": "sha256:c35038c03e636793f8176aaa836f64eba314454ae9e6ebeba8feed9772592d56", "size_bytes": 163840, "path": "/tmp/hast-util-to-estree-author/bundles/oracle.tar"}
+  },
+  "validation": {
+    "source_validation": {"command": "uv run nl2repo task validate-source catalog/sources/hast-util-to-estree", "exit_code": 0},
+    "npm_offline_install": {"command": "npm ci --offline --ignore-scripts --no-audit --no-fund", "exit_code": 0, "lockfile_version": 3, "lock_package_entries": 70, "cache_files": 275},
+    "candidate_contract": {"command": "NODE_CANDIDATE_SITE=<installed-target> node --test --test-reporter=tap /tests/private/contract.test.mjs", "exit_code": 0, "collected": 33, "passed": 33, "failed": 0},
+    "local_verifier_image": {"command": "docker build --platform linux/amd64 --no-cache -f generated/tests/Dockerfile", "exit_code": 0, "image_id": "sha256:9ecb98d4524e85d415d49bb5166e8a42d1b6e266e835462e0540d7e622eec517"},
+    "local_oracle_verifier": {"command": "docker run --rm --network none ... /tests/test.sh", "exit_code": 0, "valid": true, "collected": 33, "passed": 33, "failed": 0, "reward": 1.0, "grading_sha256": "sha256:6bd82968e0489d8477becb711ca36c6b1b48e44f106baedb7fc448fb2d05552f", "network_sha256": "sha256:500e8d18ae1228e46e9b829535c9f8c336c49a0e38dcf75981be1cd007606585", "public_network_available": false},
+    "local_controls": {"command": "docker run --rm --network none ... /tests/test.sh with task-local controls", "official_harbor_receipt": false, "empty": {"valid": true, "collected": 0, "reward": 0.0, "failure_reason": "candidate-installation-failed"}, "stub": {"valid": true, "collected": 33, "passed": 3, "failed": 30, "reward": 0.09090909090909091}, "forgery": {"valid": true, "collected": 33, "passed": 0, "failed": 33, "reward": 0.0, "verifier_owned_reward": true}, "offline": {"valid": true, "collected": 33, "passed": 2, "failed": 31, "reward": 0.06060606060606061}, "public_network_available": false},
+    "node_and_shell_syntax": {"command": "node --check private modules; bash -n controls and solve.sh", "exit_code": 0},
+    "private_archive_readability": {"command": "tar -tf dependencies/tests/commands/oracle bundles", "exit_code": 0},
+    "oracle_source_smoke": {"command": "extract digest-bound source archive; remove devDependencies/scripts; npm ci --offline; import toEstree", "exit_code": 0, "result": "exports and JSX element conversion verified"},
+    "production_compile": {"status": "passed", "manifest_sha256": "sha256:8129b7109bd6df9d539d729e34ab8fc8f3f5b00b97e265a5a01082b0d171884f"},
+    "official_oracle": {"status": "passed", "valid": true, "collected": 33, "passed": 33, "reward": 1.0},
+    "official_controls": {"status": "passed", "empty": 0.0, "stub": 0.09090909090909091, "forgery": 0.0, "public_network_available": false}
+  },
+  "residual_risks": [
+    "Private artifacts are staged under /tmp and must be copied into the parent integration CAS before compilation.",
+    "The 33-leaf verifier is an independent JSON boundary and excludes function-valued handlers, VFile objects, and non-JSON identity semantics.",
+    "Parent must run production compile, verifier image build, official Oracle, empty/stub/forgery/hang/offline controls, and bind receipts to the final manifest.",
+    "No generated catalog/tasks projection is included in this worker handoff."
+  ],
+  "next_action": "Register the four private tar artifacts by digest, compile without --allow-incomplete, and run official NoNetwork Oracle and controls."
+}

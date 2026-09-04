@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "framework": "node:test",
+  "expected_total": 33,
+  "expected_total_source": "task-local private collection",
+  "families": {
+    "package-shape": 2,
+    "error-contract": 2,
+    "basic-nodes": 7,
+    "properties-and-style": 11,
+    "space-table-casing": 5,
+    "metadata-and-stability": 3,
+    "mdx-json": 3
+  },
+  "upstream_runtime_test_file": "test.js",
+  "upstream_runtime_leaf_count": 76,
+  "note": "The production denominator is an independent JSON-boundary subset, not a copy of the mutable upstream development suite."
+}
