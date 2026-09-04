@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0",
+  "wave": "wave9",
+  "dispatch_id": "wave9-20260905-16-fresh",
+  "created_at": "2026-09-05T02:40:00Z",
+  "base_commit": "b062589caf504d8ec11b6e6b8478dd29936899ae",
+  "queue_path": ".nl2repo/authoring-live/discovery/wave8/queue.json",
+  "queue_sha256": "sha256:f162c1376530e2eca027fc582993ac829a6079fd78eb82319e52361d76f1d255",
+  "selection_rule": "first 16 fresh records after excluding catalog identities and every historical dispatch task ID",
+  "worker_agent": "worker",
+  "worker_model": "z-open-api-gpt-openai-responses-400k/gpt-5.6-sol",
+  "isolation": "worktree",
+  "network_contract": "NoNetwork: agent, candidate, verifier, Oracle execution, and controls use network_mode=no-network. Source, dependencies, tests, verifier, and Oracle payloads must be frozen and hash-locked before runtime. Runtime GitHub, npm, PyPI, Go proxy, or external-service access is forbidden. Unsupported tasks must return truthful blocked evidence.",
+  "worker_cwd": "/data/NL2RepoBench-integration-20260827",
+  "tasks": [
+    {"slot":1,"task_id":"meros","language":"node","status_at_dispatch":"candidate","revision":"87ed69fe97f5a250ee6e8bec1a9ba458e16655f9","upstream_url":"https://github.com/maraisr/meros","candidate_id":"https-github-com-maraisr-meros-7c2a0424caad"},
+    {"slot":2,"task_id":"micromark-util-chunked","language":"node","status_at_dispatch":"needs-evidence","revision":null,"upstream_url":"https://github.com/micromark/micromark.git#main","candidate_id":"https-github-com-micromark-micromark-git-main-ecfcfb651dbd"},
+    {"slot":3,"task_id":"ow","language":"node","status_at_dispatch":"candidate","revision":"3975eab08762ba1823f07e2aa3cb05f20c86296c","upstream_url":"https://github.com/sindresorhus/ow","candidate_id":"https-github-com-sindresorhus-ow-1d1125bc4c0f"},
+    {"slot":4,"task_id":"remeda","language":"node","status_at_dispatch":"candidate","revision":"ebd0be24a3407315c8b2242eebae504e0d06f8c8","upstream_url":"https://github.com/remeda/remeda","candidate_id":"https-github-com-remeda-remeda-251e2b535eac"},
+    {"slot":5,"task_id":"string.prototype.trimend","language":"node","status_at_dispatch":"candidate","revision":"9f316ac605e94df4e34c54049be6eb18d3bae83c","upstream_url":"https://github.com/es-shims/String.prototype.trimEnd","candidate_id":"https-github-com-es-shims-string-prototype-trimend-ef357dc764a4"},
+    {"slot":6,"task_id":"type-fest","language":"node","status_at_dispatch":"candidate","revision":"5715dfe23dc5853a148afa37df3c0a698ca9cbb9","upstream_url":"https://github.com/sindresorhus/type-fest","candidate_id":"https-github-com-sindresorhus-type-fest-66faa7ce2f04"},
+    {"slot":7,"task_id":"unist-util-is","language":"node","status_at_dispatch":"candidate","revision":"82b9c2547dfa52e6078a546ab5a1c64bb9381480","upstream_url":"https://github.com/syntax-tree/unist-util-is","candidate_id":"https-github-com-syntax-tree-unist-util-is-27d6e9eaf000"},
+    {"slot":8,"task_id":"unist-util-visit","language":"node","status_at_dispatch":"candidate","revision":"5d601df684ca7341646d6b57eb0f20fdfe277bc2","upstream_url":"https://github.com/syntax-tree/unist-util-visit","candidate_id":"https-github-com-syntax-tree-unist-util-visit-d15a1ed54092"},
+    {"slot":9,"task_id":"unist-util-visit-parents","language":"node","status_at_dispatch":"candidate","revision":"f06035e9161f25119fb68d178167c30003d32dfb","upstream_url":"https://github.com/syntax-tree/unist-util-visit-parents","candidate_id":"https-github-com-syntax-tree-unist-util-visit-parents-1589fbc908fa"},
+    {"slot":10,"task_id":"utility-types","language":"node","status_at_dispatch":"candidate","revision":"fb06cf0c7d2768e39b78bed8b7ca94727998cb2f","upstream_url":"https://github.com/piotrwitek/utility-types","candidate_id":"https-github-com-piotrwitek-utility-types-1e1560bfbefd"},
+    {"slot":11,"task_id":"vfile-location","language":"node","status_at_dispatch":"candidate","revision":"8d5d41dca227bc2d6535d3d293b31287d5d7953f","upstream_url":"https://github.com/vfile/vfile-location","candidate_id":"https-github-com-vfile-vfile-location-5238dd519cb4"},
+    {"slot":12,"task_id":"vfile-message","language":"node","status_at_dispatch":"candidate","revision":"2c782c8580c5b0a14baae19fa8badc628e567461","upstream_url":"https://github.com/vfile/vfile-message","candidate_id":"https-github-com-vfile-vfile-message-a45cd542a513"},
+    {"slot":13,"task_id":"which","language":"node","status_at_dispatch":"candidate","revision":"2009c9dce0e9b0dae024192731987df752c6b4f0","upstream_url":"https://github.com/npm/node-which","candidate_id":"https-github-com-npm-node-which-067424133f6b"},
+    {"slot":14,"task_id":"aiohttp","language":"python","status_at_dispatch":"candidate","revision":"25522ad29937a6b586cb4dbe906c96db45fdc672","upstream_url":"https://github.com/aio-libs/aiohttp","candidate_id":"https-github-com-aio-libs-aiohttp-9ffbda493d73"},
+    {"slot":15,"task_id":"anyio","language":"python","status_at_dispatch":"needs-evidence","revision":"928366259543412a2deb1e2ba09ea45ffa92ef4f","upstream_url":"https://github.com/agronholm/anyio","candidate_id":"https-github-com-agronholm-anyio-464b3b4383f0"},
+    {"slot":16,"task_id":"cachecontrol","language":"python","status_at_dispatch":"needs-evidence","revision":"9ff6af2c397bdfbddb57567b2350c202fed45356","upstream_url":"https://github.com/psf/cachecontrol","candidate_id":"https-github-com-psf-cachecontrol-a4fd77c1aa01"}
+  ]
+}
