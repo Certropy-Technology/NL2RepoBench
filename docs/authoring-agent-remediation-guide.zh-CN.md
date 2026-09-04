@@ -75,6 +75,10 @@ source-freeze
    和 SHA-256。
 4. Candidate dependencies 必须安装到 candidate-owned site，不能覆盖 trusted verifier
    的 pytest、pydantic 或其他 runtime。
+5. CAS 注册前扫描 lock、manifest、source map 和生成日志中的绝对 authoring/worktree
+   路径。依赖版本与 hash 保持不变时，可把 uv/pip/npm 生成注释中的输入输出路径规范化为
+   task-relative 路径；随后重新计算 artifact digest。任何这类 artifact byte 变化都会
+   改变 final manifest，旧 Oracle/control receipt 必须作废并重跑。
 
 #### npm cache closure
 
