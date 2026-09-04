@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-burrow",
+  "source_revision": "66bdb0566fdeb14251a53eb7f6cb4ed4036d16ed",
+  "language": "go",
+  "module_path": "github.com/linkedin/Burrow",
+  "root_entrypoint": "Burrow --config-dir <directory>",
+  "exported_root_api": ["core.Start(app *protocol.ApplicationContext, exitChannel chan os.Signal) int"],
+  "public_protocol_packages": ["core/protocol"],
+  "implementation_packages": [
+    "core/internal/cluster",
+    "core/internal/consumer",
+    "core/internal/evaluator",
+    "core/internal/helpers",
+    "core/internal/httpserver",
+    "core/internal/notifier",
+    "core/internal/storage",
+    "core/internal/zookeeper"
+  ],
+  "http_endpoints": [
+    "/v3/kafka",
+    "/v3/kafka/{cluster}",
+    "/v3/kafka/{cluster}/topic",
+    "/v3/kafka/{cluster}/consumer",
+    "/v3/kafka/{cluster}/consumer/{group}/status",
+    "/v3/kafka/{cluster}/consumer/{group}/lag",
+    "/metrics"
+  ],
+  "external_services": ["Kafka brokers", "ZooKeeper", "SMTP notifier", "HTTP notifier"],
+  "host_facilities": ["configuration files", "PID file", "filesystem log", "signals", "long-running goroutines"],
+  "risk_flags": [
+    "network-service-dependency",
+    "kafka-protocol",
+    "zookeeper-watchers",
+    "external-notifier-side-effects",
+    "long-running-process",
+    "signal-dependent-shutdown",
+    "configuration-filesystem",
+    "internal-package-test-coupling"
+  ],
+  "typed_bridge_status": "unsupported-without-approved-deterministic-multi-service-fixture"
+}

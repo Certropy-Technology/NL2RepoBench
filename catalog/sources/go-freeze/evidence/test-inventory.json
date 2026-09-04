@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-freeze",
+  "upstream_test_files": 3,
+  "top_level_test_functions": 8,
+  "go_test_events": 36,
+  "test_inputs": 9,
+  "golden_svg_files": 29,
+  "golden_png_files": 27,
+  "configuration_files": 2,
+  "upstream_probe": {
+    "command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -json -count=1 ./...",
+    "exit_code": 0,
+    "result": "all packages passed; the module cache was pre-existing"
+  },
+  "tested_behaviors": [
+    "default CLI help and version behavior",
+    "input file and missing-file errors",
+    "SVG output and exact SVG golden comparisons",
+    "PNG rendering and exact PNG golden comparisons",
+    "configuration files and all rendering flags",
+    "ANSI terminal capture through --execute",
+    "PTY and terminal-size behavior",
+    "embedded and caller-supplied fonts"
+  ]
+}

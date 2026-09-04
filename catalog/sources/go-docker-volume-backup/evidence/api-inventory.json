@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-docker-volume-backup",
+  "revision": "bd50ba96c439e6003b982cf6b371278eff946669",
+  "surface": "command-and-internal-backends",
+  "entrypoint": "cmd/backup/main.go:main",
+  "commands": ["backup", "backup -foreground", "backup -profile <cron>", "backup print-config"],
+  "configuration": "environment variables and /etc/dockervolumebackup/conf.d/*.env",
+  "exported_internal_types": [
+    "main.Config", "main.CompressionType", "main.CertDecoder",
+    "main.RegexpDecoder", "main.NaturalNumber", "main.WholeNumber",
+    "main.ContainersStats", "main.ServicesStats", "main.BackupFileStats",
+    "main.StorageStats", "main.Stats", "storage.Backend",
+    "storage.StorageBackend", "storage.PruneStats",
+    "local.Config", "s3.Config", "azure.Config", "dropbox.Config",
+    "googledrive.Config", "ssh.Config", "webdav.Config"
+  ],
+  "behavioral_dependencies": [
+    "Docker Engine API and socket",
+    "Docker Compose and Swarm lifecycle",
+    "mounted volume and filesystem metadata",
+    "local archive creation and symlink preservation",
+    "S3, WebDAV, Azure, Dropbox, Google Drive, and SSH/SFTP services",
+    "GPG and age executables",
+    "cron scheduling, Unix signals, and external hook processes",
+    "SMTP and notification endpoints",
+    "credentials and host configuration"
+  ],
+  "typed_bridge_status": "unsupported-without-task-specific-child-fixture"
+}

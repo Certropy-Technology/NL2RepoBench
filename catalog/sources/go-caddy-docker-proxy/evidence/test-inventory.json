@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-caddy-docker-proxy",
+  "source_revision": "d246679c72e1c3d2ef0e610503e1c2f74581978b",
+  "upstream_test_files": 13,
+  "upstream_static_test_functions": 50,
+  "upstream_packages": 6,
+  "upstream_command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOTOOLCHAIN=local go test -count=1 ./...",
+  "upstream_exit_code": 0,
+  "upstream_log": "catalog/sources/go-caddy-docker-proxy/evidence/upstream-go-test.log",
+  "offline_dependency_probe": {
+    "command": "GOMODCACHE=/tmp/go-caddy-empty-modcache GOPROXY=off GOSUMDB=off GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOTOOLCHAIN=local go test -json ./...",
+    "exit_code": 1,
+    "log": "catalog/sources/go-caddy-docker-proxy/evidence/dependency-probe.log"
+  },
+  "integration_tests": [
+    "TestIntegration_LocalPushUsesCaddyLoad",
+    "TestIntegration_LocalPushEnablesAdmin",
+    "TestIntegration_CaddyFollowsLogArgs"
+  ],
+  "denominator": {
+    "frozen_total": 0,
+    "status": "not-frozen",
+    "reason": "No production verifier can collect tests until the Docker and Caddy runtime adapters and offline dependency closure are approved."
+  }
+}

@@ -1,0 +1,67 @@
+schema_version = "1.0"
+task_id = "go-burrow"
+version = "0.1.0"
+instruction = "blocked.md"
+
+[metadata]
+difficulty = "hard"
+category = "go-service"
+tags = ["go", "go-modules", "kafka", "zookeeper", "monitoring", "http-service", "blocked"]
+language = "go"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/linkedin/Burrow"
+revision = "66bdb0566fdeb14251a53eb7f6cb4ed4036d16ed"
+license_spdx = "Apache-2.0"
+source_digest = "sha256:1f4477129cbeffec5013d106374f074e460e14c5f721f3253c45f35f31a36035"
+
+[environment]
+status = "unknown"
+os_name = "debian-bookworm"
+runtime_version = "1.26.5"
+base_image = "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+base_image_digest = "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "A clean empty module cache cannot build Burrow with GOPROXY=off; a complete private module closure was not materialized. Runtime behavior also requires Kafka, Zookeeper, configured HTTP service state, and optional notifier endpoints."
+
+[dependencies]
+status = "unknown"
+installer = "unknown"
+
+[tests]
+framework = "pytest"
+expected_total = 0
+expected_total_source = "unknown"
+commands = ["GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local GOMODCACHE=/tmp/empty-go-mod-cache GOCACHE=/tmp/empty-go-cache go test -json ./..."]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Burrow is a Kafka consumer-lag monitoring service; this source is blocked because its external service and dependency contracts are not supportable by the current separate Go verifier."
+keywords = ["go", "burrow", "kafka", "zookeeper", "consumer-lag", "http", "service"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 180.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "blocked"
+owner = "go-author-wave5-20260904-04-go-burrow"
+reason = "The immutable source is a Kafka/Zookeeper-backed monitoring service with an HTTP API and optional email/HTTP notifiers. Its behavior requires external brokers, ZooKeeper, configured service state, long-running goroutines, and network side effects; no reviewed deterministic child-side adapter exists. A clean no-network module probe also fails before collection because the complete Go module closure is unavailable."

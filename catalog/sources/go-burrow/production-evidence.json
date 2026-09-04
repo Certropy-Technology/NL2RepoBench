@@ -1,0 +1,54 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-burrow",
+  "terminal_kind": "blocked",
+  "status": "blocked",
+  "blocked": {
+    "failure_class": "verifier",
+    "next_step": "Approve or reject a deterministic Kafka/ZooKeeper/service fixture and bounded child-side adapter; materialize and hash-lock the complete Go module closure; then add public-behavior tests and rerun collection, compile, Oracle, and controls.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/linkedin/Burrow",
+      "revision": "66bdb0566fdeb14251a53eb7f6cb4ed4036d16ed",
+      "source_digest": "sha256:1f4477129cbeffec5013d106374f074e460e14c5f721f3253c45f35f31a36035",
+      "license_spdx": "Apache-2.0",
+      "license_digest": "sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    "commands": [
+      {
+        "command": "git fetch --depth 1 origin 66bdb0566fdeb14251a53eb7f6cb4ed4036d16ed && git rev-parse FETCH_HEAD && git archive --format=tar FETCH_HEAD | sha256sum && git show FETCH_HEAD:LICENSE | sha256sum",
+        "tool_version": "git 2.x",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/go-burrow/evidence/source-freeze.log",
+          "sha256": "sha256:95eaf136744d6427ef20098e9871922d80e5796ad89a10df295d1bf9d01d46db"
+        }
+      },
+      {
+        "command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local GOMODCACHE=/tmp/empty-go-mod-cache GOCACHE=/tmp/empty-go-cache go test -json ./...",
+        "tool_version": "go1.26.5 linux/amd64",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/go-burrow/evidence/dependency-probe.log",
+          "sha256": "sha256:aa2ee769f4ae3e6de192de1a2e5733146e712221b63dc2256bca25e2595ecb44"
+        }
+      },
+      {
+        "command": "static Go API, external-service, and test inventory at the frozen revision",
+        "tool_version": "Go source inspection at revision 66bdb0566fdeb14251a53eb7f6cb4ed4036d16ed",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/go-burrow/evidence/adapter-assessment.md",
+          "sha256": "sha256:2027e13c6a655851a23e00892371a94f92c4ad8077899e292085017e036eb005"
+        }
+      }
+    ],
+    "test_inventory": "catalog/sources/go-burrow/evidence/test-inventory.json",
+    "api_inventory": "catalog/sources/go-burrow/evidence/api-inventory.json"
+  },
+  "residual_risks": [
+    "No fixed public-behavior denominator is claimed because the source tests are mostly internal-package tests and the root package has only a dummy test.",
+    "A full private Go module closure and deterministic Kafka/ZooKeeper fixture may be substantial; no Harbor Oracle, controls, reward, or generated runtime is claimed.",
+    "Blind review, model pilot, and publication remain pending even if the blocker is later resolved."
+  ]
+}

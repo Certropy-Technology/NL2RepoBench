@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-docker-volume-backup",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "environment",
+    "next_step": "Freeze a Go 1.27 linux/amd64 production image and complete private module closure, then obtain an approved child-side fixture for Docker Engine, Compose/Swarm, mounted volumes, storage backends, encryption, notifications, scheduling, and hooks. If that fixture cannot be made faithful without host capabilities, retain the candidate as blocked.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/offen/docker-volume-backup",
+      "revision": "bd50ba96c439e6003b982cf6b371278eff946669",
+      "source_digest": "sha256:4eac23163d7de803af9f610fb7adb80fdcf9aca885cf57659a2b8ea461a852e0",
+      "license_spdx": "MPL-2.0",
+      "license_path": "LICENSE",
+      "license_digest": "sha256:1f256ecad192880510e84ad60474eab7589218784b9a50bc7ceee34c2b91f1d5"
+    },
+    "commands": [
+      {
+        "command": "git checkout --detach bd50ba96c439e6003b982cf6b371278eff946669 && git archive --format=tar HEAD | sha256sum",
+        "tool_version": "git",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/go-docker-volume-backup/evidence/source-freeze.log",
+          "sha256": "sha256:9955030ac3411dd704a4bcd74ed982a2351f708fa05469d65dac5a0703947e65"
+        }
+      },
+      {
+        "command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -json ./...",
+        "tool_version": "go1.26.5-X:nodwarf5 linux/amd64",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/go-docker-volume-backup/evidence/dependency-probe.log",
+          "sha256": "sha256:4cbea55748c752c212a07ed16d2f1ed0dd77076732b25e8d4827c0808ce78c41"
+        }
+      },
+      {
+        "command": "static Go API, integration test, dependency, and child-side adapter assessment",
+        "tool_version": "Go source inspection at revision bd50ba96c439e6003b982cf6b371278eff946669",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/go-docker-volume-backup/evidence/adapter-assessment.md",
+          "sha256": "sha256:e3c4bb137bdee460a1c0c4a7b1d0c07637e1a9cb74384605b3344a8faf0267ba"
+        }
+      }
+    ],
+    "test_inventory": "catalog/sources/go-docker-volume-backup/evidence/test-inventory.json",
+    "api_inventory": "catalog/sources/go-docker-volume-backup/evidence/api-inventory.json"
+  }
+}

@@ -1,0 +1,51 @@
+schema_version = "1.0"
+task_id = "go-cli"
+version = "0.1.0"
+instruction = "blocked.md"
+
+[metadata]
+difficulty = "hard"
+category = "go-cli"
+tags = ["go", "go-modules", "cli", "pki", "cryptography", "network", "blocked"]
+language = "go"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/smallstep/cli"
+revision = "eb1901e52427e629b5932b087f06807ce0dcc8ab"
+license_spdx = "Apache-2.0"
+source_digest = "sha256:6669bc71d169ed6d06f3afd987ceb83f8edb31ce1897259d5384a0f8ab1ad301"
+
+[environment]
+status = "unknown"
+os_name = "debian-bookworm"
+runtime_version = "1.26.5"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "The frozen CLI has a large Go module closure and its functional surface depends on network services, platform facilities, external processes, TTY/browser interaction, and optional KMS/TPM/HSM hardware. The current separate Go verifier has no reviewed adapter for these contracts."
+
+[dependencies]
+status = "unknown"
+installer = "unknown"
+
+[tests]
+framework = "pytest"
+expected_total = 101
+expected_total_source = "unknown"
+commands = ["GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -json ./..."]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[lifecycle]
+status = "blocked"
+owner = "go-cli-588f807-4f7a-s0-t0"
+reason = "The package is a broad PKI CLI rather than a bounded library. It exposes 11 top-level command groups and approximately 151 command constructors across certificate, CA, SSH, OAuth, crypto, ACME, fileserver, and context workflows. A faithful no-network separate verifier would require an approved adapter for network services, TLS/PKI state, browser and TTY interaction, filesystem/system trust stores, child processes, and optional KMS/TPM/HSM hardware; the offline dependency probe also fails before complete test collection."

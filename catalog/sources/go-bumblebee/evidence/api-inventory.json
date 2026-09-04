@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-bumblebee",
+  "source_revision": "d76e369a0b34d6506dc249b4d573f7859cac7a19",
+  "language": "go",
+  "module_path": "github.com/perplexityai/bumblebee",
+  "implementation_files": 30,
+  "implementation_sloc_observation": 15501,
+  "public_symbols_observed": 104,
+  "cli_entries": [
+    "bumblebee scan",
+    "bumblebee roots",
+    "bumblebee selftest",
+    "bumblebee version"
+  ],
+  "scan_profiles": ["baseline", "project", "deep"],
+  "ecosystems": [
+    "npm", "pypi", "go", "rubygems", "packagist", "mcp",
+    "editor-extension", "browser-extension", "homebrew", "agent-skill"
+  ],
+  "host_facilities": [
+    "filesystem traversal",
+    "platform-specific user roots",
+    "endpoint hostname/os/arch/user/uid metadata",
+    "environment-provided device id",
+    "temporary directory extraction",
+    "OS signal cancellation",
+    "optional authenticated HTTPS sink"
+  ],
+  "risk_flags": [
+    "host-filesystem-state",
+    "platform-specific-darwin-linux",
+    "endpoint-derived-nondeterminism",
+    "current-time-and-random-run-id",
+    "external-network-sink",
+    "embedded-fixture-runtime",
+    "large-multi-ecosystem-surface"
+  ],
+  "typed_bridge_status": "unsupported-without-approved-task-adapter"
+}

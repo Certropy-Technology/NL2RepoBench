@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-freeze",
+  "package_kind": "package-main-cli",
+  "public_entrypoints": ["freeze executable flags and positional input"],
+  "exported_library_symbols": [],
+  "internal_surface": [
+    "Config and nested Border, Shadow, Font options",
+    "input.ReadFile, input.ReadInput, input.IsPipe",
+    "svg.AddShadow, svg.AddClipPath, svg.AddCornerRadius, svg.Move",
+    "svg.AddOutline, svg.NewWindowControls, svg.SetDimensions, svg.GetDimensions",
+    "executeCommand with shellwords, xpty, exec.CommandContext",
+    "interactive runForm with huh terminal form",
+    "resvg and optional rsvg-convert PNG conversion"
+  ],
+  "adapter_boundary": "No faithful current typed subprocess adapter",
+  "unsupported_or_unresolved": [
+    "TTY allocation and terminal-size determinism",
+    "interactive terminal input",
+    "arbitrary external command execution and ANSI timing",
+    "filesystem fixture and output isolation",
+    "native/image rendering closure and pixel-golden comparison",
+    "complete offline 64-module private dependency closure"
+  ]
+}

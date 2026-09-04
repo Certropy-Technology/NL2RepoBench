@@ -1,0 +1,54 @@
+schema_version = "1.0"
+task_id = "go-bumblebee"
+version = "0.1.0"
+instruction = "blocked.md"
+
+[metadata]
+difficulty = "hard"
+category = "go-cli"
+tags = ["go", "go-modules", "security-inventory", "filesystem", "typed-bridge", "blocked"]
+language = "go"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/perplexityai/bumblebee"
+revision = "d76e369a0b34d6506dc249b4d573f7859cac7a19"
+license_spdx = "Apache-2.0"
+source_digest = "sha256:b6f1583784c46dd8469829bcff5cd4b9b284c484272ee4e2d66930ad6ce74c7e"
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+runtime_version = "1.26.5"
+base_image = "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+base_image_digest = "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The exact pure-Go source builds without module downloads, but the public CLI requires host filesystem state, endpoint metadata, and an optional external HTTP sink."
+
+[dependencies]
+status = "unknown"
+installer = "unknown"
+packages = []
+
+[tests]
+framework = "pytest"
+expected_total = 231
+expected_total_source = "unknown"
+commands = ["GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -json ./..."]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[lifecycle]
+status = "blocked"
+owner = "wave5-02-go-bumblebee"
+reason = "The exact revision builds and passes its source-only suite offline, but no reviewed separate-verifier child adapter can faithfully and deterministically preserve host filesystem/root resolution, endpoint/time/randomness fields, ten ecosystem parsers, embedded self-test, and optional HTTP sink behavior."

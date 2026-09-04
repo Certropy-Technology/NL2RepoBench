@@ -1,0 +1,54 @@
+schema_version = "1.0"
+task_id = "go-docker-volume-backup"
+version = "0.1.0"
+instruction = "blocked.md"
+
+[metadata]
+difficulty = "hard"
+category = "go-cli"
+tags = ["go", "go-modules", "docker", "backup", "filesystem", "external-io", "blocked"]
+language = "go"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/offen/docker-volume-backup"
+revision = "bd50ba96c439e6003b982cf6b371278eff946669"
+license_spdx = "MPL-2.0"
+source_digest = "sha256:4eac23163d7de803af9f610fb7adb80fdcf9aca885cf57659a2b8ea461a852e0"
+
+[environment]
+status = "unknown"
+os_name = "debian-bookworm"
+runtime_version = "1.26.5"
+base_image = "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+base_image_digest = "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "The exact source requires Go 1.27 while the locked Go lane is 1.26.5; its integration tests also require Docker-in-Docker, Swarm, storage services, credentials, and external binaries that are not available through the separate verifier contract."
+
+[dependencies]
+status = "unknown"
+installer = "unknown"
+packages = []
+
+[tests]
+framework = "pytest"
+expected_total = 0
+expected_total_source = "unknown"
+commands = ["GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -json ./...", "./test/test.sh"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[lifecycle]
+status = "blocked"
+owner = "wave5-10-go-docker-volume-backup"
+reason = "The pinned source requires Go 1.27 but the locked Go lane is 1.26.5. The only substantial test corpus is a Docker-in-Docker integration harness with Docker socket and Swarm control, mounted volumes, cloud and SSH services, encryption binaries, credentials, and external hooks. No faithful child-side adapter or complete offline module closure is available; no generated runtime exists."

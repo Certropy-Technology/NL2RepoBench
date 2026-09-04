@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-freeze",
+  "upstream_url": "https://github.com/charmbracelet/freeze",
+  "revision": "f4276107b7b7a1ad33882cb26baf2102f90887b0",
+  "archive_format": "tar",
+  "archive_sha256": "c130ef4364928c5900d89bd3452bcae979bdd6501ddb14656736577a7db07b74",
+  "license_spdx": "MIT",
+  "license_file": "LICENSE",
+  "license_sha256": "c8454ac132c0bf922746ba119745d42f45d8a0599b59a43316ed8d3de0ff1195",
+  "tracked_files": 113,
+  "go_files": 19,
+  "source_sloc": 2234,
+  "toolchain": {
+    "go": "1.26.5-X:nodwarf5",
+    "goos": "linux",
+    "goarch": "amd64",
+    "cgo_enabled": false,
+    "base_image": "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+  }
+}

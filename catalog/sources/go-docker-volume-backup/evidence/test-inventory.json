@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-docker-volume-backup",
+  "revision": "bd50ba96c439e6003b982cf6b371278eff946669",
+  "go_unit_test_files": 2,
+  "integration_executable_scripts": 31,
+  "integration_scenario_directories": 31,
+  "test_harness": "test/test.sh",
+  "collection_status": "blocked",
+  "collection_error": "The upstream corpus is a Docker-in-Docker integration harness requiring Docker daemon, Compose, Swarm, service containers, credentials, and external binaries; it cannot be collected through the current separate verifier.",
+  "observed_scenarios": [
+    "local", "cli", "s3", "webdav", "ssh", "azure", "googledrive",
+    "dropbox", "gpg", "gpg-asym", "age-passphrase", "age-publickey",
+    "tar", "zstd", "pgzip", "pruning", "notifications", "services",
+    "swarm", "worker-node", "nonroot", "ownership", "lock", "ignore",
+    "print-config", "confd", "extend", "proxy", "collision", "certs",
+    "no-restart"
+  ],
+  "test_files_sha256": {
+    "test/test.sh": "unfrozen-in-source-audit",
+    "test/util.sh": "unfrozen-in-source-audit"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-burrow",
+  "source_revision": "66bdb0566fdeb14251a53eb7f6cb4ed4036d16ed",
+  "language": "go",
+  "framework": "go test",
+  "go_files": 67,
+  "test_files": 26,
+  "test_functions": 237,
+  "root_test_functions": ["Test_dummy"],
+  "test_packages": [
+    "github.com/linkedin/Burrow",
+    "github.com/linkedin/Burrow/core/internal/cluster",
+    "github.com/linkedin/Burrow/core/internal/consumer",
+    "github.com/linkedin/Burrow/core/internal/evaluator",
+    "github.com/linkedin/Burrow/core/internal/helpers",
+    "github.com/linkedin/Burrow/core/internal/httpserver",
+    "github.com/linkedin/Burrow/core/internal/notifier",
+    "github.com/linkedin/Burrow/core/internal/storage",
+    "github.com/linkedin/Burrow/core/internal/zookeeper"
+  ],
+  "collection_status": "not-collected-under-empty-offline-cache",
+  "observed_source_test_count": 237,
+  "frozen_denominator": "unknown",
+  "notes": "Most tests are internal-package unit tests with Sarama/ZooKeeper mocks; the root package has only a dummy test. No public-behavior fixed denominator is claimed."
+}

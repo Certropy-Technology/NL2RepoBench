@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-freeze",
+  "status": "blocked",
+  "public_behavior_to_test": [
+    {"behavior": "CLI help and invalid input", "tests": ["TestFreeze", "TestFreezeHelp", "TestFreezeErrorFileMissing"]},
+    {"behavior": "SVG and PNG rendering configuration", "tests": ["TestFreezeOutput", "TestFreezeConfigurations"]},
+    {"behavior": "file, ANSI, and command input", "tests": ["TestFreezeConfigurations/execute", "TestFreezeConfigurations/eza", "TestFreezeConfigurations/layout"]},
+    {"behavior": "interactive and PTY boundary", "tests": ["README interactive mode", "pty.go executeCommand"]}
+  ],
+  "gap": "The upstream assertions are executable CLI and image-golden contracts; reducing them to JSON-safe library calls would not preserve the product under evaluation."
+}

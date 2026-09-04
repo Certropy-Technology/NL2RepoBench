@@ -1,0 +1,48 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-cli",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "verifier",
+    "next_step": "Approve a scoped CLI contract or a reviewed deterministic adapter for network/PKI, OAuth, filesystem and trust stores, child processes, TTY/browser interaction, SSH-agent state, platform APIs, and optional KMS/TPM/HSM hardware; then freeze the complete Go module closure and rerun collection.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/smallstep/cli",
+      "revision": "eb1901e52427e629b5932b087f06807ce0dcc8ab",
+      "source_digest": "sha256:6669bc71d169ed6d06f3afd987ceb83f8edb31ce1897259d5384a0f8ab1ad301",
+      "license_spdx": "Apache-2.0",
+      "license_digest": "sha256:6fac0a40e0507e3ba32cd3471c808fa5ba4b088700bd22d81250f40f6cc74db5"
+    },
+    "commands": [
+      {
+        "command": "git clone --filter=blob:none https://github.com/smallstep/cli.git /tmp/go-cli-audit && git checkout --detach eb1901e52427e629b5932b087f06807ce0dcc8ab && git archive --format=tar HEAD | sha256sum",
+        "tool_version": "git 2.x",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/go-cli/evidence/source-freeze.log",
+          "sha256": "sha256:46541d954390f9a389270f767675527b9d71ab2b696fe4a9975c97d581400d84"
+        }
+      },
+      {
+        "command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -json ./...",
+        "tool_version": "go1.26.5 linux/amd64",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/go-cli/evidence/dependency-probe.log",
+          "sha256": "sha256:1cf9a983117a7460ee4934a119d630240ce70f44feec64ea7cd343e7ff29b0db"
+        }
+      },
+      {
+        "command": "static command/API inventory and separate-verifier adapter assessment",
+        "tool_version": "Go source inspection at revision eb1901e52427e629b5932b087f06807ce0dcc8ab",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/go-cli/evidence/adapter-assessment.md",
+          "sha256": "sha256:8a38ac2817d1ab003ea59895deae06ba79f50d5463e958b1c41590b71cf51188"
+        }
+      }
+    ],
+    "test_inventory": "catalog/sources/go-cli/evidence/test-inventory.json",
+    "api_inventory": "catalog/sources/go-cli/evidence/api-inventory.json"
+  }
+}

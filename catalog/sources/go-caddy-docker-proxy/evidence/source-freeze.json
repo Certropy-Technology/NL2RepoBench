@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-caddy-docker-proxy",
+  "upstream_url": "https://github.com/lucaslorentz/caddy-docker-proxy",
+  "revision": "d246679c72e1c3d2ef0e610503e1c2f74581978b",
+  "source_digest": "sha256:c2361bf2221f82e4dcaa8173f75d47cdedb5ee520a08e9d3036ffa601eaaa7c3",
+  "license_spdx": "Apache-2.0",
+  "license_sha256": "sha256:140709ad33e198057eb13c5572c97b6a8655e19af916af6cc0761c258cd541c6",
+  "checkout": "/tmp/caddy-docker-proxy-author",
+  "source_authority": "known",
+  "commands": [
+    {
+      "command": "git clone --filter=blob:none --no-checkout https://github.com/lucaslorentz/caddy-docker-proxy /tmp/caddy-docker-proxy-author && git checkout --detach d246679c72e1c3d2ef0e610503e1c2f74581978b && git rev-parse HEAD",
+      "exit_code": 0,
+      "log": "catalog/sources/go-caddy-docker-proxy/evidence/source-freeze.log"
+    },
+    {
+      "command": "git archive --format=tar HEAD | sha256sum",
+      "exit_code": 0,
+      "log": "catalog/sources/go-caddy-docker-proxy/evidence/source-freeze.log"
+    },
+    {
+      "command": "git show HEAD:LICENSE | sha256sum",
+      "exit_code": 0,
+      "log": "catalog/sources/go-caddy-docker-proxy/evidence/source-freeze.log"
+    }
+  ],
+  "notes": [
+    "The source archive is 389120 bytes and the LICENSE is 1075 bytes at the frozen revision.",
+    "The archive digest was recomputed after checkout and matches task.toml; no source files were modified."
+  ]
+}

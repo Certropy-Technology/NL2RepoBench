@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-bumblebee",
+  "source_revision": "d76e369a0b34d6506dc249b4d573f7859cac7a19",
+  "framework": "go-test",
+  "test_files": 28,
+  "test_packages": 23,
+  "test_leaves_collected": 231,
+  "passed": 227,
+  "skipped": 4,
+  "failed": 0,
+  "collection_status": "passed-source-only",
+  "expected_total": 231,
+  "test_groups": [
+    {"scope": "cmd/bumblebee", "coverage": ["profiles", "roots", "filters", "selftest", "version"]},
+    {"scope": "internal/scanner", "coverage": ["filesystem fixtures", "deduplication", "catalog findings", "timeouts", "symlink safety"]},
+    {"scope": "internal/ecosystem/*", "coverage": ["npm", "pnpm", "Yarn", "Bun", "PyPI", "Go", "RubyGems", "Composer", "MCP", "extensions", "Homebrew", "skills"]},
+    {"scope": "internal/output", "coverage": ["NDJSON", "deduplication", "HTTP batching", "authentication", "gzip"]},
+    {"scope": "tools/osvcatalog", "coverage": ["catalog conversion", "zip input", "size bounds"]}
+  ],
+  "note": "This is upstream in-process Go test evidence. It does not constitute a separate-verifier collection receipt."
+}

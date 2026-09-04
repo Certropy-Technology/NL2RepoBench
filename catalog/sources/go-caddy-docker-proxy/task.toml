@@ -1,0 +1,53 @@
+schema_version = "1.0"
+task_id = "go-caddy-docker-proxy"
+version = "0.1.0"
+instruction = "blocked.md"
+
+[metadata]
+difficulty = "hard"
+category = "go-plugin"
+tags = ["go", "go-modules", "caddy", "docker", "reverse-proxy", "external-io", "blocked"]
+language = "go"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/lucaslorentz/caddy-docker-proxy"
+revision = "d246679c72e1c3d2ef0e610503e1c2f74581978b"
+license_spdx = "MIT"
+source_digest = "sha256:c2361bf2221f82e4dcaa8173f75d47cdedb5ee520a08e9d3036ffa601eaaa7c3"
+
+[environment]
+status = "unknown"
+os_name = "debian-bookworm"
+runtime_version = "1.26.5"
+base_image = "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+base_image_digest = "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "The frozen module imports Caddy, Moby Docker, Sprig, Zap, and Godotenv. An empty GOMODCACHE with GOPROXY=off fails before collection, and the complete private closure has not been materialized. The functional loader additionally requires a Docker socket/API and Caddy admin or in-process runtime, which are outside the current typed Go bridge contract."
+
+[dependencies]
+status = "unknown"
+installer = "unknown"
+
+[tests]
+framework = "pytest"
+expected_total = 0
+expected_total_source = "unknown"
+commands = ["GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -json ./..."]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[lifecycle]
+status = "blocked"
+owner = "go-caddy-docker-proxy-author-20260904"
+reason = "The source revision and license are frozen, but no production-safe task can be compiled or verified yet. The dependency closure is not available offline, and the public loader's core behavior depends on Docker socket/API, Docker events, container and Swarm metadata, filesystem/env state, and Caddy admin or in-process runtime. The test-only Docker mocks cannot be exposed as a faithful public API adapter."

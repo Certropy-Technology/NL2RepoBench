@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-freeze",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "verifier",
+    "next_step": "Approve a deterministic CLI/PTY and image-rendering adapter, freeze the complete Go module and native/font closure, and define bounded SVG/PNG golden assertions in a separate verifier before attempting Harbor packaging.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/charmbracelet/freeze",
+      "revision": "f4276107b7b7a1ad33882cb26baf2102f90887b0",
+      "source_digest": "sha256:c130ef4364928c5900d89bd3452bcae979bdd6501ddb14656736577a7db07b74",
+      "license_spdx": "MIT",
+      "license_digest": "sha256:c8454ac132c0bf922746ba119745d42f45d8a0599b59a43316ed8d3de0ff1195"
+    },
+    "commands": [
+      {
+        "command": "git clone --filter=blob:none https://github.com/charmbracelet/freeze /tmp/go-freeze-audit && git checkout --detach f4276107b7b7a1ad33882cb26baf2102f90887b0 && git archive --format=tar HEAD | sha256sum && sha256sum LICENSE",
+        "tool_version": "git",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/go-freeze/evidence/source-freeze.log",
+          "sha256": "sha256:1f36b242ea1e62349ab23bad91041acce9e8c739a46d54a50ad036e0aeebbba5"
+        }
+      },
+      {
+        "command": "env GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -json -count=1 ./...",
+        "tool_version": "go1.26.5-X:nodwarf5 linux/amd64",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/go-freeze/evidence/dependency-probe.log",
+          "sha256": "sha256:d5cb838d3dc3b81e7638a9cdc9c3a0a2c08be79bef9ad04a4e3a9b7084b46db0"
+        }
+      },
+      {
+        "command": "static Go source, test, dependency, and typed-bridge assessment",
+        "tool_version": "Go source inspection at revision f4276107b7b7a1ad33882cb26baf2102f90887b0",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/go-freeze/evidence/adapter-assessment.md",
+          "sha256": "sha256:909c3c57e142cae5296f13007e02e520f71f5d7b84defaf79466b71685fbd99d"
+        }
+      }
+    ],
+    "test_inventory": "catalog/sources/go-freeze/evidence/test-inventory.json",
+    "api_inventory": "catalog/sources/go-freeze/evidence/api-inventory.json",
+    "traceability": "catalog/sources/go-freeze/evidence/traceability.json",
+    "remediation": "catalog/sources/go-freeze/blocked.md"
+  }
+}

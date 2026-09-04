@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-cli",
+  "source_revision": "eb1901e52427e629b5932b087f06807ce0dcc8ab",
+  "language": "go",
+  "module_path": "github.com/smallstep/cli",
+  "implementation_files": 222,
+  "implementation_sloc_nonblank": 60184,
+  "public_command_groups": ["base64", "path", "certificate", "completion", "context", "crl", "crypto", "oauth", "version", "ca", "beta", "ssh"],
+  "command_constructors": 151,
+  "command_directories": 82,
+  "declared_module_requirements": 135,
+  "resolved_modules_with_network": 632,
+  "host_and_external_contracts": [
+    "HTTP/TLS and TCP listeners",
+    "remote CA, ACME, OAuth/OIDC, and API services",
+    "filesystem and system trust-store mutation",
+    "browser, TTY, password prompt, and SSH-agent interaction",
+    "external child processes, pagers, plugins, and platform syscalls",
+    "PKCS#11, TPM, cloud KMS, and HSM-backed keys"
+  ],
+  "typed_bridge_status": "unsupported-without-approved-task-adapter"
+}

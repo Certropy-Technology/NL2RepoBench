@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-caddy-docker-proxy",
+  "source_revision": "d246679c72e1c3d2ef0e610503e1c2f74581978b",
+  "public_packages": [
+    "github.com/lucaslorentz/caddy-docker-proxy/v2",
+    "github.com/lucaslorentz/caddy-docker-proxy/v2/caddyfile",
+    "github.com/lucaslorentz/caddy-docker-proxy/v2/config",
+    "github.com/lucaslorentz/caddy-docker-proxy/v2/docker",
+    "github.com/lucaslorentz/caddy-docker-proxy/v2/generator",
+    "github.com/lucaslorentz/caddy-docker-proxy/v2/utils"
+  ],
+  "public_api_surface": {
+    "root": ["CaddyDockerProxy", "CaddyDockerProxy.CaddyModule", "CreateDockerLoader", "DockerLoader.Start"],
+    "caddyfile": ["Block", "Container", "CreateBlock", "CreateContainer", "FromLabels", "Unmarshal", "Process"],
+    "config": ["Options", "Mode", "Controller", "Server", "Standalone"],
+    "docker": ["Client", "WrapClient", "CreateUtils", "Utils"],
+    "generator": ["CaddyfileGenerator", "CreateGenerator", "CaddyfileGenerator.GenerateCaddyfile"],
+    "utils": ["StringBoolCMap", "NewStringBoolCMap", "StringInt64CMap", "NewStringInt64CMap"]
+  },
+  "external_io_contracts": [
+    "Docker client construction and Ping through DOCKER_HOST or Unix/TCP socket",
+    "Docker event stream subscription and reconnect loop",
+    "Container, Swarm service/task/config, network list and inspect calls",
+    "Filesystem reads for Caddyfile and EnvFile plus process environment mutation",
+    "Caddy local in-process Load and remote admin HTTP POST",
+    "Caddy runtime startup, reload, logging, and integration HTTP server"
+  ],
+  "test_only_mocks": ["docker.ClientMock", "docker.UtilsMock"],
+  "bridge_assessment": "blocked: a JSON child-side adapter cannot faithfully expose the public loader/runtime contract without an approved Docker daemon fixture and Caddy admin/runtime fixture; using test-only mocks would change the contract",
+  "source_files": 115,
+  "go_source_files": 34,
+  "go_test_files": 13
+}

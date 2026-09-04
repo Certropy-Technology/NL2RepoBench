@@ -1,0 +1,54 @@
+schema_version = "1.0"
+task_id = "go-freeze"
+version = "0.1.0"
+instruction = "blocked.md"
+
+[metadata]
+language = "go"
+difficulty = "easy"
+category = "go-cli"
+tags = ["go", "go-modules", "cli", "terminal", "pty", "svg", "png", "blocked"]
+
+[source]
+status = "known"
+upstream_url = "https://github.com/charmbracelet/freeze"
+revision = "f4276107b7b7a1ad33882cb26baf2102f90887b0"
+license_spdx = "MIT"
+source_digest = "sha256:c130ef4364928c5900d89bd3452bcae979bdd6501ddb14656736577a7db07b74"
+
+[environment]
+status = "unknown"
+os_name = "debian-bookworm"
+runtime_version = "1.26.5"
+base_image = "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+base_image_digest = "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "The authoring probe used a pre-existing Go module cache; no private reproducible module bundle was materialized. Harbor execution must remain offline."
+
+[dependencies]
+status = "unknown"
+installer = "system"
+packages = []
+
+[tests]
+framework = "pytest"
+expected_total = 0
+expected_total_source = "unknown"
+commands = ["GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -json -count=1 ./..."]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[lifecycle]
+status = "blocked"
+owner = "go-freeze-author-wave5-20260904"
+reason = "The frozen CLI depends on PTY and interactive TTY behavior, external command execution, filesystem fixtures and outputs, embedded fonts, SVG/XML rendering, and PNG/WebP conversion. Its upstream tests compare golden raster/vector artifacts and invoke the executable directly. The current separate Go verifier has no reviewed child-side adapter that can preserve these terminal, process, image, and filesystem contracts under bounded no-network Harbor execution."

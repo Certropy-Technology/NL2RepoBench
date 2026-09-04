@@ -1,0 +1,52 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-caddy-docker-proxy",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "verifier",
+    "next_step": "Materialize and hash-lock the complete Go module closure, then approve a child-side Docker API fixture and bounded Caddy admin/runtime fixture covering Docker ping, events, containers, Swarm services/tasks/configs/networks, local caddy.Load, remote admin POST, and reload behavior. Re-collect a fixed denominator and implement a task-specific verifier before production compile.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/lucaslorentz/caddy-docker-proxy",
+      "revision": "d246679c72e1c3d2ef0e610503e1c2f74581978b",
+      "source_digest": "sha256:c2361bf2221f82e4dcaa8173f75d47cdedb5ee520a08e9d3036ffa601eaaa7c3",
+      "license_spdx": "MIT",
+      "license_path": "LICENSE",
+      "license_digest": "sha256:140709ad33e198057eb13c5572c97b6a8655e19af916af6cc0761c258cd541c6"
+    },
+    "commands": [
+      {
+        "command": "git clone --filter=blob:none --no-checkout https://github.com/lucaslorentz/caddy-docker-proxy /tmp/caddy-docker-proxy-author && git checkout --detach d246679c72e1c3d2ef0e610503e1c2f74581978b && git rev-parse HEAD",
+        "tool_version": "git",
+        "exit_code": 0,
+        "log": {"path": "catalog/sources/go-caddy-docker-proxy/evidence/source-freeze.log", "sha256": "sha256:9dc6b261d7de7844b09d4a605d2320204a2d3f765b8af06807607f6eb0c45e31"}
+      },
+      {
+        "command": "git archive --format=tar HEAD | sha256sum",
+        "tool_version": "git",
+        "exit_code": 0,
+        "log": {"path": "catalog/sources/go-caddy-docker-proxy/evidence/source-freeze.log", "sha256": "sha256:9dc6b261d7de7844b09d4a605d2320204a2d3f765b8af06807607f6eb0c45e31"}
+      },
+      {
+        "command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOTOOLCHAIN=local go test -count=1 ./...",
+        "tool_version": "go1.26.5-X:nodwarf5 linux/amd64; modules fetched during source-health run",
+        "exit_code": 0,
+        "log": {"path": "catalog/sources/go-caddy-docker-proxy/evidence/upstream-go-test.log", "sha256": "sha256:864942748503e88a97488a5efa3b47fd54ce3c5a50c9719009df6101e12a51dd"}
+      },
+      {
+        "command": "GOMODCACHE=/tmp/go-caddy-empty-modcache GOPROXY=off GOSUMDB=off GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOTOOLCHAIN=local go test -json ./...",
+        "tool_version": "go1.26.5-X:nodwarf5 linux/amd64",
+        "exit_code": 1,
+        "log": {"path": "catalog/sources/go-caddy-docker-proxy/evidence/dependency-probe.log", "sha256": "sha256:d19bfda81ff29d4cb4d72cb2f816938fe6d891aa6a8297c596f9916858d8363b"}
+      },
+      {
+        "command": "static API, test, Docker socket, external-I/O, and typed-bridge assessment",
+        "tool_version": "Go source inspection at revision d246679c72e1c3d2ef0e610503e1c2f74581978b",
+        "exit_code": 1,
+        "log": {"path": "catalog/sources/go-caddy-docker-proxy/evidence/adapter-assessment.md", "sha256": "sha256:cfea1bae36cf4ca274fb911379ed6d7306dd721054f2f044830714d487d74fbf"}
+      }
+    ],
+    "test_inventory": "catalog/sources/go-caddy-docker-proxy/evidence/test-inventory.json",
+    "api_inventory": "catalog/sources/go-caddy-docker-proxy/evidence/api-inventory.json"
+  }
+}

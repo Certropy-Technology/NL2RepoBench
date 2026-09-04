@@ -1,0 +1,48 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-bumblebee",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "verifier",
+    "next_step": "Approve or reject a deterministic child-side CLI adapter with virtual roots, endpoint/time/run-ID controls, embedded fixture support, all ecosystem dispatches, and a local HTTP sink double; if approved, freeze that protocol and rerun production collection, compile, Oracle, and controls.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/perplexityai/bumblebee",
+      "revision": "d76e369a0b34d6506dc249b4d573f7859cac7a19",
+      "source_digest": "sha256:b6f1583784c46dd8469829bcff5cd4b9b284c484272ee4e2d66930ad6ce74c7e",
+      "license_spdx": "Apache-2.0",
+      "license_digest": "sha256:c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    "commands": [
+      {
+        "command": "git checkout --detach d76e369a0b34d6506dc249b4d573f7859cac7a19 && git rev-parse HEAD && git archive --format=tar HEAD | sha256sum && sha256sum LICENSE",
+        "tool_version": "git",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/go-bumblebee/evidence/source-freeze.log",
+          "sha256": "sha256:d6774494feb402d7023cff9641e6c7b0ee61d187c285a2cb344c9c5a95957152"
+        }
+      },
+      {
+        "command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -json ./...",
+        "tool_version": "go1.26.5-X:nodwarf5 linux/amd64",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/go-bumblebee/evidence/dependency-probe.log",
+          "sha256": "sha256:765371b38f743ae7ad0d8c5eef61a009f1035fffe6df5ac2eab21e59e47dc30b"
+        }
+      },
+      {
+        "command": "static Go API inventory and separate-verifier adapter assessment",
+        "tool_version": "Go source inspection at revision d76e369a0b34d6506dc249b4d573f7859cac7a19",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/go-bumblebee/evidence/adapter-assessment.md",
+          "sha256": "sha256:c78f47b0c570f60850a9c8a5715a111752bfdc03f23aa8a69642daa521ee9f02"
+        }
+      }
+    ],
+    "test_inventory": "catalog/sources/go-bumblebee/evidence/test-inventory.json",
+    "api_inventory": "catalog/sources/go-bumblebee/evidence/api-inventory.json"
+  }
+}

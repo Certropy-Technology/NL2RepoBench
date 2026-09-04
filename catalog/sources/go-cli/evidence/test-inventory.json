@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-cli",
+  "source_revision": "eb1901e52427e629b5932b087f06807ce0dcc8ab",
+  "framework": "go-test",
+  "test_files": 32,
+  "test_functions": 101,
+  "collection_status": "not-collected",
+  "expected_total": 101,
+  "reason": "The no-network dependency probe failed before complete collection; 101 is a static source inventory, not a frozen production denominator."
+}
