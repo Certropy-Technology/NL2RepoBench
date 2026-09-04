@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "wave": "wave8",
+  "dispatch_id": "wave8-20260905-12-node",
+  "created_at": "2026-09-04T15:45:00Z",
+  "base_commit": "1cec54847f0ec5f62df6a3afc9f184aa5d385c37",
+  "queue_path": ".nl2repo/authoring-live/discovery/wave8/queue.json",
+  "queue_sha256": "sha256:f162c1376530e2eca027fc582993ac829a6079fd78eb82319e52361d76f1d255",
+  "selection_rule": "first 12 records with status candidate or needs-evidence, excluding rejected, existing, catalog task IDs, and duplicate upstream URL/revision identities",
+  "worker_agent": "worker",
+  "worker_model": "z-open-api-gpt-openai-responses-400k/gpt-5.6-sol",
+  "isolation": "worktree",
+  "network_contract": "NoNetwork: agent, candidate, and verifier runtime network_mode=no-network; freeze source/dependencies/Oracle payloads before execution; no runtime npm, GitHub, registry, or external-service access",
+  "worker_cwd": "/data/NL2RepoBench-integration-20260827",
+  "tasks": [
+    {"slot":1,"task_id":"@cypress/request","candidate_id":"https-github-com-cypress-io-request-18ec325255be","language":"node","status_at_dispatch":"candidate","revision":"c1d4c52354202e38bb465d717dfcbb0552b4f626","upstream_url":"https://github.com/cypress-io/request","identity":"https://github.com/cypress-io/request","worktree_owner":"wave8-01-cypress-request"},
+    {"slot":2,"task_id":"@fastify/error","candidate_id":"https-github-com-fastify-fastify-error-814e27a28697","language":"node","status_at_dispatch":"candidate","revision":"9470f997a06035d7e1dec2e2eceb7d2a3cca68e5","upstream_url":"https://github.com/fastify/fastify-error","identity":"https://github.com/fastify/fastify-error","worktree_owner":"wave8-02-fastify-error"},
+    {"slot":3,"task_id":"@sindresorhus/is","candidate_id":"https-github-com-sindresorhus-is-cc8131aaa30a","language":"node","status_at_dispatch":"candidate","revision":"7821031c66cdeb7256a0feb2d506535f9e84fcaf","upstream_url":"https://github.com/sindresorhus/is","identity":"https://github.com/sindresorhus/is","worktree_owner":"wave8-03-sindresorhus-is"},
+    {"slot":4,"task_id":"classnames","candidate_id":"https-github-com-jedwatson-classnames-7fe945ebfd8b","language":"node","status_at_dispatch":"candidate","revision":"abd6314010de053a09df5acc53e474ff65cea470","upstream_url":"https://github.com/JedWatson/classnames","identity":"https://github.com/JedWatson/classnames","worktree_owner":"wave8-04-classnames"},
+    {"slot":5,"task_id":"cli-cursor","candidate_id":"https-github-com-sindresorhus-cli-cursor-000ca81d96ee","language":"node","status_at_dispatch":"candidate","revision":"b97e13ef5de9b735fe7cb84eb5550a47f2296664","upstream_url":"https://github.com/sindresorhus/cli-cursor","identity":"https://github.com/sindresorhus/cli-cursor","worktree_owner":"wave8-05-cli-cursor"},
+    {"slot":6,"task_id":"cross-spawn","candidate_id":"https-github-com-ssh-git-github-com-moxystudio-node-cross-spawn-7ed1026ad3ca","language":"node","status_at_dispatch":"needs-evidence","revision":null,"upstream_url":"https://github.com/ssh://git@github.com/moxystudio/node-cross-spawn","identity":"https://github.com/ssh://git@github.com/moxystudio/node-cross-spawn","worktree_owner":"wave8-06-cross-spawn"},
+    {"slot":7,"task_id":"fb-watchman","candidate_id":"https-github-com-ssh-git-github-com-facebook-watchman-d06d60e56924","language":"node","status_at_dispatch":"needs-evidence","revision":null,"upstream_url":"https://github.com/ssh://git@github.com/facebook/watchman","identity":"https://github.com/ssh://git@github.com/facebook/watchman","worktree_owner":"wave8-07-fb-watchman"},
+    {"slot":8,"task_id":"filelist","candidate_id":"https-github-com-mde-filelist-ea7c634c7f41","language":"node","status_at_dispatch":"candidate","revision":"0c2b78cb425f292b353b5a2bac4a27bebf90c5a9","upstream_url":"https://github.com/mde/filelist","identity":"https://github.com/mde/filelist","worktree_owner":"wave8-08-filelist"},
+    {"slot":9,"task_id":"follow-redirects","candidate_id":"https-github-com-ssh-git-github-com-follow-redirects-follow-redirects-9fd33e3a2399","language":"node","status_at_dispatch":"needs-evidence","revision":null,"upstream_url":"https://github.com/ssh://git@github.com/follow-redirects/follow-redirects","identity":"https://github.com/ssh://git@github.com/follow-redirects/follow-redirects","worktree_owner":"wave8-09-follow-redirects"},
+    {"slot":10,"task_id":"hast-util-from-dom","candidate_id":"https-github-com-syntax-tree-hast-util-from-dom-ce8712b0f3d0","language":"node","status_at_dispatch":"candidate","revision":"a00e71765db75da0fbae2e86c90215aac2901335","upstream_url":"https://github.com/syntax-tree/hast-util-from-dom","identity":"https://github.com/syntax-tree/hast-util-from-dom","worktree_owner":"wave8-10-hast-util-from-dom"},
+    {"slot":11,"task_id":"hast-util-from-html","candidate_id":"https-github-com-syntax-tree-hast-util-from-html-ad7eb8ae97f7","language":"node","status_at_dispatch":"candidate","revision":"1ade8935dea8d293196f4cfc0463d3e91eb8a49e","upstream_url":"https://github.com/syntax-tree/hast-util-from-html","identity":"https://github.com/syntax-tree/hast-util-from-html","worktree_owner":"wave8-11-hast-util-from-html"},
+    {"slot":12,"task_id":"hast-util-from-html-isomorphic","candidate_id":"https-github-com-syntax-tree-hast-util-from-html-isomorphic-e4206ae711f3","language":"node","status_at_dispatch":"candidate","revision":"40747b5cd8c907fa773f8915ab3248cde06c3549","upstream_url":"https://github.com/syntax-tree/hast-util-from-html-isomorphic","identity":"https://github.com/syntax-tree/hast-util-from-html-isomorphic","worktree_owner":"wave8-12-hast-util-from-html-isomorphic"}
+  ]
+}
