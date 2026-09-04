@@ -1,0 +1,92 @@
+schema_version = "2.0"
+task_id = "micromark-util-chunked"
+version = "2.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "javascript-array-utility"
+tags = ["node", "npm", "esm", "micromark", "arrays", "splice", "chunking"]
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/micromark/micromark"
+revision = "774a70c6bae6dd94486d3385dbd9a0f14550b709"
+license_spdx = "MIT"
+source_digest = "sha256:ffbc51c1237344db6b47db8000aaa1668e89eb207f6a94b3a5b6472d5dda08d1"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The candidate dependency closure is frozen into a private npm cache bundle, and the Oracle restores only a digest-checked private source payload. Agent, candidate, verifier, Oracle, and controls runs have no egress."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = ["micromark-util-symbol@2.0.1"]
+artifact = { digest = "sha256:14ec819ab0ff26bbe203fe13dbe0b3da484778605b09001d865d0b660e4ed018", size_bytes = 30720, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:14ec819ab0ff26bbe203fe13dbe0b3da484778605b09001d865d0b660e4ed018", visibility = "private" }
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 24
+expected_total_source = "frozen-collection"
+commands_artifact = { digest = "sha256:3a000b557c33c88883adc5684ce3ad7bf41f7c33818d85d4a3e7b3f6d1f58aa1", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:3a000b557c33c88883adc5684ce3ad7bf41f7c33818d85d4a3e7b3f6d1f58aa1", visibility = "private" }
+test_bundle = { digest = "sha256:7e4742635a99ab260ea21703be776116db2196d52cc273e4bc8139d6852bd1bb", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:7e4742635a99ab260ea21703be776116db2196d52cc273e4bc8139d6852bd1bb", visibility = "private" }
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Build micromark-util-chunked, an ESM utility for safe large-array insertion and append operations."
+keywords = ["node", "npm", "esm", "micromark", "arrays", "splice", "chunking"]
+agent_timeout_sec = 900.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "node-author-wave9-20260905-micromark-util-chunked"
+reason = "Immutable source, private dependency closure, structured verifier, official Harbor Oracle 24/24, and empty/stub/forgery/offline NoNetwork controls passed. Review, model pilot, dataset integration, and publication remain integrator-stage gates."
+
+[oracle_bundle]
+digest = "sha256:2e8df526c8e215ad1cacf605c3fd44ef1da064c898d408b6ed52644f00b4a5a6"
+size_bytes = 1126400
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:2e8df526c8e215ad1cacf605c3fd44ef1da064c898d408b6ed52644f00b4a5a6"
+visibility = "private"

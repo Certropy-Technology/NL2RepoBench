@@ -1,0 +1,4 @@
+NoNetwork contract: Agent, candidate, verifier, Oracle, and every control run with network_mode=no-network.
+Runtime GitHub, npm, PyPI, Go proxy, and external-service access is forbidden.
+Source, dependency closure, tests, verifier, and Oracle payloads are frozen and hash-locked before runtime.
+Unsupported behavior must be marked blocked rather than weakening the contract.

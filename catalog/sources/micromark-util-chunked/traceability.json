@@ -1,0 +1,12 @@
+{
+  "schema_version":"1.0",
+  "task_id":"micromark-util-chunked",
+  "mappings":[
+    {"leaf_prefix":"public-export","instruction":"Supports and API Usage Guide","source_behavior":"root ESM named exports push and splice"},
+    {"leaf_prefix":"splice-semantics","instruction":"API Usage Guide: splice","source_behavior":"normalized start, nonnegative removal, ordered mutation"},
+    {"leaf_prefix":"push-semantics","instruction":"API Usage Guide: push","source_behavior":"append and empty-list identity"},
+    {"leaf_prefix":"large-arrays","instruction":"splice and Implementation Notes","source_behavior":"chunked insertion beyond V8 safe spread size"},
+    {"leaf_prefix":"determinism","instruction":"Implementation Notes","source_behavior":"synchronous deterministic calls"}
+  ],
+  "coverage":{"public_exports":2,"covered_exports":2,"contract_families":5}
+}

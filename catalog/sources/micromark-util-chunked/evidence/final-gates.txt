@@ -1,0 +1,17 @@
+authoring_mode=author-one
+revision=774a70c6bae6dd94486d3385dbd9a0f14550b709
+source_archive_sha256=ffbc51c1237344db6b47db8000aaa1668e89eb207f6a94b3a5b6472d5dda08d1
+dependency_bundle=sha256:14ec819ab0ff26bbe203fe13dbe0b3da484778605b09001d865d0b660e4ed018 size=30720
+commands_bundle=sha256:3a000b557c33c88883adc5684ce3ad7bf41f7c33818d85d4a3e7b3f6d1f58aa1 size=10240
+test_bundle=sha256:7e4742635a99ab260ea21703be776116db2196d52cc273e4bc8139d6852bd1bb size=10240
+oracle_bundle=sha256:2e8df526c8e215ad1cacf605c3fd44ef1da064c898d408b6ed52644f00b4a5a6 size=1126400
+compiled_manifest_sha256=sha256:2b051a1963fe5ba4956c80f9cffcd4c748f9a21fc52b8a57197562d44e479e6c
+source_validation=uv run nl2repo task validate-source catalog/sources/micromark-util-chunked exit_code=0
+network_lint=uv run nl2repo task lint-network --tasks-root catalog/sources/micromark-util-chunked --strict exit_code=0 errors=0
+oracle=harbor_0.21.0 collected=24 passed=24 failed=0 reward=1.0 public_network_available=false
+empty=harbor_0.21.0 collected=0 passed=0 failed=0 reward=0.0 reason=candidate-installation-failed public_network_available=false
+stub=harbor_0.21.0 collected=24 passed=0 failed=24 reward=0.0 public_network_available=false
+forgery=harbor_0.21.0 collected=24 passed=0 failed=24 reward=0.0 verifier_owned_reward=true public_network_available=false
+offline=harbor_0.21.0 collected=24 passed=22 failed=2 reward=0.9166666666666666 public_network_available=false
+projection_parity=deterministic compile repeated twice and cmp passed
+syntax=bash -n and jq validation passed
