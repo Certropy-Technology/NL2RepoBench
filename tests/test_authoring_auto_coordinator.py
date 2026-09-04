@@ -73,6 +73,62 @@ def test_select_packages_excludes_all_historical_package_names() -> None:
     assert coordinator._select_packages(pool, "python", history, 8) == ["a", "c"]
 
 
+def test_runtime_pool_initializes_from_tracked_seed(tmp_path: Path) -> None:
+    seed = tmp_path / "seed.json"
+    runtime = tmp_path / "live/discovery-pool.json"
+    seed.write_text(
+        json.dumps(
+            {
+                "schema_version": "2.0",
+                "python": ["python-seed"],
+                "node": ["node-seed"],
+                "go": ["go-seed"],
+            }
+        ),
+        encoding="utf-8",
+    )
+    args = SimpleNamespace(discovery_pool=runtime, discovery_seed_pool=seed)
+
+    coordinator._initialize_runtime_pool(args)
+
+    assert json.loads(runtime.read_text(encoding="utf-8"))["go"] == ["go-seed"]
+
+
+def test_go_repository_map_merges_runtime_discovery_pool(
+    tmp_path: Path, monkeypatch
+) -> None:
+    root = tmp_path / "repo"
+    scripts = root / "scripts"
+    scripts.mkdir(parents=True)
+    scripts.joinpath("authoring_supervisor.py").write_text(
+        'GO_DISCOVERY_REPOSITORIES = {"go-seed": "owner/seed"}\n',
+        encoding="utf-8",
+    )
+    runtime = tmp_path / "discovery-pool.json"
+    runtime.write_text(
+        json.dumps({"go_repositories": {"go-new": "owner/new"}}),
+        encoding="utf-8",
+    )
+
+    assert coordinator._go_repositories(root, runtime) == {
+        "go-new": "owner/new",
+        "go-seed": "owner/seed",
+    }
+
+
+def test_pool_availability_excludes_catalog_history() -> None:
+    availability = coordinator._pool_availability(
+        {
+            "python": ["existing", "new"],
+            "node": ["node-new"],
+            "go": [],
+        },
+        coordinator.History(packages={"existing"}),
+    )
+
+    assert availability == {"python": 1, "node": 1, "go": 0}
+
+
 def test_active_workers_only_counts_matching_authoring_roots(tmp_path: Path, monkeypatch) -> None:
     root = tmp_path / "repo"
     live = root / ".nl2repo/authoring-live"

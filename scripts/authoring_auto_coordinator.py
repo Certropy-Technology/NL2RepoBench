@@ -39,6 +39,7 @@ DEFAULT_MAX_AGENTS = 24
 DEFAULT_PENDING_THRESHOLD = 20
 DEFAULT_DISCOVERY_BATCH_SIZE = 4
 DEFAULT_DISCOVERY_COOLDOWN_SECONDS = 900
+DEFAULT_POOL_REFRESH_COOLDOWN_SECONDS = 21_600
 DEFAULT_INTERVAL_SECONDS = 60
 DEFAULT_AGENT_TIMEOUT_SECONDS = 14_400
 DEFAULT_LEASE_SECONDS = 18_000
@@ -365,7 +366,8 @@ def _select_packages(
     ][:limit]
 
 
-def _go_repositories(root: Path) -> dict[str, str]:
+def _go_repositories(root: Path, pool_path: Path | None = None) -> dict[str, str]:
+    repositories: dict[str, str] = {}
     path = root / "scripts/authoring_supervisor.py"
     try:
         spec = importlib.util.spec_from_file_location(
@@ -377,10 +379,76 @@ def _go_repositories(root: Path) -> dict[str, str]:
             spec.loader.exec_module(module)
             value = getattr(module, "GO_DISCOVERY_REPOSITORIES", {})
             if isinstance(value, dict):
-                return {str(key): str(item) for key, item in value.items()}
+                repositories.update(
+                    {str(key): str(item) for key, item in value.items()}
+                )
     except (OSError, ImportError, AttributeError, TypeError):
         pass
-    return dict(GO_POOL_FALLBACK)
+    if not repositories:
+        repositories.update(GO_POOL_FALLBACK)
+    if pool_path is not None and pool_path.is_file():
+        try:
+            value = _load_json(pool_path).get("go_repositories", {})
+        except (OSError, UnicodeDecodeError, json.JSONDecodeError, ValueError):
+            value = {}
+        if isinstance(value, dict):
+            repositories.update(
+                {
+                    str(package): str(repository)
+                    for package, repository in value.items()
+                    if isinstance(package, str) and isinstance(repository, str)
+                }
+            )
+    return repositories
+
+
+def _initialize_runtime_pool(args: argparse.Namespace) -> None:
+    if args.discovery_pool.is_file():
+        return
+    seed = _load_json(args.discovery_seed_pool)
+    _atomic_write(args.discovery_pool, seed)
+
+
+def _pool_availability(
+    pool: dict[str, list[str]], history: History
+) -> dict[str, int]:
+    return {
+        language: len(
+            [package for package in pool.get(language, []) if package not in history.packages]
+        )
+        for language in LANGUAGES
+    }
+
+
+def _refresh_discovery_pool(
+    root: Path, live: Path, args: argparse.Namespace
+) -> dict[str, Any]:
+    stamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
+    report = live / "supervisor/discovery" / f"pool-refresh-{stamp}.json"
+    result = _run(
+        [
+            str(_python_bin(root)),
+            str(args.pool_refresher),
+            "--seed-pool",
+            str(args.discovery_seed_pool),
+            "--output",
+            str(args.discovery_pool),
+            "--report",
+            str(report),
+            "--limit-per-source",
+            str(args.pool_refresh_limit),
+            "--max-per-language",
+            str(args.pool_max_per_language),
+        ],
+        cwd=root,
+        timeout=args.command_timeout_seconds,
+    )
+    return {
+        "event": "pool-refresh",
+        "status": "refreshed" if result["exit_code"] == 0 else "refresh-failed",
+        "report": str(report),
+        **result,
+    }
 
 
 def _register_lane(live: Path, lane: Lane) -> None:
@@ -442,7 +510,7 @@ def _discover_language(
         str(discovery_workers),
     ]
     if language == "go":
-        repositories = _go_repositories(root)
+        repositories = _go_repositories(root, args.discovery_pool)
         missing = [package for package in packages if package not in repositories]
         if missing:
             return {
@@ -888,12 +956,13 @@ def _start_workers(
 
 def _load_runtime_state(path: Path) -> dict[str, Any]:
     if not path.is_file():
-        return {"last_discovery_epoch": {}}
+        return {"last_discovery_epoch": {}, "last_pool_refresh_epoch": 0}
     try:
         value = _load_json(path)
     except (OSError, UnicodeDecodeError, json.JSONDecodeError, ValueError):
-        return {"last_discovery_epoch": {}}
+        return {"last_discovery_epoch": {}, "last_pool_refresh_epoch": 0}
     value.setdefault("last_discovery_epoch", {})
+    value.setdefault("last_pool_refresh_epoch", 0)
     return value
 
 
@@ -921,8 +990,29 @@ def _cycle(
         "threshold": args.pending_threshold,
     }
     discovery_events: list[dict[str, Any]] = []
+    pool_refresh: dict[str, Any] | None = None
     if pending_total <= args.pending_threshold and not args.dry_run:
         pool = _load_pool(args.discovery_pool)
+        availability = _pool_availability(pool, history)
+        last_refresh = float(runtime_state.get("last_pool_refresh_epoch", 0))
+        needs_refresh = any(
+            availability[language] < args.discovery_batch_size
+            for language in LANGUAGES
+        )
+        if (
+            needs_refresh
+            and time.time() - last_refresh >= args.pool_refresh_cooldown_seconds
+        ):
+            pool_refresh = _refresh_discovery_pool(root, live, args)
+            if pool_refresh["status"] == "refreshed":
+                runtime_state["last_pool_refresh_epoch"] = time.time()
+                pool = _load_pool(args.discovery_pool)
+            else:
+                runtime_state["last_pool_refresh_epoch"] = (
+                    time.time()
+                    - args.pool_refresh_cooldown_seconds
+                    + min(args.pool_refresh_cooldown_seconds, 300)
+                )
         for language in LANGUAGES:
             last = float(runtime_state.get("last_discovery_epoch", {}).get(language, 0))
             if time.time() - last < args.discovery_cooldown_seconds:
@@ -961,6 +1051,7 @@ def _cycle(
         else _start_workers(root, live, args, disk_capacity=disk_capacity)
     )
     event["discoveries"] = discovery_events
+    event["pool_refresh"] = pool_refresh
     event["worker_disk_capacity"] = disk_capacity
     event["workers_started"] = started
     active_after = _active_workers(root, live)
@@ -978,10 +1069,21 @@ def supervise(args: argparse.Namespace) -> int:
         if not args.discovery_pool.is_absolute()
         else args.discovery_pool.resolve()
     )
+    args.discovery_seed_pool = (
+        (root / args.discovery_seed_pool).resolve()
+        if not args.discovery_seed_pool.is_absolute()
+        else args.discovery_seed_pool.resolve()
+    )
+    args.pool_refresher = (
+        (root / args.pool_refresher).resolve()
+        if not args.pool_refresher.is_absolute()
+        else args.pool_refresher.resolve()
+    )
     args.runner = args.runner.resolve()
     state_path = live / "supervisor/auto-coordinator-state.json"
     lock_path = live / "supervisor/auto-coordinator.lock"
     with _exclusive_lock(lock_path):
+        _initialize_runtime_pool(args)
         runtime_state = _load_runtime_state(state_path)
         while True:
             if not args.dry_run:
@@ -1018,7 +1120,17 @@ def main() -> int:
     parser.add_argument(
         "--discovery-pool",
         type=Path,
+        default=Path(".nl2repo/authoring-live/supervisor/discovery-pool.json"),
+    )
+    parser.add_argument(
+        "--discovery-seed-pool",
+        type=Path,
         default=Path("reports/authoring-discovery-pool.json"),
+    )
+    parser.add_argument(
+        "--pool-refresher",
+        type=Path,
+        default=Path("scripts/refresh_authoring_discovery_pool.py"),
     )
     parser.add_argument(
         "--runner",
@@ -1055,6 +1167,13 @@ def main() -> int:
         type=int,
         default=DEFAULT_DISCOVERY_COOLDOWN_SECONDS,
     )
+    parser.add_argument(
+        "--pool-refresh-cooldown-seconds",
+        type=int,
+        default=DEFAULT_POOL_REFRESH_COOLDOWN_SECONDS,
+    )
+    parser.add_argument("--pool-refresh-limit", type=int, default=250)
+    parser.add_argument("--pool-max-per-language", type=int, default=500)
     parser.add_argument("--interval-seconds", type=int, default=DEFAULT_INTERVAL_SECONDS)
     parser.add_argument(
         "--agent-timeout-seconds", type=int, default=DEFAULT_AGENT_TIMEOUT_SECONDS
@@ -1080,6 +1199,8 @@ def main() -> int:
         not 1 <= args.max_agents <= DEFAULT_MAX_AGENTS
         or args.pending_threshold < 0
         or args.discovery_batch_size < 1
+        or args.pool_refresh_limit < 1
+        or args.pool_max_per_language < args.pool_refresh_limit
         or args.min_free_bytes < 0
         or args.docker_min_free_bytes < 0
         or args.docker_worker_reserve_bytes < 1
@@ -1088,6 +1209,7 @@ def main() -> int:
             f"max-agents must be 1..{DEFAULT_MAX_AGENTS}; "
             "pending-threshold must be non-negative; "
             "discovery-batch-size must be positive; "
+            "pool limits must be valid; "
             "disk thresholds must be non-negative; "
             "docker worker reserve must be positive"
         )
@@ -1096,6 +1218,7 @@ def main() -> int:
         or args.lease_seconds <= args.agent_timeout_seconds
         or args.interval_seconds < 1
         or args.discovery_cooldown_seconds < 1
+        or args.pool_refresh_cooldown_seconds < 1
     ):
         parser.error("timeouts, lease, interval, and cooldown values are invalid")
     try:
