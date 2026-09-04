@@ -1,0 +1,11 @@
+runtime=node 24.19.0
+package_manager=npm 11.17.0
+base_image=docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848
+network_mode=no-network
+lockfile_sha256=sha256:fb5916b01483a92496b5c24a2368ca2d47af7a9c235542b913c3a9dcfeeea15c
+dependency_bundle_sha256=sha256:947b03a34ed7b532a0d6e883f04fb67610e01d1915581b26620106976cad9f72
+dependency_bundle_size_bytes=133120
+packages=@types/unist==3.0.3,unist-util-stringify-position==4.0.0
+build_command=docker run --rm --network bridge node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848 npm install --package-lock-only --ignore-scripts --no-audit --no-fund
+runtime_command=npm ci --offline --ignore-scripts --no-audit --no-fund
+result=lock and cache closure frozen; no lifecycle scripts

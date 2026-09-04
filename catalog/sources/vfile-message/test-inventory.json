@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "task_id": "vfile-message",
+  "framework": "node:test",
+  "report_format": "node-test-json-v1",
+  "expected_total": 35,
+  "collection_source": "private/contract.test.mjs",
+  "leaf_groups": {"package_surface":1,"basic_error_fields":4,"point_and_position":6,"node_and_ancestors":4,"origin_overloads":6,"cause_overloads":3,"options_and_metadata":7,"determinism_and_boundaries":4},
+  "adapter": "node-test-subprocess-boundary-v1 with constructor-specific JSON requests and UID-10001 child-side Error creation",
+  "excluded_upstream_checks": ["formatting/lint/type-coverage tooling","coverage instrumentation","nondeterministic stack source locations"]
+}

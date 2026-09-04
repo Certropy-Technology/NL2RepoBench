@@ -1,0 +1,92 @@
+schema_version = "2.0"
+task_id = "vfile-message"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "vfile-message-utility"
+tags = ["node", "npm", "esm", "vfile", "unist", "error", "position", "repository-generation"]
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/vfile/vfile-message"
+revision = "2c782c8580c5b0a14baae19fa8badc628e567461"
+license_spdx = "MIT"
+source_digest = "sha256:6045e2d83f208d8f3219be4840792fdaf29f128071bd2a796d22849c2b2eca02"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "Candidate, verifier, Oracle, controls, and Agent runs are network-isolated. The npm lock/cache closure, verifier contract, and frozen source payload are private hash-locked artifacts prepared before runtime."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = ["@types/unist==3.0.3", "unist-util-stringify-position==4.0.0"]
+artifact = { digest = "sha256:947b03a34ed7b532a0d6e883f04fb67610e01d1915581b26620106976cad9f72", size_bytes = 133120, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:947b03a34ed7b532a0d6e883f04fb67610e01d1915581b26620106976cad9f72", visibility = "private" }
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 35
+expected_total_source = "frozen-collection"
+commands_artifact = { digest = "sha256:6ae0bb7a67e6c9b52f1134d1dc82210a25dd3f2ae40c410a09999a6ce3f178cb", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:6ae0bb7a67e6c9b52f1134d1dc82210a25dd3f2ae40c410a09999a6ce3f178cb", visibility = "private" }
+test_bundle = { digest = "sha256:844c1f97848244fc3f9eaaa181c35c6fa9da39af94e37dd0f51831f7f2362dfd", size_bytes = 20480, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:844c1f97848244fc3f9eaaa181c35c6fa9da39af94e37dd0f51831f7f2362dfd", visibility = "private" }
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Build the ESM vfile-message package with deterministic VFileMessage error, origin, position, node, and metadata behavior through a separate JSON subprocess verifier."
+keywords = ["node", "npm", "esm", "vfile", "unist", "error", "position"]
+agent_timeout_sec = 1200.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "node-author-wave9-20260905-vfile-message"
+reason = "The final NoNetwork task uses frozen source and npm closures with a separate subprocess verifier. Oracle passes 35/35; empty, stub, and forgery controls are valid and remain below the 0.20 reward ceiling."
+
+[oracle_bundle]
+digest = "sha256:d2e4c54e54141c1fbc2213486c7bcdecbfa9f315d71467fc39b246b753a61513"
+size_bytes = 51200
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:d2e4c54e54141c1fbc2213486c7bcdecbfa9f315d71467fc39b246b753a61513"
+visibility = "private"

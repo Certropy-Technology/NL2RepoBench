@@ -1,0 +1,9 @@
+{
+  "schema_version": "1.0",
+  "task_id": "vfile-message",
+  "source_revision": "2c782c8580c5b0a14baae19fa8badc628e567461",
+  "exports": [{"module":".","name":"VFileMessage","kind":"class","signature":"new VFileMessage(causeOrReason: string | Error, optionsOrParentOrPlace?: Options | Node | Point | Position | string | null, origin?: string | null): VFileMessage","async":false,"side_effects":false}],
+  "package_boundary": {"type":"module","root_entry":"./index.js","default_export":false,"runtime_dependencies":["unist-util-stringify-position@4.0.0"]},
+  "fields": ["ancestors","cause","column","fatal","file","line","message","name","place","reason","ruleId","source","stack","actual","expected","note","url"],
+  "risk_adaptations": ["Error causes are represented by a child-side error descriptor; stack locations are checked only by their first line.","Candidate code is loaded and instantiated only in a UID-10001 subprocess; trusted tests receive bounded JSON summaries."]
+}

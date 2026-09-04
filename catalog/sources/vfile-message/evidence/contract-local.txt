@@ -1,0 +1,13 @@
+framework=node:test
+adapter=node-test-subprocess-boundary-v1
+candidate_uid=10001
+network_mode=no-network
+command=NODE_CANDIDATE_SITE=/tmp/vfm-run node --test --test-reporter=spec contract.test.mjs
+exit_code=0
+collected=35
+passed=35
+failed=0
+collection_errors=0
+source_implementation=/tmp/vfile-message-upstream at 2c782c8580c5b0a14baae19fa8badc628e567461
+coverage=package surface, Error inheritance, reason/error causes, point/position/node overloads, origins, options, metadata, determinism, and immutability
+excluded=nondeterministic stack source locations and upstream formatting/type-coverage tooling

@@ -1,0 +1,13 @@
+mode=author-one
+upstream_url=https://github.com/vfile/vfile-message
+revision=2c782c8580c5b0a14baae19fa8badc628e567461
+git_tree=b87e1920eb287a0cf2ab2a2d33dd1756bb8de5be
+source_archive=sha256:6045e2d83f208d8f3219be4840792fdaf29f128071bd2a796d22849c2b2eca02 size_bytes=40960
+license_spdx=MIT
+license_sha256=sha256:dd1081884a92952802f4803110a6bb543acea9a814c786d58605b4c1219b5ebb
+command=git clone --no-checkout https://github.com/vfile/vfile-message /tmp/vfile-message-upstream
+command=git -C /tmp/vfile-message-upstream checkout --detach 2c782c8580c5b0a14baae19fa8badc628e567461
+command=git -C /tmp/vfile-message-upstream rev-parse HEAD
+result=2c782c8580c5b0a14baae19fa8badc628e567461
+command=git archive --format=tar --prefix=vfile-message/ 2c782c8580c5b0a14baae19fa8badc628e567461
+result=sha256:6045e2d83f208d8f3219be4840792fdaf29f128071bd2a796d22849c2b2eca02

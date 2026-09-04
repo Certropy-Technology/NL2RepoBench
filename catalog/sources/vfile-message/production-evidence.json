@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0",
+  "task_id": "vfile-message",
+  "task_version": "1.0.0",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/vfile/vfile-message",
+    "revision": "2c782c8580c5b0a14baae19fa8badc628e567461",
+    "git_tree": "b87e1920eb287a0cf2ab2a2d33dd1756bb8de5be",
+    "source_digest": "sha256:6045e2d83f208d8f3219be4840792fdaf29f128071bd2a796d22849c2b2eca02",
+    "license_spdx": "MIT",
+    "license_sha256": "sha256:dd1081884a92952802f4803110a6bb543acea9a814c786d58605b4c1219b5ebb"
+  },
+  "environment": {
+    "runtime": "node 24.19.0",
+    "package_manager": "npm 11.17.0",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "network_policy": "no-network",
+    "agent_allowed_hosts": [],
+    "verifier_network_mode": "no-network"
+  },
+  "private_artifacts": {
+    "dependency_bundle": {"digest":"sha256:947b03a34ed7b532a0d6e883f04fb67610e01d1915581b26620106976cad9f72","size_bytes":133120},
+    "commands_bundle": {"digest":"sha256:6ae0bb7a67e6c9b52f1134d1dc82210a25dd3f2ae40c410a09999a6ce3f178cb","size_bytes":10240},
+    "test_bundle": {"digest":"sha256:844c1f97848244fc3f9eaaa181c35c6fa9da39af94e37dd0f51831f7f2362dfd","size_bytes":20480},
+    "oracle_bundle": {"digest":"sha256:d2e4c54e54141c1fbc2213486c7bcdecbfa9f315d71467fc39b246b753a61513","size_bytes":51200}
+  },
+  "tests": {"framework":"node:test","report_format":"node-test-json-v1","frozen_total":35,"local_oracle_contract":{"collected":35,"passed":35,"exit_code":0},"candidate_uid":10001,"separate_verifier":true},
+  "commands": [
+    {"command":"git clone and checkout immutable revision","exit_code":0,"log":"catalog/sources/vfile-message/evidence/source-freeze.txt"},
+    {"command":"Node 24.19.0/npm 11.17.0 dependency freeze","exit_code":0,"log":"catalog/sources/vfile-message/evidence/dependency-freeze.txt"},
+    {"command":"local exact-source contract replay","exit_code":0,"collected":35,"passed":35,"log":"catalog/sources/vfile-message/evidence/contract-local.txt"}
+  ],
+  "bundle": {"status":"bound-final","path":".nl2repo/vfm-final/vfile-message/bundle.manifest.json","sha256":"sha256:0f5c807bd64f57002e6f19edb115f8886d528defd91aee958716ff83a99366e5"},
+  "oracle": {"valid":true,"collected":35,"passed":35,"reward":1.0,"grading":{"path":".nl2repo/vfm-final-runs/oracle/vfile-message-final-oracle-20260905/vfile-message__zhfnAT6/verifier/grading.json","sha256":"sha256:722528a9946bbbc7fd8283fb95c13be3d97a33d03b5a6d7a7c02ccfe64420776"},"network":{"path":".nl2repo/vfm-final-runs/oracle/vfile-message-final-oracle-20260905/vfile-message__zhfnAT6/verifier/network.json","sha256":"sha256:ddee81d173ac148e60f2488fb19c0fac5dc9bc1eb7817fdf358dfcadf204841d"},"public_network_available":false},
+  "controls": {"empty":{"valid":true,"collected":0,"passed":0,"reward":0.0,"failure_reason":"candidate-installation-failed","grading":{"path":".nl2repo/vfm-final-runs/empty/vfile-message-final-empty-20260905/vfile-message-empty__jupXdmx/verifier/grading.json","sha256":"sha256:6478906ab2514877a52cc32b45f8b6b3d1256473fb4a9923a46caffb8b6c6b1b"},"network":{"path":".nl2repo/vfm-final-runs/empty/vfile-message-final-empty-20260905/vfile-message-empty__jupXdmx/verifier/network.json","sha256":"sha256:411ac680a1b9178d5d57ae60404bc141c3141b959c1639e7af1926d1aa6ccc91"}},"stub":{"valid":true,"collected":35,"passed":1,"reward":0.02857142857142857,"grading":{"path":".nl2repo/vfm-final-runs/stub/vfile-message-final-stub-20260905/vfile-message-stub__GkYPHGe/verifier/grading.json","sha256":"sha256:d0b556083bb9ba3e9199fca8ed11a59f3ef5df7dd5cbe9c4a3256398ac15c71a"},"network":{"path":".nl2repo/vfm-final-runs/stub/vfile-message-final-stub-20260905/vfile-message-stub__GkYPHGe/verifier/network.json","sha256":"sha256:411ac680a1b9178d5d57ae60404bc141c3141b959c1639e7af1926d1aa6ccc91"}},"forgery":{"valid":true,"collected":35,"passed":1,"reward":0.02857142857142857,"verifier_owned_reward":true,"grading":{"path":".nl2repo/vfm-final-runs/forgery/vfile-message-final-forgery-20260905/vfile-message-forgery__Nrm7fQZ/verifier/grading.json","sha256":"sha256:d0b556083bb9ba3e9199fca8ed11a59f3ef5df7dd5cbe9c4a3256398ac15c71a"},"network":{"path":".nl2repo/vfm-final-runs/forgery/vfile-message-final-forgery-20260905/vfile-message-forgery__Nrm7fQZ/verifier/network.json","sha256":"sha256:ddee81d173ac148e60f2488fb19c0fac5dc9bc1eb7817fdf358dfcadf204841d"}},"offline":{"completed":true,"public_network_available":false}},
+  "residual_risks": ["The constructor adapter transports Error causes as bounded JSON descriptors and does not assert nondeterministic stack locations.","No Harbor model Agent Run was started by the authoring or integration lanes."]
+}
