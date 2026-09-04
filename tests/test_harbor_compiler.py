@@ -128,6 +128,8 @@ def test_development_compiler_generates_separate_verifier_bundle(tmp_path) -> No
     assert "--require-hashes" in verifier_dockerfile
     assert "--index-url https://pypi.org/simple" in verifier_dockerfile
     assert "COPY candidate-requirements.lock.txt" in verifier_dockerfile
+    assert "--prefix /opt/candidate-dependencies" in verifier_dockerfile
+    assert "--target /opt/candidate-dependencies/site" not in verifier_dockerfile
     assert "COPY dependencies" not in verifier_dockerfile
     assert "--no-index" not in verifier_dockerfile
     assert not (task_root / "tests/dependencies").exists()
@@ -154,6 +156,7 @@ def test_development_compiler_generates_separate_verifier_bundle(tmp_path) -> No
     assert "verification.workspace_copy" in test_script
     assert "verification.candidate_install" in test_script
     assert "NL2REPO_CANDIDATE_TOTAL_TIMEOUT_SEC=60.0" in test_script
+    assert "NL2REPO_CANDIDATE_DEPENDENCY_BIN=/opt/candidate-dependencies/bin" in test_script
     assert "cp -a" not in test_script
     assert "verification.integrity verify" in test_script
     assert "verification.process_cleanup --uid 10001" in test_script

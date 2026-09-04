@@ -1,0 +1,56 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/annotated-doc"
+version = "0.1.0"
+description = "Build annotated-doc from an empty workspace and satisfy deterministic contracts for its typed documentation metadata object."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "typing",
+    "annotated",
+    "metadata",
+    "separate-verifier",
+]
+
+[metadata]
+difficulty = "easy"
+category = "python-library"
+tags = [
+    "python",
+    "typing",
+    "annotated",
+    "metadata",
+    "separate-verifier",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 18
+canonical_manifest_digest = "sha256:a24207e29b7e4023927662808bc4320a82e53132ffcfa9afc8fd2b2c6288d1d4"
+toolchain_lock_digest = "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366"
+
+[agent]
+timeout_sec = 1800.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 1024
+storage_mb = 8192
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 2048
+storage_mb = 4096

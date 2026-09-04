@@ -331,9 +331,11 @@ COPY candidate-requirements.lock.txt /tmp/candidate-requirements.lock.txt
 RUN python -m pip install \
   --no-cache-dir \
   --index-url https://pypi.org/simple \
-  --target /opt/candidate-dependencies/site \
+  --prefix /opt/candidate-dependencies \
   --require-hashes \
-  -r /tmp/candidate-requirements.lock.txt
+  -r /tmp/candidate-requirements.lock.txt \
+  && ln -s /opt/candidate-dependencies/lib/python{python_minor}/site-packages \
+    /opt/candidate-dependencies/site
 
 COPY runtime/nl2repobench /usr/local/lib/python{python_minor}/site-packages/nl2repobench
 COPY command-plan.json /tests/command-plan.json
@@ -536,6 +538,7 @@ chmod 0700 /logs/verifier
 rm -f /logs/verifier/reward.json /logs/verifier/grading.json
 rm -rf /tmp/candidate /tmp/candidate-site /tmp/candidate-build /tmp/trusted-results
 export NL2REPO_CANDIDATE_DEPENDENCIES=/opt/candidate-dependencies/site
+export NL2REPO_CANDIDATE_DEPENDENCY_BIN=/opt/candidate-dependencies/bin
 mkdir -p /tmp/trusted-results
 chmod 0700 /tmp/trusted-results
 
@@ -683,6 +686,7 @@ mkdir -p /logs/verifier /tmp/trusted-results /tmp/candidate-site
 chmod 0700 /logs/verifier /tmp/trusted-results
 {environment}
 export NL2REPO_CANDIDATE_DEPENDENCIES=/opt/candidate-dependencies/site
+export NL2REPO_CANDIDATE_DEPENDENCY_BIN=/opt/candidate-dependencies/bin
 python -I -m nl2repobench.verification.network_check \
   --output /logs/verifier/network.json
 if [[ "$?" -ne 0 ]]; then

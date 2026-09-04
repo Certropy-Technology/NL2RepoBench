@@ -31,7 +31,7 @@ build_command = "install uv-build from the private hash-locked requirement durin
 mode = "no-network"
 offline_dependencies = "preinstalled-image"
 reference_source_fetch = "forbidden"
-reason = "The candidate build closure is installed during image build from a private hash lock; candidate and separate verifier runs have no egress. Only the trusted Oracle receives the exact source-host override."
+reason = "The candidate build closure is installed during image build from a private hash lock, and the trusted Oracle restores the frozen Git archive from a private digest-checked artifact. Agent, Oracle, candidate, verifier, and controls execute without network access."
 
 [dependencies]
 status = "known"
@@ -74,13 +74,13 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [oracle_bundle]
-digest = "sha256:c3493ea23bf2bdc0d755f6611306fbfe36139b0e1a078d6517d300cc6486c2c4"
-size_bytes = 10240
+digest = "sha256:056d49473a9c48c3119cc8e16270872411a9395ddae5adea1bc18034698139bf"
+size_bytes = 2488320
 media_type = "application/vnd.nl2repobench.private-bundle+tar"
-uri = "artifact://private/sha256:c3493ea23bf2bdc0d755f6611306fbfe36139b0e1a078d6517d300cc6486c2c4"
+uri = "artifact://private/sha256:056d49473a9c48c3119cc8e16270872411a9395ddae5adea1bc18034698139bf"
 visibility = "private"
 
 [lifecycle]
-status = "packaged"
+status = "controls-passed"
 owner = "python-author-wave2-20260828"
-reason = "Source, specification, private verifier, dependency lock, and Oracle bundle are authored; Harbor Agent/Oracle and negative controls are intentionally left for the integrator lane."
+reason = "The final NoNetwork task uses a private digest-checked Git source archive, hash-locked uv-build closure with executable build backend, and a separate verifier. Oracle passes 20/20; stub and forgery controls are valid at 0/20 and remain below the 0.20 reward ceiling."

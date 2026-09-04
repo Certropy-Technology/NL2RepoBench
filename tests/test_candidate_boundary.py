@@ -424,6 +424,36 @@ def test_candidate_build_environment_allows_only_safe_shell_names() -> None:
         candidate_install._parse_build_environment(("lowercase=value",))  # noqa: SLF001
 
 
+def test_candidate_environment_adds_trusted_dependency_bin() -> None:
+    environment = candidate_install._candidate_environment(  # noqa: SLF001
+        home=Path("/tmp/home"),
+        temporary=Path("/tmp/build"),
+        cflags="-O0 -g0",
+        dependency_root="/opt/candidate-dependencies/site",
+        dependency_bin="/opt/candidate-dependencies/bin",
+        build_environment=(),
+    )
+
+    assert "PYTHONPATH=/opt/candidate-dependencies/site" in environment
+    assert (
+        "PATH=/opt/candidate-dependencies/bin:/usr/local/bin:/usr/bin:/bin"
+        in environment
+    )
+
+
+@pytest.mark.parametrize("value", ["relative/bin", "/safe:/unsafe"])
+def test_candidate_environment_rejects_unsafe_dependency_bin(value: str) -> None:
+    with pytest.raises(ValueError, match="one absolute path"):
+        candidate_install._candidate_environment(  # noqa: SLF001
+            home=Path("/tmp/home"),
+            temporary=Path("/tmp/build"),
+            cflags="-O0 -g0",
+            dependency_root=None,
+            dependency_bin=value,
+            build_environment=(),
+        )
+
+
 @pytest.mark.parametrize(
     ("outcome", "expected_exit"),
     [("success", None), ("timeout", candidate_install.CANDIDATE_FAILURE_EXIT)],

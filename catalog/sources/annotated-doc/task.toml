@@ -31,7 +31,7 @@ network_mode = "no-network"
 mode = "no-network"
 offline_dependencies = "preinstalled-image"
 reference_source_fetch = "forbidden"
-reason = "The candidate and verifier run without egress. The hash-locked build closure is installed during image build, and only the trusted Oracle receives a run-scoped authorization for the frozen Git source host."
+reason = "The hash-locked build closure is installed during image build, and the trusted Oracle restores the frozen PyPI source distribution from a private digest-checked archive. Agent, Oracle, candidate, verifier, and controls execute without network access."
 
 [dependencies]
 status = "known"
@@ -78,13 +78,13 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "packaged"
+status = "controls-passed"
 owner = "python-author-wave2-20260828-c3"
-reason = "The source, private verifier bundle, Oracle bundle, dependency lock, and deterministic compile are prepared. Oracle and negative controls remain for the separate Harbor gate; no Agent Run was started in this authoring lane."
+reason = "The final NoNetwork task uses a private digest-checked PyPI source archive and hash-locked build closure. Oracle passes 18/18; stub and forgery controls are valid at 3/18 and remain below the 0.20 reward ceiling."
 
 [oracle_bundle]
-digest = "sha256:56364ebe9c520f03c53ed1c699d0f29dd4d901677a5702f84dce1d08a3f3d092"
-size_bytes = 427
+digest = "sha256:bbdd6f4b57a9c684c05d2bd61c8ea93572d8e3f14e23afc2fc813e459f8c8454"
+size_bytes = 20480
 media_type = "application/vnd.nl2repobench.private-bundle+tar"
-uri = "artifact://private/sha256:56364ebe9c520f03c53ed1c699d0f29dd4d901677a5702f84dce1d08a3f3d092"
+uri = "artifact://private/sha256:bbdd6f4b57a9c684c05d2bd61c8ea93572d8e3f14e23afc2fc813e459f8c8454"
 visibility = "private"
