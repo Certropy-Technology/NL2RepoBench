@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pyasn1",
+  "source_revision": "8003397013f6c0e0eabbd2605770477acbc2dc44",
+  "public_modules": ["pyasn1", "pyasn1.type.tag", "pyasn1.type.namedval", "pyasn1.type.constraint", "pyasn1.type.univ", "pyasn1.type.char", "pyasn1.type.useful", "pyasn1.type.namedtype", "pyasn1.codec.ber.encoder", "pyasn1.codec.ber.decoder", "pyasn1.codec.der.encoder", "pyasn1.codec.der.decoder", "pyasn1.codec.native.encoder", "pyasn1.codec.native.decoder"],
+  "core_apis": [
+    {"name":"Tag", "import_path":"pyasn1.type.tag.Tag", "signature":"Tag(tagClass, tagFormat, tagId)"},
+    {"name":"TagSet", "import_path":"pyasn1.type.tag.TagSet", "signature":"TagSet(baseTag=(), *superTags)"},
+    {"name":"NamedValues", "import_path":"pyasn1.type.namedval.NamedValues", "signature":"NamedValues(*args, **kwargs)"},
+    {"name":"constraints", "import_path":"pyasn1.type.constraint", "signature":"ValueRangeConstraint(lower, upper); ValueSizeConstraint(lower, upper); SingleValueConstraint(*values)"},
+    {"name":"scalar types", "import_path":"pyasn1.type.univ", "signature":"Integer(value=noValue, **kwargs); Boolean(value); OctetString(value); BitString(value); ObjectIdentifier(value); Real(value); Any(value); Null(value)"},
+    {"name":"constructed types", "import_path":"pyasn1.type.univ", "signature":"Sequence(componentType=...); SequenceOf(componentType=...); SetOf(componentType=...); Choice(componentType=...)"},
+    {"name":"codecs", "import_path":"pyasn1.codec.ber|der|native", "signature":"encode(value); decode(substrate, asn1Spec=...)"}
+  ],
+  "risk_flags": ["mutable-constructed-values", "codec-error-boundaries", "datetime-formatting"]
+}

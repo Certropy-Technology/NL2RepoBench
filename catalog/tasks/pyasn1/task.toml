@@ -1,0 +1,60 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/pyasn1"
+version = "1.0.0"
+description = "Build pyasn1 from an empty workspace and reproduce deterministic ASN.1 type, constraint, tag, and BER/DER codec behavior through a separate child-side verifier."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "asn1",
+    "ber",
+    "der",
+    "constraints",
+    "typed-values",
+    "separate-verifier",
+]
+
+[metadata]
+difficulty = "hard"
+category = "asn1-library"
+tags = [
+    "python",
+    "asn1",
+    "ber",
+    "der",
+    "constraints",
+    "typed-values",
+    "separate-verifier",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 34
+canonical_manifest_digest = "sha256:4fcb43e679906d86f5b6a3b11e425f70dc6dd72a30d60dbc841ffd7cf7fbdcb9"
+toolchain_lock_digest = "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366"
+
+[agent]
+timeout_sec = 3600.0
+
+[verifier]
+timeout_sec = 900.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 16384
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192

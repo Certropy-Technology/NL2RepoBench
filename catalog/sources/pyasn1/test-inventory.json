@@ -1,0 +1,10 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pyasn1",
+  "framework": "custom-json-v1",
+  "frozen_total": 34,
+  "scenarios": [
+    "metadata", "tag-constants", "tag-value", "tag-operators", "tagset-explicit", "tagset-implicit", "named-values", "named-values-add-clone", "range-constraint", "size-constraint", "single-value-constraint", "constraints-composed", "integer-basic", "integer-named", "boolean", "octet-string", "bit-string", "object-identifier", "real", "null-any", "character-strings", "generalized-time", "sequence", "sequence-default", "sequence-of", "set-of", "choice", "ber-scalars", "ber-roundtrip-rest", "der-sequence", "native-codec", "clone-subtype", "named-types", "decode-errors"
+  ],
+  "collection": "The trusted verifier emits one unique leaf for each scenario after launching the candidate adapter as UID 10001 subprocess. Collection mismatch is invalid."
+}

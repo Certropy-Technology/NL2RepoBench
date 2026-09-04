@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pyasn1",
+  "mapping": [
+    {"scenario":"metadata","spec":"Implementation Notes / version"},
+    {"scenario":"tag-constants|tag-value|tag-operators|tagset-explicit|tagset-implicit","spec":"API Usage Guide / Tags and named metadata"},
+    {"scenario":"named-values|named-values-add-clone","spec":"API Usage Guide / Tags and named metadata / NamedValues"},
+    {"scenario":"range-constraint|size-constraint|single-value-constraint|constraints-composed","spec":"API Usage Guide / Constraints"},
+    {"scenario":"integer-basic|integer-named|boolean|octet-string|bit-string|object-identifier|real|null-any|character-strings|generalized-time","spec":"API Usage Guide / Scalar types"},
+    {"scenario":"sequence|sequence-default|sequence-of|set-of|choice|clone-subtype|named-types","spec":"API Usage Guide / Constructed types"},
+    {"scenario":"ber-scalars|ber-roundtrip-rest|der-sequence|native-codec|decode-errors","spec":"API Usage Guide / Codecs"}
+  ],
+  "coverage_claim": "Every hidden leaf is named by a scenario in test-inventory.json and maps to behavior stated in instruction.md; no private assertion text is included."
+}

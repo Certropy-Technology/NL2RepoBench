@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pyasn1",
+  "task_version": "1.0.0",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/pyasn1/pyasn1",
+    "revision": "8003397013f6c0e0eabbd2605770477acbc2dc44",
+    "git_tree": "209111189438390eb90c999488be48ab5e32cbb5",
+    "source_digest": "sha256:c832e9d224c0a29d2f195f4472045279a9f5a0b02d793da257ab82e4e952586f",
+    "license_spdx": "BSD-2-Clause",
+    "license_sha256": "sha256:2aad5fc00f705c4a1addb83eed10a6a75d286a3779f0cf8519d87e62bc4735fd"
+  },
+  "environment": {
+    "runtime": "CPython 3.12.14",
+    "os": "debian-12-amd64",
+    "base_image": "python:3.12.14-slim-bookworm@sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e",
+    "network_policy": "no-network",
+    "agent_allowed_hosts": [],
+    "verifier_network_mode": "no-network"
+  },
+  "dependencies": {
+    "status": "known",
+    "installer": "pip",
+    "packages": ["setuptools==84.0.0"],
+    "lock_artifact": {"digest":"sha256:5610ee8f2612f0f72f7beb465eaf61392bbb0a941f38b9aa21cea075caac699e","size_bytes":279,"path":".nl2repo/authoring-live/handoffs/wave10/pyasn1/dependency-requirements.lock.txt"}
+  },
+  "private_artifacts": {
+    "verifier_bundle": {"digest":"sha256:d92f1ea7040661c6d197f182956421ccc42bde785141d5fa3f76eac24995ebab","size_bytes":30720,"path":".nl2repo/authoring-live/handoffs/wave10/pyasn1/bundles/verifier.tar"},
+    "oracle_bundle": {"digest":"sha256:d430922b1b9304f3f74f68a5de1f47ede5c8f7fcef24237f42f4272d27519048","size_bytes":1228800,"path":".nl2repo/authoring-live/handoffs/wave10/pyasn1/bundles/oracle.tar"},
+    "commands_bundle": {"digest":"sha256:f7f5490ab83df771e944ed6b92ea838064dd07a2c400a7f548250ba4c5bc173c","size_bytes":10240,"path":".nl2repo/authoring-live/handoffs/wave10/pyasn1/bundles/commands.tar"}
+  },
+  "tests": {
+    "framework": "custom-json-v1",
+    "expected_total": 34,
+    "reference_probe": {"passed":34,"collected":34,"exit_code":0},
+    "upstream_probe": {"passed":1261,"collected":1261,"exit_code":0},
+    "candidate_uid": 10001,
+    "separate_verifier": true
+  },
+  "commands": [
+    {"command":"git fetch --no-tags --depth=1 origin 8003397013f6c0e0eabbd2605770477acbc2dc44","exit_code":0,"log":"catalog/sources/pyasn1/evidence/source-freeze.txt"},
+    {"command":"python3 -m unittest discover -s tests -p 'test*.py'","exit_code":0,"passed":1261,"collected":1261,"log":".nl2repo/authoring-live/handoffs/wave10/pyasn1/upstream-tests.txt"},
+    {"command":"private child adapter replay against frozen source","exit_code":0,"passed":34,"collected":34,"log":".nl2repo/authoring-live/handoffs/wave10/pyasn1/verifier-smoke.json"},
+    {"command":"uv run nl2repo task validate-source catalog/sources/pyasn1","exit_code":0},
+    {"command":"uv run nl2repo task lint-network --tasks-root catalog/sources/pyasn1 --strict","exit_code":0}
+  ],
+  "bundle": {"status":"bound-final","path":".nl2repo/pyasn1-final/pyasn1/bundle.manifest.json","sha256":"sha256:e776601f3f04ebd2ee9e6db294be39137626fa90c20ccd38d7f1f10e9e65f5b1"},
+  "oracle": {"valid":true,"collected":34,"passed":34,"reward":1.0,"grading":{"path":".nl2repo/pyasn1-final-runs/oracle/pyasn1-final-oracle-20260905/pyasn1__ZBUuQsW/verifier/grading.json","sha256":"sha256:0b9986370081cb190aaa8cb91d678a29c7ea85533382b85d0bcb73671b425228"},"network":{"path":".nl2repo/pyasn1-final-runs/oracle/pyasn1-final-oracle-20260905/pyasn1__ZBUuQsW/verifier/network.json","sha256":"sha256:ddee81d173ac148e60f2488fb19c0fac5dc9bc1eb7817fdf358dfcadf204841d"},"public_network_available":false},
+  "controls": {
+    "empty":{"valid":true,"collected":0,"passed":0,"reward":0.0,"failure_reason":"candidate-installation-failed","grading":{"path":".nl2repo/pyasn1-final-runs/empty/pyasn1-final-empty-20260905/pyasn1-empty__QEXAXSw/verifier/grading.json","sha256":"sha256:29007a496958c223dc9b372d4af94e87cec10eb3c49c352f103862f9c37efa81"},"network":{"path":".nl2repo/pyasn1-final-runs/empty/pyasn1-final-empty-20260905/pyasn1-empty__QEXAXSw/verifier/network.json","sha256":"sha256:411ac680a1b9178d5d57ae60404bc141c3141b959c1639e7af1926d1aa6ccc91"}},
+    "stub":{"valid":true,"collected":34,"passed":0,"reward":0.0,"grading":{"path":".nl2repo/pyasn1-final-runs/stub/pyasn1-final-stub-20260905/pyasn1-stub__ZATLZrS/verifier/grading.json","sha256":"sha256:5c52f3140faa156f1e774ac303e3e823fafdf2e894d3b56dba562499ca3d0b56"},"network":{"path":".nl2repo/pyasn1-final-runs/stub/pyasn1-final-stub-20260905/pyasn1-stub__ZATLZrS/verifier/network.json","sha256":"sha256:ddee81d173ac148e60f2488fb19c0fac5dc9bc1eb7817fdf358dfcadf204841d"}},
+    "forgery":{"valid":true,"collected":34,"passed":0,"reward":0.0,"verifier_owned_reward":true,"workspace_forged_reward":1.0,"grading":{"path":".nl2repo/pyasn1-final-runs/forgery/pyasn1-final-forgery-20260905/pyasn1-forgery__pBybNuy/verifier/grading.json","sha256":"sha256:5c52f3140faa156f1e774ac303e3e823fafdf2e894d3b56dba562499ca3d0b56"},"network":{"path":".nl2repo/pyasn1-final-runs/forgery/pyasn1-final-forgery-20260905/pyasn1-forgery__pBybNuy/verifier/network.json","sha256":"sha256:411ac680a1b9178d5d57ae60404bc141c3141b959c1639e7af1926d1aa6ccc91"}},
+    "offline":{"completed":true,"public_network_available":false}
+  },
+  "residual_risks": ["The public contract selects 34 deterministic JSON-safe behaviors from the 1261-test upstream suite; non-JSON object identity and callback semantics are outside this adapter boundary.","Blind review and model pilot remain separate publication gates."]
+}

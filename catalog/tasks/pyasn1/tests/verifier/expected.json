@@ -1,0 +1,354 @@
+{
+  "ber-roundtrip-rest": {
+    "rest": "ffff",
+    "value": 5
+  },
+  "ber-scalars": {
+    "Boolean": "010101",
+    "Integer": "020107",
+    "Null": "0500",
+    "OctetString": "04026869"
+  },
+  "bit-string": {
+    "binary": "10110",
+    "bits": [
+      1,
+      0,
+      1,
+      1,
+      0
+    ],
+    "integer": 22,
+    "length": 5
+  },
+  "boolean": {
+    "false": [
+      false,
+      0
+    ],
+    "true": [
+      true,
+      1
+    ]
+  },
+  "character-strings": {
+    "numeric": "12 34",
+    "octets": "68c3a9",
+    "utf": "hé"
+  },
+  "choice": {
+    "chosen": "text",
+    "text": "hello"
+  },
+  "clone-subtype": {
+    "bad": {
+      "message": "<ConstraintsIntersection object, consts <ValueRangeConstraint object, consts 0, 10>> failed at: ValueConstraintError('<ValueRangeConstraint object, consts 0, 10> failed at: ValueConstraintError(11)') at Integer",
+      "type": "ValueConstraintError"
+    },
+    "clone": 8,
+    "same_type": true
+  },
+  "constraints-composed": {
+    "intersection": [
+      {
+        "message": null,
+        "type": null
+      },
+      {
+        "message": "<ConstraintsIntersection object, consts <ValueRangeConstraint object, consts 1, 5>, <SingleValueConstraint object, consts 2, 4>> failed at: ValueConstraintError('<SingleValueConstraint object, consts 2, 4> failed at: ValueConstraintError(3)')",
+        "type": "ValueConstraintError"
+      }
+    ],
+    "union": [
+      {
+        "message": null,
+        "type": null
+      },
+      {
+        "message": "<ConstraintsUnion object, consts <SingleValueConstraint object, consts 1>, <SingleValueConstraint object, consts 3>> failed at: ValueConstraintError('all of (<SingleValueConstraint object, consts 1>, <SingleValueConstraint object, consts 3>) failed for \"2\"')",
+        "type": "ValueConstraintError"
+      }
+    ]
+  },
+  "decode-errors": {
+    "truncated": {
+      "message": "Short substrate on input",
+      "type": "SubstrateUnderrunError"
+    },
+    "unknown_tag": {
+      "message": "",
+      "type": "EndOfStreamError"
+    }
+  },
+  "der-sequence": {
+    "encoded": "30060201050c0178",
+    "id": 5,
+    "label": "x",
+    "rest": ""
+  },
+  "generalized-time": {
+    "datetime": "2024-01-02T03:04:05.120000+00:00",
+    "pretty": "20240102030405.12Z"
+  },
+  "integer-basic": {
+    "arithmetic": [
+      9,
+      9,
+      21
+    ],
+    "bool": true,
+    "clone": 9,
+    "int": 7,
+    "pretty": "7"
+  },
+  "integer-named": {
+    "from_name": 1,
+    "named": "on",
+    "unknown": "3"
+  },
+  "metadata": {
+    "version": "0.6.4"
+  },
+  "named-types": {
+    "names": [
+      "id",
+      "name"
+    ],
+    "positions": [
+      0,
+      1
+    ],
+    "required": [
+      0
+    ]
+  },
+  "named-values": {
+    "contains": [
+      true,
+      true
+    ],
+    "items": [
+      [
+        "off",
+        0
+      ],
+      [
+        "on",
+        1
+      ],
+      [
+        "auto",
+        2
+      ]
+    ],
+    "keys": [
+      "off",
+      "on",
+      "auto"
+    ],
+    "lookups": [
+      1,
+      "auto",
+      null,
+      null
+    ],
+    "values": [
+      0,
+      1,
+      2
+    ]
+  },
+  "named-values-add-clone": {
+    "items": [
+      [
+        "zero",
+        0
+      ],
+      [
+        "one",
+        1
+      ],
+      [
+        "two",
+        2
+      ]
+    ],
+    "original": [
+      [
+        "zero",
+        0
+      ]
+    ]
+  },
+  "native-codec": {
+    "data": "6f6b",
+    "id": 4
+  },
+  "null-any": {
+    "any": "020105",
+    "null": ""
+  },
+  "object-identifier": {
+    "items": [
+      1,
+      3,
+      6,
+      1,
+      4,
+      1
+    ],
+    "prefix": true,
+    "pretty": "1.3.6.1.4.1"
+  },
+  "octet-string": {
+    "bytes": "68c3a9",
+    "numbers": [
+      104,
+      195,
+      169
+    ],
+    "pretty": "0x68c3a9"
+  },
+  "range-constraint": {
+    "bad": {
+      "message": "<ValueRangeConstraint object, consts 1, 3> failed at: ValueConstraintError(4)",
+      "type": "ValueConstraintError"
+    },
+    "good": {
+      "message": null,
+      "type": null
+    }
+  },
+  "real": {
+    "float": 3.14,
+    "tuple": [
+      314,
+      10,
+      -2
+    ]
+  },
+  "sequence": {
+    "id": 5,
+    "keys": [
+      "id",
+      "label"
+    ],
+    "label": "x",
+    "length": 2
+  },
+  "sequence-default": {
+    "enabled": true,
+    "id": 8,
+    "value_items": [
+      [
+        "enabled",
+        "True"
+      ],
+      [
+        "id",
+        "8"
+      ]
+    ]
+  },
+  "sequence-of": {
+    "items": [
+      3,
+      9,
+      2
+    ],
+    "length": 3
+  },
+  "set-of": {
+    "der": "3109020101020102020103",
+    "items": [
+      3,
+      1,
+      2
+    ]
+  },
+  "single-value-constraint": {
+    "bad": {
+      "message": "<SingleValueConstraint object, consts 'red', 'green'> failed at: ValueConstraintError('blue')",
+      "type": "ValueConstraintError"
+    },
+    "good": null
+  },
+  "size-constraint": {
+    "bad": {
+      "message": "<ValueSizeConstraint object, consts 2, 4> failed at: ValueConstraintError('x')",
+      "type": "ValueConstraintError"
+    },
+    "good": {
+      "message": null,
+      "type": null
+    }
+  },
+  "tag-constants": {
+    "application": 64,
+    "constructed": 32,
+    "context": 128,
+    "private": 192,
+    "simple": 0,
+    "universal": 0
+  },
+  "tag-operators": {
+    "and": [
+      0,
+      0,
+      3
+    ],
+    "or": [
+      192,
+      32,
+      7
+    ],
+    "ordered": true
+  },
+  "tag-value": {
+    "items": [
+      128,
+      0,
+      3
+    ],
+    "properties": [
+      128,
+      0,
+      3
+    ],
+    "repr": "<Tag object, tag [128:0:3]>"
+  },
+  "tagset-explicit": {
+    "base": [
+      0,
+      0,
+      2
+    ],
+    "length": 2,
+    "super": [
+      [
+        0,
+        0,
+        2
+      ],
+      [
+        128,
+        32,
+        4
+      ]
+    ]
+  },
+  "tagset-implicit": {
+    "base": [
+      0,
+      0,
+      2
+    ],
+    "super": [
+      [
+        128,
+        0,
+        5
+      ]
+    ]
+  }
+}

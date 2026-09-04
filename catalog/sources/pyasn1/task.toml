@@ -1,0 +1,86 @@
+schema_version = "1.0"
+task_id = "pyasn1"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "asn1-library"
+tags = ["python", "asn1", "ber", "der", "constraints", "typed-values", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/pyasn1/pyasn1"
+revision = "8003397013f6c0e0eabbd2605770477acbc2dc44"
+license_spdx = "BSD-2-Clause"
+source_digest = "sha256:c832e9d224c0a29d2f195f4472045279a9f5a0b02d793da257ab82e4e952586f"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.14"
+os_name = "debian-12-amd64"
+base_image = "python:3.12.14-slim-bookworm"
+base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e"
+system_packages = ["git"]
+network_mode = "no-network"
+build_command = "install hash-locked setuptools build closure during image build"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The pure-Python candidate has no runtime dependencies. Build and verifier dependencies are installed from hash-locked image inputs; the Oracle restores a digest-checked source archive. Agent, candidate, verifier, Oracle, and controls run without network access."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = ["setuptools==84.0.0"]
+lock_artifact = { digest = "sha256:5610ee8f2612f0f72f7beb465eaf61392bbb0a941f38b9aa21cea075caac699e", size_bytes = 279, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:5610ee8f2612f0f72f7beb465eaf61392bbb0a941f38b9aa21cea075caac699e", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 34
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/adapter.py", "/tests/verifier/run.py"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:d92f1ea7040661c6d197f182956421ccc42bde785141d5fa3f76eac24995ebab", size_bytes = 30720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:d92f1ea7040661c6d197f182956421ccc42bde785141d5fa3f76eac24995ebab", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
+
+[harbor]
+description = "Build pyasn1 from an empty workspace and reproduce deterministic ASN.1 type, constraint, tag, and BER/DER codec behavior through a separate child-side verifier."
+keywords = ["python", "asn1", "ber", "der", "constraints", "typed-values", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 900.0
+candidate_install_timeout_sec = 180.0
+candidate_total_timeout_sec = 420.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:d430922b1b9304f3f74f68a5de1f47ede5c8f7fcef24237f42f4272d27519048"
+size_bytes = 1228800
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:d430922b1b9304f3f74f68a5de1f47ede5c8f7fcef24237f42f4272d27519048"
+visibility = "private"
+
+[lifecycle]
+status = "controls-passed"
+owner = "python-author-wave10-20260905-pyasn1"
+reason = "The final NoNetwork task uses a separate UID-isolated JSON verifier. Oracle passes 34/34 across deterministic public behavior; empty, installable stub, and forgery controls are valid and score 0."
