@@ -6,11 +6,11 @@
 
 Worker 的具体 remediation contract 见
 [`authoring-agent-remediation-guide.zh-CN.md`](authoring-agent-remediation-guide.zh-CN.md)。
-缺 image/lock/build backend 是待完成工作，不是自动 Block；authoring worker
-必须完成最终 compile、Oracle 和 controls 后才到 catalog handoff，模型 Agent Run
-仍由下游独立 loop 执行。Loop 的大文件和 worktree 使用
-项目磁盘 `.nl2repo/authoring-work/`，不使用 `/tmp` tmpfs；`/tmp` 只保留有大小和时限的
-短期进程 scratch。
+缺 image/lock/build backend 是待完成工作，不是自动 Block。旧的 Python authoring
+Loop 和 auto-coordinator 已退役；活跃的顶层模型直接分配独立 worktree，审核
+task-local handoff，并串行合并和 Push。大文件和 worktree 使用项目磁盘
+`.nl2repo/authoring-work/`，不使用 `/tmp` tmpfs；`/tmp` 只保留有大小和时限的短期
+进程 scratch。
 
 旧的四文件转换和“先写 instruction、再人工补测试映射”的流程不再作为扩展主路径。
 新 Pipeline 以 source/test AST inventory 为廉价前置证据，用动态 collection 和 Oracle
@@ -62,8 +62,8 @@ Oracle x1 -> empty/stub/forgery/install-failure/panic/hang/output/background-pro
       ▼
 blind review -> catalog handoff (controls-passed)
 
-Agent Run Loop 独立消费已通过 authoring gate 的 catalog task，运行 GPT/Fable、归档 OSS
-并生成模型报告；它不属于 Raw Package -> Harbor 出题 Loop。
+Harbor Agent Run 独立消费已通过 authoring gate 的 catalog task，归档 OSS 并生成模型
+报告；它不属于 Raw Package -> Harbor 出题流程，也不能反向修改题目。
 ```
 
 每个箭头都是 stage 边界。stage 只读上游 artifact，不读取 worker 的未提交工作目录。

@@ -1,10 +1,10 @@
 # 出题 Agent Remediation Guide
 
-本文件是 Raw Package -> Harbor 出题 Loop 的 Worker contract。它不负责 GPT/Fable
+本文件是顶层模型直接编排的 Raw Package -> Harbor worker contract。它不负责模型
 或其他模型运行；Worker 必须完成题目自己的生产门禁，包括正式 Harbor Oracle、
 empty/stub/forgery/install-failure/panic/hang/oversized-output/background-process
 和 offline controls。Worker 的终点是把带有完整结构化证据的 task 交给 integration，
-状态为 `controls-passed`。后续模型评测由独立 Agent Run Loop 消费 catalog。
+状态为 `controls-passed`。后续模型评测由独立 Harbor Run 消费 catalog。
 
 ## 存储纪律
 

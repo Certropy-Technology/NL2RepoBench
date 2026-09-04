@@ -51,12 +51,13 @@ and migration contract.
 
 ## Running the Code
 
-The production authoring machine runs the systemd supervisor, isolated top-level
-Pi authoring sessions, Harbor 0.21 and the pinned OpenHands SDK fork:
+Task authoring is orchestrated by the active top-level model. Each task uses an
+isolated git worktree; task workers prepare task-local catalog and Harbor
+evidence, while the top-level model reviews, integrates, commits, pushes and
+archives accepted work. The retired Python authoring Loop and auto-coordinator
+must not be used to claim or integrate tasks.
 
 ```bash
-systemctl status nl2repobench-authoring-supervisor.service
-scripts/authoring_runtime_config.py show
 uv run nl2repo task validate-source catalog/sources/<task-id>
 uv run nl2repo harbor compile catalog/sources/<task-id> \
   --output .nl2repo/compiled/<task-id> \
@@ -68,7 +69,9 @@ uv run nl2repo harbor compile catalog/sources/<task-id> \
 The pinned SDK fork is the `openhands/` submodule. Build and verify its runtime
 image with `scripts/build_openhands_runtime.sh`. Agent and verifier runtime phases
 are offline; dependencies and source locks are prepared by controlled build stages.
-See `docs/benchmark-operations-guide.zh-CN.md` for queue and recovery procedures.
+Existing `.nl2repo/authoring-live/` queues, worktrees and receipts remain recovery
+inputs. See `docs/benchmark-operations-guide.zh-CN.md` for the manual orchestration
+and recovery procedure.
 
 ## Data Layout
 

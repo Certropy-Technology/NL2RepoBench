@@ -259,99 +259,31 @@ project cleanup。2026-08-22 曾因 Harbor 0.21.0/Python 3.14 的跨 asyncio con
 | candidate install 因 `--require-hashes` 拒绝 source directory | pip hash 校验适用于 wheel/requirements，不适用于本地 source path | build 阶段从网络按 `lock_artifact` 安装 hash-locked requirements，candidate 仍用受限 `--target --no-deps` 安装 |
 | pytest 把 `request` 报为 reserved parametrize name | fixture contract 参数名与 pytest 保留名冲突 | 改为 `payload` 等非保留名并重跑 collection |
 
-## 9. 顶层出题 Supervisor
+## 9. 顶层模型直接编排出题
 
-出题 Loop 由顶层 supervisor 统一管理。Loop controller 只负责 claim 和在独立
-worktree 中运行 Pi authoring；supervisor 负责定时检查进程、队列和磁盘，串行集成
-完成题目，生成 Harbor projection，commit/push，并在 OSS 完整归档和回读校验后删除
-worktree。watcher 与 supervisor 共用 `archive.lock`，不会同时归档或删除同一个任务。
+旧的 Python authoring Loop、auto-coordinator 和 authoring supervisor 已退役。它们不再
+自动 claim、启动 Pi session、集成或 Push。当前出题由活跃的顶层模型直接编排：每题
+一个独立 git worktree、每个 worktree 只有一个 writer，顶层模型负责选择候选、分配
+Sol/Qwen worker、审核产物、串行编译、commit、Push 和 OSS 归档。
 
-启动一次检查并按安全门禁自动启动缺失 controller：
+已有 `.nl2repo/authoring-live/queues/`、`worktrees/`、`sessions/`、private CAS 和 archive
+receipt 都是恢复输入，不因旧控制面退役而删除。接力旧任务前必须核对 queue record、
+worktree HEAD、dirty diff、handoff、production gate receipt 和是否存在活动进程/容器；
+不能仅依据 `running` 字段判断任务仍在执行。无主 claim 只能通过版本化的 queue transition
+释放，不能直接编辑 JSON。
 
-```bash
-scripts/run_authoring_supervisor.sh
-```
+新一批任务的固定执行边界：
 
-排障或 cron 首次部署使用一次性 dry-run：
+1. 顶层模型以最新 `origin/main` 创建 task-local worktree；
+2. discovery、authoring 和 repair worker 只写自己的 worktree；
+3. worker 必须产出 source、instruction、production evidence、Oracle 和全控制 receipt；
+4. 顶层模型在主线重新验证 source、network、compile、Oracle/control evidence；
+5. 共享 `catalog/tasks/`、dataset、commit、Push 和归档只由顶层模型串行执行；
+6. 只有 OSS 回读验证和 Push 都成功后才清理 worktree。
 
-```bash
-scripts/run_authoring_supervisor.sh --once --dry-run
-```
-
-默认的 Director 是无工具、无 session 的顶层 Pi Agent。它只返回固定 JSON 动作，
-由 supervisor 的白名单代码执行。`continue`、`integrate` 和 `pause` 控制现有队列；
-`discover` 只能从 `reports/authoring-discovery-pool.json` 读取已登记包名，再调用固定
-的 discovery 脚本，不会执行模型生成的任意 shell。没有 Director 或需要完全确定性
-运行时可显式使用 `--director-mode rules`。
-
-默认每种语言最多 3 个 `max-concurrency=1` controller，但受全局最多 3 个 controller
-的磁盘保护上限约束，确保 Python、Node、Go 不会在 100 GiB 工作盘上同时无限扩张。
-supervisor 同时检查 repository/worktree filesystem 和 `docker info` 返回的 DockerRootDir
-filesystem。`/data` 剩余空间低于 12 GiB，或 Docker storage 所在 filesystem 剩余低于
-20 GiB 时，停止 discovery 和新 Loop，但仍允许归档、集成和清理已验证完成题。Docker
-storage 无法查询时 fail closed，不启动 worker。`/data` 剩余空间低于 2 GiB 时不启动
-watcher。状态、动作、错误和队列快照写入
-`.nl2repo/authoring-live/supervisor/status.json`。source、generated projection、
-OSS manifest 或 worktree 发生冲突时 fail closed 并保留现场。
-
-Supervisor 使用 `origin` 的 integration branch 作为唯一写入线。生产部署时应将该线
-通过受控 fast-forward 或审核合并到 `main`；合并成功后只删除已确认 merged 的本地
-feature branch 和已归档 worktree，保留仍有 worktree、dirty 内容、未验证 evidence
-或未推送提交的 branch。
-
-### 动态运行控制与 systemd
-
-生产机可安装仓库内的 `ops/nl2repobench-authoring-supervisor.service`：
-
-```bash
-install -m 0644 ops/nl2repobench-authoring-supervisor.service \
-  /etc/systemd/system/nl2repobench-authoring-supervisor.service
-systemctl daemon-reload
-systemctl enable --now nl2repobench-authoring-supervisor.service
-systemctl status nl2repobench-authoring-supervisor.service
-```
-
-运行时配置位于：
-`.nl2repo/authoring-live/supervisor/runtime-config.json`。使用原子更新 CLI 调整并发，
-supervisor 和现有 Loop 会在下一轮读取：
-
-```bash
-scripts/authoring_runtime_config.py show
-scripts/authoring_runtime_config.py set --max-total-controllers 4
-scripts/authoring_runtime_config.py set --controller-concurrency 2
-scripts/authoring_runtime_config.py set --agent-limit 4
-scripts/authoring_runtime_config.py set --enabled false
-```
-
-当某种语言已经耗尽 queue 而受控 discovery pool 还有未尝试候选时，先停止 service，
-再使用 one-shot 补充；该命令只调用固定 adapter，不能执行任意模型或 shell 指令：
-
-```bash
-systemctl stop nl2repobench-authoring-supervisor.service
-scripts/run_authoring_supervisor.sh --once --replenish-language go
-scripts/run_authoring_supervisor.sh --once --replenish-language python \
-  --replenish-language node
-systemctl start nl2repobench-authoring-supervisor.service
-```
-
-补充操作不会重置 exhausted record；新候选会进入独立 generated lane。Go package 名称必须
-在受控 pool 的 owner/repository 映射中登记，防止 discovery 接受浮动或模型生成的来源。
-Scheduler 按语言轮转，并以 `batch_id` 区分 base 与 generated lane；因此 Go 的新 lane
-不会被同语言耗尽的旧 lane 掩盖。
-
-Supervisor service 使用 `KillMode=process`：重启或升级 supervisor 仅替换其主进程，
-不会终止已经 claim 的 controller、Pi session 或 archive watcher。它们由 lease、状态
-文件和 stale-claim reconciliation 收尾；不要用 systemd stop 作为取消在途 authoring 的方式。
-
-`max-total-controllers` 的硬上限是 6，`controller-concurrency` 的硬上限是 4；默认值
-分别为 3 和 1。增加 controller 会在下一轮逐步启动新的 Loop；降低配置不会杀掉当前
-正在执行的 task，当前 task 收尾后才停止继续 claim。`enabled=false` 停止新 claim，
-但不终止已经运行的 task。`agent-limit` 是管理员对同时运行 Agent 的上限；省略时由
-Director 决定，Director 的 `pause` 始终优先。配置非法时保留上一份有效配置并记录错误。
-
-变更运行时配置会使 Director cache 失效，促使顶层 Agent 重新评估；LLM 仍不能绕过
-Git、OSS、secret、网络、artifact 或 dirty-tree 门禁。systemd service 使用只读的 OSS
-环境文件，模型 provider 凭据仍由 `/root/.pi/agent/models.json` 管理，不写入运行配置。
+并发由顶层模型根据内存、Docker 磁盘、Provider 限流和当前 Harbor Run 动态决定。不同 task
+可以高并发，同一 task 不允许多个 writer。Harbor 模型评测与 authoring 是独立队列；正式
+评测运行期间不得修改对应 task 的 instruction、tests、image 或冻结分母。
 | Python verifier 用 `networkx`/SymPy 旧 API 失败 | pinned image 中实际版本与冻结上游 API 有 drift，或 runtime wheel 未进入 verifier context | 先记录实际版本，补兼容 shim/锁依赖并重新 Oracle；不能直接降低断言 |
 | source solution 生成空 workspace | placeholder `solve.sh` 或 agent image 缺 Git/构建工具 | 先补 exact-revision materializer、工具链和 build context，再判断题目是否可行 |
 | 没有 history/event | Harbor ATIF 转换是预期产物 | 验证 `trajectory.json`；需要 raw events 时扩展 adapter |

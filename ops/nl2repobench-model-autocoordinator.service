@@ -1,7 +1,7 @@
 [Unit]
 Description=NL2RepoBench automatic Sol and Opus Harbor campaigns
 Wants=network-online.target docker.service
-After=network-online.target docker.service nl2repobench-authoring-supervisor.service
+After=network-online.target docker.service
 
 [Service]
 Type=simple

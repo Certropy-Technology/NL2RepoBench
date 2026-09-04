@@ -18,7 +18,9 @@ from typing import Any
 from run_model_from_pi import provider_config, runtime_provider_config
 
 SAFE_NAME = re.compile(r"^[A-Za-z0-9._-]+$")
-RUNNABLE_LIFECYCLES = frozenset({"oracle-passed", "controls-passed", "reviewed", "piloted", "published"})
+RUNNABLE_LIFECYCLES = frozenset(
+    {"oracle-passed", "controls-passed", "reviewed", "piloted", "published"}
+)
 
 
 @dataclass(frozen=True)
