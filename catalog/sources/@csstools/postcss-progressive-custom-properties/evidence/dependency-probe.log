@@ -1,0 +1,5 @@
+COMMAND: npm ci --offline --ignore-scripts
+npm error code ENOTCACHED
+npm error request to https://registry.npmjs.org/postcss-value-parser/-/postcss-value-parser-4.2.0.tgz failed: cache mode is 'only-if-cached' but no cached response is available.
+npm error A complete log of this run can be found in: /root/.npm/_logs/2026-09-04T14_06_22_493Z-debug-0.log
+EXIT_CODE: 1
