@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "task_id": "multidict",
+  "public_exports": ["CIMultiDict", "CIMultiDictProxy", "MultiDict", "MultiDictProxy", "MultiMapping", "MutableMultiMapping", "getversion", "istr", "upstr"],
+  "classes": {
+    "MultiDict": ["__init__", "__getitem__", "__setitem__", "__delitem__", "__contains__", "__iter__", "__len__", "get", "getall", "getone", "add", "extend", "update", "merge", "setdefault", "popone", "popall", "popitem", "clear", "copy", "keys", "items", "values"],
+    "CIMultiDict": ["MultiDict API with case-insensitive key identity"],
+    "MultiDictProxy": ["get", "getall", "getone", "__getitem__", "__contains__", "__iter__", "__len__", "keys", "items", "values", "copy"],
+    "CIMultiDictProxy": ["MultiDictProxy API with case-insensitive key identity"],
+    "MultiMapping": ["getall", "getone"],
+    "MutableMultiMapping": ["add", "extend", "merge", "popone", "popall"]
+  },
+  "functions": {"getversion": "getversion(mapping_or_proxy) -> int", "istr": "istr(value) -> str subtype", "upstr": "alias of istr"}
+}

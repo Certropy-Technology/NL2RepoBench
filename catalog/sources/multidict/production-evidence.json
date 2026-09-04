@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0",
+  "task_id": "multidict",
+  "task_version": "1.0.0",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/aio-libs/multidict",
+    "revision": "86351873dcc36edb11ba1a27035f2ce2e9ff8f4e",
+    "git_tree": "147384c1581879b427a08239180ebe08e7051c9d",
+    "source_digest": "sha256:bfdff853c97ee413df6bde23098fbef8d6232dec8c4a2a9c2dd6a26dbd93040d",
+    "license_spdx": "Apache-2.0",
+    "license_sha256": "sha256:2e4be5fc6c4c72a466fcb665d726e049a6891981fe536c4f04b6366749461d23"
+  },
+  "environment": {
+    "python": "3.12.14",
+    "base_image": "python:3.12.14-slim-bookworm",
+    "base_image_digest": "sha256:0f5b26b9518d002b6173fd61daad821fa340635ebfec5bba471013f9ca114579",
+    "network_mode": "no-network"
+  },
+  "artifacts": {
+    "dependency_lock": {"digest": "sha256:f208f75c2ac81a0013f0d7b0e78bc6c61d88c2650daecbce3504209030ad8f53", "size_bytes": 393},
+    "verifier_bundle": {"digest": "sha256:f329cf3241c16d2dff018383eb8ab9f88753096bc02907f77a2d845881c3550d", "size_bytes": 20480},
+    "oracle_bundle": {"digest": "sha256:5321476e4e48dd505f7b022e423b6e6d1ad0f7ec73ba1a5797c302eb3db40fba", "size_bytes": 819200}
+  },
+  "tests": {"framework": "custom-json-v1", "expected_total": 31, "local_oracle_contract": {"collected": 31, "passed": 31, "exit_code": 0}, "separate_verifier": true},
+  "commands": [
+    {"command": "git checkout --detach 86351873dcc36edb11ba1a27035f2ce2e9ff8f4e", "exit_code": 0, "log": "catalog/sources/multidict/evidence/source-freeze.txt"},
+    {"command": "git archive --format=tar HEAD | sha256sum", "exit_code": 0, "sha256": "sha256:bfdff853c97ee413df6bde23098fbef8d6232dec8c4a2a9c2dd6a26dbd93040d", "log": "catalog/sources/multidict/evidence/source-freeze.txt"},
+    {"command": "uv pip compile --generate-hashes --python-version 3.12", "exit_code": 0, "sha256": "sha256:f208f75c2ac81a0013f0d7b0e78bc6c61d88c2650daecbce3504209030ad8f53", "log": "catalog/sources/multidict/evidence/dependency-freeze.txt"},
+    {"command": "private custom-json-v1 adapter replay against pure-Python pinned source", "exit_code": 0, "collected": 31, "passed": 31, "log": "catalog/sources/multidict/evidence/contract-local.txt"}
+  ],
+  "bundle": {"status": "bound-final", "path": ".nl2repo/multidict-final-v2/multidict/bundle.manifest.json", "sha256": "sha256:fab7d61c75351b023e28a4a21fea3cf3ed731264c61328939c3f9e1a605f160f"},
+  "oracle": {"valid": true, "collected": 31, "passed": 31, "reward": 1.0, "grading": {"path": ".nl2repo/multidict-final-v2-runs/oracle/multidict-final-v2-oracle-20260905/multidict__AEDpsAP/verifier/grading.json", "sha256": "sha256:c90a39dc1f4cf5ee22fa24d5bd06b49be5bb8584037ac16503adf2e8045e9e6e"}, "network": {"path": ".nl2repo/multidict-final-v2-runs/oracle/multidict-final-v2-oracle-20260905/multidict__AEDpsAP/verifier/network.json", "sha256": "sha256:411ac680a1b9178d5d57ae60404bc141c3141b959c1639e7af1926d1aa6ccc91"}, "public_network_available": false},
+  "controls": {
+    "empty": {"valid": true, "collected": 0, "passed": 0, "reward": 0.0, "failure_reason": "candidate-installation-failed", "grading": {"path": ".nl2repo/multidict-final-v2-runs/empty/multidict-final-v2-empty-20260905/multidict-empty__KFZvfJm/verifier/grading.json", "sha256": "sha256:0d923a820f4588759b1c653c77c9401408a8ef1c11040a1015966ec6c8b0253d"}, "network": {"path": ".nl2repo/multidict-final-v2-runs/empty/multidict-final-v2-empty-20260905/multidict-empty__KFZvfJm/verifier/network.json", "sha256": "sha256:411ac680a1b9178d5d57ae60404bc141c3141b959c1639e7af1926d1aa6ccc91"}},
+    "stub": {"valid": true, "collected": 31, "passed": 1, "reward": 0.03225806451612903, "grading": {"path": ".nl2repo/multidict-final-v2-runs/stub/multidict-final-v2-stub-20260905/multidict-stub__RzsYs8r/verifier/grading.json", "sha256": "sha256:027af4e6d5ba28fdd97a4bc76d0701d028a8cd661cc7f79b0267bbd5affc8567"}, "network": {"path": ".nl2repo/multidict-final-v2-runs/stub/multidict-final-v2-stub-20260905/multidict-stub__RzsYs8r/verifier/network.json", "sha256": "sha256:ddee81d173ac148e60f2488fb19c0fac5dc9bc1eb7817fdf358dfcadf204841d"}},
+    "forgery": {"valid": true, "collected": 31, "passed": 5, "reward": 0.16129032258064516, "verifier_owned_reward": true, "workspace_forged_reward": 1.0, "grading": {"path": ".nl2repo/multidict-final-v2-runs/forgery/multidict-final-v2-forgery-20260905/multidict-forgery__ZSkao7e/verifier/grading.json", "sha256": "sha256:326c56ac28596ba5964a946eb0cc3b7d22ad061b30d63579698a792a800d6425"}, "network": {"path": ".nl2repo/multidict-final-v2-runs/forgery/multidict-final-v2-forgery-20260905/multidict-forgery__ZSkao7e/verifier/network.json", "sha256": "sha256:ddee81d173ac148e60f2488fb19c0fac5dc9bc1eb7817fdf358dfcadf204841d"}},
+    "offline": {"completed": true, "public_network_available": false}
+  },
+  "residual_risks": ["The task targets stable public pure-Python semantics and does not require C-extension ABI, leak, benchmark timing, pickle fixture, or segfault behavior.", "Blind review and model pilot remain separate publication gates."]
+}

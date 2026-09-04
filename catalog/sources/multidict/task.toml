@@ -1,0 +1,87 @@
+schema_version = "1.0"
+task_id = "multidict"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "mapping-library"
+tags = ["python", "mapping", "duplicate-keys", "case-insensitive", "proxy", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/aio-libs/multidict"
+revision = "86351873dcc36edb11ba1a27035f2ce2e9ff8f4e"
+license_spdx = "Apache-2.0"
+source_digest = "sha256:bfdff853c97ee413df6bde23098fbef8d6232dec8c4a2a9c2dd6a26dbd93040d"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.14"
+os_name = "debian-12-amd64"
+base_image = "python:3.12.14-slim-bookworm"
+base_image_digest = "sha256:0f5b26b9518d002b6173fd61daad821fa340635ebfec5bba471013f9ca114579"
+system_packages = []
+network_mode = "no-network"
+build_command = "install the hash-locked setuptools build dependency during image build"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The pure-Python candidate build closure is installed during image build, and the trusted Oracle restores the frozen source from a private digest-checked archive. Agent, candidate, verifier, Oracle, and controls execute without network access."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = ["setuptools==84.0.0"]
+lock_artifact = { digest = "sha256:f208f75c2ac81a0013f0d7b0e78bc6c61d88c2650daecbce3504209030ad8f53", size_bytes = 393, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:f208f75c2ac81a0013f0d7b0e78bc6c61d88c2650daecbce3504209030ad8f53", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 31
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:f329cf3241c16d2dff018383eb8ab9f88753096bc02907f77a2d845881c3550d", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:f329cf3241c16d2dff018383eb8ab9f88753096bc02907f77a2d845881c3550d", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
+
+[harbor]
+description = "Build the pure-Python multidict mapping library from an empty workspace and satisfy a deterministic duplicate-key, case-insensitive, proxy, view, and mutation contract through a separate child-side verifier."
+keywords = ["python", "mapping", "duplicate-keys", "case-insensitive", "proxy", "separate-verifier"]
+agent_timeout_sec = 2400.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 180.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:5321476e4e48dd505f7b022e423b6e6d1ad0f7ec73ba1a5797c302eb3db40fba"
+size_bytes = 819200
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:5321476e4e48dd505f7b022e423b6e6d1ad0f7ec73ba1a5797c302eb3db40fba"
+visibility = "private"
+
+[lifecycle]
+status = "controls-passed"
+owner = "python-author-wave10-multidict"
+reason = "The final NoNetwork task uses the upstream-supported pure-Python build and a UID-isolated child verifier. Oracle passes 31/31; installable stub and forgery controls collect all 31 leaves and remain below the 0.20 reward ceiling."

@@ -1,0 +1,8 @@
+runtime=python 3.12.14
+build_dependency=setuptools==84.0.0
+lock_sha256=sha256:f208f75c2ac81a0013f0d7b0e78bc6c61d88c2650daecbce3504209030ad8f53
+lock_size_bytes=393
+network_policy=no-network
+runtime_dependency_closure=none
+command=uv pip compile --generate-hashes --python-version 3.12
+exit_code=0
