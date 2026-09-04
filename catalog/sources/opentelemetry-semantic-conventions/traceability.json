@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "task_id": "opentelemetry-semantic-conventions",
+  "source_revision": "96df63add12f6e0453b265ac34c5c07ec7b9267e",
+  "mappings": [
+    {"behavior": "package and distribution version are 0.66b0.dev", "tests": ["distribution version", "runtime version"], "instruction": "Package metadata"},
+    {"behavior": "namespace package and py.typed marker are importable", "tests": ["py.typed marker", "namespace imports"], "instruction": "Supports"},
+    {"behavior": "Schemas preserves 21 declared enum members, order, values, and lookup", "tests": ["schema enum type", "schema member order", "schema values", "schema value lookup"], "instruction": "Schema versions"},
+    {"behavior": "HTTP constants and method enum preserve exact names, values, and order", "tests": ["HTTP constant values", "HTTP enum order and values", "HTTP enum lookup"], "instruction": "HTTP attributes"},
+    {"behavior": "DB constants and system enum preserve exact names, values, and order", "tests": ["DB constant values", "DB enum order and values", "DB enum lookup"], "instruction": "Database attributes"},
+    {"behavior": "other stable constants remain exact strings", "tests": ["service/client/server constants", "exception/error constants", "metric constants", "string and enum types"], "instruction": "Other stable attribute and metric constants"}
+  ]
+}

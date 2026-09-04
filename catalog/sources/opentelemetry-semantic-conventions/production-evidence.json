@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0",
+  "task_id": "opentelemetry-semantic-conventions",
+  "task_version": "1.0.0",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/open-telemetry/opentelemetry-python",
+    "revision": "96df63add12f6e0453b265ac34c5c07ec7b9267e",
+    "source_digest": "sha256:261528522499c80a3a264c33028a582476c8c460ef6411dea52b33946ad52d0b",
+    "license_spdx": "Apache-2.0",
+    "license_sha256": "sha256:c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+  },
+  "environment": {
+    "python": "3.12.14",
+    "base_image_digest": "sha256:782412e85d0f0984994c290652577d4018aff08145c85b262bb63dc0c7522254",
+    "network_policy": "no-network"
+  },
+  "private_artifacts": {
+    "lock": {"digest": "sha256:ad7e52e0f1bf40e1b43abefc569975aad6862d932cb60ae9a18216cfaf7a797e", "size_bytes": 1886},
+    "verifier": {"digest": "sha256:19f82da6b23019bbf1274d54f5d39a17328218dc887a6efa48dcf023725a0ccf", "size_bytes": 20480},
+    "oracle": {"digest": "sha256:1e7b650df7c1cef0fe360af11da245100c80f886b3f3187aade5434db22c67e7", "size_bytes": 880640}
+  },
+  "tests": {"framework": "pytest", "protocol": "custom-json-v1", "frozen_total": 18, "separate_verifier": true},
+  "bundle": {"status": "bound-final", "path": ".nl2repo/otel-semconv-final-v2/opentelemetry-semantic-conventions/bundle.manifest.json", "sha256": "sha256:6b0c03a6844eced57245af2d4b2e0f21206907448e400da4f4b331acbbd8d034"},
+  "oracle": {"valid": true, "collected": 18, "passed": 18, "reward": 1.0, "grading": {"path": ".nl2repo/otel-semconv-final-v2-runs/oracle/otel-semconv-final-v2-oracle-20260905/opentelemetry-semantic-conventio__uJnMFEA/verifier/grading.json", "sha256": "sha256:9cc79c96d1a424ae8dd04a2e3ecd6b72f4091bdae27f7d292b9f0744bd510aaa"}, "network": {"path": ".nl2repo/otel-semconv-final-v2-runs/oracle/otel-semconv-final-v2-oracle-20260905/opentelemetry-semantic-conventio__uJnMFEA/verifier/network.json", "sha256": "sha256:411ac680a1b9178d5d57ae60404bc141c3141b959c1639e7af1926d1aa6ccc91"}, "public_network_available": false},
+  "controls": {
+    "empty": {"valid": true, "collected": 0, "passed": 0, "reward": 0.0, "failure_reason": "candidate-installation-failed", "grading": {"path": ".nl2repo/otel-semconv-final-v2-runs/empty/otel-semconv-final-v2-empty-20260905/opentelemetry-semantic-conventio__ktSYc9W/verifier/grading.json", "sha256": "sha256:1452e1c4bb23a5cb6c378bd6778e32d4cc63bb5db7489e1f5f2b4a9b97694e57"}, "network": {"path": ".nl2repo/otel-semconv-final-v2-runs/empty/otel-semconv-final-v2-empty-20260905/opentelemetry-semantic-conventio__ktSYc9W/verifier/network.json", "sha256": "sha256:411ac680a1b9178d5d57ae60404bc141c3141b959c1639e7af1926d1aa6ccc91"}},
+    "stub": {"valid": true, "collected": 18, "passed": 2, "reward": 0.1111111111111111, "grading": {"path": ".nl2repo/otel-semconv-final-v2-runs/stub/otel-semconv-final-v2-stub-20260905/opentelemetry-semantic-conventio__uTfPu3w/verifier/grading.json", "sha256": "sha256:0952c2f3da6630f14503027e6ee6dbff96ec89dc13bc1c59d97d78708151d261"}, "network": {"path": ".nl2repo/otel-semconv-final-v2-runs/stub/otel-semconv-final-v2-stub-20260905/opentelemetry-semantic-conventio__uTfPu3w/verifier/network.json", "sha256": "sha256:ddee81d173ac148e60f2488fb19c0fac5dc9bc1eb7817fdf358dfcadf204841d"}},
+    "forgery": {"valid": true, "collected": 18, "passed": 2, "reward": 0.1111111111111111, "verifier_owned_reward": true, "workspace_forged_reward": 1.0, "grading": {"path": ".nl2repo/otel-semconv-final-v2-runs/forgery/otel-semconv-final-v2-forgery-20260905/opentelemetry-semantic-conventio__HxsFyd3/verifier/grading.json", "sha256": "sha256:0952c2f3da6630f14503027e6ee6dbff96ec89dc13bc1c59d97d78708151d261"}, "network": {"path": ".nl2repo/otel-semconv-final-v2-runs/forgery/otel-semconv-final-v2-forgery-20260905/opentelemetry-semantic-conventio__HxsFyd3/verifier/network.json", "sha256": "sha256:411ac680a1b9178d5d57ae60404bc141c3141b959c1639e7af1926d1aa6ccc91"}},
+    "offline": {"completed": true, "public_network_available": false}
+  },
+  "residual_risks": ["The contract covers a deterministic subset of generated semantic-convention modules and omits the unavailable development-only sibling dependency.", "Blind review and model pilot remain separate publication gates."]
+}

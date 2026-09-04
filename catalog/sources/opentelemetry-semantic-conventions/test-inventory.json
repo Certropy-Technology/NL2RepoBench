@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "task_id": "opentelemetry-semantic-conventions",
+  "upstream_tests": {"path": "tests/test_semconv.py", "tests": 1, "purpose": "package import smoke test"},
+  "private_contract": {"framework": "custom-json-v1", "frozen_total": 18, "collection_source": "deterministic scenario registry"},
+  "scenarios": [
+    "distribution version", "runtime version", "py.typed marker", "namespace imports",
+    "schema enum type", "schema member order", "schema values", "schema value lookup",
+    "HTTP constant values", "HTTP enum order and values", "HTTP enum lookup",
+    "DB constant values", "DB enum order and values", "DB enum lookup",
+    "service/client/server constants", "exception/error constants", "metric constants", "string and enum types"
+  ],
+  "collection_policy": "Every scenario is one leaf; candidate failures are behavior failures, while verifier/protocol failures invalidate the run."
+}

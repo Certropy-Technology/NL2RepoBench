@@ -1,0 +1,86 @@
+schema_version = "1.0"
+task_id = "opentelemetry-semantic-conventions"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "python-constants-library"
+tags = ["python", "opentelemetry", "semantic-conventions", "generated-constants", "enum", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/open-telemetry/opentelemetry-python"
+revision = "96df63add12f6e0453b265ac34c5c07ec7b9267e"
+license_spdx = "Apache-2.0"
+source_digest = "sha256:261528522499c80a3a264c33028a582476c8c460ef6411dea52b33946ad52d0b"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.14"
+os_name = "debian-12-amd64"
+base_image = "python:3.12.14-slim-bookworm"
+base_image_digest = "sha256:782412e85d0f0984994c290652577d4018aff08145c85b262bb63dc0c7522254"
+system_packages = ["git", "ca-certificates"]
+network_mode = "no-network"
+build_command = "install hash-locked build and verifier dependencies during image build"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The candidate build closure is installed during image build and the Oracle restores a private digest-checked source archive. Agent, candidate, verifier, Oracle, and controls run without network access."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = ["hatchling==1.27.0", "packaging==26.3", "pathspec==1.1.1", "pluggy==1.6.0", "setuptools==80.10.2", "trove-classifiers==2026.6.1.19", "typing-extensions==4.15.0", "wheel==0.45.1"]
+lock_artifact = { digest = "sha256:ad7e52e0f1bf40e1b43abefc569975aad6862d932cb60ae9a18216cfaf7a797e", size_bytes = 1886, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:ad7e52e0f1bf40e1b43abefc569975aad6862d932cb60ae9a18216cfaf7a797e", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 18
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:19f82da6b23019bbf1274d54f5d39a17328218dc887a6efa48dcf023725a0ccf", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:19f82da6b23019bbf1274d54f5d39a17328218dc887a6efa48dcf023725a0ccf", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
+
+[harbor]
+description = "Build the OpenTelemetry semantic conventions package from an empty workspace and satisfy a deterministic subset of generated attributes, metrics, schemas, and version contracts through a separate child-process verifier."
+keywords = ["python", "opentelemetry", "semantic-conventions", "generated-constants", "enum", "separate-verifier"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:1e7b650df7c1cef0fe360af11da245100c80f886b3f3187aade5434db22c67e7"
+size_bytes = 880640
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:1e7b650df7c1cef0fe360af11da245100c80f886b3f3187aade5434db22c67e7"
+visibility = "private"
+
+[lifecycle]
+status = "controls-passed"
+owner = "python-author-wave10-20260905"
+reason = "The final NoNetwork task uses frozen generated package artifacts and a separate UID-isolated JSON verifier. Oracle passes 18/18; empty, installable stub, and forgery controls are valid, collect the fixed denominator where applicable, and remain below the 0.20 reward ceiling."

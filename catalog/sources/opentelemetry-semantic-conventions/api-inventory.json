@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0",
+  "task_id": "opentelemetry-semantic-conventions",
+  "source_revision": "96df63add12f6e0453b265ac34c5c07ec7b9267e",
+  "public_modules": [
+    "opentelemetry.semconv.attributes.client_attributes",
+    "opentelemetry.semconv.attributes.db_attributes",
+    "opentelemetry.semconv.attributes.error_attributes",
+    "opentelemetry.semconv.attributes.exception_attributes",
+    "opentelemetry.semconv.attributes.http_attributes",
+    "opentelemetry.semconv.attributes.server_attributes",
+    "opentelemetry.semconv.attributes.service_attributes",
+    "opentelemetry.semconv.metrics.db_metrics",
+    "opentelemetry.semconv.metrics.http_metrics",
+    "opentelemetry.semconv.schemas",
+    "opentelemetry.semconv.version"
+  ],
+  "symbols": {
+    "enums": ["Schemas", "HttpRequestMethodValues", "DbSystemNameValues"],
+    "constant_groups": ["http", "db", "service", "client", "server", "exception", "error", "metrics_http", "metrics_db"]
+  },
+  "boundary_flags": ["namespace-package", "generated-source", "enum-order", "version-metadata"],
+  "unscored_upstream_surface": ["incubating modules", "resource and trace generated modules", "release automation"]
+}
