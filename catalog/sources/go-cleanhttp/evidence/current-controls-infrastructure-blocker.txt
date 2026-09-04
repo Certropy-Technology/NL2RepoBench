@@ -1,0 +1,25 @@
+Task: go-cleanhttp
+Attempted: 2026-09-04
+Baseline: 34535079a91901f79b4914973fde3a9a55e33e7f
+Bundle manifest: .nl2repo/compiled-current/go-cleanhttp/bundle.manifest.json
+Bundle manifest sha256: bb2a34cf0582b25b35528f4039502aff3e28b3c68a5195dbb5a3375b41e903f8
+
+Validation and compile passed. Official Harbor Oracle passed 1/1 with reward 1.0.
+All seven attempted negative controls failed before verifier startup while creating
+Docker compose verifier networks. Docker returned:
+  all predefined address pools have been fully subnetted
+
+This is an infrastructure failure. No control received a verifier grading report,
+so no control is marked passed and no current production controls-passed claim is
+made from this attempt. Existing historical receipts are not reused because their
+bundle manifest differs from the current compiled bundle.
+
+Observed commands:
+  docker network ls --format '{{.ID}}\\t{{.Name}}\\t{{.Driver}}'
+  docker info --format '{{json .}}'
+  uv run --frozen --project harbor-runner harbor run ...
+
+Observed Docker state: 31 bridge networks, 53 containers, all listed bridge
+networks had active container attachments at observation time. Do not remove active
+campaign containers. Retry controls serially after completed campaign cleanup or
+an approved Docker address-pool remediation.

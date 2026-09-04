@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-cleanhttp",
+  "upstream_url": "https://github.com/hashicorp/go-cleanhttp",
+  "revision": "2901fbf3e0ecb2512cd7d278977a6b4ae0342ac0",
+  "commit_date": "2026-08-25T07:30:55+01:00",
+  "source_archive": {
+    "format": "git-archive-tar",
+    "sha256": "sha256:e1937b5e35049788a73ef0ecbc7107a2e38a27f09876fd71ccdbf1809305d83f",
+    "size_bytes": 51200
+  },
+  "license": {
+    "spdx": "MPL-2.0",
+    "path": "LICENSE",
+    "sha256": "sha256:6d241fa71d581f282557cb7c5ef7318b6c89918328a9d0dccb4031163486a40e"
+  },
+  "module": {
+    "path": "github.com/hashicorp/go-cleanhttp",
+    "upstream_go_directive": "1.24",
+    "locked_go_directive": "1.26.5",
+    "external_modules": 0,
+    "go_sum_entries": 0
+  },
+  "selected_package": "github.com/hashicorp/go-cleanhttp",
+  "first_lane_scan": {
+    "cgo": false,
+    "unsafe": false,
+    "plugin": false,
+    "go_generate": false,
+    "go_workspace": false,
+    "external_replace": false,
+    "network": false,
+    "filesystem": true,
+    "http": true,
+    "tty": false
+  },
+  "acquisition": {
+    "clone": "git clone --no-checkout https://github.com/hashicorp/go-cleanhttp .nl2repo/authoring-work/go-author-auto-20260903T131454Z/go-cleanhttp/src",
+    "fetch": "git checkout --detach 2901fbf3e0ecb2512cd7d278977a6b4ae0342ac0",
+    "checkout_exit_code": 0,
+    "resolved_revision": "2901fbf3e0ecb2512cd7d278977a6b4ae0342ac0"
+  }
+}

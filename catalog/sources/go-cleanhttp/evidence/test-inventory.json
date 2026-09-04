@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-cleanhttp",
+  "upstream_test_files": 1,
+  "upstream_static_test_functions": 1,
+  "upstream_packages": 1,
+  "upstream_command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -count=1 -json ./...",
+  "upstream_exit_code": 0,
+  "upstream_results": {"passed": 6, "failed": 0, "skipped": 0},
+  "upstream_test_json": ".nl2repo/authoring-work/go-author-auto-20260903T131454Z/go-cleanhttp/upstream-go-test.json",
+  "frozen_leaf": {
+    "id": "contract::public-api",
+    "frozen_total": 1,
+    "framework": "go bridge contract",
+    "private_case_count": 7,
+    "cases": [
+      "default and pooled transport field configuration",
+      "fresh transport and client ownership",
+      "default and pooled client configuration",
+      "printable path forwards to next handler",
+      "non-printable path uses default bad-request status",
+      "custom handler error status",
+      "nil request is ignored"
+    ],
+    "collection_source": "fixed verifier-owned contract"
+  }
+}

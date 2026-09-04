@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-cleanhttp",
+  "package": "github.com/hashicorp/go-cleanhttp",
+  "tracked_source_files": 15,
+  "go_source_files": 4,
+  "public_symbols": [
+    "DefaultTransport",
+    "DefaultPooledTransport",
+    "DefaultClient",
+    "DefaultPooledClient",
+    "HandlerInput",
+    "PrintablePathCheckHandler"
+  ],
+  "public_bridge_operations": [
+    "transport_summary",
+    "client_summary",
+    "handler_status",
+    "handler_nil_request"
+  ],
+  "bridge_scope": "Bounded deterministic JSON values; the bridge does not make network requests and does not expose callbacks, transport RoundTrip behavior, or runtime timing.",
+  "source_revision": "2901fbf3e0ecb2512cd7d278977a6b4ae0342ac0"
+}

@@ -1,0 +1,77 @@
+schema_version = "1.0"
+task_id = "go-cleanhttp"
+version = "0.1.0"
+instruction = "instruction.md"
+oracle_bundle = { digest = "sha256:ad1516211c7f2ab4a51af7eb68c9473815147a552c04c5a1695b0d82e6e1ba27", size_bytes = 10240, media_type = "application/vnd.nl2repobench.oracle-bundle+tar", uri = "artifact://private/sha256:ad1516211c7f2ab4a51af7eb68c9473815147a552c04c5a1695b0d82e6e1ba27", visibility = "private" }
+
+[metadata]
+difficulty = "medium"
+category = "go-library"
+tags = ["go", "go-modules", "net-http", "transport", "middleware", "typed-bridge", "public-api"]
+language = "go"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/hashicorp/go-cleanhttp"
+revision = "2901fbf3e0ecb2512cd7d278977a6b4ae0342ac0"
+license_spdx = "MPL-2.0"
+source_digest = "sha256:e1937b5e35049788a73ef0ecbc7107a2e38a27f09876fd71ccdbf1809305d83f"
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+runtime_version = "1.26.5"
+base_image = "docker.io/library/golang@sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+base_image_digest = "sha256:53eeac89074db483fdf0ab3be1df32bf6e47562263d2d0d6baa7f26acb4957dd"
+network_mode = "no-network"
+build_command = "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -mod=vendor ./..."
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "Candidate and separate verifier execution use a private pre-materialized Go module closure and run without network; only the trusted Oracle receives a run-scoped source-host authorization."
+
+[dependencies]
+status = "known"
+installer = "system"
+packages = []
+module_bundle = { digest = "sha256:7b74c1c70ffc4bde63557c255edd2b5ae43594b6a367d185c1ce1f91fe11e275", size_bytes = 10240, media_type = "application/vnd.nl2repobench.go-module-bundle+tar", uri = "artifact://private/sha256:7b74c1c70ffc4bde63557c255edd2b5ae43594b6a367d185c1ce1f91fe11e275", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 1
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Recreate the deterministic clean HTTP transport, client, and printable-path middleware APIs through a bounded Go bridge."
+keywords = ["go", "go-cleanhttp", "net-http", "transport", "middleware", "typed-bridge", "public-api"]
+agent_timeout_sec = 900.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "parent-integration-20260904"
+reason = "The final official Harbor 0.21.0 Oracle passed 1/1. Empty, stub, and forgery controls produced valid 0-reward receipts with verifier-owned grading and no public network access."
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:e5577cff9bfe763addac792834f99540011405d6132fca823f2509d2a047e51c", size_bytes = 10240, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:e5577cff9bfe763addac792834f99540011405d6132fca823f2509d2a047e51c", visibility = "private" }
+entrypoint = "contract.sh"

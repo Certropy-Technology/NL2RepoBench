@@ -623,7 +623,10 @@ def _validate_grading(
         )
     if not isinstance(counts, dict) or counts.get("collected") != expected_total:
         raise ProductionGateError(f"{task_id}: grading collection differs from frozen total")
-    if grading.get("expected_total") != expected_total:
+    # Go normalizes the fixed denominator as ``frozen_total`` while the
+    # Python/Node adapters expose the same value as ``expected_total``.
+    reported_total = grading.get("expected_total", grading.get("frozen_total"))
+    if reported_total != expected_total:
         raise ProductionGateError(f"{task_id}: grading expected_total differs from source")
     if isinstance(collection, dict) and collection.get("collection_errors"):
         raise ProductionGateError(f"{task_id}: grading contains collection errors")

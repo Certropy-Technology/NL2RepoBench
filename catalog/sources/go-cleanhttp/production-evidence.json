@@ -1,0 +1,75 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-cleanhttp",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source_freeze": {
+    "upstream_url": "https://github.com/hashicorp/go-cleanhttp",
+    "revision": "2901fbf3e0ecb2512cd7d278977a6b4ae0342ac0",
+    "source_digest": "sha256:e1937b5e35049788a73ef0ecbc7107a2e38a27f09876fd71ccdbf1809305d83f",
+    "license_spdx": "MPL-2.0"
+  },
+  "bundle": {
+    "path": "catalog/tasks/go-cleanhttp/bundle.manifest.json",
+    "sha256": "sha256:142fc651433644fe61d7945b35749b0b5e10a61db6cda65e29b83b428b1f569c",
+    "mode": "production",
+    "expected_total": 1
+  },
+  "oracle": {
+    "harbor_version": "0.21.0",
+    "command": "uv run --frozen --project harbor-runner harbor run -p catalog/tasks/go-cleanhttp -a oracle --allow-agent-host github.com --job-name go-cleanhttp-published-oracle-20260904 --jobs-dir .nl2repo/go-cleanhttp-published-runs/oracle --n-concurrent 1 --max-retries 0 --yes",
+    "exit_code": 0,
+    "valid": true,
+    "collected": 1,
+    "passed": 1,
+    "reward": 1.0,
+    "grading": {"path": "catalog/sources/go-cleanhttp/evidence/receipts/published-oracle-grading.json", "sha256": "sha256:b00d7a553a2fddacea6fa04621bafef45310450fbfe030c859f754ad2e6f6933"},
+    "network": {"path": "catalog/sources/go-cleanhttp/evidence/receipts/published-oracle-network.json", "sha256": "sha256:2f6b56d46d0c170803928dc5d9ae16de0aae30667b2439ba5793866f67187c63"}
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/go-cleanhttp-final-source/go-cleanhttp -a nop --job-name go-cleanhttp-final-empty-20260904 --jobs-dir .nl2repo/go-cleanhttp-final-runs/empty --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {"path": "catalog/sources/go-cleanhttp/evidence/receipts/empty-grading.json", "sha256": "sha256:f50f1c97834aae0757eb19f7b1926b462c178862bac6df8d7f04e6f4d30db843"},
+      "network": {"path": "catalog/sources/go-cleanhttp/evidence/receipts/empty-network.json", "sha256": "sha256:9d29e9ae1129c191b95bf9242116f02f3cb579792ee7ce6663a90f5fa6612b24"}
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/go-cleanhttp-final-controls/go-cleanhttp-stub -a oracle --job-name go-cleanhttp-final-stub-20260904 --jobs-dir .nl2repo/go-cleanhttp-final-runs/stub --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 1,
+      "passed": 0,
+      "reward": 0.0,
+      "grading": {"path": "catalog/sources/go-cleanhttp/evidence/receipts/stub-grading.json", "sha256": "sha256:770db3ca92e7856ca2aafafc513a44b9f7287cc614932077530145c6ab4ec74d"},
+      "network": {"path": "catalog/sources/go-cleanhttp/evidence/receipts/stub-network.json", "sha256": "sha256:906fe8f3735eabf58bfdee3dcdf167e1c37fe6560166301987100ec4069e31f6"}
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/go-cleanhttp-final-controls-v2/go-cleanhttp-forgery -a oracle --job-name go-cleanhttp-final-forgery-20260904 --jobs-dir .nl2repo/go-cleanhttp-final-runs/forgery --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 1,
+      "passed": 0,
+      "reward": 0.0,
+      "verifier_owned_reward": true,
+      "grading": {"path": "catalog/sources/go-cleanhttp/evidence/receipts/forgery-grading.json", "sha256": "sha256:770db3ca92e7856ca2aafafc513a44b9f7287cc614932077530145c6ab4ec74d"},
+      "network": {"path": "catalog/sources/go-cleanhttp/evidence/receipts/forgery-network.json", "sha256": "sha256:797145ae4a63d34f8ac32c3a34aac2c1f16387c8e8813cd0d9ddbc310ea6bd29"}
+    },
+    "offline": {
+      "command": "official Harbor verifier network-none probe from final Oracle run",
+      "exit_code": 0,
+      "completed": true,
+      "valid": true,
+      "network": {"path": "catalog/sources/go-cleanhttp/evidence/receipts/oracle-network.json", "sha256": "sha256:2f6b56d46d0c170803928dc5d9ae16de0aae30667b2439ba5793866f67187c63"}
+    }
+  },
+  "residual_risks": [
+    "The typed bridge intentionally excludes live HTTP requests and connection-reuse timing.",
+    "Blind review, publication, and model Agent Run remain separate integrator stages."
+  ]
+}

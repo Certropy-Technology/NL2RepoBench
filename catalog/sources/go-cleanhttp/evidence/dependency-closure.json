@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-cleanhttp",
+  "status": "known",
+  "module_path": "github.com/hashicorp/go-cleanhttp",
+  "go_version": "1.26.5",
+  "external_modules": 0,
+  "offline": true,
+  "module_bundle_digest": "sha256:7b74c1c70ffc4bde63557c255edd2b5ae43594b6a367d185c1ce1f91fe11e275",
+  "module_bundle_size_bytes": 10240,
+  "closure_files": ["go.mod", "go.sum", "vendor/modules.txt"],
+  "probe_command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -mod=vendor ./...",
+  "probe_exit_code": 0,
+  "probe_result": "ok github.com/hashicorp/go-cleanhttp 0.012s"
+}

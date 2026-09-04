@@ -294,6 +294,20 @@ def test_oracle_and_control_evidence_are_hash_bound_and_fail_closed(tmp_path: Pa
     assert "hash mismatch" in result["errors"][0]["message"]
 
 
+def test_grading_accepts_go_frozen_total_denominator() -> None:
+    grading = _grading(1, 1.0)
+    grading.pop("expected_total")
+    grading["frozen_total"] = 1
+
+    gate._validate_grading(
+        "go-fixture",
+        grading,
+        expected_total=1,
+        minimum_reward=0.8,
+        maximum_reward=1.0,
+    )
+
+
 def test_blocked_evidence_requires_hashed_real_command_log(tmp_path: Path) -> None:
     log = tmp_path / "evidence/blocked.log"
     log.parent.mkdir(parents=True)

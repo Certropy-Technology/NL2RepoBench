@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-cleanhttp",
+  "source_revision": "2901fbf3e0ecb2512cd7d278977a6b4ae0342ac0",
+  "leaf_id": "contract::public-api",
+  "frozen_total": 1,
+  "public_contract": "instruction.md#api-usage-guide",
+  "traceability": [
+    {"assertion_class": "transport defaults and fresh ownership", "bridge_operation": "transport_summary", "instruction_section": "API Usage Guide"},
+    {"assertion_class": "client-owned transport defaults", "bridge_operation": "client_summary", "instruction_section": "API Usage Guide"},
+    {"assertion_class": "printable path forwarding", "bridge_operation": "handler_status", "instruction_section": "API Usage Guide"},
+    {"assertion_class": "non-printable path status", "bridge_operation": "handler_status", "instruction_section": "API Usage Guide"},
+    {"assertion_class": "nil request behavior", "bridge_operation": "handler_nil_request", "instruction_section": "API Usage Guide"},
+    {"assertion_class": "newline-delimited structured errors", "bridge_operation": "invalid-operation", "instruction_section": "Implementation Notes"}
+  ],
+  "excluded_upstream_behavior": ["HTTP network requests", "RoundTrip behavior", "timing-sensitive connection reuse", "benchmark performance"],
+  "exclusion_reason": "These behaviors either require external network state or cannot be represented as bounded deterministic JSON without changing the package contract."
+}
