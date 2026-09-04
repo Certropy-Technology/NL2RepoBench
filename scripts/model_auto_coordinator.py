@@ -25,6 +25,18 @@ RUNNABLE_LIFECYCLES = frozenset(
     {"oracle-passed", "controls-passed", "reviewed", "piloted", "published"}
 )
 MODEL_IDS = ("gpt-5.6-sol", "claude-opus-5")
+MODEL_SPECS = {
+    "gpt-5.6-sol": {
+        "provider": "z-open-api-gpt-openai-responses",
+        "harbor_model": "openai/gpt-5.6-sol",
+        "run_prefix": "gpt56",
+    },
+    "claude-opus-5": {
+        "provider": "z-open-api-claude-anthropic-messages",
+        "harbor_model": "anthropic/claude-opus-5",
+        "run_prefix": "opus5",
+    },
+}
 INTEGRATION_SUBJECT = re.compile(r"^Integrate authored task ([A-Za-z0-9._-]+)$")
 
 
@@ -222,17 +234,43 @@ def select_missing_tasks(
     ][:batch_size]
 
 
-def _runner_active() -> bool:
+def select_missing_for_model(
+    tasks: list[Task], completed: dict[str, set[str]], model_id: str, *, batch_size: int
+) -> list[Task]:
+    return [task for task in tasks if task.task_id not in completed.get(model_id, set())][
+        :batch_size
+    ]
+
+
+def _process_commands() -> list[list[str]]:
+    commands: list[list[str]] = []
     for entry in Path("/proc").iterdir():
         if not entry.name.isdigit():
             continue
         try:
-            command = entry.joinpath("cmdline").read_bytes().replace(b"\0", b" ")
+            fields = [
+                item.decode(errors="replace")
+                for item in entry.joinpath("cmdline").read_bytes().split(b"\0")
+                if item
+            ]
         except OSError:
             continue
-        if b"run_dual_model_queue.py" in command:
-            return True
-    return False
+        commands.append(fields)
+    return commands
+
+
+def _active_models() -> set[str]:
+    active: set[str] = set()
+    for fields in _process_commands():
+        if not any(item.endswith("run_model_from_pi.py") for item in fields):
+            continue
+        try:
+            model_id = fields[fields.index("--model-id") + 1]
+        except (ValueError, IndexError):
+            continue
+        if model_id in MODEL_IDS:
+            active.add(model_id)
+    return active
 
 
 def _campaign_payload(repository: Path, campaign_id: str, tasks: list[Task]) -> dict[str, Any]:
@@ -253,9 +291,94 @@ def _campaign_payload(repository: Path, campaign_id: str, tasks: list[Task]) -> 
     }
 
 
+def _model_command(
+    repository: Path,
+    args: argparse.Namespace,
+    *,
+    model_id: str,
+    campaign_id: str,
+    tasks: list[Task],
+) -> list[str]:
+    spec = MODEL_SPECS[model_id]
+    prefix = f"{spec['run_prefix']}-{campaign_id}"
+    return [
+        str(repository / ".venv/bin/python3"),
+        str(repository / "scripts/run_model_from_pi.py"),
+        "--provider",
+        spec["provider"],
+        "--model-id",
+        model_id,
+        "--harbor-model",
+        spec["harbor_model"],
+        "--task",
+        ",".join(task.task_id for task in tasks),
+        "--run-root",
+        str(repository / ".nl2repo/runs/model/auto" / campaign_id),
+        "--run-prefix",
+        prefix,
+        "--lock-root",
+        str(repository / ".nl2repo/locks/model/auto-2x1" / spec["run_prefix"]),
+        "--concurrency",
+        "1",
+        "--agent-timeout-seconds",
+        str(args.agent_timeout_seconds),
+        "--models-file",
+        str(args.models_file),
+    ]
+
+
+def _launch_model_queue(
+    repository: Path,
+    state_root: Path,
+    args: argparse.Namespace,
+    *,
+    model_id: str,
+    campaign_id: str,
+    tasks: list[Task],
+) -> dict[str, Any]:
+    campaign_root = repository / ".nl2repo/model-campaigns/auto" / campaign_id
+    campaign = campaign_root / "campaign.json"
+    payload = _campaign_payload(repository, campaign_id, tasks)
+    payload["model_id"] = model_id
+    payload["max_total_concurrency"] = 1
+    _atomic_write(campaign, payload)
+    command = _model_command(
+        repository,
+        args,
+        model_id=model_id,
+        campaign_id=campaign_id,
+        tasks=tasks,
+    )
+    log = state_root / "logs" / f"{campaign_id}.log"
+    log.parent.mkdir(parents=True, exist_ok=True)
+    with log.open("a", encoding="utf-8") as stream:
+        process = subprocess.Popen(
+            command,
+            cwd=repository,
+            stdout=stream,
+            stderr=subprocess.STDOUT,
+            start_new_session=True,
+        )
+    return {
+        "model_id": model_id,
+        "campaign_id": campaign_id,
+        "tasks": [task.task_id for task in tasks],
+        "pid": process.pid,
+        "command": command,
+        "campaign": str(campaign),
+        "log": str(log),
+    }
+
+
 def cycle(repository: Path, state_root: Path, args: argparse.Namespace) -> dict[str, Any]:
-    if _runner_active():
-        return {"event": "cycle-skipped", "reason": "model-runner-active"}
+    active_models = _active_models()
+    idle_models = [model for model in MODEL_IDS if model not in active_models]
+    if not idle_models:
+        return {
+            "event": "cycle-skipped",
+            "reason": "all-model-lanes-active",
+            "active_models": sorted(active_models),
+        }
     docker_free = shutil.disk_usage(args.docker_root).free
     if docker_free < args.min_free_bytes:
         return {
@@ -278,51 +401,38 @@ def cycle(repository: Path, state_root: Path, args: argparse.Namespace) -> dict[
     if inventory_result["exit_code"] != 0:
         return {"event": "inventory-failed", **inventory_result}
     tasks = runnable_tasks(repository, max_age_days=args.max_integration_age_days)
-    filtered, completed = fresh_inventory(_load_object(inventory_path), tasks)
-    selected = select_missing_tasks(tasks, completed, batch_size=args.batch_size)
-    if not selected:
+    _filtered, completed = fresh_inventory(_load_object(inventory_path), tasks)
+    started: list[dict[str, Any]] = []
+    for model_id in idle_models:
+        selected = select_missing_for_model(
+            tasks, completed, model_id, batch_size=args.batch_size
+        )
+        if not selected:
+            continue
+        model_slug = MODEL_SPECS[model_id]["run_prefix"]
+        campaign_id = f"auto-{model_slug}-{stamp}"
+        started.append(
+            _launch_model_queue(
+                repository,
+                state_root,
+                args,
+                model_id=model_id,
+                campaign_id=campaign_id,
+                tasks=selected,
+            )
+        )
+    if not started:
         return {
             "event": "cycle-idle",
             "runnable_tasks": len(tasks),
             "inventory": str(inventory_path),
+            "active_models": sorted(active_models),
         }
-    campaign_id = f"auto-2x1-{stamp}"
-    campaign_root = repository / ".nl2repo/model-campaigns/auto" / campaign_id
-    campaign = campaign_root / "campaign.json"
-    eligible_inventory = campaign_root / "eligible-oss-inventory.json"
-    plan = campaign_root / "plan.json"
-    _atomic_write(campaign, _campaign_payload(repository, campaign_id, selected))
-    _atomic_write(eligible_inventory, filtered)
-    command = [
-        str(repository / ".venv/bin/python3"),
-        str(repository / "scripts/run_dual_model_queue.py"),
-        "--campaign",
-        str(campaign),
-        "--run-root",
-        str(repository / ".nl2repo/runs/model/auto" / campaign_id),
-        "--lock-root",
-        str(repository / ".nl2repo/locks/model/auto-2x1"),
-        "--plan-output",
-        str(plan),
-        "--models-file",
-        str(args.models_file),
-        "--existing-inventory",
-        str(eligible_inventory),
-        "--per-model-concurrency",
-        "1",
-        "--agent-timeout-seconds",
-        str(args.agent_timeout_seconds),
-        "--second-model",
-        "opus",
-        "--execute",
-    ]
-    result = _run(command, cwd=repository, timeout=None)
     return {
-        "event": "campaign-complete" if result["exit_code"] == 0 else "campaign-failed",
-        "campaign_id": campaign_id,
-        "tasks": [task.task_id for task in selected],
+        "event": "model-queues-started",
+        "active_models_before": sorted(active_models),
+        "started": started,
         "inventory": str(inventory_path),
-        **result,
     }
 
 
