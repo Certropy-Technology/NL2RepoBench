@@ -1,0 +1,9 @@
+{
+  "upstream_test_command": "GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -count=1 ./...",
+  "upstream_test_files": ["concurrent_map_test.go"],
+  "upstream_test_count": 25,
+  "upstream_benchmark_files": ["concurrent_map_bench_test.go"],
+  "bridge_operations": ["sequence", "lookup", "callbacks", "json", "concurrent", "custom_sharding"],
+  "published_denominator": 1,
+  "collection_source": "private contract.sh custom-json-v1"
+}

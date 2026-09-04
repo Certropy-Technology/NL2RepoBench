@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-concurrent-map",
+  "status": "controls-passed",
+  "terminal_kind": "valid",
+  "source_freeze": {
+    "upstream_url": "https://github.com/orcaman/concurrent-map",
+    "revision": "85296bce05256a80153a9e0c2bf6f4e167a4fe8d",
+    "license_spdx": "MIT",
+    "license_digest": "sha256:24e87a7a28fd918ce1157608adb53962ebee0cb047a901386b9615f934fb61a3",
+    "source_digest": "sha256:8330f9e3a9b9d32e25d587cc5aae885dbafbcba94ce89fafacd35170fa899300",
+    "evidence": "evidence/source-freeze.log",
+    "source_freeze_sha256": "sha256:ea3e057e759abaf5823050625e3c42cdcfe5b3fc2db879ccabec149800535729"
+  },
+  "environment": {
+    "go_version": "1.26.5",
+    "platform": "linux/amd64",
+    "network_mode": "no-network",
+    "module_closure": "standard-library-only private vendor bundle"
+  },
+  "artifacts": {
+    "module_bundle": {"digest":"sha256:4f817efcd8ee4cfb1e4f75ce4e30f17e74811500301bb7eb100e8d7217af4a4a","size_bytes":10240,"path":"/tmp/go-concurrent-map-bundles/module.tar"},
+    "verifier_bundle": {"digest":"sha256:4aba31f2b2f686331f8264d3e076b95a31a2a906b7a9fccab3707081c614b581","size_bytes":10240,"path":"/tmp/go-concurrent-map-bundles/verifier.tar"},
+    "oracle_bundle": {"digest":"sha256:78d511eeb69426cf4ed81d654ea73a264085a1800cd3c09e1c16b1cc98c21b6d","size_bytes":61440,"path":"/tmp/go-concurrent-map-oracle-v4.tar"}
+  },
+  "commands": [
+    {"command":"GOOS=linux GOARCH=amd64 CGO_ENABLED=0 GOWORK=off GOPROXY=off GOSUMDB=off GOTOOLCHAIN=local go test -count=1 ./...","exit_code":0,"evidence":"evidence/dependency-probe.log","evidence_sha256":"sha256:019732f15cdd8a11a184bbc9918a135cd174564171536d6eefcab3a3cb1a66b7"},
+    {"command":"gofmt -d harbor/tests/bridge.go","exit_code":0},
+    {"command":"local bridge contract against frozen upstream","exit_code":0,"result":"go-concurrent-map-contract passed"}
+  ],
+  "final_bundle": {"status":"bound-v9","compiler":"GoHarborCompiler","toolchain":"toolchain.go.lock.toml","bundle_manifest_sha256":"sha256:cf6b6b74a945296947110945f3648e3dfbae7badaa7cc1ce998b787540224d14","oracle_bundle_revision":"v4-offline-source-archive-vet-disabled-go-sum"},
+  "oracle": {"status":"passed","frozen_total":1,"valid":true,"collected":1,"passed":1,"reward":1.0,"grading":{"path":".nl2repo/go-concurrent-map-runs/oracle-v9/go-concurrent-map-oracle-v9-20260904/go-concurrent-map__37Hu5z4/verifier/grading.json","sha256":"sha256:b00d7a553a2fddacea6fa04621bafef45310450fbfe030c859f754ad2e6f6933"},"network":{"path":".nl2repo/go-concurrent-map-runs/oracle-v9/go-concurrent-map-oracle-v9-20260904/go-concurrent-map__37Hu5z4/verifier/network.json","sha256":"sha256:500e8d18ae1228e46e9b829535c9f8c336c49a0e38dcf75981be1cd007606585"},"public_network_available":false},
+  "controls": {"status":"passed","required":["empty","stub","forgery","offline"],"empty":{"valid":true,"collected":0,"passed":0,"reward":0.0,"grading":{"path":".nl2repo/go-concurrent-map-runs/empty-v9/go-concurrent-map-empty-v9-20260904/go-concurrent-map__RD29wAs/verifier/grading.json","sha256":"sha256:f50f1c97834aae0757eb19f7b1926b462c178862bac6df8d7f04e6f4d30db843"},"network":{"path":".nl2repo/go-concurrent-map-runs/empty-v9/go-concurrent-map-empty-v9-20260904/go-concurrent-map__RD29wAs/verifier/network.json","sha256":"sha256:0baf820f731069ca4a766ca9de4100f92d7b9a34316914ae9acefb90d91c8ac4"}},"stub":{"valid":true,"collected":1,"passed":0,"reward":0.0,"grading":{"path":".nl2repo/go-concurrent-map-runs/controls-v9/stub/go-concurrent-map-stub-v9-20260904/go-concurrent-map-stub__nJ5Gnef/verifier/grading.json","sha256":"sha256:770db3ca92e7856ca2aafafc513a44b9f7287cc614932077530145c6ab4ec74d"},"network":{"path":".nl2repo/go-concurrent-map-runs/controls-v9/stub/go-concurrent-map-stub-v9-20260904/go-concurrent-map-stub__nJ5Gnef/verifier/network.json","sha256":"sha256:500e8d18ae1228e46e9b829535c9f8c336c49a0e38dcf75981be1cd007606585"}},"forgery":{"valid":true,"collected":1,"passed":0,"reward":0.0,"verifier_owned_reward":true,"grading":{"path":".nl2repo/go-concurrent-map-runs/controls-v9/forgery/go-concurrent-map-forgery-v9-20260904/go-concurrent-map-forgery__E89ScBJ/verifier/grading.json","sha256":"sha256:770db3ca92e7856ca2aafafc513a44b9f7287cc614932077530145c6ab4ec74d"},"network":{"path":".nl2repo/go-concurrent-map-runs/controls-v9/forgery/go-concurrent-map-forgery-v9-20260904/go-concurrent-map-forgery__E89ScBJ/verifier/network.json","sha256":"sha256:5d3d9a4b1f397381a9db0b85cf6ec016d4ecb642c634a8499627bfdf96d22615"}}},
+  "residual_risks": [
+    "The private CAS artifacts and deterministic production compile were completed by the parent integration lane.",
+    "The published denominator is one verifier-owned custom-json-v1 leaf; upstream tests remain baseline evidence.",
+    "UnmarshalJSON on a zero-value map is not claimed because upstream panics before initialization."
+  ]
+}

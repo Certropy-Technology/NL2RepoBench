@@ -1,0 +1,18 @@
+{
+  "contract_leaf": "go-concurrent-map/public-api",
+  "instruction_sections": {
+    "set_get": ["API Usage Guide", "Implementation Notes"],
+    "callbacks": ["API Usage Guide"],
+    "iteration": ["API Usage Guide"],
+    "json": ["API Usage Guide"],
+    "concurrency": ["Supports", "Implementation Notes"]
+  },
+  "bridge_assertions": {
+    "sequence": ["Set", "MSet", "SetIfAbsent", "Upsert", "RemoveCb", "Count", "IsEmpty", "Items"],
+    "lookup": ["MSet", "Get", "Has", "Count"],
+    "callbacks": ["Upsert", "RemoveCb", "IsEmpty"],
+    "json": ["MarshalJSON", "UnmarshalJSON", "Count", "Items"],
+    "concurrent": ["Set", "Get", "Count"],
+    "custom_sharding": ["NewWithCustomShardingFunction", "Set", "Get", "Count"]
+  }
+}
