@@ -1,0 +1,15 @@
+pyarrow bounded native build probe
+==================================
+authoring_only: true
+runtime_network_used: false
+python: 3.12.11
+build_tools_installed_before_probe: cmake==4.4.3, cython==3.3.0, ninja==1.13.2, numpy==2.5.2, scikit-build-core==1.0.3, setuptools==84.0.0, setuptools-scm==10.2.3
+command: PATH=<probe-venv>/bin:$PATH uv build --wheel --out-dir <handoff>/wheel-out <handoff>/upstream/python
+exit_code: 2
+result: scikit-build-core reached CMake configuration with GCC 16.2.1, CMake 4.4.3, Python 3.12.11, NumPy 2.5.2, and Cython 3.3.0.
+failure_stage: CMake configure at python/CMakeLists.txt:296 find_package(Arrow REQUIRED)
+failure_excerpt: Could not find ArrowConfig.cmake or arrow-config.cmake. Set CMAKE_PREFIX_PATH or Arrow_DIR to a matching Arrow C++ SDK.
+classification: environment
+interpretation: The Python build backend was successfully remediated. The remaining build input is the native Arrow C++ SDK and its transitive dependency closure, not another Python package-index dependency.
+full_authoring_log: /data/NL2RepoBench-integration-20260827/.nl2repo/authoring-live/handoffs/wave10/pyarrow/build-probe-v2.log
+wheel_produced: false

@@ -1,0 +1,26 @@
+rpds-py native build evidence
+
+Command: cargo metadata --locked --format-version 1 --manifest-path upstream/Cargo.toml
+Tool: cargo 1.97.1 / rustc 1.97.1
+Exit code: 0
+Result: 15 registry packages; no git sources.
+
+Command: cargo vendor <private handoff cargo-vendor directory>
+Tool: cargo 1.97.1
+Exit code: 0
+Result: cargo registry closure materialized outside the worktree.
+Private bundle: cargo-vendor.tar
+Private bundle SHA-256: da0215d10c6247bb6989321d9291c3c7054bb8f8cef600f257c491f5226848f1
+Private bundle size: 16179200 bytes
+
+Command: CARGO_NET_OFFLINE=true maturin build --release --locked --interpreter /root/.local/bin/python3.12 --out dist
+Tool: maturin 1.9.6 / CPython 3.12.11 / cargo 1.97.1
+Exit code: 0
+Result: rpds_py-2026.6.3-cp312-cp312-manylinux_2_34_x86_64.whl
+Wheel SHA-256: 2554089e9e5308c6532c81e80e985e0f15978d09ccd315c1223f6d51c56309cf
+Wheel size: 356773 bytes
+
+Command: cargo metadata --locked --offline --format-version 1 --manifest-path upstream/Cargo.toml
+Tool: cargo 1.97.1
+Exit code: 0
+Result: exact dependency graph resolved with no network access.

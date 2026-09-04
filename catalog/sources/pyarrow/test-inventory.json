@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pyarrow",
+  "source_revision": "287c749468bb0254ca910a9053efd04834ec32d6",
+  "framework": "pytest",
+  "inventory_method": "static file/function/decorator count plus source-only collection probe",
+  "test_modules": 56,
+  "static_test_functions": 2123,
+  "parameterize_sites": 403,
+  "dynamic_collected": null,
+  "collection_exit_code": 4,
+  "collection_error": "ImportError while loading python/pyarrow/conftest.py: ModuleNotFoundError: No module named 'pyarrow.lib'",
+  "external_test_data": [
+    {
+      "path": "cpp/submodules/parquet-testing",
+      "revision": "e74785d85a4ecee829e1e405444d6a1b24b8bc9c"
+    },
+    {
+      "path": "testing",
+      "revision": "9ff285c88565f0f6abc855918c6a342e70e4909c"
+    }
+  ],
+  "representative_areas": [
+    "arrays, scalars, schemas, tables, tensors, and memory",
+    "compute, Acero, UDF, and execution plans",
+    "IPC, CSV, JSON, Feather, ORC, and Parquet",
+    "datasets, encryption, filesystems, Flight, CUDA, and Substrait",
+    "pandas, NumPy, Cython, CFFI, DLPack, and extension types"
+  ],
+  "frozen_denominator": null,
+  "status": "blocked-before-collection"
+}

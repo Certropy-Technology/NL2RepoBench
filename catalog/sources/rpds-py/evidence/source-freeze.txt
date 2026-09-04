@@ -1,0 +1,18 @@
+rpds-py source freeze evidence
+
+Command: git clone --no-checkout https://github.com/crate-py/rpds upstream
+Command: git checkout --detach 0c6a30b4016cd3738bc0dd19caba1b004bbee15c
+Tool: git 2.55.0
+Exit code: 0
+Resolved commit: 0c6a30b4016cd3738bc0dd19caba1b004bbee15c
+Resolved tree: f9e00874d6cdfacc1911124670df515806ba428e
+Command: git archive --format=tar HEAD | sha256sum
+Exit code: 0
+Archive SHA-256: b6f7619d8b389a078a84f36b4d84efba056482524f18a6a94b2781d2d1a59d1e
+Archive size: 286720 bytes
+License: MIT
+LICENSE SHA-256: 314e4e91be3baa93c0fb4bccc9e4e97cd643eb839b065af921782c2175fe9909
+
+The source is a Rust/PyO3 cdylib. It has no Python fallback. The committed
+Cargo.lock is the dependency graph for this exact revision; its SHA-256 is
+eb42f3b7f05935fefe44bc19c8416c4ecacb93d81933bb1e7de5678f8b978598.

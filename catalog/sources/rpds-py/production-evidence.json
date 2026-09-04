@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.0",
+  "task_id": "rpds-py",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "environment",
+    "next_step": "Add a reviewed Rust/native compiler adapter that injects the private Cargo vendor closure and native Oracle payload without public projection leakage. Then author a separate child-process verifier with a positive frozen denominator, compile without --allow-incomplete, and run fresh NoNetwork Oracle, empty, installable stub, forgery, install-failure, and offline controls against the final manifest.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/crate-py/rpds",
+      "revision": "0c6a30b4016cd3738bc0dd19caba1b004bbee15c",
+      "tree": "f9e00874d6cdfacc1911124670df515806ba428e",
+      "source_digest": "sha256:b6f7619d8b389a078a84f36b4d84efba056482524f18a6a94b2781d2d1a59d1e",
+      "license_spdx": "MIT",
+      "license_digest": "sha256:314e4e91be3baa93c0fb4bccc9e4e97cd643eb839b065af921782c2175fe9909"
+    },
+    "commands": [
+      {
+        "command": "git checkout --detach 0c6a30b4016cd3738bc0dd19caba1b004bbee15c; git archive --format=tar HEAD | sha256sum; sha256sum LICENSE",
+        "tool_version": "git 2.55.0",
+        "exit_code": 0,
+        "log": {"path": "catalog/sources/rpds-py/evidence/source-freeze.txt", "sha256": "sha256:7e4a7139b822e8f5c4c95657f2ea19e0d986edcaac10a0c7c47b7c17b595b57a"}
+      },
+      {
+        "command": "cargo metadata --locked --offline --format-version 1 --manifest-path upstream/Cargo.toml",
+        "tool_version": "cargo 1.97.1 / rustc 1.97.1",
+        "exit_code": 0,
+        "log": {"path": "catalog/sources/rpds-py/evidence/native-build.txt", "sha256": "sha256:4356155374aca862ba4e274131cca13c7b1289b34fc54f03a85af04e3010cdd5"}
+      },
+      {
+        "command": "CARGO_NET_OFFLINE=true maturin build --release --locked --interpreter /root/.local/bin/python3.12 --out dist",
+        "tool_version": "maturin 1.9.6 / CPython 3.12.11",
+        "exit_code": 0,
+        "log": {"path": "catalog/sources/rpds-py/evidence/native-build.txt", "sha256": "sha256:4356155374aca862ba4e274131cca13c7b1289b34fc54f03a85af04e3010cdd5"}
+      },
+      {
+        "command": "cd upstream && test-venv/bin/python -m pytest -q -c pyproject.toml tests",
+        "tool_version": "CPython 3.12.11 / pytest 9.0.3",
+        "exit_code": 0,
+        "log": {"path": "catalog/sources/rpds-py/evidence/test-probe.txt", "sha256": "sha256:7ca8a2a837f224b829b3397aa741db06c62426a64dbfeb20af50b81ac74f2da1"}
+      },
+      {
+        "command": "Current Python Harbor compiler capability review for Rust/Cargo native payloads and private Oracle transport",
+        "tool_version": "nl2repobench current checkout",
+        "exit_code": 1,
+        "log": {"path": "catalog/sources/rpds-py/evidence/compiler-gap.txt", "sha256": "sha256:9ff2b8cc06d95cf68363bda80447db6b1e062056b7daceb04a198056fadf68b4"}
+      }
+    ],
+    "artifacts": {
+      "source_archive": {"digest": "sha256:b6f7619d8b389a078a84f36b4d84efba056482524f18a6a94b2781d2d1a59d1e", "size_bytes": 286720},
+      "cargo_vendor_bundle": {"digest": "sha256:da0215d10c6247bb6989321d9291c3c7054bb8f8cef600f257c491f5226848f1", "size_bytes": 16179200, "visibility": "private"},
+      "native_oracle_bundle": {"digest": "sha256:f7f7766b080b3270335a8807ce917865675147657403ef59240834add9702705", "size_bytes": 655360, "visibility": "private"},
+      "native_wheel": {"digest": "sha256:2554089e9e5308c6532c81e80e985e0f15978d09ccd315c1223f6d51c56309cf", "size_bytes": 356773, "visibility": "private"}
+    },
+    "test_inventory": "catalog/sources/rpds-py/test-inventory.json",
+    "api_inventory": "catalog/sources/rpds-py/api-inventory.json",
+    "handoff_directory": ".nl2repo/authoring-live/handoffs/wave10/rpds-py/"
+  }
+}

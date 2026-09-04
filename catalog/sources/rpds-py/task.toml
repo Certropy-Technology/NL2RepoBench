@@ -1,0 +1,72 @@
+schema_version = "1.0"
+task_id = "rpds-py"
+version = "0.1.0"
+instruction = "blocked.md"
+
+[metadata]
+difficulty = "hard"
+category = "persistent-data-structures"
+tags = ["python", "rust", "pyo3", "persistent", "immutable", "native", "blocked"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/crate-py/rpds"
+revision = "0c6a30b4016cd3738bc0dd19caba1b004bbee15c"
+license_spdx = "MIT"
+source_digest = "sha256:b6f7619d8b389a078a84f36b4d84efba056482524f18a6a94b2781d2d1a59d1e"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.11"
+os_name = "debian-12-amd64"
+base_image = "python:3.12.14-slim-bookworm"
+base_image_digest = "sha256:782412e85d0f0984994c290652577d4018aff08145c85b262bb63dc0c7522254"
+system_packages = ["cargo", "rustc"]
+network_mode = "no-network"
+build_command = "Build the PyO3 extension with the frozen Cargo.lock and a private vendored Cargo registry closure."
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "The exact Rust registry closure was frozen for authoring, but the current Python Harbor compiler has no Cargo/vendor build lane or native Oracle transport. Agent, candidate, verifier, Oracle, and controls must remain network-isolated."
+
+[dependencies]
+status = "unknown"
+installer = "unknown"
+packages = ["maturin==1.9.6", "archery==1.2.3", "pyo3==0.29.2", "rpds==1.2.1"]
+
+[tests]
+framework = "pytest"
+expected_total = 0
+expected_total_source = "unknown"
+commands = []
+protected_paths = []
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Blocked rpds-py candidate: the exact PyO3/Rust source and Cargo closure are frozen, but the current Python Harbor compiler has no supported native Rust build and Oracle transport lane."
+keywords = ["python", "rust", "pyo3", "persistent", "immutable", "native", "blocked"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 960.0
+candidate_install_timeout_sec = 240.0
+candidate_total_timeout_sec = 600.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "blocked"
+owner = "wave10-16-rpds-py"
+reason = "The assigned revision is a native PyO3 extension with no Python fallback. A bounded authoring probe built its CPython 3.12 wheel offline and passed 132/132 upstream tests, but production packaging cannot express the required Rust/Cargo closure or private native Oracle payload under the current Python compiler without a new compiler lane or public native-wheel leakage."

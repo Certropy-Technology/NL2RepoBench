@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "task_id": "rpds-py",
+  "source_revision": "0c6a30b4016cd3738bc0dd19caba1b004bbee15c",
+  "framework": "pytest",
+  "upstream_test_files": [
+    {"path": "tests/test_hash_trie_map.py", "test_functions": 45},
+    {"path": "tests/test_hash_trie_set.py", "test_functions": 21},
+    {"path": "tests/test_list.py", "test_functions": 19},
+    {"path": "tests/test_queue.py", "test_functions": 17},
+    {"path": "tests/test_stack.py", "test_functions": 16}
+  ],
+  "local_collection": {"collected": 132, "passed": 132, "failed": 0, "exit_code": 0, "python": "3.12.11"},
+  "production_frozen_total": 0,
+  "production_status": "blocked",
+  "reason": "A separate verifier and production fixed denominator were not authored because the current Python compiler cannot inject the native Rust/Cargo lane required by this package."
+}

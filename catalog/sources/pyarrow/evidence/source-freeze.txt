@@ -1,0 +1,22 @@
+pyarrow source freeze
+=====================
+command: git init <handoff>/upstream; git remote add origin https://github.com/apache/arrow; git fetch --depth=1 origin 287c749468bb0254ca910a9053efd04834ec32d6; git checkout --detach FETCH_HEAD
+exit_code: 0
+git_version: 2.55.0
+upstream: https://github.com/apache/arrow
+revision: 287c749468bb0254ca910a9053efd04834ec32d6
+tree: d7e407b64c5039481a84b048c09875aa1d5c6064
+commit_date: 2026-09-04T17:30:30+05:30
+archive_command: git archive --format=tar HEAD
+archive_sha256: cb7d1779cdb97f3223f40291281e60b31e1f5a6f9a486eb3ad25e7521df595c7
+archive_size_bytes: 69007360
+license_path: LICENSE.txt
+license_spdx: Apache-2.0
+license_sha256: d1c981370f1ffd4edcdd2fb3565c8939cc40c75e24e1f92d581d04e54f0dff81
+notice_path: NOTICE.txt
+notice_sha256: afd895d61a00101f6d5a41cf518c83865d815e8109e956f512a0ce4ea9738c06
+python_pyproject_sha256: 405bb3632f869a9a690e811f066d1f3727a95138c59a6fadb7925726265c6eee
+submodule: cpp/submodules/parquet-testing e74785d85a4ecee829e1e405444d6a1b24b8bc9c (not materialized)
+submodule: testing 9ff285c88565f0f6abc855918c6a342e70e4909c (not materialized)
+private_source_archive: /data/NL2RepoBench-integration-20260827/.nl2repo/authoring-live/handoffs/wave10/pyarrow/source.tar
+runtime_network_used: false

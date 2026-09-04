@@ -1,0 +1,65 @@
+schema_version = "1.0"
+task_id = "pyarrow"
+version = "0.1.0"
+instruction = "blocked.md"
+
+[metadata]
+difficulty = "hard"
+category = "columnar-computing"
+tags = ["python", "cpp", "cython", "native-extension", "apache-arrow", "blocked", "no-network"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/apache/arrow"
+revision = "287c749468bb0254ca910a9053efd04834ec32d6"
+license_spdx = "Apache-2.0"
+source_digest = "sha256:cb7d1779cdb97f3223f40291281e60b31e1f5a6f9a486eb3ad25e7521df595c7"
+submodules = [
+  "cpp/submodules/parquet-testing@e74785d85a4ecee829e1e405444d6a1b24b8bc9c",
+  "testing@9ff285c88565f0f6abc855918c6a342e70e4909c",
+]
+
+[environment]
+status = "unknown"
+python_version = "3.12.11"
+os_name = "linux-amd64"
+system_packages = ["Arrow C++ SDK and transitive native libraries are not frozen"]
+network_mode = "no-network"
+build_command = "A bounded authoring probe used scikit-build-core 1.0.3, CMake 4.4.3, Cython 3.3.0, Ninja 1.13.2, and NumPy 2.5.2; configuration stopped because ArrowConfig.cmake was unavailable."
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "Agent, candidate, verifier, Oracle, and every control must run without egress. The exact Arrow C++ SDK, native transitive closure, source-derived PyArrow wheel, and test-data submodules have not been frozen into approved private artifacts."
+
+[dependencies]
+status = "unknown"
+installer = "pip"
+packages = [
+  "scikit-build-core>=1.0",
+  "cython>=3.1",
+  "numpy>=2.0",
+  "setuptools-scm[toml]>=8",
+  "Arrow C++ SDK and native transitive closure (not frozen)",
+]
+
+[tests]
+framework = "pytest"
+expected_total = 0
+expected_total_source = "unknown"
+commands = []
+protected_paths = []
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[lifecycle]
+status = "blocked"
+owner = "wave10-pyarrow"
+reason = "The exact PyArrow source is frozen, but it cannot be built or collected from the Python tree alone: the build requires a matching Arrow C++ SDK and native libraries, and pytest imports the missing compiled pyarrow.lib extension. A faithful production task also needs the two pinned test-data submodules, an approved private native Oracle payload, and a reviewed child-process protocol for Arrow arrays, schemas, buffers, IPC, filesystems, datasets, and compute values. No runtime, Oracle, controls, denominator, or reward is claimed."

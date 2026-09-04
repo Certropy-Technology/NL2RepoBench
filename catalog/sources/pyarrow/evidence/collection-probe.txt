@@ -1,0 +1,12 @@
+pyarrow source-only collection probe
+====================================
+authoring_only: true
+runtime_network_used: false
+python: 3.14.6
+command: cd <handoff>/upstream/python && python3 -m pytest --collect-only -q pyarrow/tests
+exit_code: 4
+failure_stage: conftest import
+failure: ImportError while loading python/pyarrow/conftest.py; pyarrow/__init__.py imports pyarrow.lib; ModuleNotFoundError: No module named 'pyarrow.lib'
+collected: unknown
+frozen_denominator: not established
+full_authoring_log: /data/NL2RepoBench-integration-20260827/.nl2repo/authoring-live/handoffs/wave10/pyarrow/collect.log

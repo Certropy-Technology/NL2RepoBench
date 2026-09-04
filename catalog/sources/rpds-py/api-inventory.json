@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "task_id": "rpds-py",
+  "source_revision": "0c6a30b4016cd3738bc0dd19caba1b004bbee15c",
+  "module": "rpds",
+  "native": true,
+  "python_fallback": false,
+  "classes": {
+    "HashTrieMap": ["__init__", "__contains__", "__getitem__", "__iter__", "__len__", "__repr__", "__hash__", "get", "keys", "values", "items", "insert", "remove", "discard", "update", "convert", "fromkeys"],
+    "HashTrieSet": ["__init__", "__contains__", "__iter__", "__len__", "__repr__", "__hash__", "insert", "remove", "discard", "update", "union", "intersection", "difference", "symmetric_difference"],
+    "List": ["__init__", "__iter__", "__len__", "__repr__", "__hash__", "__reversed__", "first", "rest", "push_front", "drop_first"],
+    "Stack": ["__init__", "__iter__", "__len__", "__repr__", "__hash__", "peek", "pop", "push"],
+    "Queue": ["__init__", "__iter__", "__len__", "__repr__", "__hash__", "peek", "is_empty", "dequeue", "enqueue"]
+  },
+  "risk_flags": ["native", "rust-build", "persistent-object-identity", "pickle", "hashing"],
+  "cargo_lock": {
+    "digest": "sha256:eb42f3b7f05935fefe44bc19c8416c4ecacb93d81933bb1e7de5678f8b978598",
+    "registry_packages": 15,
+    "git_sources": 0
+  },
+  "scanner_identity": "manual-rust-pyo3-inventory-v1"
+}

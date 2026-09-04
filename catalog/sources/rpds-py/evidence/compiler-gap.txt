@@ -1,0 +1,20 @@
+rpds-py production compiler gap
+
+The current Python Harbor compiler requires a hash-locked pip dependency lock,
+does not provide a Cargo/vendor build contract, and extracts a private
+oracle_bundle into the generated solution. rpds-py is a native PyO3 cdylib with
+no Python fallback, so a faithful Oracle requires a native wheel or a source
+plus Cargo closure. The current Python projection cannot carry that private
+native payload without violating the repository's native-wheel and public
+projection boundary.
+
+The authoring remediation did freeze both payload classes outside the worktree:
+source.tar SHA-256 b6f7619d8b389a078a84f36b4d84efba056482524f18a6a94b2781d2d1a59d1e,
+native-oracle.tar SHA-256 f7f7766b080b3270335a8807ce917865675147657403ef59240834add9702705,
+and cargo-vendor.tar SHA-256 da0215d10c6247bb6989321d9291c3c7054bb8f8cef600f257c491f5226848f1.
+
+Required next action: add a reviewed Rust/native compiler adapter that injects
+the private Cargo closure and native Oracle payload without public projection
+leakage; then author a separate child-process verifier, freeze its positive
+denominator, compile a final task, and run fresh NoNetwork Oracle, empty, stub,
+forgery, install-failure, and offline controls.

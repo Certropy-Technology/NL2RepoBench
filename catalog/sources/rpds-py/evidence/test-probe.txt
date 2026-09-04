@@ -1,0 +1,17 @@
+rpds-py test probe evidence
+
+Initial command: pytest -q upstream/tests
+Exit code: 4
+Reason: the parent repository's pytest configuration injected
+--cov=nl2repobench and --cov-fail-under=80; this was a harness configuration
+error, not a test or source failure.
+
+Corrected command: cd upstream && test-venv/bin/python -m pytest -q -c pyproject.toml tests
+Tool: CPython 3.12.11 / pytest 9.0.3 / rpds-py native wheel built from the
+assigned revision
+Exit code: 0
+Result: 132 passed in 0.54s; 132 collected, 0 failed.
+
+The wheel was installed into a clean task-local virtual environment before the
+corrected test command. No candidate, verifier, Oracle, or control runtime was
+started; all future runtime phases remain required to use network_mode=no-network.

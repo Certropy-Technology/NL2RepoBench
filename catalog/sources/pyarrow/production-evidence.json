@@ -1,0 +1,72 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pyarrow",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "environment",
+    "next_step": "Approve a bounded PyArrow public API scope or require the full native package; then reproducibly build the exact Arrow C++ SDK and source-derived PyArrow wheel with all native dependencies and both pinned test-data submodules as hash-locked private artifacts. Provide an approved out-of-projection private native Oracle payload, implement a reviewed child-side protocol for Arrow values/resources, collect a positive denominator in a clean NoNetwork image, compile, and run fresh Oracle, empty, installable stub, forgery, and offline controls.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/apache/arrow",
+      "revision": "287c749468bb0254ca910a9053efd04834ec32d6",
+      "tree": "d7e407b64c5039481a84b048c09875aa1d5c6064",
+      "source_digest": "sha256:cb7d1779cdb97f3223f40291281e60b31e1f5a6f9a486eb3ad25e7521df595c7",
+      "archive_size_bytes": 69007360,
+      "license_spdx": "Apache-2.0",
+      "license_path": "LICENSE.txt",
+      "license_digest": "sha256:d1c981370f1ffd4edcdd2fb3565c8939cc40c75e24e1f92d581d04e54f0dff81",
+      "notice_path": "NOTICE.txt",
+      "notice_digest": "sha256:afd895d61a00101f6d5a41cf518c83865d815e8109e956f512a0ce4ea9738c06",
+      "submodules": [
+        {"path": "cpp/submodules/parquet-testing", "revision": "e74785d85a4ecee829e1e405444d6a1b24b8bc9c", "materialized": false},
+        {"path": "testing", "revision": "9ff285c88565f0f6abc855918c6a342e70e4909c", "materialized": false}
+      ]
+    },
+    "commands": [
+      {
+        "command": "git init <handoff>/upstream; git remote add origin https://github.com/apache/arrow; git fetch --depth=1 origin 287c749468bb0254ca910a9053efd04834ec32d6; git checkout --detach FETCH_HEAD; git archive --format=tar HEAD",
+        "tool_version": "git version 2.55.0",
+        "exit_code": 0,
+        "log": {"path": "catalog/sources/pyarrow/evidence/source-freeze.txt", "sha256": "sha256:fe6380b5fe7054990a093228113839fd023e76b038d57dfa1dc53e84e139263f"}
+      },
+      {
+        "command": "PATH=<probe-venv>/bin:$PATH uv build --wheel --out-dir <handoff>/wheel-out <handoff>/upstream/python",
+        "tool_version": "uv 0.11.2; Python 3.12.11; scikit-build-core 1.0.3; CMake 4.4.3; Cython 3.3.0; Ninja 1.13.2; NumPy 2.5.2",
+        "exit_code": 2,
+        "log": {"path": "catalog/sources/pyarrow/evidence/build-probe.txt", "sha256": "sha256:74685b2ab16eab81b6039e68adb122c932b5b8b654e8fbdc6bd520e23185e414"}
+      },
+      {
+        "command": "cd <handoff>/upstream/python && python3 -m pytest --collect-only -q pyarrow/tests",
+        "tool_version": "CPython 3.14.6; pytest 9.0.2",
+        "exit_code": 4,
+        "log": {"path": "catalog/sources/pyarrow/evidence/collection-probe.txt", "sha256": "sha256:c276819a187b0e3d33b7e09cebfa3ffdc745dc30219c9893ac8e8c5fdcc12995"}
+      },
+      {
+        "command": "static source, build metadata, API, test, Cython, C++, CMake, and submodule inventory",
+        "tool_version": "CPython 3.14.6 ast; ripgrep 15.1.0; git 2.55.0",
+        "exit_code": 0,
+        "log": {"path": "catalog/sources/pyarrow/evidence/boundary-assessment.txt", "sha256": "sha256:71c10509841afdb61ee42d4beeb95a5373dfd9bffaf4919aa1e6d20f092a68e3"}
+      }
+    ],
+    "observations": {
+      "build_backend_remediated": true,
+      "arrow_cpp_sdk_frozen": false,
+      "source_derived_wheel_built": false,
+      "test_submodules_materialized": false,
+      "dynamic_collection_completed": false,
+      "frozen_denominator": null,
+      "faithful_child_protocol": false,
+      "official_harbor_started": false,
+      "oracle_claimed": false,
+      "controls_claimed": false
+    },
+    "network_policy": {
+      "mode": "no-network",
+      "allowed_hosts": [],
+      "offline_dependencies": "missing",
+      "reference_source_fetch": "forbidden"
+    },
+    "api_inventory": "catalog/sources/pyarrow/api-inventory.json",
+    "test_inventory": "catalog/sources/pyarrow/test-inventory.json"
+  }
+}

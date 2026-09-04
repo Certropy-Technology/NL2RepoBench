@@ -1,0 +1,18 @@
+pyarrow verifier boundary assessment
+=====================================
+command: static source, build metadata, API, test, Cython, C++, CMake, and submodule inventory at revision 287c749468bb0254ca910a9053efd04834ec32d6
+tool_versions: CPython 3.14.6 ast; ripgrep 15.1.0; git 2.55.0
+exit_code: 0
+failure_class: verifier
+python_cython_and_include_files: 148
+top_level_pyx_modules: 23
+top_level_pxi_fragments: 17
+cpp_source_and_header_files: 1740
+cmake_projects: 56
+python_test_modules: 56
+static_test_functions: 2123
+parameterize_sites: 403
+native_root_import: pyarrow.lib
+external_test_submodules: cpp/submodules/parquet-testing, testing
+unsupported_current_boundary: native buffers and zero-copy views; schemas and extension types; C data and DLPack capsules; memory pools and file handles; IPC streams; callbacks; optional filesystem, Flight, and CUDA resources
+conclusion: The current separate verifier has no reviewed child-side serialization/session protocol for the package's native values and resources. A runtime-only or small pure-Python smoke contract would not faithfully represent the discovered PyArrow package without an approved scope decision.
