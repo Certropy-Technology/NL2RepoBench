@@ -22,8 +22,9 @@ reference_source_fetch = "forbidden"
 reason = "The audit lacks a locked dependency/image closure and separate verifier."
 [dependencies]
 status = "unknown"
-installer = "pip"
+package_manager = "pip"
 packages = []
+
 [tests]
 framework = "pytest"
 expected_total = 0

@@ -35,15 +35,35 @@ reference_source_fetch = "forbidden"
 reason = "Third-party build and test dependencies are installed during the Docker build phase, which has network. The agent phase therefore needs no egress. A model provider host, when an in-container agent needs one, is injected per run via Harbor agent.extra_allowed_hosts instead of being pinned in task metadata."
 [dependencies]
 status = "known"
-installer = "pip"
+package_manager = "pip"
 packages = [
-  "SQLAlchemy==2.0.43",
-  "tablib==3.8.0",
-  "openpyxl==3.1.5",
-  "docopt==0.6.2",
-  "psycopg2-binary==2.9.10",
+    "SQLAlchemy==2.0.43",
+    "tablib==3.8.0",
+    "openpyxl==3.1.5",
+    "docopt==0.6.2",
+    "psycopg2-binary==2.9.10",
 ]
-lock_artifact = { digest = "sha256:f034fa0d95dd21401e1a7ed3db5c9d5f4170e97fc20809c049d4ccbf9b9c10ca", size_bytes = 1030, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:f034fa0d95dd21401e1a7ed3db5c9d5f4170e97fc20809c049d4ccbf9b9c10ca", visibility = "private" }
+
+[dependencies.lock]
+digest = "sha256:eb681433fb7bf21d440a543d52806a7b14393fcf4594678f3ea8a0c418e7fbc6"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:eb681433fb7bf21d440a543d52806a7b14393fcf4594678f3ea8a0c418e7fbc6"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:b912cc55e950857d2d114559e1657afa9d500570dc2fa4ea1716d316e784be2f"
+size_bytes = 998
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:b912cc55e950857d2d114559e1657afa9d500570dc2fa4ea1716d316e784be2f"
+visibility = "private"
 
 [tests]
 framework = "pytest"

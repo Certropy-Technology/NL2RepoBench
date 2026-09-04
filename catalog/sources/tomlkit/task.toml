@@ -24,8 +24,9 @@ reference_source_fetch = "forbidden"
 reason = "Rich mutable internals and test dependencies lack a frozen offline verifier contract."
 [dependencies]
 status = "unknown"
-installer = "pip"
+package_manager = "pip"
 packages = []
+
 [tests]
 framework = "pytest"
 expected_total = 0

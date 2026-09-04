@@ -35,20 +35,40 @@ reason = "The hash-locked httpx runtime and setuptools build backend are install
 
 [dependencies]
 status = "known"
-installer = "pip"
+package_manager = "pip"
 packages = [
-  "anyio==4.14.2",
-  "certifi==2026.7.22",
-  "h11==0.16.0",
-  "httpcore==1.0.9",
-  "httpx==0.28.1",
-  "idna==3.19",
-  "packaging==26.3",
-  "setuptools==80.9.0",
-  "typing-extensions==4.16.0",
-  "wheel==0.46.1",
+    "anyio==4.14.2",
+    "certifi==2026.7.22",
+    "h11==0.16.0",
+    "httpcore==1.0.9",
+    "httpx==0.28.1",
+    "idna==3.19",
+    "packaging==26.3",
+    "setuptools==80.9.0",
+    "typing-extensions==4.16.0",
+    "wheel==0.46.1",
 ]
-lock_artifact = { digest = "sha256:c040982d796cdcbcccba3aca9e8abc7f0353f4220a9d9b98fda1650b37a74adf", size_bytes = 2336, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:c040982d796cdcbcccba3aca9e8abc7f0353f4220a9d9b98fda1650b37a74adf", visibility = "private" }
+
+[dependencies.lock]
+digest = "sha256:f02c6c93ff6cb2ffd9484e1aac1630af643068bf1590dc1a4adedf0d5ae06f1e"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:f02c6c93ff6cb2ffd9484e1aac1630af643068bf1590dc1a4adedf0d5ae06f1e"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:6045314a89795d18f6686fd5c5db36f48f6a7c60c74829e19dc7610644984986"
+size_bytes = 998
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:6045314a89795d18f6686fd5c5db36f48f6a7c60c74829e19dc7610644984986"
+visibility = "private"
 
 [tests]
 framework = "pytest"

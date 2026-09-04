@@ -32,7 +32,7 @@ reason = "BLOCKER: dependency closure is not yet frozen (dependencies.status=unk
 
 [dependencies]
 status = "unknown"
-installer = "pip"
+package_manager = "pip"
 packages = []
 
 [tests]

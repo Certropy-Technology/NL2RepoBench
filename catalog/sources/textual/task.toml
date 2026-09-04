@@ -35,9 +35,40 @@ reason = "Hash-locked Python dependencies are installed during Docker build; can
 
 [dependencies]
 status = "known"
-installer = "pip"
-packages = ["linkify-it-py==2.1.0", "markdown-it-py==4.2.0", "mdit-py-plugins==0.6.1", "mdurl==0.1.2", "platformdirs==4.11.3", "poetry-core==2.2.1", "pygments==2.21.0", "rich==15.0.0", "typing-extensions==4.16.0", "uc-micro-py==2.0.0"]
-lock_artifact = { digest = "sha256:a3a41659d2b2a9f2d37b1ab47273e9337b5f59c3667f623bfede67de76a49f09", size_bytes = 3011, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:a3a41659d2b2a9f2d37b1ab47273e9337b5f59c3667f623bfede67de76a49f09", visibility = "private" }
+package_manager = "pip"
+packages = [
+    "linkify-it-py==2.1.0",
+    "markdown-it-py==4.2.0",
+    "mdit-py-plugins==0.6.1",
+    "mdurl==0.1.2",
+    "platformdirs==4.11.3",
+    "poetry-core==2.2.1",
+    "pygments==2.21.0",
+    "rich==15.0.0",
+    "typing-extensions==4.16.0",
+    "uc-micro-py==2.0.0",
+]
+
+[dependencies.lock]
+digest = "sha256:a89f9b39205a8d0f1ddc3abf7986de82fb86246026c18cf06fd9e2d2d0d31f9f"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:a89f9b39205a8d0f1ddc3abf7986de82fb86246026c18cf06fd9e2d2d0d31f9f"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:679e0be83bc3fd24ca24ee76446e98df3b32a9856204f07ad84ae26d2812d61f"
+size_bytes = 998
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:679e0be83bc3fd24ca24ee76446e98df3b32a9856204f07ad84ae26d2812d61f"
+visibility = "private"
 
 [tests]
 framework = "pytest"

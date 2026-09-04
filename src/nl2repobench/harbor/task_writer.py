@@ -110,6 +110,7 @@ def write_file_manifest(
 
 __all__ = [
     "TaskWriterError",
+    "PYTHON_VERIFIER_FILES",
     "copy_tree",
     "extract_private_bundle",
     "write_file_manifest",
@@ -117,7 +118,7 @@ __all__ = [
 ]
 
 
-_PYTHON_VERIFIER_FILES = (
+PYTHON_VERIFIER_FILES = (
     "__init__.py",
     "domain/__init__.py",
     "domain/canonical.py",
@@ -134,6 +135,7 @@ _PYTHON_VERIFIER_FILES = (
     "verification/candidate_client.py",
     "verification/candidate_install.py",
     "verification/candidate_runner.py",
+    "verification/candidate_process_cli.py",
     "verification/command_plan.py",
     "verification/custom_verifier.py",
     "verification/evaluator.py",
@@ -144,6 +146,8 @@ _PYTHON_VERIFIER_FILES = (
     "verification/java_bridge.py",
     "verification/java_grader.py",
     "verification/java_process.py",
+    "verification/java_private_artifacts.py",
+    "verification/subprocess_supervisor.py",
     "verification/go_supervisor.py",
     "verification/grader.py",
     "verification/integrity.py",
@@ -168,11 +172,17 @@ _PYTHON_VERIFIER_FILES = (
 )
 
 
-def copy_python_verifier_runtime(destination: Path) -> None:
-    """Copy the complete trusted Python normalization/evaluation runtime."""
+def copy_python_verifier_runtime(
+    destination: Path, *, include_java_private: bool = False
+) -> None:
+    """Copy the trusted Python normalization/evaluation runtime."""
 
     package_root = Path(__file__).parents[1]
-    for relative in _PYTHON_VERIFIER_FILES:
+    for relative in PYTHON_VERIFIER_FILES:
+        if not include_java_private and relative in {
+            "verification/java_private_artifacts.py",
+        }:
+            continue
         source = package_root / relative
         if not source.is_file():
             raise TaskWriterError(f"canonical verifier runtime file is missing: {relative}")

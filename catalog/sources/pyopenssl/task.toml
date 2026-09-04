@@ -35,9 +35,36 @@ reason = "Dependencies are installed during image build from the private hash lo
 
 [dependencies]
 status = "known"
-installer = "pip"
-packages = ["cffi==2.1.1", "cryptography==50.0.0", "pycparser==3.0", "setuptools==75.8.0", "typing-extensions==4.16.0", "wheel==0.45.1"]
-lock_artifact = { digest = "sha256:d79d470276f63bd47c296f4cc7467a883442b4eb85e9863fa4af236d517e3b95", size_bytes = 13574, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:d79d470276f63bd47c296f4cc7467a883442b4eb85e9863fa4af236d517e3b95", visibility = "private" }
+package_manager = "pip"
+packages = [
+    "cffi==2.1.1",
+    "cryptography==50.0.0",
+    "pycparser==3.0",
+    "setuptools==75.8.0",
+    "typing-extensions==4.16.0",
+    "wheel==0.45.1",
+]
+
+[dependencies.lock]
+digest = "sha256:5950548fc6d85f6964fbf5bc2ea96911fd580f20262d3a969055c2466de0bf06"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:5950548fc6d85f6964fbf5bc2ea96911fd580f20262d3a969055c2466de0bf06"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:e6555779880f316fd903fa60490acd724de74b44df92f64693d42614b00d2272"
+size_bytes = 1000
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:e6555779880f316fd903fa60490acd724de74b44df92f64693d42614b00d2272"
+visibility = "private"
 
 [tests]
 framework = "pytest"

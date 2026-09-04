@@ -35,24 +35,44 @@ reason = "The candidate and verifier dependency closures are installed during Do
 
 [dependencies]
 status = "known"
-installer = "pip"
+package_manager = "pip"
 packages = [
-  "anyio==4.14.2",
-  "certifi==2026.7.22",
-  "h11==0.16.0",
-  "h2==4.4.1",
-  "hatch-fancy-pypi-readme==25.1.0",
-  "hatchling==1.27.0",
-  "hpack==4.2.0",
-  "hyperframe==6.1.0",
-  "idna==3.19",
-  "packaging==26.3",
-  "pathspec==1.1.1",
-  "pluggy==1.6.0",
-  "trove-classifiers==2026.6.1.19",
-  "typing-extensions==4.16.0",
+    "anyio==4.14.2",
+    "certifi==2026.7.22",
+    "h11==0.16.0",
+    "h2==4.4.1",
+    "hatch-fancy-pypi-readme==25.1.0",
+    "hatchling==1.27.0",
+    "hpack==4.2.0",
+    "hyperframe==6.1.0",
+    "idna==3.19",
+    "packaging==26.3",
+    "pathspec==1.1.1",
+    "pluggy==1.6.0",
+    "trove-classifiers==2026.6.1.19",
+    "typing-extensions==4.16.0",
 ]
-lock_artifact = { digest = "sha256:dc2a13a34eb0da9ba22a1de076a125e02a98403b015d5729ebfdf24dd51733b5", size_bytes = 3653, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:dc2a13a34eb0da9ba22a1de076a125e02a98403b015d5729ebfdf24dd51733b5", visibility = "private" }
+
+[dependencies.lock]
+digest = "sha256:aa3939e217a3a749ebfbd501346ac9d516da631802b5cf233b25104d1647ba0b"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:aa3939e217a3a749ebfbd501346ac9d516da631802b5cf233b25104d1647ba0b"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:f92a3d5dd976e6faf885dcc0a758b3191fa8c6cbf3a623d1cff100a599d4798a"
+size_bytes = 998
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:f92a3d5dd976e6faf885dcc0a758b3191fa8c6cbf3a623d1cff100a599d4798a"
+visibility = "private"
 
 [tests]
 framework = "pytest"

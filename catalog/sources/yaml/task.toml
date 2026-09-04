@@ -22,14 +22,9 @@ reference_source_fetch = "forbidden"
 reason = "The npm build/cache closure and structured node:test verifier are not frozen."
 [dependencies]
 status = "unknown"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
+packages = []
+
 [tests]
 framework = "node:test"
 report_format = "node-test-json-v1"

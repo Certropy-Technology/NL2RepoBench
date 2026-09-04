@@ -6,7 +6,16 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "hard"
 category = "data-model"
-tags = ["python", "data-model", "dataclass-transform", "validators", "converters", "repository-generation", "pytest", "separate-verifier"]
+tags = [
+    "python",
+    "data-model",
+    "dataclass-transform",
+    "validators",
+    "converters",
+    "repository-generation",
+    "pytest",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -14,7 +23,6 @@ status = "known"
 upstream_url = "https://github.com/python-attrs/attrs"
 revision = "c1dc5dcba16ed827aa6dcad896b41a3afedb4e32"
 license_spdx = "MIT"
-# Unprefixed `git archive --format=tar HEAD` from the detached revision.
 source_digest = "sha256:c7ebd671099d268790f83a2bc3e51b0dc3844bafd41a71b9768567e656538fac"
 submodules = []
 
@@ -34,37 +42,68 @@ reason = "The candidate build closure is installed during Docker build; the agen
 
 [dependencies]
 status = "known"
-installer = "pip"
+package_manager = "pip"
 packages = [
-  "hatch-fancy-pypi-readme==25.1.0",
-  "hatch-vcs==0.5.0",
-  "hatchling==1.27.0",
-  "packaging==26.3",
-  "pathspec==1.1.1",
-  "pluggy==1.6.0",
-  "setuptools==84.0.0",
-  "setuptools-scm==10.2.1",
-  "trove-classifiers==2026.6.1.19",
-  "vcs-versioning==2.3.1",
+    "hatch-fancy-pypi-readme==25.1.0",
+    "hatch-vcs==0.5.0",
+    "hatchling==1.27.0",
+    "packaging==26.3",
+    "pathspec==1.1.1",
+    "pluggy==1.6.0",
+    "setuptools==84.0.0",
+    "setuptools-scm==10.2.1",
+    "trove-classifiers==2026.6.1.19",
+    "vcs-versioning==2.3.1",
 ]
-lock_artifact = { digest = "sha256:1cf14dce7bdbfee65cfc65d14a519fa3084f0b9e09223a6e8668225f6610c201", size_bytes = 2377, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:1cf14dce7bdbfee65cfc65d14a519fa3084f0b9e09223a6e8668225f6610c201", visibility = "private" }
+
+[dependencies.lock]
+digest = "sha256:d047d708503d49bac537db9780087a58f4f627bf4f4fb065e6de00cee43c2716"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:d047d708503d49bac537db9780087a58f4f627bf4f4fb065e6de00cee43c2716"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:29d7f60c8a00012dbf5adfcdbef13027652f51e343fccc1c720590c5e25a2c82"
+size_bytes = 998
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:29d7f60c8a00012dbf5adfcdbef13027652f51e343fccc1c720590c5e25a2c82"
+visibility = "private"
 
 [tests]
 framework = "pytest"
 expected_total = 20
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
+commands = [
+    "custom-json-v1 verifier entrypoint",
+]
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
+passed_statuses = [
+    "passed",
+]
 excluded_statuses = []
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Build the pinned attrs class-building library from an empty workspace; grading uses deterministic allowlisted JSON class, conversion, validation, and introspection scenarios."
-keywords = ["python", "data-model", "validators", "converters", "json-scenarios", "separate-verifier"]
+keywords = [
+    "python",
+    "data-model",
+    "validators",
+    "converters",
+    "json-scenarios",
+    "separate-verifier",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 120.0
@@ -78,15 +117,22 @@ workspace_artifact = "/workspace"
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:193fc637b9876ef82979e422b12dc77a761387a303831c886c122e1fc6d0e0cb", size_bytes = 30720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:193fc637b9876ef82979e422b12dc77a761387a303831c886c122e1fc6d0e0cb", visibility = "private" }
 entrypoint = "run.py"
-environment = {}
+
+[verifier.bundle]
+digest = "sha256:acd51b7c10ff3b6326c21a5c5dde85767296506090f45e6b05f72753d7f71671"
+size_bytes = 30720
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:acd51b7c10ff3b6326c21a5c5dde85767296506090f45e6b05f72753d7f71671"
+visibility = "private"
+
+[verifier.environment]
 
 [oracle_bundle]
-digest = "sha256:24eddf2b30290557b4cbe0408595fc9e1083c948bf97fbf06172f3def30ed932"
+digest = "sha256:44c93ac89501afa18cc2d3d63b28a287b0267fedfb20eb26adb791a1fab95c5f"
 size_bytes = 2160640
 media_type = "application/vnd.nl2repobench.private-bundle+tar"
-uri = "artifact://private/sha256:24eddf2b30290557b4cbe0408595fc9e1083c948bf97fbf06172f3def30ed932"
+uri = "artifact://private/sha256:44c93ac89501afa18cc2d3d63b28a287b0267fedfb20eb26adb791a1fab95c5f"
 visibility = "private"
 
 [lifecycle]

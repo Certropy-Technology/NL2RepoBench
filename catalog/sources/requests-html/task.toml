@@ -33,7 +33,7 @@ reason = "BLOCKED: the available image has no reviewed hash-locked Python/Chromi
 
 [dependencies]
 status = "unknown"
-installer = "pip"
+package_manager = "pip"
 packages = []
 
 [tests]

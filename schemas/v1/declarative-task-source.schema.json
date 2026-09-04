@@ -46,63 +46,9 @@
     },
     "DependencyBundle": {
       "additionalProperties": false,
-      "allOf": [
-        {
-          "if": {
-            "properties": {
-              "status": {
-                "const": "known"
-              }
-            },
-            "required": [
-              "status"
-            ]
-          },
-          "then": {
-            "oneOf": [
-              {
-                "properties": {
-                  "lock_artifact": {
-                    "not": {
-                      "type": "null"
-                    }
-                  }
-                },
-                "required": [
-                  "lock_artifact"
-                ]
-              },
-              {
-                "properties": {
-                  "module_bundle": {
-                    "not": {
-                      "type": "null"
-                    }
-                  }
-                },
-                "required": [
-                  "module_bundle"
-                ]
-              },
-              {
-                "properties": {
-                  "maven_bundle": {
-                    "not": {
-                      "type": "null"
-                    }
-                  }
-                },
-                "required": [
-                  "maven_bundle"
-                ]
-              }
-            ]
-          }
-        }
-      ],
-      "description": "Hash-locked build-time dependencies for Python task images.\n\nPython Harbor images install candidate dependencies from the package index\nduring the Docker build.  The final task never carries a wheelhouse and\nthe verifier never uses ``--no-index``.  ``lock_artifact`` contains only a\nrequirements lock file with hashes; ``artifact`` is retained solely so\nolder catalog records can be diagnosed and rejected during publication.",
+      "description": "One language-neutral lock/store/inventory dependency contract.",
       "properties": {
-        "artifact": {
+        "inventory": {
           "anyOf": [
             {
               "$ref": "#/$defs/ArtifactRef"
@@ -113,50 +59,43 @@
           ],
           "default": null
         },
-        "installer": {
+        "lock": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "offline_store": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "package_manager": {
           "default": "unknown",
           "enum": [
             "uv",
             "pip",
+            "npm",
+            "pnpm",
+            "go-modules",
             "maven",
-            "system",
+            "cargo",
+            "none",
             "unknown"
           ],
-          "title": "Installer",
+          "title": "Package Manager",
           "type": "string"
-        },
-        "lock_artifact": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ArtifactRef"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
-        },
-        "maven_bundle": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ArtifactRef"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
-        },
-        "module_bundle": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/ArtifactRef"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
         },
         "packages": {
           "default": [],
@@ -1053,6 +992,19 @@
       "properties": {
         "bundle": {
           "$ref": "#/$defs/ArtifactRef"
+        },
+        "contract_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^sha256:[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Contract Sha256"
         },
         "entrypoint": {
           "default": "run.py",

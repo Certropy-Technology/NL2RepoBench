@@ -41,16 +41,36 @@ libc = "glibc"
 
 [dependencies]
 status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
-packages = ["@types/estree-jsx", "@types/hast", "@types/mdast", "devlop", "mdast-util-from-markdown", "mdast-util-to-markdown"]
-artifact = { digest = "sha256:bd3680a8bafd8aaf9731a9d32032d16e9134b6246da5289529efb89cc78de5a1", size_bytes = 1008913, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:bd3680a8bafd8aaf9731a9d32032d16e9134b6246da5289529efb89cc78de5a1", visibility = "private" }
+packages = [
+    "@types/estree-jsx",
+    "@types/hast",
+    "@types/mdast",
+    "devlop",
+    "mdast-util-from-markdown",
+    "mdast-util-to-markdown",
+]
+
+[dependencies.lock]
+digest = "sha256:8d9b5a98c674bdf6e52ce18658090517a134a28df640e241b97ce83c0ff25947"
+size_bytes = 92160
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:8d9b5a98c674bdf6e52ce18658090517a134a28df640e241b97ce83c0ff25947"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:3454d655df93b1410f3549e98c5270a1e5a2946595a248dac07becb1951c3457"
+size_bytes = 3020800
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:3454d655df93b1410f3549e98c5270a1e5a2946595a248dac07becb1951c3457"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:1b18374f37d24d4d8c67df38bf11f58b11ab0aed32530282dbd1d696653d851e"
+size_bytes = 46417
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:1b18374f37d24d4d8c67df38bf11f58b11ab0aed32530282dbd1d696653d851e"
+visibility = "private"
 
 [tests]
 framework = "node:test"

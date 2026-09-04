@@ -35,9 +35,31 @@ reason = "The candidate build closure is installed during image build from a pri
 
 [dependencies]
 status = "known"
-installer = "pip"
-packages = ["uv-build==0.9.21"]
-lock_artifact = { digest = "sha256:5d512b9d962906055568862b5f8f45fe4344b394d49933c24559ad020c7f0c21", size_bytes = 2021, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:5d512b9d962906055568862b5f8f45fe4344b394d49933c24559ad020c7f0c21", visibility = "private" }
+package_manager = "pip"
+packages = [
+    "uv-build==0.9.21",
+]
+
+[dependencies.lock]
+digest = "sha256:de60227da4bf6649f499ea31e3fb2a2050f5f4c4a79ea08b1c84cca8c3fd5a02"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:de60227da4bf6649f499ea31e3fb2a2050f5f4c4a79ea08b1c84cca8c3fd5a02"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:821ca4e3294db114b230d843e8cde31bd62bb1e7f12bf246985d0f7cb516c4ac"
+size_bytes = 998
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:821ca4e3294db114b230d843e8cde31bd62bb1e7f12bf246985d0f7cb516c4ac"
+visibility = "private"
 
 [tests]
 framework = "pytest"

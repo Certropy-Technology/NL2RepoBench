@@ -26,7 +26,7 @@ reason = "The approved candidate report contains no immutable revision; source r
 
 [dependencies]
 status = "unknown"
-installer = "pip"
+package_manager = "pip"
 packages = []
 
 [tests]

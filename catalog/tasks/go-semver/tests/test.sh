@@ -17,6 +17,9 @@ if ! python3 -I -c "$PYTHON_ROOT; $COPY_WORKSPACE"   --source /workspace --desti
   exit 0
 fi
 chown -R candidate:candidate /tmp/go-candidate
+rm -rf /tmp/go-candidate/vendor
+cp -a /opt/go-module-bundle/vendor /tmp/go-candidate/vendor
+chown -R candidate:candidate /tmp/go-candidate/vendor
 GO_VALIDATE=$(cat <<'PY'
 from pathlib import Path
 from nl2repobench.package_managers.go_modules import GoModulesPackageManager
@@ -46,7 +49,10 @@ if ! /usr/bin/python3 -I -c "$PYTHON_ROOT; $RUN_CONTRACT" \
   --script /tests/private/contract.sh --bridge /tmp/go-candidate/bridge \
   --proxy /opt/nl2repobench-runtime/nl2repobench/verification/go_bridge_proxy.py \
   > /logs/verifier/result.json; then
-  grade --reason candidate-call-failed
+  cat > /tmp/go-report.json <<'JSON'
+{"schema_version":"1.0","framework":"go","report_format":"go-test-json-v1","collected":1,"tests":[{"test_id":"contract::public-api","status":"failed","duration_ms":0,"details":"candidate-call-failed"}],"collection_errors":[],"runner_exit_code":1}
+JSON
+  grade --report /tmp/go-report.json --runner-exit-code 1
   exit 0
 fi
 cat > /tmp/go-report.json <<'JSON'

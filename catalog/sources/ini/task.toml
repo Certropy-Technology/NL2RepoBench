@@ -38,15 +38,10 @@ reason = "Runtime-only closure passed in a disposable probe, but the development
 
 [dependencies]
 status = "unknown"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
-packages = ["development lockfile v2 and rejected; runtime-only disposable lock was not retained"]
+packages = [
+    "development lockfile v2 and rejected; runtime-only disposable lock was not retained",
+]
 
 [tests]
 framework = "node:test"

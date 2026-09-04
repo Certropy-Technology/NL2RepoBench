@@ -33,24 +33,22 @@ reference_source_fetch = "forbidden"
 reason = "No final verifier image, hash-locked build/test dependency closure, or private verifier assets are frozen; agent and verifier run phases must remain offline and must not retrieve the reference source."
 
 [dependencies]
-# hpack has no runtime dependencies. These are the exact direct build/test/
-# tooling versions selected by the source uv.lock, not a task-local requirements lock.
 status = "unknown"
-installer = "uv"
+package_manager = "uv"
 packages = [
-  "setuptools==82.0.1",
-  "wheel==0.47.0",
-  "pytest==9.1.1",
-  "pytest-cov==7.1.0",
-  "pytest-xdist==3.8.0",
-  "hypothesis==6.155.6",
-  "ruff==0.15.18",
-  "mypy==1.20.2",
-  "typing-extensions==4.15.0",
-  "check-manifest==0.51",
-  "build==1.5.0",
-  "twine==6.2.0",
-  "sphinx==9.1.0; python_version >= '3.12'",
+    "setuptools==82.0.1",
+    "wheel==0.47.0",
+    "pytest==9.1.1",
+    "pytest-cov==7.1.0",
+    "pytest-xdist==3.8.0",
+    "hypothesis==6.155.6",
+    "ruff==0.15.18",
+    "mypy==1.20.2",
+    "typing-extensions==4.15.0",
+    "check-manifest==0.51",
+    "build==1.5.0",
+    "twine==6.2.0",
+    "sphinx==9.1.0; python_version >= '3.12'",
 ]
 
 [tests]

@@ -1,0 +1,53 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/java-semver4j"
+version = "1.0.0"
+description = "Recreate the serializable Semver parsing, comparison, stability, and requirement behavior of vdurmont/semver4j."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "java",
+    "maven",
+    "semver",
+    "typed-bridge",
+    "public-api",
+]
+
+[metadata]
+difficulty = "easy"
+category = "java-library"
+tags = [
+    "java",
+    "maven",
+    "semver",
+    "typed-runtime",
+    "public-api",
+]
+language = "java"
+runtime = "jdk"
+runtime_version = "temurin-21.0.12+8"
+package_manager = "maven"
+package_manager_version = "3.9.11"
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 8
+canonical_manifest_digest = "sha256:eb483b45384e8eb142c3b2b4290222d26ed56051294297cd9dedd83305b80cc7"
+toolchain_lock_digest = "sha256:9ea2918f480bf5a09904f21c3655bded56711fd8618a7e41b0c19bb632d5a37e"
+
+[agent]
+timeout_sec = 1200.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[environment]
+network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096

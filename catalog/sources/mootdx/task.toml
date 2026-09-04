@@ -33,19 +33,19 @@ reason = "The final legacy test path requires mutable finance endpoints and curr
 
 [dependencies]
 status = "unknown"
-installer = "pip"
+package_manager = "pip"
 packages = [
-  "httpx==0.25.0",
-  "mini-racer==0.12.0",
-  "numpy==1.24.3",
-  "pandas==1.5.3",
-  "tdxpy==0.2.6",
-  "tenacity==8.2.2",
-  "pytest-datadir",
-  "pytest-cov",
-  "pytest",
-  "freezegun",
-  "requests (unversioned legacy setup command)",
+    "httpx==0.25.0",
+    "mini-racer==0.12.0",
+    "numpy==1.24.3",
+    "pandas==1.5.3",
+    "tdxpy==0.2.6",
+    "tenacity==8.2.2",
+    "pytest-datadir",
+    "pytest-cov",
+    "pytest",
+    "freezegun",
+    "requests (unversioned legacy setup command)",
 ]
 
 [tests]

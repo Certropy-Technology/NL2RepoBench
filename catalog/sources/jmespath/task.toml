@@ -29,8 +29,10 @@ reason = "The candidate has no approved private test/command artifact or complet
 
 [dependencies]
 status = "unknown"
-installer = "pip"
-packages = ["pytest and verifier dependencies are not a frozen private lock"]
+package_manager = "pip"
+packages = [
+    "pytest and verifier dependencies are not a frozen private lock",
+]
 
 [tests]
 framework = "pytest"

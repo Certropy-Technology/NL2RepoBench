@@ -41,15 +41,10 @@ reason = "The candidate and verifier must run offline; a complete private npm ca
 
 [dependencies]
 status = "unknown"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
-packages = ["753 resolved lock entries"]
+packages = [
+    "753 resolved lock entries",
+]
 
 [tests]
 framework = "node:test"

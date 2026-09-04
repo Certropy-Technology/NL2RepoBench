@@ -41,16 +41,39 @@ libc = "glibc"
 
 [dependencies]
 status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
-packages = ["@types/mdast@4.0.4", "@types/unist@3.0.3", "longest-streak@3.1.0", "mdast-util-phrasing@4.1.0", "mdast-util-to-string@4.0.0", "micromark-util-classify-character@2.0.1", "micromark-util-decode-string@2.0.1", "unist-util-visit@5.1.0", "zwitch@2.0.4"]
-artifact = { digest = "sha256:29a9d2641d88d8bf563b0869eeb3c13a2bc81f1d66a7ba1d27d4cb27c2c58184", size_bytes = 1105920, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:29a9d2641d88d8bf563b0869eeb3c13a2bc81f1d66a7ba1d27d4cb27c2c58184", visibility = "private" }
+packages = [
+    "@types/mdast@4.0.4",
+    "@types/unist@3.0.3",
+    "longest-streak@3.1.0",
+    "mdast-util-phrasing@4.1.0",
+    "mdast-util-to-string@4.0.0",
+    "micromark-util-classify-character@2.0.1",
+    "micromark-util-decode-string@2.0.1",
+    "unist-util-visit@5.1.0",
+    "zwitch@2.0.4",
+]
+
+[dependencies.lock]
+digest = "sha256:c508fbd6efe0fbc436428bc57c50713abe99538b5b5b54cb466b4d8c299e15bf"
+size_bytes = 40960
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:c508fbd6efe0fbc436428bc57c50713abe99538b5b5b54cb466b4d8c299e15bf"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:b3c21df64f7172475ca0f9129456fc7d46505b2b1a0f49667cd898627cd147c2"
+size_bytes = 1003520
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:b3c21df64f7172475ca0f9129456fc7d46505b2b1a0f49667cd898627cd147c2"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:5634757353e7a119a6c9046636de71bac61a7bae71038c90b78755a12dffb466"
+size_bytes = 19395
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:5634757353e7a119a6c9046636de71bac61a7bae71038c90b78755a12dffb466"
+visibility = "private"
 
 [tests]
 framework = "node:test"

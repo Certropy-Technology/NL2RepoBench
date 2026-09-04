@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -uo pipefail
+rm -rf /tmp/candidate /tmp/candidate-build /tmp/candidate-site
 mkdir -p /logs/verifier /tmp/trusted-results /tmp/candidate-site
 chmod 0700 /logs/verifier /tmp/trusted-results
-rm -rf /tmp/candidate /tmp/candidate-build /tmp/candidate-site
 
 export NL2REPO_CANDIDATE_DEPENDENCIES=/opt/candidate-dependencies/site
 python -I -m nl2repobench.verification.network_check   --output /logs/verifier/network.json
@@ -16,7 +16,7 @@ if [[ "$?" -ne 0 ]]; then
   exit 0
 fi
 chown -R candidate:candidate /tmp/candidate /tmp/candidate-site
-python -I -B -m nl2repobench.verification.candidate_install   --source /tmp/candidate --target /tmp/candidate-site   --timeout-sec 120.0   --status /logs/verifier/candidate-install.json
+python -I -B -m nl2repobench.verification.candidate_install   --source /tmp/candidate --target /tmp/candidate-site   --timeout-sec 120.0   --address-space-bytes 2147483648   --cflags '-O0 -g0'      --status /logs/verifier/candidate-install.json
 if [[ "$?" -ne 0 ]]; then
   python -I -m nl2repobench.verification.cli     --expected 40 --runtime python --metric-contract fixed-test-pass-rate-v1     --reason candidate-installation-failed
   exit 0

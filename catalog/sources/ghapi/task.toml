@@ -35,25 +35,45 @@ reason = "The candidate and separate verifier use a build-time hash-locked depen
 
 [dependencies]
 status = "known"
-installer = "pip"
+package_manager = "pip"
 packages = [
-  "anyio==4.14.2",
-  "fastcore==2.2.16",
-  "fastspec==0.2.3",
-  "fasttransport==0.0.1",
-  "h11==0.16.0",
-  "httpcore2==2.12.0",
-  "httpx2==2.12.0",
-  "idna==3.19",
-  "iniconfig==2.3.0",
-  "packaging==26.3",
-  "pluggy==1.6.0",
-  "pygments==2.21.0",
-  "pytest==9.1.1",
-  "truststore==0.10.4",
-  "typing-extensions==4.16.0",
+    "anyio==4.14.2",
+    "fastcore==2.2.16",
+    "fastspec==0.2.3",
+    "fasttransport==0.0.1",
+    "h11==0.16.0",
+    "httpcore2==2.12.0",
+    "httpx2==2.12.0",
+    "idna==3.19",
+    "iniconfig==2.3.0",
+    "packaging==26.3",
+    "pluggy==1.6.0",
+    "pygments==2.21.0",
+    "pytest==9.1.1",
+    "truststore==0.10.4",
+    "typing-extensions==4.16.0",
 ]
-lock_artifact = { digest = "sha256:e307326db7e70468d4be4c68ad3d76707a887dbb71e1dd5d9c2388520d8def68", size_bytes = 3326, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:e307326db7e70468d4be4c68ad3d76707a887dbb71e1dd5d9c2388520d8def68", visibility = "private" }
+
+[dependencies.lock]
+digest = "sha256:7530a5fa9cd6cdde6212240ce877d134fbf3c8fb141164462d04af2623c675e6"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:7530a5fa9cd6cdde6212240ce877d134fbf3c8fb141164462d04af2623c675e6"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:6f0f580d10409ddf00d7a016900b63d10789a5e5b53ac911316f1189766616b1"
+size_bytes = 998
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:6f0f580d10409ddf00d7a016900b63d10789a5e5b53ac911316f1189766616b1"
+visibility = "private"
 
 [tests]
 framework = "pytest"

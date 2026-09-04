@@ -6,7 +6,15 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "easy"
 category = "npm-url-parser"
-tags = ["node", "npm", "esm", "url", "semver", "parser", "json"]
+tags = [
+    "node",
+    "npm",
+    "esm",
+    "url",
+    "semver",
+    "parser",
+    "json",
+]
 language = "node"
 
 [source]
@@ -41,21 +49,30 @@ libc = "glibc"
 
 [dependencies]
 status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
-packages = ["semver"]
+packages = [
+    "semver",
+]
 
-[dependencies.artifact]
-digest = "sha256:ec634ced2458053d631f3c0700c791678d463198f966e19d4bcd2815808b3057"
-size_bytes = 135192
-media_type = "application/vnd.nl2repobench.npm-bundle+tar"
-uri = "artifact://private/sha256:ec634ced2458053d631f3c0700c791678d463198f966e19d4bcd2815808b3057"
+[dependencies.lock]
+digest = "sha256:a332ddce63f903ef6429522df4ef34177d6ede9e3be6e9e0bcb780896595390d"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:a332ddce63f903ef6429522df4ef34177d6ede9e3be6e9e0bcb780896595390d"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:0d55a5b017c9956252f1a24a09bb3565d5200a8919f0138f1f67d647cc3b3137"
+size_bytes = 399360
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:0d55a5b017c9956252f1a24a09bb3565d5200a8919f0138f1f67d647cc3b3137"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:78e0e1943c32a437749de6148fdcaeb337d4d5fe83107a38f1d56ddde5cf617f"
+size_bytes = 3001
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:78e0e1943c32a437749de6148fdcaeb337d4d5fe83107a38f1d56ddde5cf617f"
 visibility = "private"
 
 [tests]
@@ -72,10 +89,10 @@ uri = "artifact://private/sha256:cab621dcaf7260f80d7c66f04c60ed005c26aa2b0a37485
 visibility = "private"
 
 [tests.test_bundle]
-digest = "sha256:6c08d505abd0581f533082cba7abb65edac25522abdd09867056cb36c23c8824"
-size_bytes = 3430
+digest = "sha256:a340cba294c65f03eb13200098456b091a534cd88b352a09660945a4fc3f7138"
+size_bytes = 20480
 media_type = "application/vnd.nl2repobench.node-tests+tar"
-uri = "artifact://private/sha256:6c08d505abd0581f533082cba7abb65edac25522abdd09867056cb36c23c8824"
+uri = "artifact://private/sha256:a340cba294c65f03eb13200098456b091a534cd88b352a09660945a4fc3f7138"
 visibility = "private"
 
 [metric]
@@ -84,7 +101,15 @@ collection_mismatch = "fail"
 
 [harbor]
 description = "Build the parse-npm-tarball-url ESM package with a deterministic URL and SemVer JSON contract."
-keywords = ["node", "npm", "esm", "url", "semver", "parser", "json"]
+keywords = [
+    "node",
+    "npm",
+    "esm",
+    "url",
+    "semver",
+    "parser",
+    "json",
+]
 agent_timeout_sec = 900.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 90.0
@@ -102,8 +127,8 @@ owner = "parse-npm-tarball-url-repair"
 reason = "Fresh Harbor 0.21 Node 24 remediation gates passed: Oracle collected 14/14 with reward 0.9285714285714286; empty reward 0.0; stub and forgery each collected 14/14 with reward 0.0; every verifier emitted a network.json proving public_network_available=false. Runtime was regenerated from this source with the corrected 14-leaf bundle."
 
 [oracle_bundle]
-digest = "sha256:3e4f7b8a4624900ad83a82abcdd61f3aab41b7a18188f86a46850f49b8acc4e3"
-size_bytes = 13440
+digest = "sha256:50258a341ab4ef55edc20e0736af5ff1fe1c3d746aad07c58eec3fdfe5740f1c"
+size_bytes = 61440
 media_type = "application/vnd.nl2repobench.oracle+tar"
-uri = "artifact://private/sha256:3e4f7b8a4624900ad83a82abcdd61f3aab41b7a18188f86a46850f49b8acc4e3"
+uri = "artifact://private/sha256:50258a341ab4ef55edc20e0736af5ff1fe1c3d746aad07c58eec3fdfe5740f1c"
 visibility = "private"

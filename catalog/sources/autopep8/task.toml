@@ -35,8 +35,12 @@ reason = "The exact pycodestyle and setuptools/wheel build closure was resolved 
 
 [dependencies]
 status = "unknown"
-installer = "pip"
-packages = ["pycodestyle==2.12.1", "setuptools==80.10.2", "wheel==0.45.1"]
+package_manager = "pip"
+packages = [
+    "pycodestyle==2.12.1",
+    "setuptools==80.10.2",
+    "wheel==0.45.1",
+]
 
 [tests]
 framework = "pytest"

@@ -35,9 +35,36 @@ reason = "The hash-locked build and Click-adapter closure is installed during Do
 
 [dependencies]
 status = "known"
-installer = "pip"
-packages = ["click==8.5.0", "packaging==26.3", "setuptools==84.0.0", "setuptools-scm==10.2.1", "vcs-versioning==2.3.1", "wheel==0.48.0"]
-lock_artifact = { digest = "sha256:5eb3c82fcb606d102cd7e1c257745ec63e7dce8ffaafa8327a4dda0705762ad5", size_bytes = 2282, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:5eb3c82fcb606d102cd7e1c257745ec63e7dce8ffaafa8327a4dda0705762ad5", visibility = "private" }
+package_manager = "pip"
+packages = [
+    "click==8.5.0",
+    "packaging==26.3",
+    "setuptools==84.0.0",
+    "setuptools-scm==10.2.1",
+    "vcs-versioning==2.3.1",
+    "wheel==0.48.0",
+]
+
+[dependencies.lock]
+digest = "sha256:49e3d780450f91092e7327d23d6e6430148dc9a61282101c71453c53fcd6e179"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:49e3d780450f91092e7327d23d6e6430148dc9a61282101c71453c53fcd6e179"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:3dfdc4e1b67f836632f4ac2f8d394bb65127622075824e10e5d0f5cb8681bcb4"
+size_bytes = 998
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:3dfdc4e1b67f836632f4ac2f8d394bb65127622075824e10e5d0f5cb8681bcb4"
+visibility = "private"
 
 [tests]
 framework = "pytest"

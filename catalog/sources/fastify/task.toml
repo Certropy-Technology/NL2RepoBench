@@ -40,17 +40,16 @@ architecture = "linux/amd64"
 libc = "glibc"
 
 [dependencies]
-status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
+status = "unknown"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
-artifact = { digest = "sha256:557436dc2e3ee5001af16d553c4edb27173794095259127d08312e85989e9637", size_bytes = 2983541, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:557436dc2e3ee5001af16d553c4edb27173794095259127d08312e85989e9637", visibility = "private" }
-packages = ["@fastify/ajv-compiler", "avvio", "fast-json-stringify", "find-my-way", "light-my-request", "pino"]
+packages = [
+    "@fastify/ajv-compiler",
+    "avvio",
+    "fast-json-stringify",
+    "find-my-way",
+    "light-my-request",
+    "pino",
+]
 
 [tests]
 framework = "node:test"

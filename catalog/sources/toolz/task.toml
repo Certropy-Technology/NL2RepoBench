@@ -32,14 +32,12 @@ reference_source_fetch = "forbidden"
 reason = "The package dependency closure and bounded verifier are not frozen; candidate and verifier execution remain network-isolated."
 
 [dependencies]
-# Runtime imports are standard-library/local only. These are the unpinned
-# PEP 517 build and source-test requirements, not an offline closure.
 status = "unknown"
-installer = "uv"
+package_manager = "uv"
 packages = [
-  "setuptools>=77",
-  "setuptools-git-versioning>=2.0",
-  "pytest>=6.0",
+    "setuptools>=77",
+    "setuptools-git-versioning>=2.0",
+    "pytest>=6.0",
 ]
 
 [tests]

@@ -33,8 +33,8 @@ tags = [
 ]
 metric_contract = "fixed-test-pass-rate-v1"
 expected_test_count = 100
-canonical_manifest_digest = "sha256:59d85623173544a16e2708d2e28abb63792075ba78cea77ba67860aa59d23086"
-toolchain_lock_digest = "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366"
+canonical_manifest_digest = "sha256:d42d0d822869714f35f057d4a760881aaf3d6574a0bddc0fa06565059082fe6d"
+toolchain_lock_digest = "sha256:e54be279a86caa843480b583d388ff7e6c977605b505448ba54549621be5ed68"
 
 [agent]
 timeout_sec = 2400.0

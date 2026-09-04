@@ -42,11 +42,13 @@ reference_source_fetch = "forbidden"
 reason = "The package, locale, and dependency closure is not frozen; candidate and verifier execution remain network-isolated."
 
 [dependencies]
-# Runtime scope is the standard-library fallback. These are provisional
-# authoring/test tools only; no hash-locked requirements artifact or lock digest is claimed.
 status = "unknown"
-installer = "uv"
-packages = ["pytest", "hypothesis", "setuptools"]
+package_manager = "uv"
+packages = [
+    "pytest",
+    "hypothesis",
+    "setuptools",
+]
 
 [tests]
 framework = "pytest"

@@ -34,9 +34,32 @@ reason = "Third-party build and test dependencies are installed during the Docke
 
 [dependencies]
 status = "known"
-installer = "pip"
-lock_artifact = { digest = "sha256:bbeec4fd66ac676902fce0d2563c4802804066a7ab8c5417e6e0d1403080fffd", size_bytes = 1374, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:bbeec4fd66ac676902fce0d2563c4802804066a7ab8c5417e6e0d1403080fffd", visibility = "private" }
-packages = ["dataclasses-json", "pytest"]
+package_manager = "pip"
+packages = [
+    "dataclasses-json",
+    "pytest",
+]
+
+[dependencies.lock]
+digest = "sha256:149659446b0c3577024d76954c0a990d5a6567b6fb02e03bdbdd48bf1d3e1d0a"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:149659446b0c3577024d76954c0a990d5a6567b6fb02e03bdbdd48bf1d3e1d0a"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:dc2b698f23631c1cd81e547803ca0799d04dfabc292e6a389e2aab8657ce993d"
+size_bytes = 998
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:dc2b698f23631c1cd81e547803ca0799d04dfabc292e6a389e2aab8657ce993d"
+visibility = "private"
 
 [tests]
 framework = "pytest"

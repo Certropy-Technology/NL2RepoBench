@@ -34,9 +34,29 @@ reason = "Candidate and verifier execution uses a private zero-dependency Go mod
 
 [dependencies]
 status = "known"
-installer = "system"
+package_manager = "go-modules"
 packages = []
-module_bundle = { digest = "sha256:d06a57d70a9f6d7927a5f0a516a8a771dbaa7626506f28a2f7888587eadf8885", size_bytes = 10240, media_type = "application/vnd.nl2repobench.go-module-bundle+tar", uri = "artifact://private/sha256:d06a57d70a9f6d7927a5f0a516a8a771dbaa7626506f28a2f7888587eadf8885", visibility = "private" }
+
+[dependencies.lock]
+digest = "sha256:fcd14b47aa4ce6f5dd591c5528b6e66f24d632e7a9c0afdf112256076517d633"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:fcd14b47aa4ce6f5dd591c5528b6e66f24d632e7a9c0afdf112256076517d633"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:3c1de9cc5210c5fc7b19f548e3eb2117940fd96422ccb43ca17ee4646f9bbfeb"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:3c1de9cc5210c5fc7b19f548e3eb2117940fd96422ccb43ca17ee4646f9bbfeb"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:ae1d3fb47a6836323df94ac442ddefe42eac61abc873e3b1d730de7b0d5ee74d"
+size_bytes = 1313
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:ae1d3fb47a6836323df94ac442ddefe42eac61abc873e3b1d730de7b0d5ee74d"
+visibility = "private"
 
 [tests]
 framework = "pytest"

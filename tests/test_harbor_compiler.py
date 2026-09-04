@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import io
 import json
 import shutil
@@ -18,7 +19,14 @@ from nl2repobench.harbor.models import (
     load_toolchain_lock,
 )
 from nl2repobench.harbor.registry import HarborCompilerRegistry
+from nl2repobench.package_managers.dependency_artifacts import (
+    LOCK_MEDIA_TYPE,
+    STORE_MEDIA_TYPE,
+    put_dependency_archive,
+    put_dependency_inventory,
+)
 from nl2repobench.storage.artifacts import FileArtifactStore, LocalArtifactResolver
+from nl2repobench.storage.canonical_ustar import CanonicalEntry
 from nl2repobench.verification.command_plan import validate_command_plan
 
 ROOT = Path(__file__).parents[1]
@@ -43,6 +51,35 @@ def _tar_bytes(files: dict[str, bytes]) -> bytes:
             info.mode = 0o755 if name.endswith(".sh") else 0o644
             archive.addfile(info, io.BytesIO(content))
     return buffer.getvalue()
+
+
+def _dependency_bundle(store: FileArtifactStore, lock_data: bytes) -> dict[str, object]:
+    lock_entries = (
+        CanonicalEntry("requirements.lock.txt", "file", 0o444, lock_data),
+    )
+    store_entries: tuple[CanonicalEntry, ...] = ()
+    lock = put_dependency_archive(store, lock_entries, media_type=LOCK_MEDIA_TYPE)
+    offline_store = put_dependency_archive(
+        store, store_entries, media_type=STORE_MEDIA_TYPE
+    )
+    inventory = put_dependency_inventory(
+        store,
+        identity="python+uv",
+        adapter_version="python-preinstalled-image-v1",
+        toolchain_digest="sha256:" + hashlib.sha256(TOOLCHAIN.read_bytes()).hexdigest(),
+        lock_ref=lock,
+        lock_entries=lock_entries,
+        store_ref=offline_store,
+        store_entries=store_entries,
+        smoke_command_id="python-preinstalled-image-v1",
+    )
+    return {
+        "status": "known",
+        "package_manager": "uv",
+        "lock": lock.model_dump(mode="json"),
+        "offline_store": offline_store.model_dump(mode="json"),
+        "inventory": inventory.model_dump(mode="json"),
+    }
 
 
 def test_toolchain_images_are_digest_pinned() -> None:
@@ -312,10 +349,9 @@ def test_production_compiler_resolves_private_test_and_oracle_bundles(tmp_path) 
         _tar_bytes({"solve.sh": b"#!/usr/bin/env bash\nset -euo pipefail\n"}),
         visibility=Visibility.PRIVATE,
     )
-    dependency_lock = store.put_bytes(
+    dependency_bundle = _dependency_bundle(
+        store,
         b"demo-pkg==1.0 \\\n" + b"    --hash=sha256:" + b"0" * 64 + b"\n",
-        media_type="text/plain; charset=utf-8",
-        visibility=Visibility.PRIVATE,
     )
     commands = store.put_bytes(
         b'{"schema_version":"1.0","runner":"pytest-subprocess-boundary-v1",'
@@ -351,11 +387,7 @@ def test_production_compiler_resolves_private_test_and_oracle_bundles(tmp_path) 
             "base_image_digest": "sha256:" + "3" * 64,
             "network_mode": "no-network",
         },
-        "dependencies": {
-            "status": "known",
-            "lock_artifact": dependency_lock.model_dump(mode="json"),
-            "installer": "uv",
-        },
+        "dependencies": dependency_bundle,
         "tests": {
             "expected_total": 1,
             "expected_total_source": "frozen-collection",
@@ -417,11 +449,7 @@ def test_vendor_dependency_bundle_is_forbidden(tmp_path) -> None:
 
 def test_production_compiler_emits_custom_verifier_bundle(tmp_path) -> None:
     store = FileArtifactStore(tmp_path / "artifacts")
-    dependency_lock = store.put_bytes(
-        b"",
-        media_type="text/plain; charset=utf-8",
-        visibility=Visibility.PRIVATE,
-    )
+    dependency_bundle = _dependency_bundle(store, b"")
     verifier_bundle = store.put_bytes(
         _tar_bytes(
             {
@@ -468,11 +496,7 @@ def test_production_compiler_emits_custom_verifier_bundle(tmp_path) -> None:
                     "base_image_digest": "sha256:" + "3" * 64,
                     "network_mode": "no-network",
                 },
-                "dependencies": {
-                    "status": "known",
-                    "lock_artifact": dependency_lock.model_dump(mode="json"),
-                    "installer": "uv",
-                },
+                    "dependencies": dependency_bundle,
                 "tests": {
                     "expected_total": 1,
                     "expected_total_source": "frozen-collection",

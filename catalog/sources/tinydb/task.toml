@@ -7,13 +7,13 @@ instruction = "instruction.md"
 difficulty = "medium"
 category = "embedded-document-database"
 tags = [
-  "python",
-  "document-database",
-  "json-storage",
-  "queries",
-  "middleware",
-  "lru-cache",
-  "separate-verifier",
+    "python",
+    "document-database",
+    "json-storage",
+    "queries",
+    "middleware",
+    "lru-cache",
+    "separate-verifier",
 ]
 language = "python"
 
@@ -43,36 +43,67 @@ reason = "The complete Hatchling build closure is hash-locked and installed duri
 
 [dependencies]
 status = "known"
-installer = "pip"
+package_manager = "pip"
 packages = [
-  "hatchling==1.27.0",
-  "packaging==26.3",
-  "pathspec==1.1.1",
-  "pluggy==1.6.0",
-  "trove-classifiers==2026.6.1.19",
+    "hatchling==1.27.0",
+    "packaging==26.3",
+    "pathspec==1.1.1",
+    "pluggy==1.6.0",
+    "trove-classifiers==2026.6.1.19",
 ]
-lock_artifact = { digest = "sha256:fd810403f6009d181240bb6c35df4669fbbc6783fdd8720215843a2f8e170ef4", size_bytes = 945, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:fd810403f6009d181240bb6c35df4669fbbc6783fdd8720215843a2f8e170ef4", visibility = "private" }
+
+[dependencies.lock]
+digest = "sha256:99c0e2f8271243b23e86b8dc9a15a183a37801e6ae233f9f0b371c6bb9d1b278"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:99c0e2f8271243b23e86b8dc9a15a183a37801e6ae233f9f0b371c6bb9d1b278"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:3327bf65f0b8f469cbef11687676af5afaa5d153141a87b3f7aa3cf8636ca1ef"
+size_bytes = 996
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:3327bf65f0b8f469cbef11687676af5afaa5d153141a87b3f7aa3cf8636ca1ef"
+visibility = "private"
 
 [tests]
 framework = "pytest"
 expected_total = 36
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
+commands = [
+    "custom-json-v1 verifier entrypoint",
+]
 protected_paths = [
-  "/tests/verifier/run.py",
-  "/tests/verifier/adapter.py",
-  "/tests/verifier/expected.json",
+    "/tests/verifier/run.py",
+    "/tests/verifier/adapter.py",
+    "/tests/verifier/expected.json",
 ]
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:52799e7a572abac041f9fb470f0b61df8e443fdcc842de9df53ef565bd61fa93", size_bytes = 51200, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:52799e7a572abac041f9fb470f0b61df8e443fdcc842de9df53ef565bd61fa93", visibility = "private" }
 entrypoint = "run.py"
-environment = {}
+
+[verifier.bundle]
+digest = "sha256:53e9bb0d04451eebbc887df5a6b2dd39722808a808b52e4c044120f4195efbae"
+size_bytes = 51200
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:53e9bb0d04451eebbc887df5a6b2dd39722808a808b52e4c044120f4195efbae"
+visibility = "private"
+
+[verifier.environment]
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
+passed_statuses = [
+    "passed",
+]
 excluded_statuses = []
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
@@ -80,12 +111,12 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 [harbor]
 description = "Build TinyDB 4.9.0 from an empty workspace and satisfy a bounded storage, query, table, update, middleware, and cache contract."
 keywords = [
-  "python",
-  "document-database",
-  "json-storage",
-  "query-builder",
-  "middleware",
-  "separate-verifier",
+    "python",
+    "document-database",
+    "json-storage",
+    "query-builder",
+    "middleware",
+    "separate-verifier",
 ]
 agent_timeout_sec = 2400.0
 verifier_timeout_sec = 600.0
@@ -99,10 +130,10 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [oracle_bundle]
-digest = "sha256:e8493c16b381ce3de7e4fb1be38882302e74f41319c9a928cce1405d07af7abb"
+digest = "sha256:4cc2a74913baec986d2be7837da170f4da1e9b5be59dfa7511e25a72e5a6b810"
 size_bytes = 593920
 media_type = "application/vnd.nl2repobench.private-bundle+tar"
-uri = "artifact://private/sha256:e8493c16b381ce3de7e4fb1be38882302e74f41319c9a928cce1405d07af7abb"
+uri = "artifact://private/sha256:4cc2a74913baec986d2be7837da170f4da1e9b5be59dfa7511e25a72e5a6b810"
 visibility = "private"
 
 [lifecycle]

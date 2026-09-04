@@ -15,7 +15,7 @@ function run(command, commandArgs, cwd) {
     "90s",
     "/usr/bin/prlimit",
     "--cpu=90",
-    "--nproc=32",
+    "--nproc=4096",
     "--nofile=128",
     "--",
     command,

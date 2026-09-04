@@ -3,21 +3,29 @@ from __future__ import annotations
 import hashlib
 import io
 import json
-import re
 import shutil
 import subprocess
 import sys
 import tarfile
+import tomllib
 from pathlib import Path
 
 import pytest
+import tomli_w
 
 from nl2repobench.domain.models import Visibility
 from nl2repobench.domain.runtime import PackageManager, RuntimeDiscriminator, RuntimeLanguage
 from nl2repobench.harbor.go_compiler import GoHarborCompileError, GoHarborCompiler
+from nl2repobench.package_managers.dependency_artifacts import (
+    LOCK_MEDIA_TYPE,
+    STORE_MEDIA_TYPE,
+    put_dependency_archive,
+    put_dependency_inventory,
+)
 from nl2repobench.package_managers.go_modules import GoModulesPackageManager
 from nl2repobench.runtimes.go import GoRuntimeAdapter
 from nl2repobench.storage.artifacts import FileArtifactStore, LocalArtifactResolver
+from nl2repobench.storage.canonical_ustar import entries_from_tree
 from nl2repobench.verification.go_bridge import (
     GoBridgeOperation,
     GoBridgeSpec,
@@ -214,7 +222,7 @@ def test_go_compiler_separates_development_and_locked_toolchains(tmp_path: Path)
 
     with pytest.raises(GoHarborCompileError, match="toolchain.go.lock.toml"):
         development.compile_task(root / "catalog/sources/go-google-uuid", tmp_path)
-    with pytest.raises(GoHarborCompileError, match="private artifact resolver is required"):
+    with pytest.raises(GoHarborCompileError, match="lock/store/inventory is missing"):
         locked.compile_task(root / "catalog/sources/go-google-uuid", tmp_path)
 
     source = tmp_path / "source"
@@ -223,13 +231,32 @@ def test_go_compiler_separates_development_and_locked_toolchains(tmp_path: Path)
     module = tmp_path / "module"
     module.mkdir()
     _go_bundle(module)
-    module_bundle = _private_archive(
+    lock_root = tmp_path / "lock"
+    store_root = tmp_path / "store"
+    lock_root.mkdir()
+    store_root.mkdir()
+    shutil.copy2(module / "go.mod", lock_root / "go.mod")
+    shutil.copy2(module / "go.sum", lock_root / "go.sum")
+    shutil.copytree(module / "vendor", store_root / "vendor")
+    lock_entries = entries_from_tree(lock_root)
+    store_entries = entries_from_tree(store_root)
+    lock_ref = put_dependency_archive(
+        store, lock_entries, media_type=LOCK_MEDIA_TYPE
+    )
+    store_ref = put_dependency_archive(
+        store, store_entries, media_type=STORE_MEDIA_TYPE
+    )
+    inventory_ref = put_dependency_inventory(
         store,
-        {
-            path.relative_to(module).as_posix(): path.read_bytes()
-            for path in module.rglob("*")
-            if path.is_file()
-        },
+        identity="go+go-modules",
+        adapter_version="go-modules-offline-v1",
+        toolchain_digest="sha256:"
+        + hashlib.sha256((root / "toolchain.go.lock.toml").read_bytes()).hexdigest(),
+        lock_ref=lock_ref,
+        lock_entries=lock_entries,
+        store_ref=store_ref,
+        store_entries=store_entries,
+        smoke_command_id="go-test-offline-v1",
     )
     verifier_bundle = _private_archive(
         store,
@@ -240,26 +267,26 @@ def test_go_compiler_separates_development_and_locked_toolchains(tmp_path: Path)
         {"solve.sh": b"#!/bin/sh\nexit 0\n"},
     )
     descriptor = source / "task.toml"
-    data = descriptor.read_text(encoding="utf-8")
-    data = re.sub(
-        r"module_bundle = \{[^\n]+\}",
-        "module_bundle = " + _artifact_toml(module_bundle),
-        data,
+    data = tomllib.loads(descriptor.read_text(encoding="utf-8"))
+    data["dependencies"] = {
+        "status": "known",
+        "package_manager": "go-modules",
+        "packages": [],
+        "lock": lock_ref.model_dump(mode="json", exclude={"schema_version"}),
+        "offline_store": store_ref.model_dump(
+            mode="json", exclude={"schema_version"}
+        ),
+        "inventory": inventory_ref.model_dump(
+            mode="json", exclude={"schema_version"}
+        ),
+    }
+    data["verifier"]["bundle"] = verifier_bundle.model_dump(
+        mode="json", exclude={"schema_version"}
     )
-    data = re.sub(
-        r"^bundle = \{[^\n]+\}",
-        "bundle = " + _artifact_toml(verifier_bundle),
-        data,
-        count=1,
-        flags=re.MULTILINE,
+    data["oracle_bundle"] = oracle_bundle.model_dump(
+        mode="json", exclude={"schema_version"}
     )
-    data = re.sub(
-        r"oracle_bundle = \{[^\n]+\}",
-        "oracle_bundle = " + _artifact_toml(oracle_bundle),
-        data,
-        count=1,
-    )
-    descriptor.write_text(data, encoding="utf-8")
+    descriptor.write_text(tomli_w.dumps(data), encoding="utf-8")
 
     production = GoHarborCompiler(
         root / "toolchain.go.lock.toml",

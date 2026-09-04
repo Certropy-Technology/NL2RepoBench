@@ -57,7 +57,7 @@ def test_known_environment_requires_image_digest() -> None:
         )
 
 
-def test_known_python_dependencies_require_a_lock_not_a_vendor_bundle() -> None:
+def test_known_dependencies_require_lock_store_and_inventory() -> None:
     artifact = ArtifactRef(
         digest="sha256:" + "e" * 64,
         size_bytes=1,
@@ -65,23 +65,24 @@ def test_known_python_dependencies_require_a_lock_not_a_vendor_bundle() -> None:
         visibility=Visibility.PRIVATE,
     )
 
-    with pytest.raises(ValidationError, match="requires lock_artifact"):
+    with pytest.raises(ValidationError, match="lock, offline_store, and inventory"):
         DependencyBundle(
             status=ProvenanceStatus.KNOWN,
-            artifact=artifact,
-            installer="pip",
+            package_manager="pip",
+            lock=artifact,
         )
 
     bundle = DependencyBundle(
         status=ProvenanceStatus.KNOWN,
-        lock_artifact=artifact,
-        installer="pip",
+        package_manager="pip",
+        lock=artifact,
+        offline_store=artifact,
+        inventory=artifact,
     )
-    assert bundle.lock_artifact == artifact
-    assert bundle.artifact is None
+    assert bundle.lock == artifact
 
 
-def test_known_go_dependencies_require_a_private_module_bundle() -> None:
+def test_dependency_artifacts_must_be_private() -> None:
     private = ArtifactRef(
         digest="sha256:" + "f" * 64,
         size_bytes=1,
@@ -97,15 +98,19 @@ def test_known_go_dependencies_require_a_private_module_bundle() -> None:
 
     bundle = DependencyBundle(
         status=ProvenanceStatus.KNOWN,
-        module_bundle=private,
-        installer="system",
+        package_manager="go-modules",
+        lock=private,
+        offline_store=private,
+        inventory=private,
     )
-    assert bundle.module_bundle == private
-    with pytest.raises(ValidationError, match="module_bundle must be private"):
+    assert bundle.offline_store == private
+    with pytest.raises(ValidationError, match="offline_store must be private"):
         DependencyBundle(
             status=ProvenanceStatus.KNOWN,
-            module_bundle=public,
-            installer="system",
+            package_manager="go-modules",
+            lock=private,
+            offline_store=public,
+            inventory=private,
         )
 
 

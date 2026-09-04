@@ -35,18 +35,38 @@ reason = "The pure-Python build/runtime closure is installed from the private ha
 
 [dependencies]
 status = "known"
-installer = "pip"
+package_manager = "pip"
 packages = [
-  "hatchling==1.28.0",
-  "packaging==26.3",
-  "pathspec==1.1.1",
-  "pluggy==1.6.0",
-  "setuptools==80.9.0",
-  "trove-classifiers==2026.6.1.19",
-  "typing-extensions==4.15.0",
-  "wheel==0.45.1",
+    "hatchling==1.28.0",
+    "packaging==26.3",
+    "pathspec==1.1.1",
+    "pluggy==1.6.0",
+    "setuptools==80.9.0",
+    "trove-classifiers==2026.6.1.19",
+    "typing-extensions==4.15.0",
+    "wheel==0.45.1",
 ]
-lock_artifact = { digest = "sha256:de73ddf89ab1141d8f54290bd6030dc93e6186936fd9892ff444c8aacdd2d1a5", size_bytes = 2371, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:de73ddf89ab1141d8f54290bd6030dc93e6186936fd9892ff444c8aacdd2d1a5", visibility = "private" }
+
+[dependencies.lock]
+digest = "sha256:40a1bb5c776bced8c8e5aabad0130c77fed18a61d67619da27b3ac408d403d86"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:40a1bb5c776bced8c8e5aabad0130c77fed18a61d67619da27b3ac408d403d86"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:57728b67e34be9edf043f47a891223f434ec3c874bbdbf8dc63589acb18e62c9"
+size_bytes = 998
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:57728b67e34be9edf043f47a891223f434ec3c874bbdbf8dc63589acb18e62c9"
+visibility = "private"
 
 [tests]
 framework = "pytest"

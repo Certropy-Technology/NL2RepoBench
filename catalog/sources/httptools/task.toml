@@ -38,9 +38,33 @@ reason = "The Cython, setuptools, and wheel build closure is installed from a ha
 
 [dependencies]
 status = "known"
-installer = "pip"
-packages = ["Cython==3.1.4", "setuptools==80.9.0", "wheel==0.45.1"]
-lock_artifact = { digest = "sha256:7a6600fb982baaf0ee99c485d498a01cdb77241057323d9c1aad00dbe62bea75", size_bytes = 7124, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:7a6600fb982baaf0ee99c485d498a01cdb77241057323d9c1aad00dbe62bea75", visibility = "private" }
+package_manager = "pip"
+packages = [
+    "Cython==3.1.4",
+    "setuptools==80.9.0",
+    "wheel==0.45.1",
+]
+
+[dependencies.lock]
+digest = "sha256:5d7e949f103a93864354ba8fabe9585408ead6211671749ab3947c9dc9174388"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:5d7e949f103a93864354ba8fabe9585408ead6211671749ab3947c9dc9174388"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:f79b9eea2abde42b3f7585145034e5a327218ff510f2d61ba0650da3a577d6ae"
+size_bytes = 998
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:f79b9eea2abde42b3f7585145034e5a327218ff510f2d61ba0650da3a577d6ae"
+visibility = "private"
 
 [tests]
 framework = "pytest"

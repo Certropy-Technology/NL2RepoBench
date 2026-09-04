@@ -41,21 +41,32 @@ reason = "Candidate and verifier runs are offline. The exact npm closure is inst
 
 [dependencies]
 status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
-packages = ["get-east-asian-width@1.5.0", "strip-ansi@7.1.2", "ansi-regex@6.3.0"]
+packages = [
+    "get-east-asian-width@1.5.0",
+    "strip-ansi@7.1.2",
+    "ansi-regex@6.3.0",
+]
 
-[dependencies.artifact]
-digest = "sha256:f4c21f91cbfd6288219c149fbf3753082649d8fe152c1377a3ab57fc03f02c11"
-size_bytes = 204800
-media_type = "application/vnd.nl2repobench.npm-bundle+tar"
-uri = "artifact://private/sha256:f4c21f91cbfd6288219c149fbf3753082649d8fe152c1377a3ab57fc03f02c11"
+[dependencies.lock]
+digest = "sha256:8140ca52fc0ef3c708accb0c847a8ea45c3029f22b9b0162b725703257a00b99"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:8140ca52fc0ef3c708accb0c847a8ea45c3029f22b9b0162b725703257a00b99"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:d4799be4d544cfa879b33c2cd2108d380860364f1b914c54fd48918243f86b3d"
+size_bytes = 184320
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:d4799be4d544cfa879b33c2cd2108d380860364f1b914c54fd48918243f86b3d"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:542b58b966cb82e4cc3808dea52b49dd7a4c909877ee363d3c6a934bff999b0f"
+size_bytes = 7114
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:542b58b966cb82e4cc3808dea52b49dd7a4c909877ee363d3c6a934bff999b0f"
 visibility = "private"
 
 [tests]

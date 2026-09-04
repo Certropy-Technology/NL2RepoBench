@@ -29,8 +29,10 @@ reason = "The candidate exercises live Google/Selenium behavior and requires a b
 
 [dependencies]
 status = "unknown"
-installer = "pip"
-packages = ["browser, driver, Selenium, and package dependencies are not a frozen offline closure"]
+package_manager = "pip"
+packages = [
+    "browser, driver, Selenium, and package dependencies are not a frozen offline closure",
+]
 
 [tests]
 framework = "pytest"

@@ -29,8 +29,12 @@ reason = "Jinja requires MarkupSafe, flit_core, and a reviewed pytest/test-data 
 
 [dependencies]
 status = "unknown"
-installer = "pip"
-packages = ["MarkupSafe>=3.0", "flit_core<4", "pytest/test-data closure not frozen"]
+package_manager = "pip"
+packages = [
+    "MarkupSafe>=3.0",
+    "flit_core<4",
+    "pytest/test-data closure not frozen",
+]
 
 [tests]
 framework = "pytest"

@@ -35,9 +35,34 @@ reason = "The candidate and separate verifier dependency closures are installed 
 
 [dependencies]
 status = "known"
-installer = "pip"
-packages = ["regex==2025.11.3", "requests==2.32.5", "setuptools==80.9.0", "wheel==0.45.1"]
-lock_artifact = { digest = "sha256:5649458ada38d73e6f38baff0eee6e6866884fbc8c2ab1f75c1c5dd21083ed52", size_bytes = 26173, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:5649458ada38d73e6f38baff0eee6e6866884fbc8c2ab1f75c1c5dd21083ed52", visibility = "private" }
+package_manager = "pip"
+packages = [
+    "regex==2025.11.3",
+    "requests==2.32.5",
+    "setuptools==80.9.0",
+    "wheel==0.45.1",
+]
+
+[dependencies.lock]
+digest = "sha256:5095bf3487b37d0002b4bcc6b82272fed7dc72b176bb3baa523fb6c97b61eca2"
+size_bytes = 30720
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:5095bf3487b37d0002b4bcc6b82272fed7dc72b176bb3baa523fb6c97b61eca2"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:64c35b629f354431037a5c14e4ac3bbcd2d03a173aa87a7d99529df34e4aea2a"
+size_bytes = 1000
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:64c35b629f354431037a5c14e4ac3bbcd2d03a173aa87a7d99529df34e4aea2a"
+visibility = "private"
 
 [tests]
 framework = "pytest"

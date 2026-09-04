@@ -35,9 +35,37 @@ reason = "The candidate and verifier images install the private hash-locked buil
 
 [dependencies]
 status = "known"
-installer = "pip"
-packages = ["flit-core==3.12.0", "flit-scm==1.7.0", "packaging==26.3", "setuptools==84.0.0", "setuptools-scm==10.2.1", "typing-extensions==4.15.0", "vcs-versioning==2.3.1"]
-lock_artifact = { digest = "sha256:2c72a304c9e815bf0f280369ec62ed342fed5872cc810c999fc606aba1fa8f33", size_bytes = 1330, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:2c72a304c9e815bf0f280369ec62ed342fed5872cc810c999fc606aba1fa8f33", visibility = "private" }
+package_manager = "pip"
+packages = [
+    "flit-core==3.12.0",
+    "flit-scm==1.7.0",
+    "packaging==26.3",
+    "setuptools==84.0.0",
+    "setuptools-scm==10.2.1",
+    "typing-extensions==4.15.0",
+    "vcs-versioning==2.3.1",
+]
+
+[dependencies.lock]
+digest = "sha256:aad0dc182e7e11834c3abcaa18125e820d1a3432147b3b747b8505cf347a9907"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:aad0dc182e7e11834c3abcaa18125e820d1a3432147b3b747b8505cf347a9907"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:14a839e351df71c84a9b674166ff8def8226bb553cf1030892e511934c79c3cb"
+size_bytes = 998
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:14a839e351df71c84a9b674166ff8def8226bb553cf1030892e511934c79c3cb"
+visibility = "private"
 
 [tests]
 framework = "pytest"

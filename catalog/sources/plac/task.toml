@@ -29,7 +29,7 @@ reason = "BLOCKER: no hash-locked build or verifier dependency closure exists. F
 
 [dependencies]
 status = "unknown"
-installer = "pip"
+package_manager = "pip"
 packages = []
 
 [tests]

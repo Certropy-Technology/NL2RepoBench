@@ -6,7 +6,13 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "medium"
 category = "time-control-testing"
-tags = ["python", "datetime", "time-freezing", "decorators", "separate-verifier"]
+tags = [
+    "python",
+    "datetime",
+    "time-freezing",
+    "decorators",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -35,33 +41,79 @@ reason = "python-dateutil, six, setuptools, and wheel are installed from a hash-
 
 [dependencies]
 status = "known"
-installer = "pip"
-packages = ["python-dateutil==2.9.0.post0", "setuptools==80.10.2", "six==1.17.0", "wheel==0.45.1"]
-lock_artifact = { digest = "sha256:22b0ccfd39dfcf82a9b7367da41a8bd6be98b4ee365fbcd5839a02842205b884", size_bytes = 1388, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:22b0ccfd39dfcf82a9b7367da41a8bd6be98b4ee365fbcd5839a02842205b884", visibility = "private" }
+package_manager = "pip"
+packages = [
+    "python-dateutil==2.9.0.post0",
+    "setuptools==80.10.2",
+    "six==1.17.0",
+    "wheel==0.45.1",
+]
+
+[dependencies.lock]
+digest = "sha256:944564a21cf3db6e5e9fadeb66b65ded0cf886c08d1d6bca1f2a57343e3b7766"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:944564a21cf3db6e5e9fadeb66b65ded0cf886c08d1d6bca1f2a57343e3b7766"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:945d84db0ed39faae1e4bceb40e1c7db64ba3fb672456880e97bc13fd7b63045"
+size_bytes = 998
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:945d84db0ed39faae1e4bceb40e1c7db64ba3fb672456880e97bc13fd7b63045"
+visibility = "private"
 
 [tests]
 framework = "pytest"
 expected_total = 24
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py", "/tests/verifier/expected.json"]
+commands = [
+    "custom-json-v1 verifier entrypoint",
+]
+protected_paths = [
+    "/tests/verifier/run.py",
+    "/tests/verifier/adapter.py",
+    "/tests/verifier/expected.json",
+]
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:253bbf64c2964cad8a0f06e51dcd1a212da4bb62bbb68aceb657c654db3d4fe2", size_bytes = 30720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:253bbf64c2964cad8a0f06e51dcd1a212da4bb62bbb68aceb657c654db3d4fe2", visibility = "private" }
 entrypoint = "run.py"
-environment = {}
+
+[verifier.bundle]
+digest = "sha256:ad326ed70466ebc871df8bfa55c97392e2502108f5d91c1e1bc39ca25de903ed"
+size_bytes = 30720
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:ad326ed70466ebc871df8bfa55c97392e2502108f5d91c1e1bc39ca25de903ed"
+visibility = "private"
+
+[verifier.environment]
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
+passed_statuses = [
+    "passed",
+]
 excluded_statuses = []
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Build freezegun 1.5.5 from an empty workspace and satisfy a bounded deterministic freeze_time, date, datetime, tick, move_to, timezone, decorator, and context contract through isolated subprocesses."
-keywords = ["python", "datetime", "time-freezing", "decorators", "separate-verifier"]
+keywords = [
+    "python",
+    "datetime",
+    "time-freezing",
+    "decorators",
+    "separate-verifier",
+]
 agent_timeout_sec = 2400.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 90.0
@@ -74,10 +126,10 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [oracle_bundle]
-digest = "sha256:0461dddad21fc9f5fd2830832f89abac505bd3bc0d0f671bb6bfbb374e6129bf"
+digest = "sha256:69264682317ac2b10aaa6bba2d5c0519ea6e5027a704be5eb9575d77f90231b9"
 size_bytes = 194560
 media_type = "application/vnd.nl2repobench.private-bundle+tar"
-uri = "artifact://private/sha256:0461dddad21fc9f5fd2830832f89abac505bd3bc0d0f671bb6bfbb374e6129bf"
+uri = "artifact://private/sha256:69264682317ac2b10aaa6bba2d5c0519ea6e5027a704be5eb9575d77f90231b9"
 visibility = "private"
 
 [lifecycle]

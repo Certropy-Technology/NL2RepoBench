@@ -32,9 +32,29 @@ reason = "The candidate and verifier use the pre-materialized standard-library-o
 
 [dependencies]
 status = "known"
-installer = "system"
+package_manager = "go-modules"
 packages = []
-module_bundle = { digest = "sha256:47f336a69aff8a84fdd375c3f9acd13c4172f9d509c36b5eca59e50c16ba460c", size_bytes = 505, uri = "artifact://private/sha256:47f336a69aff8a84fdd375c3f9acd13c4172f9d509c36b5eca59e50c16ba460c", visibility = "private" }
+
+[dependencies.lock]
+digest = "sha256:cc0a48f951134872bf7418246386714b927f06f559d3f3d1166f2d197ee09109"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:cc0a48f951134872bf7418246386714b927f06f559d3f3d1166f2d197ee09109"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:0da4cec3f3b236fa829413e9b13598412fd7149598a663db15fc247865c222c9"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:0da4cec3f3b236fa829413e9b13598412fd7149598a663db15fc247865c222c9"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:d31d15401d7ce83106add509769e8cd52d380fad4b298dd6a8b55f350d59c050"
+size_bytes = 1313
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:d31d15401d7ce83106add509769e8cd52d380fad4b298dd6a8b55f350d59c050"
+visibility = "private"
 
 [tests]
 framework = "pytest"

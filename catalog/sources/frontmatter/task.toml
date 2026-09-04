@@ -26,7 +26,7 @@ reason = "The frozen verifier image and source/test mapping are unavailable; no 
 
 [dependencies]
 status = "unknown"
-installer = "pip"
+package_manager = "pip"
 packages = []
 
 [tests]

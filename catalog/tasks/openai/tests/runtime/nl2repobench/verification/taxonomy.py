@@ -16,6 +16,7 @@ class VerificationReason(StrEnum):
     CANDIDATE_WORKSPACE_REJECTED = "candidate-workspace-rejected"
     CANDIDATE_INSTALLATION_FAILED = "candidate-installation-failed"
     CANDIDATE_CALL_FAILED = "candidate-call-failed"
+    CANDIDATE_TIMEOUT = "candidate-timeout"
     SETUP_COMMAND_FAILED = "setup-command-failed"
     REPORT_MISSING = "report-missing"
     REPORT_MALFORMED = "report-malformed"

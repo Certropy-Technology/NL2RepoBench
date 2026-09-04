@@ -6,7 +6,13 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "medium"
 category = "format-string-parsing"
-tags = ["python", "parsing", "format-strings", "repository-generation", "separate-verifier"]
+tags = [
+    "python",
+    "parsing",
+    "format-strings",
+    "repository-generation",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -34,32 +40,74 @@ reason = "The hash-locked build closure is installed during image build. Runtime
 
 [dependencies]
 status = "known"
-installer = "pip"
-packages = ["setuptools==80.10.2", "wheel==0.45.1"]
-lock_artifact = { digest = "sha256:24713a5496e38f6da905cbc7944c15efd8863916e5da6825b835f66aa99068f7", size_bytes = 204, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:24713a5496e38f6da905cbc7944c15efd8863916e5da6825b835f66aa99068f7", visibility = "private" }
+package_manager = "pip"
+packages = [
+    "setuptools==80.10.2",
+    "wheel==0.45.1",
+]
+
+[dependencies.lock]
+digest = "sha256:593f3fc0c74888bd0196da49c67f027f0a626badc04a17523700ad85e4d38e2e"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:593f3fc0c74888bd0196da49c67f027f0a626badc04a17523700ad85e4d38e2e"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:42fd2484de983c1d7bcd56a981c7fe48556e2a909fa3ee043dbb6012c17f28c3"
+size_bytes = 996
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:42fd2484de983c1d7bcd56a981c7fe48556e2a909fa3ee043dbb6012c17f28c3"
+visibility = "private"
 
 [tests]
 framework = "pytest"
 expected_total = 96
 expected_total_source = "frozen-collection"
-commands = ["python -I /tests/verifier/run.py"]
-protected_paths = ["/tests/verifier/run.py", "/tests/verifier/probe.py"]
+commands = [
+    "python -I /tests/verifier/run.py",
+]
+protected_paths = [
+    "/tests/verifier/run.py",
+    "/tests/verifier/probe.py",
+]
 
 [verifier]
 protocol = "custom-json-v1"
 entrypoint = "run.py"
-bundle = { digest = "sha256:34c5369de94a0a17da612822ce17cf5619777ca43b4e6287f238932926845755", size_bytes = 71680, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:34c5369de94a0a17da612822ce17cf5619777ca43b4e6287f238932926845755", visibility = "private" }
+
+[verifier.bundle]
+digest = "sha256:dba92fed557f143bc1265ae8a5838ba32a647d169fd5b573547ede482d22e97f"
+size_bytes = 71680
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:dba92fed557f143bc1265ae8a5838ba32a647d169fd5b573547ede482d22e97f"
+visibility = "private"
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
+passed_statuses = [
+    "passed",
+]
 excluded_statuses = []
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Build the bounded parse format-string parsing library from an empty workspace."
-keywords = ["python", "parsing", "format-strings", "separate-verifier", "no-network"]
+keywords = [
+    "python",
+    "parsing",
+    "format-strings",
+    "separate-verifier",
+    "no-network",
+]
 agent_timeout_sec = 2400.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 60.0
@@ -77,8 +125,8 @@ owner = "worker"
 reason = "Fresh Harbor 0.21.0 receipts are bound to the final verifier artifact that retains the frozen upstream traceability fixtures: Oracle passed 96/96 at reward 1.0, empty scored 0.0, stub passed 9/96 at reward 0.09375, forgery scored 0.0 despite a forged workspace reward, and every verifier network probe confirmed no public connectivity. Reviews, pilots, and publication remain pending."
 
 [oracle_bundle]
-digest = "sha256:2725090f72efa86930fd19c6abf806b68f0c03373696e27b44c376891b85365d"
+digest = "sha256:c04d0794afde82b5dd1f9c1964bb4d1b753b230eb83eefd8a26a06b8935c9510"
 size_bytes = 143360
 media_type = "application/vnd.nl2repobench.private-bundle+tar"
-uri = "artifact://private/sha256:2725090f72efa86930fd19c6abf806b68f0c03373696e27b44c376891b85365d"
+uri = "artifact://private/sha256:c04d0794afde82b5dd1f9c1964bb4d1b753b230eb83eefd8a26a06b8935c9510"
 visibility = "private"

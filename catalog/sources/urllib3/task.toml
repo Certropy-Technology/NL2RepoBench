@@ -35,9 +35,33 @@ reason = "urllib3 runtime behavior is locally deterministic. Build dependencies 
 
 [dependencies]
 status = "known"
-installer = "pip"
-packages = ["hatch-vcs==0.5.0", "hatchling==1.32.0", "setuptools-scm==10.2.1"]
-lock_artifact = { digest = "sha256:a7d9c8379c1a6529ab2f34abc12a6e5fc926af7b133b6be5dfa40f2684a69a40", size_bytes = 2775, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:a7d9c8379c1a6529ab2f34abc12a6e5fc926af7b133b6be5dfa40f2684a69a40", visibility = "private" }
+package_manager = "pip"
+packages = [
+    "hatch-vcs==0.5.0",
+    "hatchling==1.32.0",
+    "setuptools-scm==10.2.1",
+]
+
+[dependencies.lock]
+digest = "sha256:c5684769cea21119391f93f161814fcbd242fe483218a5ebc91662e28183d898"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:c5684769cea21119391f93f161814fcbd242fe483218a5ebc91662e28183d898"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:1977ce9e7092ea1dd1a9a7dab103e2cb8b31481589b0ce696e5071c99771c95a"
+size_bytes = 998
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:1977ce9e7092ea1dd1a9a7dab103e2cb8b31481589b0ce696e5071c99771c95a"
+visibility = "private"
 
 [tests]
 framework = "pytest"

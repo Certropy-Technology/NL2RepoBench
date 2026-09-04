@@ -6,7 +6,13 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "easy"
 category = "parser-combinators"
-tags = ["python", "parser-combinators", "repository-generation", "pytest", "stdlib"]
+tags = [
+    "python",
+    "parser-combinators",
+    "repository-generation",
+    "pytest",
+    "stdlib",
+]
 language = "python"
 
 [source]
@@ -16,9 +22,6 @@ revision = "03deafa98a17adc27b1f650241701b2d21902b3e"
 license_spdx = "MIT"
 source_digest = "sha256:5b3f5d7aa6d5ee31659ce341bc15dee031ca631cc69e1d3ac392b4b03df6f10f"
 
-# Evidence in audit.md: this is an unprefixed git archive from the exact
-# revision; LICENSE is 1132 bytes with SHA-256
-# 3cd274c6ec7873e4f03693145819ec1fb82768d1386b7c59b4ff194c79853e06.
 [environment]
 status = "known"
 python_version = "3.12.14"
@@ -34,45 +37,81 @@ reference_source_fetch = "forbidden"
 reason = "Third-party build and test dependencies are installed during the Docker build phase, which has network. The agent phase therefore needs no egress. A model provider host, when an in-container agent needs one, is injected per run via Harbor agent.extra_allowed_hosts instead of being pinned in task metadata."
 
 [dependencies]
-# The verifier and candidate image install this hash-locked package-index
-# closure during Docker build; no wheelhouse is carried in the task.
 status = "known"
-installer = "pip"
+package_manager = "pip"
 packages = [
-  "iniconfig==2.3.0",
-  "packaging==26.3",
-  "pluggy==1.6.0",
-  "pygments==2.21.0",
-  "pytest==9.1.1",
-  "setuptools==80.10.2",
-  "wheel==0.45.1",
+    "iniconfig==2.3.0",
+    "packaging==26.3",
+    "pluggy==1.6.0",
+    "pygments==2.21.0",
+    "pytest==9.1.1",
+    "setuptools==80.10.2",
+    "wheel==0.45.1",
 ]
-lock_artifact = { digest = "sha256:5d35f14e65efab521aaea8470ab259e5463e97c8eedeba785ecbbbcc591fed36", size_bytes = 707, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:5d35f14e65efab521aaea8470ab259e5463e97c8eedeba785ecbbbcc591fed36", visibility = "private" }
+
+[dependencies.lock]
+digest = "sha256:10661b86a734e2c7ace647c34dc11bab4727617e2d895cd0a386f59278475b8f"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:10661b86a734e2c7ace647c34dc11bab4727617e2d895cd0a386f59278475b8f"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:395fcdb22e44c4502545d9ff700f15ae8dce0b94430525ce5e677e1d5c2867bb"
+size_bytes = 996
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:395fcdb22e44c4502545d9ff700f15ae8dce0b94430525ce5e677e1d5c2867bb"
+visibility = "private"
 
 [tests]
 framework = "pytest"
 expected_total = 88
 expected_total_source = "frozen-collection"
-commands = ["python -I /tests/verifier/run.py"]
-protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py", "/tests/verifier/fixture"]
+commands = [
+    "python -I /tests/verifier/run.py",
+]
+protected_paths = [
+    "/tests/verifier/run.py",
+    "/tests/verifier/adapter.py",
+    "/tests/verifier/fixture",
+]
 
 [verifier]
 protocol = "custom-json-v1"
 entrypoint = "run.py"
-bundle = { digest = "sha256:d9adcae4345746eb166cc0e367d22580f6587a1f42b471205d6f5f27113a897c", size_bytes = 61440, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:d9adcae4345746eb166cc0e367d22580f6587a1f42b471205d6f5f27113a897c", visibility = "private" }
+
+[verifier.bundle]
+digest = "sha256:2d503ba436ced1db4a862e2a20424d43d9e31115230f861f18c001b7c91c4af3"
+size_bytes = 61440
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:2d503ba436ced1db4a862e2a20424d43d9e31115230f861f18c001b7c91c4af3"
+visibility = "private"
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
+passed_statuses = [
+    "passed",
+]
 excluded_statuses = []
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
-# Production compiler settings. The private verifier, dependency lock, and
-# Oracle artifacts declared above resolve from the authorized artifact store.
 description = "Build the parsy parser-combinator library from an empty workspace."
-keywords = ["python", "parser-combinators", "pytest", "separate-verifier", "no-network"]
+keywords = [
+    "python",
+    "parser-combinators",
+    "pytest",
+    "separate-verifier",
+    "no-network",
+]
 agent_timeout_sec = 1800.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 30.0
@@ -89,8 +128,8 @@ status = "controls-passed"
 reason = "Production bundle materialized with a frozen 88-leaf upstream suite, separate custom-json-v1 verifier, hash-locked build dependencies, and digest-verified local Oracle source archive. Harbor Oracle, empty, stub, and forgery controls are recorded in task-local evidence."
 
 [oracle_bundle]
-digest = "sha256:9daf44390c7aa813a4461b056d0f98f066bc5fe1fcf7eb7aaeda4850b09a53bc"
+digest = "sha256:787b283af1f1c4f94dc85592b338d25a90278c46d33b32083679cb46c9a351f9"
 size_bytes = 204800
 media_type = "application/vnd.nl2repobench.private-bundle+tar"
-uri = "artifact://private/sha256:9daf44390c7aa813a4461b056d0f98f066bc5fe1fcf7eb7aaeda4850b09a53bc"
+uri = "artifact://private/sha256:787b283af1f1c4f94dc85592b338d25a90278c46d33b32083679cb46c9a351f9"
 visibility = "private"

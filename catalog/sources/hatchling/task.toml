@@ -35,17 +35,37 @@ reason = "The Python packaging/runtime and candidate build tools are installed f
 
 [dependencies]
 status = "known"
-installer = "pip"
+package_manager = "pip"
 packages = [
-  "packaging==26.3",
-  "pathspec==1.1.1",
-  "pluggy==1.6.0",
-  "setuptools==80.10.2",
-  "tomlkit==0.13.3",
-  "trove-classifiers==2026.6.1.19",
-  "wheel==0.45.1",
+    "packaging==26.3",
+    "pathspec==1.1.1",
+    "pluggy==1.6.0",
+    "setuptools==80.10.2",
+    "tomlkit==0.13.3",
+    "trove-classifiers==2026.6.1.19",
+    "wheel==0.45.1",
 ]
-lock_artifact = { digest = "sha256:1c65ec786efe51baa5f9ff90c60c963719c41216451db6f18842eb89ba231a42", size_bytes = 1317, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:1c65ec786efe51baa5f9ff90c60c963719c41216451db6f18842eb89ba231a42", visibility = "private" }
+
+[dependencies.lock]
+digest = "sha256:13efb7fd32668d62cd118d6ce22f26c771732f2f31dec020be086d5b60a9fe14"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:13efb7fd32668d62cd118d6ce22f26c771732f2f31dec020be086d5b60a9fe14"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:5ada04d3f2cb51f071abfd8bbffad67c02b768caae76ee7f1adcd865d6aa4f22"
+size_bytes = 998
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:5ada04d3f2cb51f071abfd8bbffad67c02b768caae76ee7f1adcd865d6aa4f22"
+visibility = "private"
 
 [tests]
 framework = "pytest"

@@ -7,14 +7,14 @@ instruction = "instruction.md"
 difficulty = "medium"
 category = "tree-data-structure"
 tags = [
-  "python",
-  "tree",
-  "iterators",
-  "rendering",
-  "json",
-  "mermaid",
-  "scenario-adapter",
-  "separate-verifier",
+    "python",
+    "tree",
+    "iterators",
+    "rendering",
+    "json",
+    "mermaid",
+    "scenario-adapter",
+    "separate-verifier",
 ]
 language = "python"
 
@@ -43,43 +43,81 @@ reason = "Build-time dependencies are installed from the private hash lock; agen
 
 [dependencies]
 status = "known"
-installer = "pip"
+package_manager = "pip"
 packages = [
-  "annotated-doc==0.0.4",
-  "markdown-it-py==4.0.0",
-  "mdurl==0.1.2",
-  "pdm-backend==2.4.9",
-  "pygments==2.20.0",
-  "rich==15.0.0",
-  "setuptools==80.9.0",
-  "shellingham==1.5.4",
-  "wheel==0.45.1",
+    "annotated-doc==0.0.4",
+    "markdown-it-py==4.0.0",
+    "mdurl==0.1.2",
+    "pdm-backend==2.4.9",
+    "pygments==2.20.0",
+    "rich==15.0.0",
+    "setuptools==80.9.0",
+    "shellingham==1.5.4",
+    "wheel==0.45.1",
 ]
-lock_artifact = { digest = "sha256:9bbdacc0a37d970d48fc387c12dbffb9f69b030e0ae87dfe9cd0415494643667", size_bytes = 922, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:9bbdacc0a37d970d48fc387c12dbffb9f69b030e0ae87dfe9cd0415494643667", visibility = "private" }
+
+[dependencies.lock]
+digest = "sha256:12168331edc867154f5638cff4391110d82774e20e1e467d3cb18c858855aba8"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:12168331edc867154f5638cff4391110d82774e20e1e467d3cb18c858855aba8"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:70aa31e3442e2cd5d13ac509e6157f1876284cc9fd76521a15a158ac0e238b0e"
+size_bytes = 996
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:70aa31e3442e2cd5d13ac509e6157f1876284cc9fd76521a15a158ac0e238b0e"
+visibility = "private"
 
 [tests]
 framework = "pytest"
 expected_total = 19
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
+commands = [
+    "custom-json-v1 verifier entrypoint",
+]
 protected_paths = []
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
+passed_statuses = [
+    "passed",
+]
 excluded_statuses = []
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:a685f107c95260e9218d5a3034bb77cabe74f78aeb98f25f1bd6e6e778f4bbdd", size_bytes = 30720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:a685f107c95260e9218d5a3034bb77cabe74f78aeb98f25f1bd6e6e778f4bbdd", visibility = "private" }
 entrypoint = "run.py"
-environment = {}
+
+[verifier.bundle]
+digest = "sha256:4b8872e3a59a4a1d44206987bbebd332e95925d475cb97f9a30a37487771d632"
+size_bytes = 30720
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:4b8872e3a59a4a1d44206987bbebd332e95925d475cb97f9a30a37487771d632"
+visibility = "private"
+
+[verifier.environment]
 
 [harbor]
 description = "Build anytree from an empty workspace and satisfy a bounded JSON scenario suite for its public tree, traversal, path, rendering, and import-export APIs."
-keywords = ["python", "tree", "iterators", "scenario-adapter", "json", "separate-verifier"]
+keywords = [
+    "python",
+    "tree",
+    "iterators",
+    "scenario-adapter",
+    "json",
+    "separate-verifier",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 120.0
@@ -92,10 +130,10 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [oracle_bundle]
-digest = "sha256:dede9730f20ed93e4114a6425ce14f7b9443ac161d7d66fc4994287b70021395"
+digest = "sha256:edacc903b90f59a39800e3f7e6dd56b68c5f377e730daf1fa71cb92270751813"
 size_bytes = 706560
 media_type = "application/vnd.nl2repobench.private-bundle+tar"
-uri = "artifact://private/sha256:dede9730f20ed93e4114a6425ce14f7b9443ac161d7d66fc4994287b70021395"
+uri = "artifact://private/sha256:edacc903b90f59a39800e3f7e6dd56b68c5f377e730daf1fa71cb92270751813"
 visibility = "private"
 
 [lifecycle]

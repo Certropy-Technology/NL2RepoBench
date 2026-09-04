@@ -35,15 +35,35 @@ reason = "The build backend closure is installed from the private hash lock duri
 
 [dependencies]
 status = "known"
-installer = "pip"
+package_manager = "pip"
 packages = [
-  "coherent-licensed==0.5.2",
-  "packaging==26.3",
-  "setuptools==84.0.0",
-  "setuptools-scm==10.2.1",
-  "vcs-versioning==2.3.1",
+    "coherent-licensed==0.5.2",
+    "packaging==26.3",
+    "setuptools==84.0.0",
+    "setuptools-scm==10.2.1",
+    "vcs-versioning==2.3.1",
 ]
-lock_artifact = { digest = "sha256:1e46c7b4a0449f037ab4666bead1282541bde2119c5fc759a3a881c527e9b551", size_bytes = 955, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:1e46c7b4a0449f037ab4666bead1282541bde2119c5fc759a3a881c527e9b551", visibility = "private" }
+
+[dependencies.lock]
+digest = "sha256:5fd6ed24192a0bc992dab562224ef94adb2fecf5a928870c00d15ac7750142b0"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:5fd6ed24192a0bc992dab562224ef94adb2fecf5a928870c00d15ac7750142b0"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:563cee1e5680aa0fa7350b481ec2b6c89e368e11f4608861c58afe43a4ef0125"
+size_bytes = 996
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:563cee1e5680aa0fa7350b481ec2b6c89e368e11f4608861c58afe43a4ef0125"
+visibility = "private"
 
 [tests]
 framework = "pytest"

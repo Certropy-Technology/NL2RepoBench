@@ -35,9 +35,39 @@ reason = "Candidate and separate verifier execution are network-isolated. Build 
 
 [dependencies]
 status = "known"
-installer = "pip"
-packages = ["hatch-vcs==0.5.0", "hatchling==1.27.0", "packaging==26.3", "pathspec==1.1.1", "pluggy==1.6.0", "setuptools==84.0.0", "setuptools-scm==10.2.1", "trove-classifiers==2026.6.1.19", "vcs-versioning==2.3.1"]
-lock_artifact = { digest = "sha256:742f447ef50010fc01803a0891b0caa66f1c78cea241b9120505a9f3a4382267", size_bytes = 2151, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:742f447ef50010fc01803a0891b0caa66f1c78cea241b9120505a9f3a4382267", visibility = "private" }
+package_manager = "pip"
+packages = [
+    "hatch-vcs==0.5.0",
+    "hatchling==1.27.0",
+    "packaging==26.3",
+    "pathspec==1.1.1",
+    "pluggy==1.6.0",
+    "setuptools==84.0.0",
+    "setuptools-scm==10.2.1",
+    "trove-classifiers==2026.6.1.19",
+    "vcs-versioning==2.3.1",
+]
+
+[dependencies.lock]
+digest = "sha256:299592490010f9fb985ea0d79da2d033badcdef20372f4b297f3615d79dcabcb"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:299592490010f9fb985ea0d79da2d033badcdef20372f4b297f3615d79dcabcb"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:461da7bde1090e02175d5359ec5ebc91db2cba6135ac1f11164b94e6845af886"
+size_bytes = 998
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:461da7bde1090e02175d5359ec5ebc91db2cba6135ac1f11164b94e6845af886"
+visibility = "private"
 
 [tests]
 framework = "pytest"

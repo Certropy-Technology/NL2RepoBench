@@ -44,11 +44,11 @@
       "x-nl2repobench-model": "ArtifactRef",
       "x-nl2repobench-runtime-validation": true
     },
-    "DependencyBundleV2": {
+    "DependencyBundle": {
       "additionalProperties": false,
-      "description": "Offline dependency closure with an explicit npm consumer contract.",
+      "description": "One language-neutral lock/store/inventory dependency contract.",
       "properties": {
-        "artifact": {
+        "inventory": {
           "anyOf": [
             {
               "$ref": "#/$defs/ArtifactRef"
@@ -59,59 +59,42 @@
           ],
           "default": null
         },
-        "consumer": {
-          "enum": [
-            "candidate-runtime",
-            "verifier-runtime"
+        "lock": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            {
+              "type": "null"
+            }
           ],
-          "title": "Consumer",
-          "type": "string"
+          "default": null
         },
-        "ecosystem": {
-          "enum": [
-            "python",
-            "npm"
+        "offline_store": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            {
+              "type": "null"
+            }
           ],
-          "title": "Ecosystem",
-          "type": "string"
-        },
-        "install_mode": {
-          "const": "offline",
-          "default": "offline",
-          "title": "Install Mode",
-          "type": "string"
-        },
-        "lifecycle_scripts": {
-          "const": "ignore-scripts",
-          "default": "ignore-scripts",
-          "title": "Lifecycle Scripts",
-          "type": "string"
-        },
-        "lockfile_name": {
-          "enum": [
-            "requirements.lock.txt",
-            "package-lock.json",
-            "pnpm-lock.yaml"
-          ],
-          "title": "Lockfile Name",
-          "type": "string"
-        },
-        "lockfile_version": {
-          "title": "Lockfile Version",
-          "type": "string"
+          "default": null
         },
         "package_manager": {
+          "default": "unknown",
           "enum": [
             "uv",
             "pip",
             "npm",
-            "pnpm"
+            "pnpm",
+            "go-modules",
+            "maven",
+            "cargo",
+            "none",
+            "unknown"
           ],
           "title": "Package Manager",
-          "type": "string"
-        },
-        "package_manager_version": {
-          "title": "Package Manager Version",
           "type": "string"
         },
         "packages": {
@@ -123,32 +106,19 @@
           "type": "array"
         },
         "schema_version": {
-          "const": "2.0",
-          "default": "2.0",
+          "const": "1.0",
+          "default": "1.0",
           "title": "Schema Version",
           "type": "string"
         },
         "status": {
-          "default": "unknown",
-          "enum": [
-            "known",
-            "unknown"
-          ],
-          "title": "Status",
-          "type": "string"
+          "$ref": "#/$defs/ProvenanceStatus",
+          "default": "unknown"
         }
       },
-      "required": [
-        "ecosystem",
-        "consumer",
-        "lockfile_name",
-        "lockfile_version",
-        "package_manager",
-        "package_manager_version"
-      ],
-      "title": "DependencyBundleV2",
+      "title": "DependencyBundle",
       "type": "object",
-      "x-nl2repobench-model": "DependencyBundleV2",
+      "x-nl2repobench-model": "DependencyBundle",
       "x-nl2repobench-runtime-validation": true
     },
     "EnvironmentLockV2": {
@@ -1040,7 +1010,7 @@
   "description": "Human-maintained v2 task definition loaded from ``task.toml``.",
   "properties": {
     "dependencies": {
-      "$ref": "#/$defs/DependencyBundleV2"
+      "$ref": "#/$defs/DependencyBundle"
     },
     "environment": {
       "$ref": "#/$defs/EnvironmentLockV2"

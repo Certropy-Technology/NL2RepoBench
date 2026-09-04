@@ -35,9 +35,31 @@ reason = "The candidate uses a pure-Python JSON adaptation with a hash-locked bu
 
 [dependencies]
 status = "known"
-installer = "pip"
-packages = ["setuptools==80.9.0"]
-lock_artifact = { digest = "sha256:d978dd32c7d5c8bb3a1f40f9b05fe68f34fb24bef1ae4bd9b3c60af6fb1f87fd", size_bytes = 189, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:d978dd32c7d5c8bb3a1f40f9b05fe68f34fb24bef1ae4bd9b3c60af6fb1f87fd", visibility = "private" }
+package_manager = "pip"
+packages = [
+    "setuptools==80.9.0",
+]
+
+[dependencies.lock]
+digest = "sha256:3d095d52e12f60b8ba247c7c16d8c3a640a4bdc41582b2e8799b8e8f1e5aaed6"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:3d095d52e12f60b8ba247c7c16d8c3a640a4bdc41582b2e8799b8e8f1e5aaed6"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:5aff0901b0cc8b0190a2524dc979f7ed0a06941999df8c6bba9a5a3b7d524e18"
+size_bytes = 996
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:5aff0901b0cc8b0190a2524dc979f7ed0a06941999df8c6bba9a5a3b7d524e18"
+visibility = "private"
 
 [tests]
 framework = "pytest"

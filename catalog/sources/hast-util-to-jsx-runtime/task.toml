@@ -41,21 +41,44 @@ reason = "Candidate and separate verifier phases use an immutable npm v3 cache a
 
 [dependencies]
 status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
-packages = ["@types/estree", "@types/hast", "@types/unist", "comma-separated-tokens", "devlop", "estree-util-is-identifier-name", "hast-util-whitespace", "mdast-util-mdx-expression", "mdast-util-mdx-jsx", "mdast-util-mdxjs-esm", "property-information", "space-separated-tokens", "style-to-js", "unist-util-position", "vfile-message"]
+packages = [
+    "@types/estree",
+    "@types/hast",
+    "@types/unist",
+    "comma-separated-tokens",
+    "devlop",
+    "estree-util-is-identifier-name",
+    "hast-util-whitespace",
+    "mdast-util-mdx-expression",
+    "mdast-util-mdx-jsx",
+    "mdast-util-mdxjs-esm",
+    "property-information",
+    "space-separated-tokens",
+    "style-to-js",
+    "unist-util-position",
+    "vfile-message",
+]
 
-[dependencies.artifact]
-digest = "sha256:5c1b001b38f695c16aecd46b6a7f5678f0a72fba0afdc164aae6388c5912dec7"
-size_bytes = 4935680
-media_type = "application/vnd.nl2repobench.npm-bundle+tar"
-uri = "artifact://private/sha256:5c1b001b38f695c16aecd46b6a7f5678f0a72fba0afdc164aae6388c5912dec7"
+[dependencies.lock]
+digest = "sha256:c99c411a65eb4736a2b8b76ab0c53424b61b92c2686e6c0e6dcec944266dba17"
+size_bytes = 143360
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:c99c411a65eb4736a2b8b76ab0c53424b61b92c2686e6c0e6dcec944266dba17"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:6a0b8ed36eeb03312e2e4fef84de2c4bad44ec8a43e3d1d2b800ce41f622c3c2"
+size_bytes = 4608000
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:6a0b8ed36eeb03312e2e4fef84de2c4bad44ec8a43e3d1d2b800ce41f622c3c2"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:9a74ae31bdf4d9d996f30bbd1d7239ca8417c562a920b503adb422ddeb91a44e"
+size_bytes = 68802
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:9a74ae31bdf4d9d996f30bbd1d7239ca8417c562a920b503adb422ddeb91a44e"
 visibility = "private"
 
 [tests]

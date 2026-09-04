@@ -34,9 +34,29 @@ reason = "Candidate and separate verifier execution use a private hash-addressed
 
 [dependencies]
 status = "known"
-installer = "system"
+package_manager = "go-modules"
 packages = []
-module_bundle = { digest = "sha256:40824bd4d569133cff05aae5166aef989d0f1b233732ae46541428c4ec5d85b4", size_bytes = 412, uri = "artifact://private/sha256:40824bd4d569133cff05aae5166aef989d0f1b233732ae46541428c4ec5d85b4", visibility = "private" }
+
+[dependencies.lock]
+digest = "sha256:6ea41311ceaf3a328fb956fe57d54829f0d9140a628a68a0904c3e8521926436"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:6ea41311ceaf3a328fb956fe57d54829f0d9140a628a68a0904c3e8521926436"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:0da4cec3f3b236fa829413e9b13598412fd7149598a663db15fc247865c222c9"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:0da4cec3f3b236fa829413e9b13598412fd7149598a663db15fc247865c222c9"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:9d8d32abd4e49d305ccbd64c3117c70cf2a598b0fdffea3bbccf40cafee65fe3"
+size_bytes = 1313
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:9d8d32abd4e49d305ccbd64c3117c70cf2a598b0fdffea3bbccf40cafee65fe3"
+visibility = "private"
 
 [tests]
 framework = "pytest"

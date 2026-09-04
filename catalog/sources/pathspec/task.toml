@@ -35,9 +35,31 @@ reason = "Candidate and verifier execution are network-isolated. The only build 
 
 [dependencies]
 status = "known"
-installer = "pip"
-packages = ["flit-core==3.12.0"]
-lock_artifact = { digest = "sha256:b3d7456ecf8cd481ce5ea8a7e28ad58078a134e6dd51c1a69e1cf6d6074f7d0e", size_bytes = 442, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:b3d7456ecf8cd481ce5ea8a7e28ad58078a134e6dd51c1a69e1cf6d6074f7d0e", visibility = "private" }
+package_manager = "pip"
+packages = [
+    "flit-core==3.12.0",
+]
+
+[dependencies.lock]
+digest = "sha256:c1f7c695fbd1984478e0ea3b2ad00545b6a3f1f685cc7e83f7739b0f95dbb3bd"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:c1f7c695fbd1984478e0ea3b2ad00545b6a3f1f685cc7e83f7739b0f95dbb3bd"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:ee326dcc24bf574ad75cc9ca30f405f7d5e9c8463e862c5a49ff3b443728e1cb"
+size_bytes = 996
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:ee326dcc24bf574ad75cc9ca30f405f7d5e9c8463e862c5a49ff3b443728e1cb"
+visibility = "private"
 
 [tests]
 framework = "pytest"

@@ -35,16 +35,36 @@ reason = "Build-time dependencies are installed from the private hash lock. Agen
 
 [dependencies]
 status = "known"
-installer = "pip"
+package_manager = "pip"
 packages = [
-  "aiobotocore==2.25.1",
-  "aiohttp==3.12.15",
-  "fsspec==2026.7.0",
-  "pytest==9.1.1",
-  "setuptools==84.0.0",
-  "wheel==0.46.1",
+    "aiobotocore==2.25.1",
+    "aiohttp==3.12.15",
+    "fsspec==2026.7.0",
+    "pytest==9.1.1",
+    "setuptools==84.0.0",
+    "wheel==0.46.1",
 ]
-lock_artifact = { digest = "sha256:38a692d95ba6065b5b0c55eb13e41b332f2d49691fbc3bb84ba6a5d8d297e5d3", size_bytes = 69204, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:38a692d95ba6065b5b0c55eb13e41b332f2d49691fbc3bb84ba6a5d8d297e5d3", visibility = "private" }
+
+[dependencies.lock]
+digest = "sha256:7fd8611f2df56134ecc1598af88103a7573f5e00f368f118b58162eb3cdb40fd"
+size_bytes = 71680
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:7fd8611f2df56134ecc1598af88103a7573f5e00f368f118b58162eb3cdb40fd"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:1b88cdf1ca6fe5f43694357ca43ddd35aeaf064f519e6f249fb066e76cd81803"
+size_bytes = 1000
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:1b88cdf1ca6fe5f43694357ca43ddd35aeaf064f519e6f249fb066e76cd81803"
+visibility = "private"
 
 [tests]
 framework = "pytest"

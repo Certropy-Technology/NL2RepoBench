@@ -29,14 +29,14 @@ reason = "Agent and verifier runs must remain offline; no hash-locked wcwidth/te
 
 [dependencies]
 status = "unknown"
-installer = "pip"
+package_manager = "pip"
 packages = [
-  "wcwidth>=0.3.5",
-  "hatch-vcs",
-  "hatchling>=1.27",
-  "pytest>=9",
-  "pytest-cov",
-  "pytest-lazy-fixtures",
+    "wcwidth>=0.3.5",
+    "hatch-vcs",
+    "hatchling>=1.27",
+    "pytest>=9",
+    "pytest-cov",
+    "pytest-lazy-fixtures",
 ]
 
 [tests]

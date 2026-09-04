@@ -18,6 +18,7 @@ class LeafCase(RecordModel):
 
     leaf_id: Annotated[str, Field(min_length=1, max_length=512)]
     status: LeafStatus
+    display_name: Annotated[str | None, Field(min_length=1, max_length=512)] = None
     duration_ms: Annotated[float, Field(ge=0)] = 0.0
     details: Annotated[str | None, Field(max_length=4096)] = None
 

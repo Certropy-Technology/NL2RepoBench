@@ -34,9 +34,29 @@ reason = "The candidate and verifier use a prebuilt, empty Go module closure; on
 
 [dependencies]
 status = "known"
-installer = "system"
-module_bundle = { digest = "sha256:13eef327dbfbe50b6bf6c3e111a9d16e77385846458fbbc5997025a153994e3d", size_bytes = 476, uri = "artifact://private/sha256:13eef327dbfbe50b6bf6c3e111a9d16e77385846458fbbc5997025a153994e3d", visibility = "private" }
+package_manager = "go-modules"
 packages = []
+
+[dependencies.lock]
+digest = "sha256:cf636a1166f2ab9b6b0bbc09c2f1a38be8e9a3fe0370f697afb5f153050f6a69"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:cf636a1166f2ab9b6b0bbc09c2f1a38be8e9a3fe0370f697afb5f153050f6a69"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:2a5031c8f977bae0aaf9d2089355f17b35fc9fc45eb4c211544de701cb8da33a"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:2a5031c8f977bae0aaf9d2089355f17b35fc9fc45eb4c211544de701cb8da33a"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:0dbcf6f9b515b70c92c98def7b49f87bcd560feaa55d8578cd88d124d6d347bb"
+size_bytes = 1315
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:0dbcf6f9b515b70c92c98def7b49f87bcd560feaa55d8578cd88d124d6d347bb"
+visibility = "private"
 
 [tests]
 framework = "pytest"

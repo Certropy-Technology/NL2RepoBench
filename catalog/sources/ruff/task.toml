@@ -35,9 +35,31 @@ reason = "The setuptools build closure is hash-locked and installed during Docke
 
 [dependencies]
 status = "known"
-installer = "pip"
-packages = ["setuptools==80.9.0"]
-lock_artifact = { digest = "sha256:d1ff29fc884cbcbf907784faf5366752f6f4046acdc9196c40aa5b3a96f45e96", size_bytes = 104, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:d1ff29fc884cbcbf907784faf5366752f6f4046acdc9196c40aa5b3a96f45e96", visibility = "private" }
+package_manager = "pip"
+packages = [
+    "setuptools==80.9.0",
+]
+
+[dependencies.lock]
+digest = "sha256:8f6e9b4edde333fe5cd931441edc03f17006a629bd46b92eff7e32ad4b0d3832"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:8f6e9b4edde333fe5cd931441edc03f17006a629bd46b92eff7e32ad4b0d3832"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:cc91743446490fa9a1f7422b12d9c906ef5e3ee7d2b37470e62ee2bf49f9e83f"
+size_bytes = 996
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:cc91743446490fa9a1f7422b12d9c906ef5e3ee7d2b37470e62ee2bf49f9e83f"
+visibility = "private"
 
 [tests]
 framework = "pytest"

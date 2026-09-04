@@ -35,19 +35,39 @@ reason = "Click, h11, and candidate build backends are installed during image co
 
 [dependencies]
 status = "known"
-installer = "pip"
+package_manager = "pip"
 packages = [
-  "click==8.3.1",
-  "h11==0.16.0",
-  "hatchling==1.27.0",
-  "packaging==26.3",
-  "pathspec==1.1.1",
-  "pluggy==1.6.0",
-  "setuptools==80.9.0",
-  "trove-classifiers==2026.6.1.19",
-  "wheel==0.45.1",
+    "click==8.3.1",
+    "h11==0.16.0",
+    "hatchling==1.27.0",
+    "packaging==26.3",
+    "pathspec==1.1.1",
+    "pluggy==1.6.0",
+    "setuptools==80.9.0",
+    "trove-classifiers==2026.6.1.19",
+    "wheel==0.45.1",
 ]
-lock_artifact = { digest = "sha256:9e004a37049cd9aee2e2d768ebcfe413ba180572d6280d76a032ebf945a12229", size_bytes = 1874, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:9e004a37049cd9aee2e2d768ebcfe413ba180572d6280d76a032ebf945a12229", visibility = "private" }
+
+[dependencies.lock]
+digest = "sha256:5216240611af55312549ead091400c3a02207064727c83f19613fea0086f892c"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:5216240611af55312549ead091400c3a02207064727c83f19613fea0086f892c"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:d4a04497d13ee780fd64ccabb299526b72fe3134b1d386a431051c53856e18ec"
+size_bytes = 998
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:d4a04497d13ee780fd64ccabb299526b72fe3134b1d386a431051c53856e18ec"
+visibility = "private"
 
 [tests]
 framework = "pytest"

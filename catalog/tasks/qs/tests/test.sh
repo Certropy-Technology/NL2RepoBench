@@ -4,31 +4,13 @@ mkdir -p /logs/verifier
 chmod 0700 /logs/verifier
 rm -f /logs/verifier/reward.json /logs/verifier/grading.json   /logs/verifier/report.json /logs/verifier/network.json
 rm -rf /tmp/candidate-source /tmp/candidate-site /tmp/npm-cache
+
 NETWORK_CHECK='import sys; sys.path.insert(0, "/opt/nl2repobench-runtime");'
 NETWORK_CHECK+='from nl2repobench.verification.network_check import main; main()'
 if ! python3 -I -c "$NETWORK_CHECK" --output /logs/verifier/network.json; then
-  node /tests/runtime/node/grade-report.mjs --expected 17 --reason verifier-network-available --output /logs/verifier
-  exit 0
-fi
-
-/usr/local/bin/node /tests/runtime/node/network-check.mjs \
-  --output /logs/verifier/network.json
-network_exit_code=$?
-if [[ "$network_exit_code" -ne 0 ]]; then
-  network_reason=verifier-network-available
-  if [[ "$network_exit_code" -ne 1 ]] || [[ ! -s /logs/verifier/network.json ]]; then
-    network_reason=verifier-internal-error
-  fi
   node /tests/runtime/node/grade-report.mjs \
     --expected 17 \
-    --reason "$network_reason" \
-    --output /logs/verifier
-  exit 0
-fi
-if [[ ! -s /logs/verifier/network.json ]]; then
-  node /tests/runtime/node/grade-report.mjs \
-    --expected 17 \
-    --reason verifier-internal-error \
+    --reason verifier-network-available \
     --output /logs/verifier
   exit 0
 fi
@@ -86,7 +68,10 @@ node /tests/runtime/node/run_tests.mjs \
   --expected 17 \
   --output /logs/verifier/report.json || runner_exit_code=$?
 if [[ "$runner_exit_code" -eq 70 ]]; then
-  node /tests/runtime/node/grade-report.mjs --expected 17 --reason candidate-call-failed --output /logs/verifier
+  node /tests/runtime/node/grade-report.mjs \
+    --expected 17 \
+    --reason candidate-call-failed \
+    --output /logs/verifier
   exit 0
 fi
 node /tests/runtime/node/grade-report.mjs \

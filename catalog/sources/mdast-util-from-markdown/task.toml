@@ -41,21 +41,41 @@ libc = "glibc"
 
 [dependencies]
 status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
-packages = ["@types/mdast", "@types/unist", "decode-named-character-reference", "devlop", "mdast-util-to-string", "micromark", "micromark-util-decode-numeric-character-reference", "micromark-util-decode-string", "micromark-util-normalize-identifier", "micromark-util-symbol", "micromark-util-types", "unist-util-stringify-position"]
+packages = [
+    "@types/mdast",
+    "@types/unist",
+    "decode-named-character-reference",
+    "devlop",
+    "mdast-util-to-string",
+    "micromark",
+    "micromark-util-decode-numeric-character-reference",
+    "micromark-util-decode-string",
+    "micromark-util-normalize-identifier",
+    "micromark-util-symbol",
+    "micromark-util-types",
+    "unist-util-stringify-position",
+]
 
-[dependencies.artifact]
-digest = "sha256:ff246aef973478493951ab7b6db855b735b58ede0e23e6bd493eb82dcb359a1c"
-size_bytes = 2222080
-media_type = "application/vnd.nl2repobench.npm-bundle+tar"
-uri = "artifact://private/sha256:ff246aef973478493951ab7b6db855b735b58ede0e23e6bd493eb82dcb359a1c"
+[dependencies.lock]
+digest = "sha256:bf3196043d13c36a286d36534297d2ac11ba3ef93926b0de65309caf5709cb51"
+size_bytes = 71680
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:bf3196043d13c36a286d36534297d2ac11ba3ef93926b0de65309caf5709cb51"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:18d4bee53691d3f01b0f213b10f9089871b7ba985e918a5be91a331c94b509fb"
+size_bytes = 2027520
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:18d4bee53691d3f01b0f213b10f9089871b7ba985e918a5be91a331c94b509fb"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:98ba497a864f6f2d63a6ee0f049e469c8e13ee3c0f5884491f029d9113e7c966"
+size_bytes = 37313
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:98ba497a864f6f2d63a6ee0f049e469c8e13ee3c0f5884491f029d9113e7c966"
 visibility = "private"
 
 [tests]

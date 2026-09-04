@@ -6,7 +6,16 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "easy"
 category = "terminal-formatting"
-tags = ["node", "npm", "esm", "terminal", "ansi", "color", "json", "repository-generation"]
+tags = [
+    "node",
+    "npm",
+    "esm",
+    "terminal",
+    "ansi",
+    "color",
+    "json",
+    "repository-generation",
+]
 language = "node"
 
 [source]
@@ -18,7 +27,6 @@ source_digest = "sha256:0b041959f2c9516006566ed834208aaccf765e8d20f1b39efd8727e2
 submodules = []
 
 [environment]
-# Locked Node 24 image used by both isolated Harbor environments.
 status = "known"
 os_name = "debian-bookworm"
 base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
@@ -41,28 +49,50 @@ architecture = "linux/amd64"
 libc = "glibc"
 
 [dependencies]
-# The zero-runtime-dependency package has a verified root-only npm v3 lock
-# and an intentionally empty verifier-owned npm cache.
 status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
 packages = []
-artifact = { digest = "sha256:c3e8dba6d8511f5c2396941f70625aff6d02e64488e12afb30938a00e9a310a1", size_bytes = 10240, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:c3e8dba6d8511f5c2396941f70625aff6d02e64488e12afb30938a00e9a310a1", visibility = "private" }
+
+[dependencies.lock]
+digest = "sha256:ffb4e9249932aa496cb05549e77468f86863355cd0b03e6b55c183a1673fd8f3"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:ffb4e9249932aa496cb05549e77468f86863355cd0b03e6b55c183a1673fd8f3"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:63bdad568ff0174494aaaf128eafb1340ee1f22e4187976cc5fd107a141fdd22"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:63bdad568ff0174494aaaf128eafb1340ee1f22e4187976cc5fd107a141fdd22"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:298daa2b282e47f2ba57266c227c50b09258277d060d97c7cde442cce2d898e6"
+size_bytes = 1278
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:298daa2b282e47f2ba57266c227c50b09258277d060d97c7cde442cce2d898e6"
+visibility = "private"
 
 [tests]
-# A private deterministic node:test adapter freezes 24 leaf cases.
 framework = "node:test"
 report_format = "node-test-json-v1"
 expected_total = 24
 expected_total_source = "frozen-collection"
-commands_artifact = { digest = "sha256:d7bd386cd8ffcabafa9fb1f4488b95dee2e4e6ac0ab1feeb428ad1e8b9c2ef13", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:d7bd386cd8ffcabafa9fb1f4488b95dee2e4e6ac0ab1feeb428ad1e8b9c2ef13", visibility = "private" }
-test_bundle = { digest = "sha256:bd24983738489f856a9498c678ab89ae1c1c7ca3060e979cd62791630da0bca9", size_bytes = 20480, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:bd24983738489f856a9498c678ab89ae1c1c7ca3060e979cd62791630da0bca9", visibility = "private" }
+
+[tests.commands_artifact]
+digest = "sha256:7fb226a910c24e687c97db717df2114cebb65a78cb609d73becadf70fb3826c3"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.node-commands+tar"
+uri = "artifact://private/sha256:7fb226a910c24e687c97db717df2114cebb65a78cb609d73becadf70fb3826c3"
+visibility = "private"
+
+[tests.test_bundle]
+digest = "sha256:c40aef522a2267d9458782b19694782026c0b18e004727e210efeccd35950d6a"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.node-tests+tar"
+uri = "artifact://private/sha256:c40aef522a2267d9458782b19694782026c0b18e004727e210efeccd35950d6a"
+visibility = "private"
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
@@ -70,7 +100,16 @@ collection_mismatch = "fail"
 
 [harbor]
 description = "Production Node ESM slice for deterministic Chalk ANSI level and style APIs."
-keywords = ["node", "npm", "esm", "terminal", "ansi", "color", "json", "chalk"]
+keywords = [
+    "node",
+    "npm",
+    "esm",
+    "terminal",
+    "ansi",
+    "color",
+    "json",
+    "chalk",
+]
 agent_timeout_sec = 900.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 90.0
@@ -88,8 +127,8 @@ owner = "chalk-repair"
 reason = "Production revalidation after the verifier network-proof and Node toolchain digest change passed: the Harbor Oracle scored 24/24 with reward 1.0; empty, stub, and forgery scored 0.0; and every run emitted a fresh verifier-owned network receipt proving no public egress. Review and pilot remain publication-stage work."
 
 [oracle_bundle]
-digest = "sha256:d1f8c09e29ccc43c1ffbf316b54ab285c00dd7b66ef6ce0ca73278858cbd9b24"
+digest = "sha256:ee1b8271f4e483450b61b662901c1565dbb609a755e01fbf008d75cdeb91d358"
 size_bytes = 81920
 media_type = "application/vnd.nl2repobench.oracle+tar"
-uri = "artifact://private/sha256:d1f8c09e29ccc43c1ffbf316b54ab285c00dd7b66ef6ce0ca73278858cbd9b24"
+uri = "artifact://private/sha256:ee1b8271f4e483450b61b662901c1565dbb609a755e01fbf008d75cdeb91d358"
 visibility = "private"

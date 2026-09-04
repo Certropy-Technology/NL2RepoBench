@@ -27,7 +27,7 @@ reason = "The audit did not establish an immutable source checkout or a hash-loc
 
 [dependencies]
 status = "unknown"
-installer = "pip"
+package_manager = "pip"
 packages = []
 
 [tests]

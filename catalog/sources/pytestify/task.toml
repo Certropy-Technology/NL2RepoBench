@@ -31,13 +31,13 @@ reason = "Agent and verifier runs must remain offline. The audit has no approved
 
 [dependencies]
 status = "unknown"
-installer = "pip"
+package_manager = "pip"
 packages = [
-  "tokenize-rt>=4.0.0",
-  "pytest==8.4.1",
-  "pytest-xdist==3.8.0",
-  "setuptools==58.1.0",
-  "wheel==0.45.1",
+    "tokenize-rt>=4.0.0",
+    "pytest==8.4.1",
+    "pytest-xdist==3.8.0",
+    "setuptools==58.1.0",
+    "wheel==0.45.1",
 ]
 
 [tests]

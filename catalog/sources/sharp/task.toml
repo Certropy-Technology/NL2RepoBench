@@ -42,21 +42,34 @@ libc = "glibc"
 
 [dependencies]
 status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
-packages = ["@img/colour", "@img/sharp-libvips-linux-x64", "@img/sharp-linux-x64", "detect-libc", "semver"]
+packages = [
+    "@img/colour",
+    "@img/sharp-libvips-linux-x64",
+    "@img/sharp-linux-x64",
+    "detect-libc",
+    "semver",
+]
 
-[dependencies.artifact]
-digest = "sha256:e75a9da90ef9110bfb734a7e81cb20fe5f2a27beee4d4eab132fafb04b645e71"
-size_bytes = 9185280
-media_type = "application/vnd.nl2repobench.npm-bundle+tar"
-uri = "artifact://private/sha256:e75a9da90ef9110bfb734a7e81cb20fe5f2a27beee4d4eab132fafb04b645e71"
+[dependencies.lock]
+digest = "sha256:b72c3f29289016f6c785959f1ec27bc9ca0bb66218f7d3880ac737904dae3bb0"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:b72c3f29289016f6c785959f1ec27bc9ca0bb66218f7d3880ac737904dae3bb0"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:ed07fcac7f32c642ff13ba7eedfeb43f8be4689ceecd927ca6d6c3808754be15"
+size_bytes = 9175040
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:ed07fcac7f32c642ff13ba7eedfeb43f8be4689ceecd927ca6d6c3808754be15"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:943de50d9664786f055446d28977de84be53b2f485f28115e65d1985992b18a2"
+size_bytes = 8165
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:943de50d9664786f055446d28977de84be53b2f485f28115e65d1985992b18a2"
 visibility = "private"
 
 [tests]

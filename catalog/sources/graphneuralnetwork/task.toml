@@ -3,12 +3,24 @@ task_id = "graphneuralnetwork"
 version = "0.2.0"
 instruction = "instruction.md"
 
-oracle_bundle = { digest = "sha256:e0ca03295ab9bdb4d9dab1791b9aeddb9efce0c79c3d9a476c6830637b84e66e", size_bytes = 34099200, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:e0ca03295ab9bdb4d9dab1791b9aeddb9efce0c79c3d9a476c6830637b84e66e", visibility = "private" }
+[oracle_bundle]
+digest = "sha256:7e779493d024c1e8d19524e5a6a59880f69f0a52555ff92f5d6014e733d17b7d"
+size_bytes = 34099200
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:7e779493d024c1e8d19524e5a6a59880f69f0a52555ff92f5d6014e733d17b7d"
+visibility = "private"
 
 [metadata]
 difficulty = "easy"
 category = "python-library"
-tags = ["python", "machine-learning", "tensorflow", "graph-neural-network", "repository-generation", "separate-verifier"]
+tags = [
+    "python",
+    "machine-learning",
+    "tensorflow",
+    "graph-neural-network",
+    "repository-generation",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -25,7 +37,10 @@ python_version = "3.12.14"
 os_name = "debian-12"
 base_image = "python:3.12.14-slim-bookworm"
 base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e"
-system_packages = ["build-essential", "libgomp1"]
+system_packages = [
+    "build-essential",
+    "libgomp1",
+]
 network_mode = "no-network"
 build_command = "install the pinned CPU-only TensorFlow closure from the private requirements lock during the verifier image build"
 
@@ -37,36 +52,67 @@ reason = "Third-party build and test dependencies are installed during the Docke
 
 [dependencies]
 status = "known"
-installer = "pip"
+package_manager = "pip"
 packages = [
-  "tensorflow-cpu==2.19.0",
-  "networkx==3.4.2",
-  "numpy==2.1.3",
-  "scipy==1.15.3",
-  "scikit-learn==1.7.1",
-  "matplotlib==3.10.5",
-  "setuptools==80.10.2",
-  "wheel==0.45.1",
+    "tensorflow-cpu==2.19.0",
+    "networkx==3.4.2",
+    "numpy==2.1.3",
+    "scipy==1.15.3",
+    "scikit-learn==1.7.1",
+    "matplotlib==3.10.5",
+    "setuptools==80.10.2",
+    "wheel==0.45.1",
 ]
-lock_artifact = { digest = "sha256:a30e649e38343eebfe8322f4c75c14e36752e5d3a48bae529988273f0cfa4b1c", size_bytes = 5118, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:a30e649e38343eebfe8322f4c75c14e36752e5d3a48bae529988273f0cfa4b1c", visibility = "private" }
+
+[dependencies.lock]
+digest = "sha256:42207e37799c4a8c99302736c8e9adf53951ad3c7898ff4b0b318295d8d8483a"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:42207e37799c4a8c99302736c8e9adf53951ad3c7898ff4b0b318295d8d8483a"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:f7fcc4e3fb9960309e402406202cc3bad5a0254c789abdcaa6bbcf1002b79ca5"
+size_bytes = 998
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:f7fcc4e3fb9960309e402406202cc3bad5a0254c789abdcaa6bbcf1002b79ca5"
+visibility = "private"
 
 [tests]
 framework = "pytest"
 expected_total = 4
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
+commands = [
+    "custom-json-v1 verifier entrypoint",
+]
 protected_paths = []
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
+passed_statuses = [
+    "passed",
+]
 excluded_statuses = []
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Build the GraphNeuralNetwork TensorFlow graph-learning package from an empty workspace."
-keywords = ["python", "tensorflow", "graph-neural-network", "machine-learning", "repository-generation", "separate-verifier"]
+keywords = [
+    "python",
+    "tensorflow",
+    "graph-neural-network",
+    "machine-learning",
+    "repository-generation",
+    "separate-verifier",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 1800.0
 candidate_install_timeout_sec = 300.0
@@ -80,9 +126,16 @@ workspace_artifact = "/workspace"
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:993115d21018f68eaac97de122a3fe176ab3068b0842b065787109d986615f9b", size_bytes = 30720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:993115d21018f68eaac97de122a3fe176ab3068b0842b065787109d986615f9b", visibility = "private" }
 entrypoint = "run.py"
-environment = {}
+
+[verifier.bundle]
+digest = "sha256:e9408215237b81a4dd7f72fad811bcfae9467006b7d75d08aa33057f5aed3349"
+size_bytes = 30720
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:e9408215237b81a4dd7f72fad811bcfae9467006b7d75d08aa33057f5aed3349"
+visibility = "private"
+
+[verifier.environment]
 
 [lifecycle]
 status = "controls-passed"

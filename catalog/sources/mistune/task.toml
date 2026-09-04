@@ -33,18 +33,15 @@ reference_source_fetch = "forbidden"
 reason = "The parser dependency closure and bounded verifier are not frozen; candidate and verifier execution remain network-isolated."
 
 [dependencies]
-# The runtime dependency is conditional typing-extensions below Python 3.11.
-# The exact test-group versions come from uv.lock, while setuptools is an
-# unbounded build requirement and no portable offline bundle is stored here.
 status = "unknown"
-installer = "uv"
+package_manager = "uv"
 packages = [
-  "setuptools",
-  "typing-extensions==4.16.0; python_version < '3.11'",
-  "pytest==9.1.1",
-  "pytest-cov==7.1.0",
-  "mypy==2.3.0",
-  "ruff==0.15.22",
+    "setuptools",
+    "typing-extensions==4.16.0; python_version < '3.11'",
+    "pytest==9.1.1",
+    "pytest-cov==7.1.0",
+    "mypy==2.3.0",
+    "ruff==0.15.22",
 ]
 
 [tests]

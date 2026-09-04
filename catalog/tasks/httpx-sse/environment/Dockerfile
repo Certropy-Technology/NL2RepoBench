@@ -1,6 +1,6 @@
 FROM --platform=linux/amd64 nl2repobench/openhands-sdk-fork:930e9b1da
 
-LABEL org.nl2repobench.agent-runtime-image="nl2repobench/openhands-sdk-fork:930e9b1da" org.nl2repobench.agent-runtime-image-id="sha256:70525a5fbee81f4d202b7f7de14857fe78f961ce2ec3995efd1a4850e45c7ea5" org.nl2repobench.agent-dependency-build="pip-index-hash-locked-v1"
+LABEL org.nl2repobench.agent-runtime-image="nl2repobench/openhands-sdk-fork:930e9b1da" org.nl2repobench.agent-runtime-image-id="sha256:21f0ba5b3649db3ccc91b1128e5c8c6ffb915d4a8a04faaa11162793099dfac8" org.nl2repobench.agent-dependency-build="pip-index-hash-locked-v1"
 
 RUN apt-get update && apt-get install -y --no-install-recommends util-linux && rm -rf /var/lib/apt/lists/*
 

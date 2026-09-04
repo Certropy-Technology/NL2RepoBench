@@ -22,6 +22,10 @@ import tomli_w
 from nl2repobench.authoring.catalog import CatalogCompiler
 from nl2repobench.domain.models import ArtifactRef
 from nl2repobench.domain.models_v2 import DeclarativeTaskSourceV2, TaskManifestV2
+from nl2repobench.package_managers.dependency_artifacts import (
+    load_dependency_inventory,
+    materialize_dependency_archive,
+)
 from nl2repobench.storage.artifacts import FileArtifactStore, LocalArtifactResolver
 from nl2repobench.storage.files import atomic_write
 from nl2repobench.verification.node_command_plan import EXPECTED_NODE_PLAN
@@ -30,7 +34,11 @@ from .bundle_io import (
     BundleLimits,
 )
 from .models_v2 import load_node_toolchain_lock
-from .node_dependencies import NodeDependencyError, validate_npm_dependency_bundle
+from .node_dependencies import (
+    NodeDependencyError,
+    restore_node_dependency_store,
+    validate_npm_dependency_bundle,
+)
 from .task_writer import (
     TaskWriterError,
     copy_python_verifier_runtime,
@@ -171,8 +179,12 @@ class NodeHarborCompiler:
         task_root: Path,
         kind: str,
         output_root: Path,
+        *,
+        private_cas_root: Path | None = None,
     ) -> Path:
         """Create a supported Node control without mutating the source bundle."""
+
+        del private_cas_root
 
         if kind not in {
             "empty",
@@ -307,10 +319,10 @@ ENV npm_config_cache=/opt/npm-bundle/npm-cache \\
 
         dependencies_root = tests_root / "dependencies"
         dependencies_root.mkdir()
-        if manifest.dependency_bundle.artifact is not None and not allow_incomplete:
-            self._extract_private_bundle(manifest.dependency_bundle.artifact, dependencies_root)
-        else:
+        if allow_incomplete:
             self._write_empty_npm_bundle(dependencies_root)
+        else:
+            self._materialize_dependencies(manifest, dependencies_root)
         try:
             validate_npm_dependency_bundle(
                 dependencies_root,
@@ -360,6 +372,47 @@ WORKDIR /tests
         )
         atomic_write(tests_root / "test.sh", self._test_script(manifest).encode())
         os.chmod(tests_root / "test.sh", 0o755)
+
+    def _materialize_dependencies(
+        self, manifest: TaskManifestV2, destination: Path
+    ) -> None:
+        bundle = manifest.dependency_bundle
+        if (
+            self.artifact_resolver is None
+            or bundle.lock is None
+            or bundle.offline_store is None
+        ):
+            raise NodeHarborCompileError("Node dependency lock/store/inventory is missing")
+        identity = f"node+{bundle.package_manager}"
+        toolchain_digest = f"sha256:{hashlib.sha256(self.toolchain_path.read_bytes()).hexdigest()}"
+        try:
+            inventory = load_dependency_inventory(
+                bundle,
+                resolver=self.artifact_resolver,
+                expected_identity=identity,
+                expected_toolchain_digest=toolchain_digest,
+                expected_adapter_version=f"{bundle.package_manager}-offline-v1",
+            )
+            with tempfile.TemporaryDirectory(prefix="nl2repo-node-dependencies-") as temp:
+                root = Path(temp)
+                lock_root = root / "lock"
+                store_root = root / "store"
+                materialize_dependency_archive(
+                    bundle.lock,
+                    inventory.lock,
+                    lock_root,
+                    resolver=self.artifact_resolver,
+                )
+                materialize_dependency_archive(
+                    bundle.offline_store,
+                    inventory.store,
+                    store_root,
+                    resolver=self.artifact_resolver,
+                )
+                self._copy_tree(lock_root, destination)
+                restore_node_dependency_store(store_root, destination)
+        except (OSError, ValueError) as exc:
+            raise NodeHarborCompileError(f"invalid Node dependency closure: {exc}") from exc
 
     def _write_python_verifier_runtime(self, tests_root: Path) -> None:
         try:

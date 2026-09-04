@@ -6,7 +6,16 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "easy"
 category = "http-cookie"
-tags = ["node", "npm", "esm", "http", "cookie", "parser", "serializer", "json"]
+tags = [
+    "node",
+    "npm",
+    "esm",
+    "http",
+    "cookie",
+    "parser",
+    "serializer",
+    "json",
+]
 language = "node"
 
 [source]
@@ -41,24 +50,49 @@ libc = "glibc"
 
 [dependencies]
 status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
 packages = []
-artifact = { digest = "sha256:0465771fa2162c197c01e0fbf91097cb083e1d34df867386add3c2b9399c6d34", size_bytes = 10240, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:0465771fa2162c197c01e0fbf91097cb083e1d34df867386add3c2b9399c6d34", visibility = "private" }
+
+[dependencies.lock]
+digest = "sha256:c74d5455ffd5a9e3ea9c7e7c6611e03d896bc5c9fd319cc5b0a470aae98de266"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:c74d5455ffd5a9e3ea9c7e7c6611e03d896bc5c9fd319cc5b0a470aae98de266"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:63bdad568ff0174494aaaf128eafb1340ee1f22e4187976cc5fd107a141fdd22"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:63bdad568ff0174494aaaf128eafb1340ee1f22e4187976cc5fd107a141fdd22"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:b535d9d2ba3f0b095e25b2325782cc107bf1fdba06b63272f1914be09b092904"
+size_bytes = 1278
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:b535d9d2ba3f0b095e25b2325782cc107bf1fdba06b63272f1914be09b092904"
+visibility = "private"
 
 [tests]
 framework = "node:test"
 report_format = "node-test-json-v1"
 expected_total = 32
 expected_total_source = "frozen-collection"
-commands_artifact = { digest = "sha256:fda65a1fae7a54d9433921e0c28ac2311ec9dbefc0b8c54efe69c954ad4433f7", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:fda65a1fae7a54d9433921e0c28ac2311ec9dbefc0b8c54efe69c954ad4433f7", visibility = "private" }
-test_bundle = { digest = "sha256:fafcf9cc348d7b2d39d38862563860fc16e7dfb8968f01bd254453930bc08587", size_bytes = 20480, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:fafcf9cc348d7b2d39d38862563860fc16e7dfb8968f01bd254453930bc08587", visibility = "private" }
+
+[tests.commands_artifact]
+digest = "sha256:fda65a1fae7a54d9433921e0c28ac2311ec9dbefc0b8c54efe69c954ad4433f7"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.node-commands+tar"
+uri = "artifact://private/sha256:fda65a1fae7a54d9433921e0c28ac2311ec9dbefc0b8c54efe69c954ad4433f7"
+visibility = "private"
+
+[tests.test_bundle]
+digest = "sha256:45a9cacab290ed8036500b4156473924a97b1a1effd73d91ff680c3f0492325b"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.node-tests+tar"
+uri = "artifact://private/sha256:45a9cacab290ed8036500b4156473924a97b1a1effd73d91ff680c3f0492325b"
+visibility = "private"
 
 [metric]
 contract_id = "node-test-leaf-pass-rate-v1"
@@ -66,7 +100,16 @@ collection_mismatch = "fail"
 
 [harbor]
 description = "Pinned cookie ESM JSON-safe parser and serializer contract with 32 deterministic node:test leaves."
-keywords = ["node", "npm", "esm", "http", "cookie", "parser", "serializer", "json"]
+keywords = [
+    "node",
+    "npm",
+    "esm",
+    "http",
+    "cookie",
+    "parser",
+    "serializer",
+    "json",
+]
 agent_timeout_sec = 900.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 90.0
@@ -84,8 +127,8 @@ owner = "cookie-repair"
 reason = "Hash-bound Harbor 0.21 evidence is complete for the current source and locked Node toolchain: Oracle passed 32/32; empty failed closed at reward 0; the isolated committed-dispatch stub collected 32 and scored 1/32; forgery collected 32 and scored 1/32 despite a forged workspace reward; and every gate has a verifier-owned no-egress network receipt. Reviews and pilots remain pending."
 
 [oracle_bundle]
-digest = "sha256:6880843c56fbb2812265e32874ede71387f6a1559c240c785c25344fac2cc0fc"
+digest = "sha256:801d3ad825c7a0e7f1a17da2b96de788f885b0806c7c9d43552c1486f04cdfd1"
 size_bytes = 40960
 media_type = "application/vnd.nl2repobench.oracle+tar"
-uri = "artifact://private/sha256:6880843c56fbb2812265e32874ede71387f6a1559c240c785c25344fac2cc0fc"
+uri = "artifact://private/sha256:801d3ad825c7a0e7f1a17da2b96de788f885b0806c7c9d43552c1486f04cdfd1"
 visibility = "private"

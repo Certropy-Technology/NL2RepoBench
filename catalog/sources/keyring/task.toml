@@ -35,9 +35,44 @@ reason = "All Python build and runtime dependencies are installed from a hash-lo
 
 [dependencies]
 status = "known"
-installer = "pip"
-packages = ["cffi==2.1.1", "coherent-licensed==0.5.2", "cryptography==50.0.1", "jaraco-classes==3.4.0", "jaraco-context==6.1.2", "jaraco-functools==4.6.0", "jeepney==0.9.0", "more-itertools==11.1.0", "packaging==26.3", "pycparser==3.0", "secretstorage==3.5.0", "setuptools==80.10.2", "setuptools-scm==9.2.2", "wheel==0.45.1"]
-lock_artifact = { digest = "sha256:724d58a9ba8a0db35fe30b6482633dabc5f54807a1368e81b157df2847e054f6", size_bytes = 14722, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:724d58a9ba8a0db35fe30b6482633dabc5f54807a1368e81b157df2847e054f6", visibility = "private" }
+package_manager = "pip"
+packages = [
+    "cffi==2.1.1",
+    "coherent-licensed==0.5.2",
+    "cryptography==50.0.1",
+    "jaraco-classes==3.4.0",
+    "jaraco-context==6.1.2",
+    "jaraco-functools==4.6.0",
+    "jeepney==0.9.0",
+    "more-itertools==11.1.0",
+    "packaging==26.3",
+    "pycparser==3.0",
+    "secretstorage==3.5.0",
+    "setuptools==80.10.2",
+    "setuptools-scm==9.2.2",
+    "wheel==0.45.1",
+]
+
+[dependencies.lock]
+digest = "sha256:2bd3acf15ab421570e862e3794bcb870c385b64f161cdd7b9bc51f510a99d4f3"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:2bd3acf15ab421570e862e3794bcb870c385b64f161cdd7b9bc51f510a99d4f3"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:29d8c9c0dbcdba487b9289dbeb0c4035f7788f79740c790c9d60479f68171588"
+size_bytes = 1000
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:29d8c9c0dbcdba487b9289dbeb0c4035f7788f79740c790c9d60479f68171588"
+visibility = "private"
 
 [tests]
 framework = "pytest"

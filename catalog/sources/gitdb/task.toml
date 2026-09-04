@@ -35,9 +35,32 @@ reason = "The hash-locked setuptools build backend and smmap runtime are install
 
 [dependencies]
 status = "known"
-installer = "pip"
-packages = ["setuptools==80.9.0", "smmap==5.0.3"]
-lock_artifact = { digest = "sha256:00715ac5bf2a20051b68e61d9da975ef60c7a89f4cd0e57b7ee775dd1ca8c48f", size_bytes = 372, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:00715ac5bf2a20051b68e61d9da975ef60c7a89f4cd0e57b7ee775dd1ca8c48f", visibility = "private" }
+package_manager = "pip"
+packages = [
+    "setuptools==80.9.0",
+    "smmap==5.0.3",
+]
+
+[dependencies.lock]
+digest = "sha256:5fa05a6a0adafa3dbeec053decacbbb51bb8123bbb223f5b85ea08986a52f0eb"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:5fa05a6a0adafa3dbeec053decacbbb51bb8123bbb223f5b85ea08986a52f0eb"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:bad24d74ed2c7c4d5f1477922f7f695a242f43cb27583bbd5ec8221fd3779cf2"
+size_bytes = 996
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:bad24d74ed2c7c4d5f1477922f7f695a242f43cb27583bbd5ec8221fd3779cf2"
+visibility = "private"
 
 [tests]
 framework = "pytest"

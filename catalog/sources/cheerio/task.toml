@@ -41,38 +41,51 @@ reason = "Agent and verifier runs have no egress. The verifier receives a conten
 
 [dependencies]
 status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
 packages = [
-  "boolbase@1.0.0",
-  "cheerio-select@2.1.0",
-  "css-select@5.2.2",
-  "css-what@6.2.2",
-  "dom-serializer@2.0.0",
-  "domelementtype@2.3.0",
-  "domhandler@5.0.3",
-  "domutils@4.0.2",
-  "encoding-sniffer@0.2.1",
-  "entities@4.5.0",
-  "htmlparser2@10.1.0",
-  "iconv-lite@0.6.3",
-  "nth-check@2.1.1",
-  "parse5@7.3.0",
-  "parse5-htmlparser2-tree-adapter@7.1.0",
-  "parse5-parser-stream@7.1.2",
-  "safer-buffer@2.1.2",
-  "undici@8.10.0",
-  "whatwg-encoding@3.1.1",
-  "whatwg-mimetype@5.0.0",
-  "nested runtime entries are frozen by the lock artifact",
+    "boolbase@1.0.0",
+    "cheerio-select@2.1.0",
+    "css-select@5.2.2",
+    "css-what@6.2.2",
+    "dom-serializer@2.0.0",
+    "domelementtype@2.3.0",
+    "domhandler@5.0.3",
+    "domutils@4.0.2",
+    "encoding-sniffer@0.2.1",
+    "entities@4.5.0",
+    "htmlparser2@10.1.0",
+    "iconv-lite@0.6.3",
+    "nth-check@2.1.1",
+    "parse5@7.3.0",
+    "parse5-htmlparser2-tree-adapter@7.1.0",
+    "parse5-parser-stream@7.1.2",
+    "safer-buffer@2.1.2",
+    "undici@8.10.0",
+    "whatwg-encoding@3.1.1",
+    "whatwg-mimetype@5.0.0",
+    "nested runtime entries are frozen by the lock artifact",
 ]
-artifact = { digest = "sha256:b6b746448a44d78794f97aecd591503065bcb323f5788e6dd2ea965ebf473cfb", size_bytes = 4536320, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:b6b746448a44d78794f97aecd591503065bcb323f5788e6dd2ea965ebf473cfb", visibility = "private" }
+
+[dependencies.lock]
+digest = "sha256:7abbdc48e367c40c88bad310895ae37cf6f107ae03ed0559c7980d70530d120d"
+size_bytes = 51200
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:7abbdc48e367c40c88bad310895ae37cf6f107ae03ed0559c7980d70530d120d"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:43c50c82de7014bf3a95e8ca39345724b4c7d218348d58ea7e539f41b6535a0a"
+size_bytes = 4423680
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:43c50c82de7014bf3a95e8ca39345724b4c7d218348d58ea7e539f41b6535a0a"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:5a8bbf96e26a70d641f0ea0b6cb7b30a7d798db688c8826bbeaadbbe8ec0b201"
+size_bytes = 27478
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:5a8bbf96e26a70d641f0ea0b6cb7b30a7d798db688c8826bbeaadbbe8ec0b201"
+visibility = "private"
 
 [tests]
 framework = "node:test"

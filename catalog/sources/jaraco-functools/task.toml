@@ -35,15 +35,35 @@ reason = "Candidate and separate verifier dependencies are installed during the 
 
 [dependencies]
 status = "known"
-installer = "pip"
+package_manager = "pip"
 packages = [
-  "more-itertools==11.1.0",
-  "packaging==26.3",
-  "setuptools==84.0.0",
-  "setuptools-scm==10.2.1",
-  "vcs-versioning==2.3.1",
+    "more-itertools==11.1.0",
+    "packaging==26.3",
+    "setuptools==84.0.0",
+    "setuptools-scm==10.2.1",
+    "vcs-versioning==2.3.1",
 ]
-lock_artifact = { digest = "sha256:92b30ae17afb26ddd7397ec510c14201dc1182cd39819b7fbf0fb3a30221d3dc", size_bytes = 1306, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:92b30ae17afb26ddd7397ec510c14201dc1182cd39819b7fbf0fb3a30221d3dc", visibility = "private" }
+
+[dependencies.lock]
+digest = "sha256:29a3aff9fcc74cfe4d8430debdbfe4491ee473269a7f9e95797215f4706c5e95"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:29a3aff9fcc74cfe4d8430debdbfe4491ee473269a7f9e95797215f4706c5e95"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:a4c68fd1ff447f0c862c5c01df902a46bfc741279708da66fcd9e195b61be256"
+size_bytes = 998
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:a4c68fd1ff447f0c862c5c01df902a46bfc741279708da66fcd9e195b61be256"
+visibility = "private"
 
 [tests]
 framework = "pytest"

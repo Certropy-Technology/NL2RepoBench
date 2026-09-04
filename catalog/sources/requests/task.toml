@@ -35,9 +35,36 @@ reason = "All build and runtime dependencies are installed during the Docker bui
 
 [dependencies]
 status = "known"
-installer = "pip"
-packages = ["certifi==2025.8.3", "charset-normalizer==3.4.3", "idna==3.10", "setuptools==80.10.2", "urllib3==2.5.0", "wheel==0.45.1"]
-lock_artifact = { digest = "sha256:9b7299b62de007629eda85f97c12e5a96abda1b1d65b36311db67c41e5bfaf62", size_bytes = 8570, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:9b7299b62de007629eda85f97c12e5a96abda1b1d65b36311db67c41e5bfaf62", visibility = "private" }
+package_manager = "pip"
+packages = [
+    "certifi==2025.8.3",
+    "charset-normalizer==3.4.3",
+    "idna==3.10",
+    "setuptools==80.10.2",
+    "urllib3==2.5.0",
+    "wheel==0.45.1",
+]
+
+[dependencies.lock]
+digest = "sha256:8f412db741d278af6639cce2a73c1253aca68b6debd1cdb9f9dee6112614a249"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:8f412db741d278af6639cce2a73c1253aca68b6debd1cdb9f9dee6112614a249"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:21d541184951e885f2cc580d3563df1f9a1f9a690bc26912a4e74577f0831c6f"
+size_bytes = 998
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:21d541184951e885f2cc580d3563df1f9a1f9a690bc26912a4e74577f0831c6f"
+visibility = "private"
 
 [tests]
 framework = "pytest"

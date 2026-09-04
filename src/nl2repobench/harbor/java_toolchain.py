@@ -44,6 +44,9 @@ class JavaToolchainLock(BaseModel):
     verifier_requirements_sha256: str = Field(pattern=r"^sha256:[0-9a-f]{64}$")
     verifier_requirements_lock: str = "verifier/requirements.lock.txt"
     java_runtime_sha256: str | None = Field(default=None, pattern=r"^sha256:[0-9a-f]{64}$")
+    java_oracle_agent_sha256: str | None = Field(
+        default=None, pattern=r"^sha256:[0-9a-f]{64}$"
+    )
     private_artifacts_status: Literal["unavailable", "available"]
     agent_image_status: Literal["not-java-bound", "java-bound"]
 
@@ -83,6 +86,10 @@ class JavaToolchainLock(BaseModel):
             raise ValueError("locked Java toolchain runtime_build_ref must be digest pinned")
         if self.status == "locked" and self.agent_runtime_build_ref != self.agent_runtime_image:
             raise ValueError("locked Java toolchain agent_runtime_build_ref must be digest pinned")
+        if self.status == "locked" and self.java_oracle_agent_sha256 is None:
+            raise ValueError("locked Java toolchain requires the Oracle agent digest")
+        if self.status == "locked" and self.java_runtime_sha256 is None:
+            raise ValueError("locked Java toolchain requires the runtime helper digest")
         return self
 
     @property

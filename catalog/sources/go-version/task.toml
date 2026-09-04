@@ -33,9 +33,29 @@ reason = "Candidate and verifier execution is offline; only the trusted Oracle r
 
 [dependencies]
 status = "known"
-installer = "system"
+package_manager = "go-modules"
 packages = []
-module_bundle = { digest = "sha256:ac9751fca88240393a398179a0874c4aa669aa79b63a79e76ee8ea0d61b98315", size_bytes = 483, uri = "artifact://private/sha256:ac9751fca88240393a398179a0874c4aa669aa79b63a79e76ee8ea0d61b98315", visibility = "private" }
+
+[dependencies.lock]
+digest = "sha256:43b98317ebfedb823e61dcd6932a5af7f05620458a751ff33c3236f5096277d6"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:43b98317ebfedb823e61dcd6932a5af7f05620458a751ff33c3236f5096277d6"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:0da4cec3f3b236fa829413e9b13598412fd7149598a663db15fc247865c222c9"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:0da4cec3f3b236fa829413e9b13598412fd7149598a663db15fc247865c222c9"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:121a22a63619f86b13878153edd2404baea8afcfab40e471e3f00cd45cf4ff10"
+size_bytes = 1313
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:121a22a63619f86b13878153edd2404baea8afcfab40e471e3f00cd45cf4ff10"
+visibility = "private"
 
 [tests]
 framework = "pytest"

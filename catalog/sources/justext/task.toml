@@ -33,7 +33,7 @@ reason = "The immutable verifier image contains an unapproved functional source 
 
 [dependencies]
 status = "unknown"
-installer = "pip"
+package_manager = "pip"
 packages = []
 
 [tests]

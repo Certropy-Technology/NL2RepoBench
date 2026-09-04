@@ -297,6 +297,10 @@ def prepare_harbor_control(
         Path,
         typer.Option("--toolchain", help="Pinned Harbor/toolchain lock."),
     ] = Path("toolchain.lock.toml"),
+    artifact_root: Annotated[
+        Path,
+        typer.Option("--artifact-root", help="Content-addressed private artifact root."),
+    ] = Path(".nl2repo/artifacts"),
 ) -> None:
     """Prepare a control bundle that Harbor executes with the Oracle agent."""
 
@@ -306,11 +310,68 @@ def prepare_harbor_control(
             kind,
             output_root,
             toolchain,
+            artifact_resolver=LocalArtifactResolver(
+                FileArtifactStore(artifact_root), allow_private=True
+            ),
         )
     except (HarborCompileError, OSError, ValueError) as exc:
         typer.echo(f"control preparation failed: {exc}", err=True)
         raise typer.Exit(code=1) from exc
     _json_print({"kind": kind, "output": str(output)})
+
+
+@harbor_app.command("prepare-run")
+def prepare_harbor_run(
+    task_root: Annotated[Path, typer.Argument(help="Compiled Harbor task directory.")],
+    role: Annotated[str, typer.Argument(help="Run role: model or oracle.")],
+    output_root: Annotated[
+        Path,
+        typer.Option("--output", help="Directory for the prepared run copy."),
+    ] = Path("build/runs"),
+    toolchain: Annotated[
+        Path,
+        typer.Option("--toolchain", help="Pinned Harbor/toolchain lock."),
+    ] = Path("toolchain.lock.toml"),
+    artifact_root: Annotated[
+        Path,
+        typer.Option("--artifact-root", help="Content-addressed private artifact root."),
+    ] = Path(".nl2repo/artifacts"),
+    private_cas_root: Annotated[
+        Path | None,
+        typer.Option(
+            "--private-cas-output",
+            help="External ignored directory for this run's task-scoped CAS.",
+        ),
+    ] = None,
+) -> None:
+    """Prepare a Java model/oracle run with task-scoped private artifacts."""
+
+    resolver = LocalArtifactResolver(
+        FileArtifactStore(artifact_root),
+        allow_private=True,
+    )
+    try:
+        output = HarborCompilerRegistry.default().prepare_run_bundle(
+            task_root,
+            role,
+            output_root,
+            toolchain,
+            artifact_resolver=resolver,
+            private_cas_root=private_cas_root,
+        )
+    except (HarborCompileError, OSError, ValueError) as exc:
+        typer.echo(f"run preparation failed: {exc}", err=True)
+        raise typer.Exit(code=1) from exc
+    _json_print(
+        {
+            "role": role,
+            "output": str(output),
+            "private_cas": str(
+                (private_cas_root or (output_root / ".private-cas"))
+                / f"{task_root.name}-{role}"
+            ),
+        }
+    )
 
 
 @task_app.command("scaffold")

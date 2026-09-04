@@ -17,6 +17,10 @@ import tomli_w
 from nl2repobench.authoring.catalog import CatalogCompiler
 from nl2repobench.domain.canonical import canonical_json
 from nl2repobench.domain.models import ArtifactRef, HarborExecutionProfile, TaskManifest
+from nl2repobench.package_managers.dependency_artifacts import (
+    load_dependency_inventory,
+    materialize_dependency_archive,
+)
 from nl2repobench.storage.artifacts import LocalArtifactResolver
 from nl2repobench.storage.files import atomic_write
 
@@ -147,8 +151,12 @@ class HarborCompiler:
         task_root: Path,
         kind: str,
         output_root: Path,
+        *,
+        private_cas_root: Path | None = None,
     ) -> Path:
         """Create a stub/forgery Oracle bundle without mutating the source task."""
+
+        del private_cas_root
 
         if kind not in {
             "stub",
@@ -370,18 +378,46 @@ WORKDIR /tests
         """Resolve a hash lock without materializing vendor dependency bytes."""
 
         bundle = manifest.dependency_bundle
-        if bundle.artifact is not None:
-            raise HarborCompileError(
-                "vendor dependency artifacts are forbidden; use dependency_bundle.lock_artifact"
-            )
-        if bundle.lock_artifact is None:
+        if bundle.lock is None:
             if allow_incomplete:
                 return b""
-            raise HarborCompileError("production task requires dependency_bundle.lock_artifact")
+            raise HarborCompileError("production task requires dependency_bundle.lock")
         if self.artifact_resolver is None:
             raise HarborCompileError("private artifact resolver is required for dependency lock")
         try:
-            data = self.artifact_resolver.resolve(bundle.lock_artifact).read_bytes()
+            toolchain_digest = (
+                "sha256:" + hashlib.sha256(self.toolchain_path.read_bytes()).hexdigest()
+            )
+            inventory = load_dependency_inventory(
+                bundle,
+                resolver=self.artifact_resolver,
+                expected_identity=f"python+{bundle.package_manager}",
+                expected_toolchain_digest=toolchain_digest,
+                expected_adapter_version="python-preinstalled-image-v1",
+            )
+            with tempfile.TemporaryDirectory(prefix="nl2repo-python-dependencies-") as temp:
+                root = Path(temp)
+                lock_root = root / "lock"
+                store_root = root / "store"
+                materialize_dependency_archive(
+                    bundle.lock,
+                    inventory.lock,
+                    lock_root,
+                    resolver=self.artifact_resolver,
+                )
+                assert bundle.offline_store is not None
+                materialize_dependency_archive(
+                    bundle.offline_store,
+                    inventory.store,
+                    store_root,
+                    resolver=self.artifact_resolver,
+                )
+                lock_path = lock_root / "requirements.lock.txt"
+                if not lock_path.is_file():
+                    raise HarborCompileError(
+                        "Python dependency lock archive lacks requirements.lock.txt"
+                    )
+                data = lock_path.read_bytes()
         except (OSError, ValueError) as exc:
             raise HarborCompileError(f"cannot resolve dependency lock: {exc}") from exc
         self._validate_dependency_lock(data)

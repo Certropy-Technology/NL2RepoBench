@@ -19,6 +19,7 @@ MODEL_FAILURES = frozenset(
         VerificationReason.CANDIDATE_WORKSPACE_REJECTED,
         VerificationReason.CANDIDATE_INSTALLATION_FAILED,
         VerificationReason.CANDIDATE_CALL_FAILED,
+        VerificationReason.CANDIDATE_TIMEOUT,
         VerificationReason.SETUP_COMMAND_FAILED,
     }
 )

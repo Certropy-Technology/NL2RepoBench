@@ -6,7 +6,15 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "medium"
 category = "python-library"
-tags = ["python", "json", "database", "persistence", "cli", "repository-generation", "separate-verifier"]
+tags = [
+    "python",
+    "json",
+    "database",
+    "persistence",
+    "cli",
+    "repository-generation",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -33,32 +41,77 @@ reason = "Third-party build and test dependencies are installed during the Docke
 
 [dependencies]
 status = "known"
-installer = "pip"
-packages = ["prettytable==3.3.0", "setuptools==75.8.0", "wcwidth==0.8.2", "wheel==0.45.1"]
-lock_artifact = { digest = "sha256:af5dfe8c3afa459b6e99db7699eb865e9179b2d70a9a2d1947b29c9ba57128a0", size_bytes = 747, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:af5dfe8c3afa459b6e99db7699eb865e9179b2d70a9a2d1947b29c9ba57128a0", visibility = "private" }
+package_manager = "pip"
+packages = [
+    "prettytable==3.3.0",
+    "setuptools==75.8.0",
+    "wcwidth==0.8.2",
+    "wheel==0.45.1",
+]
+
+[dependencies.lock]
+digest = "sha256:08024da4311bb59610234dcc87400d94b9eb5c24c0e103b236dc7245c4a502e0"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:08024da4311bb59610234dcc87400d94b9eb5c24c0e103b236dc7245c4a502e0"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:21ee2f5bf7acf4d85c2abcf5ea768d4fba0d054eed2a01ce18dafc5f4d2d2f4a"
+size_bytes = 996
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:21ee2f5bf7acf4d85c2abcf5ea768d4fba0d054eed2a01ce18dafc5f4d2d2f4a"
+visibility = "private"
 
 [tests]
 framework = "pytest"
 expected_total = 96
 expected_total_source = "frozen-collection"
-protected_paths = ["tests"]
-commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = [
+    "tests",
+]
+commands = [
+    "custom-json-v1 verifier entrypoint",
+]
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:62077eb660aa0bc5687968aaccbabd5671e820e63f4e734d8308a536591458ca", size_bytes = 30720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:62077eb660aa0bc5687968aaccbabd5671e820e63f4e734d8308a536591458ca", visibility = "private" }
 entrypoint = "run.py"
+
+[verifier.bundle]
+digest = "sha256:c746c4e1ec2313bb64ba2e77569e413c4a22094645477e8f452ab9ef745cd965"
+size_bytes = 30720
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:c746c4e1ec2313bb64ba2e77569e413c4a22094645477e8f452ab9ef745cd965"
+visibility = "private"
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
+passed_statuses = [
+    "passed",
+]
 excluded_statuses = []
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Build the pysonDB-v2 JSON persistence package from an empty workspace."
-keywords = ["python", "json", "database", "persistence", "cli", "repository-generation", "separate-verifier"]
+keywords = [
+    "python",
+    "json",
+    "database",
+    "persistence",
+    "cli",
+    "repository-generation",
+    "separate-verifier",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 60.0
@@ -75,8 +128,8 @@ status = "controls-passed"
 reason = "One official Harbor 0.21.0 Oracle passed 96/96 with reward 1.0 and valid grading; empty scored 0.0, stub and forgery each scored 3/96, and every verifier receipt proved no public network. Reviews and pilots remain out of scope."
 
 [oracle_bundle]
-digest = "sha256:4bfed9da3d0cc0341519ce079fa95ffcdc95567ddca57738fa7bc0acee8670a0"
+digest = "sha256:6a3cb99ff809644952f9628580ce1694a6ac5fcbe9a140c315b94cf98a75a3e7"
 size_bytes = 122880
 media_type = "application/vnd.nl2repobench.private-bundle+tar"
-uri = "artifact://private/sha256:4bfed9da3d0cc0341519ce079fa95ffcdc95567ddca57738fa7bc0acee8670a0"
+uri = "artifact://private/sha256:6a3cb99ff809644952f9628580ce1694a6ac5fcbe9a140c315b94cf98a75a3e7"
 visibility = "private"

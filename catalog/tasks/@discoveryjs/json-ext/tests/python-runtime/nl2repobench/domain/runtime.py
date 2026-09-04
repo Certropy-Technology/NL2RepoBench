@@ -26,6 +26,7 @@ class RuntimeLanguage(StrEnum):
     PYTHON = "python"
     NODE = "node"
     GO = "go"
+    JAVA = "java"
 
 
 class PackageManager(StrEnum):
@@ -36,6 +37,7 @@ class PackageManager(StrEnum):
     NPM = "npm"
     PNPM = "pnpm"
     GO_MODULES = "go-modules"
+    MAVEN = "maven"
     NONE = "none"
 
 
@@ -47,12 +49,10 @@ class RuntimeDiscriminator(BaseModel):
     ``none``; Node accepts ``npm``, ``pnpm`` or ``none``. Any other pairing is
     rejected so a caller cannot silently route a task to the wrong adapter.
 
-    ``from_catalog_source`` reads the current human-facing source locations:
-    Python sources declare their installer in ``dependencies.installer``;
-    Node sources declare their language and package manager in
-    ``environment.runtime``. This is an explicit transitional mapping, not a
-    fallback parser. The canonical ``environment_lock.runtime`` field remains
-    a later migration step documented by the caller.
+    ``from_catalog_source`` reads the canonical dependency/runtime identity:
+    Python, Go, and Java sources declare the package manager in
+    ``dependencies.package_manager``; Node sources declare it in
+    ``environment.runtime``.
     """
 
     model_config = ConfigDict(extra="forbid", frozen=True)
@@ -70,6 +70,7 @@ class RuntimeDiscriminator(BaseModel):
                 {PackageManager.NPM, PackageManager.PNPM, PackageManager.NONE}
             ),
             RuntimeLanguage.GO: frozenset({PackageManager.GO_MODULES}),
+            RuntimeLanguage.JAVA: frozenset({PackageManager.MAVEN}),
         }
         if self.package_manager not in allowed[self.language]:
             accepted = ", ".join(
@@ -96,7 +97,7 @@ class RuntimeDiscriminator(BaseModel):
         language = metadata.get("language")
         if language == RuntimeLanguage.PYTHON.value:
             dependencies = _required_mapping(source, "dependencies")
-            package_manager = dependencies.get("installer")
+            package_manager = dependencies.get("package_manager")
         elif language == RuntimeLanguage.NODE.value:
             environment = _required_mapping(source, "environment")
             runtime = _required_mapping(environment, "runtime")
@@ -106,18 +107,18 @@ class RuntimeDiscriminator(BaseModel):
                 )
             package_manager = runtime.get("package_manager")
         elif language == RuntimeLanguage.GO.value:
-            package_manager = PackageManager.GO_MODULES.value
+            dependencies = _required_mapping(source, "dependencies")
+            package_manager = dependencies.get("package_manager")
+        elif language == RuntimeLanguage.JAVA.value:
+            dependencies = _required_mapping(source, "dependencies")
+            package_manager = dependencies.get("package_manager")
         else:
             raise RuntimeContractError(
-                "metadata.language must explicitly be one of: python, node, go"
+                "metadata.language must explicitly be one of: python, node, go, java"
             )
 
         if not isinstance(package_manager, str) or not package_manager:
-            location = (
-                "dependencies.installer"
-                if language == RuntimeLanguage.PYTHON.value
-                else "environment.runtime.package_manager"
-            )
+            location = "dependencies.package_manager"
             raise RuntimeContractError(f"{location} is required for runtime dispatch")
 
         try:

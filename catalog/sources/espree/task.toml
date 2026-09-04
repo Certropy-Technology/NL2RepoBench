@@ -41,16 +41,33 @@ libc = "glibc"
 
 [dependencies]
 status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
-packages = ["acorn", "acorn-jsx", "eslint-visitor-keys"]
-artifact = { digest = "sha256:124f8b7f93d42eb9e501d8133a3d38b3f8c9e747fc4a5d445764ce416b1fb808", size_bytes = 757760, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:124f8b7f93d42eb9e501d8133a3d38b3f8c9e747fc4a5d445764ce416b1fb808", visibility = "private" }
+packages = [
+    "acorn",
+    "acorn-jsx",
+    "eslint-visitor-keys",
+]
+
+[dependencies.lock]
+digest = "sha256:bd0287946f04936188278e5ec727422919686d7dd7c5c07cc644efb90670e6ff"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:bd0287946f04936188278e5ec727422919686d7dd7c5c07cc644efb90670e6ff"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:e87d66941f5e97d9801a5bad7d9a0092523d8ba7d00a0288931145603b62b511"
+size_bytes = 706560
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:e87d66941f5e97d9801a5bad7d9a0092523d8ba7d00a0288931145603b62b511"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:d113916c0521f6f383f3913e5f24befa39ab84df5ceac98f6221ddcd38120d8a"
+size_bytes = 4586
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:d113916c0521f6f383f3913e5f24befa39ab84df5ceac98f6221ddcd38120d8a"
+visibility = "private"
 
 [tests]
 framework = "node:test"

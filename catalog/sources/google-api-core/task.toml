@@ -35,26 +35,46 @@ reason = "The candidate and separate verifier run without egress. Hash-locked de
 
 [dependencies]
 status = "known"
-installer = "pip"
+package_manager = "pip"
 packages = [
-  "certifi==2026.7.22",
-  "cffi==2.1.1",
-  "charset-normalizer==3.5.1",
-  "cryptography==50.0.1",
-  "google-auth==2.57.0",
-  "googleapis-common-protos==1.75.2",
-  "idna==3.19",
-  "proto-plus==1.28.4",
-  "protobuf==7.36.0",
-  "pyasn1==0.6.4",
-  "pyasn1-modules==0.4.2",
-  "pycparser==3.0",
-  "requests==2.34.2",
-  "setuptools==80.9.0",
-  "urllib3==2.7.0",
-  "wheel==0.45.1",
+    "certifi==2026.7.22",
+    "cffi==2.1.1",
+    "charset-normalizer==3.5.1",
+    "cryptography==50.0.1",
+    "google-auth==2.57.0",
+    "googleapis-common-protos==1.75.2",
+    "idna==3.19",
+    "proto-plus==1.28.4",
+    "protobuf==7.36.0",
+    "pyasn1==0.6.4",
+    "pyasn1-modules==0.4.2",
+    "pycparser==3.0",
+    "requests==2.34.2",
+    "setuptools==80.9.0",
+    "urllib3==2.7.0",
+    "wheel==0.45.1",
 ]
-lock_artifact = { digest = "sha256:caec483297b1c9ba10d20812b953cd84c3bd53efae4da16d67f5c6fc85eafc2d", size_bytes = 30519, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:caec483297b1c9ba10d20812b953cd84c3bd53efae4da16d67f5c6fc85eafc2d", visibility = "private" }
+
+[dependencies.lock]
+digest = "sha256:feaf1031d3f0b16fb1a9436de7e709114e2bba31777df50a77a93af2a5422d11"
+size_bytes = 40960
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:feaf1031d3f0b16fb1a9436de7e709114e2bba31777df50a77a93af2a5422d11"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:45ba1ce3237e7c15e33f317f3fcdae8456da6cd5dafb46b61ff6aa1f61050ead"
+size_bytes = 1000
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:45ba1ce3237e7c15e33f317f3fcdae8456da6cd5dafb46b61ff6aa1f61050ead"
+visibility = "private"
 
 [tests]
 framework = "pytest"

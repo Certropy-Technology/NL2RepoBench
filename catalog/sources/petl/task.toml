@@ -43,16 +43,14 @@ reference_source_fetch = "forbidden"
 reason = "The data fixture and dependency closure are not frozen; candidate and verifier execution remain network-isolated."
 
 [dependencies]
-# The restricted CSV/JSON path has no runtime third-party dependency. These
-# are observed build/test inputs only; no content-addressed requirements lock exists.
 status = "unknown"
-installer = "uv"
+package_manager = "uv"
 packages = [
-  "setuptools==75.8.0",
-  "setuptools-scm==8.2.0",
-  "wheel==0.45.1",
-  "pytest==8.3.5",
-  "pytest-cov==6.0.0",
+    "setuptools==75.8.0",
+    "setuptools-scm==8.2.0",
+    "wheel==0.45.1",
+    "pytest==8.3.5",
+    "pytest-cov==6.0.0",
 ]
 
 [tests]

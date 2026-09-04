@@ -6,7 +6,14 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "hard"
 category = "data-structures"
-tags = ["python", "sorted-containers", "sequences", "sets", "mappings", "separate-verifier"]
+tags = [
+    "python",
+    "sorted-containers",
+    "sequences",
+    "sets",
+    "mappings",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -35,27 +42,63 @@ reason = "The hash-locked setuptools build dependency is installed during Docker
 
 [dependencies]
 status = "known"
-installer = "pip"
-packages = ["setuptools==84.0.0"]
-lock_artifact = { digest = "sha256:1131088e92e1d95ea433c538a636bbd1be03bdc2f568d1c4807ba646bf84694a", size_bytes = 272, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:1131088e92e1d95ea433c538a636bbd1be03bdc2f568d1c4807ba646bf84694a", visibility = "private" }
+package_manager = "pip"
+packages = [
+    "setuptools==84.0.0",
+]
+
+[dependencies.lock]
+digest = "sha256:7a0998ca4cbea08604cbc5158520bdbf43d0fb91d02b13588f75a4dcf85794f6"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:7a0998ca4cbea08604cbc5158520bdbf43d0fb91d02b13588f75a4dcf85794f6"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:88b7a6ebca7be1a61d2ec96c3fc3e8390a3cc007ee8849670595c173b64a5c46"
+size_bytes = 996
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:88b7a6ebca7be1a61d2ec96c3fc3e8390a3cc007ee8849670595c173b64a5c46"
+visibility = "private"
 
 [tests]
 framework = "pytest"
 expected_total = 30
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py"]
+commands = [
+    "custom-json-v1 verifier entrypoint",
+]
+protected_paths = [
+    "/tests/verifier/run.py",
+    "/tests/verifier/adapter.py",
+]
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
+passed_statuses = [
+    "passed",
+]
 excluded_statuses = []
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Build sortedcontainers 2.4.0 from an empty workspace and satisfy a bounded sorted list, set, dictionary, and view scenario suite."
-keywords = ["python", "sorted-list", "sorted-set", "sorted-dict", "stateful-api", "separate-verifier"]
+keywords = [
+    "python",
+    "sorted-list",
+    "sorted-set",
+    "sorted-dict",
+    "stateful-api",
+    "separate-verifier",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 480.0
 candidate_install_timeout_sec = 90.0
@@ -69,21 +112,32 @@ workspace_artifact = "/workspace"
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:88e2ac5e01b7c835bf042c4d623d2143cbebbb9e266186f22302060da19e5d44", size_bytes = 30720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:88e2ac5e01b7c835bf042c4d623d2143cbebbb9e266186f22302060da19e5d44", visibility = "private" }
 entrypoint = "run.py"
-environment = {}
+
+[verifier.bundle]
+digest = "sha256:df0e34d5653be7347d3cf595896782a5dc96f1d1bb433654360471841506cc29"
+size_bytes = 30720
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:df0e34d5653be7347d3cf595896782a5dc96f1d1bb433654360471841506cc29"
+visibility = "private"
+
+[verifier.environment]
 
 [oracle_bundle]
-digest = "sha256:b5cc7eb67340b84f413c073907807f10d36fd81a2587273ec9042b2d445dc644"
+digest = "sha256:bd04e3d6bf9d83f9e37d356c44f956ef34aee2f5944ede20954773bf25d14881"
 size_bytes = 10926080
 media_type = "application/vnd.nl2repobench.private-bundle+tar"
-uri = "artifact://private/sha256:b5cc7eb67340b84f413c073907807f10d36fd81a2587273ec9042b2d445dc644"
+uri = "artifact://private/sha256:bd04e3d6bf9d83f9e37d356c44f956ef34aee2f5944ede20954773bf25d14881"
 visibility = "private"
 
 [lifecycle]
 status = "controls-passed"
 owner = "worker/sortedcontainers"
 reason = "Strict Harbor 0.21.0 Oracle passed 30/30 at reward 1.0; empty, stub, forgery, and offline controls passed with path- and SHA-bound canonical evidence. Reviews and pilots remain separate stages."
-evidence = [
-  { digest = "sha256:f96aa28b8cfb7274f9be14497ec625f44e9c79e321048b361f2a014d94e59fa5", size_bytes = 3726, media_type = "application/json", uri = "artifact://private/sha256:f96aa28b8cfb7274f9be14497ec625f44e9c79e321048b361f2a014d94e59fa5", visibility = "private" },
-]
+
+[[lifecycle.evidence]]
+digest = "sha256:f96aa28b8cfb7274f9be14497ec625f44e9c79e321048b361f2a014d94e59fa5"
+size_bytes = 3726
+media_type = "application/json"
+uri = "artifact://private/sha256:f96aa28b8cfb7274f9be14497ec625f44e9c79e321048b361f2a014d94e59fa5"
+visibility = "private"

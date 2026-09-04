@@ -34,9 +34,37 @@ reason = "The candidate and separate verifier use a private pre-materialized Go 
 
 [dependencies]
 status = "known"
-installer = "system"
-packages = ["github.com/google/btree@v1.1.2", "github.com/rosedblabs/wal@v1.3.8", "github.com/valyala/bytebufferpool@v1.0.0", "github.com/bwmarrin/snowflake@v0.3.0", "github.com/gofrs/flock@v0.8.1", "github.com/robfig/cron/v3@v3.0.0", "github.com/stretchr/testify@v1.9.0"]
-module_bundle = { digest = "sha256:ac4281abe988fe298d9725768acefdd698c427441e9c8cd24654cde765cf821a", size_bytes = 1184053, uri = "artifact://private/sha256:ac4281abe988fe298d9725768acefdd698c427441e9c8cd24654cde765cf821a", visibility = "private" }
+package_manager = "go-modules"
+packages = [
+    "github.com/google/btree@v1.1.2",
+    "github.com/rosedblabs/wal@v1.3.8",
+    "github.com/valyala/bytebufferpool@v1.0.0",
+    "github.com/bwmarrin/snowflake@v0.3.0",
+    "github.com/gofrs/flock@v0.8.1",
+    "github.com/robfig/cron/v3@v3.0.0",
+    "github.com/stretchr/testify@v1.9.0",
+]
+
+[dependencies.lock]
+digest = "sha256:6c51a45b1be145e8211faa3170e714e545fded94f38da68db5c5665c472afb35"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:6c51a45b1be145e8211faa3170e714e545fded94f38da68db5c5665c472afb35"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:4fcf411d55dd6cbe1fc991c1389f918bd978ca76f7faeff3e46334b86b9fbe89"
+size_bytes = 7628800
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:4fcf411d55dd6cbe1fc991c1389f918bd978ca76f7faeff3e46334b86b9fbe89"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:99008d50c550f4d9893dbadc41e1cb6e584029f1f81d279e1e83f0d104bc69f2"
+size_bytes = 77897
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:99008d50c550f4d9893dbadc41e1cb6e584029f1f81d279e1e83f0d104bc69f2"
+visibility = "private"
 
 [tests]
 framework = "pytest"

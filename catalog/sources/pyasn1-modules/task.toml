@@ -35,9 +35,32 @@ reason = "The agent and separate verifier run with no network. The hash-locked p
 
 [dependencies]
 status = "known"
-installer = "pip"
-packages = ["pyasn1==0.6.1", "setuptools==80.9.0"]
-lock_artifact = { digest = "sha256:e3bc914b0a408ea00c822e5126c3e9837a3818dcf2b332a79232d15ba873999c", size_bytes = 621, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:e3bc914b0a408ea00c822e5126c3e9837a3818dcf2b332a79232d15ba873999c", visibility = "private" }
+package_manager = "pip"
+packages = [
+    "pyasn1==0.6.1",
+    "setuptools==80.9.0",
+]
+
+[dependencies.lock]
+digest = "sha256:6eba411b411140b891128d05a7e55ebc51bb635a958ea1e2a27b1fafefdf5540"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:6eba411b411140b891128d05a7e55ebc51bb635a958ea1e2a27b1fafefdf5540"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:b9dc7c3344a871010927a8398ddf3ad32909aa159e119f2e9f87076c34deeb1b"
+size_bytes = 996
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:b9dc7c3344a871010927a8398ddf3ad32909aa159e119f2e9f87076c34deeb1b"
+visibility = "private"
 
 [tests]
 framework = "pytest"

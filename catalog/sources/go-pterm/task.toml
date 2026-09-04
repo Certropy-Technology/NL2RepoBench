@@ -33,24 +33,44 @@ reason = "Candidate and verifier use the pre-materialized private Go module clos
 
 [dependencies]
 status = "known"
-installer = "system"
+package_manager = "go-modules"
 packages = [
-  "atomicgo.dev/cursor@v0.2.0",
-  "atomicgo.dev/keyboard@v0.2.10",
-  "atomicgo.dev/schedule@v0.1.0",
-  "github.com/clipperhouse/uax29/v2@v2.7.0",
-  "github.com/containerd/console@v1.0.5",
-  "github.com/davecgh/go-spew@v1.1.1",
-  "github.com/lithammer/fuzzysearch@v1.1.8",
-  "github.com/mattn/go-runewidth@v0.0.23",
-  "github.com/pmezard/go-difflib@v1.0.0",
-  "github.com/stretchr/testify@v1.11.1",
-  "golang.org/x/sys@v0.43.0",
-  "golang.org/x/term@v0.42.0",
-  "golang.org/x/text@v0.36.0",
-  "gopkg.in/yaml.v3@v3.0.1",
+    "atomicgo.dev/cursor@v0.2.0",
+    "atomicgo.dev/keyboard@v0.2.10",
+    "atomicgo.dev/schedule@v0.1.0",
+    "github.com/clipperhouse/uax29/v2@v2.7.0",
+    "github.com/containerd/console@v1.0.5",
+    "github.com/davecgh/go-spew@v1.1.1",
+    "github.com/lithammer/fuzzysearch@v1.1.8",
+    "github.com/mattn/go-runewidth@v0.0.23",
+    "github.com/pmezard/go-difflib@v1.0.0",
+    "github.com/stretchr/testify@v1.11.1",
+    "golang.org/x/sys@v0.43.0",
+    "golang.org/x/term@v0.42.0",
+    "golang.org/x/text@v0.36.0",
+    "gopkg.in/yaml.v3@v3.0.1",
 ]
-module_bundle = { digest = "sha256:f2c548708a2e8fce5d83dca4048d4c7ffcdf02426137c0a6f833d841a8c69f48", size_bytes = 1835857, uri = "artifact://private/sha256:f2c548708a2e8fce5d83dca4048d4c7ffcdf02426137c0a6f833d841a8c69f48", visibility = "private" }
+
+[dependencies.lock]
+digest = "sha256:885e9c15c1ad37bb944961df43c47d7d844155609d37bbb42e88e3b8e6ce4d68"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:885e9c15c1ad37bb944961df43c47d7d844155609d37bbb42e88e3b8e6ce4d68"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:ab15cb240d06723bd049b7082f469d6a402dd6ad1466c4b5a478b300a36e1b65"
+size_bytes = 11366400
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:ab15cb240d06723bd049b7082f469d6a402dd6ad1466c4b5a478b300a36e1b65"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:af1f5f1373801c278dfedf0798be8a2d81fe6aa43e47ab1906a39afa77a623ae"
+size_bytes = 108288
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:af1f5f1373801c278dfedf0798be8a2d81fe6aa43e47ab1906a39afa77a623ae"
+visibility = "private"
 
 [tests]
 framework = "pytest"

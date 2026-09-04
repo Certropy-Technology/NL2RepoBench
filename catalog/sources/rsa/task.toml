@@ -34,21 +34,41 @@ reason = "The hash-locked Python build and test closure is installed during imag
 
 [dependencies]
 status = "known"
-installer = "pip"
+package_manager = "pip"
 packages = [
-  "coverage==7.16.0",
-  "iniconfig==2.3.0",
-  "mypy==1.5.1",
-  "mypy-extensions==1.1.0",
-  "packaging==26.3",
-  "pluggy==1.6.0",
-  "poetry-core==1.9.1",
-  "pyasn1==0.5.0",
-  "pytest==7.4.0",
-  "pytest-cov==4.1.0",
-  "typing-extensions==4.16.0",
+    "coverage==7.16.0",
+    "iniconfig==2.3.0",
+    "mypy==1.5.1",
+    "mypy-extensions==1.1.0",
+    "packaging==26.3",
+    "pluggy==1.6.0",
+    "poetry-core==1.9.1",
+    "pyasn1==0.5.0",
+    "pytest==7.4.0",
+    "pytest-cov==4.1.0",
+    "typing-extensions==4.16.0",
 ]
-lock_artifact = { digest = "sha256:66b2e89bac10a56ee786628d1bbac6586215d27c8e73bd8eb6abf5950b58bd52", size_bytes = 14749, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:66b2e89bac10a56ee786628d1bbac6586215d27c8e73bd8eb6abf5950b58bd52", visibility = "private" }
+
+[dependencies.lock]
+digest = "sha256:d43f1a5c6e2e34cfce9ac926819a778ec3f4f5619d50924cd369b5efb9a20395"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:d43f1a5c6e2e34cfce9ac926819a778ec3f4f5619d50924cd369b5efb9a20395"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:f4d753b12004c53ed832f931c0081aaf05c1ba474456603c693e9fcba55cf28b"
+size_bytes = 1000
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:f4d753b12004c53ed832f931c0081aaf05c1ba474456603c693e9fcba55cf28b"
+visibility = "private"
 
 [tests]
 framework = "pytest"

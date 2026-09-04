@@ -39,8 +39,8 @@ package_manager = "npm"
 test_framework = "node:test"
 metric_contract = "node-test-leaf-pass-rate-v1"
 expected_test_count = 37
-canonical_manifest_digest = "sha256:5535b2700e14b56557284fc994e688b9dd09c24176197820293330ef8377ba03"
-toolchain_lock_digest = "sha256:f8dd709ad5723115af52174afa94ad7a80710be83d4fb643b8524a2389d21f92"
+canonical_manifest_digest = "sha256:c935c5db538bdb845ba803436e9a16a8edd1b2982860d099af9ed7c7b2e190de"
+toolchain_lock_digest = "sha256:4a70f5734f00f1822b9f3aa9755ebdbed19848407d57f537cc97290608ec5b2f"
 
 [agent]
 timeout_sec = 1200.0

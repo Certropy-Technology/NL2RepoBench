@@ -6,7 +6,15 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "easy"
 category = "query-string"
-tags = ["node", "npm", "commonjs", "query-string", "parser", "serializer", "json"]
+tags = [
+    "node",
+    "npm",
+    "commonjs",
+    "query-string",
+    "parser",
+    "serializer",
+    "json",
+]
 language = "node"
 
 [source]
@@ -41,24 +49,52 @@ libc = "glibc"
 
 [dependencies]
 status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
-packages = ["es-define-property", "side-channel"]
-artifact = { digest = "sha256:8e7c589b4204a84381dc37717692779bcf77c533e60bb78de316c80a0f0ec6ab", size_bytes = 11970560, media_type = "application/gzip", uri = "artifact://private/sha256:8e7c589b4204a84381dc37717692779bcf77c533e60bb78de316c80a0f0ec6ab", visibility = "private" }
+packages = [
+    "es-define-property",
+    "side-channel",
+]
+
+[dependencies.lock]
+digest = "sha256:c7e9ebbc2bc1167c63e27b0a7a9c694d187957c9a94056d77d208e1d4e5f3ccc"
+size_bytes = 40960
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:c7e9ebbc2bc1167c63e27b0a7a9c694d187957c9a94056d77d208e1d4e5f3ccc"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:17b2ae2cf6a1608b26e0dc14c7b6c6e1b7d7710609e67c014bc38dbd4b785411"
+size_bytes = 11888640
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:17b2ae2cf6a1608b26e0dc14c7b6c6e1b7d7710609e67c014bc38dbd4b785411"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:723c2c6995b3238c3e33d398786a24ae5b73cdd67af029a8bbc57d3bc02ed5e2"
+size_bytes = 21379
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:723c2c6995b3238c3e33d398786a24ae5b73cdd67af029a8bbc57d3bc02ed5e2"
+visibility = "private"
 
 [tests]
 framework = "node:test"
 report_format = "node-test-json-v1"
 expected_total = 17
 expected_total_source = "frozen-collection"
-commands_artifact = { digest = "sha256:2d7be4fbb2b6fdc530c8581a2f6c73a494987b177a544a0e5c5d38337964d111", size_bytes = 10240, media_type = "application/gzip", uri = "artifact://private/sha256:2d7be4fbb2b6fdc530c8581a2f6c73a494987b177a544a0e5c5d38337964d111", visibility = "private" }
-test_bundle = { digest = "sha256:fea116e8b08b2c805fa579cc7994c45ebdb1151e7b77592023d1d7e4adeb4e83", size_bytes = 10240, media_type = "application/gzip", uri = "artifact://private/sha256:fea116e8b08b2c805fa579cc7994c45ebdb1151e7b77592023d1d7e4adeb4e83", visibility = "private" }
+
+[tests.commands_artifact]
+digest = "sha256:7fb226a910c24e687c97db717df2114cebb65a78cb609d73becadf70fb3826c3"
+size_bytes = 10240
+media_type = "application/gzip"
+uri = "artifact://private/sha256:7fb226a910c24e687c97db717df2114cebb65a78cb609d73becadf70fb3826c3"
+visibility = "private"
+
+[tests.test_bundle]
+digest = "sha256:d56e64bba4b3aff86987404a98a8c218207bb9e61d51e3f37d4a35f3b4ecd3cc"
+size_bytes = 10240
+media_type = "application/gzip"
+uri = "artifact://private/sha256:d56e64bba4b3aff86987404a98a8c218207bb9e61d51e3f37d4a35f3b4ecd3cc"
+visibility = "private"
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
@@ -66,7 +102,15 @@ collection_mismatch = "fail"
 
 [harbor]
 description = "Pinned qs CommonJS JSON query-string contract with a deterministic 17-leaf node:test slice."
-keywords = ["node", "npm", "commonjs", "query-string", "parser", "serializer", "json"]
+keywords = [
+    "node",
+    "npm",
+    "commonjs",
+    "query-string",
+    "parser",
+    "serializer",
+    "json",
+]
 agent_timeout_sec = 1200.0
 verifier_timeout_sec = 900.0
 candidate_install_timeout_sec = 120.0
@@ -84,8 +128,8 @@ owner = "qs-repair"
 reason = "Fresh Harbor 0.21.0 Node production revalidation passed Oracle 17/17 with reward 1.0; empty, stub, and forgery controls returned reward 0.0; every verifier emitted network.json with public_network_available=false; and the forged workspace reward did not affect verifier-owned grading. Review, pilot, and publication remain out of scope."
 
 [oracle_bundle]
-digest = "sha256:4a8830b28168e71bf06afd5f1741da3b5d1445ae5ee637a38fa65eb64482537d"
+digest = "sha256:36cfc25ef23a5101cbaa1b85751bcdcba151e9bedb4241dca13087a011432677"
 size_bytes = 12032000
 media_type = "application/gzip"
-uri = "artifact://private/sha256:4a8830b28168e71bf06afd5f1741da3b5d1445ae5ee637a38fa65eb64482537d"
+uri = "artifact://private/sha256:36cfc25ef23a5101cbaa1b85751bcdcba151e9bedb4241dca13087a011432677"
 visibility = "private"

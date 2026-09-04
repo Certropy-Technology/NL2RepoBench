@@ -22,8 +22,9 @@ reference_source_fetch = "forbidden"
 reason = "Wireless hardware/network behavior and dependency closure are not reproducibly available."
 [dependencies]
 status = "unknown"
-installer = "pip"
+package_manager = "pip"
 packages = []
+
 [tests]
 framework = "pytest"
 expected_total = 0

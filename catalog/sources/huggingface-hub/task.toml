@@ -35,20 +35,40 @@ reason = "Candidate and verifier dependencies are installed during image build f
 
 [dependencies]
 status = "known"
-installer = "pip"
+package_manager = "pip"
 packages = [
-  "click==8.4.2",
-  "filelock==3.32.3",
-  "fsspec==2026.7.0",
-  "httpx==0.28.1",
-  "packaging==26.3",
-  "pyyaml==6.0.3",
-  "tqdm==4.70.0",
-  "typing-extensions==4.16.0",
-  "setuptools==84.0.0",
-  "wheel==0.45.1",
+    "click==8.4.2",
+    "filelock==3.32.3",
+    "fsspec==2026.7.0",
+    "httpx==0.28.1",
+    "packaging==26.3",
+    "pyyaml==6.0.3",
+    "tqdm==4.70.0",
+    "typing-extensions==4.16.0",
+    "setuptools==84.0.0",
+    "wheel==0.45.1",
 ]
-lock_artifact = { digest = "sha256:65b065f7ae1c55064a20407eca78808697c26fb1190448a3e71717abf0d56f83", size_bytes = 9451, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:65b065f7ae1c55064a20407eca78808697c26fb1190448a3e71717abf0d56f83", visibility = "private" }
+
+[dependencies.lock]
+digest = "sha256:a036bf98de9308a62df716eec33aead25c4ac12e72762153e807c7d0d2953150"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:a036bf98de9308a62df716eec33aead25c4ac12e72762153e807c7d0d2953150"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:557352ea21d86a78849274fe7af0726d02af3e3d2ed7fe4df9d1ba9faa77bd1d"
+size_bytes = 998
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:557352ea21d86a78849274fe7af0726d02af3e3d2ed7fe4df9d1ba9faa77bd1d"
+visibility = "private"
 
 [tests]
 framework = "pytest"

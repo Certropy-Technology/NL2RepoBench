@@ -28,7 +28,7 @@ reason = "The candidate contract requires loopback-only mocking; source/package/
 
 [dependencies]
 status = "unknown"
-installer = "pip"
+package_manager = "pip"
 packages = []
 
 [tests]

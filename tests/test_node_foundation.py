@@ -15,9 +15,8 @@ from typer.testing import CliRunner
 
 from nl2repobench.authoring.catalog import CatalogCompiler
 from nl2repobench.cli import app
-from nl2repobench.domain.models import Visibility
+from nl2repobench.domain.models import DependencyBundle, Visibility
 from nl2repobench.domain.models_v2 import (
-    DependencyBundleV2,
     EnvironmentLockV2,
     RuntimeProfileV2,
 )
@@ -103,14 +102,10 @@ def test_v2_runtime_and_npm_versions_are_exact() -> None:
             package_manager_version="10.9.8",
             libc="glibc",
         )
-    with pytest.raises(ValueError, match="lockfile version 3"):
-        DependencyBundleV2(
-            ecosystem="npm",
-            consumer="candidate-runtime",
-            lockfile_name="package-lock.json",
-            lockfile_version="2",
+    with pytest.raises(ValueError, match="lock, offline_store, and inventory"):
+        DependencyBundle(
+            status="known",
             package_manager="npm",
-            package_manager_version="10.9.8",
         )
 
 

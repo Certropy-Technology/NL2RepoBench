@@ -60,10 +60,10 @@ class PnpmHarborCompiler(NodeHarborCompiler):
 
         dependencies_root = tests_root / "dependencies"
         dependencies_root.mkdir()
-        if manifest.dependency_bundle.artifact is not None and not allow_incomplete:
-            self._extract_private_bundle(manifest.dependency_bundle.artifact, dependencies_root)
-        else:
+        if allow_incomplete:
             self._write_empty_pnpm_bundle(dependencies_root)
+        else:
+            self._materialize_dependencies(manifest, dependencies_root)
         try:
             self.package_manager.validate_offline_store(
                 dependencies_root,

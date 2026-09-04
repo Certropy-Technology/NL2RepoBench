@@ -33,9 +33,29 @@ reason = "The candidate and verifier run without network; private build artifact
 
 [dependencies]
 status = "known"
-installer = "system"
-module_bundle = { digest = "sha256:c37e4b325aea1739f2cd129def35c1a5accdbe4b4c8952bf26e214bb18051e0c", size_bytes = 505, uri = "artifact://private/sha256:c37e4b325aea1739f2cd129def35c1a5accdbe4b4c8952bf26e214bb18051e0c", visibility = "private" }
+package_manager = "go-modules"
 packages = []
+
+[dependencies.lock]
+digest = "sha256:124f5646e93bfee742afb94da63574867e42ec8130594837afa7ca26f5fbcc3b"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:124f5646e93bfee742afb94da63574867e42ec8130594837afa7ca26f5fbcc3b"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:3c1de9cc5210c5fc7b19f548e3eb2117940fd96422ccb43ca17ee4646f9bbfeb"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:3c1de9cc5210c5fc7b19f548e3eb2117940fd96422ccb43ca17ee4646f9bbfeb"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:50e24cc024885689c1b2d3476fcceefb201737c9877e204d9f961b14e8803aa8"
+size_bytes = 1313
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:50e24cc024885689c1b2d3476fcceefb201737c9877e204d9f961b14e8803aa8"
+visibility = "private"
 
 [tests]
 framework = "pytest"

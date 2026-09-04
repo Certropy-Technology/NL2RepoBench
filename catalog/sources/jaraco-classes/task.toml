@@ -35,9 +35,32 @@ reason = "Candidate and verifier dependencies are installed during Docker build 
 
 [dependencies]
 status = "known"
-installer = "pip"
-packages = ["more-itertools==10.8.0", "setuptools==84.0.0"]
-lock_artifact = { digest = "sha256:a40aefe9af103356292f794e87b6982d86ab7c836c30eab2d66ccc1465921a4e", size_bytes = 619, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:a40aefe9af103356292f794e87b6982d86ab7c836c30eab2d66ccc1465921a4e", visibility = "private" }
+package_manager = "pip"
+packages = [
+    "more-itertools==10.8.0",
+    "setuptools==84.0.0",
+]
+
+[dependencies.lock]
+digest = "sha256:613a6b2bb8f514501c20d97a807efb190f6eeac28cbfe5e58a9ad5817fae264e"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:613a6b2bb8f514501c20d97a807efb190f6eeac28cbfe5e58a9ad5817fae264e"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:2ea8169d37ac368c69054169ca746ced1280cbadd08604280294f40642b5f1eb"
+size_bytes = 996
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:2ea8169d37ac368c69054169ca746ced1280cbadd08604280294f40642b5f1eb"
+visibility = "private"
 
 [tests]
 framework = "pytest"

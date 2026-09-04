@@ -32,21 +32,41 @@ reason = "Candidate and verifier execution use a private hash-addressed Go modul
 
 [dependencies]
 status = "known"
-installer = "system"
+package_manager = "go-modules"
 packages = [
-  "github.com/alecthomas/kong@v1.14.0",
-  "github.com/charmbracelet/bubbles@v1.0.0",
-  "github.com/charmbracelet/bubbletea@v1.3.10",
-  "github.com/charmbracelet/lipgloss@v1.1.0",
-  "github.com/goccy/go-json@v0.10.6",
-  "github.com/google/go-cmp@v0.7.0",
-  "github.com/hashicorp/hcl/v2@v2.24.0",
-  "github.com/pelletier/go-toml/v2@v2.4.3",
-  "github.com/zclconf/go-cty@v1.17.0",
-  "go.yaml.in/yaml/v4@v4.0.0-rc.3",
-  "gopkg.in/ini.v1@v1.67.0"
+    "github.com/alecthomas/kong@v1.14.0",
+    "github.com/charmbracelet/bubbles@v1.0.0",
+    "github.com/charmbracelet/bubbletea@v1.3.10",
+    "github.com/charmbracelet/lipgloss@v1.1.0",
+    "github.com/goccy/go-json@v0.10.6",
+    "github.com/google/go-cmp@v0.7.0",
+    "github.com/hashicorp/hcl/v2@v2.24.0",
+    "github.com/pelletier/go-toml/v2@v2.4.3",
+    "github.com/zclconf/go-cty@v1.17.0",
+    "go.yaml.in/yaml/v4@v4.0.0-rc.3",
+    "gopkg.in/ini.v1@v1.67.0",
 ]
-module_bundle = { digest = "sha256:1614d318bea93da429dced0e338071c59c971cfc879d9910e06f5db63fc3fab2", size_bytes = 4401408, uri = "artifact://private/sha256:1614d318bea93da429dced0e338071c59c971cfc879d9910e06f5db63fc3fab2", visibility = "private" }
+
+[dependencies.lock]
+digest = "sha256:13bc1d7e421422250ad6fea01417d85eac0b69ba5a99e45f4f090ee1d2f1d70c"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:13bc1d7e421422250ad6fea01417d85eac0b69ba5a99e45f4f090ee1d2f1d70c"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:2db113e33bebede762be3cb2953102caab683f59ddf8d0eab146cb5be0fd504f"
+size_bytes = 21678080
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:2db113e33bebede762be3cb2953102caab683f59ddf8d0eab146cb5be0fd504f"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:85e0f03370c4611760cd40bf3d727608847144540a4d8b9e465d893658bac4ac"
+size_bytes = 228921
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:85e0f03370c4611760cd40bf3d727608847144540a4d8b9e465d893658bac4ac"
+visibility = "private"
 
 [tests]
 framework = "pytest"

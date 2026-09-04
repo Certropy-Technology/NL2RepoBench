@@ -30,8 +30,12 @@ reason = "No immutable source archive, hash-locked dependency closure, or privat
 
 [dependencies]
 status = "unknown"
-installer = "pip"
-packages = ["feedparser-sgmllib", "requests", "chardet"]
+package_manager = "pip"
+packages = [
+    "feedparser-sgmllib",
+    "requests",
+    "chardet",
+]
 
 [tests]
 framework = "pytest"

@@ -22,8 +22,9 @@ reference_source_fetch = "forbidden"
 reason = "No immutable environment, SQLite/native dependency closure, structured collection, or separate verifier is frozen."
 [dependencies]
 status = "unknown"
-installer = "pip"
+package_manager = "pip"
 packages = []
+
 [tests]
 framework = "pytest"
 expected_total = 0

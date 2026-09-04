@@ -41,21 +41,28 @@ reason = "The candidate package has no runtime dependencies and installs from a 
 
 [dependencies]
 status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
 packages = []
 
-[dependencies.artifact]
-digest = "sha256:c31c6bd8ffa0ea14677f5553b9d1b8c9146af0efb68c5abb51423cb8b647f683"
-size_bytes = 486
-media_type = "application/vnd.nl2repobench.npm-bundle+tar"
-uri = "artifact://private/sha256:c31c6bd8ffa0ea14677f5553b9d1b8c9146af0efb68c5abb51423cb8b647f683"
+[dependencies.lock]
+digest = "sha256:5851a19ae12fb81c47932b8618139487ca09378f56d9a47df16135cb4aaabc63"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:5851a19ae12fb81c47932b8618139487ca09378f56d9a47df16135cb4aaabc63"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:63bdad568ff0174494aaaf128eafb1340ee1f22e4187976cc5fd107a141fdd22"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:63bdad568ff0174494aaaf128eafb1340ee1f22e4187976cc5fd107a141fdd22"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:b3a9ab06d58f3e935d2c12cd7d3e2135d43a691a11a432cae172d5ee09843b49"
+size_bytes = 1278
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:b3a9ab06d58f3e935d2c12cd7d3e2135d43a691a11a432cae172d5ee09843b49"
 visibility = "private"
 
 [tests]

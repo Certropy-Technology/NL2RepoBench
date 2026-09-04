@@ -35,9 +35,33 @@ reason = "Build dependencies are installed from the private hash lock. Agent and
 
 [dependencies]
 status = "known"
-installer = "pip"
-packages = ["packaging==26.3", "setuptools==80.9.0", "setuptools-scm==9.2.0"]
-lock_artifact = { digest = "sha256:309f6694aa87bcec0c13aabd117fe7b07ae6f15c63ac7a62f758901471562b08", size_bytes = 1124, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:309f6694aa87bcec0c13aabd117fe7b07ae6f15c63ac7a62f758901471562b08", visibility = "private" }
+package_manager = "pip"
+packages = [
+    "packaging==26.3",
+    "setuptools==80.9.0",
+    "setuptools-scm==9.2.0",
+]
+
+[dependencies.lock]
+digest = "sha256:5e028bc524dff60d0c7a4fc51ff1f55c46083b7dfd025ff9db8f923cd320d45b"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:5e028bc524dff60d0c7a4fc51ff1f55c46083b7dfd025ff9db8f923cd320d45b"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:b5d3062001e4f7a4efc4f59c9e0c34238e475f2be6a633d5bf74cd9a6a93e530"
+size_bytes = 998
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:b5d3062001e4f7a4efc4f59c9e0c34238e475f2be6a633d5bf74cd9a6a93e530"
+visibility = "private"
 
 [tests]
 framework = "pytest"

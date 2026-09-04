@@ -33,15 +33,35 @@ reason = "The hash-locked build closure is installed during Docker image constru
 
 [dependencies]
 status = "known"
-installer = "pip"
+package_manager = "pip"
 packages = [
-  "hatchling==1.27.0",
-  "packaging==26.3",
-  "pathspec==1.1.1",
-  "pluggy==1.6.0",
-  "trove-classifiers==2026.6.1.19",
+    "hatchling==1.27.0",
+    "packaging==26.3",
+    "pathspec==1.1.1",
+    "pluggy==1.6.0",
+    "trove-classifiers==2026.6.1.19",
 ]
-lock_artifact = { digest = "sha256:fa29aa639cc510c171cb66d5d67817cf25c3d89585868284fd60c9249e9f1356", size_bytes = 1431, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:fa29aa639cc510c171cb66d5d67817cf25c3d89585868284fd60c9249e9f1356", visibility = "private" }
+
+[dependencies.lock]
+digest = "sha256:ed23c039dba2a6ba46ff013479d0d165a49d700bcf11bab53a6d78ebeae9d803"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:ed23c039dba2a6ba46ff013479d0d165a49d700bcf11bab53a6d78ebeae9d803"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:7a484402c7c694b0e6b7035e167164eb8119d461b17d17c69244b243ed8f0abb"
+size_bytes = 998
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:7a484402c7c694b0e6b7035e167164eb8119d461b17d17c69244b243ed8f0abb"
+visibility = "private"
 
 [tests]
 framework = "pytest"

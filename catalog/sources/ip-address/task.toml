@@ -41,16 +41,29 @@ libc = "glibc"
 
 [dependencies]
 status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
 packages = []
-artifact = { digest = "sha256:19faf94e16d65ac03244727e846df58e9d83a68728f6f70e2d7ed1bab274b828", size_bytes = 415, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:19faf94e16d65ac03244727e846df58e9d83a68728f6f70e2d7ed1bab274b828", visibility = "private" }
+
+[dependencies.lock]
+digest = "sha256:44e56689e122a47bc9a7d7e415f7fa2e724e7eb606bd8909431fd7b2ee38a562"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:44e56689e122a47bc9a7d7e415f7fa2e724e7eb606bd8909431fd7b2ee38a562"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:63bdad568ff0174494aaaf128eafb1340ee1f22e4187976cc5fd107a141fdd22"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:63bdad568ff0174494aaaf128eafb1340ee1f22e4187976cc5fd107a141fdd22"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:1c3e6ee17730aa6a99d5e16d238a38c9d4839f9d15a2a1ca48cd0700793055fa"
+size_bytes = 1278
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:1c3e6ee17730aa6a99d5e16d238a38c9d4839f9d15a2a1ca48cd0700793055fa"
+visibility = "private"
 
 [tests]
 framework = "node:test"

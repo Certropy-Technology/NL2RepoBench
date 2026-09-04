@@ -6,7 +6,14 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "easy"
 category = "data-serialization"
-tags = ["python", "json-lines", "streaming", "reader", "writer", "separate-verifier"]
+tags = [
+    "python",
+    "json-lines",
+    "streaming",
+    "reader",
+    "writer",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -35,33 +42,79 @@ reason = "The attrs runtime dependency and setuptools/wheel build closure are ha
 
 [dependencies]
 status = "known"
-installer = "pip"
-packages = ["attrs==25.4.0", "setuptools==80.10.2", "wheel==0.45.1"]
-lock_artifact = { digest = "sha256:20ed7127abfff312a28b82beacd113204107222df88db0a656bab6403a6c2034", size_bytes = 558, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:20ed7127abfff312a28b82beacd113204107222df88db0a656bab6403a6c2034", visibility = "private" }
+package_manager = "pip"
+packages = [
+    "attrs==25.4.0",
+    "setuptools==80.10.2",
+    "wheel==0.45.1",
+]
+
+[dependencies.lock]
+digest = "sha256:0d879f2392b5d80f31242f468d6725dcfc2e12baca5fed6c8f18786dd1d2b80d"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:0d879f2392b5d80f31242f468d6725dcfc2e12baca5fed6c8f18786dd1d2b80d"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:d7c850b0be13c32d0bffb755f7addf2259882780ac64e6dca0cfe39d964fadc5"
+size_bytes = 996
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:d7c850b0be13c32d0bffb755f7addf2259882780ac64e6dca0cfe39d964fadc5"
+visibility = "private"
 
 [tests]
 framework = "pytest"
 expected_total = 30
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py", "/tests/verifier/expected.json"]
+commands = [
+    "custom-json-v1 verifier entrypoint",
+]
+protected_paths = [
+    "/tests/verifier/run.py",
+    "/tests/verifier/adapter.py",
+    "/tests/verifier/expected.json",
+]
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:e1e953f420f49ef8d846cbc415e40ac272c1abbf26c736a09aadb9beb41d8ba3", size_bytes = 30720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:e1e953f420f49ef8d846cbc415e40ac272c1abbf26c736a09aadb9beb41d8ba3", visibility = "private" }
 entrypoint = "run.py"
-environment = {}
+
+[verifier.bundle]
+digest = "sha256:4c1fa08b98bc7ae112c051b9542c1ba563f82164d68e4aa24a093caf25a12611"
+size_bytes = 30720
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:4c1fa08b98bc7ae112c051b9542c1ba563f82164d68e4aa24a093caf25a12611"
+visibility = "private"
+
+[verifier.environment]
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
+passed_statuses = [
+    "passed",
+]
 excluded_statuses = []
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Build jsonlines 4.0.0 from an empty workspace and satisfy a bounded Reader, Writer, JSON, error, iteration, and file-mode contract."
-keywords = ["python", "json-lines", "streaming", "reader", "writer", "separate-verifier"]
+keywords = [
+    "python",
+    "json-lines",
+    "streaming",
+    "reader",
+    "writer",
+    "separate-verifier",
+]
 agent_timeout_sec = 1800.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 90.0
@@ -74,10 +127,10 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [oracle_bundle]
-digest = "sha256:823aa329652e4b1ed29375c82b7abbddc0aaea2c87c6fcf0190674eff8d0792f"
+digest = "sha256:fd90b882b47faa6cffb6fe9bb90b23d25e086011127222ff09d65ba62686712f"
 size_bytes = 81920
 media_type = "application/vnd.nl2repobench.private-bundle+tar"
-uri = "artifact://private/sha256:823aa329652e4b1ed29375c82b7abbddc0aaea2c87c6fcf0190674eff8d0792f"
+uri = "artifact://private/sha256:fd90b882b47faa6cffb6fe9bb90b23d25e086011127222ff09d65ba62686712f"
 visibility = "private"
 
 [lifecycle]

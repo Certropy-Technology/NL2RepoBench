@@ -6,7 +6,15 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "hard"
 category = "filesystem-concurrency"
-tags = ["python", "filesystem", "concurrency", "asyncio", "multiprocessing", "repository-generation", "separate-verifier"]
+tags = [
+    "python",
+    "filesystem",
+    "concurrency",
+    "asyncio",
+    "multiprocessing",
+    "repository-generation",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -34,44 +42,86 @@ reason = "The candidate and verifier images install the private hash-locked buil
 
 [dependencies]
 status = "known"
-installer = "pip"
+package_manager = "pip"
 packages = [
-  "hatch-vcs==0.5.0",
-  "hatchling==1.29.0",
-  "packaging==26.3",
-  "pathspec==1.1.1",
-  "pluggy==1.6.0",
-  "setuptools==75.8.0",
-  "setuptools-scm==10.2.1",
-  "trove-classifiers==2026.6.1.19",
-  "vcs-versioning==2.3.1",
-  "wheel==0.45.1",
+    "hatch-vcs==0.5.0",
+    "hatchling==1.29.0",
+    "packaging==26.3",
+    "pathspec==1.1.1",
+    "pluggy==1.6.0",
+    "setuptools==75.8.0",
+    "setuptools-scm==10.2.1",
+    "trove-classifiers==2026.6.1.19",
+    "vcs-versioning==2.3.1",
+    "wheel==0.45.1",
 ]
-lock_artifact = { digest = "sha256:883ffff65a1fe5256972090cc49ca607098dddaec0c4b6089f8192d9abb7b679", size_bytes = 1890, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:883ffff65a1fe5256972090cc49ca607098dddaec0c4b6089f8192d9abb7b679", visibility = "private" }
+
+[dependencies.lock]
+digest = "sha256:85a7a45ac3a2b56d3e89ee39c4c989b72824b28e7c1fc514d5f61c08e6fd1796"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:85a7a45ac3a2b56d3e89ee39c4c989b72824b28e7c1fc514d5f61c08e6fd1796"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:4ef3eb7cd0b7fb5ab711e43524b090949138c47a505b8900598c7fb470622bdb"
+size_bytes = 998
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:4ef3eb7cd0b7fb5ab711e43524b090949138c47a505b8900598c7fb470622bdb"
+visibility = "private"
 
 [tests]
 framework = "pytest"
 expected_total = 17
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py"]
+commands = [
+    "custom-json-v1 verifier entrypoint",
+]
+protected_paths = [
+    "/tests/verifier/run.py",
+    "/tests/verifier/adapter.py",
+]
 
 [verifier]
 protocol = "custom-json-v1"
 entrypoint = "run.py"
-bundle = { digest = "sha256:36d03a7f2840b4a6cd4d22576dc52f0479aa1b00c6ddef85fd07cc59cba4d903", size_bytes = 30720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:36d03a7f2840b4a6cd4d22576dc52f0479aa1b00c6ddef85fd07cc59cba4d903", visibility = "private" }
-environment = {}
+
+[verifier.bundle]
+digest = "sha256:9dbab48bf104758bae95c52055b12988dc67a2ad32e50805f5f5ba22626cbf37"
+size_bytes = 30720
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:9dbab48bf104758bae95c52055b12988dc67a2ad32e50805f5f5ba22626cbf37"
+visibility = "private"
+
+[verifier.environment]
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
+passed_statuses = [
+    "passed",
+]
 excluded_statuses = []
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Build the filelock filesystem coordination library from an empty workspace."
-keywords = ["python", "file-locking", "filesystem", "asyncio", "concurrency", "separate-verifier", "no-network"]
+keywords = [
+    "python",
+    "file-locking",
+    "filesystem",
+    "asyncio",
+    "concurrency",
+    "separate-verifier",
+    "no-network",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 90.0
@@ -89,8 +139,8 @@ owner = "integrator"
 reason = "Production Harbor compile succeeded without --allow-incomplete. Final Linux Oracle passed 17/17 with valid=true and reward=1.0; empty/nop, importable stub, and forged-artifact controls all scored 0.0. Review and pilot remain pending."
 
 [oracle_bundle]
-digest = "sha256:79d7adb06dd589461714a73ddabe6f8157d70dcded43aa3c89563b2a4b7f3b0d"
+digest = "sha256:ccd6ed2a7dd43378b2cd2b69714f7bf6af23107c8225ce48afff75e78ef335e6"
 size_bytes = 1556480
 media_type = "application/vnd.nl2repobench.private-bundle+tar"
-uri = "artifact://private/sha256:79d7adb06dd589461714a73ddabe6f8157d70dcded43aa3c89563b2a4b7f3b0d"
+uri = "artifact://private/sha256:ccd6ed2a7dd43378b2cd2b69714f7bf6af23107c8225ce48afff75e78ef335e6"
 visibility = "private"

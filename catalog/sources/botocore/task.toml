@@ -35,16 +35,36 @@ reason = "All candidate and verifier dependencies are installed during image bui
 
 [dependencies]
 status = "known"
-installer = "pip"
+package_manager = "pip"
 packages = [
-  "jmespath==1.0.1",
-  "python-dateutil==2.9.0.post0",
-  "urllib3==2.5.0",
-  "six==1.17.0",
-  "setuptools==80.10.2",
-  "wheel==0.45.1",
+    "jmespath==1.0.1",
+    "python-dateutil==2.9.0.post0",
+    "urllib3==2.5.0",
+    "six==1.17.0",
+    "setuptools==80.10.2",
+    "wheel==0.45.1",
 ]
-lock_artifact = { digest = "sha256:3a91a7b8c6f6e932308c2d440feed9234f360588a02dc20f643366cb4b0c1cfd", size_bytes = 2003, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:3a91a7b8c6f6e932308c2d440feed9234f360588a02dc20f643366cb4b0c1cfd", visibility = "private" }
+
+[dependencies.lock]
+digest = "sha256:5187193ed07732cbf84fc6c996dfd13613c9f85dd464dd3baf92a298cac454aa"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:5187193ed07732cbf84fc6c996dfd13613c9f85dd464dd3baf92a298cac454aa"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:36d3b37b5519fe1700bf90742a91074167f17db8e420e67c104df72c5d137c05"
+size_bytes = 998
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:36d3b37b5519fe1700bf90742a91074167f17db8e420e67c104df72c5d137c05"
+visibility = "private"
 
 [tests]
 framework = "pytest"

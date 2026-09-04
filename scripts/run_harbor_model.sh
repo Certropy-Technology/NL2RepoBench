@@ -101,7 +101,43 @@ harbor_jobs_dir="$job_dir"
 [[ "$task_path" != *$'\n'* ]] || { echo "invalid Harbor task path" >&2; exit 1; }
 [[ -d "$task_path" ]] || { echo "missing Harbor task: $task_path" >&2; exit 1; }
 [[ -f "$task_config" ]] || { echo "missing Harbor config: $task_config" >&2; exit 1; }
+task_path="$(cd "$task_path" && pwd)"
+task_config="$task_path/task.toml"
 mkdir -p "$job_dir"
+task_language="$({
+  python3 - "$task_config" <<'PY'
+import sys
+import tomllib
+from pathlib import Path
+
+with Path(sys.argv[1]).open("rb") as handle:
+    metadata = tomllib.load(handle).get("metadata", {})
+print(metadata.get("language", ""))
+PY
+})"
+if [[ "$task_language" == "java" ]]; then
+  java_prepared_root="$job_dir/java-prepared"
+  prepared_json="$job_dir/java-prepared.json"
+  if ! (cd "$REPO_ROOT" && PYTHONPATH="$REPO_ROOT/src" uv run \
+    --project "$REPO_ROOT" nl2repo harbor prepare-run \
+      "$task_path" model \
+    --output "$java_prepared_root" \
+      --private-cas-output "$REPO_ROOT/.nl2repo/java-run-cas/$RUN_ID" \
+      --toolchain "$REPO_ROOT/toolchain.java.lock.toml" \
+      --artifact-root "$REPO_ROOT/.nl2repo/artifacts") >"$prepared_json"; then
+    echo "failed to prepare Java model run" >&2
+    exit 1
+  fi
+  task_path="$(python3 - "$prepared_json" <<'PY'
+import json
+import sys
+
+with open(sys.argv[1], encoding="utf-8") as handle:
+    print(json.load(handle)["output"])
+PY
+)"
+  task_config="$task_path/task.toml"
+fi
 archive_task_id="${TASK_ID//\//__}"
 archive_script="$SCRIPT_ROOT/archive_harbor_job.py"
 

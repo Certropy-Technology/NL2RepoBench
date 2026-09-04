@@ -33,9 +33,36 @@ reason = "The hash-locked SQLAlchemy and Mako closure is installed during image 
 
 [dependencies]
 status = "known"
-installer = "pip"
-lock_artifact = { digest = "sha256:2977f99ef38095162afc88a4cfc62a4e54ade5c9db4d12c8266a366b5c808114", size_bytes = 20371, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:2977f99ef38095162afc88a4cfc62a4e54ade5c9db4d12c8266a366b5c808114", visibility = "private" }
-packages = ["SQLAlchemy==2.0.36", "Mako==1.4.1", "greenlet==3.5.5", "MarkupSafe==3.0.3", "typing_extensions==4.16.0", "setuptools==84.0.0"]
+package_manager = "pip"
+packages = [
+    "SQLAlchemy==2.0.36",
+    "Mako==1.4.1",
+    "greenlet==3.5.5",
+    "MarkupSafe==3.0.3",
+    "typing_extensions==4.16.0",
+    "setuptools==84.0.0",
+]
+
+[dependencies.lock]
+digest = "sha256:c6bdabebc40ea6a448c24073c7bcaececd9e093cb18c61fc35962973eb86c17e"
+size_bytes = 30720
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:c6bdabebc40ea6a448c24073c7bcaececd9e093cb18c61fc35962973eb86c17e"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:b15abf8a89c5c79e36c0bbb6785c18c0d2028264086ebbba3a494989ae1866ea"
+size_bytes = 1000
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:b15abf8a89c5c79e36c0bbb6785c18c0d2028264086ebbba3a494989ae1866ea"
+visibility = "private"
 
 [tests]
 framework = "pytest"

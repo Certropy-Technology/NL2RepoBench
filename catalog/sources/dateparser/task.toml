@@ -24,7 +24,7 @@ reason = "Source freeze and dependency/data closure were not established; no run
 
 [dependencies]
 status = "unknown"
-installer = "pip"
+package_manager = "pip"
 packages = []
 
 [tests]

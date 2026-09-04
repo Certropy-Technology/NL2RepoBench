@@ -34,26 +34,46 @@ reason = "Candidate and verifier dependencies are installed during image constru
 
 [dependencies]
 status = "known"
-installer = "pip"
+package_manager = "pip"
 packages = [
-  "annotated-doc==0.0.5",
-  "jaraco-context==6.1.2",
-  "jaraco-functools==4.6.0",
-  "jaraco-text==4.3.0",
-  "markdown-it-py==4.2.0",
-  "mdurl==0.1.2",
-  "more-itertools==11.1.0",
-  "packaging==26.3",
-  "platformdirs==4.11.5",
-  "pygments==2.21.0",
-  "rich==15.0.0",
-  "setuptools==80.9.0",
-  "shellingham==1.5.4",
-  "typer==0.27.1",
-  "typer-slim==0.24.0",
-  "wheel==0.45.1",
+    "annotated-doc==0.0.5",
+    "jaraco-context==6.1.2",
+    "jaraco-functools==4.6.0",
+    "jaraco-text==4.3.0",
+    "markdown-it-py==4.2.0",
+    "mdurl==0.1.2",
+    "more-itertools==11.1.0",
+    "packaging==26.3",
+    "platformdirs==4.11.5",
+    "pygments==2.21.0",
+    "rich==15.0.0",
+    "setuptools==80.9.0",
+    "shellingham==1.5.4",
+    "typer==0.27.1",
+    "typer-slim==0.24.0",
+    "wheel==0.45.1",
 ]
-lock_artifact = { digest = "sha256:7c331718b77eb1c0ff026e6512f5767a486d0ceb7ee99bc1159f55cb5f3a7861", size_bytes = 3654, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:7c331718b77eb1c0ff026e6512f5767a486d0ceb7ee99bc1159f55cb5f3a7861", visibility = "private" }
+
+[dependencies.lock]
+digest = "sha256:5b20d6c1bfe2e3c11aa06397302ef7fd26b2ea70b1d8d3d5a228c1ed1fa7bc65"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:5b20d6c1bfe2e3c11aa06397302ef7fd26b2ea70b1d8d3d5a228c1ed1fa7bc65"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:aba414d1e251725b426e12f230372c4f19e53f90152b95cb91ea45b1cdb0f63d"
+size_bytes = 998
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:aba414d1e251725b426e12f230372c4f19e53f90152b95cb91ea45b1cdb0f63d"
+visibility = "private"
 
 [tests]
 framework = "pytest"

@@ -35,9 +35,31 @@ reason = "The exact setuptools build backend is installed from a private hash-lo
 
 [dependencies]
 status = "known"
-installer = "pip"
-packages = ["setuptools==80.9.0"]
-lock_artifact = { digest = "sha256:49ce9d46ae31a11ed293f835c2075157a285687a86f15244094608a5ccd4d6f9", size_bytes = 634, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:49ce9d46ae31a11ed293f835c2075157a285687a86f15244094608a5ccd4d6f9", visibility = "private" }
+package_manager = "pip"
+packages = [
+    "setuptools==80.9.0",
+]
+
+[dependencies.lock]
+digest = "sha256:e7e9a6ebb9c7bae7edcf108c0fc13f49ecc39d5338430534285ec481e8d3ddfc"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:e7e9a6ebb9c7bae7edcf108c0fc13f49ecc39d5338430534285ec481e8d3ddfc"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:542f6e579b176a95df09d40b3fc5c1e225e52012895f998669762d5d1a0dba42"
+size_bytes = 996
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:542f6e579b176a95df09d40b3fc5c1e225e52012895f998669762d5d1a0dba42"
+visibility = "private"
 
 [tests]
 framework = "pytest"

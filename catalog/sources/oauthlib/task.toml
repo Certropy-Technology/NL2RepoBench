@@ -35,9 +35,32 @@ reason = "Candidate and separate verifier dependencies are installed during imag
 
 [dependencies]
 status = "known"
-installer = "pip"
-packages = ["setuptools==84.0.0", "wheel==0.45.1"]
-lock_artifact = { digest = "sha256:a55530deb66485e0d12a067aa6b80a0a92b51f0a5b79c9097b80e5a8ee1cbb11", size_bytes = 440, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:a55530deb66485e0d12a067aa6b80a0a92b51f0a5b79c9097b80e5a8ee1cbb11", visibility = "private" }
+package_manager = "pip"
+packages = [
+    "setuptools==84.0.0",
+    "wheel==0.45.1",
+]
+
+[dependencies.lock]
+digest = "sha256:1c33b4069f0f384a402fed58458adacf9c757974a11fcda3b07165f6b6b34ab3"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:1c33b4069f0f384a402fed58458adacf9c757974a11fcda3b07165f6b6b34ab3"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:bf8f976f657c020badaaaafd05fc2cd293c8be8d76499384b79a9955fa6a9c78"
+size_bytes = 996
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:bf8f976f657c020badaaaafd05fc2cd293c8be8d76499384b79a9955fa6a9c78"
+visibility = "private"
 
 [tests]
 framework = "pytest"

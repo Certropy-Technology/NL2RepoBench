@@ -3,12 +3,23 @@
 from __future__ import annotations
 
 from collections.abc import Sequence
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Protocol
 
 
 class PackageManagerError(ValueError):
     """A package-manager lock or offline closure is unsafe or malformed."""
+
+
+@dataclass(frozen=True)
+class CommandSpec:
+    """Verifier-owned process command with no arbitrary shell surface."""
+
+    argv: tuple[str, ...]
+    cwd: str = "."
+    environment: tuple[tuple[str, str], ...] = ()
+    timeout_sec: int = 600
 
 
 class PackageManagerAdapter(Protocol):

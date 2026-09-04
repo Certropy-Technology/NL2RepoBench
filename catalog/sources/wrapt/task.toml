@@ -35,9 +35,33 @@ reason = "The hash-locked setuptools and wheel build closure is installed during
 
 [dependencies]
 status = "known"
-installer = "pip"
-packages = ["packaging==26.3", "setuptools==84.0.0", "wheel==0.48.0"]
-lock_artifact = { digest = "sha256:47fe38b7bdb55f56a709d325f15e7b4944a64d72b53f3df191225cbc4afdd965", size_bytes = 559, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:47fe38b7bdb55f56a709d325f15e7b4944a64d72b53f3df191225cbc4afdd965", visibility = "private" }
+package_manager = "pip"
+packages = [
+    "packaging==26.3",
+    "setuptools==84.0.0",
+    "wheel==0.48.0",
+]
+
+[dependencies.lock]
+digest = "sha256:1d43c9df36e12a9a952ecad7c87965cdf1c5bb44a26ea5cb83576b1481e2e832"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:1d43c9df36e12a9a952ecad7c87965cdf1c5bb44a26ea5cb83576b1481e2e832"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:3a75ddde0db07f8fb5b2c27177127c3e7860334cc9dfe862adbdb7c4c142e2d9"
+size_bytes = 996
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:3a75ddde0db07f8fb5b2c27177127c3e7860334cc9dfe862adbdb7c4c142e2d9"
+visibility = "private"
 
 [tests]
 framework = "pytest"

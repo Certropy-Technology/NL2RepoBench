@@ -273,8 +273,28 @@ class NetworkPolicy(RecordModel):
         return self
 
 
+class JavaRuntimeProfile(RecordModel):
+    """Exact JDK/Maven identity used by the Java authoring lane."""
+
+    language: Literal["java"] = "java"
+    runtime: Literal["jdk"] = "jdk"
+    version: str
+    package_manager: Literal["maven"] = "maven"
+    package_manager_version: str
+    architecture: Literal["linux/amd64"] = "linux/amd64"
+    libc: Literal["glibc"] = "glibc"
+
+    @model_validator(mode="after")
+    def validate_toolchain_versions(self) -> JavaRuntimeProfile:
+        if not re.fullmatch(r"temurin-21\.0\.[0-9]+\+[0-9]+", self.version):
+            raise ValueError("Java runtime version must be an exact Temurin JDK 21 build")
+        if not re.fullmatch(r"3\.9\.[0-9]+", self.package_manager_version):
+            raise ValueError("Maven version must be an exact 3.9.x release")
+        return self
+
+
 class EnvironmentLock(RecordModel):
-    """Reproducible execution environment metadata."""
+    """Reproducible execution environment metadata across supported runtimes."""
 
     model_config = ConfigDict(
         json_schema_extra={
@@ -285,14 +305,15 @@ class EnvironmentLock(RecordModel):
                         "properties": {"status": {"const": "known"}},
                     },
                     "then": {
-                        "required": [
-                            "python_version",
-                            "os_name",
-                            "base_image",
-                            "base_image_digest",
+                        "required": ["os_name", "base_image", "base_image_digest"],
+                        "oneOf": [
+                            {"required": ["python_version"]},
+                            {"required": ["runtime_version"]},
+                            {"required": ["runtime"]},
                         ],
                         "properties": {
                             "python_version": {"type": "string", "minLength": 1},
+                            "runtime_version": {"type": "string", "minLength": 1},
                             "os_name": {"type": "string", "minLength": 1},
                             "base_image": {"type": "string", "minLength": 1},
                             "base_image_digest": {
@@ -308,6 +329,7 @@ class EnvironmentLock(RecordModel):
 
     status: ProvenanceStatus = ProvenanceStatus.UNKNOWN
     python_version: str | None = None
+    runtime_version: str | None = None
     os_name: str | None = None
     base_image: str | None = None
     base_image_digest: str | None = Field(default=None, pattern=SHA256_PATTERN)
@@ -315,6 +337,7 @@ class EnvironmentLock(RecordModel):
     build_command: str | None = None
     network_mode: Literal["public", "no-network", "allowlist"] | None = None
     network_policy: NetworkPolicy | None = None
+    runtime: JavaRuntimeProfile | None = None
 
     @model_validator(mode="after")
     def validate_network_policy_consistency(self) -> EnvironmentLock:
@@ -334,61 +357,137 @@ class EnvironmentLock(RecordModel):
             missing = [
                 name
                 for name, value in {
-                    "python_version": self.python_version,
                     "os_name": self.os_name,
                     "base_image": self.base_image,
                     "base_image_digest": self.base_image_digest,
                 }.items()
                 if not value
             ]
+            if not self.python_version and not self.runtime_version and self.runtime is None:
+                missing.append("python_version or runtime_version")
             if missing:
                 raise ValueError(f"known environment is missing: {', '.join(missing)}")
         return self
 
 
 class DependencyBundle(RecordModel):
-    """Hash-locked build-time dependencies for Python task images.
-
-    Python Harbor images install candidate dependencies from the package index
-    during the Docker build.  The final task never carries a wheelhouse and
-    the verifier never uses ``--no-index``.  ``lock_artifact`` contains only a
-    requirements lock file with hashes; ``artifact`` is retained solely so
-    older catalog records can be diagnosed and rejected during publication.
-    """
-
-    model_config = ConfigDict(
-        json_schema_extra={
-            "allOf": [
-                {
-                    "if": {
-                        "required": ["status"],
-                        "properties": {"status": {"const": "known"}},
-                    },
-                    "then": {
-                        "required": ["lock_artifact"],
-                        "properties": {"lock_artifact": {"not": {"type": "null"}}},
-                    },
-                }
-            ]
-        }
-    )
+    """One language-neutral lock/store/inventory dependency contract."""
 
     status: ProvenanceStatus = ProvenanceStatus.UNKNOWN
-    lock_artifact: ArtifactRef | None = None
-    """Private raw ``requirements.lock.txt`` used for network installation."""
-
-    # Legacy field.  It points to a wheelhouse and is intentionally not used
-    # by the Python Harbor compiler anymore.  Keeping it in the model lets us
-    # produce a precise publication gap for stale catalog records instead of
-    # silently treating vendor installation as valid.
-    artifact: ArtifactRef | None = None
-    installer: Literal["uv", "pip", "system", "unknown"] = "unknown"
+    package_manager: Literal[
+        "uv",
+        "pip",
+        "npm",
+        "pnpm",
+        "go-modules",
+        "maven",
+        "cargo",
+        "none",
+        "unknown",
+    ] = "unknown"
+    lock: ArtifactRef | None = None
+    offline_store: ArtifactRef | None = None
+    inventory: ArtifactRef | None = None
     packages: tuple[str, ...] = ()
 
     @model_validator(mode="after")
     def validate_known_bundle(self) -> DependencyBundle:
-        if self.status is ProvenanceStatus.KNOWN and self.lock_artifact is None:
-            raise ValueError("known dependency bundle requires lock_artifact")
+        references = (self.lock, self.offline_store, self.inventory)
+        if self.status is ProvenanceStatus.KNOWN:
+            if self.package_manager == "unknown":
+                raise ValueError("known dependency bundle requires package_manager")
+            if any(reference is None for reference in references):
+                raise ValueError(
+                    "known dependency bundle requires lock, offline_store, and inventory"
+                )
+        elif any(reference is not None for reference in references):
+            raise ValueError("unknown dependency bundle cannot carry artifact references")
+        for name, reference in zip(
+            ("lock", "offline_store", "inventory"), references, strict=True
+        ):
+            if reference is not None and reference.visibility is not Visibility.PRIVATE:
+                raise ValueError(f"dependency bundle {name} must be private")
+        return self
+
+
+class InventoryEntry(BaseModel):
+    """One canonical dependency archive member."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True, str_strip_whitespace=True)
+
+    path: str
+    type: Literal["file", "directory"]
+    mode: Literal["0444", "0555"]
+    size: Annotated[int, Field(ge=0)]
+    sha256: str | None = Field(default=None, pattern=SHA256_PATTERN)
+
+    @model_validator(mode="after")
+    def validate_entry(self) -> InventoryEntry:
+        path = PurePosixPath(self.path)
+        if path.is_absolute() or not path.parts or any(
+            part in {"", ".", ".."} for part in path.parts
+        ):
+            raise ValueError("dependency inventory path is unsafe")
+        if self.type == "directory":
+            if self.mode != "0555" or self.size != 0 or self.sha256 is not None:
+                raise ValueError("dependency inventory directory metadata is invalid")
+        elif self.sha256 is None:
+            raise ValueError("dependency inventory file requires sha256")
+        return self
+
+
+class ArchiveInventory(BaseModel):
+    """Closed-world inventory for one canonical dependency archive."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True, str_strip_whitespace=True)
+
+    archive_kind: Literal["dependency-lock", "offline-store"]
+    archive_digest: str = Field(pattern=SHA256_PATTERN)
+    tree_digest: str = Field(pattern=SHA256_PATTERN)
+    entries: tuple[InventoryEntry, ...]
+    file_count: Annotated[int, Field(ge=0)]
+    directory_count: Annotated[int, Field(ge=0)]
+    total_bytes: Annotated[int, Field(ge=0)]
+
+    @model_validator(mode="after")
+    def validate_counts(self) -> ArchiveInventory:
+        paths = [entry.path for entry in self.entries]
+        if paths != sorted(paths, key=lambda value: value.encode("utf-8")):
+            raise ValueError("dependency inventory entries must be sorted")
+        if len(paths) != len(set(paths)):
+            raise ValueError("dependency inventory entries must be unique")
+        files = [entry for entry in self.entries if entry.type == "file"]
+        directories = [entry for entry in self.entries if entry.type == "directory"]
+        if self.file_count != len(files) or self.directory_count != len(directories):
+            raise ValueError("dependency inventory entry counts do not match")
+        if self.total_bytes != sum(entry.size for entry in files):
+            raise ValueError("dependency inventory total_bytes does not match")
+        return self
+
+
+class DependencyOfflineSmoke(BaseModel):
+    model_config = ConfigDict(extra="forbid", frozen=True, str_strip_whitespace=True)
+
+    status: Literal["passed"]
+    command_id: Annotated[str, Field(min_length=1, max_length=128)]
+
+
+class DependencyInventory(RecordModel):
+    """The single external inventory binding dependency lock and store."""
+
+    identity: Annotated[str, Field(pattern=r"^[a-z0-9-]+\+[a-z0-9-]+$")]
+    adapter_version: Annotated[str, Field(min_length=1, max_length=128)]
+    toolchain_digest: str = Field(pattern=SHA256_PATTERN)
+    lock: ArchiveInventory
+    store: ArchiveInventory
+    offline_smoke: DependencyOfflineSmoke
+
+    @model_validator(mode="after")
+    def validate_archive_kinds(self) -> DependencyInventory:
+        if self.lock.archive_kind != "dependency-lock":
+            raise ValueError("dependency lock inventory has the wrong archive kind")
+        if self.store.archive_kind != "offline-store":
+            raise ValueError("dependency store inventory has the wrong archive kind")
         return self
 
 
@@ -442,7 +541,8 @@ class TestManifest(RecordModel):
         }
     )
 
-    framework: Literal["pytest"] = "pytest"
+    framework: Literal["pytest", "junit-platform"] = "pytest"
+    report_format: str | None = None
     # Blocked/excluded descriptors may have no frozen collection yet. Runtime
     # publication validation still requires a positive frozen denominator.
     expected_total: Annotated[int, Field(ge=0)] = 0
@@ -455,6 +555,15 @@ class TestManifest(RecordModel):
 
     @model_validator(mode="after")
     def validate_command_source(self) -> TestManifest:
+        if (
+            self.framework == "junit-platform"
+            and self.report_format != "junit-open-test-report-xml-v1"
+        ):
+            raise ValueError(
+                "junit-platform tests require report_format=junit-open-test-report-xml-v1"
+            )
+        if self.framework == "pytest" and self.report_format is not None:
+            raise ValueError("pytest tests must not declare a runtime-specific report_format")
         if (
             not self.commands
             and self.commands_artifact is None
@@ -473,6 +582,9 @@ class MetricContract(RecordModel):
 
     contract_id: str = "fixed-test-pass-rate-v1"
     passed_statuses: tuple[Literal["passed"], ...] = ("passed",)
+    # Legacy v1 schema field. The current runtime contract is defined by
+    # verification.metric_contract and rejects this historical exclusion field
+    # at the evaluator boundary rather than silently applying it.
     excluded_statuses: tuple[Literal["skipped", "xfail"], ...] = ("skipped",)
     collection_mismatch: Literal["fail", "record-only"] = "fail"
     formula: str = "clamp(passed / frozen_total, 0, 1)"
@@ -655,10 +767,20 @@ class TaskManifest(RecordModel):
             gaps.append("environment_lock.status=known")
         if self.dependency_bundle.status is not ProvenanceStatus.KNOWN:
             gaps.append("dependency_bundle.status=known")
-        if self.dependency_bundle.lock_artifact is None:
-            gaps.append("dependency_bundle.lock_artifact")
-        if self.dependency_bundle.artifact is not None:
-            gaps.append("dependency_bundle.artifact=forbidden")
+        if self.dependency_bundle.package_manager == "unknown":
+            gaps.append("dependency_bundle.package_manager")
+        for field_name, reference in {
+            "lock": self.dependency_bundle.lock,
+            "offline_store": self.dependency_bundle.offline_store,
+            "inventory": self.dependency_bundle.inventory,
+        }.items():
+            if reference is None:
+                gaps.append(f"dependency_bundle.{field_name}")
+            elif reference.visibility is not Visibility.PRIVATE:
+                gaps.append(f"dependency_bundle.{field_name}.visibility=private")
+        if self.metadata.language == "java":
+            if self.environment_lock.runtime is None:
+                gaps.append("environment_lock.runtime")
         if self.tests.expected_total_source != "frozen-collection":
             gaps.append("tests.expected_total_source=frozen-collection")
         if self.tests.expected_total <= 0:

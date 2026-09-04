@@ -28,7 +28,7 @@ reason = "No immutable upstream revision, source archive digest, license evidenc
 
 [dependencies]
 status = "unknown"
-installer = "pip"
+package_manager = "pip"
 packages = []
 
 [tests]

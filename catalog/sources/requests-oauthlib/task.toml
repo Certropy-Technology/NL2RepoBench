@@ -35,9 +35,41 @@ reason = "The candidate and verifier dependency closure is installed only during
 
 [dependencies]
 status = "known"
-installer = "pip"
-packages = ["certifi==2026.7.22", "cffi==2.1.1", "charset-normalizer==3.5.1", "cryptography==50.0.1", "idna==3.19", "oauthlib==3.3.0", "pycparser==3.0", "pyjwt==2.13.0", "requests==2.31.0", "setuptools==80.9.0", "urllib3==2.7.0"]
-lock_artifact = { digest = "sha256:f6e0bac76cf4def49e6f48f503361f8c220a188d457c390cd94b936027848752", size_bytes = 28898, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:f6e0bac76cf4def49e6f48f503361f8c220a188d457c390cd94b936027848752", visibility = "private" }
+package_manager = "pip"
+packages = [
+    "certifi==2026.7.22",
+    "cffi==2.1.1",
+    "charset-normalizer==3.5.1",
+    "cryptography==50.0.1",
+    "idna==3.19",
+    "oauthlib==3.3.0",
+    "pycparser==3.0",
+    "pyjwt==2.13.0",
+    "requests==2.31.0",
+    "setuptools==80.9.0",
+    "urllib3==2.7.0",
+]
+
+[dependencies.lock]
+digest = "sha256:2e8131a8fba0c583098f9e20147f9963f3fedc74d133f8aa6fde3b946d0fe66b"
+size_bytes = 30720
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:2e8131a8fba0c583098f9e20147f9963f3fedc74d133f8aa6fde3b946d0fe66b"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:9a974b6662a46dd022219ab480b00a8c07a89de3b009dae653d47e64ea25a13b"
+size_bytes = 1000
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:9a974b6662a46dd022219ab480b00a8c07a89de3b009dae653d47e64ea25a13b"
+visibility = "private"
 
 [tests]
 framework = "pytest"

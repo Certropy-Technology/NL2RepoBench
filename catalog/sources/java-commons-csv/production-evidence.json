@@ -1,0 +1,126 @@
+{
+  "bundle": {
+    "path": "catalog/tasks/java-commons-csv/bundle.manifest.json",
+    "sha256": "sha256:db9862122738af7ebcfb8066ada0ea1ed20209cc5d79308b74fe11f9adbe37e8"
+  },
+  "controls": {
+    "empty": {
+      "command": "harbor run -p java-commons-csv-empty -a oracle",
+      "counts_collected": 0,
+      "exit_code": 0,
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/runs/java-pilot-final/controls-v19/java-commons-csv/empty/2026-09-05__00-59-34/java-commons-csv-empty__dqDnJMR/verifier/grading.json",
+        "sha256": "sha256:69b96276bafdba4bc418af89ccfd0ac9902e7f7def186242e24e9df785a2304c"
+      },
+      "network": {
+        "path": ".nl2repo/runs/java-pilot-final/controls-v19/java-commons-csv/empty/2026-09-05__00-59-34/java-commons-csv-empty__dqDnJMR/verifier/network.json",
+        "sha256": "sha256:0e5a9efbe33139845cdbb9712dc185f216902f0f2b205af704fa821cc27804c3"
+      },
+      "reward": 0.0,
+      "valid": true
+    },
+    "forgery": {
+      "command": "harbor run -p java-commons-csv-forgery -a oracle",
+      "counts_collected": 4,
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/java-pilot-final/controls-v19/java-commons-csv/forgery/2026-09-05__01-05-07/java-commons-csv-forgery__Nui7SWd/verifier/grading.json",
+        "sha256": "sha256:1caf72cefc92e2eecd8f83fbbc77cd66f60379451523f3a351d988083f1add98"
+      },
+      "network": {
+        "path": ".nl2repo/runs/java-pilot-final/controls-v19/java-commons-csv/forgery/2026-09-05__01-05-07/java-commons-csv-forgery__Nui7SWd/verifier/network.json",
+        "sha256": "sha256:a9683461878716c60bad2acec544708b8dda3fc4038c66c23957f2985865c26b"
+      },
+      "reward": 0.0,
+      "valid": true,
+      "verifier_owned_reward": true
+    },
+    "hang": {
+      "command": "harbor run -p java-commons-csv-hang -a oracle",
+      "counts_collected": 0,
+      "exit_code": 0,
+      "failure_reason": "candidate-timeout",
+      "grading": {
+        "path": ".nl2repo/runs/java-pilot-final/controls-v19/java-commons-csv/hang/2026-09-05__01-09-33/java-commons-csv-hang__c88ZDhX/verifier/grading.json",
+        "sha256": "sha256:99c01b70f4e043cbc4e6835511d2ad48f2a3051ee26af4ac82d4b3d3df254828"
+      },
+      "network": {
+        "path": ".nl2repo/runs/java-pilot-final/controls-v19/java-commons-csv/hang/2026-09-05__01-09-33/java-commons-csv-hang__c88ZDhX/verifier/network.json",
+        "sha256": "sha256:749682486d23f7efcec0330a557a111ec2001671405f05789e2acd67910d00f6"
+      },
+      "reward": 0.0,
+      "valid": true
+    },
+    "install-failure": {
+      "command": "harbor run -p java-commons-csv-install-failure -a oracle",
+      "counts_collected": 0,
+      "exit_code": 0,
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/runs/java-pilot-final/controls-v19/java-commons-csv/install-failure/2026-09-05__01-08-08/java-commons-csv-install-failure__e8CKthH/verifier/grading.json",
+        "sha256": "sha256:69b96276bafdba4bc418af89ccfd0ac9902e7f7def186242e24e9df785a2304c"
+      },
+      "network": {
+        "path": ".nl2repo/runs/java-pilot-final/controls-v19/java-commons-csv/install-failure/2026-09-05__01-08-08/java-commons-csv-install-failure__e8CKthH/verifier/network.json",
+        "sha256": "sha256:b10bc221037f49fe5ae7ddaed75346607a5546b7dafe59de1327592c41ecf115"
+      },
+      "reward": 0.0,
+      "valid": true
+    },
+    "offline": {
+      "command": "harbor run -p java-commons-csv-offline -a oracle",
+      "completed": true,
+      "counts_collected": 0,
+      "exit_code": 0,
+      "failure_reason": "candidate-installation-failed",
+      "grading": {
+        "path": ".nl2repo/runs/java-pilot-final/controls-v19/java-commons-csv/offline/2026-09-05__01-16-05/java-commons-csv-offline__YThtXiX/verifier/grading.json",
+        "sha256": "sha256:69b96276bafdba4bc418af89ccfd0ac9902e7f7def186242e24e9df785a2304c"
+      },
+      "network": {
+        "path": ".nl2repo/runs/java-pilot-final/controls-v19/java-commons-csv/offline/2026-09-05__01-16-05/java-commons-csv-offline__YThtXiX/verifier/network.json",
+        "sha256": "sha256:13cec582eb5e674b55ab96902f96ad7f3b59243cb8d77a70510d1aa6766ecff4"
+      },
+      "reward": 0.0,
+      "valid": true
+    },
+    "stub": {
+      "command": "harbor run -p java-commons-csv-stub -a oracle",
+      "counts_collected": 4,
+      "exit_code": 0,
+      "grading": {
+        "path": ".nl2repo/runs/java-pilot-final/controls-v19/java-commons-csv/stub/2026-09-05__01-01-05/java-commons-csv-stub__AmWeQgK/verifier/grading.json",
+        "sha256": "sha256:1caf72cefc92e2eecd8f83fbbc77cd66f60379451523f3a351d988083f1add98"
+      },
+      "network": {
+        "path": ".nl2repo/runs/java-pilot-final/controls-v19/java-commons-csv/stub/2026-09-05__01-01-05/java-commons-csv-stub__AmWeQgK/verifier/network.json",
+        "sha256": "sha256:a97148dfe5ceca78b85d44012cf22d7e1bf1d6b4ada6ba83dcabb5434808efad"
+      },
+      "reward": 0.0,
+      "valid": true
+    }
+  },
+  "frozen_total": 4,
+  "oracle": {
+    "command": "bash scripts/run_java_oracle.sh",
+    "exit_code": 0,
+    "grading": {
+      "path": ".nl2repo/runs/java-pilot-final/oracle-v19-final/java-commons-csv-v19-final/harbor/2026-09-05__01-00-02/java-commons-csv-oracle__UnuRFgF/verifier/grading.json",
+      "sha256": "sha256:6931f4c8515277dba36d678f04b16f0c864aa32b7fdd4f94ea459a8733cebbd4"
+    },
+    "harbor_version": "0.21.0",
+    "network": {
+      "path": ".nl2repo/runs/java-pilot-final/oracle-v19-final/java-commons-csv-v19-final/harbor/2026-09-05__01-00-02/java-commons-csv-oracle__UnuRFgF/verifier/network.json",
+      "sha256": "sha256:8ef135a20cf7f60a4ecf5eef3eaed0ca5fb03f7ffc27103db1ccfa5effa96979"
+    },
+    "reward": 1.0,
+    "valid": true
+  },
+  "runtime": "java+maven",
+  "schema_version": "1.0",
+  "source_digest": "sha256:a1c7ff981e195c01797f44a3bf87db07f9759ec803f1c76abdff6462411c7c37",
+  "source_revision": "5b99c860986a87f9da664bf47a3a7c0026673123",
+  "task_id": "java-commons-csv",
+  "terminal_kind": "valid"
+}

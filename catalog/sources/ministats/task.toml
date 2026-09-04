@@ -29,7 +29,7 @@ reason = "Synthetic development fixture; the production dependency lock and immu
 
 [dependencies]
 status = "unknown"
-installer = "uv"
+package_manager = "uv"
 packages = []
 
 [tests]

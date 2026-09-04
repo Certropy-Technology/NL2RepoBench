@@ -38,15 +38,10 @@ reason = "Agent and verifier runs must remain offline; the source lock is npm v2
 
 [dependencies]
 status = "unknown"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
-packages = ["committed lockfile v2; approved npm v3 cache closure is missing"]
+packages = [
+    "committed lockfile v2; approved npm v3 cache closure is missing",
+]
 
 [tests]
 framework = "node:test"

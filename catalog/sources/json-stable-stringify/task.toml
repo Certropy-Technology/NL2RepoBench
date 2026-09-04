@@ -41,15 +41,35 @@ reason = "The candidate and separate verifier use only the frozen private npm ca
 
 [dependencies]
 status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
-packages = ["call-bind@1.0.9", "call-bound@1.0.4", "isarray@2.0.5", "jsonify@0.0.1", "object-keys@1.1.1"]
+packages = [
+    "call-bind@1.0.9",
+    "call-bound@1.0.4",
+    "isarray@2.0.5",
+    "jsonify@0.0.1",
+    "object-keys@1.1.1",
+]
+
+[dependencies.lock]
+digest = "sha256:9b6986048f675e4a9d7168d6204a1c536a43951824f932094513948453e85055"
+size_bytes = 40960
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:9b6986048f675e4a9d7168d6204a1c536a43951824f932094513948453e85055"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:02468ba5de623165ebf10d2927ada1b318bc73a2c05721d43444907409ce009e"
+size_bytes = 716800
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:02468ba5de623165ebf10d2927ada1b318bc73a2c05721d43444907409ce009e"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:f9638292033aad27e6c6d63183f369f1798d5560a48cf881149a9234b02cc177"
+size_bytes = 23184
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:f9638292033aad27e6c6d63183f369f1798d5560a48cf881149a9234b02cc177"
+visibility = "private"
 
 [tests]
 framework = "node:test"
@@ -79,13 +99,6 @@ workspace_artifact = "/workspace"
 status = "controls-passed"
 owner = "node-author-wave2-20260828/json-stable-stringify"
 reason = "Frozen Node/npm source, private test collection, production bundle, Oracle, empty/stub/forgery/install-script/loader-hook/hang/offline controls, and no-network receipts are recorded in production-evidence.json; model Agent Run and integrator review remain outstanding."
-
-[dependencies.artifact]
-digest = "sha256:2ea87d8d7f4ab8922e374bd5283f34e55fafb085610481038800a252b5a43cb9"
-size_bytes = 860160
-media_type = "application/vnd.nl2repobench.npm-bundle+tar"
-uri = "artifact://private/sha256:2ea87d8d7f4ab8922e374bd5283f34e55fafb085610481038800a252b5a43cb9"
-visibility = "private"
 
 [tests.commands_artifact]
 digest = "sha256:7c01784a886870bdd39d14eb870029fc492c9fcad9be6793e74a462702227ebb"

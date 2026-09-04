@@ -1,44 +1,28 @@
 {
   "schema_version": "1.0",
   "task_id": "tokenizers",
-  "terminal_kind": "awaiting-agent-run",
-  "source": {
-    "upstream_url": "https://github.com/huggingface/tokenizers",
-    "revision": "d5827816baedcbf1cb5b452dea8048150b6872df",
-    "tree": "66236e7ea0531c9e76294112a46c80e6e8469f6b",
-    "archive_sha256": "sha256:ee078d644cd1e414f7a27a3085124577584dccbdeb4bc3f0addc4b065bc4b2d1",
-    "license_spdx": "Apache-2.0",
-    "license_sha256": "sha256:c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
-  },
-  "environment": {
-    "python": "3.12.11 probe; task lock 3.12.14",
-    "rustc": "1.97.1",
-    "cargo": "1.97.1",
-    "maturin": "1.15.0",
-    "base_image": "python:3.12-slim@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
-    "network_policy": "no-network for agent/verifier; Oracle source exception is not exercised in this lane"
-  },
-  "artifacts": {
-    "dependency_lock": {"digest": "sha256:6e11d375b53cfece00b9329b579c66249974f9dccc913c3245241df0e7bfd2c6", "size_bytes": 18345},
-    "verifier_bundle": {"digest": "sha256:9e3527bf783aa7f3ecc9bd695cf78e47c21c3047306a27ada47fe739c21ec5fc", "size_bytes": 20480},
-    "oracle_bundle": {"digest": "sha256:c972e5dd4b22aea96ac7abf9b8b13a694a029b1fef700a226390cd98b278c686", "size_bytes": 8755200},
-    "compiled_bundle_manifest": {"path": ".nl2repo/final-compile/tokenizers/bundle.manifest.json", "sha256": "sha256:b8f4a4ae27270c0f228ebcf991c5ab7721886edd3e0ffa7220b8d4f4ba928cb3", "file_count": 62}
-  },
-  "local_probes": [
-    {"command": "python3 -m pip wheel upstream/bindings/python --no-deps --no-build-isolation", "exit_code": 2, "classification": "environment", "reason": "initial probe environment lacked maturin; repaired with task-local maturin 1.15.0"},
-    {"command": "maturin build --release --manifest-path upstream/bindings/python/Cargo.toml", "exit_code": 0, "output": "tokenizers-0.23.2.dev0-cp310-abi3-manylinux_2_34_x86_64.whl, 3601244 bytes"},
-    {"command": "uv pip install --target candidate-install-site --no-deps --no-build-isolation upstream/bindings/python", "exit_code": 0, "output": "built and installed tokenizers==0.23.2.dev0"},
-    {"command": "uv pip install --require-hashes --dry-run -r candidate-requirements.lock.txt", "exit_code": 0, "output": "18 packages resolved from the hash lock"},
-    {"command": "local Oracle wrapper install from source-derived wheel", "exit_code": 0, "output": "tokenizers==0.23.2.dev0 imported and encoded a local WordLevel token"},
-    {"command": "private custom-json-v1 scenarios against verified reference wheel", "exit_code": 0, "passed": 32, "collected": 32},
-    {"command": "production compile twice and cmp bundle.manifest.json", "exit_code": 0, "manifest_sha256": "sha256:57d89196d6086db3e930042cf2057fd50f43974d6ea7b3cec497d3be48fa3234"}
-  ],
-  "oracle": {"status": "not-run", "reason": "Lane contract forbids starting a Harbor Agent Run from this worktree; integrator must run the official Oracle gate from the compiled bundle."},
-  "controls": {"status": "not-run", "reason": "Lane contract forbids starting Harbor runs here; control scripts are authored and compiled, but no control receipt is claimed."},
-  "status_boundary": "awaiting-agent-run",
-  "residual_risks": [
-    "Official Harbor Oracle, empty, stub, forgery, timeout, workspace-invalid, and offline receipts remain pending integrator execution.",
-    "The Python binding's Rust dependency graph has no upstream Cargo.lock; the candidate lock covers Python build/runtime packages, while the task image supplies cargo/rustc and the Oracle bundle carries a source-derived wheel.",
-    "Blind review, traceability approval, independent model Agent Run, and pilot remain separate stages."
-  ]
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "verifier",
+    "next_step": "Move the source-derived tokenizers wheel into a task-scoped private CAS and implement role-scoped Python Oracle materialization so model runs and the checked-in runtime cannot access the wheel; then recompile and run fresh Oracle, empty, stub, forgery, timeout, workspace-invalid, and offline controls.",
+    "source_freeze": {
+      "status": "known",
+      "revision": "d5827816baedcbf1cb5b452dea8048150b6872df",
+      "source_digest": "sha256:ee078d644cd1e414f7a27a3085124577584dccbdeb4bc3f0addc4b065bc4b2d1",
+      "license_spdx": "Apache-2.0",
+      "license_digest": "sha256:c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "submodules": []
+    },
+    "commands": [
+      {
+        "command": "uv run pytest -q -p no:cacheprovider --no-cov tests/test_no_vendor_install.py",
+        "tool_version": "uv 0.11.32; pytest 9.1.1",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/tokenizers/evidence/vendor-policy.log",
+          "sha256": "sha256:7556345665b9b8df3e14f774d21fc43354524c1d8b58c91fb6fdc8cfe5b16a49"
+        }
+      }
+    ]
+  }
 }

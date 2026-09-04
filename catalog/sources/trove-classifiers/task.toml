@@ -35,9 +35,33 @@ reason = "The complete Python build closure is installed from a hash-locked requ
 
 [dependencies]
 status = "known"
-installer = "pip"
-packages = ["calver==2025.10.20", "setuptools==80.10.2", "wheel==0.45.1"]
-lock_artifact = { digest = "sha256:14727b57e136ea76fe6adb916c5caf91cabae9f0213255455cee18364d54049e", size_bytes = 1223, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:14727b57e136ea76fe6adb916c5caf91cabae9f0213255455cee18364d54049e", visibility = "private" }
+package_manager = "pip"
+packages = [
+    "calver==2025.10.20",
+    "setuptools==80.10.2",
+    "wheel==0.45.1",
+]
+
+[dependencies.lock]
+digest = "sha256:43b78e63080b4a5b007d0162e6c0b3e0917db14ee21e1c99c46e739f35e679e1"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:43b78e63080b4a5b007d0162e6c0b3e0917db14ee21e1c99c46e739f35e679e1"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:ef2494a8ab176cd3d1d1204577c9bb54cc593e4080cb16f3c6a1a059ae560dd4"
+size_bytes = 998
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:ef2494a8ab176cd3d1d1204577c9bb54cc593e4080cb16f3c6a1a059ae560dd4"
+visibility = "private"
 
 [tests]
 framework = "pytest"

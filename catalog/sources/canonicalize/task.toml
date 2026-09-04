@@ -40,18 +40,35 @@ architecture = "linux/amd64"
 libc = "glibc"
 
 [dependencies]
-# Generated and validated from the exact source revision with npm 11.17.0.
 status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
-artifact = { digest = "sha256:911470dae44f1bcb844fd01523adf9f082db227f52e51d0695f2ad0a96ead73a", size_bytes = 4321280, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:911470dae44f1bcb844fd01523adf9f082db227f52e51d0695f2ad0a96ead73a", visibility = "private" }
-packages = ["@eslint/js", "c8", "eslint", "globals"]
+packages = [
+    "@eslint/js",
+    "c8",
+    "eslint",
+    "globals",
+]
+
+[dependencies.lock]
+digest = "sha256:85ab14a4e6f4fd9ff3631866926c16c91e5b6bec91418b5941d5d2e22a205022"
+size_bytes = 174080
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:85ab14a4e6f4fd9ff3631866926c16c91e5b6bec91418b5941d5d2e22a205022"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:5d5ff64bb844265b9a4e35035a87325256d780ad86a4a6ff427944a57b316b55"
+size_bytes = 4167680
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:5d5ff64bb844265b9a4e35035a87325256d780ad86a4a6ff427944a57b316b55"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:987490a1e6c253d6bf58c1c2947eaec5b7bcc3d7ace191b89f6acb4878e9f389"
+size_bytes = 70901
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:987490a1e6c253d6bf58c1c2947eaec5b7bcc3d7ace191b89f6acb4878e9f389"
+visibility = "private"
 
 [tests]
 framework = "node:test"

@@ -41,16 +41,41 @@ libc = "glibc"
 
 [dependencies]
 status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
-packages = ["@types/minimist", "camelcase-keys", "decamelize", "decamelize-keys", "minimist-options", "normalize-package-data", "read-package-up", "redent", "trim-newlines", "type-fest", "yargs-parser"]
-artifact = { digest = "sha256:c8b983dd3d5fa25f3648f164ebda2a8a9c95f4259b898fdda19c5f6a65acaa9c", size_bytes = 10240, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:c8b983dd3d5fa25f3648f164ebda2a8a9c95f4259b898fdda19c5f6a65acaa9c", visibility = "private" }
+packages = [
+    "@types/minimist",
+    "camelcase-keys",
+    "decamelize",
+    "decamelize-keys",
+    "minimist-options",
+    "normalize-package-data",
+    "read-package-up",
+    "redent",
+    "trim-newlines",
+    "type-fest",
+    "yargs-parser",
+]
+
+[dependencies.lock]
+digest = "sha256:2efc9e83d3f5c6906f1173859b06c120efc4ccf02262285fa78980d7ac1eb667"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:2efc9e83d3f5c6906f1173859b06c120efc4ccf02262285fa78980d7ac1eb667"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:63bdad568ff0174494aaaf128eafb1340ee1f22e4187976cc5fd107a141fdd22"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:63bdad568ff0174494aaaf128eafb1340ee1f22e4187976cc5fd107a141fdd22"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:7b6221ccd45d93df2b0ae1f8f2a7c3201a888e8d918b9cfb54c78c4c137dac7d"
+size_bytes = 1278
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:7b6221ccd45d93df2b0ae1f8f2a7c3201a888e8d918b9cfb54c78c4c137dac7d"
+visibility = "private"
 
 [tests]
 framework = "node:test"

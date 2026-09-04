@@ -34,21 +34,38 @@ reason = "Hash-locked Python dependencies are installed during Docker build; can
 
 [dependencies]
 status = "known"
-installer = "pip"
-lock_artifact = { digest = "sha256:dbb0487545ec7c74e5deaa0f4a3f4e7ef31a62d8820128dfb499c1751ba1b1c6", size_bytes = 712, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:dbb0487545ec7c74e5deaa0f4a3f4e7ef31a62d8820128dfb499c1751ba1b1c6", visibility = "private" }
+package_manager = "pip"
 packages = [
-  "cryptography==50.0.0",
-  "pyasn1==0.6.4",
-  "pyasn1-modules==0.4.2",
-  "cffi==2.1.1",
-  "pycparser==3.0",
-  "setuptools==80.9.0",
-  "wheel==0.45.1",
+    "cryptography==50.0.0",
+    "pyasn1==0.6.4",
+    "pyasn1-modules==0.4.2",
+    "cffi==2.1.1",
+    "pycparser==3.0",
+    "setuptools==80.9.0",
+    "wheel==0.45.1",
 ]
 
-# NOTE: tests.framework has no custom-adapter value in the shared schema, so it
-# stays at the schema default. The authoritative runner descriptor for this task
-# is verifier.protocol = "custom-json-v1" with entrypoint test.sh.
+[dependencies.lock]
+digest = "sha256:f4f093d7053b82fecff81f4f98c8c10f6fecfc75888b3c6c88c90f6215cb6d55"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:f4f093d7053b82fecff81f4f98c8c10f6fecfc75888b3c6c88c90f6215cb6d55"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:9cc53fc8d62b24cd382f4c002fe9a8b93e745e3f17444d938d975d0660664d37"
+size_bytes = 996
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:9cc53fc8d62b24cd382f4c002fe9a8b93e745e3f17444d938d975d0660664d37"
+visibility = "private"
+
 [tests]
 expected_total = 32
 expected_total_source = "frozen-collection"

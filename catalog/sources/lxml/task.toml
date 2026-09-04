@@ -41,9 +41,34 @@ reason = "The hash-locked Python build closure and native system dependencies ar
 
 [dependencies]
 status = "known"
-installer = "pip"
-packages = ["Cython==3.3.0", "packaging==26.3", "setuptools==84.0.0", "wheel==0.48.0"]
-lock_artifact = { digest = "sha256:56a79992e5df8df4362eb3e119a9b21648f94c0f910ee47f23c8915137721b90", size_bytes = 4463, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:56a79992e5df8df4362eb3e119a9b21648f94c0f910ee47f23c8915137721b90", visibility = "private" }
+package_manager = "pip"
+packages = [
+    "Cython==3.3.0",
+    "packaging==26.3",
+    "setuptools==84.0.0",
+    "wheel==0.48.0",
+]
+
+[dependencies.lock]
+digest = "sha256:1653057be3e91540dd87d6b5bb262632e50cd79728fbead1c5e3959b01ffa117"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:1653057be3e91540dd87d6b5bb262632e50cd79728fbead1c5e3959b01ffa117"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:998321fa6f868cec8bd3597747a29b82983a65402cd9cb5bde9c2a0d39297bf1"
+size_bytes = 998
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:998321fa6f868cec8bd3597747a29b82983a65402cd9cb5bde9c2a0d39297bf1"
+visibility = "private"
 
 [tests]
 framework = "pytest"

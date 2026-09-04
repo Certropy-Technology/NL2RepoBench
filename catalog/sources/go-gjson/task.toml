@@ -33,9 +33,32 @@ reason = "Candidate and verifier use the private pre-materialized Go module clos
 
 [dependencies]
 status = "known"
-installer = "system"
-packages = ["github.com/tidwall/match@v1.1.1", "github.com/tidwall/pretty@v1.2.0"]
-module_bundle = { digest = "sha256:fc252f8a424717d8370b50ae874a2ad088d6def9b8e997dc0725eeab9aefdb1c", size_bytes = 9128, uri = "artifact://private/sha256:fc252f8a424717d8370b50ae874a2ad088d6def9b8e997dc0725eeab9aefdb1c", visibility = "private" }
+package_manager = "go-modules"
+packages = [
+    "github.com/tidwall/match@v1.1.1",
+    "github.com/tidwall/pretty@v1.2.0",
+]
+
+[dependencies.lock]
+digest = "sha256:73411beffefecfbb0f181542a226cede76ec2fbc3561ae79b1ddbe4348542901"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:73411beffefecfbb0f181542a226cede76ec2fbc3561ae79b1ddbe4348542901"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:01e77fa4f5f0eea6f83e9d943714e8902c1f7d3854d91ed6b3787c6cbcf8cf22"
+size_bytes = 40960
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:01e77fa4f5f0eea6f83e9d943714e8902c1f7d3854d91ed6b3787c6cbcf8cf22"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:1ee943052230c6d072b6cee8c354a34cab4f47b8ff7edcb05dfa2b6b7ba40587"
+size_bytes = 2702
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:1ee943052230c6d072b6cee8c354a34cab4f47b8ff7edcb05dfa2b6b7ba40587"
+visibility = "private"
 
 [tests]
 framework = "pytest"

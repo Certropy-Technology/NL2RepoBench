@@ -43,16 +43,48 @@ libc = "glibc"
 
 [dependencies]
 status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-artifact = { digest = "sha256:ecf3bc094dd2de65ed386273fcd90ac1881e55e0b7d36b5c0ebbec654ad3993d", size_bytes = 532951, media_type = "application/gzip", uri = "artifact://private/sha256:ecf3bc094dd2de65ed386273fcd90ac1881e55e0b7d36b5c0ebbec654ad3993d", visibility = "private" }
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
-packages = ["accepts", "content-disposition", "content-type", "cookies", "delegates", "destroy", "encodeurl", "escape-html", "fresh", "http-assert", "http-errors", "koa-compose", "mime-types", "on-finished", "parseurl", "statuses", "type-is", "vary"]
+packages = [
+    "accepts",
+    "content-disposition",
+    "content-type",
+    "cookies",
+    "delegates",
+    "destroy",
+    "encodeurl",
+    "escape-html",
+    "fresh",
+    "http-assert",
+    "http-errors",
+    "koa-compose",
+    "mime-types",
+    "on-finished",
+    "parseurl",
+    "statuses",
+    "type-is",
+    "vary",
+]
+
+[dependencies.lock]
+digest = "sha256:05fba33ee7a9e86a6f478acd5f74c9195dd8f4e025965b8124ca0c914f2a1ef6"
+size_bytes = 61440
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:05fba33ee7a9e86a6f478acd5f74c9195dd8f4e025965b8124ca0c914f2a1ef6"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:e09983aa8b5a272b0dec275425b3372b3538a7f7a4880fe3a154337fb5329076"
+size_bytes = 1628160
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:e09983aa8b5a272b0dec275425b3372b3538a7f7a4880fe3a154337fb5329076"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:a38b3b629af4feb8757a5fe4511bc89fc6f6afe73f4a06945d5e2a8ca04da7ef"
+size_bytes = 34664
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:a38b3b629af4feb8757a5fe4511bc89fc6f6afe73f4a06945d5e2a8ca04da7ef"
+visibility = "private"
 
 [tests]
 framework = "node:test"

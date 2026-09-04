@@ -35,9 +35,44 @@ reason = "Candidate and separate verifier dependencies are installed during Dock
 
 [dependencies]
 status = "known"
-installer = "pip"
-packages = ["attrs==26.1.0", "hatch-vcs==0.5.0", "hatchling==1.27.0", "packaging==26.3", "pathspec==1.1.1", "pluggy==1.6.0", "referencing==0.37.0", "rpds-py==2026.6.3", "setuptools==84.0.0", "setuptools-scm==10.2.1", "tomlkit==0.15.1", "trove-classifiers==2026.6.1.19", "typing-extensions==4.16.0", "vcs-versioning==2.3.1"]
-lock_artifact = { digest = "sha256:1b4ee11b80043c94719346dd9498b4e5753a17d971cb81b22cc890de6e6a9092", size_bytes = 12859, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:1b4ee11b80043c94719346dd9498b4e5753a17d971cb81b22cc890de6e6a9092", visibility = "private" }
+package_manager = "pip"
+packages = [
+    "attrs==26.1.0",
+    "hatch-vcs==0.5.0",
+    "hatchling==1.27.0",
+    "packaging==26.3",
+    "pathspec==1.1.1",
+    "pluggy==1.6.0",
+    "referencing==0.37.0",
+    "rpds-py==2026.6.3",
+    "setuptools==84.0.0",
+    "setuptools-scm==10.2.1",
+    "tomlkit==0.15.1",
+    "trove-classifiers==2026.6.1.19",
+    "typing-extensions==4.16.0",
+    "vcs-versioning==2.3.1",
+]
+
+[dependencies.lock]
+digest = "sha256:26db3cc323061c8002b323fe872458b2318ed12e4546351c788548a37939f41a"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:26db3cc323061c8002b323fe872458b2318ed12e4546351c788548a37939f41a"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:f2ceefd8b444325fe9b51eb6c75b7a388b2b7e12e4785389f9ba4404c7988592"
+size_bytes = 1000
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:f2ceefd8b444325fe9b51eb6c75b7a388b2b7e12e4785389f9ba4404c7988592"
+visibility = "private"
 
 [tests]
 framework = "pytest"

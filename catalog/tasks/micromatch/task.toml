@@ -39,8 +39,8 @@ package_manager = "npm"
 test_framework = "node:test"
 metric_contract = "fixed-test-pass-rate-v1"
 expected_test_count = 67
-canonical_manifest_digest = "sha256:c064ab3390b5fd8bbf70b87d30090eb190093d5f72929b8a2301e903ca5ca269"
-toolchain_lock_digest = "sha256:aac76d5c1a423cd3c5c9c96870198475e0fed151793b60eeb830a7c053692dc8"
+canonical_manifest_digest = "sha256:602dee8dcd31486a9ce1ade9021ad11c737903e94e65f939890dedbf37391b54"
+toolchain_lock_digest = "sha256:4a70f5734f00f1822b9f3aa9755ebdbed19848407d57f537cc97290608ec5b2f"
 
 [agent]
 timeout_sec = 1800.0

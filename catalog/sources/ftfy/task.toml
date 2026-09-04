@@ -34,17 +34,16 @@ reference_source_fetch = "forbidden"
 reason = "The hash-locked build/runtime closure is installed during image build. Agent and separate verifier runs have no egress; the Oracle consumes only a local private source archive after verifying its frozen digest."
 
 [dependencies]
-status = "known"
-installer = "pip"
+status = "unknown"
+package_manager = "pip"
 packages = [
-  "hatchling==1.27.0",
-  "packaging==26.3",
-  "pathspec==1.1.1",
-  "pluggy==1.6.0",
-  "trove-classifiers==2026.6.1.19",
-  "wcwidth==0.2.13",
+    "hatchling==1.27.0",
+    "packaging==26.3",
+    "pathspec==1.1.1",
+    "pluggy==1.6.0",
+    "trove-classifiers==2026.6.1.19",
+    "wcwidth==0.2.13",
 ]
-lock_artifact = { digest = "sha256:d0568c7d45a0d0c18bd8cd8af06905fab8a0728b056498c4206e60f9f8399e51", size_bytes = 1131, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:d0568c7d45a0d0c18bd8cd8af06905fab8a0728b056498c4206e60f9f8399e51", visibility = "private" }
 
 [tests]
 framework = "pytest"

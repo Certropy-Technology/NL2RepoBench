@@ -38,15 +38,10 @@ reason = "The package needs a compliant npm v3 lock/cache closure and a reviewed
 
 [dependencies]
 status = "unknown"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
-packages = ["committed npm lock v1; compliant private npm v3 closure is missing"]
+packages = [
+    "committed npm lock v1; compliant private npm v3 closure is missing",
+]
 
 [tests]
 framework = "node:test"

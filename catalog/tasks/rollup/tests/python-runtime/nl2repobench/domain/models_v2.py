@@ -24,6 +24,7 @@ from pydantic_core import CoreSchema
 from .canonical import content_digest
 from .models import (
     ArtifactRef,
+    DependencyBundle,
     Difficulty,
     HarborExecutionProfile,
     NetworkPolicy,
@@ -34,6 +35,10 @@ from .models import (
 SCHEMA_VERSION_V2: Literal["2.0"] = "2.0"
 NODE_VERSION_PATTERN = r"^(?:22|24)\.[0-9]+\.[0-9]+(?:[-+][0-9A-Za-z.-]+)?$"
 SEMVER_PATTERN = r"^[0-9]+\.[0-9]+\.[0-9]+(?:[-+][0-9A-Za-z.-]+)?$"
+TASK_ID_PATTERN_V2 = (
+    r"^(?:[A-Za-z0-9][A-Za-z0-9._-]*|@[A-Za-z0-9][A-Za-z0-9._-]*/"
+    r"[A-Za-z0-9][A-Za-z0-9._-]*)$"
+)
 
 
 class V2RecordModel(BaseModel):
@@ -140,48 +145,6 @@ class EnvironmentLockV2(V2RecordModel):
         return self
 
 
-class DependencyBundleV2(V2RecordModel):
-    """Offline dependency closure with an explicit npm consumer contract."""
-
-    status: Literal["known", "unknown"] = "unknown"
-    ecosystem: Literal["python", "npm"]
-    consumer: Literal["candidate-runtime", "verifier-runtime"]
-    artifact: ArtifactRef | None = None
-    lockfile_name: Literal["requirements.lock.txt", "package-lock.json", "pnpm-lock.yaml"]
-    lockfile_version: str
-    package_manager: Literal["uv", "pip", "npm", "pnpm"]
-    package_manager_version: str
-    install_mode: Literal["offline"] = "offline"
-    lifecycle_scripts: Literal["ignore-scripts"] = "ignore-scripts"
-    packages: tuple[str, ...] = ()
-
-    @model_validator(mode="after")
-    def validate_dependency_identity(self) -> DependencyBundleV2:
-        if self.ecosystem == "npm":
-            if self.package_manager == "npm":
-                if self.lockfile_name != "package-lock.json":
-                    raise ValueError("npm dependency bundles require package-lock.json")
-                if self.lockfile_version != "3":
-                    raise ValueError("npm dependency bundles require lockfile version 3")
-            elif self.package_manager == "pnpm":
-                if self.lockfile_name != "pnpm-lock.yaml":
-                    raise ValueError("pnpm dependency bundles require pnpm-lock.yaml")
-                if not self.lockfile_version.startswith("9"):
-                    raise ValueError("pnpm dependency bundles require lockfile version 9")
-            else:
-                raise ValueError("Node dependency bundles require npm or pnpm")
-            if not re.fullmatch(SEMVER_PATTERN, self.package_manager_version):
-                raise ValueError("Node package managers require an exact semantic version")
-        else:
-            if self.lockfile_name in {"package-lock.json", "pnpm-lock.yaml"} or (
-                self.package_manager in {"npm", "pnpm"}
-            ):
-                raise ValueError("Python dependency bundles cannot use Node metadata")
-        if self.status == "known" and self.artifact is None:
-            raise ValueError("known dependency bundle requires an artifact")
-        return self
-
-
 class TestManifestV2(V2RecordModel):
     """Frozen private ``node:test`` collection and report contract."""
 
@@ -236,13 +199,13 @@ class TaskMetadataV2(V2RecordModel):
 class DeclarativeTaskSourceV2(V2RecordModel):
     """Human-maintained v2 task definition loaded from ``task.toml``."""
 
-    task_id: str = Field(pattern=r"^[A-Za-z0-9][A-Za-z0-9._-]*$")
+    task_id: str = Field(pattern=TASK_ID_PATTERN_V2)
     version: str = "2.0.0"
     instruction: str = "instruction.md"
     metadata: TaskMetadataV2 = Field(default_factory=TaskMetadataV2)
     source: SourceLock = Field(default_factory=SourceLock)
     environment: EnvironmentLockV2 = Field(default_factory=EnvironmentLockV2)
-    dependencies: DependencyBundleV2
+    dependencies: DependencyBundle
     tests: TestManifestV2
     metric: NodeMetricContractV2 = Field(default_factory=NodeMetricContractV2)
     lifecycle: TaskLifecycleRecord = Field(default_factory=TaskLifecycleRecord)
@@ -262,7 +225,7 @@ class DeclarativeTaskSourceV2(V2RecordModel):
 class TaskRefV2(V2RecordModel):
     """Stable reference to a v2 canonical task manifest."""
 
-    task_id: str = Field(pattern=r"^[A-Za-z0-9][A-Za-z0-9._-]*$")
+    task_id: str = Field(pattern=TASK_ID_PATTERN_V2)
     version: str
     manifest_digest: Annotated[str, Field(pattern=r"^sha256:[0-9a-f]{64}$")]
     manifest_uri: str
@@ -271,7 +234,7 @@ class TaskRefV2(V2RecordModel):
 class TaskManifestV2(V2RecordModel):
     """Canonical Node task record produced by the additive catalog path."""
 
-    task_id: str = Field(pattern=r"^[A-Za-z0-9][A-Za-z0-9._-]*$")
+    task_id: str = Field(pattern=TASK_ID_PATTERN_V2)
     version: str = "2.0.0"
     metadata: TaskMetadataV2 = Field(default_factory=TaskMetadataV2)
     instruction: ArtifactRef
@@ -283,7 +246,7 @@ class TaskManifestV2(V2RecordModel):
         default_factory=EnvironmentLockV2,
         validation_alias=AliasChoices("environment_lock", "environment"),
     )
-    dependency_bundle: DependencyBundleV2
+    dependency_bundle: DependencyBundle
     tests: TestManifestV2
     metric: NodeMetricContractV2 = Field(default_factory=NodeMetricContractV2)
     lifecycle: TaskLifecycleRecord = Field(default_factory=TaskLifecycleRecord)
@@ -297,7 +260,7 @@ class TaskManifestV2(V2RecordModel):
             raise ValueError("metadata language must match runtime language")
         if runtime is not None and runtime.runtime != "node":
             raise ValueError("Node task requires the node runtime")
-        if self.dependency_bundle.ecosystem != "npm":
+        if self.dependency_bundle.package_manager not in {"npm", "pnpm"}:
             raise ValueError("Node task requires an npm dependency bundle")
         if self.tests.framework != "node:test":
             raise ValueError("Node task requires the node:test framework")
@@ -330,10 +293,15 @@ class TaskManifestV2(V2RecordModel):
                 gaps.append("environment.runtime.version=node-22-or-24")
             if self.environment_lock.base_image_digest is None:
                 gaps.append("environment.base_image_digest")
-        if self.dependency_bundle.status != "known":
+        if self.dependency_bundle.status.value != "known":
             gaps.append("dependency_bundle.status=known")
-        if self.dependency_bundle.artifact is None:
-            gaps.append("dependency_bundle.artifact")
+        for name, reference in {
+            "lock": self.dependency_bundle.lock,
+            "offline_store": self.dependency_bundle.offline_store,
+            "inventory": self.dependency_bundle.inventory,
+        }.items():
+            if reference is None:
+                gaps.append(f"dependency_bundle.{name}")
         if self.tests.expected_total_source != "frozen-collection":
             gaps.append("tests.expected_total_source=frozen-collection")
         if self.tests.commands_artifact is None:

@@ -29,8 +29,10 @@ reason = "The immutable verifier image differs from upstream in 18 paths and no 
 
 [dependencies]
 status = "unknown"
-installer = "pip"
-packages = ["crypto backends and test dependencies are not a hash-locked offline closure"]
+package_manager = "pip"
+packages = [
+    "crypto backends and test dependencies are not a hash-locked offline closure",
+]
 
 [tests]
 framework = "pytest"

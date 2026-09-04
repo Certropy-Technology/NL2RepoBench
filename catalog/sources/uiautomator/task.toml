@@ -21,8 +21,9 @@ reference_source_fetch = "forbidden"
 reason = "Device/ADB environment and dependency closure are not reproducibly frozen."
 [dependencies]
 status = "unknown"
-installer = "pip"
+package_manager = "pip"
 packages = []
+
 [tests]
 framework = "pytest"
 expected_total = 0

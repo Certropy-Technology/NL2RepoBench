@@ -33,9 +33,35 @@ reason = "Build and test dependencies are installed during image construction fr
 
 [dependencies]
 status = "known"
-installer = "pip"
-packages = ["hatchling==1.27.0", "packaging==26.3", "pathspec==1.1.1", "pluggy==1.6.0", "trove-classifiers==2026.6.1.19"]
-lock_artifact = { digest = "sha256:bd66c9a73352c89928a286f06d124cc815fc6ea504ebb5eba59e96e66aa87a78", size_bytes = 1404, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:bd66c9a73352c89928a286f06d124cc815fc6ea504ebb5eba59e96e66aa87a78", visibility = "private" }
+package_manager = "pip"
+packages = [
+    "hatchling==1.27.0",
+    "packaging==26.3",
+    "pathspec==1.1.1",
+    "pluggy==1.6.0",
+    "trove-classifiers==2026.6.1.19",
+]
+
+[dependencies.lock]
+digest = "sha256:0527f8a17dc6711dbdd31edff750efeda9b9c55d7f30b78bd2ead7d350b14809"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:0527f8a17dc6711dbdd31edff750efeda9b9c55d7f30b78bd2ead7d350b14809"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:8f9376242bdf6f44766e8d1943583a8cf45916022d210604a4a923dbff9d4608"
+size_bytes = 998
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:8f9376242bdf6f44766e8d1943583a8cf45916022d210604a4a923dbff9d4608"
+visibility = "private"
 
 [tests]
 framework = "pytest"

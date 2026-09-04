@@ -6,7 +6,14 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "easy"
 category = "caching"
-tags = ["python", "caching", "memoization", "cache-policies", "ttl", "separate-verifier"]
+tags = [
+    "python",
+    "caching",
+    "memoization",
+    "cache-policies",
+    "ttl",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -35,33 +42,77 @@ reason = "The hash-locked build closure is installed during Docker image build. 
 
 [dependencies]
 status = "known"
-installer = "pip"
-packages = ["setuptools==80.10.2", "wheel==0.45.1"]
-lock_artifact = { digest = "sha256:24713a5496e38f6da905cbc7944c15efd8863916e5da6825b835f66aa99068f7", size_bytes = 204, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:24713a5496e38f6da905cbc7944c15efd8863916e5da6825b835f66aa99068f7", visibility = "private" }
+package_manager = "pip"
+packages = [
+    "setuptools==80.10.2",
+    "wheel==0.45.1",
+]
+
+[dependencies.lock]
+digest = "sha256:593f3fc0c74888bd0196da49c67f027f0a626badc04a17523700ad85e4d38e2e"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:593f3fc0c74888bd0196da49c67f027f0a626badc04a17523700ad85e4d38e2e"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:42fd2484de983c1d7bcd56a981c7fe48556e2a909fa3ee043dbb6012c17f28c3"
+size_bytes = 996
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:42fd2484de983c1d7bcd56a981c7fe48556e2a909fa3ee043dbb6012c17f28c3"
+visibility = "private"
 
 [tests]
 framework = "pytest"
 expected_total = 18
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py"]
+commands = [
+    "custom-json-v1 verifier entrypoint",
+]
+protected_paths = [
+    "/tests/verifier/run.py",
+    "/tests/verifier/adapter.py",
+]
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:10649f23624d72fa386488b7416b0c6eb6a3d34854de01bd6b51f1a234af7380", size_bytes = 30720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:10649f23624d72fa386488b7416b0c6eb6a3d34854de01bd6b51f1a234af7380", visibility = "private" }
 entrypoint = "run.py"
-environment = {}
+
+[verifier.bundle]
+digest = "sha256:96243b38c7b234f45c4ca5cae7360be2d0e99fa17989c1b98d5782e5d53be377"
+size_bytes = 30720
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:96243b38c7b234f45c4ca5cae7360be2d0e99fa17989c1b98d5782e5d53be377"
+visibility = "private"
+
+[verifier.environment]
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
+passed_statuses = [
+    "passed",
+]
 excluded_statuses = []
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Build cachetools 7.1.7 from an empty workspace and reproduce deterministic cache, TTL, LRU, LFU, MRU-trace, random-replacement, key, and memoization behavior through a separate child-side JSON adapter."
-keywords = ["python", "caching", "cache-policies", "ttl", "memoization", "separate-verifier"]
+keywords = [
+    "python",
+    "caching",
+    "cache-policies",
+    "ttl",
+    "memoization",
+    "separate-verifier",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 480.0
 candidate_install_timeout_sec = 120.0
@@ -74,10 +125,10 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [oracle_bundle]
-digest = "sha256:da5fc086e99abf5b3ea91e19f0dedb209eeec8aab999e595899fa0f445bbff3d"
+digest = "sha256:7a09183c5eb2dffabfe27ce6d82036ef237ce1a17b3ee37db53ea44e402e5d37"
 size_bytes = 286720
 media_type = "application/vnd.nl2repobench.private-bundle+tar"
-uri = "artifact://private/sha256:da5fc086e99abf5b3ea91e19f0dedb209eeec8aab999e595899fa0f445bbff3d"
+uri = "artifact://private/sha256:7a09183c5eb2dffabfe27ce6d82036ef237ce1a17b3ee37db53ea44e402e5d37"
 visibility = "private"
 
 [lifecycle]

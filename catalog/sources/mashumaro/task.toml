@@ -29,8 +29,10 @@ reason = "The post-release source requires an approved platform-specific depende
 
 [dependencies]
 status = "unknown"
-installer = "pip"
-packages = ["codec and test dependencies are not a hash-locked offline closure"]
+package_manager = "pip"
+packages = [
+    "codec and test dependencies are not a hash-locked offline closure",
+]
 
 [tests]
 framework = "pytest"

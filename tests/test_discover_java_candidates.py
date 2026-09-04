@@ -67,3 +67,21 @@ def test_inspect_checkout_rejects_multi_module_dynamic_build(tmp_path: Path) -> 
     assert {"multi-module", "profiles", "custom-build", "no-java-tests"} <= set(
         result["risk_flags"]
     )
+
+
+def test_inspect_checkout_treats_profiles_as_remediation_risk(tmp_path: Path) -> None:
+    (tmp_path / "pom.xml").write_text(
+        """<project><profiles><profile><id>release</id></profile></profiles></project>""",
+        encoding="utf-8",
+    )
+    source = tmp_path / "src/main/java/example"
+    source.mkdir(parents=True)
+    (source / "Demo.java").write_text("public final class Demo {}\n", encoding="utf-8")
+    tests = tmp_path / "src/test/java/example"
+    tests.mkdir(parents=True)
+    (tests / "DemoTest.java").write_text("@Test void testDemo() {}\n", encoding="utf-8")
+
+    result = discover._inspect_checkout(tmp_path)
+
+    assert result["profile_eligible"] is True
+    assert {"profiles", "custom-build"} <= set(result["risk_flags"])

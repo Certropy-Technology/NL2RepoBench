@@ -35,18 +35,38 @@ reason = "PyYAML is built and tested from a preinstalled hash-locked closure. Ag
 
 [dependencies]
 status = "known"
-installer = "pip"
+package_manager = "pip"
 packages = [
-  "Cython==3.0.12",
-  "iniconfig==2.3.0",
-  "packaging==26.3",
-  "pluggy==1.6.0",
-  "pygments==2.21.0",
-  "pytest==9.1.1",
-  "setuptools==84.0.0",
-  "wheel==0.48.0",
+    "Cython==3.0.12",
+    "iniconfig==2.3.0",
+    "packaging==26.3",
+    "pluggy==1.6.0",
+    "pygments==2.21.0",
+    "pytest==9.1.1",
+    "setuptools==84.0.0",
+    "wheel==0.48.0",
 ]
-lock_artifact = { digest = "sha256:d226ffcdb54f7b30c35189714c0af444c46d3697c23efcb1f838808e1c3a05e9", size_bytes = 7323, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:d226ffcdb54f7b30c35189714c0af444c46d3697c23efcb1f838808e1c3a05e9", visibility = "private" }
+
+[dependencies.lock]
+digest = "sha256:5612fbd57cae316db938a28473c5bd058745d9271732c87ea41650b6cf0dd64a"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:5612fbd57cae316db938a28473c5bd058745d9271732c87ea41650b6cf0dd64a"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:69a845b9ecc9f889594c17efa9ec0a11e57f33cbd3faaf29b6f404e1e2b589d7"
+size_bytes = 998
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:69a845b9ecc9f889594c17efa9ec0a11e57f33cbd3faaf29b6f404e1e2b589d7"
+visibility = "private"
 
 [tests]
 framework = "pytest"

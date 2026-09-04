@@ -34,7 +34,7 @@ reason = "The synthetic Java verifier has no third-party dependency closure."
 
 [dependencies]
 status = "unknown"
-installer = "maven"
+package_manager = "maven"
 packages = []
 
 [tests]

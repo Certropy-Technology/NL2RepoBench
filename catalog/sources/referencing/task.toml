@@ -33,9 +33,38 @@ reason = "Third-party build and verifier dependencies are installed during Docke
 
 [dependencies]
 status = "known"
-installer = "pip"
-lock_artifact = { digest = "sha256:d856eea398d73acc1a1d34cbf986a11757f77046083ea43119bad8c3a9f786f8", size_bytes = 11959, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:d856eea398d73acc1a1d34cbf986a11757f77046083ea43119bad8c3a9f786f8", visibility = "private" }
-packages = ["attrs==26.1.0", "hatchling==1.32.0", "packaging==26.3", "pathspec==1.1.1", "pluggy==1.6.0", "rpds-py==2026.6.3", "tomlkit==0.15.1", "trove-classifiers==2026.6.1.19"]
+package_manager = "pip"
+packages = [
+    "attrs==26.1.0",
+    "hatchling==1.32.0",
+    "packaging==26.3",
+    "pathspec==1.1.1",
+    "pluggy==1.6.0",
+    "rpds-py==2026.6.3",
+    "tomlkit==0.15.1",
+    "trove-classifiers==2026.6.1.19",
+]
+
+[dependencies.lock]
+digest = "sha256:2c9431add31f9ad875f3351e021854c6601e436b856efdc9f2c4d81d51fdb90a"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:2c9431add31f9ad875f3351e021854c6601e436b856efdc9f2c4d81d51fdb90a"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:0749542b860bf9084d7d1ee2542e0076448375a08cd1f57621de569893e4995c"
+size_bytes = 1000
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:0749542b860bf9084d7d1ee2542e0076448375a08cd1f57621de569893e4995c"
+visibility = "private"
 
 [tests]
 framework = "pytest"

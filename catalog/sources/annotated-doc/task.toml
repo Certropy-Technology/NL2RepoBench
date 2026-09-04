@@ -35,13 +35,33 @@ reason = "The candidate and verifier run without egress. The hash-locked build c
 
 [dependencies]
 status = "known"
-installer = "pip"
+package_manager = "pip"
 packages = [
-  "pdm-backend==2.4.9",
-  "setuptools==80.10.2",
-  "wheel==0.45.1",
+    "pdm-backend==2.4.9",
+    "setuptools==80.10.2",
+    "wheel==0.45.1",
 ]
-lock_artifact = { digest = "sha256:8def077e38fc27788aebae15d6a25834717fbc34521ac3ce27872e3565a528e6", size_bytes = 302, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:8def077e38fc27788aebae15d6a25834717fbc34521ac3ce27872e3565a528e6", visibility = "private" }
+
+[dependencies.lock]
+digest = "sha256:58bb6f34780900a7a6a472af8bb47ed08372468a4edc9b2297e286bc6e19346a"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:58bb6f34780900a7a6a472af8bb47ed08372468a4edc9b2297e286bc6e19346a"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:809038993a775f7122a6c75b38ba70b4344af8ed3683fde06e310d842893592b"
+size_bytes = 996
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:809038993a775f7122a6c75b38ba70b4344af8ed3683fde06e310d842893592b"
+visibility = "private"
 
 [tests]
 framework = "pytest"

@@ -6,7 +6,13 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "medium"
 category = "data-validation"
-tags = ["python", "validation", "data-structures", "json-schema", "separate-verifier"]
+tags = [
+    "python",
+    "validation",
+    "data-structures",
+    "json-schema",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -35,33 +41,77 @@ reason = "The hash-locked setuptools/wheel build closure is installed during Doc
 
 [dependencies]
 status = "known"
-installer = "pip"
-packages = ["setuptools==80.10.2", "wheel==0.45.1"]
-lock_artifact = { digest = "sha256:90a80e01203c275711b283f26c56ef906501fd427bc02887dfc36f046c96aeae", size_bytes = 374, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:90a80e01203c275711b283f26c56ef906501fd427bc02887dfc36f046c96aeae", visibility = "private" }
+package_manager = "pip"
+packages = [
+    "setuptools==80.10.2",
+    "wheel==0.45.1",
+]
+
+[dependencies.lock]
+digest = "sha256:a73435e015f41f4f7222cd2c6088fe09e8174e2c51351f385d8f79e5707712aa"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:a73435e015f41f4f7222cd2c6088fe09e8174e2c51351f385d8f79e5707712aa"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:d4aa2290eec0932cae866c86931ed59c827a28cfddaaf9a6bdd45c8d9e7df316"
+size_bytes = 996
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:d4aa2290eec0932cae866c86931ed59c827a28cfddaaf9a6bdd45c8d9e7df316"
+visibility = "private"
 
 [tests]
 framework = "pytest"
 expected_total = 30
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py", "/tests/verifier/expected.json"]
+commands = [
+    "custom-json-v1 verifier entrypoint",
+]
+protected_paths = [
+    "/tests/verifier/run.py",
+    "/tests/verifier/adapter.py",
+    "/tests/verifier/expected.json",
+]
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:031ab6ff57dbc19f31036810b78f51c1dfc7b90524e47854513895742b896394", size_bytes = 61440, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:031ab6ff57dbc19f31036810b78f51c1dfc7b90524e47854513895742b896394", visibility = "private" }
 entrypoint = "run.py"
-environment = {}
+
+[verifier.bundle]
+digest = "sha256:c2a311a26641fbcea15132adf36f5d0c888da319c52b1ef1a8ebcb89a2aaaf9c"
+size_bytes = 61440
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:c2a311a26641fbcea15132adf36f5d0c888da319c52b1ef1a8ebcb89a2aaaf9c"
+visibility = "private"
+
+[verifier.environment]
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
+passed_statuses = [
+    "passed",
+]
 excluded_statuses = []
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Build schema 0.7.8 from an empty workspace and satisfy a bounded validation, transform, default, hook, error, and JSON Schema contract."
-keywords = ["python", "validation", "data-structures", "json-schema", "separate-verifier"]
+keywords = [
+    "python",
+    "validation",
+    "data-structures",
+    "json-schema",
+    "separate-verifier",
+]
 agent_timeout_sec = 2400.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 90.0
@@ -74,10 +124,10 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [oracle_bundle]
-digest = "sha256:7bbb73a8548a650ee83f7beccb19539bf800b87f6e7db90da9b5569775dff29f"
+digest = "sha256:af6a783334289e161a19d47284e22f43b2762a20ed41f8c92a543d117210f478"
 size_bytes = 184320
 media_type = "application/vnd.nl2repobench.private-bundle+tar"
-uri = "artifact://private/sha256:7bbb73a8548a650ee83f7beccb19539bf800b87f6e7db90da9b5569775dff29f"
+uri = "artifact://private/sha256:af6a783334289e161a19d47284e22f43b2762a20ed41f8c92a543d117210f478"
 visibility = "private"
 
 [lifecycle]

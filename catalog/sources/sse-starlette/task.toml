@@ -35,22 +35,42 @@ reason = "Starlette, AnyIO, pytest, and the setuptools build backend are install
 
 [dependencies]
 status = "known"
-installer = "pip"
+package_manager = "pip"
 packages = [
-  "anyio==4.14.2",
-  "idna==3.19",
-  "iniconfig==2.3.0",
-  "packaging==26.3",
-  "pluggy==1.6.0",
-  "pygments==2.20.0",
-  "pytest==9.1.1",
-  "pytest-asyncio==1.4.0",
-  "setuptools==80.9.0",
-  "starlette==0.49.3",
-  "typing-extensions==4.16.0",
-  "wheel==0.45.1",
+    "anyio==4.14.2",
+    "idna==3.19",
+    "iniconfig==2.3.0",
+    "packaging==26.3",
+    "pluggy==1.6.0",
+    "pygments==2.20.0",
+    "pytest==9.1.1",
+    "pytest-asyncio==1.4.0",
+    "setuptools==80.9.0",
+    "starlette==0.49.3",
+    "typing-extensions==4.16.0",
+    "wheel==0.45.1",
 ]
-lock_artifact = { digest = "sha256:33b43814cf359ad02c46c1e5289cd4b8a8e268435a113a9c88f7ef0a09981fb2", size_bytes = 2242, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:33b43814cf359ad02c46c1e5289cd4b8a8e268435a113a9c88f7ef0a09981fb2", visibility = "private" }
+
+[dependencies.lock]
+digest = "sha256:43c48c6718407c81f09311a620a77791106f5d3d6dc1df418c79370e3759a0b7"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:43c48c6718407c81f09311a620a77791106f5d3d6dc1df418c79370e3759a0b7"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:8cc24cfc40bba8c63af126daa4732527d2f67e49872df4acb4c5e96f9a9fa175"
+size_bytes = 998
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:8cc24cfc40bba8c63af126daa4732527d2f67e49872df4acb4c5e96f9a9fa175"
+visibility = "private"
 
 [tests]
 framework = "pytest"

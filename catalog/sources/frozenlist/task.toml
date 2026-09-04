@@ -35,20 +35,40 @@ reason = "The candidate build closure is installed during the image build; agent
 
 [dependencies]
 status = "known"
-installer = "pip"
+package_manager = "pip"
 packages = [
-  "coverage==7.15.4",
-  "cython==3.3.0",
-  "expandvars==1.1.2",
-  "iniconfig==2.3.0",
-  "packaging==26.3",
-  "pluggy==1.6.0",
-  "pygments==2.21.0",
-  "pytest==9.1.1",
-  "pytest-cov==7.1.0",
-  "setuptools==84.0.0",
+    "coverage==7.15.4",
+    "cython==3.3.0",
+    "expandvars==1.1.2",
+    "iniconfig==2.3.0",
+    "packaging==26.3",
+    "pluggy==1.6.0",
+    "pygments==2.21.0",
+    "pytest==9.1.1",
+    "pytest-cov==7.1.0",
+    "setuptools==84.0.0",
 ]
-lock_artifact = { digest = "sha256:0e67ed06724c0147acd72530d244bcb23a766985b2378c07543578fa2fd1d8fc", size_bytes = 15460, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:0e67ed06724c0147acd72530d244bcb23a766985b2378c07543578fa2fd1d8fc", visibility = "private" }
+
+[dependencies.lock]
+digest = "sha256:96df7bbfa443417d534280ebad7d152a6859d8d2db1b79a392ee68dc3dd3e6a0"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:96df7bbfa443417d534280ebad7d152a6859d8d2db1b79a392ee68dc3dd3e6a0"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:cb8e64b2b6da701a3256e9eec05387900420fd60b7d2532c00ed8b26940c02a9"
+size_bytes = 1000
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:cb8e64b2b6da701a3256e9eec05387900420fd60b7d2532c00ed8b26940c02a9"
+visibility = "private"
 
 [tests]
 framework = "pytest"

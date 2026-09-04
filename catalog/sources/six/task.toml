@@ -6,7 +6,13 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "medium"
 category = "python-compatibility-library"
-tags = ["python", "compatibility", "metaclasses", "lazy-imports", "separate-verifier"]
+tags = [
+    "python",
+    "compatibility",
+    "metaclasses",
+    "lazy-imports",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -35,33 +41,75 @@ reason = "The sole third-party build dependency is installed from a hash-locked 
 
 [dependencies]
 status = "known"
-installer = "pip"
-packages = ["setuptools==80.10.2"]
-lock_artifact = { digest = "sha256:089efaf118e36d6827593b3ae59897143e2cc618c5c3bd41361fbaa1c46ec29b", size_bytes = 99, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:089efaf118e36d6827593b3ae59897143e2cc618c5c3bd41361fbaa1c46ec29b", visibility = "private" }
+package_manager = "pip"
+packages = [
+    "setuptools==80.10.2",
+]
+
+[dependencies.lock]
+digest = "sha256:1581c7f556c108262d734274dc960eb1b917f6ee161f57eb0c97c6b9b0f38760"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:1581c7f556c108262d734274dc960eb1b917f6ee161f57eb0c97c6b9b0f38760"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:8c9a57f5d4f0a165dbb0e34a1dc29dc907172f688a4caed849e9fa91adbbfb40"
+size_bytes = 994
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:8c9a57f5d4f0a165dbb0e34a1dc29dc907172f688a4caed849e9fa91adbbfb40"
+visibility = "private"
 
 [tests]
 framework = "pytest"
 expected_total = 21
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py"]
+commands = [
+    "custom-json-v1 verifier entrypoint",
+]
+protected_paths = [
+    "/tests/verifier/run.py",
+    "/tests/verifier/adapter.py",
+]
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:d0e27dd3221c980a9ea4d17d5304f58c4bd3aa7e740ab69d9eb7aa743e8fd96a", size_bytes = 30720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:d0e27dd3221c980a9ea4d17d5304f58c4bd3aa7e740ab69d9eb7aa743e8fd96a", visibility = "private" }
 entrypoint = "run.py"
-environment = {}
+
+[verifier.bundle]
+digest = "sha256:1448ef313cfb1504ceda0336b1cd324b62922b01e5ce2da1b33df243c7112857"
+size_bytes = 30720
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:1448ef313cfb1504ceda0336b1cd324b62922b01e5ce2da1b33df243c7112857"
+visibility = "private"
+
+[verifier.environment]
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
+passed_statuses = [
+    "passed",
+]
 excluded_statuses = []
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Build six 1.17.0 from an empty workspace and satisfy a bounded Python 3 compatibility contract through a separate subprocess verifier."
-keywords = ["python", "compatibility", "metaclasses", "lazy-imports", "separate-verifier"]
+keywords = [
+    "python",
+    "compatibility",
+    "metaclasses",
+    "lazy-imports",
+    "separate-verifier",
+]
 agent_timeout_sec = 1800.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 90.0
@@ -74,10 +122,10 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [oracle_bundle]
-digest = "sha256:6692cd25576d4f28f9704074ada80a2ef16dd2e55a859df68ecf4f952408f33d"
+digest = "sha256:760a86f29e6c73a1bf0a5a0f289095401adba98be4461489999d76a2d791285a"
 size_bytes = 163840
 media_type = "application/vnd.nl2repobench.private-bundle+tar"
-uri = "artifact://private/sha256:6692cd25576d4f28f9704074ada80a2ef16dd2e55a859df68ecf4f952408f33d"
+uri = "artifact://private/sha256:760a86f29e6c73a1bf0a5a0f289095401adba98be4461489999d76a2d791285a"
 visibility = "private"
 
 [lifecycle]

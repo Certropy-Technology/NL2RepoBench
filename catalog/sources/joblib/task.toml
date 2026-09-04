@@ -35,15 +35,35 @@ reason = "Candidate and verifier dependencies are installed during the image bui
 
 [dependencies]
 status = "known"
-installer = "pip"
+package_manager = "pip"
 packages = [
-  "cloudpickle==3.1.1",
-  "lz4==4.4.4",
-  "numpy==2.3.2",
-  "setuptools==84.0.0",
-  "wheel==0.45.1",
+    "cloudpickle==3.1.1",
+    "lz4==4.4.4",
+    "numpy==2.3.2",
+    "setuptools==84.0.0",
+    "wheel==0.45.1",
 ]
-lock_artifact = { digest = "sha256:107dec1f59314223e9245ef5e05afff4d16fc3ac10e2a5f14d3b7729a62e95b7", size_bytes = 11178, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:107dec1f59314223e9245ef5e05afff4d16fc3ac10e2a5f14d3b7729a62e95b7", visibility = "private" }
+
+[dependencies.lock]
+digest = "sha256:e52b0d464afc2b558883fb18953004d23aff8945fc918e816479dfc8528891f1"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:e52b0d464afc2b558883fb18953004d23aff8945fc918e816479dfc8528891f1"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:3601dee46a4fff37f81be6ac535baed3662b43cb14c52d877fd2184c6a6757b8"
+size_bytes = 1000
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:3601dee46a4fff37f81be6ac535baed3662b43cb14c52d877fd2184c6a6757b8"
+visibility = "private"
 
 [tests]
 framework = "pytest"

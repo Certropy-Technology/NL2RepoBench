@@ -6,7 +6,15 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "easy"
 category = "uuid-library"
-tags = ["node", "npm", "esm", "uuid", "rfc9562", "crypto", "json"]
+tags = [
+    "node",
+    "npm",
+    "esm",
+    "uuid",
+    "rfc9562",
+    "crypto",
+    "json",
+]
 language = "node"
 
 [source]
@@ -41,21 +49,28 @@ reason = "uuid has no runtime dependencies; npm and the empty v3 cache closure a
 
 [dependencies]
 status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
 packages = []
 
-[dependencies.artifact]
-digest = "sha256:5f9d04dc93501397cb67f7bbc8d7754e334d8d1b07cbf4bf471ba9096c2c2ef0"
+[dependencies.lock]
+digest = "sha256:6c2adc520bb1e7a59ae875bc82098e7c9b0e2847d2ae22bd377354b9efb871a7"
 size_bytes = 10240
-media_type = "application/x-tar"
-uri = "artifact://private/sha256:5f9d04dc93501397cb67f7bbc8d7754e334d8d1b07cbf4bf471ba9096c2c2ef0"
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:6c2adc520bb1e7a59ae875bc82098e7c9b0e2847d2ae22bd377354b9efb871a7"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:63bdad568ff0174494aaaf128eafb1340ee1f22e4187976cc5fd107a141fdd22"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:63bdad568ff0174494aaaf128eafb1340ee1f22e4187976cc5fd107a141fdd22"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:cec0d4a0bf6bdecac67038eae1a76d334e82d53b7e353d8122af16c0e59dae38"
+size_bytes = 1278
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:cec0d4a0bf6bdecac67038eae1a76d334e82d53b7e353d8122af16c0e59dae38"
 visibility = "private"
 
 [tests]
@@ -72,10 +87,10 @@ uri = "artifact://private/sha256:a832562812d78324c3ac1b16a15a9ab97c6e9e92ad7de11
 visibility = "private"
 
 [tests.test_bundle]
-digest = "sha256:5b47ed878b774988d48f953119f87c2f8f986a1f9b1d9468a4b4c2644d78521e"
+digest = "sha256:824b684a460501ec4ac398caf10c4dfd5d8a0183b2edba6af8125ab2c3fc3e42"
 size_bytes = 20480
 media_type = "application/x-tar"
-uri = "artifact://private/sha256:5b47ed878b774988d48f953119f87c2f8f986a1f9b1d9468a4b4c2644d78521e"
+uri = "artifact://private/sha256:824b684a460501ec4ac398caf10c4dfd5d8a0183b2edba6af8125ab2c3fc3e42"
 visibility = "private"
 
 [metric]
@@ -84,7 +99,15 @@ collection_mismatch = "fail"
 
 [harbor]
 description = "Build the real uuidjs/uuid v14.0.2 Node ESM package for a deterministic RFC 9562 API slice."
-keywords = ["node", "npm", "esm", "uuid", "rfc9562", "crypto", "json"]
+keywords = [
+    "node",
+    "npm",
+    "esm",
+    "uuid",
+    "rfc9562",
+    "crypto",
+    "json",
+]
 agent_timeout_sec = 1200.0
 verifier_timeout_sec = 900.0
 candidate_install_timeout_sec = 120.0
@@ -97,10 +120,10 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [oracle_bundle]
-digest = "sha256:32061c8cecbcc32135456832c087ddb7844ca073eea8d2f6eaddf029542833be"
-size_bytes = 983040
+digest = "sha256:df3b5aab07a7cb2f77e03a9a949094d983ae3f499a0917f50d1edb084f5d1b0c"
+size_bytes = 972800
 media_type = "application/x-tar"
-uri = "artifact://private/sha256:32061c8cecbcc32135456832c087ddb7844ca073eea8d2f6eaddf029542833be"
+uri = "artifact://private/sha256:df3b5aab07a7cb2f77e03a9a949094d983ae3f499a0917f50d1edb084f5d1b0c"
 visibility = "private"
 
 [lifecycle]

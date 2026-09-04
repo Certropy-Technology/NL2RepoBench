@@ -3,17 +3,25 @@ task_id = "schedule-master"
 version = "0.2.0"
 instruction = "instruction.md"
 
-oracle_bundle = { digest = "sha256:d44f267ff683af724478ec41bc8235dfd7d6638554a4f41a8fd344bbc2c50832", size_bytes = 215040, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:d44f267ff683af724478ec41bc8235dfd7d6638554a4f41a8fd344bbc2c50832", visibility = "private" }
+[oracle_bundle]
+digest = "sha256:77adfb186ac9324cf3285cf763c834e5297803d97593dd85e6e2b8c26de1cc49"
+size_bytes = 215040
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:77adfb186ac9324cf3285cf763c834e5297803d97593dd85e6e2b8c26de1cc49"
+visibility = "private"
 
 [metadata]
 difficulty = "medium"
 category = "python-library"
-tags = ["python", "scheduling", "stateful-api", "timezones", "separate-verifier"]
+tags = [
+    "python",
+    "scheduling",
+    "stateful-api",
+    "timezones",
+    "separate-verifier",
+]
 language = "python"
 
-# Release 1.2.2. `git archive --format=tar <revision>` is recorded here.
-# SPDX evidence: LICENSE.txt at this revision is the MIT license
-# (sha256:30a8352c318ce1b645acde0299697342d4380ed2637d7ca18a8ad25661e3b41b).
 [source]
 status = "known"
 upstream_url = "https://github.com/dbader/schedule"
@@ -31,46 +39,85 @@ base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee320
 system_packages = []
 network_mode = "no-network"
 
-# Runtime and test dependencies ship as a private hash-locked requirements artifact
-# (pytest 8.4.1 and pytz 2025.2) installed during the Docker build phase.
-# The frozen suite selects explicit POSIX TZ strings and calls time.tzset(), so
-# host tzdata does not participate in grading; remote timezone behaviour comes
-# from the pinned pytz wheel.
-
 [environment.network_policy]
 mode = "no-network"
 offline_dependencies = "preinstalled-image"
 reference_source_fetch = "forbidden"
 reason = "Third-party build and test dependencies are installed during the Docker build phase, which has network. The agent phase therefore needs no egress. A model provider host, when an in-container agent needs one, is injected per run via Harbor agent.extra_allowed_hosts instead of being pinned in task metadata."
+
 [dependencies]
 status = "known"
-installer = "pip"
-packages = ["pytest==8.4.1", "pytz==2025.2", "setuptools==75.8.0", "wheel==0.45.1"]
-lock_artifact = { digest = "sha256:2efd8650487d4127fcfb4ddde1f74fb8190d0044698cfc11d91a581facd8984d", size_bytes = 804, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:2efd8650487d4127fcfb4ddde1f74fb8190d0044698cfc11d91a581facd8984d", visibility = "private" }
+package_manager = "pip"
+packages = [
+    "pytest==8.4.1",
+    "pytz==2025.2",
+    "setuptools==75.8.0",
+    "wheel==0.45.1",
+]
+
+[dependencies.lock]
+digest = "sha256:1872814236ba26545f5493828bf78e2767da2574f21c453208ba837db0a5cf6c"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:1872814236ba26545f5493828bf78e2767da2574f21c453208ba837db0a5cf6c"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:07c7a3447a14303b2436b6d534e8b36300dbe1b0c597ae81f8df75f54469fdc0"
+size_bytes = 996
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:07c7a3447a14303b2436b6d534e8b36300dbe1b0c597ae81f8df75f54469fdc0"
+visibility = "private"
 
 [tests]
 framework = "pytest"
 expected_total = 81
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["test_schedule.py"]
+commands = [
+    "custom-json-v1 verifier entrypoint",
+]
+protected_paths = [
+    "test_schedule.py",
+]
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
+passed_statuses = [
+    "passed",
+]
 excluded_statuses = []
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:b768f96ccfa3a335d6c248cc22d8637e6065ee211b0f13f3002ab68fe3ae5cc1", size_bytes = 92160, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:b768f96ccfa3a335d6c248cc22d8637e6065ee211b0f13f3002ab68fe3ae5cc1", visibility = "private" }
 entrypoint = "run.py"
-environment = {}
+
+[verifier.bundle]
+digest = "sha256:1dca661f676c7ca22151f2f10dbb3974e3743ea89d51a2ba11927f4dc687297c"
+size_bytes = 92160
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:1dca661f676c7ca22151f2f10dbb3974e3743ea89d51a2ba11927f4dc687297c"
+visibility = "private"
+
+[verifier.environment]
 
 [harbor]
 description = "Build the schedule in-process job scheduling library from an empty workspace."
-keywords = ["python", "scheduling", "timezones", "stateful-api", "repository-generation"]
+keywords = [
+    "python",
+    "scheduling",
+    "timezones",
+    "stateful-api",
+    "repository-generation",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 90.0

@@ -41,23 +41,21 @@ reference_source_fetch = "forbidden"
 reason = "The parser fixtures, dependency closure, and separate verifier are not frozen; candidate and verifier execution remain network-isolated."
 
 [dependencies]
-# Source-declared build/unit/doctest/type/dev requirements. These names are
-# observations, not a hash-locked offline DependencyBundle.
 status = "unknown"
-installer = "uv"
+package_manager = "uv"
 packages = [
-  "flit_core>=3.12,<4",
-  "pytest",
-  "railroad-diagrams",
-  "jinja2",
-  "matplotlib; platform_python_implementation != 'PyPy' and python_version < '3.15'",
-  "tox",
-  "coverage",
-  "pre-commit",
-  "sphinx",
-  "myst-parser",
-  "alabaster",
-  "mypy",
+    "flit_core>=3.12,<4",
+    "pytest",
+    "railroad-diagrams",
+    "jinja2",
+    "matplotlib; platform_python_implementation != 'PyPy' and python_version < '3.15'",
+    "tox",
+    "coverage",
+    "pre-commit",
+    "sphinx",
+    "myst-parser",
+    "alabaster",
+    "mypy",
 ]
 
 [tests]

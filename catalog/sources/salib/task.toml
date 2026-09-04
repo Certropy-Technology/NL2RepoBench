@@ -36,16 +36,16 @@ reason = "The scientific dependency and data closure is not frozen; candidate an
 # not a resolved offline closure.
 [dependencies]
 status = "unknown"
-installer = "pip"
+package_manager = "pip"
 packages = [
-  "numpy>=2.0",
-  "scipy>=1.9.3",
-  "matplotlib>=3.5",
-  "pandas>=2.0",
-  "multiprocess",
-  "pathos>=0.3.2",
-  "pytest",
-  "pytest-cov",
+    "numpy>=2.0",
+    "scipy>=1.9.3",
+    "matplotlib>=3.5",
+    "pandas>=2.0",
+    "multiprocess",
+    "pathos>=0.3.2",
+    "pytest",
+    "pytest-cov",
 ]
 
 [tests]

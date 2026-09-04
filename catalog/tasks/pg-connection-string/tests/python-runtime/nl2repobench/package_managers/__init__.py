@@ -2,15 +2,17 @@
 
 from typing import Any
 
-from .base import PackageManagerAdapter, PackageManagerError
+from .base import CommandSpec, PackageManagerAdapter, PackageManagerError
 
 __all__ = [
     "PackageManagerAdapter",
+    "CommandSpec",
     "PackageManagerError",
     "PackageManagerRegistry",
     "GoModulesPackageManager",
     "PnpmLockSummary",
     "PnpmPackageManager",
+    "MavenPackageManager",
     "UnknownPackageManagerError",
 ]
 
@@ -28,6 +30,10 @@ def __getattr__(name: str) -> Any:
         from .pnpm import PnpmLockSummary
 
         return PnpmLockSummary
+    if name == "MavenPackageManager":
+        from .maven import MavenPackageManager
+
+        return MavenPackageManager
     if name in {"PackageManagerRegistry", "UnknownPackageManagerError"}:
         from .registry import PackageManagerRegistry, UnknownPackageManagerError
 

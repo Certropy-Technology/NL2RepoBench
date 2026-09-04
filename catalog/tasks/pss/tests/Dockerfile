@@ -3,10 +3,12 @@ FROM --platform=linux/amd64 python:3.12.14-slim-bookworm@sha256:356b0d18f9385f4b
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates git && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.lock.txt /tmp/requirements.lock.txt
-RUN python -m pip install --no-cache-dir --require-hashes -r /tmp/requirements.lock.txt
+RUN python -m pip install --no-cache-dir --require-hashes \
+  --index-url https://pypi.org/simple \
+  -r /tmp/requirements.lock.txt
 
 COPY candidate-requirements.lock.txt /tmp/candidate-requirements.lock.txt
-RUN python -m pip install   --no-cache-dir   --target /opt/candidate-dependencies/site   --require-hashes   -r /tmp/candidate-requirements.lock.txt
+RUN python -m pip install   --no-cache-dir   --index-url https://pypi.org/simple   --target /opt/candidate-dependencies/site   --require-hashes   -r /tmp/candidate-requirements.lock.txt
 
 COPY runtime/nl2repobench /usr/local/lib/python3.12/site-packages/nl2repobench
 COPY command-plan.json /tests/command-plan.json

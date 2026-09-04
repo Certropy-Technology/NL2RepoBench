@@ -35,15 +35,35 @@ reason = "The candidate has no runtime dependencies. The hash-locked Hatchling b
 
 [dependencies]
 status = "known"
-installer = "pip"
+package_manager = "pip"
 packages = [
-  "hatchling==1.27.0",
-  "packaging==26.3",
-  "pathspec==1.1.1",
-  "pluggy==1.6.0",
-  "trove-classifiers==2026.6.1.19",
+    "hatchling==1.27.0",
+    "packaging==26.3",
+    "pathspec==1.1.1",
+    "pluggy==1.6.0",
+    "trove-classifiers==2026.6.1.19",
 ]
-lock_artifact = { digest = "sha256:724c24e8bc09704f8c2337206e2b818eecbd66f0c791000997b28218e0e60324", size_bytes = 1238, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:724c24e8bc09704f8c2337206e2b818eecbd66f0c791000997b28218e0e60324", visibility = "private" }
+
+[dependencies.lock]
+digest = "sha256:02e057bc1c406daa698febabd5d141766a1af09cc265de50471e6d48b0b26293"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:02e057bc1c406daa698febabd5d141766a1af09cc265de50471e6d48b0b26293"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:380d8eaca181a71832e9093e7981db36ac759a6e8fc4b20ceef27fd430b83ba1"
+size_bytes = 998
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:380d8eaca181a71832e9093e7981db36ac759a6e8fc4b20ceef27fd430b83ba1"
+visibility = "private"
 
 [tests]
 framework = "pytest"

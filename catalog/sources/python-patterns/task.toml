@@ -27,7 +27,7 @@ reason = "No hash-locked offline build and test dependency closure is available.
 
 [dependencies]
 status = "unknown"
-installer = "pip"
+package_manager = "pip"
 packages = []
 
 [tests]

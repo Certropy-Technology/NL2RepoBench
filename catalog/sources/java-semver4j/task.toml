@@ -1,0 +1,119 @@
+schema_version = "1.0"
+task_id = "java-semver4j"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "easy"
+category = "java-library"
+tags = ["java", "maven", "semver", "typed-runtime", "public-api"]
+language = "java"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/vdurmont/semver4j"
+revision = "7653e418d610ffcd2811bcb55fd72d00d420950b"
+license_spdx = "MIT"
+source_digest = "sha256:7357a5bcc4f1360d506722e89ff274d42d09f4871f457c212454b5131c63d017"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "nl2repobench/java-runtime@sha256:d5e429fd4c57040b5fe23cc92196828dc9f1e3b13ac47539183431b223ea84f3"
+base_image_digest = "sha256:d5e429fd4c57040b5fe23cc92196828dc9f1e3b13ac47539183431b223ea84f3"
+network_mode = "no-network"
+
+[environment.runtime]
+language = "java"
+runtime = "jdk"
+version = "temurin-21.0.12+8"
+package_manager = "maven"
+package_manager_version = "3.9.11"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "The candidate and verifier use a private, hash-locked empty Maven closure; only the trusted Oracle source fetch is authorized."
+
+[dependencies]
+status = "known"
+package_manager = "maven"
+packages = []
+
+[dependencies.lock]
+digest = "sha256:504e9112c6eb63830825505e945155fefa7e43e47774cdbccba627c3e84b2524"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:504e9112c6eb63830825505e945155fefa7e43e47774cdbccba627c3e84b2524"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:bbf11f0816b1f01a39557cd5c86d7578bdbb697546ae9d40f691d04ca7b2c37b"
+size_bytes = 978
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:bbf11f0816b1f01a39557cd5c86d7578bdbb697546ae9d40f691d04ca7b2c37b"
+visibility = "private"
+
+[tests]
+framework = "junit-platform"
+report_format = "junit-open-test-report-xml-v1"
+expected_total = 8
+expected_total_source = "frozen-collection"
+commands = ["mvn --offline validate", "javac verifier-owned contract"]
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.sh"
+contract_sha256 = "sha256:c3adcf8e3a18c74218c00969800e5f0f4469a44a4edc333570fb06303d2e6725"
+
+[verifier.bundle]
+digest = "sha256:386eeff48d510e97a9a4b6beaca9fe98814b86b48b14e64d1562097662f9a6ae"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.verifier+tar"
+uri = "artifact://private/sha256:386eeff48d510e97a9a4b6beaca9fe98814b86b48b14e64d1562097662f9a6ae"
+visibility = "private"
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Recreate the serializable Semver parsing, comparison, stability, and requirement behavior of vdurmont/semver4j."
+keywords = ["java", "maven", "semver", "typed-bridge", "public-api"]
+agent_timeout_sec = 1200.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "java-maven-authoring-20260902"
+reason = "Immutable source freeze, offline Maven closure, separate verifier, Oracle, empty/stub/forgery/install-failure/hang/offline controls, and no-network replay passed. Java pilot gate still requires additional real tasks."
+
+[oracle_bundle]
+digest = "sha256:79973f518a40b550e53dd901f51d04690d1f9aa437b17f9f2fc94b5ac596f2a0"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:79973f518a40b550e53dd901f51d04690d1f9aa437b17f9f2fc94b5ac596f2a0"
+visibility = "private"

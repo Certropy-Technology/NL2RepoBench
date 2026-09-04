@@ -35,9 +35,32 @@ reason = "The hash-locked build/runtime closure is installed during Docker build
 
 [dependencies]
 status = "known"
-installer = "pip"
-packages = ["flit-core==3.12.0", "mdurl==0.1.2"]
-lock_artifact = { digest = "sha256:de84e4c33a89e47c7d11238590b7b3650fc1bc43cda4c76976bdbabca5b7fdb5", size_bytes = 371, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:de84e4c33a89e47c7d11238590b7b3650fc1bc43cda4c76976bdbabca5b7fdb5", visibility = "private" }
+package_manager = "pip"
+packages = [
+    "flit-core==3.12.0",
+    "mdurl==0.1.2",
+]
+
+[dependencies.lock]
+digest = "sha256:f53f84223320722b9ba7a6484277f63a0ac2f61eb3bd8f4a497330c8c80bdf3b"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:f53f84223320722b9ba7a6484277f63a0ac2f61eb3bd8f4a497330c8c80bdf3b"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:e5891c8a454df30a855a122f1785b2ae27bc8f592d423d8a1683a7c4978fa54e"
+size_bytes = 996
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:e5891c8a454df30a855a122f1785b2ae27bc8f592d423d8a1683a7c4978fa54e"
+visibility = "private"
 
 [tests]
 framework = "pytest"

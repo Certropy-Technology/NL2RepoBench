@@ -35,11 +35,31 @@ reason = "Build dependencies are installed during Docker build from a hash-locke
 
 [dependencies]
 status = "known"
-installer = "pip"
+package_manager = "pip"
 packages = [
-  "poetry-core==2.1.3",
+    "poetry-core==2.1.3",
 ]
-lock_artifact = { digest = "sha256:7354071a6b2e0ed06c1a8b9f2e471025c007c90fb41dc9bf85dd68a9c51df48d", size_bytes = 543, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:7354071a6b2e0ed06c1a8b9f2e471025c007c90fb41dc9bf85dd68a9c51df48d", visibility = "private" }
+
+[dependencies.lock]
+digest = "sha256:373918eade2e48ef0f65abf06ea0a1e0fbad1dfe1f0910d94ff81206f2eb8f16"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:373918eade2e48ef0f65abf06ea0a1e0fbad1dfe1f0910d94ff81206f2eb8f16"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:43b6d27049599697c986abb317b33b613985902a67e759a34d6084f4cebe7042"
+size_bytes = 996
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:43b6d27049599697c986abb317b33b613985902a67e759a34d6084f4cebe7042"
+visibility = "private"
 
 [tests]
 framework = "pytest"

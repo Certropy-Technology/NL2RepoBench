@@ -6,11 +6,17 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "medium"
 category = "python-cli"
-tags = ["python", "cli", "source-search", "filesystem", "regex", "repository-generation", "separate-verifier"]
+tags = [
+    "python",
+    "cli",
+    "source-search",
+    "filesystem",
+    "regex",
+    "repository-generation",
+    "separate-verifier",
+]
 language = "python"
 
-# Upstream is public-domain software with an Unlicense-style notice. The
-# bundled psslib/colorama copy has its own BSD license; see provenance.md.
 [source]
 status = "known"
 upstream_url = "https://github.com/eliben/pss"
@@ -19,18 +25,16 @@ license_spdx = "Unlicense"
 source_digest = "sha256:2c86bef90a85c8d09fd0a66d64d183f9960bc46f1489fce629303a92b43bee9b"
 submodules = []
 
-# Re-based from the legacy ghcr.io/multimodal-art-projection/nl2repobench/pss
-# image (Python 3.10.11, debian-11). The production verifier installs its trusted
-# runtime into the 3.12 site-packages path, so a 3.10 base cannot start it. The
-# frozen revision still collects and passes 46/46 on this base, so the
-# denominator is unchanged; see provenance.md.
 [environment]
 status = "known"
 python_version = "3.12.14"
 os_name = "debian-12"
 base_image = "python:3.12.14-slim-bookworm"
 base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e"
-system_packages = ["ca-certificates", "git"]
+system_packages = [
+    "ca-certificates",
+    "git",
+]
 build_command = "apt-get install --no-install-recommends ca-certificates git"
 network_mode = "no-network"
 
@@ -39,48 +43,86 @@ mode = "no-network"
 offline_dependencies = "preinstalled-image"
 reference_source_fetch = "forbidden"
 reason = "Third-party build and test dependencies are installed during the Docker build phase, which has network. The agent phase therefore needs no egress. A model provider host, when an in-container agent needs one, is injected per run via Harbor agent.extra_allowed_hosts instead of being pinned in task metadata."
-# Verifier-side runtime for the frozen upstream fixture, resolved offline from a
-# hash-locked requirements artifact at Docker build time. setuptools and wheel are required
-# because the candidate install runs pip with --no-build-isolation.
+
 [dependencies]
 status = "known"
-installer = "pip"
+package_manager = "pip"
 packages = [
-  "colorama==0.4.6",
-  "iniconfig==2.3.0",
-  "packaging==26.3",
-  "pluggy==1.6.0",
-  "pygments==2.21.0",
-  "pytest==8.4.1",
-  "setuptools==80.10.2",
-  "wheel==0.45.1",
+    "colorama==0.4.6",
+    "iniconfig==2.3.0",
+    "packaging==26.3",
+    "pluggy==1.6.0",
+    "pygments==2.21.0",
+    "pytest==8.4.1",
+    "setuptools==80.10.2",
+    "wheel==0.45.1",
 ]
-lock_artifact = { digest = "sha256:a8a6fd5f5cb7acc86edaa633bdc47e6e036afdb4df72348134abd84281bee529", size_bytes = 808, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:a8a6fd5f5cb7acc86edaa633bdc47e6e036afdb4df72348134abd84281bee529", visibility = "private" }
 
-# The frozen upstream fixture collects 46 items at the pinned revision and all 46
-# are scored, so the denominator is the full collection.
+[dependencies.lock]
+digest = "sha256:58932fff35bf71c95d6dc1502fa573fd21215678b22dcd8e4b71b7d706214864"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:58932fff35bf71c95d6dc1502fa573fd21215678b22dcd8e4b71b7d706214864"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:d4e337f8d32f16ad17dd6234d79d3c40032841d2f0342fceddace0ee7b1ca8c2"
+size_bytes = 996
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:d4e337f8d32f16ad17dd6234d79d3c40032841d2f0342fceddace0ee7b1ca8c2"
+visibility = "private"
+
 [tests]
 framework = "pytest"
 expected_total = 46
 expected_total_source = "frozen-collection"
-commands = ["python -I /tests/verifier/run.py"]
-protected_paths = ["/tests/verifier/run.py", "/tests/verifier/fixture/test", "/tests/verifier/scored-nodes.json"]
+commands = [
+    "python -I /tests/verifier/run.py",
+]
+protected_paths = [
+    "/tests/verifier/run.py",
+    "/tests/verifier/fixture/test",
+    "/tests/verifier/scored-nodes.json",
+]
 
 [verifier]
 protocol = "custom-json-v1"
 entrypoint = "run.py"
-bundle = { digest = "sha256:2ff4a04239a836b564022db061249bf14420a2b7311751164a99e86869662933", size_bytes = 143360, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:2ff4a04239a836b564022db061249bf14420a2b7311751164a99e86869662933", visibility = "private" }
+
+[verifier.bundle]
+digest = "sha256:607bf0b754c9050ce2409398ceb972de55f09bcb016a8a6db3736d0a31ca6c33"
+size_bytes = 143360
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:607bf0b754c9050ce2409398ceb972de55f09bcb016a8a6db3736d0a31ca6c33"
+visibility = "private"
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
+passed_statuses = [
+    "passed",
+]
 excluded_statuses = []
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Build the PSS recursive source-code search toolkit and command-line interface from an empty workspace."
-keywords = ["python", "cli", "source-search", "filesystem", "regex", "repository-generation", "separate-verifier"]
+keywords = [
+    "python",
+    "cli",
+    "source-search",
+    "filesystem",
+    "regex",
+    "repository-generation",
+    "separate-verifier",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 90.0
@@ -97,8 +139,8 @@ status = "controls-passed"
 reason = "Receipt paths and SHA-256 digests revalidated. Production compile requires no --allow-incomplete; Harbor 0.21.0 Oracle is valid at 46/46 with reward 1.0. Empty is a valid model-zero; stub and forgery are valid at 1/46 (reward 0.021739, below 0.20); verifier-owned forgery grading and offline network probes passed. Blind review, pilot, and publication remain pending."
 
 [oracle_bundle]
-digest = "sha256:73c0719e6e03b954dd9cad7a6ef61e2676fed769ead482bdf92aab6199d556a4"
+digest = "sha256:fb5f61cac527a7a4d3dc12daec1293f6e54448132cdbcc7aaff0ac87f98d2692"
 size_bytes = 276480
 media_type = "application/vnd.nl2repobench.private-bundle+tar"
-uri = "artifact://private/sha256:73c0719e6e03b954dd9cad7a6ef61e2676fed769ead482bdf92aab6199d556a4"
+uri = "artifact://private/sha256:fb5f61cac527a7a4d3dc12daec1293f6e54448132cdbcc7aaff0ac87f98d2692"
 visibility = "private"

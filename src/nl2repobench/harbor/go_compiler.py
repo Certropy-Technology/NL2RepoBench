@@ -16,6 +16,10 @@ import tomli_w
 from nl2repobench.authoring.catalog import CatalogCompiler, DeclarativeTaskSource
 from nl2repobench.domain.models import ArtifactRef, TaskManifest
 from nl2repobench.package_managers.base import PackageManagerError
+from nl2repobench.package_managers.dependency_artifacts import (
+    load_dependency_inventory,
+    materialize_dependency_archive,
+)
 from nl2repobench.package_managers.go_modules import GoModulesPackageManager
 from nl2repobench.storage.artifacts import FileArtifactStore, LocalArtifactResolver
 from nl2repobench.storage.files import atomic_write
@@ -226,8 +230,12 @@ class GoHarborCompiler:
         task_root: Path,
         kind: str,
         output_root: Path,
+        *,
+        private_cas_root: Path | None = None,
     ) -> Path:
         """Create a Go control bundle without mutating the compiled task."""
+
+        del private_cas_root
 
         supported = {
             "stub",
@@ -343,21 +351,63 @@ WORKDIR /tests
                     )
                 copy_tree(dependencies, destination)
             else:
-                reference = source.dependencies.module_bundle
-                if reference is None:
-                    raise GoHarborCompileError(
-                        "Go production task requires dependencies.module_bundle"
-                    )
-                self._extract_private_bundle(reference, destination)
+                self._materialize_dependencies(source, destination)
             copy_tree(destination, task_root / "environment/go-module-bundle")
-            GoModulesPackageManager().validate_offline_store(
-                destination,
-                lockfile=destination / "go.mod",
-                manifest=destination / "module.manifest.json",
-                expected_version=self.go_version,
-            )
+            if allow_incomplete:
+                GoModulesPackageManager().validate_offline_store(
+                    destination,
+                    lockfile=destination / "go.mod",
+                    manifest=destination / "module.manifest.json",
+                    expected_version=self.go_version,
+                )
+            else:
+                GoModulesPackageManager().validate_lock(
+                    destination / "go.mod", expected_version=self.go_version
+                )
         except (TaskWriterError, PackageManagerError) as exc:
             raise GoHarborCompileError(f"invalid Go module closure: {exc}") from exc
+
+    def _materialize_dependencies(
+        self, source: DeclarativeTaskSource, destination: Path
+    ) -> None:
+        bundle = source.dependencies
+        if (
+            self.artifact_resolver is None
+            or bundle.lock is None
+            or bundle.offline_store is None
+        ):
+            raise GoHarborCompileError("Go dependency lock/store/inventory is missing")
+        toolchain_digest = f"sha256:{hashlib.sha256(self.toolchain_path.read_bytes()).hexdigest()}"
+        inventory = load_dependency_inventory(
+            bundle,
+            resolver=self.artifact_resolver,
+                expected_identity="go+go-modules",
+                expected_toolchain_digest=toolchain_digest,
+                expected_adapter_version="go-modules-offline-v1",
+            )
+        with tempfile.TemporaryDirectory(prefix="nl2repo-go-dependencies-") as temp:
+            root = Path(temp)
+            lock_root = root / "lock"
+            store_root = root / "store"
+            materialize_dependency_archive(
+                bundle.lock,
+                inventory.lock,
+                lock_root,
+                resolver=self.artifact_resolver,
+            )
+            materialize_dependency_archive(
+                bundle.offline_store,
+                inventory.store,
+                store_root,
+                resolver=self.artifact_resolver,
+            )
+            copy_tree(lock_root, destination)
+            for path in store_root.iterdir():
+                target = destination / path.name
+                if path.is_dir():
+                    copy_tree(path, target)
+                else:
+                    atomic_write(target, path.read_bytes())
 
     def _write_verifier(
         self,

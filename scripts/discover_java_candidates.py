@@ -37,11 +37,6 @@ JUNIT_TEST = re.compile(
 HARD_RISKS = frozenset(
     {
         "multi-module",
-        "snapshot-version",
-        "dynamic-version",
-        "custom-build",
-        "profiles",
-        "maven-extension",
         "no-java-tests",
         "non-java-source",
     }

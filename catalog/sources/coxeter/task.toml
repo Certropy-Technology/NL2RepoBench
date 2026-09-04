@@ -33,25 +33,23 @@ reference_source_fetch = "forbidden"
 reason = "The scientific dependency closure and final image are not frozen; candidate and verifier execution remain network-isolated."
 
 [dependencies]
-# These are the source-declared runtime/build/test requirements and one
-# observed generated closure, not a hash-locked offline bundle.
 status = "unknown"
-installer = "uv"
+package_manager = "uv"
 packages = [
-  "numpy>=1.19.0",
-  "rowan>=1.2.0",
-  "scipy>1.0.0",
-  "setuptools",
-  "wheel",
-  "docutils",
-  "hypothesis[numpy]",
-  "matplotlib",
-  "miniball",
-  "plato-draw",
-  "pytest",
-  "pytest-cov",
-  "pytest-doctestplus",
-  "pytest-xdist",
+    "numpy>=1.19.0",
+    "rowan>=1.2.0",
+    "scipy>1.0.0",
+    "setuptools",
+    "wheel",
+    "docutils",
+    "hypothesis[numpy]",
+    "matplotlib",
+    "miniball",
+    "plato-draw",
+    "pytest",
+    "pytest-cov",
+    "pytest-doctestplus",
+    "pytest-xdist",
 ]
 
 [tests]

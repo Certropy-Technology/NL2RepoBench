@@ -41,16 +41,32 @@ libc = "glibc"
 
 [dependencies]
 status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
-packages = ["micromark-util-symbol==2.0.1", "micromark-util-types==2.0.2"]
-artifact = { digest = "sha256:3715cd959353c56f2b92dfef87816b61d2344cbcb83110b387e9e2f91ab89ace", size_bytes = 112640, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:3715cd959353c56f2b92dfef87816b61d2344cbcb83110b387e9e2f91ab89ace", visibility = "private" }
+packages = [
+    "micromark-util-symbol==2.0.1",
+    "micromark-util-types==2.0.2",
+]
+
+[dependencies.lock]
+digest = "sha256:e5bc8bf13efd0c56033fae51916e053fd0d7e42dd67153a149c978697a27c28c"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:e5bc8bf13efd0c56033fae51916e053fd0d7e42dd67153a149c978697a27c28c"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:169040909c561fc6052a1098e36b69f44e1f33ca1292a0d25ef370b5a5230310"
+size_bytes = 112640
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:169040909c561fc6052a1098e36b69f44e1f33ca1292a0d25ef370b5a5230310"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:4b0d15b801b07cc6102b1aeb3a74b280e55a01face4bdca0152d033aacbea3a6"
+size_bytes = 3822
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:4b0d15b801b07cc6102b1aeb3a74b280e55a01face4bdca0152d033aacbea3a6"
+visibility = "private"
 
 [tests]
 framework = "node:test"

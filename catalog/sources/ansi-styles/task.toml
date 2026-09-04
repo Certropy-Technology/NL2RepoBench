@@ -41,21 +41,28 @@ reason = "ansi-styles has no runtime dependency roots; the npm v3 lock and empty
 
 [dependencies]
 status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
 packages = []
 
-[dependencies.artifact]
-digest = "sha256:7a9d19aa3a974d1d98b2efa737054916be0a385036536a2a793fc1b4220ea4b5"
-size_bytes = 443
-media_type = "application/vnd.nl2repobench.npm-bundle+tar"
-uri = "artifact://private/sha256:7a9d19aa3a974d1d98b2efa737054916be0a385036536a2a793fc1b4220ea4b5"
+[dependencies.lock]
+digest = "sha256:e121b0782156953c25c8e93558d7a71b63cc961c0b6202659eefaf0481628232"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:e121b0782156953c25c8e93558d7a71b63cc961c0b6202659eefaf0481628232"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:63bdad568ff0174494aaaf128eafb1340ee1f22e4187976cc5fd107a141fdd22"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:63bdad568ff0174494aaaf128eafb1340ee1f22e4187976cc5fd107a141fdd22"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:59875d9a14288a4f2cd1e3490b4bce66abbacf59038a7e42720d065ba3c3f1ab"
+size_bytes = 1278
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:59875d9a14288a4f2cd1e3490b4bce66abbacf59038a7e42720d065ba3c3f1ab"
 visibility = "private"
 
 [tests]

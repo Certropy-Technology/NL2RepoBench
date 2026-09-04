@@ -38,15 +38,10 @@ reason = "Agent and verifier runs must remain offline; the upstream monorepo loc
 
 [dependencies]
 status = "unknown"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
-packages = ["csv-parse sync runtime has no third-party imports, but the isolated build/test closure and generated dist provenance are not frozen"]
+packages = [
+    "csv-parse sync runtime has no third-party imports, but the isolated build/test closure and generated dist provenance are not frozen",
+]
 
 [tests]
 framework = "node:test"

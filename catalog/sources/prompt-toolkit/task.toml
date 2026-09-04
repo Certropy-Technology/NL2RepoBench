@@ -7,13 +7,13 @@ instruction = "instruction.md"
 difficulty = "hard"
 category = "terminal"
 tags = [
-  "python",
-  "terminal",
-  "headless",
-  "buffer",
-  "completion",
-  "key-bindings",
-  "separate-verifier",
+    "python",
+    "terminal",
+    "headless",
+    "buffer",
+    "completion",
+    "key-bindings",
+    "separate-verifier",
 ]
 language = "python"
 
@@ -41,33 +41,78 @@ reason = "The hash-locked third-party closure is installed during the Docker bui
 
 [dependencies]
 status = "known"
-installer = "pip"
-packages = ["setuptools==80.10.2", "wcwidth==0.8.1"]
-lock_artifact = { digest = "sha256:87346076fd5fc526db637b9d8703d331aff682e87c9c0a9534f5f171701526d8", size_bytes = 375, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:87346076fd5fc526db637b9d8703d331aff682e87c9c0a9534f5f171701526d8", visibility = "private" }
+package_manager = "pip"
+packages = [
+    "setuptools==80.10.2",
+    "wcwidth==0.8.1",
+]
+
+[dependencies.lock]
+digest = "sha256:e32ce187470b3fc38b14e12c8bd98fe7f3ffda2011ac578c3c4cb3d0a239da83"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:e32ce187470b3fc38b14e12c8bd98fe7f3ffda2011ac578c3c4cb3d0a239da83"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:c3bca04e585e8b431e40c1361d516a1ec191e673155ccd5cf4bc96fe9507e6e9"
+size_bytes = 996
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:c3bca04e585e8b431e40c1361d516a1ec191e673155ccd5cf4bc96fe9507e6e9"
+visibility = "private"
 
 [tests]
 framework = "pytest"
 expected_total = 9
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py"]
+commands = [
+    "custom-json-v1 verifier entrypoint",
+]
+protected_paths = [
+    "/tests/verifier/run.py",
+    "/tests/verifier/adapter.py",
+]
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:0a5f03d89b626de5be9bfdb507d3d1f2a2ae7ffafdb9655d1de3f9205c5bf5da", size_bytes = 30720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:0a5f03d89b626de5be9bfdb507d3d1f2a2ae7ffafdb9655d1de3f9205c5bf5da", visibility = "private" }
 entrypoint = "run.py"
-environment = {}
+
+[verifier.bundle]
+digest = "sha256:3bf5b8c03dbb1f637bff751cca6aa986ead604f4c4c74a43fc6d925c9e6e7fc1"
+size_bytes = 30720
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:3bf5b8c03dbb1f637bff751cca6aa986ead604f4c4c74a43fc6d925c9e6e7fc1"
+visibility = "private"
+
+[verifier.environment]
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
+passed_statuses = [
+    "passed",
+]
 excluded_statuses = []
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Build prompt_toolkit 3.0.53 from an empty workspace; grading uses deterministic headless document, buffer, completion, data-model, and key-binding behavior through a separate child adapter."
-keywords = ["python", "terminal", "headless", "buffer", "completion", "key-bindings", "separate-verifier"]
+keywords = [
+    "python",
+    "terminal",
+    "headless",
+    "buffer",
+    "completion",
+    "key-bindings",
+    "separate-verifier",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 480.0
 candidate_install_timeout_sec = 120.0
@@ -80,16 +125,20 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [oracle_bundle]
-digest = "sha256:863d30b08209c483f729cd0517fcfe7a074c3606266d3378d4d4d3d4ae3bc1d5"
-size_bytes = 6031360
+digest = "sha256:90febb487d24801478d3d2160f8ab458e76f0b400b746836c4683426208743c0"
+size_bytes = 6021120
 media_type = "application/vnd.nl2repobench.private-bundle+tar"
-uri = "artifact://private/sha256:863d30b08209c483f729cd0517fcfe7a074c3606266d3378d4d4d3d4ae3bc1d5"
+uri = "artifact://private/sha256:90febb487d24801478d3d2160f8ab458e76f0b400b746836c4683426208743c0"
 visibility = "private"
 
 [lifecycle]
 status = "controls-passed"
 owner = "worker"
 reason = "Official Harbor 0.21.0 Oracle passed 9/9 with reward 1.0; empty, stub, and forgery controls scored 0.0 and all final verifier network probes were false."
-evidence = [
-  { digest = "sha256:52d123a02d779f7fbf3c8e3e8fc99dcab15d1088b6d1351b4adb252eeac8cc32", size_bytes = 5847, media_type = "application/json", uri = "artifact://private/sha256:52d123a02d779f7fbf3c8e3e8fc99dcab15d1088b6d1351b4adb252eeac8cc32", visibility = "private" },
-]
+
+[[lifecycle.evidence]]
+digest = "sha256:52d123a02d779f7fbf3c8e3e8fc99dcab15d1088b6d1351b4adb252eeac8cc32"
+size_bytes = 5847
+media_type = "application/json"
+uri = "artifact://private/sha256:52d123a02d779f7fbf3c8e3e8fc99dcab15d1088b6d1351b4adb252eeac8cc32"
+visibility = "private"

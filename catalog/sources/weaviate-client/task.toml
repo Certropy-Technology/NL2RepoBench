@@ -35,9 +35,53 @@ reason = "The exact runtime and build closure is installed from a hash-locked re
 
 [dependencies]
 status = "known"
-installer = "pip"
-packages = ["annotated-types==0.8.0", "anyio==4.14.2", "authlib==1.7.2", "certifi==2026.7.22", "cffi==2.1.1", "cryptography==50.0.1", "grpcio==1.78.0", "h11==0.16.0", "httpcore==1.0.9", "httpx==0.28.1", "idna==3.19", "joserfc==1.7.5", "packaging==26.3", "protobuf==6.33.6", "pycparser==3.0", "pydantic==2.13.5", "pydantic-core==2.46.5", "setuptools==80.10.2", "setuptools-scm==9.2.2", "typing-extensions==4.16.0", "typing-inspection==0.4.4", "validators==0.35.0", "wheel==0.46.2"]
-lock_artifact = { digest = "sha256:d91def8f511391c301c8fbd131dca5316bdd9f599d61d91be074eab8c3839257", size_bytes = 35024, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:d91def8f511391c301c8fbd131dca5316bdd9f599d61d91be074eab8c3839257", visibility = "private" }
+package_manager = "pip"
+packages = [
+    "annotated-types==0.8.0",
+    "anyio==4.14.2",
+    "authlib==1.7.2",
+    "certifi==2026.7.22",
+    "cffi==2.1.1",
+    "cryptography==50.0.1",
+    "grpcio==1.78.0",
+    "h11==0.16.0",
+    "httpcore==1.0.9",
+    "httpx==0.28.1",
+    "idna==3.19",
+    "joserfc==1.7.5",
+    "packaging==26.3",
+    "protobuf==6.33.6",
+    "pycparser==3.0",
+    "pydantic==2.13.5",
+    "pydantic-core==2.46.5",
+    "setuptools==80.10.2",
+    "setuptools-scm==9.2.2",
+    "typing-extensions==4.16.0",
+    "typing-inspection==0.4.4",
+    "validators==0.35.0",
+    "wheel==0.46.2",
+]
+
+[dependencies.lock]
+digest = "sha256:0a4330267fd04599f84b25e7d958810a1f3faa16f9cc2062525953d1fe3be843"
+size_bytes = 40960
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:0a4330267fd04599f84b25e7d958810a1f3faa16f9cc2062525953d1fe3be843"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:a49fdf593fad2e8fb4113f613d989fd9fe9cf685d769d938c9e63d9fa315cedd"
+size_bytes = 1000
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:a49fdf593fad2e8fb4113f613d989fd9fe9cf685d769d938c9e63d9fa315cedd"
+visibility = "private"
 
 [tests]
 framework = "pytest"

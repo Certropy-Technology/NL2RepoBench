@@ -33,8 +33,10 @@ reason = "The frozen image uses networked, partly unpinned dependencies and nati
 
 [dependencies]
 status = "unknown"
-installer = "pip"
-packages = ["legacy image requirements and native yara/libarchive artifacts are not a reproducible lock"]
+package_manager = "pip"
+packages = [
+    "legacy image requirements and native yara/libarchive artifacts are not a reproducible lock",
+]
 
 [tests]
 framework = "pytest"

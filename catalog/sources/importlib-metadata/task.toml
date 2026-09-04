@@ -35,16 +35,36 @@ reason = "The hash-locked build and zipp runtime closure is installed during Doc
 
 [dependencies]
 status = "known"
-installer = "pip"
+package_manager = "pip"
 packages = [
-  "coherent-licensed==0.5.2",
-  "packaging==26.3",
-  "setuptools==84.0.0",
-  "setuptools-scm==10.2.1",
-  "vcs-versioning==2.3.1",
-  "zipp==4.1.0",
+    "coherent-licensed==0.5.2",
+    "packaging==26.3",
+    "setuptools==84.0.0",
+    "setuptools-scm==10.2.1",
+    "vcs-versioning==2.3.1",
+    "zipp==4.1.0",
 ]
-lock_artifact = { digest = "sha256:4ba29e58b3d26914ccd51cd4449fadd1a0d114b3392860bc6328f09155d0b3cf", size_bytes = 1628, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:4ba29e58b3d26914ccd51cd4449fadd1a0d114b3392860bc6328f09155d0b3cf", visibility = "private" }
+
+[dependencies.lock]
+digest = "sha256:d22ef9bab6df18d4976293a29d5eb4ad1aee2b29dfff08eeefa85521da7d6304"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:d22ef9bab6df18d4976293a29d5eb4ad1aee2b29dfff08eeefa85521da7d6304"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:581914d8ee35b445046de19523bd5610560cb1c8fa690e8f2545d5155d91af74"
+size_bytes = 998
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:581914d8ee35b445046de19523bd5610560cb1c8fa690e8f2545d5155d91af74"
+visibility = "private"
 
 [tests]
 framework = "pytest"

@@ -14,7 +14,7 @@ import tomllib
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Protocol
+from typing import Any, Protocol, cast
 
 from nl2repobench.authoring.catalog import CatalogCompiler
 from nl2repobench.domain.runtime import (
@@ -41,6 +41,8 @@ class HarborRuntimeCompiler(Protocol):
         task_root: Path,
         kind: str,
         output_root: Path,
+        *,
+        private_cas_root: Path | None = None,
     ) -> Path: ...
 
 
@@ -188,8 +190,61 @@ class HarborCompilerRegistry:
         """
 
         identity = self._runtime_for_compiled_task(task_root)
+        if artifact_resolver is not None:
+            declared: dict[str, object] = {}
+            for relative in (
+                "tests/private-artifact-refs.json",
+                "solution/oracle-ref.json",
+            ):
+                path = task_root / relative
+                if path.is_file() and not path.is_symlink():
+                    try:
+                        value = json.loads(path.read_text(encoding="utf-8"))
+                    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+                        raise UnknownRuntimeAdapterError(
+                            f"invalid private artifact refs: {path}"
+                        ) from exc
+                    if isinstance(value, dict):
+                        declared[relative] = value
+            artifact_resolver = artifact_resolver.scoped(
+                _private_artifact_digests(declared)
+            )
         compiler = self.resolve(identity)(toolchain_path, artifact_resolver)
+        if identity == RuntimeDiscriminator(
+            language=RuntimeLanguage.JAVA,
+            package_manager=PackageManager.MAVEN,
+        ):
+            prepare_java = cast(Any, compiler).prepare_control_bundle
+            return cast(Path, prepare_java(
+                task_root,
+                kind,
+                output_root,
+                private_cas_root=output_root / ".private-cas",
+            ))
         return compiler.prepare_control_bundle(task_root, kind, output_root)
+
+    def prepare_run_bundle(
+        self,
+        task_root: Path,
+        role: str,
+        output_root: Path,
+        toolchain_path: Path,
+        *,
+        artifact_resolver: LocalArtifactResolver | None = None,
+        private_cas_root: Path | None = None,
+    ) -> Path:
+        """Prepare a runtime role copy with task-scoped private artifacts."""
+
+        identity = self._runtime_for_compiled_task(task_root)
+        compiler = self.resolve(identity)(toolchain_path, artifact_resolver)
+        method = getattr(compiler, "prepare_run_bundle", None)
+        if not callable(method):
+            raise UnknownRuntimeAdapterError(
+                f"runtime {identity.language.value}+{identity.package_manager.value} "
+                "does not support role-scoped run preparation"
+            )
+        prepare = cast("Callable[..., Path]", method)
+        return prepare(task_root, role, output_root, private_cas_root)
 
     @staticmethod
     def _runtime_for_compiled_task(task_root: Path) -> RuntimeDiscriminator:

@@ -41,7 +41,7 @@ const pythonArgs = [
   "--expected",
   expected,
   "--metric-contract",
-  "fixed-test-pass-rate-v1",
+  "node-test-leaf-pass-rate-v1",
   "--output",
   output,
 ];

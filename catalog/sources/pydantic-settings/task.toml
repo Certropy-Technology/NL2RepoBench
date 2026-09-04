@@ -33,9 +33,44 @@ reason = "Third-party build and test dependencies are installed during the Docke
 
 [dependencies]
 status = "known"
-installer = "pip"
-lock_artifact = { digest = "sha256:b350283c9b3a343cc38b05affa57957f035da0794d4c074f3c50a666e2c86c89", size_bytes = 14279, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:b350283c9b3a343cc38b05affa57957f035da0794d4c074f3c50a666e2c86c89", visibility = "private" }
-packages = ["annotated-types==0.7.0", "editables==0.5", "hatchling==1.28.0", "packaging==26.0", "pathspec==1.0.4", "pluggy==1.6.0", "pydantic==2.13.4", "pydantic-core==2.46.4", "python-dotenv==1.2.2", "setuptools==80.9.0", "trove-classifiers==2026.6.1.19", "typing-extensions==4.15.0", "typing-inspection==0.4.4", "wheel==0.45.1"]
+package_manager = "pip"
+packages = [
+    "annotated-types==0.7.0",
+    "editables==0.5",
+    "hatchling==1.28.0",
+    "packaging==26.0",
+    "pathspec==1.0.4",
+    "pluggy==1.6.0",
+    "pydantic==2.13.4",
+    "pydantic-core==2.46.4",
+    "python-dotenv==1.2.2",
+    "setuptools==80.9.0",
+    "trove-classifiers==2026.6.1.19",
+    "typing-extensions==4.15.0",
+    "typing-inspection==0.4.4",
+    "wheel==0.45.1",
+]
+
+[dependencies.lock]
+digest = "sha256:77b9445bd790cab2c457887a022694032d8da34b934c6a0092bfd6d37b497dbc"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:77b9445bd790cab2c457887a022694032d8da34b934c6a0092bfd6d37b497dbc"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:ddf3d0d9c407b7e8ae129cc6c7bbaa1c0c7c01ce131cc568bf263c4066120f33"
+size_bytes = 1000
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:ddf3d0d9c407b7e8ae129cc6c7bbaa1c0c7c01ce131cc568bf263c4066120f33"
+visibility = "private"
 
 [tests]
 framework = "pytest"

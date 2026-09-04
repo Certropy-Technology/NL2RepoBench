@@ -35,20 +35,40 @@ reason = "The pure-Python build and runtime closure are installed from the priva
 
 [dependencies]
 status = "known"
-installer = "pip"
+package_manager = "pip"
 packages = [
-  "annotated-types==0.8.0",
-  "expandvars==1.1.2",
-  "idna==3.18",
-  "multidict==6.7.1",
-  "propcache==0.4.1",
-  "pydantic==2.13.4",
-  "pydantic-core==2.46.4",
-  "setuptools==84.0.0",
-  "typing-extensions==4.16.0",
-  "typing-inspection==0.4.4",
+    "annotated-types==0.8.0",
+    "expandvars==1.1.2",
+    "idna==3.18",
+    "multidict==6.7.1",
+    "propcache==0.4.1",
+    "pydantic==2.13.4",
+    "pydantic-core==2.46.4",
+    "setuptools==84.0.0",
+    "typing-extensions==4.16.0",
+    "typing-inspection==0.4.4",
 ]
-lock_artifact = { digest = "sha256:54d3d89472cf0919f20d83aa27182f4f7901214460b21928a37b78e81c09bbfe", size_bytes = 35078, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:54d3d89472cf0919f20d83aa27182f4f7901214460b21928a37b78e81c09bbfe", visibility = "private" }
+
+[dependencies.lock]
+digest = "sha256:c042b1fcc714dc46e98c3786c8059581522d289d7bd253728c084e959b67ac5a"
+size_bytes = 40960
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:c042b1fcc714dc46e98c3786c8059581522d289d7bd253728c084e959b67ac5a"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:0469b876cab18046060108500ef8510705b487f0404b30d73795cc7cdd75102d"
+size_bytes = 1000
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:0469b876cab18046060108500ef8510705b487f0404b30d73795cc7cdd75102d"
+visibility = "private"
 
 [tests]
 framework = "pytest"

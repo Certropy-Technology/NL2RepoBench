@@ -33,7 +33,7 @@ reason = "The candidate and verifier must remain offline, but no hash-locked dep
 
 [dependencies]
 status = "unknown"
-installer = "pip"
+package_manager = "pip"
 packages = []
 
 [tests]

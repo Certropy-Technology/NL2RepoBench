@@ -22,8 +22,9 @@ reference_source_fetch = "forbidden"
 reason = "The static audit does not establish a frozen model/data dependency closure or deterministic verifier boundary."
 [dependencies]
 status = "unknown"
-installer = "pip"
+package_manager = "pip"
 packages = []
+
 [tests]
 framework = "pytest"
 expected_total = 0

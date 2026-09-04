@@ -22,8 +22,9 @@ reference_source_fetch = "forbidden"
 reason = "Scientific dependency closure, data fixtures, collection, and separate verifier are not frozen."
 [dependencies]
 status = "unknown"
-installer = "pip"
+package_manager = "pip"
 packages = []
+
 [tests]
 framework = "pytest"
 expected_total = 0

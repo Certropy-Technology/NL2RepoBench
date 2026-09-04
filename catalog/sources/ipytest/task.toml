@@ -29,8 +29,10 @@ reason = "The legacy fixture has an unapproved packaging/line-ending overlay and
 
 [dependencies]
 status = "unknown"
-installer = "pip"
-packages = ["pytest, Jupyter, notebook, and native test dependencies are not a hash-locked offline closure"]
+package_manager = "pip"
+packages = [
+    "pytest, Jupyter, notebook, and native test dependencies are not a hash-locked offline closure",
+]
 
 [tests]
 framework = "pytest"

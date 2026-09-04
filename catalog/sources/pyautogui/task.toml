@@ -34,7 +34,8 @@ reason = "The pinned legacy verifier image is known, but no approved candidate d
 
 [dependencies]
 status = "unknown"
-installer = "pip"
+package_manager = "pip"
+packages = []
 
 [tests]
 framework = "pytest"

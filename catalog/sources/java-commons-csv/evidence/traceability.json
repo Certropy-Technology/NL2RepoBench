@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0",
+  "task_id": "java-commons-csv",
+  "source_revision": "5b99c860986a87f9da664bf47a3a7c0026673123",
+  "package": "org.apache.commons:commons-csv",
+  "source_archive": {
+    "sha256": "sha256:a1c7ff981e195c01797f44a3bf87db07f9759ec803f1c76abdff6462411c7c37",
+    "license_file": "LICENSE.txt",
+    "license_spdx": "Apache-2.0",
+    "license_sha256": "sha256:b1d2870f1a00e4d7f56576e5f0870cba109e041f8af66866cf5b499478e654e7"
+  },
+  "api_inventory": {
+    "main_java_files": 12,
+    "selected_symbols": [
+      "org.apache.commons.csv.CSVParser.parse",
+      "org.apache.commons.csv.CSVRecord.get",
+      "org.apache.commons.csv.CSVRecord.size",
+      "org.apache.commons.csv.CSVFormat.format"
+    ],
+    "excluded_behavior": [
+      "streaming parser builder variants",
+      "database ResultSet integration",
+      "Maven release, profile, plugin, and publishing configuration"
+    ]
+  },
+  "contract_leaf": {
+    "frozen_total": 4,
+    "framework": "trusted synthetic ContractMain",
+    "ids": ["rows", "field", "size", "format"],
+    "instruction_sections": ["Supports", "API Usage Guide", "Implementation Notes"]
+  },
+  "environment_adaptation": {
+    "candidate_build": "verifier-owned javac with --release 21",
+    "dependency_closure": "empty private Maven repository",
+    "upstream_pom": "not executed; metadata-only static validation"
+  }
+}

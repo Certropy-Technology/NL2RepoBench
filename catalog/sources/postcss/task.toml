@@ -41,21 +41,32 @@ reason = "The candidate and separate verifier run without egress. Exact npm v3 c
 
 [dependencies]
 status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
-packages = ["nanoid@3.3.18", "picocolors@1.1.1", "source-map-js@1.2.1"]
+packages = [
+    "nanoid@3.3.18",
+    "picocolors@1.1.1",
+    "source-map-js@1.2.1",
+]
 
-[dependencies.artifact]
-digest = "sha256:19bcd8e05e38de3a80b5ec32e970b34f693efe98f9ba49045182d76f3d2b3d35"
-size_bytes = 542720
-media_type = "application/vnd.nl2repobench.npm-bundle+tar"
-uri = "artifact://private/sha256:19bcd8e05e38de3a80b5ec32e970b34f693efe98f9ba49045182d76f3d2b3d35"
+[dependencies.lock]
+digest = "sha256:2bbb76e4fbea5005fbccc981cb0556d1e9db3f9e20df38543f3f55a13aad93ae"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:2bbb76e4fbea5005fbccc981cb0556d1e9db3f9e20df38543f3f55a13aad93ae"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:fa5efca5ab8caf377f8c616fd47a0087dd050bd480f364e21fddcf5abb050b31"
+size_bytes = 501760
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:fa5efca5ab8caf377f8c616fd47a0087dd050bd480f364e21fddcf5abb050b31"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:fc34310b4803e9ce93525106679002bafc6fbcde9afc4d0f99bb3e334c5db629"
+size_bytes = 4923
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:fc34310b4803e9ce93525106679002bafc6fbcde9afc4d0f99bb3e334c5db629"
 visibility = "private"
 
 [tests]

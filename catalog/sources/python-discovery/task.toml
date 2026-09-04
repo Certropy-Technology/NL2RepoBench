@@ -35,20 +35,40 @@ reason = "Build dependencies are installed from a private hash-locked requiremen
 
 [dependencies]
 status = "known"
-installer = "pip"
+package_manager = "pip"
 packages = [
-  "filelock==3.32.3",
-  "hatch-vcs==0.5.0",
-  "hatchling==1.28.0",
-  "packaging==26.3",
-  "pathspec==1.1.1",
-  "pluggy==1.6.0",
-  "setuptools==84.0.0",
-  "setuptools-scm==10.2.1",
-  "trove-classifiers==2026.6.1.19",
-  "vcs-versioning==2.3.1",
+    "filelock==3.32.3",
+    "hatch-vcs==0.5.0",
+    "hatchling==1.28.0",
+    "packaging==26.3",
+    "pathspec==1.1.1",
+    "pluggy==1.6.0",
+    "setuptools==84.0.0",
+    "setuptools-scm==10.2.1",
+    "trove-classifiers==2026.6.1.19",
+    "vcs-versioning==2.3.1",
 ]
-lock_artifact = { digest = "sha256:d74a9e86b1d99df47ebb7d7de1d55c9f5c76629127a0659e8ac34c7c1282e005", size_bytes = 2590, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:d74a9e86b1d99df47ebb7d7de1d55c9f5c76629127a0659e8ac34c7c1282e005", visibility = "private" }
+
+[dependencies.lock]
+digest = "sha256:f7d7fc98fcbe2723a31626acc156e92626c10d8fd008bb67ac0975e65e98f99d"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:f7d7fc98fcbe2723a31626acc156e92626c10d8fd008bb67ac0975e65e98f99d"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:c9e84cb36167387cd4812eb63e06fbe2bc81f48dce605ecaa5a65a540d7fb6eb"
+size_bytes = 998
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:c9e84cb36167387cd4812eb63e06fbe2bc81f48dce605ecaa5a65a540d7fb6eb"
+visibility = "private"
 
 [tests]
 framework = "pytest"

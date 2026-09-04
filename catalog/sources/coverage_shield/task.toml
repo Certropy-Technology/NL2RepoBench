@@ -37,8 +37,14 @@ reference_source_fetch = "forbidden"
 reason = "Third-party build and test dependencies are installed during the Docker build phase, which has network. The agent phase therefore needs no egress. A model provider host, when an in-container agent needs one, is injected per run via Harbor agent.extra_allowed_hosts instead of being pinned in task metadata."
 [dependencies]
 status = "unknown"
-installer = "pip"
-packages = ["coverage", "pandas", "seaborn", "pytest", "setuptools"]
+package_manager = "pip"
+packages = [
+    "coverage",
+    "pandas",
+    "seaborn",
+    "pytest",
+    "setuptools",
+]
 
 [tests]
 framework = "pytest"

@@ -34,9 +34,32 @@ reason = "The hash-locked dnspython and idna closure is installed during image b
 
 [dependencies]
 status = "known"
-installer = "pip"
-packages = ["dnspython==2.8.0", "idna==3.15"]
-lock_artifact = { digest = "sha256:0a5d43ff7f54ed8301e6a986794e53b1632f48db0d05975173298f0bf9b3e361", size_bytes = 877, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:0a5d43ff7f54ed8301e6a986794e53b1632f48db0d05975173298f0bf9b3e361", visibility = "private" }
+package_manager = "pip"
+packages = [
+    "dnspython==2.8.0",
+    "idna==3.15",
+]
+
+[dependencies.lock]
+digest = "sha256:a8b03e7279b464a5ccab82a380fb5705eb27c4f6311a0e52f3474672f544a487"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:a8b03e7279b464a5ccab82a380fb5705eb27c4f6311a0e52f3474672f544a487"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:7037e3c636ff82f68d17723483009b310b0d7c86e77c935e41b0d5a0191413eb"
+size_bytes = 996
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:7037e3c636ff82f68d17723483009b310b0d7c86e77c935e41b0d5a0191413eb"
+visibility = "private"
 
 [tests]
 framework = "pytest"

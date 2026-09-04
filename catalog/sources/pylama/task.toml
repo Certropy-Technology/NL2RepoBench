@@ -29,8 +29,10 @@ reason = "The immutable image contains unapproved setup/test overlays and no has
 
 [dependencies]
 status = "unknown"
-installer = "pip"
-packages = ["linter plugin and test dependencies are not a hash-locked offline closure"]
+package_manager = "pip"
+packages = [
+    "linter plugin and test dependencies are not a hash-locked offline closure",
+]
 
 [tests]
 framework = "pytest"

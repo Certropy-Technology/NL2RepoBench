@@ -35,14 +35,43 @@ reason = "Candidate and verifier dependencies are installed during image build f
 
 [dependencies]
 status = "known"
-installer = "pip"
-packages = ["distlib==0.4.3", "filelock==3.32.4", "hatch-vcs==0.5.0", "hatchling==1.32.0", "packaging==26.3", "pathspec==1.1.1", "platformdirs==4.11.5", "pluggy==1.6.0", "python-discovery==1.6.0", "setuptools==84.0.0", "setuptools-scm==10.2.1", "tomlkit==0.15.1", "trove-classifiers==2026.6.1.19", "vcs-versioning==2.3.1"]
+package_manager = "pip"
+packages = [
+    "distlib==0.4.3",
+    "filelock==3.32.4",
+    "hatch-vcs==0.5.0",
+    "hatchling==1.32.0",
+    "packaging==26.3",
+    "pathspec==1.1.1",
+    "platformdirs==4.11.5",
+    "pluggy==1.6.0",
+    "python-discovery==1.6.0",
+    "setuptools==84.0.0",
+    "setuptools-scm==10.2.1",
+    "tomlkit==0.15.1",
+    "trove-classifiers==2026.6.1.19",
+    "vcs-versioning==2.3.1",
+]
 
-[dependencies.lock_artifact]
-digest = "sha256:dbb1d8ef1652f52e6f974af4db034d2333fd4414702ff793d69803e8bea36966"
-size_bytes = 3145
-media_type = "text/plain; charset=utf-8"
-uri = "artifact://private/sha256:dbb1d8ef1652f52e6f974af4db034d2333fd4414702ff793d69803e8bea36966"
+[dependencies.lock]
+digest = "sha256:3baaf65e39fa82f7141a9d7f2cdb1d6930d9a29a13cc2b1ef3a4623d6fedd947"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:3baaf65e39fa82f7141a9d7f2cdb1d6930d9a29a13cc2b1ef3a4623d6fedd947"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:bc106c3faa755dc7a35d0dd2b9506d3cd39e8eeaf505a608191aa3ee7944eb23"
+size_bytes = 998
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:bc106c3faa755dc7a35d0dd2b9506d3cd39e8eeaf505a608191aa3ee7944eb23"
 visibility = "private"
 
 [tests]

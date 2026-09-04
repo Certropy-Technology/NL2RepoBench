@@ -6,7 +6,15 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "medium"
 category = "json-parser"
-tags = ["node", "npm", "esm", "jsonc", "parser", "formatter", "editor"]
+tags = [
+    "node",
+    "npm",
+    "esm",
+    "jsonc",
+    "parser",
+    "formatter",
+    "editor",
+]
 language = "node"
 
 [source]
@@ -41,24 +49,49 @@ libc = "glibc"
 
 [dependencies]
 status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
 packages = []
-artifact = { digest = "sha256:95f5d2f3b01cdde10bd0755a35f81fcafe3481f035a87ba55604092f3a5eab48", size_bytes = 10240, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:95f5d2f3b01cdde10bd0755a35f81fcafe3481f035a87ba55604092f3a5eab48", visibility = "private" }
+
+[dependencies.lock]
+digest = "sha256:2812890189bd3bdee5ed6e2cc4ee361b0587568a35542a3695531c4395cf9b7e"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:2812890189bd3bdee5ed6e2cc4ee361b0587568a35542a3695531c4395cf9b7e"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:63bdad568ff0174494aaaf128eafb1340ee1f22e4187976cc5fd107a141fdd22"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:63bdad568ff0174494aaaf128eafb1340ee1f22e4187976cc5fd107a141fdd22"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:b28b0960067295f20f5817b3c7d645b1367bca22d7da9af643d1224bf5073cad"
+size_bytes = 1278
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:b28b0960067295f20f5817b3c7d645b1367bca22d7da9af643d1224bf5073cad"
+visibility = "private"
 
 [tests]
 framework = "node:test"
 report_format = "node-test-json-v1"
 expected_total = 37
 expected_total_source = "frozen-collection"
-commands_artifact = { digest = "sha256:e3eae4a8e5200c195e49c2a40e53b184d57bb3c291d1abbd94f2710daec42233", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:e3eae4a8e5200c195e49c2a40e53b184d57bb3c291d1abbd94f2710daec42233", visibility = "private" }
-test_bundle = { digest = "sha256:44f78a303e09ed29d26b217fa368606f063079d931dd5876aa9d052132069f55", size_bytes = 30720, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:44f78a303e09ed29d26b217fa368606f063079d931dd5876aa9d052132069f55", visibility = "private" }
+
+[tests.commands_artifact]
+digest = "sha256:7fb226a910c24e687c97db717df2114cebb65a78cb609d73becadf70fb3826c3"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.node-commands+tar"
+uri = "artifact://private/sha256:7fb226a910c24e687c97db717df2114cebb65a78cb609d73becadf70fb3826c3"
+visibility = "private"
+
+[tests.test_bundle]
+digest = "sha256:31a55577819f9bd011559f5e2ed8a47d81c112b6f698b41a85ffc1d6f96c46a2"
+size_bytes = 30720
+media_type = "application/vnd.nl2repobench.node-tests+tar"
+uri = "artifact://private/sha256:31a55577819f9bd011559f5e2ed8a47d81c112b6f698b41a85ffc1d6f96c46a2"
+visibility = "private"
 
 [metric]
 contract_id = "node-test-leaf-pass-rate-v1"
@@ -66,7 +99,15 @@ collection_mismatch = "fail"
 
 [harbor]
 description = "Scripts-stripped zero-dependency JSONC parser with a bounded JSON-safe parse, modify, and format contract."
-keywords = ["node", "npm", "esm", "jsonc", "parser", "formatter", "editor"]
+keywords = [
+    "node",
+    "npm",
+    "esm",
+    "jsonc",
+    "parser",
+    "formatter",
+    "editor",
+]
 agent_timeout_sec = 1200.0
 verifier_timeout_sec = 900.0
 candidate_install_timeout_sec = 90.0
@@ -84,8 +125,8 @@ owner = "jsonc-parser-repair"
 reason = "Fresh production compile and Harbor gates passed: Oracle 37/37 reward 1.0; empty 0 collected; stub 37 collected with verifier reward 1/37; forgery 37 collected with verifier reward 1/37 despite forged workspace reward; all verifier network.json probes report public_network_available=false."
 
 [oracle_bundle]
-digest = "sha256:3d2ff9790b3049f39f3f93621a45bd79cef6ec3f89485611a1812cc1c09280b8"
+digest = "sha256:7591b6c5e93182a3fb457514946da368f538ac7e408b7e3add9b4b6279a3240d"
 size_bytes = 389120
 media_type = "application/vnd.nl2repobench.oracle+tar"
-uri = "artifact://private/sha256:3d2ff9790b3049f39f3f93621a45bd79cef6ec3f89485611a1812cc1c09280b8"
+uri = "artifact://private/sha256:7591b6c5e93182a3fb457514946da368f538ac7e408b7e3add9b4b6279a3240d"
 visibility = "private"

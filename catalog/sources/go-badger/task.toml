@@ -33,21 +33,41 @@ reason = "Candidate and verifier use a private pre-materialized Go module closur
 
 [dependencies]
 status = "known"
-installer = "system"
+package_manager = "go-modules"
 packages = [
-  "github.com/cespare/xxhash/v2@v2.3.0",
-  "github.com/dgraph-io/ristretto/v2@v2.2.0",
-  "github.com/dustin/go-humanize@v1.0.1",
-  "github.com/google/flatbuffers@v25.2.10+incompatible",
-  "github.com/klauspost/compress@v1.18.0",
-  "github.com/spf13/cobra@v1.9.1",
-  "github.com/stretchr/testify@v1.11.1",
-  "go.opentelemetry.io/contrib/zpages@v0.66.0",
-  "go.opentelemetry.io/otel@v1.41.0",
-  "golang.org/x/sys@v0.41.0",
-  "google.golang.org/protobuf@v1.36.7",
+    "github.com/cespare/xxhash/v2@v2.3.0",
+    "github.com/dgraph-io/ristretto/v2@v2.2.0",
+    "github.com/dustin/go-humanize@v1.0.1",
+    "github.com/google/flatbuffers@v25.2.10+incompatible",
+    "github.com/klauspost/compress@v1.18.0",
+    "github.com/spf13/cobra@v1.9.1",
+    "github.com/stretchr/testify@v1.11.1",
+    "go.opentelemetry.io/contrib/zpages@v0.66.0",
+    "go.opentelemetry.io/otel@v1.41.0",
+    "golang.org/x/sys@v0.41.0",
+    "google.golang.org/protobuf@v1.36.7",
 ]
-module_bundle = { digest = "sha256:b36996f41a537acb138492a6986c8da64c4a34019483be45b59e4556cd876abc", size_bytes = 2623622, uri = "artifact://private/sha256:b36996f41a537acb138492a6986c8da64c4a34019483be45b59e4556cd876abc", visibility = "private" }
+
+[dependencies.lock]
+digest = "sha256:ec206cbd9dee0daa8ee486f8ebf7027f98980d0c148a43530a1e6d5da8ae0a08"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:ec206cbd9dee0daa8ee486f8ebf7027f98980d0c148a43530a1e6d5da8ae0a08"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:76606aef5e136173f8c9e6a6c6caafa181b4474c966f0e753bc42fae6996e51f"
+size_bytes = 15882240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:76606aef5e136173f8c9e6a6c6caafa181b4474c966f0e753bc42fae6996e51f"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:f7606e929225f991967d09efdb4ff983645662a1e58d73cdf439f4f883ccae47"
+size_bytes = 210687
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:f7606e929225f991967d09efdb4ff983645662a1e58d73cdf439f4f883ccae47"
+visibility = "private"
 
 [tests]
 framework = "pytest"

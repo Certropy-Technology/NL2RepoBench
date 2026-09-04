@@ -40,16 +40,8 @@ architecture = "linux/amd64"
 libc = "glibc"
 
 [dependencies]
-status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
+status = "unknown"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
-artifact = { digest = "sha256:aa416bda29b7abe7bc918632746f594b28c50b523c2738acc54d2da0f103c345", size_bytes = 449, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:aa416bda29b7abe7bc918632746f594b28c50b523c2738acc54d2da0f103c345", visibility = "private" }
 packages = []
 
 [tests]

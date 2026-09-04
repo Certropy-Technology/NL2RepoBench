@@ -29,8 +29,27 @@ reason = "The exact source archive is frozen, but the optional backend/test depe
 
 [dependencies]
 status = "unknown"
-installer = "pip"
-packages = ["attrs>=25.4.0", "typing-extensions>=4.14.0", "exceptiongroup>=1.1.1; python_version < '3.11'", "pymongo", "cbor2", "msgpack", "msgspec", "orjson", "PyYAML", "tomlkit", "tomli", "ujson", "hypothesis", "pytest", "pytest-typing", "mypy", "pytest-benchmark", "immutables"]
+package_manager = "pip"
+packages = [
+    "attrs>=25.4.0",
+    "typing-extensions>=4.14.0",
+    "exceptiongroup>=1.1.1; python_version < '3.11'",
+    "pymongo",
+    "cbor2",
+    "msgpack",
+    "msgspec",
+    "orjson",
+    "PyYAML",
+    "tomlkit",
+    "tomli",
+    "ujson",
+    "hypothesis",
+    "pytest",
+    "pytest-typing",
+    "mypy",
+    "pytest-benchmark",
+    "immutables",
+]
 
 [tests]
 framework = "pytest"

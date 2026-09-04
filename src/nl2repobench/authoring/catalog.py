@@ -88,8 +88,8 @@ class DeclarativeTaskSource(RecordModel):
                 raise ValueError(
                     "Java tasks require environment.runtime with package_manager=maven"
                 )
-            if self.dependencies.installer != "maven":
-                raise ValueError("Java tasks require dependencies.installer=maven")
+            if self.dependencies.package_manager != "maven":
+                raise ValueError("Java tasks require dependencies.package_manager=maven")
             if self.tests.framework != "junit-platform":
                 raise ValueError("Java tasks require tests.framework=junit-platform")
         return self
@@ -453,7 +453,7 @@ status = "unknown"
 
 [dependencies]
 status = "unknown"
-installer = "uv"
+package_manager = "uv"
 
 [tests]
 framework = "pytest"

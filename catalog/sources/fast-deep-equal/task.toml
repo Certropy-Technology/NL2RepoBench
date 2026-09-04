@@ -6,7 +6,14 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "easy"
 category = "deep-equality"
-tags = ["node", "npm", "commonjs", "json", "equality", "subprocess"]
+tags = [
+    "node",
+    "npm",
+    "commonjs",
+    "json",
+    "equality",
+    "subprocess",
+]
 language = "node"
 
 [source]
@@ -41,24 +48,49 @@ libc = "glibc"
 
 [dependencies]
 status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
 packages = []
-artifact = { digest = "sha256:949eaa861a331f8273258a69eed71002b5b484228045d85cfe7ea4558f9ccf9f", size_bytes = 10240, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:949eaa861a331f8273258a69eed71002b5b484228045d85cfe7ea4558f9ccf9f", visibility = "private" }
+
+[dependencies.lock]
+digest = "sha256:0211ee3ac261dd3f29e608f08a6c0fdd218adf21597509594777c0acf988a5fc"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:0211ee3ac261dd3f29e608f08a6c0fdd218adf21597509594777c0acf988a5fc"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:63bdad568ff0174494aaaf128eafb1340ee1f22e4187976cc5fd107a141fdd22"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:63bdad568ff0174494aaaf128eafb1340ee1f22e4187976cc5fd107a141fdd22"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:b3cfb8d8c3da42a20e1e9d84afbbba35a53886d9cc858b0715d3d53fc05d7006"
+size_bytes = 1278
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:b3cfb8d8c3da42a20e1e9d84afbbba35a53886d9cc858b0715d3d53fc05d7006"
+visibility = "private"
 
 [tests]
 framework = "node:test"
 report_format = "node-test-json-v1"
 expected_total = 20
 expected_total_source = "frozen-collection"
-commands_artifact = { digest = "sha256:e9338437d214111fee4790824bfc08ed1346a2519c1bcb439d53217221ed1040", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-commands+tar", uri = "artifact://private/sha256:e9338437d214111fee4790824bfc08ed1346a2519c1bcb439d53217221ed1040", visibility = "private" }
-test_bundle = { digest = "sha256:71a7b368d85c8aea4bf5ec64900e317cb4b815793ed31d7a60e866aeb618d97f", size_bytes = 10240, media_type = "application/vnd.nl2repobench.node-tests+tar", uri = "artifact://private/sha256:71a7b368d85c8aea4bf5ec64900e317cb4b815793ed31d7a60e866aeb618d97f", visibility = "private" }
+
+[tests.commands_artifact]
+digest = "sha256:e9338437d214111fee4790824bfc08ed1346a2519c1bcb439d53217221ed1040"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.node-commands+tar"
+uri = "artifact://private/sha256:e9338437d214111fee4790824bfc08ed1346a2519c1bcb439d53217221ed1040"
+visibility = "private"
+
+[tests.test_bundle]
+digest = "sha256:8c25a5df40fde9b89bc33429ee1bcc03fac961372e4e15cb55258d77a342cce0"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.node-tests+tar"
+uri = "artifact://private/sha256:8c25a5df40fde9b89bc33429ee1bcc03fac961372e4e15cb55258d77a342cce0"
+visibility = "private"
 
 [metric]
 contract_id = "node-test-leaf-pass-rate-v1"
@@ -66,7 +98,14 @@ collection_mismatch = "fail"
 
 [harbor]
 description = "Build the fast-deep-equal CommonJS JSON equality package from an empty workspace."
-keywords = ["node", "npm", "commonjs", "json", "equality", "separate-verifier"]
+keywords = [
+    "node",
+    "npm",
+    "commonjs",
+    "json",
+    "equality",
+    "separate-verifier",
+]
 agent_timeout_sec = 900.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 90.0
@@ -84,8 +123,8 @@ owner = "repair/fast-deep-equal"
 reason = "After the shared Node network-proof and toolchain digest change, official Harbor 0.21.0 revalidation passed Oracle 20/20 with reward 1.0 and fresh empty, stub, and forgery controls with reward 0.0; every verifier run generated network.json proving no public egress. Review, pilot, and publication remain out of scope."
 
 [oracle_bundle]
-digest = "sha256:0a878d3dc5bac73a18378cada7fcf709f586053183b0209afa73efd4e69d0a12"
+digest = "sha256:9e9ac858e7568b918e7bb8fad9fe3413501c1567dbc3a739f535178a22858297"
 size_bytes = 10240
 media_type = "application/vnd.nl2repobench.private-bundle+tar"
-uri = "artifact://private/sha256:0a878d3dc5bac73a18378cada7fcf709f586053183b0209afa73efd4e69d0a12"
+uri = "artifact://private/sha256:9e9ac858e7568b918e7bb8fad9fe3413501c1567dbc3a739f535178a22858297"
 visibility = "private"

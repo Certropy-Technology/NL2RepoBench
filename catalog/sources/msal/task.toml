@@ -35,9 +35,39 @@ reason = "The candidate and separate verifier run offline. Dependencies are inst
 
 [dependencies]
 status = "known"
-installer = "pip"
-packages = ["certifi==2026.7.22", "cffi==2.1.1", "charset-normalizer==3.5.1", "cryptography==50.0.0", "idna==3.19", "pycparser==3.0", "PyJWT==2.13.0", "requests==2.34.2", "urllib3==2.7.0"]
-lock_artifact = { digest = "sha256:1073c1bd5ad52fbdf3ced009f7ba7f564cccdf4cfb14775835c6a5e49c4cbe6d", size_bytes = 28469, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:1073c1bd5ad52fbdf3ced009f7ba7f564cccdf4cfb14775835c6a5e49c4cbe6d", visibility = "private" }
+package_manager = "pip"
+packages = [
+    "certifi==2026.7.22",
+    "cffi==2.1.1",
+    "charset-normalizer==3.5.1",
+    "cryptography==50.0.0",
+    "idna==3.19",
+    "pycparser==3.0",
+    "PyJWT==2.13.0",
+    "requests==2.34.2",
+    "urllib3==2.7.0",
+]
+
+[dependencies.lock]
+digest = "sha256:034a219702bf4eec0e7139c312544c7f6b579856860a49764ee2cb2c9eac9140"
+size_bytes = 30720
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:034a219702bf4eec0e7139c312544c7f6b579856860a49764ee2cb2c9eac9140"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:e8cee45a40c3f879b885a5454b9a8e83c4a7de7b9e8948decf73de277025bc66"
+size_bytes = 1000
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:e8cee45a40c3f879b885a5454b9a8e83c4a7de7b9e8948decf73de277025bc66"
+visibility = "private"
 
 [tests]
 framework = "pytest"

@@ -3,7 +3,7 @@ FROM --platform=linux/amd64 docker.io/library/node@sha256:a9f5f7c91a432850b2a8a7
 FROM --platform=linux/amd64 nl2repobench/openhands-sdk-fork:930e9b1da-bookworm
 
 LABEL org.nl2repobench.agent-runtime-image="nl2repobench/openhands-sdk-fork:930e9b1da-bookworm" \
-  org.nl2repobench.agent-runtime-image-id="sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f" \
+  org.nl2repobench.agent-runtime-image-id="sha256:3b9288ec42f69da761f0aedb9a72c6888376e9395f9122192aca67e81d913c79" \
   org.nl2repobench.agent-dependency-build="npm-offline-bundle-v1"
 
 COPY --from=node-runtime /usr/local/bin/node /usr/local/bin/node

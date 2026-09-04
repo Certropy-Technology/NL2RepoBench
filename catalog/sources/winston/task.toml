@@ -41,16 +41,41 @@ libc = "glibc"
 
 [dependencies]
 status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-artifact = { digest = "sha256:603ce4138f7c02c8a4f610bc6dd6c3ceeff6219afe4064d340fb688b67665e61", size_bytes = 33894400, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:603ce4138f7c02c8a4f610bc6dd6c3ceeff6219afe4064d340fb688b67665e61", visibility = "private" }
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
-packages = ["@colors/colors", "@dabh/diagnostics", "async", "is-stream", "logform", "one-time", "readable-stream", "safe-stable-stringify", "stack-trace", "triple-beam", "winston-transport"]
+packages = [
+    "@colors/colors",
+    "@dabh/diagnostics",
+    "async",
+    "is-stream",
+    "logform",
+    "one-time",
+    "readable-stream",
+    "safe-stable-stringify",
+    "stack-trace",
+    "triple-beam",
+    "winston-transport",
+]
+
+[dependencies.lock]
+digest = "sha256:2cdfdd4a36c72dfba485c31c17c81da71ce1cd03f120ee01eddb67b3e69319ed"
+size_bytes = 573440
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:2cdfdd4a36c72dfba485c31c17c81da71ce1cd03f120ee01eddb67b3e69319ed"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:38d0b9f56f6f558ce403c829b30b9a131c843efc2bf5edaa6fccbac7e3135807"
+size_bytes = 32266240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:38d0b9f56f6f558ce403c829b30b9a131c843efc2bf5edaa6fccbac7e3135807"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:f15edcd33763b5067e2549f9d05145b7ca56225bb61b1ef63dd0fdd3507cff5b"
+size_bytes = 361906
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:f15edcd33763b5067e2549f9d05145b7ca56225bb61b1ef63dd0fdd3507cff5b"
+visibility = "private"
 
 [tests]
 framework = "node:test"

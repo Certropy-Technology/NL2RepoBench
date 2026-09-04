@@ -35,22 +35,19 @@ reference_source_fetch = "forbidden"
 reason = "The package and tool dependency closure is not frozen; candidate and verifier execution remain network-isolated."
 
 [dependencies]
-# doit declares no runtime requirements. These are its unpinned build/dev and
-# behavior-changing optional requirements, plus pytest from the provisional
-# collection probe. They are observations, not an offline dependency closure.
 status = "unknown"
-installer = "pip"
+package_manager = "pip"
 packages = [
-  "setuptools>=68.0",
-  "build",
-  "twine",
-  "pyflakes>=3.0",
-  "pycodestyle>=2.10",
-  "rut>=0.3",
-  "coverage>=7.0",
-  "tomli; python_version < '3.11'",
-  "cloudpickle; platform_python_implementation != 'PyPy'",
-  "pytest",
+    "setuptools>=68.0",
+    "build",
+    "twine",
+    "pyflakes>=3.0",
+    "pycodestyle>=2.10",
+    "rut>=0.3",
+    "coverage>=7.0",
+    "tomli; python_version < '3.11'",
+    "cloudpickle; platform_python_implementation != 'PyPy'",
+    "pytest",
 ]
 
 [tests]

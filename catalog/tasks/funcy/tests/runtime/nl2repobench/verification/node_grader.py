@@ -57,9 +57,11 @@ def _node_report(report: EvaluationResult) -> NodeTestReportV2 | None:
     )
 
 
-def _as_node_result(result: EvaluationResult) -> NodeGradingResultV2:
+def _as_node_result(
+    result: EvaluationResult, *, metric_contract_id: str | None = None
+) -> NodeGradingResultV2:
     return NodeGradingResultV2(
-        metric_contract=result.metric_contract,
+        metric_contract=metric_contract_id or result.metric_contract,
         valid=result.valid,
         reward=result.reward,
         expected_total=result.frozen_total,
@@ -96,9 +98,13 @@ def grade_node_test_report(
     if expected_total <= 0:
         raise ValueError("expected_total must be positive")
     contract = metric_contract_from_legacy(metric_contract)
+
+    def as_node_result(result: EvaluationResult) -> NodeGradingResultV2:
+        requested_id = metric_contract if isinstance(metric_contract, str) else None
+        return _as_node_result(result, metric_contract_id=requested_id)
     if explicit_reason is not None:
         canonical_explicit_reason = canonical_reason(explicit_reason)
-        return _as_node_result(
+        return as_node_result(
             failure_result_for_reason(
                 contract=contract,
                 expected_total=expected_total,
@@ -107,7 +113,7 @@ def grade_node_test_report(
             )
         )
     if runner_exit_code is not None and runner_exit_code not in {0, 1}:
-        return _as_node_result(
+        return as_node_result(
             failure_result_for_reason(
                 contract=contract,
                 expected_total=expected_total,
@@ -122,7 +128,7 @@ def grade_node_test_report(
             trusted_runner_exit_code=runner_exit_code,
         )
     except ReportNormalizationError as exc:
-        return _as_node_result(
+        return as_node_result(
             failure_result_for_reason(
                 contract=contract,
                 expected_total=expected_total,
@@ -131,7 +137,7 @@ def grade_node_test_report(
                 details=exc.details,
             )
         )
-    return _as_node_result(evaluate_leaf_report(report, contract))
+    return as_node_result(evaluate_leaf_report(report, contract))
 
 
 def write_node_grading_outputs(result: NodeGradingResultV2, output_dir: Path) -> None:

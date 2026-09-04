@@ -41,7 +41,7 @@ def test_runtime_discriminator_reads_explicit_java_source() -> None:
     result = RuntimeDiscriminator.from_catalog_source(
         {
             "metadata": {"language": "java"},
-            "dependencies": {"installer": "maven"},
+            "dependencies": {"package_manager": "maven"},
         }
     )
     assert result == RuntimeDiscriminator(
@@ -62,7 +62,7 @@ def test_runtime_discriminator_reads_explicit_python_source() -> None:
     result = RuntimeDiscriminator.from_catalog_source(
         {
             "metadata": {"language": "python"},
-            "dependencies": {"installer": "pip"},
+            "dependencies": {"package_manager": "pip"},
         }
     )
     assert result == RuntimeDiscriminator(
@@ -94,7 +94,7 @@ def test_runtime_discriminator_reads_explicit_node_source() -> None:
     [
         (
             {"metadata": {"language": "python"}, "dependencies": {}},
-            "dependencies.installer",
+            "dependencies.package_manager",
         ),
         (
             {

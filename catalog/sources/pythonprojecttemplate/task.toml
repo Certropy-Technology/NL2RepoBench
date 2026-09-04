@@ -32,17 +32,34 @@ reference_source_fetch = "forbidden"
 reason = "Third-party build and test dependencies are installed during the Docker build phase, which has network. The agent phase therefore needs no egress, and the Oracle bundle ships the frozen source archive locally so even an Oracle run needs no host authorization. A model provider host, when an in-container agent needs one, is injected per run via Harbor agent.extra_allowed_hosts instead of being pinned in task metadata."
 
 [dependencies]
-# setuptools/wheel supply the declared setuptools.build_meta backend because the
-# candidate install runs `pip install --no-deps --no-build-isolation`; numpy is
-# the upstream runtime dependency.
 status = "known"
-installer = "pip"
+package_manager = "pip"
 packages = [
-  "setuptools==80.10.2",
-  "wheel==0.45.1",
-  "numpy==2.2.6",
+    "setuptools==80.10.2",
+    "wheel==0.45.1",
+    "numpy==2.2.6",
 ]
-lock_artifact = { digest = "sha256:0f3dedf79c6b58611093e452fea6fcd7067db300460a789c86c3577366cf6aa9", size_bytes = 374, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:0f3dedf79c6b58611093e452fea6fcd7067db300460a789c86c3577366cf6aa9", visibility = "private" }
+
+[dependencies.lock]
+digest = "sha256:f86472131598bcb52db7c559c5d425c4460e9a3e61871d0faff1d00b96a715ff"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:f86472131598bcb52db7c559c5d425c4460e9a3e61871d0faff1d00b96a715ff"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:db74ad8a2401d88f9287b6c90f42c5b082a6c839ca01945880f22627a31e7e2a"
+size_bytes = 996
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:db74ad8a2401d88f9287b6c90f42c5b082a6c839ca01945880f22627a31e7e2a"
+visibility = "private"
 
 [tests]
 framework = "pytest"

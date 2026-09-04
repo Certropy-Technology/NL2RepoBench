@@ -35,9 +35,36 @@ reason = "The exact third-party runtime, test, and build closure is hash-locked 
 
 [dependencies]
 status = "known"
-installer = "pip"
-packages = ["botocore==1.43.78", "jmespath==1.0.1", "s3transfer==0.19.0", "pytest==8.4.2", "setuptools==80.10.2", "wheel==0.45.1"]
-lock_artifact = { digest = "sha256:b60bc17b2558fc212aaa469f7d26d9cdb8f72803a6acc9b96326fd6d028187c8", size_bytes = 3580, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:b60bc17b2558fc212aaa469f7d26d9cdb8f72803a6acc9b96326fd6d028187c8", visibility = "private" }
+package_manager = "pip"
+packages = [
+    "botocore==1.43.78",
+    "jmespath==1.0.1",
+    "s3transfer==0.19.0",
+    "pytest==8.4.2",
+    "setuptools==80.10.2",
+    "wheel==0.45.1",
+]
+
+[dependencies.lock]
+digest = "sha256:eef207f47b99652279922c5633adeef97742f6cdb2011aa3778de58f71bc07b3"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:eef207f47b99652279922c5633adeef97742f6cdb2011aa3778de58f71bc07b3"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:d1de8348dab21461e39568040c8043715c760c277b30770856a6a57f6b418eab"
+size_bytes = 998
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:d1de8348dab21461e39568040c8043715c760c277b30770856a6a57f6b418eab"
+visibility = "private"
 
 [tests]
 framework = "pytest"

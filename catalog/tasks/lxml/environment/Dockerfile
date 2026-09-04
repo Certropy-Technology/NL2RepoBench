@@ -1,6 +1,6 @@
 FROM --platform=linux/amd64 nl2repobench/openhands-sdk-fork:930e9b1da
 
-LABEL org.nl2repobench.agent-runtime-image="nl2repobench/openhands-sdk-fork:930e9b1da" org.nl2repobench.agent-runtime-image-id="sha256:70525a5fbee81f4d202b7f7de14857fe78f961ce2ec3995efd1a4850e45c7ea5" org.nl2repobench.agent-dependency-build="pip-index-hash-locked-v1"
+LABEL org.nl2repobench.agent-runtime-image="nl2repobench/openhands-sdk-fork:930e9b1da" org.nl2repobench.agent-runtime-image-id="sha256:21f0ba5b3649db3ccc91b1128e5c8c6ffb915d4a8a04faaa11162793099dfac8" org.nl2repobench.agent-dependency-build="pip-index-hash-locked-v1"
 
 RUN apt-get update && apt-get install -y --no-install-recommends build-essential=12.12 git=1:2.47.3-0+deb13u1 pkg-config=1.8.1-4 libxml2-dev=2.12.7+dfsg+really2.9.14-2.1+deb13u3 libxslt1-dev=1.1.35-1.2+deb13u3 zlib1g-dev=1:1.3.dfsg+really1.3.1-1+b1 && rm -rf /var/lib/apt/lists/*
 

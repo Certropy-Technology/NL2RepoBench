@@ -33,9 +33,29 @@ reason = "The candidate and verifier run without network; the standard-library m
 
 [dependencies]
 status = "known"
-installer = "system"
+package_manager = "go-modules"
 packages = []
-module_bundle = { digest = "sha256:a317d89249a4dc6d2fc63bd79c0dc557afef0bde7d0062f5514649ac1ea03439", size_bytes = 10240, uri = "artifact://private/sha256:a317d89249a4dc6d2fc63bd79c0dc557afef0bde7d0062f5514649ac1ea03439", visibility = "private" }
+
+[dependencies.lock]
+digest = "sha256:873c5d8337fe6d26085d4ccafa782d5ac0e80e34111ad51530e3fc8f54e2f724"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:873c5d8337fe6d26085d4ccafa782d5ac0e80e34111ad51530e3fc8f54e2f724"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:3c1de9cc5210c5fc7b19f548e3eb2117940fd96422ccb43ca17ee4646f9bbfeb"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:3c1de9cc5210c5fc7b19f548e3eb2117940fd96422ccb43ca17ee4646f9bbfeb"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:a88611aa3e009f532f6bdada77e62eb47900b72c7fb4561091d2f58331da10b0"
+size_bytes = 1313
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:a88611aa3e009f532f6bdada77e62eb47900b72c7fb4561091d2f58331da10b0"
+visibility = "private"
 
 [tests]
 framework = "pytest"

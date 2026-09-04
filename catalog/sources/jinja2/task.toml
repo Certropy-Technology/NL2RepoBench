@@ -34,9 +34,32 @@ reason = "The candidate build closure is installed during Docker build from a pr
 
 [dependencies]
 status = "known"
-installer = "pip"
-packages = ["flit_core==3.12.0", "MarkupSafe==3.0.2"]
-lock_artifact = { digest = "sha256:6f0c0fb81b16f79cd65c5709201febcf0c5cf4ae9c68da2f353557aa161ceed5", size_bytes = 5612, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:6f0c0fb81b16f79cd65c5709201febcf0c5cf4ae9c68da2f353557aa161ceed5", visibility = "private" }
+package_manager = "pip"
+packages = [
+    "flit_core==3.12.0",
+    "MarkupSafe==3.0.2",
+]
+
+[dependencies.lock]
+digest = "sha256:d2a119d34a092798f1d797bc9673cc3b720c3f84dc9186c1ca5fda0973acc576"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:d2a119d34a092798f1d797bc9673cc3b720c3f84dc9186c1ca5fda0973acc576"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:f44bdc7547cdc1bc41c9f9584d2dda5f2d7d494b42f04f5f9e941111f95c2c9e"
+size_bytes = 998
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:f44bdc7547cdc1bc41c9f9584d2dda5f2d7d494b42f04f5f9e941111f95c2c9e"
+visibility = "private"
 
 [tests]
 framework = "pytest"

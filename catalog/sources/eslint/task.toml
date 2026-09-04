@@ -41,16 +41,60 @@ libc = "glibc"
 
 [dependencies]
 status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
-artifact = { digest = "sha256:1da1b847f34dc599a15227303a513ce9f8f1141879b03784d5862b1d12760573", size_bytes = 11806720, media_type = "application/vnd.nl2repobench.npm-bundle+tar", uri = "artifact://private/sha256:1da1b847f34dc599a15227303a513ce9f8f1141879b03784d5862b1d12760573", visibility = "private" }
-packages = ["@eslint-community/eslint-utils", "@eslint-community/regexpp", "@eslint/config-array", "@eslint/config-helpers", "@eslint/core", "@eslint/plugin-kit", "@humanfs/node", "@humanwhocodes/module-importer", "@humanwhocodes/retry", "@types/estree", "ajv", "cross-spawn", "debug", "escape-string-regexp", "eslint-scope", "eslint-visitor-keys", "espree", "esquery", "esutils", "fast-deep-equal", "file-entry-cache", "find-up", "glob-parent", "ignore", "imurmurhash", "is-glob", "json-stable-stringify-without-jsonify", "minimatch", "natural-compare", "optionator"]
+packages = [
+    "@eslint-community/eslint-utils",
+    "@eslint-community/regexpp",
+    "@eslint/config-array",
+    "@eslint/config-helpers",
+    "@eslint/core",
+    "@eslint/plugin-kit",
+    "@humanfs/node",
+    "@humanwhocodes/module-importer",
+    "@humanwhocodes/retry",
+    "@types/estree",
+    "ajv",
+    "cross-spawn",
+    "debug",
+    "escape-string-regexp",
+    "eslint-scope",
+    "eslint-visitor-keys",
+    "espree",
+    "esquery",
+    "esutils",
+    "fast-deep-equal",
+    "file-entry-cache",
+    "find-up",
+    "glob-parent",
+    "ignore",
+    "imurmurhash",
+    "is-glob",
+    "json-stable-stringify-without-jsonify",
+    "minimatch",
+    "natural-compare",
+    "optionator",
+]
+
+[dependencies.lock]
+digest = "sha256:49e075da3db435b103dbd05bf02552f4260ae7bcc3a47f88646217d43b3cd5ea"
+size_bytes = 133120
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:49e075da3db435b103dbd05bf02552f4260ae7bcc3a47f88646217d43b3cd5ea"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:d48971285de6826b84fc2d0e98cc152758f9b8316c15f6042cbb9bc6ed511892"
+size_bytes = 10782720
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:d48971285de6826b84fc2d0e98cc152758f9b8316c15f6042cbb9bc6ed511892"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:f5b28041816e1ac0850b6737497012b06a029aa80a6094f2ec330c7429fdeabf"
+size_bytes = 70082
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:f5b28041816e1ac0850b6737497012b06a029aa80a6094f2ec330c7429fdeabf"
+visibility = "private"
 
 [tests]
 framework = "node:test"

@@ -35,9 +35,32 @@ reason = "The candidate closure is installed during image build from a private h
 
 [dependencies]
 status = "known"
-installer = "pip"
-packages = ["flit_core==3.12.0", "markupsafe==3.0.3"]
-lock_artifact = { digest = "sha256:5c3a43a596e4b578cd3689d9a253e1d82deca429e134468cd951c109e0050f1e", size_bytes = 8252, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:5c3a43a596e4b578cd3689d9a253e1d82deca429e134468cd951c109e0050f1e", visibility = "private" }
+package_manager = "pip"
+packages = [
+    "flit_core==3.12.0",
+    "markupsafe==3.0.3",
+]
+
+[dependencies.lock]
+digest = "sha256:f0324332e5668deb6f30b1080d94f15ded75c786c76faf8484bb1adac6248ba5"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:f0324332e5668deb6f30b1080d94f15ded75c786c76faf8484bb1adac6248ba5"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:710d91e5cdf8fe6adf4ec91d54e0e04ca56bd9b24a3fae9f15fd459892f3b01d"
+size_bytes = 998
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:710d91e5cdf8fe6adf4ec91d54e0e04ca56bd9b24a3fae9f15fd459892f3b01d"
+visibility = "private"
 
 [tests]
 framework = "pytest"

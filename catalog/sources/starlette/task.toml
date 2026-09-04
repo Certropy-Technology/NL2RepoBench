@@ -35,18 +35,38 @@ reason = "Candidate and separate verifier dependencies are installed during the 
 
 [dependencies]
 status = "known"
-installer = "pip"
+package_manager = "pip"
 packages = [
-  "anyio==4.14.2",
-  "hatchling==1.27.0",
-  "idna==3.19",
-  "packaging==26.3",
-  "pathspec==1.1.1",
-  "pluggy==1.6.0",
-  "trove-classifiers==2026.6.1.19",
-  "typing-extensions==4.15.0",
+    "anyio==4.14.2",
+    "hatchling==1.27.0",
+    "idna==3.19",
+    "packaging==26.3",
+    "pathspec==1.1.1",
+    "pluggy==1.6.0",
+    "trove-classifiers==2026.6.1.19",
+    "typing-extensions==4.15.0",
 ]
-lock_artifact = { digest = "sha256:eae0b61331efd96e46f5a698c066ced450b0cb31479b4a42fe7318a87b1312d8", size_bytes = 2201, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:eae0b61331efd96e46f5a698c066ced450b0cb31479b4a42fe7318a87b1312d8", visibility = "private" }
+
+[dependencies.lock]
+digest = "sha256:761b4522ae25dcb4a5192f1e64d10be5f2b70b078cfed0bfde7cbe88ca8d1ee7"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:761b4522ae25dcb4a5192f1e64d10be5f2b70b078cfed0bfde7cbe88ca8d1ee7"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:f886fbbf3eb82f79349b8960209ee30bca957c4e0db90a0398e7061c3fee9c2c"
+size_bytes = 998
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:f886fbbf3eb82f79349b8960209ee30bca957c4e0db90a0398e7061c3fee9c2c"
+visibility = "private"
 
 [tests]
 framework = "pytest"

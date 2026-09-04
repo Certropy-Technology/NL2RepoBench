@@ -1,0 +1,44 @@
+{
+  "schema_version": "1.0",
+  "status": "passed",
+  "runtime": "java+maven",
+  "tasks": 3,
+  "task_ids": [
+    "java-commons-codec",
+    "java-commons-csv",
+    "java-semver4j"
+  ],
+  "controls": true,
+  "evidence_generation": "v19-strict-candidate-contract",
+  "oracle": {
+    "all_valid": true,
+    "minimum_reward": 1.0,
+    "fixed_denominators": {
+      "java-commons-codec": 4,
+      "java-commons-csv": 4,
+      "java-semver4j": 8
+    }
+  },
+  "network": {
+    "verifier_public_network_available": false,
+    "agent_network_policy": "no-network",
+    "oracle_source_host": "github.com"
+  },
+  "ownership": {
+    "generated_runtime_private_bytes": false,
+    "verifier_private_cas": true,
+    "oracle_role_scoped_cas": true
+  },
+  "runtime_evidence": {
+    "java_helper_digest": "sha256:da077d780eb22f7860ce571a80fc6ff1877534a6cf73d4b7964dd2374092ae8e",
+    "oracle_receipts": ".nl2repo/runs/java-pilot-final/oracle-v19-final",
+    "control_receipts": ".nl2repo/runs/java-pilot-final/controls-v19",
+    "shared_subprocess_supervisor": true,
+    "shared_candidate_process_cli": true,
+    "contract_main_runuser_removed": true,
+    "contract_main_digest_pinned": true,
+    "locked_helper_and_harbor_paths_confined": true,
+    "go_binary_supervisor_unchanged": true
+  },
+  "qualification": "pilot-only; not a dataset publication approval"
+}

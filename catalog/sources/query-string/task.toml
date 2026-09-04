@@ -38,24 +38,17 @@ reason = "Agent and verifier runs must have no network access; the private npm c
 
 [dependencies]
 status = "unknown"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
 package_manager = "npm"
-package_manager_version = "10.9.8"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
 packages = [
-  "decode-uri-component",
-  "filter-obj",
-  "split-on-first",
-  "ava",
-  "benchmark",
-  "deep-equal",
-  "fast-check",
-  "tsd",
-  "xo",
+    "decode-uri-component",
+    "filter-obj",
+    "split-on-first",
+    "ava",
+    "benchmark",
+    "deep-equal",
+    "fast-check",
+    "tsd",
+    "xo",
 ]
 
 [tests]

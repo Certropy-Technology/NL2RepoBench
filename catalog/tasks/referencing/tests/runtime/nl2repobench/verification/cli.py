@@ -39,7 +39,7 @@ def main() -> None:
     parser.add_argument("--expected", type=int, required=True)
     parser.add_argument(
         "--runtime",
-        choices=("python", "node", "go"),
+        choices=("python", "node", "go", "java"),
         required=True,
         help="Explicit verifier runtime identity.",
     )
@@ -56,8 +56,10 @@ def main() -> None:
     runtime = args.runtime
     if runtime == "python" and (args.report is not None or args.runner_exit_code is not None):
         parser.error("--runtime python cannot receive Node report arguments")
-    if runtime in {"node", "go"} and (args.junit is not None or args.collection is not None):
-        parser.error("Node/Go runtimes cannot receive pytest report arguments")
+    if runtime in {"node", "go", "java"} and (
+        args.junit is not None or args.collection is not None
+    ):
+        parser.error("Node/Go/Java runtimes cannot receive pytest report arguments")
     adapter = VerifierRuntimeRegistry.default().resolve(runtime)
     reason = canonical_reason(args.reason) if args.reason else None
     result = adapter.grade(

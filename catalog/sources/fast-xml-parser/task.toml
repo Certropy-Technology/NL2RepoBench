@@ -38,15 +38,10 @@ libc = "glibc"
 
 [dependencies]
 status = "unknown"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
-packages = ["runtime/build dependency closure not frozen"]
+packages = [
+    "runtime/build dependency closure not frozen",
+]
 
 [tests]
 framework = "node:test"

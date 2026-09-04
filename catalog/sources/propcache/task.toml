@@ -35,22 +35,42 @@ reason = "Candidate build dependencies are installed during image construction f
 
 [dependencies]
 status = "known"
-installer = "pip"
+package_manager = "pip"
 packages = [
-  "Cython==3.3.0",
-  "coverage==7.16.0",
-  "execnet==2.1.2",
-  "expandvars==1.0.0",
-  "iniconfig==2.3.0",
-  "packaging==26.3",
-  "pluggy==1.6.0",
-  "pygments==2.21.0",
-  "pytest==9.1.1",
-  "pytest-cov==7.1.0",
-  "pytest-xdist==3.8.0",
-  "setuptools==80.9.0",
+    "Cython==3.3.0",
+    "coverage==7.16.0",
+    "execnet==2.1.2",
+    "expandvars==1.0.0",
+    "iniconfig==2.3.0",
+    "packaging==26.3",
+    "pluggy==1.6.0",
+    "pygments==2.21.0",
+    "pytest==9.1.1",
+    "pytest-cov==7.1.0",
+    "pytest-xdist==3.8.0",
+    "setuptools==80.9.0",
 ]
-lock_artifact = { digest = "sha256:fee99e3a0694f0b8f7bf08a897343ed0be3afd74f26e35d3c7be464e6124690c", size_bytes = 16539, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:fee99e3a0694f0b8f7bf08a897343ed0be3afd74f26e35d3c7be464e6124690c", visibility = "private" }
+
+[dependencies.lock]
+digest = "sha256:4af6635b138570e8563b46835e3df0d7b392af7847b344eb185b8a1ccf969939"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:4af6635b138570e8563b46835e3df0d7b392af7847b344eb185b8a1ccf969939"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:760b43ae8713aa66cdc729fc608e40f6f18eaec55fa157220d4164073159d6e3"
+size_bytes = 1000
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:760b43ae8713aa66cdc729fc608e40f6f18eaec55fa157220d4164073159d6e3"
+visibility = "private"
 
 [tests]
 framework = "pytest"

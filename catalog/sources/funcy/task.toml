@@ -6,7 +6,14 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "medium"
 category = "functional-utilities"
-tags = ["python", "functional-programming", "iterators", "collections", "memoization", "separate-verifier"]
+tags = [
+    "python",
+    "functional-programming",
+    "iterators",
+    "collections",
+    "memoization",
+    "separate-verifier",
+]
 language = "python"
 
 [source]
@@ -35,33 +42,77 @@ reason = "The sole third-party build dependency is installed from a hash-locked 
 
 [dependencies]
 status = "known"
-installer = "pip"
-packages = ["setuptools==80.10.2"]
-lock_artifact = { digest = "sha256:089efaf118e36d6827593b3ae59897143e2cc618c5c3bd41361fbaa1c46ec29b", size_bytes = 99, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:089efaf118e36d6827593b3ae59897143e2cc618c5c3bd41361fbaa1c46ec29b", visibility = "private" }
+package_manager = "pip"
+packages = [
+    "setuptools==80.10.2",
+]
+
+[dependencies.lock]
+digest = "sha256:1581c7f556c108262d734274dc960eb1b917f6ee161f57eb0c97c6b9b0f38760"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:1581c7f556c108262d734274dc960eb1b917f6ee161f57eb0c97c6b9b0f38760"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:8c9a57f5d4f0a165dbb0e34a1dc29dc907172f688a4caed849e9fa91adbbfb40"
+size_bytes = 994
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:8c9a57f5d4f0a165dbb0e34a1dc29dc907172f688a4caed849e9fa91adbbfb40"
+visibility = "private"
 
 [tests]
 framework = "pytest"
 expected_total = 40
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py", "/tests/verifier/expected.json"]
+commands = [
+    "custom-json-v1 verifier entrypoint",
+]
+protected_paths = [
+    "/tests/verifier/run.py",
+    "/tests/verifier/adapter.py",
+    "/tests/verifier/expected.json",
+]
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:d348504af1cd511b21b4ab8e075a66679906b7847c77870228b11ac81161ffed", size_bytes = 30720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:d348504af1cd511b21b4ab8e075a66679906b7847c77870228b11ac81161ffed", visibility = "private" }
 entrypoint = "run.py"
-environment = {}
+
+[verifier.bundle]
+digest = "sha256:a0547c77a65d2697bcf587dae40d3e850aaef78df7e17aae681aea77639b99d0"
+size_bytes = 30720
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:a0547c77a65d2697bcf587dae40d3e850aaef78df7e17aae681aea77639b99d0"
+visibility = "private"
+
+[verifier.environment]
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
+passed_statuses = [
+    "passed",
+]
 excluded_statuses = []
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
 [harbor]
 description = "Build funcy 2.0 from an empty workspace and reproduce deterministic sequence, lazy iterator, collection, higher-order function, and caching behavior through a separate child-side JSON adapter with a named callback vocabulary."
-keywords = ["python", "functional-programming", "iterators", "collections", "memoization", "separate-verifier"]
+keywords = [
+    "python",
+    "functional-programming",
+    "iterators",
+    "collections",
+    "memoization",
+    "separate-verifier",
+]
 agent_timeout_sec = 3600.0
 verifier_timeout_sec = 480.0
 candidate_install_timeout_sec = 120.0
@@ -74,10 +125,10 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [oracle_bundle]
-digest = "sha256:9a14f46490d30429f42e7b9cf0fcb2d89623c7fd0451cba396c88d1dd4696f4b"
+digest = "sha256:eeeac2e6524c9faa4c68613a20614833f06721d21af64c5bbe5503e92405f3da"
 size_bytes = 348160
 media_type = "application/vnd.nl2repobench.private-bundle+tar"
-uri = "artifact://private/sha256:9a14f46490d30429f42e7b9cf0fcb2d89623c7fd0451cba396c88d1dd4696f4b"
+uri = "artifact://private/sha256:eeeac2e6524c9faa4c68613a20614833f06721d21af64c5bbe5503e92405f3da"
 visibility = "private"
 
 [lifecycle]

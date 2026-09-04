@@ -1,0 +1,48 @@
+{
+  "schema_version": "1.0",
+  "task_id": "java-semver4j",
+  "source_revision": "7653e418d610ffcd2811bcb55fd72d00d420950b",
+  "package": "com.vdurmont:semver4j",
+  "source_archive": {
+    "sha256": "sha256:7357a5bcc4f1360d506722e89ff274d42d09f4871f457c212454b5131c63d017",
+    "license_file": "LICENSE.md",
+    "license_spdx": "MIT",
+    "license_sha256": "sha256:f2648977a7ce48a6a48962a11ff33b3c754fc23780ac1c4c388d40a96b0815b9"
+  },
+  "api_inventory": {
+    "source_files": 5,
+    "test_files": 5,
+    "public_symbols": 8,
+    "selected_symbols": [
+      "Semver(String)",
+      "Semver(String, SemverType)",
+      "getValue",
+      "getMajor",
+      "getMinor",
+      "isGreaterThan",
+      "isLowerThan",
+      "isEqualTo",
+      "isStable",
+      "satisfies"
+    ],
+    "excluded_behavior": [
+      "Requirement builder variants beyond the public string contract",
+      "Tokenizer and Range internal implementation details",
+      "Maven release, signing, coverage, and publishing plugins",
+      "JUnit 4 and Mockito upstream test harness"
+    ]
+  },
+  "contract_leaf": {
+    "frozen_total": 8,
+    "framework": "trusted synthetic ContractMain",
+    "ids": ["parse", "major", "minor", "greater", "lower", "equal", "stable", "satisfies"],
+    "instruction_sections": ["Supports", "API Usage Guide", "Implementation Notes"]
+  },
+  "environment_adaptation": {
+    "jdk": "temurin-21.0.12+8",
+    "maven": "3.9.11",
+    "candidate_build": "verifier-owned javac with --release 21",
+    "dependency_closure": "empty private Maven repository",
+    "upstream_pom": "not executed; metadata-only static validation"
+  }
+}

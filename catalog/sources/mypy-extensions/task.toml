@@ -35,9 +35,31 @@ reason = "The exact hash-locked flit_core build dependency is installed during D
 
 [dependencies]
 status = "known"
-installer = "pip"
-packages = ["flit_core==3.12.0"]
-lock_artifact = { digest = "sha256:15474c26171aabab9fe8ef5770ec96e46a21a5a391b84729633c87ddb0b40867", size_bytes = 188, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:15474c26171aabab9fe8ef5770ec96e46a21a5a391b84729633c87ddb0b40867", visibility = "private" }
+package_manager = "pip"
+packages = [
+    "flit_core==3.12.0",
+]
+
+[dependencies.lock]
+digest = "sha256:0b1df4607ca84b3c424b081ee1090f865bd33df84e413667315184e15e320065"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:0b1df4607ca84b3c424b081ee1090f865bd33df84e413667315184e15e320065"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:bec7c359ed7c9533b4ca5762edcf47096a2038bfaa4c69eff53b2d137912f5ff"
+size_bytes = 996
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:bec7c359ed7c9533b4ca5762edcf47096a2038bfaa4c69eff53b2d137912f5ff"
+visibility = "private"
 
 [tests]
 framework = "pytest"

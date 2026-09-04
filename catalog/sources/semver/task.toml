@@ -29,14 +29,7 @@ reason = "No reviewed npm v3 development/test lock and content-addressed offline
 
 [dependencies]
 status = "unknown"
-ecosystem = "npm"
-consumer = "verifier-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
 package_manager = "npm"
-package_manager_version = "10.9.8"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
 packages = []
 
 [tests]

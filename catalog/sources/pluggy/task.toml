@@ -27,8 +27,11 @@ reason = "The audit records an upstream URL, full commit, and MIT claim, but no 
 
 [dependencies]
 status = "unknown"
-installer = "pip"
-packages = ["setuptools>=65", "setuptools-scm[toml]>=8"]
+package_manager = "pip"
+packages = [
+    "setuptools>=65",
+    "setuptools-scm[toml]>=8",
+]
 
 [tests]
 framework = "pytest"

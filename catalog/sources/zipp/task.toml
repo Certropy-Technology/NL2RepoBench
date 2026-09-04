@@ -35,15 +35,35 @@ reason = "The exact-pinned hash-locked setuptools/SCM/license build closure is i
 
 [dependencies]
 status = "known"
-installer = "pip"
+package_manager = "pip"
 packages = [
-  "coherent-licensed==0.5.2",
-  "packaging==26.3",
-  "setuptools==84.0.0",
-  "setuptools-scm==10.2.1",
-  "vcs-versioning==2.3.1",
+    "coherent-licensed==0.5.2",
+    "packaging==26.3",
+    "setuptools==84.0.0",
+    "setuptools-scm==10.2.1",
+    "vcs-versioning==2.3.1",
 ]
-lock_artifact = { digest = "sha256:ab10714e1bce45f85ed12aac1b027c67fd60712025ee7d3af28a55636961e190", size_bytes = 1880, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:ab10714e1bce45f85ed12aac1b027c67fd60712025ee7d3af28a55636961e190", visibility = "private" }
+
+[dependencies.lock]
+digest = "sha256:394551494980adbcf2867b7cb28c36e76faf261b007b7eba9ddda56ea35c66a5"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:394551494980adbcf2867b7cb28c36e76faf261b007b7eba9ddda56ea35c66a5"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:bc7e484aa7732aa2bb8ae9dfd10bc8a13c16893ac5740fb32829e6444c04fd2e"
+size_bytes = 998
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:bc7e484aa7732aa2bb8ae9dfd10bc8a13c16893ac5740fb32829e6444c04fd2e"
+visibility = "private"
 
 [tests]
 framework = "pytest"

@@ -37,20 +37,40 @@ reason = "The hash-locked build/runtime closure is installed at image-build time
 
 [dependencies]
 status = "known"
-installer = "pip"
+package_manager = "pip"
 packages = [
-  "dnspython==2.8.0",
-  "flit-core==3.12.0",
-  "hatch-requirements-txt==0.4.1",
-  "hatchling==1.27.0",
-  "packaging==26.3",
-  "pathspec==1.1.1",
-  "pluggy==1.6.0",
-  "setuptools==80.9.0",
-  "trove-classifiers==2026.6.1.19",
-  "wheel==0.45.1",
+    "dnspython==2.8.0",
+    "flit-core==3.12.0",
+    "hatch-requirements-txt==0.4.1",
+    "hatchling==1.27.0",
+    "packaging==26.3",
+    "pathspec==1.1.1",
+    "pluggy==1.6.0",
+    "setuptools==80.9.0",
+    "trove-classifiers==2026.6.1.19",
+    "wheel==0.45.1",
 ]
-lock_artifact = { digest = "sha256:d5bada113ff462970d1fb42e3d6ad3fa6628fcddeed7afae554871a9c271aa45", size_bytes = 1893, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:d5bada113ff462970d1fb42e3d6ad3fa6628fcddeed7afae554871a9c271aa45", visibility = "private" }
+
+[dependencies.lock]
+digest = "sha256:d036407acf2fd218f1b0894962c22e278925e3263ec9fe8d35c34e5170f0f11f"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:d036407acf2fd218f1b0894962c22e278925e3263ec9fe8d35c34e5170f0f11f"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:74add8be12ce7bc6d10993810f1605628ae72cdc5ff002068dbb9a65841268bd"
+size_bytes = 998
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:74add8be12ce7bc6d10993810f1605628ae72cdc5ff002068dbb9a65841268bd"
+visibility = "private"
 
 [tests]
 framework = "pytest"

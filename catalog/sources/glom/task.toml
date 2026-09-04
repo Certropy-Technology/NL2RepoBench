@@ -35,9 +35,34 @@ reason = "The candidate dependency closure is installed during the Docker build 
 
 [dependencies]
 status = "known"
-installer = "pip"
-packages = ["attrs==25.4.0", "boltons==25.0.0", "face==24.0.0", "setuptools==80.9.0"]
-lock_artifact = { digest = "sha256:b3ab4f35abc257efe0ca5a002ef1e5164ea72147ea01a791f669ddf8fecb8a47", size_bytes = 1410, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:b3ab4f35abc257efe0ca5a002ef1e5164ea72147ea01a791f669ddf8fecb8a47", visibility = "private" }
+package_manager = "pip"
+packages = [
+    "attrs==25.4.0",
+    "boltons==25.0.0",
+    "face==24.0.0",
+    "setuptools==80.9.0",
+]
+
+[dependencies.lock]
+digest = "sha256:fe3950798db137b0697fb051fcbcc4759dec761aa6b9cfa2c5071e3c56cb8794"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:fe3950798db137b0697fb051fcbcc4759dec761aa6b9cfa2c5071e3c56cb8794"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:1d58588fe58367a722636c38fc9cb21dc5a3d7ad18a7a73647605fc62b4aef70"
+size_bytes = 998
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:1d58588fe58367a722636c38fc9cb21dc5a3d7ad18a7a73647605fc62b4aef70"
+visibility = "private"
 
 [tests]
 framework = "pytest"

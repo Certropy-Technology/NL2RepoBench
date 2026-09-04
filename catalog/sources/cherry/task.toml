@@ -33,7 +33,7 @@ reason = "The legacy image is immutable but is not an approved production enviro
 
 [dependencies]
 status = "unknown"
-installer = "pip"
+package_manager = "pip"
 packages = []
 
 [tests]

@@ -31,7 +31,7 @@ reason = "The callable/rich-object verifier and dependency closure are not froze
 
 [dependencies]
 status = "unknown"
-installer = "pip"
+package_manager = "pip"
 packages = [
     "pytest==8.3.2",
     "eth-hash[pycryptodome]==0.7.0",

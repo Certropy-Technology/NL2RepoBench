@@ -41,21 +41,28 @@ reason = "Candidate and verifier runs are network-isolated. The zero-dependency 
 
 [dependencies]
 status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
 packages = []
 
-[dependencies.artifact]
-digest = "sha256:f5e99d78f60de54f9740184515aa32094a267f457ff9bf5af9a2f8da54e61e07"
-size_bytes = 390
-media_type = "application/vnd.nl2repobench.npm-bundle+tar"
-uri = "artifact://private/sha256:f5e99d78f60de54f9740184515aa32094a267f457ff9bf5af9a2f8da54e61e07"
+[dependencies.lock]
+digest = "sha256:d55b3bcd3a7415eb44931f7669094ddb089969f40c40e810dd51c95a4e5ff408"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:d55b3bcd3a7415eb44931f7669094ddb089969f40c40e810dd51c95a4e5ff408"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:63bdad568ff0174494aaaf128eafb1340ee1f22e4187976cc5fd107a141fdd22"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:63bdad568ff0174494aaaf128eafb1340ee1f22e4187976cc5fd107a141fdd22"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:02e12951e08d8b34047418eefc44631cfe3268fc0b63da59a571bc058bf8eccd"
+size_bytes = 1278
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:02e12951e08d8b34047418eefc44631cfe3268fc0b63da59a571bc058bf8eccd"
 visibility = "private"
 
 [tests]

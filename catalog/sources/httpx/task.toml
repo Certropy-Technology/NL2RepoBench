@@ -35,30 +35,50 @@ reason = "Third-party build and test dependencies are installed during the Docke
 
 [dependencies]
 status = "known"
-lock_artifact = { digest = "sha256:8f35c08665ed4c75ca58caf51de225dfdbeb95ca5a66057adeebfa14c408d6cd", size_bytes = 4774, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:8f35c08665ed4c75ca58caf51de225dfdbeb95ca5a66057adeebfa14c408d6cd", visibility = "private" }
-installer = "pip"
+package_manager = "pip"
 packages = [
-  "anyio==4.10.0",
-  "attrs==26.1.0",
-  "certifi==2025.8.3",
-  "h11==0.16.0",
-  "hatch-fancy-pypi-readme==25.1.0",
-  "hatchling==1.27.0",
-  "httpcore==1.0.9",
-  "idna==3.10",
-  "iniconfig==2.3.0",
-  "outcome==1.3.0.post0",
-  "packaging==26.3",
-  "pathspec==1.1.1",
-  "pluggy==1.6.0",
-  "pygments==2.21.0",
-  "pytest==8.4.1",
-  "sniffio==1.3.1",
-  "sortedcontainers==2.4.0",
-  "trio==0.31.0",
-  "trove-classifiers==2026.6.1.19",
-  "typing-extensions==4.16.0",
+    "anyio==4.10.0",
+    "attrs==26.1.0",
+    "certifi==2025.8.3",
+    "h11==0.16.0",
+    "hatch-fancy-pypi-readme==25.1.0",
+    "hatchling==1.27.0",
+    "httpcore==1.0.9",
+    "idna==3.10",
+    "iniconfig==2.3.0",
+    "outcome==1.3.0.post0",
+    "packaging==26.3",
+    "pathspec==1.1.1",
+    "pluggy==1.6.0",
+    "pygments==2.21.0",
+    "pytest==8.4.1",
+    "sniffio==1.3.1",
+    "sortedcontainers==2.4.0",
+    "trio==0.31.0",
+    "trove-classifiers==2026.6.1.19",
+    "typing-extensions==4.16.0",
 ]
+
+[dependencies.lock]
+digest = "sha256:a3053b2fe5c1b80cea8137e600665ee49c5992cf5f4896d0c840027125a5d8f8"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:a3053b2fe5c1b80cea8137e600665ee49c5992cf5f4896d0c840027125a5d8f8"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:1fbb4adedb519dacbd5805447849884fe85747773ce0e254f55c4910f07eea2a"
+size_bytes = 998
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:1fbb4adedb519dacbd5805447849884fe85747773ce0e254f55c4910f07eea2a"
+visibility = "private"
 
 [tests]
 framework = "pytest"

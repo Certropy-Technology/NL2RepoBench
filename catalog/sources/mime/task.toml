@@ -41,21 +41,28 @@ reason = "mime has no runtime dependency roots; the npm v3 lock and empty integr
 
 [dependencies]
 status = "known"
-ecosystem = "npm"
-consumer = "candidate-runtime"
-lockfile_name = "package-lock.json"
-lockfile_version = "3"
 package_manager = "npm"
-package_manager_version = "11.17.0"
-install_mode = "offline"
-lifecycle_scripts = "ignore-scripts"
 packages = []
 
-[dependencies.artifact]
-digest = "sha256:3705c717f949ecf4d9cc50887c243f0996d903b0cafa636c61ffad50992de13d"
-size_bytes = 491
-media_type = "application/vnd.nl2repobench.npm-bundle+tar"
-uri = "artifact://private/sha256:3705c717f949ecf4d9cc50887c243f0996d903b0cafa636c61ffad50992de13d"
+[dependencies.lock]
+digest = "sha256:32ed9d393568baf5b29ec6577d094092a5ff9e398fd96a72e6b0e89228bcf8c9"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:32ed9d393568baf5b29ec6577d094092a5ff9e398fd96a72e6b0e89228bcf8c9"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:63bdad568ff0174494aaaf128eafb1340ee1f22e4187976cc5fd107a141fdd22"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:63bdad568ff0174494aaaf128eafb1340ee1f22e4187976cc5fd107a141fdd22"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:19067d34eac7f3b668cbc4bd7be4afbab57090d99b609d6a7f1a49643b80fd88"
+size_bytes = 1278
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:19067d34eac7f3b668cbc4bd7be4afbab57090d99b609d6a7f1a49643b80fd88"
 visibility = "private"
 
 [tests]

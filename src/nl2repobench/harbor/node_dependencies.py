@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+import shutil
 import stat
 import tarfile
 from pathlib import Path, PurePosixPath
@@ -281,6 +282,63 @@ def validate_npm_dependency_bundle(
     total = sum(path.stat().st_size for path in paths)
     if total > MAX_NPM_TOTAL_BYTES:
         raise NodeDependencyError("npm dependency bundle exceeds expanded size limit")
+
+
+def restore_node_dependency_store(source: Path, destination: Path) -> None:
+    """Restore logical npm/pnpm cache paths from the canonical object store."""
+
+    mapping_path = source / "node-store-paths.json"
+    payload = _validate_json_file(mapping_path, max_bytes=MAX_NPM_MANIFEST_BYTES)
+    if set(payload) != {"schema_version", "roots", "files"} or payload["schema_version"] != "1.0":
+        raise NodeDependencyError("canonical Node store mapping schema is invalid")
+    roots = payload["roots"]
+    files = payload["files"]
+    if (
+        not isinstance(roots, list)
+        or not all(root in {"npm-cache", "pnpm-store"} for root in roots)
+        or roots != sorted(set(roots))
+        or not isinstance(files, list)
+    ):
+        raise NodeDependencyError("canonical Node store roots are invalid")
+    destination.mkdir(parents=True, exist_ok=True)
+    for root in roots:
+        (destination / root).mkdir(parents=True, exist_ok=True)
+    used_objects: set[Path] = set()
+    previous = ""
+    for item in files:
+        if not isinstance(item, dict) or set(item) != {"path", "sha256", "size"}:
+            raise NodeDependencyError("canonical Node store file entry is malformed")
+        relative = _relative_member(str(item["path"]))
+        if relative.parts[0] not in set(roots) or relative.as_posix() <= previous:
+            raise NodeDependencyError("canonical Node store paths are unsorted or invalid")
+        previous = relative.as_posix()
+        digest = item["sha256"]
+        size = item["size"]
+        if (
+            not isinstance(digest, str)
+            or not re.fullmatch(r"[0-9a-f]{64}", digest)
+            or not isinstance(size, int)
+            or isinstance(size, bool)
+            or size < 0
+        ):
+            raise NodeDependencyError("canonical Node store digest or size is invalid")
+        artifact = source / "objects" / digest[:2] / digest
+        if (
+            artifact.is_symlink()
+            or not artifact.is_file()
+            or artifact.stat().st_size != size
+            or hashlib.sha256(artifact.read_bytes()).hexdigest() != digest
+        ):
+            raise NodeDependencyError("canonical Node store object failed integrity")
+        target = destination.joinpath(*relative.parts)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(artifact, target)
+        used_objects.add(artifact)
+    actual_objects = {
+        path for path in (source / "objects").rglob("*") if path.is_file()
+    } if (source / "objects").is_dir() else set()
+    if used_objects != actual_objects:
+        raise NodeDependencyError("canonical Node store contains unreferenced objects")
 
 
 def validate_npm_package_tarball(archive: Path) -> None:
