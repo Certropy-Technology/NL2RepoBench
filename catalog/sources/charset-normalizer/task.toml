@@ -1,0 +1,86 @@
+schema_version = "1.0"
+task_id = "charset-normalizer"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "text-encoding-detection"
+tags = ["python", "encoding", "unicode", "charset-detection", "cli", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/jawah/charset_normalizer"
+revision = "e239bdc5cc1eb1f0db08d4046ad531f805dbea71"
+license_spdx = "MIT"
+source_digest = "sha256:4846e586d01120fcea41d4a60b8d287d28e59b3060f46476f6844b83b3eb86cf"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.14"
+os_name = "debian-12-amd64"
+base_image = "python:3.12.14-slim-bookworm"
+base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e"
+system_packages = []
+network_mode = "no-network"
+build_command = "Install the hash-locked setuptools and wheel build closure during image build; candidate installation uses the frozen project without runtime network access."
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The package has no runtime dependencies. Build tools are installed from the private hash-locked closure, and the trusted Oracle restores the frozen source from a private digest-checked archive. Agent, candidate, verifier, Oracle, and controls execute without network access."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = ["setuptools==80.10.2", "wheel==0.45.1"]
+lock_artifact = { digest = "sha256:5d0ca04e334f7260a4cae5b961c5661a26b8e55c42002e58e661426135618c5c", size_bytes = 596, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:5d0ca04e334f7260a4cae5b961c5661a26b8e55c42002e58e661426135618c5c", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 33
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py"]
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:fe872ebb92147ea21c6c471ba49619365b2967296e24bbdb13fa53fb1d7ac84d", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:fe872ebb92147ea21c6c471ba49619365b2967296e24bbdb13fa53fb1d7ac84d", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build charset-normalizer 3.5.1 from an empty workspace and reproduce deterministic encoding detection, result models, Unicode helpers, legacy compatibility, and CLI behavior through a separate child-process verifier."
+keywords = ["python", "encoding", "unicode", "charset-detection", "cli", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 900.0
+candidate_install_timeout_sec = 180.0
+candidate_total_timeout_sec = 420.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:74f4b338b55edbe51e0885d5a23fdcaf97ce1bff8cb59d88e0e33d18a823a3c3"
+size_bytes = 686080
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:74f4b338b55edbe51e0885d5a23fdcaf97ce1bff8cb59d88e0e33d18a823a3c3"
+visibility = "private"
+
+[lifecycle]
+status = "controls-passed"
+owner = "worker/charset-normalizer-wave10"
+reason = "The final NoNetwork task uses a separate child-process verifier. Oracle passes 33/33; empty, installable stub, and forgery controls are valid, collect the fixed denominator where applicable, and remain below the 0.20 reward ceiling."

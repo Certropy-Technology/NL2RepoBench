@@ -1,0 +1,10 @@
+command: git clone --no-checkout https://github.com/jawah/charset_normalizer upstream
+command: git checkout --detach e239bdc5cc1eb1f0db08d4046ad531f805dbea71
+exit_code: 0
+revision: e239bdc5cc1eb1f0db08d4046ad531f805dbea71
+git_tree: 4d96daa1f3df3d3f7cbab0a00f11181e7f7ecb1d
+archive_command: git archive --format=tar HEAD -o source.tar
+source_archive_sha256: 4846e586d01120fcea41d4a60b8d287d28e59b3060f46476f6844b83b3eb86cf
+source_archive_size_bytes: 675840
+license: MIT
+license_sha256: 6d0d41bfe170ac6c7dc248c9a63e254d0fb45a60d50a8257d0af92c6e249b887

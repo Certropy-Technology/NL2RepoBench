@@ -1,0 +1,4 @@
+command: docker run --rm --network none -v upstream:/src:ro python:3.12.14-slim-bookworm@sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e python probe.py
+exit_code: 0
+result: public signatures, versions, detection, model, utility, BOM and legacy probes completed
+probe_log: private handoff probe-output.txt

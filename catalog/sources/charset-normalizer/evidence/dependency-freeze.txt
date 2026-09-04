@@ -1,0 +1,8 @@
+command: python 3.12.14 digest-pinned build image, build-time requirements
+exit_code: 0
+runtime_dependencies: none
+build_dependencies: setuptools==80.10.2, wheel==0.45.1
+lock_sha256: 5d0ca04e334f7260a4cae5b961c5661a26b8e55c42002e58e661426135618c5c
+lock_size_bytes: 596
+network_policy: no-network during candidate, verifier, Oracle, and controls
+lock_location: private handoff requirements.lock.txt

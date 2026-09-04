@@ -1,0 +1,8 @@
+{
+  "schema_version": "1.0",
+  "framework": "custom-json-v1",
+  "frozen_total": 33,
+  "source_tests": ["tests/test_base_detection.py", "tests/test_detect_legacy.py", "tests/test_utils.py", "tests/test_cli.py", "tests/test_isbinary.py", "tests/test_edge_case.py"],
+  "contract_groups": {"surface_and_signatures": 2, "detection": 10, "file_and_binary_entrypoints": 4, "legacy_and_models": 7, "codec_and_unicode_helpers": 6, "cli": 2, "metadata": 1, "determinism": 1},
+  "collection": {"collected": 33, "errors": 0, "exit_code": 0}
+}
