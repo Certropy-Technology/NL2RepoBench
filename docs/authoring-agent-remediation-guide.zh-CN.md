@@ -76,6 +76,16 @@ source-freeze
 4. Candidate dependencies 必须安装到 candidate-owned site，不能覆盖 trusted verifier
    的 pytest、pydantic 或其他 runtime。
 
+#### npm cache closure
+
+npm 离线闭包必须同时包含 package tarball 和 npm cache index/packument metadata。仅把
+`node_modules`、`.tgz` 或 `_cacache/content-v2` 打进 artifact 不足以支持
+`npm ci --offline`；必须从空 cache 做一次完全离线重放，并验证 lockfile 中每个
+`resolved`/`integrity` 条目都能由该 cache 命中。出现 `ENOTCACHED` 时先检查对应包的
+packument/index entry，再判断 tarball 是否缺失。闭包完成条件是：清空 host npm cache
+后，使用 private dependency artifact 和 frozen lockfile 在 `network=none` 容器内完成
+`npm ci --offline --ignore-scripts --no-audit --no-fund`。
+
 ### Verifier boundary
 
 优先使用 generic candidate client。JSON/回调/生成代码/状态 session 无法表达时使用
@@ -102,6 +112,15 @@ frozen denominator、reward `>=0.80`。再运行 empty/stub/forgery/install-fail
 panic/hang/oversized-output/background-process/offline controls。所有运行必须保留
 result、grading、network 和 reward 证据；empty/install-failure 的允许 0/0 结果必须
 显式记录。只有完成这些门禁后，Worker 才能写 `controls-passed` handoff。
+
+stub 和 forgery 必须是可安装候选，并让 verifier 实际 collection 固定分母；二者不能
+用 `candidate-installation-failed` 或 0/0 代替行为测试。stub/forgery reward 必须各自
+不高于 `0.20`。若简单 stub 因公共 surface、默认值或错误类型获得过多分数，应保留正确
+package/export 形状，但让核心构造或调用稳定失败，再重新 compile；task metadata、
+control script 或 lifecycle 变化后，旧 Oracle/control receipt 全部失效，必须对新 final
+manifest 重跑 Oracle 和完整 control matrix。forgery 还必须在 candidate workspace 写入
+伪造 reward/grading 文件，并证明最终评分仍由 verifier 独立产生。
+
 只要 verifier/image/build 自身失败，分类为 `verifier`/`environment`/`infrastructure`，
 不能当作模型 0 分；只有 candidate workspace/install/behavior 已真实执行后才分类为
 `model`。
