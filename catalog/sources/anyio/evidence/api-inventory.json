@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0",
+  "task_id": "anyio",
+  "revision": "928366259543412a2deb1e2ba09ea45ffa92ef4f",
+  "package_modules": 46,
+  "root_non_private_attributes_observed": 96,
+  "top_level_ast": {
+    "public_definitions": 300,
+    "classes": 153,
+    "async_functions": 69,
+    "sync_functions": 78
+  },
+  "built_in_backends": ["asyncio", "trio"],
+  "backend_abstraction_method_count": 47,
+  "behavior_families": [
+    "event loop selection and clocks",
+    "cancellation scopes and checkpoints",
+    "task groups and futures",
+    "events, locks, semaphores and capacity limiters",
+    "memory, buffered, text, file and TLS streams",
+    "TCP, UDP and UNIX sockets and listeners",
+    "subprocesses and process groups",
+    "worker threads and blocking portals",
+    "worker processes and subinterpreters",
+    "signals, temporary files and filesystem paths",
+    "async iterators and async caching",
+    "pytest backend fixtures and runners"
+  ],
+  "non_json_boundaries": [
+    "coroutine and callback identity",
+    "live task and cancellation scope lifetime",
+    "backend-specific cancellation exception classes",
+    "context variable propagation",
+    "exception groups and traceback context",
+    "file descriptors, sockets, listeners and streams",
+    "processes, threads, interpreters and OS signals",
+    "backend clocks, scheduler checkpoints and task ancestry"
+  ],
+  "inventory_kind": "static-authoring-evidence-not-a-public-contract"
+}

@@ -1,0 +1,52 @@
+{
+  "schema_version": "1.0",
+  "task_id": "anyio",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "verifier",
+    "next_step": "Approve the complete asyncio and Trio public scope or explicitly narrow it, freeze a Python 3.12 hash-locked dependency/test closure, and design a reviewed child-side protocol for live async resources, cancellation, scheduling, local I/O, subprocesses, threads, processes, interpreters, signals, and pytest fixtures. Then collect a dynamic fixed denominator and rerun compile, Oracle, empty, stub, forgery, and offline controls under NoNetwork.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/agronholm/anyio",
+      "revision": "928366259543412a2deb1e2ba09ea45ffa92ef4f",
+      "source_digest": "sha256:688c88c5af84b9d9e2eb4efa17227bc9073210d71da09754bfe954779f4e0542",
+      "license_spdx": "MIT",
+      "license_path": "LICENSE",
+      "license_digest": "sha256:5361ac9dc58f2ef5fd2e9b09c68297c17f04950909bbc8023bdb82eacf22c2b0"
+    },
+    "commands": [
+      {
+        "command": "git clone --filter=blob:none https://github.com/agronholm/anyio /tmp/anyio-author/source && git checkout --detach 928366259543412a2deb1e2ba09ea45ffa92ef4f && git archive --format=tar HEAD | sha256sum && sha256sum LICENSE",
+        "tool_version": "git",
+        "exit_code": 0,
+        "log": {"path": "catalog/sources/anyio/evidence/source-freeze.txt", "sha256": "sha256:36dfa6dfc2a958632f51c268701363ce2d957a4b86eff7f80fad84a35f7f2749"}
+      },
+      {
+        "command": "PYTHONNOUSERSITE=1 python3 -I -c <dependency availability and root API import probe>",
+        "tool_version": "CPython 3.14.6",
+        "exit_code": 1,
+        "log": {"path": "catalog/sources/anyio/evidence/environment-probe.txt", "sha256": "sha256:c6704028b37c642cc81adeda44a3b000ef73f94fb74fc86d19678cb043e1de6e"}
+      },
+      {
+        "command": "static AST, backend abstraction, and pytest inventory at revision 928366259543412a2deb1e2ba09ea45ffa92ef4f",
+        "tool_version": "CPython 3.14.6 ast; git source tree",
+        "exit_code": 1,
+        "log": {"path": "catalog/sources/anyio/evidence/backend-assessment.txt", "sha256": "sha256:2de07681fe100e5f5337283787bca751eeef3238d704fd1f70dcbaf9e9eceabb"}
+      },
+      {
+        "command": "static public API inventory",
+        "tool_version": "CPython 3.14.6 ast",
+        "exit_code": 0,
+        "log": {"path": "catalog/sources/anyio/evidence/api-inventory.json", "sha256": "sha256:a7aeffe669325202b5478d5661fd7cb23a04b39cda6b674c60dcaec30c78d001"}
+      },
+      {
+        "command": "static upstream test inventory",
+        "tool_version": "CPython 3.14.6 ast",
+        "exit_code": 0,
+        "log": {"path": "catalog/sources/anyio/evidence/test-inventory.json", "sha256": "sha256:251731128329ebebda1b7c89bf19c43c385992fed9dcfb359d39c94f1d9b14d6"}
+      }
+    ],
+    "test_inventory": "catalog/sources/anyio/evidence/test-inventory.json",
+    "api_inventory": "catalog/sources/anyio/evidence/api-inventory.json"
+  }
+}

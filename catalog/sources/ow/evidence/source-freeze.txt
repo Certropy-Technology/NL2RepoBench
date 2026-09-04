@@ -1,0 +1,11 @@
+mode=author-one
+command=git clone --no-checkout https://github.com/sindresorhus/ow /tmp/ow-source; git checkout --detach 3975eab08762ba1823f07e2aa3cb05f20c86296c; git rev-parse HEAD; git rev-parse HEAD^{tree}; git archive --format=tar --prefix=ow/ HEAD | sha256sum; wc -c /tmp/ow.tar; sha256sum license
+tool_version=git; node=v22.23.1; npm=10.9.8
+exit_code=0
+revision=3975eab08762ba1823f07e2aa3cb05f20c86296c
+tree=0f6785555daf2cdd3ecd25e721c8bdd10404977f
+source_archive_bytes=634880
+source_archive_sha256=sha256:bc70bf80d6125a8869d314ea7c1004e61eefdef9763eeda6fd3945d8bb1cb183
+license_bytes=1117
+license_sha256=sha256:5c932d88256b4ab958f64a856fa48e8bd1f55bc1d96b8149c65689e0c61789d3
+tracked_files=89

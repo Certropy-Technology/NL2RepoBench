@@ -1,0 +1,9 @@
+mode=author-one
+command=npm install --package-lock-only --ignore-scripts --offline --no-audit --no-fund
+tool_version=Node-v22.23.1 npm-10.9.8
+exit_code=1
+failure_class=environment
+stderr=npm error code ENOTCACHED; request to https://registry.npmjs.org/@sindresorhus%2fis failed: cache mode is only-if-cached but no cached response is available.
+required_runtime_dependencies=@sindresorhus/is@^7.1.0, callsites@^4.2.0, dot-prop@^10.1.0, environment@^1.1.0, fast-equals@^5.3.2, is-identifier@^1.0.1
+cache_probe=@sindresorhus/is=0; callsites=3 unrelated entries; dot-prop=0; environment=0; fast-equals=0; is-identifier=0
+remediation=Materialize and hash-lock the complete npm v3 closure before retrying under Node 24.19.0/npm 11.17.0 with no runtime registry access.

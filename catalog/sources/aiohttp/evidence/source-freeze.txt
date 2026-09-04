@@ -1,0 +1,28 @@
+aiohttp source-freeze remediation evidence
+mode=author-one
+upstream=https://github.com/aio-libs/aiohttp
+assigned_revision=25522ad29937a6b586cb4dbe906c96db45fdc672
+network_scope=authoring-only immutable source lookup
+runtime_network=forbidden
+
+$ git --version
+git version 2.55.0
+
+$ timeout 120 git ls-remote https://github.com/aio-libs/aiohttp 25522ad29937a6b586cb4dbe906c96db45fdc672
+exit_code=0
+stdout=<empty>
+stderr=<empty>
+
+$ timeout 120 git fetch --no-tags --depth=1 origin 25522ad29937a6b586cb4dbe906c96db45fdc672
+exit_code=128
+fatal: remote error: upload-pack: not our ref 25522ad29937a6b586cb4dbe906c96db45fdc672
+
+$ git cat-file -e '25522ad29937a6b586cb4dbe906c96db45fdc672^{commit}'
+exit_code=128
+stdout=<empty>
+stderr=<empty>
+
+local_checkout_head=65bbc597f27058115d20a86fe71118ea44358023
+local_checkout_contains_assigned_revision=false
+result=source-freeze-failed
+classification=source

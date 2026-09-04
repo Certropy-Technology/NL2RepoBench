@@ -1,0 +1,86 @@
+schema_version = "1.0"
+task_id = "anyio"
+version = "0.1.0"
+instruction = "blocked.md"
+
+[metadata]
+difficulty = "hard"
+category = "async-concurrency-library"
+tags = ["python", "asyncio", "trio", "concurrency", "networking", "subprocess", "blocked"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/agronholm/anyio"
+revision = "928366259543412a2deb1e2ba09ea45ffa92ef4f"
+license_spdx = "MIT"
+source_digest = "sha256:688c88c5af84b9d9e2eb4efa17227bc9073210d71da09754bfe954779f4e0542"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.14"
+os_name = "debian-13-amd64"
+base_image = "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "Agent, candidate, verifier, Oracle execution, and controls must have no egress. The exact asyncio/Trio and test dependency closure is not frozen, and no faithful separate-verifier protocol exists for native async resources."
+
+[dependencies]
+status = "unknown"
+installer = "pip"
+packages = [
+  "idna>=2.8",
+  "typing_extensions>=4.16.0; python_version<'3.15'",
+  "trio>=0.32.0",
+  "setuptools>=77",
+  "setuptools_scm>=6.4",
+  "blockbuster>=1.5.23; python_version<'3.15'",
+  "coverage[toml]>=7",
+  "hypothesis>=4.18.2",
+  "psutil>=5.9",
+  "pytest>=9.0",
+  "pytest-mock>=3.14",
+  "pytest-timeout>=2.4.0",
+  "trustme>=1.0.0",
+  "truststore>=0.9.1",
+  "uvloop>=0.22.1; implementation_name=='cpython' and platform_system!='Windows' and python_version<'3.15'",
+]
+
+[tests]
+framework = "pytest"
+expected_total = 0
+expected_total_source = "unknown"
+commands = []
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Blocked AnyIO candidate: exact source is frozen, but backend-complete async behavior has no approved offline dependency closure or child-side verifier protocol."
+keywords = ["python", "asyncio", "trio", "concurrency", "networking", "blocked"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 900.0
+candidate_install_timeout_sec = 180.0
+candidate_total_timeout_sec = 600.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "blocked"
+owner = "wave9-15-anyio"
+reason = "Revision 9283662 and its MIT license are frozen, but the full asyncio/Trio dependency matrix is not hash-locked and the separate verifier cannot faithfully transport cancellation scopes, task groups, async resources, sockets, subprocesses, threads, processes, interpreters, signals, and pytest fixtures through the generic JSON boundary. No runtime, Oracle, controls, or reward is claimed."

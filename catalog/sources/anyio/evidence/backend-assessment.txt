@@ -1,0 +1,17 @@
+command: static AST, backend abstraction, and pytest inventory at revision 928366259543412a2deb1e2ba09ea45ffa92ef4f
+tool_version: CPython 3.14.6 ast; ripgrep 15.1.0; git source tree
+exit_code: 1
+tracked_files: 120
+package_python_modules: 46
+top_level_public_definitions: 300
+top_level_public_classes: 153
+top_level_public_async_functions: 69
+top_level_public_sync_functions: 78
+backend_abstraction_methods: 47
+test_modules_named_test_py: 29
+top_level_test_definitions: 304
+top_level_async_test_definitions: 257
+backend_fixture_or_parameter_references: 153
+subprocess_process_interpreter_references: 89
+socket_api_references: 282
+assessment: A faithful child-side verifier protocol is unavailable. Observable values include coroutine functions, callbacks, tasks, cancellation scopes, exception groups, context variables, backend clocks, live streams/listeners/sockets, subprocesses, threads, processes, subinterpreters, signals, filesystem resources, pytest hooks, and backend-specific options. The generic JSON invocation boundary cannot preserve these identities and lifetimes. Direct trusted-process imports would violate separate-verifier isolation. Restricting coverage to one backend or a stateless subset requires an explicit product scope decision.

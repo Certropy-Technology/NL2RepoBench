@@ -1,0 +1,8 @@
+mode=author-one
+command=static source/API and verifier-boundary assessment at revision 3975eab08762ba1823f07e2aa3cb05f20c86296c
+tool_version=Node TypeScript source inspection; exact revision 3975eab08762ba1823f07e2aa3cb05f20c86296c
+exit_code=1
+failure_class=verifier
+public_surface=ow assertion/isValid/validate/create; Predicate families string number bigint boolean undefined null array object date error map weakMap set weakSet function regExp promise typedArray ArrayBuffer DataView iterable; modifiers optional nullable absent; any and not
+boundary=callbacks, RegExp, symbols, functions, Map/Set/Date/Error/typed arrays, and ArgumentError validationErrors require child-side construction and normalized JSON output
+remediation=Approve a bounded declarative scenario grammar and freeze source-only tests before production compilation.

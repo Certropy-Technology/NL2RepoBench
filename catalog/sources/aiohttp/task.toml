@@ -1,0 +1,51 @@
+schema_version = "1.0"
+task_id = "aiohttp"
+version = "0.1.0"
+instruction = "blocked.md"
+
+[metadata]
+difficulty = "hard"
+category = "async-http-framework"
+tags = ["python", "asyncio", "http", "websocket", "native-extension", "blocked", "no-network"]
+language = "python"
+
+[source]
+status = "unknown"
+upstream_url = "https://github.com/aio-libs/aiohttp"
+revision = "25522ad29937a6b586cb4dbe906c96db45fdc672"
+submodules = []
+
+[environment]
+status = "unknown"
+python_version = "3.12.14"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "The assigned immutable revision cannot be fetched from the declared upstream, so no source archive, dependency closure, verifier, or Oracle payload can be frozen. Agent, candidate, verifier, Oracle, and controls must remain offline."
+
+[dependencies]
+status = "unknown"
+installer = "pip"
+packages = []
+
+[tests]
+framework = "pytest"
+expected_total = 0
+expected_total_source = "unknown"
+commands = []
+protected_paths = []
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[lifecycle]
+status = "blocked"
+owner = "wave9-aiohttp"
+reason = "The declared upstream does not advertise or serve commit 25522ad29937a6b586cb4dbe906c96db45fdc672: an exact shallow fetch exits 128 with 'upload-pack: not our ref'. Substituting another aiohttp revision would violate source authority. No runtime, Oracle, controls, or score is claimed."

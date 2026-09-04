@@ -1,0 +1,11 @@
+command=pnpm install --offline --frozen-lockfile --ignore-scripts
+working_tree=/tmp/meros-freeze/offline-build
+node_version=v22.23.1
+pnpm_version=10.33.0
+exit_code=1
+result=ERR_PNPM_NO_OFFLINE_TARBALL
+missing_package=@jridgewell/trace-mapping@0.3.25
+missing_url=https://registry.npmjs.org/@jridgewell/trace-mapping/-/trace-mapping-0.3.25.tgz
+stdout_stderr_summary=Lockfile is up to date; resolution skipped; 32 packages requested; offline store missing the package above.
+classification=environment
+remediation=Materialize the complete hash-locked pnpm cache/build closure privately, then rerun offline installation and freeze deterministic package/test artifacts.

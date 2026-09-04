@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0",
+  "task_id": "ow",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "environment",
+    "next_step": "Materialize the complete hash-locked npm v3 dependency/cache closure for @sindresorhus/is, callsites, dot-prop, environment, fast-equals, and is-identifier; then approve a bounded JSON child-side adapter and freeze its tests before compiling or running Harbor gates.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/sindresorhus/ow",
+      "revision": "3975eab08762ba1823f07e2aa3cb05f20c86296c",
+      "source_digest": "sha256:bc70bf80d6125a8869d314ea7c1004e61eefdef9763eeda6fd3945d8bb1cb183",
+      "license_spdx": "MIT",
+      "license_digest": "sha256:5c932d88256b4ab958f64a856fa48e8bd1f55bc1d96b8149c65689e0c61789d3"
+    },
+    "commands": [
+      {
+        "command": "git clone --no-checkout https://github.com/sindresorhus/ow /tmp/ow-source; git checkout --detach 3975eab08762ba1823f07e2aa3cb05f20c86296c; git archive --format=tar --prefix=ow/ HEAD | sha256sum; sha256sum license",
+        "tool_version": "git; Node v22.23.1/npm 10.9.8 host used for inspection",
+        "exit_code": 0,
+        "log": {"path": "catalog/sources/ow/evidence/source-freeze.txt", "sha256": "sha256:e74f838b65fc1b11d2fb8e3831b45b9c74797a8e23cfe7937627dc5326a46a63"}
+      },
+      {
+        "command": "npm install --package-lock-only --ignore-scripts --offline --no-audit --no-fund",
+        "tool_version": "Node v22.23.1/npm 10.9.8",
+        "exit_code": 1,
+        "log": {"path": "catalog/sources/ow/evidence/dependency-probe.txt", "sha256": "sha256:dbbcb060cdc4b50165f541204a9c8e6031d0f99eff3f33a0506cdbde91a99c05"}
+      },
+      {
+        "command": "static source/API and verifier-boundary assessment at revision 3975eab08762ba1823f07e2aa3cb05f20c86296c",
+        "tool_version": "Node TypeScript source inspection",
+        "exit_code": 1,
+        "log": {"path": "catalog/sources/ow/evidence/adapter-assessment.txt", "sha256": "sha256:6542a2599851a6aaba3187374445ed2a2eb114b950247f257828be9e5fa8d104"}
+      }
+    ]
+  }
+}

@@ -1,0 +1,23 @@
+mode: author-one source freeze
+command: git clone --filter=blob:none https://github.com/agronholm/anyio /tmp/anyio-author/source
+command: git -C /tmp/anyio-author/source checkout --detach 928366259543412a2deb1e2ba09ea45ffa92ef4f
+command: git -C /tmp/anyio-author/source rev-parse HEAD
+exit_code: 0
+stdout: 928366259543412a2deb1e2ba09ea45ffa92ef4f
+command: git -C /tmp/anyio-author/source rev-parse HEAD^{tree}
+exit_code: 0
+stdout: 50b1e8f311c883eb9a26c36dffae06e5bfc056aa
+command: git -C /tmp/anyio-author/source describe --tags --always --dirty
+exit_code: 0
+stdout: 4.15.0
+command: git -C /tmp/anyio-author/source archive --format=tar HEAD > /tmp/anyio-author/source.tar; stat -c %s /tmp/anyio-author/source.tar; sha256sum /tmp/anyio-author/source.tar
+exit_code: 0
+stdout: 1413120
+stdout: 688c88c5af84b9d9e2eb4efa17227bc9073210d71da09754bfe954779f4e0542  /tmp/anyio-author/source.tar
+command: sha256sum LICENSE pyproject.toml
+exit_code: 0
+stdout: 5361ac9dc58f2ef5fd2e9b09c68297c17f04950909bbc8023bdb82eacf22c2b0  LICENSE
+stdout: ec078d7c073f8de87af76af75d844c3bdaf165629e7a5778e7f7cbfbdb692f9f  pyproject.toml
+command: git status --porcelain=v1; git submodule status
+exit_code: 0
+stdout: <empty; clean checkout with no submodules>

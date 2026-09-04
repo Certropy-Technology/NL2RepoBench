@@ -1,0 +1,28 @@
+mode: local dependency and import probe; not a production Oracle or collection
+network_policy: no network access was used after the immutable source checkout
+command: PYTHONNOUSERSITE=1 python3 -I -c <importlib availability probe>
+exit_code: 0
+stdout: python=3.14.6 (main, Jun 11 2026, 00:00:00) [GCC 16.1.1 20260515 (Red Hat 16.1.1-2)]
+stdout: platform=Linux-7.1.8-200.fc44.x86_64-x86_64-with-glibc2.43
+stdout: idna=True
+stdout: typing_extensions=False
+stdout: trio=False
+stdout: pytest=False
+stdout: pytest_mock=False
+stdout: pytest_timeout=False
+stdout: hypothesis=False
+stdout: psutil=False
+stdout: trustme=False
+stdout: truststore=False
+stdout: uvloop=False
+stdout: blockbuster=False
+stdout: setuptools=False
+stdout: setuptools_scm=False
+command: PYTHONNOUSERSITE=1 PYTHONPATH=src python3 <root/backend/API import probe>
+exit_code: 1
+stdout: module=/tmp/anyio-author/source/src/anyio/__init__.py
+stdout: available_backends=()
+stdout: all_backends=('asyncio', 'trio')
+stdout: root_exports=96
+stderr: ModuleNotFoundError: No module named 'typing_extensions'
+assessment: The requested revision supports Python >=3.10, including the repository lane's Python 3.12.14. On Python <3.15 it requires typing_extensions>=4.16.0 for typed-attribute APIs. The Trio backend and the complete upstream test/build closure are also absent and no repository lock file exists. A source-only import failure is expected in this deliberately empty local environment and is not a source defect.

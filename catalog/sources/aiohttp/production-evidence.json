@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0",
+  "task_id": "aiohttp",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "source",
+    "next_step": "Correct the discovery revision to a complete commit that belongs to https://github.com/aio-libs/aiohttp, or provide an authoritative immutable source object for 25522ad29937a6b586cb4dbe906c96db45fdc672; then freeze its archive and license digests before resolving the hash-locked NoNetwork dependency, verifier, and Oracle closures.",
+    "source_freeze": {
+      "status": "failed",
+      "upstream_url": "https://github.com/aio-libs/aiohttp",
+      "revision": "25522ad29937a6b586cb4dbe906c96db45fdc672",
+      "reason": "The upstream advertises no matching ref and rejects an exact shallow fetch with 'upload-pack: not our ref'; the assigned object is absent locally after the attempt."
+    },
+    "commands": [
+      {
+        "command": "timeout 120 git ls-remote https://github.com/aio-libs/aiohttp 25522ad29937a6b586cb4dbe906c96db45fdc672; timeout 120 git fetch --no-tags --depth=1 origin 25522ad29937a6b586cb4dbe906c96db45fdc672; git cat-file -e '25522ad29937a6b586cb4dbe906c96db45fdc672^{commit}'",
+        "tool_version": "git version 2.55.0",
+        "exit_code": 128,
+        "log": {
+          "path": "catalog/sources/aiohttp/evidence/source-freeze.txt",
+          "sha256": "sha256:edbee85fb8d7512614f6ac5e738ea98067361c30d9724742c4ce12018d939576"
+        }
+      }
+    ]
+  }
+}

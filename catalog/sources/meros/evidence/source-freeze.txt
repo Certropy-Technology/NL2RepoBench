@@ -1,0 +1,13 @@
+command=git clone --no-tags --filter=blob:none https://github.com/maraisr/meros /tmp/meros-freeze/repo
+command=git -C /tmp/meros-freeze/repo checkout --detach 87ed69fe97f5a250ee6e8bec1a9ba458e16655f9
+resolved_revision=87ed69fe97f5a250ee6e8bec1a9ba458e16655f9
+tree=00a8d6b7bc1ef91c741a8bf15c4de8e00886e73e
+archive_format=tar
+archive_prefix=meros/
+archive_size_bytes=133120
+archive_sha256=b28f52eb9ba973f597a52c48d0b000ccc74e0aa32fd9dfb5239530ef4a35c658
+license_path=license
+license_size_bytes=1081
+license_sha256=57dcf8781bbc1a18b6763d2c5cca486981330a7892821ab1800826d15b247c64
+submodules=none
+checkout_status=clean_detached

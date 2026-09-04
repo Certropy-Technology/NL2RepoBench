@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0",
+  "task_id": "anyio",
+  "revision": "928366259543412a2deb1e2ba09ea45ffa92ef4f",
+  "framework": "pytest with AnyIO's own plugin",
+  "test_modules": 29,
+  "top_level_test_definitions": 304,
+  "top_level_async_test_definitions": 257,
+  "frozen_collection": null,
+  "expected_total": null,
+  "reason_total_unknown": "Backend and parameter matrices are expanded dynamically and the complete hash-locked asyncio/Trio test dependency closure is not frozen.",
+  "largest_modules_by_static_definitions": {
+    "tests/test_taskgroups.py": 114,
+    "tests/streams/test_memory.py": 29,
+    "tests/test_pytest_plugin.py": 22,
+    "tests/test_subprocesses.py": 20,
+    "tests/test_to_thread.py": 18,
+    "tests/test_futures.py": 17,
+    "tests/test_to_process.py": 11,
+    "tests/test_sockets.py": 11,
+    "tests/test_concurrency_utils.py": 10,
+    "tests/streams/test_buffered.py": 9
+  },
+  "environment_sensitive_families": [
+    "asyncio and Trio parameterization",
+    "uvloop backend options",
+    "local TCP, UDP and UNIX sockets",
+    "TLS certificate fixtures",
+    "subprocess and process-pool lifecycle",
+    "thread and context propagation",
+    "subinterpreter availability",
+    "OS signal delivery",
+    "timing, cancellation and scheduler ordering",
+    "pytest plugin collection and fixture behavior"
+  ],
+  "inventory_kind": "static-source-evidence-not-a-scoring-denominator"
+}
