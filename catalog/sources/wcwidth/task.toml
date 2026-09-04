@@ -75,13 +75,13 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [oracle_bundle]
-digest = "sha256:047492fa3f7f6e6fbca042ed2e55ecc7cf2495fcb71223f70d78f50cc8860872"
+digest = "sha256:c0d116b5d9f6df385cfd1ed5ee71aeb6d2fcb9b47c9d63111bd52c54d98b5d63"
 size_bytes = 10240
 media_type = "application/vnd.nl2repobench.private-bundle+tar"
-uri = "artifact://private/sha256:047492fa3f7f6e6fbca042ed2e55ecc7cf2495fcb71223f70d78f50cc8860872"
+uri = "artifact://private/sha256:c0d116b5d9f6df385cfd1ed5ee71aeb6d2fcb9b47c9d63111bd52c54d98b5d63"
 visibility = "private"
 
 [lifecycle]
-status = "packaged"
-owner = "python-author-wave2-20260828"
-reason = "Source, dependency closure, private custom verifier, digest-checked Oracle bundle and controls are prepared; production compile and official Harbor gates are recorded in the handoff."
+status = "controls-passed"
+owner = "parent-integration-20260904"
+reason = "The current production bundle passed the official Harbor 0.21.0 Oracle at 36/36. Empty, stub, and forgery controls produced valid bounded low scores with verifier-owned reports; verifier network probes were false."

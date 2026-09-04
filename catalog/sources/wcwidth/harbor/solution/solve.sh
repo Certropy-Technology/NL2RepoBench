@@ -5,7 +5,7 @@ set -euo pipefail
 # trusted Oracle run. The model Agent receives no source-host authorization.
 UPSTREAM_URL="https://github.com/jquast/wcwidth"
 UPSTREAM_REVISION="551710eabf316ed2d9e3782c1fe9cf80ff0f6ed9"
-SOURCE_ARCHIVE_SHA256="sha256:d8621c78e2a93b9f7a97ee756832a3639e8bbb87c7c79f4c8344ef7fb4bf8fb6"
+SOURCE_ARCHIVE_SHA256="d8621c78e2a93b9f7a97ee756832a3639e8bbb87c7c79f4c8344ef7fb4bf8fb6"
 SOURCE_DIR="/tmp/wcwidth-source"
 SOURCE_ARCHIVE="/tmp/wcwidth-source.tar"
 
@@ -26,3 +26,18 @@ printf '%s  %s\n' "$SOURCE_ARCHIVE_SHA256" "$SOURCE_ARCHIVE" | sha256sum --check
 
 find /workspace -mindepth 1 -maxdepth 1 -exec rm -rf -- {} +
 tar -xf "$SOURCE_ARCHIVE" -C /workspace
+
+# The verifier rejects symlinks when it copies the untrusted candidate workspace.
+# Materialize only links that resolve to regular files inside this trusted Oracle
+# checkout; reject every other link rather than weakening the copy boundary.
+while IFS= read -r -d '' link; do
+    target="$(readlink -f "$link")"
+    if [[ "$target" != /workspace/* || ! -f "$target" ]]; then
+        echo "unsupported Oracle source symlink: $link" >&2
+        exit 1
+    fi
+    temporary="$(mktemp "${link}.XXXXXX")"
+    cat "$target" > "$temporary"
+    rm "$link"
+    mv "$temporary" "$link"
+done < <(find /workspace -type l -print0)

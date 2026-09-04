@@ -81,9 +81,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "packaged"
-owner = "node-author-auto-20260903T035117Z/mimic-fn"
-reason = "Frozen source, deterministic private child-side verifier, npm closure, Oracle solution, and negative controls are authored. Official Harbor Agent/Oracle/control receipts remain an integrator responsibility."
+status = "controls-passed"
+owner = "parent-integration-20260904"
+reason = "The official Harbor 0.21.0 Oracle passed 32/32. Empty, stub, forgery, timeout, and offline controls now produce valid 32/32 collected reports at reward 0.0, with verifier-owned reports and no public network access."
 
 [oracle_bundle]
 digest = "sha256:cd717f7e4a44f91cedbe7bf26d077113d4df8ec45e6af0a79efe79cb209e8951"
