@@ -1,0 +1,20 @@
+[Unit]
+Description=NL2RepoBench automatic Sol and Opus Harbor campaigns
+Wants=network-online.target docker.service
+After=network-online.target docker.service nl2repobench-authoring-supervisor.service
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/data/NL2RepoBench-integration-20260827
+Environment=PYTHONUNBUFFERED=1
+EnvironmentFile=-/root/.config/itbench/bootstrap-secrets.env
+ExecStart=/data/NL2RepoBench-integration-20260827/.venv/bin/python3 /data/NL2RepoBench-integration-20260827/scripts/model_auto_coordinator.py --repository-root /data/NL2RepoBench-integration-20260827 --state-root .nl2repo/model-auto --docker-root /data/docker-runtime/docker --models-file /root/.pi/agent/models.json --batch-size 4 --interval-seconds 300 --inventory-timeout-seconds 900 --agent-timeout-seconds 14400 --max-integration-age-days 30 --min-free-bytes 21474836480
+Restart=always
+RestartSec=30
+TimeoutStopSec=60
+KillMode=control-group
+LimitNOFILE=8192
+
+[Install]
+WantedBy=multi-user.target
