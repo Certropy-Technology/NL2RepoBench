@@ -148,7 +148,7 @@ class HarborCompiler:
         kind: str,
         output_root: Path,
     ) -> Path:
-        """Create a stub/forgery Oracle bundle without mutating the source task."""
+        """Create a task-local control bundle without mutating the source task."""
 
         if kind not in {
             "stub",
@@ -156,6 +156,11 @@ class HarborCompiler:
             "install-hang",
             "workspace-invalid",
             "call-hang",
+            "install-failure",
+            "panic",
+            "hang",
+            "oversized-output",
+            "background-process",
         }:
             raise HarborCompileError(f"unsupported control kind: {kind}")
         script = task_root / "controls" / f"{kind}.sh"

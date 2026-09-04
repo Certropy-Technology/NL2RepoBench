@@ -186,6 +186,9 @@ class NodeHarborCompiler:
             "install-script",
             "loader-hook",
             "oversized-output",
+            "install-failure",
+            "panic",
+            "background-process",
         }:
             raise NodeHarborCompileError(f"unsupported control kind: {kind}")
         script = task_root / "controls" / f"{kind}.sh"

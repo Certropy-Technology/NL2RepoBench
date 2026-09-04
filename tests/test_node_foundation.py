@@ -285,6 +285,32 @@ def test_node_control_dispatch_and_manifest_integrity(tmp_path: Path) -> None:
         assert entry["sha256"] == hashlib.sha256(file_path.read_bytes()).hexdigest()
 
 
+@pytest.mark.parametrize(
+    "kind",
+    ("install-failure", "panic", "background-process"),
+)
+def test_node_control_dispatch_supports_current_adversarial_kinds(
+    tmp_path: Path, kind: str
+) -> None:
+    source = tmp_path / "source"
+    shutil.copytree(NODE_TASK, source)
+    controls = source / "harbor/controls"
+    controls.mkdir()
+    script = controls / f"{kind}.sh"
+    script.write_text(f"#!/usr/bin/env bash\necho {kind}\n", encoding="utf-8")
+    task_root = NodeHarborCompiler(NODE_TOOLCHAIN).compile_task(
+        source, tmp_path / "tasks", allow_incomplete=True
+    )
+
+    control = HarborCompilerRegistry.default().prepare_control_bundle(
+        task_root, kind, tmp_path / "controls", NODE_TOOLCHAIN
+    )
+
+    assert (control / "solution/solve.sh").read_bytes() == script.read_bytes()
+    manifest = json.loads((control / "bundle.manifest.json").read_text())
+    assert manifest["mode"] == f"control-{kind}"
+
+
 def test_node_control_rejects_python_only_kind(tmp_path: Path) -> None:
     source = tmp_path / "source"
     shutil.copytree(NODE_TASK, source)

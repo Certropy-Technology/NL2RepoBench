@@ -527,6 +527,29 @@ def test_prepare_stub_control_replaces_only_control_solution(tmp_path) -> None:
     assert json.loads((control / "bundle.manifest.json").read_text())["mode"] == "control-stub"
 
 
+@pytest.mark.parametrize(
+    "kind",
+    (
+        "install-failure",
+        "panic",
+        "hang",
+        "oversized-output",
+        "background-process",
+    ),
+)
+def test_prepare_current_python_control_kinds(tmp_path, kind: str) -> None:
+    compiler = HarborCompiler(TOOLCHAIN)
+    task_root = compiler.compile_task(SOURCE, tmp_path / "tasks", allow_incomplete=True)
+    script = task_root / "controls" / f"{kind}.sh"
+    script.write_text(f"#!/usr/bin/env bash\necho {kind}\n", encoding="utf-8")
+
+    control = compiler.prepare_control_bundle(task_root, kind, tmp_path / "controls")
+
+    assert (control / "solution/solve.sh").read_bytes() == script.read_bytes()
+    manifest = json.loads((control / "bundle.manifest.json").read_text())
+    assert manifest["mode"] == f"control-{kind}"
+
+
 def test_prepare_control_rejects_unknown_kind(tmp_path) -> None:
     compiler = HarborCompiler(TOOLCHAIN)
     task_root = compiler.compile_task(SOURCE, tmp_path / "tasks", allow_incomplete=True)
