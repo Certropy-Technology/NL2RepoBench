@@ -1,0 +1,22 @@
+mode=author-one
+command=git init && git remote add origin https://github.com/piotrwitek/utility-types && git fetch --depth=1 origin fb06cf0c7d2768e39b78bed8b7ca94727998cb2f && git checkout --detach FETCH_HEAD
+exit_code=0
+resolved_revision=fb06cf0c7d2768e39b78bed8b7ca94727998cb2f
+tree=ac59befe061fd3865362662975c5192b029b6f65
+subject=Update contribution guidelines for PR submissions
+commit_time=2026-05-09T12:55:38+02:00
+checkout_status=clean
+submodules=none
+command=git archive --format=tar HEAD > /tmp/utility-types-source.tar && sha256sum /tmp/utility-types-source.tar && wc -c /tmp/utility-types-source.tar
+run_1_exit_code=0
+run_1_size_bytes=450560
+run_1_sha256=89ef3a2ba2f2f0b8d1adfec0e2be2c0a066b1333b6fc8483539f563987d279e6
+command=git archive --format=tar HEAD | sha256sum
+run_2_exit_code=0
+run_2_size_bytes=450560
+run_2_sha256=89ef3a2ba2f2f0b8d1adfec0e2be2c0a066b1333b6fc8483539f563987d279e6
+command=sha256sum LICENSE package.json package-lock.json
+exit_code=0
+license_sha256=eba0c3a8b90636744cc57e1a90f2d87767a57cccc86578a8168130f96896c9a9
+package_json_sha256=8fcdeaa7f9f671e378e9a3d7e6ee8b9561ce5a6fcf8da79a1c8d2386e87cc37d
+package_lock_sha256=7dee1211429063026504ca740ce3904ced98942d33692eecedf123dd578f161b

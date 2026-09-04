@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0",
+  "task_id": "cachecontrol",
+  "revision": "9ff6af2c397bdfbddb57567b2350c202fed45356",
+  "upstream_tests": {
+    "path": "tests",
+    "tracked_files": 17,
+    "collected": 113,
+    "passed": 113,
+    "failed": 0,
+    "collection_command": "uv run --project <frozen-source> --with pytest --with cherrypy --with 'cheroot>=11.1.2' pytest --collect-only -q -o addopts='' -p no:cacheprovider tests",
+    "test_command": "uv run --project <frozen-source> --with pytest --with cherrypy --with 'cheroot>=11.1.2' pytest -q -o addopts='' -p no:cacheprovider tests"
+  },
+  "private_contract": {
+    "framework": "custom-json-v1",
+    "frozen_total": 27,
+    "scenarios": [
+      "exports-and-version",
+      "parse-uri",
+      "cache-url-normalization",
+      "cache-control-directives",
+      "cache-control-invalid-values",
+      "dict-cache-crud",
+      "base-cache-contract",
+      "serializer-roundtrip",
+      "serializer-vary",
+      "serializer-rejects-invalid",
+      "one-day-heuristic",
+      "one-day-preserves-expires",
+      "expires-after-heuristic",
+      "last-modified-heuristic",
+      "conditional-headers",
+      "cache-response-max-age",
+      "cache-response-body-length",
+      "cache-response-no-store",
+      "cache-response-vary-star",
+      "cache-response-etag",
+      "cache-response-redirect",
+      "cached-request-fresh",
+      "cached-request-stale-purges",
+      "update-cached-response",
+      "file-cache-crud",
+      "separate-body-file-cache",
+      "wrapper-and-adapter"
+    ]
+  },
+  "collection_policy": "Every scenario emits one unique leaf and collection mismatch is fatal.",
+  "risk_adaptation": "Live server and Redis tests are not scored. Their underlying cache decisions and storage contracts are exercised with prepared requests, memory responses, injected time, and temporary files."
+}

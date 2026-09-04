@@ -1,0 +1,27 @@
+COMMAND: disposable immutable source checkout
+git clone --filter=blob:none --no-checkout https://github.com/sindresorhus/type-fest.git /tmp/type-fest-audit-5715dfe
+git -C /tmp/type-fest-audit-5715dfe fetch --no-tags origin 5715dfe23dc5853a148afa37df3c0a698ca9cbb9
+git -C /tmp/type-fest-audit-5715dfe checkout --detach 5715dfe23dc5853a148afa37df3c0a698ca9cbb9
+EXIT_CODE: 0
+
+COMMIT: 5715dfe23dc5853a148afa37df3c0a698ca9cbb9
+TREE: 5e57604b56fca8e29df9929dc6e651ae5ca4de5d
+SUBJECT: Meta tweaks
+COMMIT_TIME: 2026-09-02T04:13:00+02:00
+DESCRIBE: v5.9.0-1-g5715dfe
+TRACKED_FILES: 483
+SOURCE_DECLARATION_FILES: 216
+TYPE_TEST_FILES: 221
+GIT_SUBMODULES: none
+
+COMMAND: git archive --format=tar HEAD
+ARCHIVE_BYTES: 2734080
+ARCHIVE_SHA256: cc121f8fbb5405e1529bc1ccf2dc66ccb16b99f6c26ee409b4d3e5a89000c2bd
+REPEAT_ARCHIVE_SHA256: cc121f8fbb5405e1529bc1ccf2dc66ccb16b99f6c26ee409b4d3e5a89000c2bd
+
+LICENSE_MIT_BYTES: 1117
+LICENSE_MIT_SHA256: 5c932d88256b4ab958f64a856fa48e8bd1f55bc1d96b8149c65689e0c61789d3
+LICENSE_CC0_BYTES: 7048
+LICENSE_CC0_SHA256: a2010f343487d3f7618affe54f789f5487602331c0a8d03f49e9a7c547cf0499
+PACKAGE_JSON_SHA256: a2e0db80f15c56f59cd3cf9ba21ffe0757bf9174c3568f2d2fccfd9f3effd821
+INDEX_DTS_SHA256: 7d77e53e16b53b0aecae5b768267a8fdf0646279610d97f105fa3dca0e58ec11

@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0",
+  "task_id": "cachecontrol",
+  "revision": "9ff6af2c397bdfbddb57567b2350c202fed45356",
+  "distribution": "CacheControl",
+  "version": "0.14.4",
+  "public_modules": [
+    "cachecontrol",
+    "cachecontrol.adapter",
+    "cachecontrol.cache",
+    "cachecontrol.caches",
+    "cachecontrol.caches.file_cache",
+    "cachecontrol.controller",
+    "cachecontrol.filewrapper",
+    "cachecontrol.heuristics",
+    "cachecontrol.serialize",
+    "cachecontrol.wrapper"
+  ],
+  "scored_symbols": {
+    "cachecontrol": ["CacheControlAdapter", "CacheController", "CacheControl", "__version__"],
+    "cachecontrol.cache": ["BaseCache", "DictCache", "SeparateBodyBaseCache"],
+    "cachecontrol.caches.file_cache": ["FileCache", "SeparateBodyFileCache", "url_to_file_path"],
+    "cachecontrol.controller": ["parse_uri", "CacheController"],
+    "cachecontrol.heuristics": ["expire_after", "datetime_to_header", "BaseHeuristic", "OneDayCache", "ExpiresAfter", "LastModified"],
+    "cachecontrol.serialize": ["Serializer"],
+    "cachecontrol.wrapper": ["CacheControl"]
+  },
+  "excluded_risk_surface": [
+    "outbound HTTP, DNS, TLS, and proxy transport",
+    "live CherryPy fixture server",
+    "Redis service integration",
+    "command-line HTTP fetch behavior",
+    "uncontrolled wall-clock waiting"
+  ],
+  "adapter_boundary": "The verifier constructs requests.PreparedRequest and in-memory urllib3.HTTPResponse objects in a UID-isolated candidate child. Filesystem tests use a child-owned temporary directory."
+}

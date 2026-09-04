@@ -1,0 +1,87 @@
+schema_version = "1.0"
+task_id = "cachecontrol"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "python-http-cache"
+tags = ["python", "http", "cache-control", "serialization", "requests", "file-cache", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/psf/cachecontrol"
+revision = "9ff6af2c397bdfbddb57567b2350c202fed45356"
+license_spdx = "Apache-2.0"
+source_digest = "sha256:a4759421bdf464fc3b0bebfaa3ff6d93d11dac0f460621a4b20ae012908fc965"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12"
+os_name = "debian-12-amd64"
+base_image = "python:3.12-slim"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = ["git"]
+network_mode = "no-network"
+build_command = "install the hash-locked uv-build, requests, msgpack, filelock, and transitive dependency closure during Docker image build"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The exact build and runtime dependency closure is installed from a private hash lock during image construction. Agent and separate verifier phases have no egress. Only the trusted Oracle receives the exact upstream host override and verifies the frozen commit archive digest."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = ["certifi==2026.7.22", "charset-normalizer==3.5.1", "filelock==3.20.3", "idna==3.19", "msgpack==1.2.1", "requests==2.33.0", "urllib3==2.7.0", "uv-build==0.11.32"]
+lock_artifact = { digest = "sha256:13338a86c4571463b0934a97337eff55265de4ad262d167f7615ae65fbf18016", size_bytes = 23333, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:13338a86c4571463b0934a97337eff55265de4ad262d167f7615ae65fbf18016", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 27
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+bundle = { digest = "sha256:3abcb1eda859e33d27fffa5bf472280416849537c12020bdd38bcf9748d23c7a", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:3abcb1eda859e33d27fffa5bf472280416849537c12020bdd38bcf9748d23c7a", visibility = "private" }
+environment = {}
+
+[harbor]
+description = "Build CacheControl 0.14.4 from an empty workspace and reproduce deterministic cache storage, RFC cache directive, freshness, ETag, serialization, heuristic, wrapper, and adapter behavior through an isolated subprocess verifier."
+keywords = ["python", "http", "cache-control", "serialization", "requests", "file-cache", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 360.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:df8faa3260e08d375e67005e761740f95ab3f56b1bc6232a8102240293cfbba6"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:df8faa3260e08d375e67005e761740f95ab3f56b1bc6232a8102240293cfbba6"
+visibility = "private"
+
+[lifecycle]
+status = "blocked"
+owner = "python-author-discover-20260903T025734Z/cachecontrol"
+reason = "The supplied Oracle artifact is not NoNetwork-safe: its solve.sh performs runtime git fetch from GitHub and contains no frozen source archive. A new digest-verified offline Oracle bundle and fresh production compile, Oracle, and controls are required."

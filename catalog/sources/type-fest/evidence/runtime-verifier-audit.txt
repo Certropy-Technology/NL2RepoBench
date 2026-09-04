@@ -1,0 +1,27 @@
+COMMAND: inspect package metadata and exports
+RESULT: package version 5.9.0; type module; exports for "." and "./globals"
+RESULT: both export maps contain only a "types" condition; no import or require condition
+RESULT: package types are ./index.d.ts; sideEffects=false; dependency tagged-tag@^1.0.0
+RESULT: package scripts include test:tsc, test:tsd, test:xo, test:linter, and test
+RESULT: no package-lock.json, npm-shrinkwrap.json, pnpm-lock.yaml, or yarn.lock is tracked
+EXIT_CODE: 0
+
+COMMAND: node --version && npm --version
+RESULT: v22.23.1 / 10.9.8
+
+COMMAND: node --input-type=module -e "import('type-fest')"
+RESULT: Error [ERR_PACKAGE_PATH_NOT_EXPORTED]: No "exports" main defined in package.json
+EXIT_CODE: 1
+
+COMMAND: node -e "require('type-fest')"
+RESULT: Error [ERR_PACKAGE_PATH_NOT_EXPORTED]: No "exports" main defined in package.json
+EXIT_CODE: 1
+
+COMMAND: npm ci --offline --ignore-scripts --no-audit --no-fund
+RESULT: npm ERR! The `npm ci` command can only install with an existing package-lock.json or npm-shrinkwrap.json
+EXIT_CODE: 1
+
+COMMAND: static type-test inventory
+RESULT: 221 test-d TypeScript files; 5552 expectType/expectAssignable/expectNotAssignable/expectError/expectNever/expectNotType occurrences
+RESULT: 203 top-level export type statements in index.d.ts; 217 declaration files total
+RESULT: these require compiler diagnostics and cannot be scored by the Node runtime verifier

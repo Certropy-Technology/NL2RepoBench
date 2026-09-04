@@ -1,0 +1,7 @@
+command=env npm_config_cache=/tmp/utility-types-empty-cache npm_config_offline=true npm_config_ignore_scripts=true npm_config_audit=false npm_config_fund=false npm ci --offline --ignore-scripts --no-audit --no-fund
+tool_version=Node v22.23.1; npm 10.9.8
+exit_code=1
+stderr=npm error code ENOTCACHED
+stderr=npm error request to https://registry.npmjs.org/yargs-parser/-/yargs-parser-7.0.0.tgz failed: cache mode is 'only-if-cached' but no cached response is available.
+interpretation=missing offline npm cache; infrastructure/source fetch is not permitted during runtime
+network_contract=NoNetwork for agent,candidate,verifier,Oracle,controls

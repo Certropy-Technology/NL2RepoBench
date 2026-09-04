@@ -1,0 +1,44 @@
+{
+  "schema_version": "1.0",
+  "task_id": "type-fest",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "verifier",
+    "next_step": "Author and review a separate TypeScript diagnostic verifier with a bounded positive/negative fixture protocol, freeze a compiler and tsd-compatible private dependency closure, then collect a fixed denominator and run NoNetwork Oracle, empty, stub, forgery, and offline controls. Do not generate catalog/tasks/type-fest until those gates pass.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/sindresorhus/type-fest",
+      "revision": "5715dfe23dc5853a148afa37df3c0a698ca9cbb9",
+      "tree": "5e57604b56fca8e29df9929dc6e651ae5ca4de5d",
+      "source_digest": "sha256:cc121f8fbb5405e1529bc1ccf2dc66ccb16b99f6c26ee409b4d3e5a89000c2bd",
+      "license_spdx": "MIT OR CC0-1.0",
+      "license_paths": ["license-mit", "license-cc0"],
+      "license_digests": {
+        "license-mit": "sha256:5c932d88256b4ab958f64a856fa48e8bd1f55bc1d96b8149c65689e0c61789d3",
+        "license-cc0": "sha256:a2010f343487d3f7618affe54f789f5487602331c0a8d03f49e9a7c547cf0499"
+      },
+      "package_manifest_digest": "sha256:a2e0db80f15c56f59cd3cf9ba21ffe0757bf9174c3568f2d2fccfd9f3effd821",
+      "audit_digest": "sha256:442f194338134fe39174443603daca8ec50a430ca0de422ae78ffda1182d4fff"
+    },
+    "commands": [
+      {
+        "command": "git clone --filter=blob:none --no-checkout https://github.com/sindresorhus/type-fest.git /tmp/type-fest-audit-5715dfe; git fetch --no-tags origin 5715dfe23dc5853a148afa37df3c0a698ca9cbb9; git checkout --detach 5715dfe23dc5853a148afa37df3c0a698ca9cbb9; git archive --format=tar HEAD; sha256sum license-mit license-cc0 package.json index.d.ts",
+        "tool_version": "Git source-freeze audit",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/type-fest/evidence/source-freeze.txt",
+          "sha256": "sha256:28cfce993f07dbbabff1bf03cc517bb387fe98d3590a68e24528d89e07c6873d"
+        }
+      },
+      {
+        "command": "node --input-type=module -e import('type-fest'); node -e require('type-fest'); npm ci --offline --ignore-scripts --no-audit --no-fund",
+        "tool_version": "Node 22.23.1 / npm 10.9.8",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/type-fest/evidence/runtime-verifier-audit.txt",
+          "sha256": "sha256:c5d1cccfd99bc7303d3314f68e2ce643364c152a0d9da52bc030b7a08b506fbc"
+        }
+      }
+    ]
+  }
+}

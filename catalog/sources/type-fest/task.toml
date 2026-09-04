@@ -1,0 +1,79 @@
+schema_version = "2.0"
+task_id = "type-fest"
+version = "0.1.0"
+instruction = "blocked.md"
+
+[metadata]
+language = "node"
+difficulty = "hard"
+category = "typescript-type-utilities"
+tags = ["node", "npm", "typescript", "type-level-programming", "declaration-only", "blocked"]
+
+[source]
+status = "known"
+upstream_url = "https://github.com/sindresorhus/type-fest"
+revision = "5715dfe23dc5853a148afa37df3c0a698ca9cbb9"
+license_spdx = "MIT OR CC0-1.0"
+source_digest = "sha256:cc121f8fbb5405e1529bc1ccf2dc66ccb16b99f6c26ee409b4d3e5a89000c2bd"
+submodules = []
+
+[environment]
+status = "unknown"
+network_mode = "no-network"
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "Agent, candidate, verifier, Oracle, and controls must run without egress. The exact source has no npm v3 lock/cache closure, and faithful validation requires a pinned TypeScript diagnostic compiler rather than a Node runtime import."
+
+[dependencies]
+status = "unknown"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = ["tagged-tag@^1.0.0", "typescript@^5.9.2", "tsd@^0.33.0", "the remaining development and type-test closure is not frozen"]
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 0
+expected_total_source = "unknown"
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Blocked audit of type-fest because the exact package exposes TypeScript declarations only and has no faithful Node runtime verifier."
+keywords = ["node", "npm", "typescript", "type-only", "blocked"]
+agent_timeout_sec = 900.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "blocked"
+owner = "repair/type-fest"
+reason = "The exact revision is a declaration-only TypeScript package: its root and globals exports contain only types, and ESM import plus CommonJS require fail with ERR_PACKAGE_PATH_NOT_EXPORTED. A faithful task would need a reviewed TypeScript compiler/diagnostic verifier and a complete offline npm closure; the current Node runtime verifier cannot measure type-level semantics. No catalog/tasks/type-fest runtime exists."

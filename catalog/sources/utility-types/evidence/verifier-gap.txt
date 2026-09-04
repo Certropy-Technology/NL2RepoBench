@@ -1,0 +1,22 @@
+command=rg '^export (type|interface) ' src/utility-types.ts src/mapped-types.ts src/aliases-and-guards.ts
+exit_code=0
+type_exports=59
+command=rg '^export (const|function) ' src/aliases-and-guards.ts src/functional-helpers.ts
+exit_code=0
+runtime_exports=4
+command=rg '@dts-jest:pass:snap' src/*.spec.snap.ts
+exit_code=0
+dts_snapshot_assertions=145
+command=rg '^it\(' src/*.spec.ts
+exit_code=0
+jest_runtime_leaves=7
+command=node -e "const x=require('./package-lock.json'); console.log(x.lockfileVersion); console.log(Object.keys(x.packages).length); console.log(Object.values(x.packages).filter(y=>y.integrity).length)"
+exit_code=0
+lockfile_version=3
+lock_packages=698
+lock_integrity_entries=631
+verifier_audit=current_node_verifier_supports_node_test_json_v1_only
+verifier_audit_exit_code=0
+verifier_typecheck_protocol=missing
+verifier_typecheck_protocol_exit_code=1
+decision=blocked

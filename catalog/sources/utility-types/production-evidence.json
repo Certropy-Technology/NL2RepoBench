@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.0",
+  "task_id": "utility-types",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "verifier",
+    "next_step": "Implement and review a dedicated NoNetwork TypeScript compile-time verifier with a fixed diagnostic leaf contract, freeze the complete npm v3 lock/cache closure, then rerun the source baseline and production compile.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/piotrwitek/utility-types",
+      "revision": "fb06cf0c7d2768e39b78bed8b7ca94727998cb2f",
+      "tree": "ac59befe061fd3865362662975c5192b029b6f65",
+      "source_digest": "sha256:89ef3a2ba2f2f0b8d1adfec0e2be2c0a066b1333b6fc8483539f563987d279e6",
+      "archive_size_bytes": 450560,
+      "license_spdx": "MIT",
+      "license_digest": "sha256:eba0c3a8b90636744cc57e1a90f2d87767a57cccc86578a8168130f96896c9a9",
+      "source_log": {"path":"catalog/sources/utility-types/evidence/source-freeze.txt","sha256":"sha256:5458a087802ae64ab20c17e9d2f1b12ee081620cae2682ddfbc6a3a1bd3555be"}
+    },
+    "commands": [
+      {"command":"npm ci --offline --ignore-scripts --no-audit --no-fund","tool_version":"Node v22.23.1; npm 10.9.8","exit_code":1,"log":{"path":"catalog/sources/utility-types/evidence/offline-install.txt","sha256":"sha256:15a2df28b57eabcaf48445407c757ac0d5c0d9ed70f17e38a39a9cfe26cce423"}},
+      {"command":"Audit current Node verifier for TypeScript compile-time protocol","tool_version":"nl2repobench 0.1.0; Harbor 0.21.0","exit_code":1,"log":{"path":"catalog/sources/utility-types/evidence/verifier-gap.txt","sha256":"sha256:96431a93ac9215ae8fa8a78466954a332ea9a55bc347a484e7674c5981e33657"}}
+    ],
+    "observations": {
+      "type_exports": 59,
+      "runtime_exports": 4,
+      "dts_snapshot_assertions": 145,
+      "runtime_jest_leaves": 7,
+      "lockfile_version": 3,
+      "lock_packages": 698,
+      "lock_integrity_entries": 631,
+      "faithful_verifier": false,
+      "runtime_only_verifier": "unfaithful"
+    },
+    "network_policy": {
+      "mode": "no-network",
+      "allowed_hosts": [],
+      "offline_dependencies": "missing",
+      "reference_source_fetch": "forbidden"
+    }
+  }
+}

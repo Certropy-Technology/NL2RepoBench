@@ -1,0 +1,68 @@
+schema_version = "2.0"
+task_id = "utility-types"
+version = "0.1.0"
+instruction = "blocked.md"
+
+[metadata]
+language = "node"
+difficulty = "hard"
+category = "typescript-type-utilities"
+tags = ["node", "npm", "typescript", "type-level", "mapped-types", "blocked"]
+
+[source]
+status = "known"
+upstream_url = "https://github.com/piotrwitek/utility-types"
+revision = "fb06cf0c7d2768e39b78bed8b7ca94727998cb2f"
+license_spdx = "MIT"
+source_digest = "sha256:89ef3a2ba2f2f0b8d1adfec0e2be2c0a066b1333b6fc8483539f563987d279e6"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+allowed_hosts = []
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "Agent, candidate, verifier, Oracle, and controls must run without network access; the exact npm development closure and a faithful TypeScript type-check verifier are not available as frozen private artifacts."
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[dependencies]
+status = "unknown"
+ecosystem = "npm"
+consumer = "verifier-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = []
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 0
+expected_total_source = "unknown"
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[lifecycle]
+status = "blocked"
+owner = "node-author-wave9-20260905"
+reason = "The source and MIT license are frozen, but the package's core behavior is TypeScript compile-time assignability. The current Node verifier has no type-check protocol, and the exact 698-entry npm development closure is not frozen for offline runtime. A runtime-only guard verifier would be unfaithful. No catalog/tasks/utility-types runtime exists."

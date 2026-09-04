@@ -1,0 +1,37 @@
+cachecontrol authoring remediation evidence
+============================================
+
+Task: cachecontrol
+Upstream: https://github.com/psf/cachecontrol
+Revision: 9ff6af2c397bdfbddb57567b2350c202fed45356
+Source archive digest: sha256:a4759421bdf464fc3b0bebfaa3ff6d93d11dac0f460621a4b20ae012908fc965
+
+Command: tar -tvf .nl2repo/artifacts/private/sha256/df/df8faa3260e08d375e67005e761740f95ab3f56b1bc6232a8102240293cfbba6
+Exit code: 0
+Output:
+-rwxr-xr-x 0/0 993 1970-01-01 08:00 solve.sh
+
+Command: tar -xOf .nl2repo/artifacts/private/sha256/df/df8faa3260e08d375e67005e761740f95ab3f56b1bc6232a8102240293cfbba6 solve.sh
+Exit code: 0
+Output:
+#!/usr/bin/env bash
+set -euo pipefail
+readonly UPSTREAM_URL="https://github.com/psf/cachecontrol"
+readonly UPSTREAM_REVISION="9ff6af2c397bdfbddb57567b2350c202fed45356"
+readonly SOURCE_ARCHIVE_SHA256="a4759421bdf464fc3b0bebfaa3ff6d93d11dac0f460621a4b20ae012908fc965"
+readonly FETCH_ROOT="/tmp/cachecontrol-oracle-source"
+readonly SOURCE_ARCHIVE="/tmp/cachecontrol-source.tar"
+rm -rf -- "$FETCH_ROOT" "$SOURCE_ARCHIVE"
+git init -q "$FETCH_ROOT"
+git -C "$FETCH_ROOT" remote add origin "$UPSTREAM_URL"
+git -C "$FETCH_ROOT" fetch -q --depth 1 origin "$UPSTREAM_REVISION"
+test "$(git -C "$FETCH_ROOT" rev-parse FETCH_HEAD^{commit})" = "$UPSTREAM_REVISION"
+git -C "$FETCH_ROOT" archive --format=tar --output="$SOURCE_ARCHIVE" "$UPSTREAM_REVISION"
+
+Finding: this payload performs runtime GitHub access from the Oracle container. The bundle has no source archive member, so it cannot be converted to an offline Oracle without authoring a new private artifact. Running it under network_mode=no-network would fail before source restoration.
+
+Command: uv run nl2repo task validate-source catalog/sources/cachecontrol
+Exit code: 0
+Output: source schema and declared source contract validated before the Oracle artifact audit.
+
+Remediation: create a new private Oracle tar containing solve.sh and the digest-verified source archive, assert the revision and archive SHA-256 locally, update the artifact reference, compile without --allow-incomplete, then run fresh Oracle, empty, stub, forgery, and offline controls under network_mode=no-network.

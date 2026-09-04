@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "task_id": "type-fest",
+  "assessment": "blocked",
+  "faithful_runtime_verifier": false,
+  "reason": "The package's public exports are TypeScript declarations only. Both ESM import and CommonJS require fail with ERR_PACKAGE_PATH_NOT_EXPORTED, while the 221 upstream test-d files assert compiler diagnostics rather than runtime values.",
+  "required_remediation": [
+    "Freeze a reviewed npm v3 private closure for tagged-tag, TypeScript, tsd, and the bounded test toolchain.",
+    "Author a separate child-side TypeScript diagnostic verifier with positive and negative assertion semantics.",
+    "Freeze the compiler version, fixture collection, denominator, diagnostic normalization, and NoNetwork controls."
+  ],
+  "runtime_policy": {
+    "agent_network_mode": "no-network",
+    "candidate_network_mode": "no-network",
+    "verifier_network_mode": "no-network",
+    "oracle_network_mode": "no-network",
+    "controls_network_mode": "no-network",
+    "runtime_external_access": "forbidden"
+  },
+  "observations": {
+    "declaration_files": 217,
+    "source_declaration_files": 216,
+    "type_test_files": 221,
+    "tracked_lockfiles": 0,
+    "runtime_export_conditions": 0,
+    "runtime_dependency_ranges": 1
+  }
+}
