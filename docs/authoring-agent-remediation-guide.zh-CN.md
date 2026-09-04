@@ -74,7 +74,11 @@ source-freeze
 3. 清空 package cache，在 no-network verifier 中重新安装；保存每个 artifact 的 size
    和 SHA-256。
 4. Candidate dependencies 必须安装到 candidate-owned site，不能覆盖 trusted verifier
-   的 pytest、pydantic 或其他 runtime。
+   的 pytest、pydantic 或其他 runtime。`pip --prefix` 仍需配合 `--ignore-installed`；否则
+   candidate lock 中的同名低版本依赖可能先卸载 trusted site 中的包，再写入 prefix，
+   导致 verifier 在 import 阶段崩溃。编译后的 tests Dockerfile 必须同时包含
+   `--ignore-installed` 和 `--prefix /opt/candidate-dependencies`，并验证 trusted runtime
+   在 candidate closure 安装后仍可 import。
 5. CAS 注册前扫描 lock、manifest、source map 和生成日志中的绝对 authoring/worktree
    路径。依赖版本与 hash 保持不变时，可把 uv/pip/npm 生成注释中的输入输出路径规范化为
    task-relative 路径；随后重新计算 artifact digest。任何这类 artifact byte 变化都会
