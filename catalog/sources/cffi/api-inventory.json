@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "task_id": "cffi",
+  "source_revision": "61fe449bd5bf9ae48211e822a7eefa5cb07c11d3",
+  "public_modules": ["cffi", "cffi.api", "cffi.error", "cffi.model"],
+  "public_symbols": [
+    "cffi.FFI", "cffi.CDefError", "cffi.FFIError", "cffi.VerificationError",
+    "cffi.VerificationMissing", "FFI.cdef", "FFI.typeof", "FFI.getctype",
+    "FFI.sizeof", "FFI.alignof", "FFI.new", "FFI.cast", "FFI.string",
+    "FFI.buffer", "FFI.callback", "FFI.new_handle", "FFI.from_handle",
+    "FFI.addressof", "FFI.dlopen", "FFI.set_source", "FFI.emit_c_code",
+    "FFI.list_types"
+  ],
+  "risk_flags": ["native-extension", "libffi", "callbacks", "compiler", "dynamic-loader", "buffer-protocol", "opaque-handles"],
+  "unsupported_surface": ["embedding API", "platform-specific ABI layouts", "arbitrary external libraries", "thread callbacks", "Windows-only behavior", "free-threaded CPython variants"],
+  "inventory_method": "AST and source inspection at the assigned immutable revision, followed by a bounded CPython 3.12 build and representative upstream pytest probe."
+}

@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0",
+  "task_id": "cffi",
+  "task_version": "1.0.0",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/python-cffi/cffi",
+    "revision": "61fe449bd5bf9ae48211e822a7eefa5cb07c11d3",
+    "git_tree": "a2a978f86440242005ad936e5528d5ddbc0dbfd7",
+    "source_digest": "sha256:3a426232fcb6ae371250e4e54428adb7b606ba77802bcf35025d059628082f0d",
+    "license_spdx": "MIT-0",
+    "license_sha256": "sha256:5ba24ddc57067f9249add644c3afc41a5d6dc37e23433ef759d95df370b0af63"
+  },
+  "environment": {
+    "python": "3.12.14",
+    "base_image": "python:3.12.14-slim-bookworm",
+    "base_image_digest": "sha256:782412e85d0f0984994c290652577d4018aff08145c85b262bb63dc0c7522254",
+    "system_packages": ["build-essential", "libffi-dev", "pkg-config"],
+    "network_mode": "no-network"
+  },
+  "artifacts": {
+    "dependency_lock": {"digest":"sha256:e46f6b4e04c812094a23cdcf944d70a3b3d2b6516e111e0ff2b252325fe663e0","size_bytes":563},
+    "verifier_bundle": {"digest":"sha256:4558565a0bd78b2b9a608107c09d299a183f6f254c333915837c31ce3857e3b5","size_bytes":20480},
+    "oracle_bundle": {"digest":"sha256:97ae56223612c6d64d5b7941b01a049e66db26c7b88d17fd414efb4b5a35c601","size_bytes":2457600}
+  },
+  "tests": {"framework":"custom-json-v1","expected_total":28,"local_oracle_contract":{"collected":28,"passed":28,"exit_code":0},"candidate_uid":10001,"separate_verifier":true},
+  "commands": [
+    {"command":"git checkout --detach 61fe449bd5bf9ae48211e822a7eefa5cb07c11d3; git archive --format=tar HEAD | sha256sum","exit_code":0,"log":"catalog/sources/cffi/evidence/source-freeze.txt"},
+    {"command":"docker build pinned Python 3.12 image with build-essential libffi-dev pkg-config","exit_code":0,"log":"catalog/sources/cffi/evidence/build-test-probe.txt"},
+    {"command":"local custom-json-v1 adapter replay against frozen reference","exit_code":0,"collected":28,"passed":28,"log":"catalog/sources/cffi/evidence/contract-local.txt"}
+  ],
+  "bundle": {"status":"bound-final","path":".nl2repo/cffi-final/cffi/bundle.manifest.json","sha256":"sha256:df3caee44d490fa2517c568856394281fd4f0c6b9708e10b023dd9b95478fd74"},
+  "oracle": {"valid":true,"collected":28,"passed":28,"reward":1.0,"grading":{"path":".nl2repo/cffi-final-runs/oracle/cffi-final-oracle-20260905/cffi__k5pCUPH/verifier/grading.json","sha256":"sha256:03a394b0323ae67d7a8a8f06842e96046281e877b15695463c1d48583e53218c"},"network":{"path":".nl2repo/cffi-final-runs/oracle/cffi-final-oracle-20260905/cffi__k5pCUPH/verifier/network.json","sha256":"sha256:411ac680a1b9178d5d57ae60404bc141c3141b959c1639e7af1926d1aa6ccc91"},"public_network_available":false},
+  "controls": {
+    "empty":{"valid":true,"collected":0,"passed":0,"reward":0.0,"failure_reason":"candidate-installation-failed","grading":{"path":".nl2repo/cffi-final-runs/empty/cffi-final-empty-20260905/cffi-empty__oWves46/verifier/grading.json","sha256":"sha256:be0fafcd206e3c872ead6011bd828bea1ee82ca6a36504a2482e540c85e396b4"},"network":{"path":".nl2repo/cffi-final-runs/empty/cffi-final-empty-20260905/cffi-empty__oWves46/verifier/network.json","sha256":"sha256:411ac680a1b9178d5d57ae60404bc141c3141b959c1639e7af1926d1aa6ccc91"}},
+    "stub":{"valid":true,"collected":28,"passed":2,"reward":0.07142857142857142,"grading":{"path":".nl2repo/cffi-final-runs/stub/cffi-final-stub-20260905/cffi-stub__tiQXmik/verifier/grading.json","sha256":"sha256:2ecb32803f494595e2d06f518998a66fe3d7001ef485856f1a4d3b22f18adc92"},"network":{"path":".nl2repo/cffi-final-runs/stub/cffi-final-stub-20260905/cffi-stub__tiQXmik/verifier/network.json","sha256":"sha256:411ac680a1b9178d5d57ae60404bc141c3141b959c1639e7af1926d1aa6ccc91"}},
+    "forgery":{"valid":true,"collected":28,"passed":2,"reward":0.07142857142857142,"verifier_owned_reward":true,"workspace_forged_reward":1.0,"grading":{"path":".nl2repo/cffi-final-runs/forgery/cffi-final-forgery-20260905/cffi-forgery__ywEK93i/verifier/grading.json","sha256":"sha256:2ecb32803f494595e2d06f518998a66fe3d7001ef485856f1a4d3b22f18adc92"},"network":{"path":".nl2repo/cffi-final-runs/forgery/cffi-final-forgery-20260905/cffi-forgery__ywEK93i/verifier/network.json","sha256":"sha256:411ac680a1b9178d5d57ae60404bc141c3141b959c1639e7af1926d1aa6ccc91"}},
+    "offline":{"completed":true,"public_network_available":false}
+  },
+  "residual_risks": ["The contract is a deterministic subset of the native package; embedding, arbitrary library loading, platform ABI matrix, and thread scheduling are excluded.","Blind review and model pilot remain separate publication gates."]
+}

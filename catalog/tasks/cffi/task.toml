@@ -1,0 +1,58 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/cffi"
+version = "1.0.0"
+description = "Build the pinned cffi foreign-function interface from an empty workspace and satisfy a deterministic child-process contract for C type parsing, memory, callbacks, and local C library access."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "cffi",
+    "native",
+    "callbacks",
+    "ctypes",
+    "separate-verifier",
+]
+
+[metadata]
+difficulty = "hard"
+category = "foreign-function-interface"
+tags = [
+    "python",
+    "cffi",
+    "ctypes",
+    "native",
+    "callbacks",
+    "separate-verifier",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 28
+canonical_manifest_digest = "sha256:ae4a7f5474119a08f6b1dfd61aaa671eb910127626981716a170c5a579fde2ed"
+toolchain_lock_digest = "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366"
+
+[agent]
+timeout_sec = 3600.0
+
+[verifier]
+timeout_sec = 780.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 16384
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192

@@ -1,0 +1,12 @@
+command: uv venv --python 3.14; uv pip install setuptools==84.0.0 pycparser==3.0 pytest==9.0.2; uv pip install --no-deps --no-build-isolation source
+exit_code: 2
+failure_class: environment
+reason: host probe lacked ffi.h
+remediation: rerun in python:3.12.14-slim-bookworm with build-essential libffi-dev pkg-config
+command: docker build --network=default -t cffi-author-probe:61fe449 <frozen source build context>
+command: docker run --rm --network none cffi-author-probe:61fe449 python -m pytest -c /dev/null --collect-only -q testing/cffi1/test_ffi_obj.py testing/cffi1/test_function_args.py testing/cffi1/test_new_ffi_1.py
+command: docker run --rm --network none cffi-author-probe:61fe449 python -m pytest -c /dev/null -q testing/cffi1/test_ffi_obj.py testing/cffi1/test_function_args.py testing/cffi1/test_new_ffi_1.py
+exit_code: 0
+collection: 168
+passed: 164
+skipped: 4

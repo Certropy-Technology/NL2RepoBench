@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "task_id": "cffi",
+  "framework": "custom-json-v1",
+  "frozen_total": 28,
+  "scenario_ids": [
+    "exports-version", "ffi-construction", "primitive-type", "pointer-new",
+    "array-new", "struct-new", "cast-and-size", "string-read", "buffer-read",
+    "getctype-normalization", "callback-success", "callback-error", "callback-onerror",
+    "handle-roundtrip", "handle-identity", "addressof-array", "struct-field",
+    "pointer-arithmetic", "cdef-types", "cdef-invalid", "list-types", "dlopen-abs",
+    "dlopen-strlen", "emit-c-code", "set-source", "error-hierarchy", "null-and-bool",
+    "deterministic-repeat"
+  ],
+  "collection_source": "The private adapter emits one leaf per scenario; trusted run.py validates exactly 28 unique leaves.",
+  "excluded_upstream_groups": ["embedding", "platform-specific", "thread-unsafe callback tests", "external library and compiler matrix tests", "historical Python 2 tests"],
+  "exclusion_reason": "These groups require platform state, executable embedding, arbitrary toolchain/linker behavior, or native objects that cannot be faithfully represented across the child JSON boundary."
+}

@@ -1,0 +1,6 @@
+python: 3.12.14
+base_image: python:3.12.14-slim-bookworm@sha256:782412e85d0f0984994c290652577d4018aff08145c85b262bb63dc0c7522254
+system_packages: build-essential libffi-dev pkg-config
+candidate_requirements: setuptools==84.0.0; pycparser==3.0
+candidate_requirements_lock_sha256: sha256:e46f6b4e04c812094a23cdcf944d70a3b3d2b6516e111e0ff2b252325fe663e0
+network_policy: no-network during Agent, candidate, verifier, Oracle, and control execution

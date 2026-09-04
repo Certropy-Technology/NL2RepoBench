@@ -1,0 +1,86 @@
+schema_version = "1.0"
+task_id = "cffi"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "foreign-function-interface"
+tags = ["python", "cffi", "ctypes", "native", "callbacks", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/python-cffi/cffi"
+revision = "61fe449bd5bf9ae48211e822a7eefa5cb07c11d3"
+license_spdx = "MIT-0"
+source_digest = "sha256:3a426232fcb6ae371250e4e54428adb7b606ba77802bcf35025d059628082f0d"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.14"
+os_name = "debian-12-amd64"
+base_image = "python:3.12.14-slim-bookworm"
+base_image_digest = "sha256:782412e85d0f0984994c290652577d4018aff08145c85b262bb63dc0c7522254"
+system_packages = ["build-essential", "libffi-dev", "pkg-config"]
+network_mode = "no-network"
+build_command = "install hash-locked setuptools and pycparser during image build, then build the candidate with libffi-dev"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The candidate build closure is installed during image construction and the trusted Oracle restores a digest-checked private source archive. Agent, Oracle, candidate, verifier, and controls execute without network access."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = ["pycparser==3.0", "setuptools==84.0.0"]
+lock_artifact = { digest = "sha256:e46f6b4e04c812094a23cdcf944d70a3b3d2b6516e111e0ff2b252325fe663e0", size_bytes = 563, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:e46f6b4e04c812094a23cdcf944d70a3b3d2b6516e111e0ff2b252325fe663e0", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 28
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:4558565a0bd78b2b9a608107c09d299a183f6f254c333915837c31ce3857e3b5", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:4558565a0bd78b2b9a608107c09d299a183f6f254c333915837c31ce3857e3b5", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
+
+[harbor]
+description = "Build the pinned cffi foreign-function interface from an empty workspace and satisfy a deterministic child-process contract for C type parsing, memory, callbacks, and local C library access."
+keywords = ["python", "cffi", "native", "callbacks", "ctypes", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 780.0
+candidate_install_timeout_sec = 240.0
+candidate_total_timeout_sec = 420.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:97ae56223612c6d64d5b7941b01a049e66db26c7b88d17fd414efb4b5a35c601"
+size_bytes = 2457600
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:97ae56223612c6d64d5b7941b01a049e66db26c7b88d17fd414efb4b5a35c601"
+visibility = "private"
+
+[lifecycle]
+status = "controls-passed"
+owner = "python-author-wave10-cffi"
+reason = "The final NoNetwork task uses a hash-locked native build closure and UID-isolated child verifier. Oracle passes 28/28; empty, installable stub, and forgery controls are valid and remain below the 0.20 reward ceiling."

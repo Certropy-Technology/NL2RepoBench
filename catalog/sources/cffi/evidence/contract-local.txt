@@ -1,0 +1,7 @@
+command: docker run --rm --network none cffi-author-probe:61fe449 with frozen candidate and cffi JSON adapter
+exit_code: 0
+expected_total: 28
+collected: 28
+passed: 28
+public_network_available: false
+adapter_boundary: native CData, callbacks, buffers, and local symbols remain in UID 10001 child process; trusted verifier compares JSON only
