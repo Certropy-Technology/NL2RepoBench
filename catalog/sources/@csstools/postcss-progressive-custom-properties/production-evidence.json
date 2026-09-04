@@ -1,0 +1,48 @@
+{
+  "schema_version": "1.0",
+  "task_id": "@csstools/postcss-progressive-custom-properties",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "environment",
+    "next_step": "Freeze a package-scoped npm lock/cache for postcss-value-parser, the PostCSS peer, and the reviewed child-side adapter; collect a fixed denominator and rerun compile, Oracle, and controls against the final bundle.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/csstools/postcss-plugins",
+      "revision": "c55f9afa26005f083703dd79659b3b7d198ccd37",
+      "source_digest": "sha256:193881e20b579edc5df20115921d97fae2f913fc3f170915672aee17cc6e40d6",
+      "license_spdx": "MIT-0",
+      "license_digest": "sha256:947e32047a166cd05f04e45938d172b412c07cbee0b9735afd14bae30e02c2f6"
+    },
+    "commands": [
+      {
+        "command": "git rev-parse c55f9afa26005f083703dd79659b3b7d198ccd37 && git archive --format=tar c55f9afa26005f083703dd79659b3b7d198ccd37 | sha256sum && sha256sum plugins/postcss-progressive-custom-properties/LICENSE.md",
+        "tool_version": "git 2.x",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/@csstools/postcss-progressive-custom-properties/evidence/source-freeze.log",
+          "sha256": "sha256:8ba52b4c9fb0b04b9c56903334fe969792658f9512002f454693b51053fa7260"
+        }
+      },
+      {
+        "command": "npm ci --offline --ignore-scripts",
+        "tool_version": "Node v22.23.1 / npm 10.9.8",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/@csstools/postcss-progressive-custom-properties/evidence/dependency-probe.log",
+          "sha256": "sha256:a8d1a101ddd6535ebf5e916ea7e18e53ef61191759dad6b39f9bc9700adc906c"
+        }
+      },
+      {
+        "command": "static package API and source-only test inventory",
+        "tool_version": "Node source inspection at revision c55f9afa26005f083703dd79659b3b7d198ccd37",
+        "exit_code": 1,
+        "log": {
+          "path": "catalog/sources/@csstools/postcss-progressive-custom-properties/evidence/adapter-assessment.md",
+          "sha256": "sha256:e66cba42dd0f59e7641d4f9c868f162c68ff0eab81250b5baa3797d5514de60d"
+        }
+      }
+    ],
+    "api_inventory": "catalog/sources/@csstools/postcss-progressive-custom-properties/evidence/api-inventory.json",
+    "test_inventory": "catalog/sources/@csstools/postcss-progressive-custom-properties/evidence/test-inventory.json"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "revision": "c55f9afa26005f083703dd79659b3b7d198ccd37",
+  "framework": "node:test via @csstools/postcss-tape",
+  "fixture_files": [
+    "plugins/postcss-progressive-custom-properties/test/basic.css",
+    "plugins/postcss-progressive-custom-properties/test/basic.expect.css",
+    "plugins/postcss-progressive-custom-properties/test/example.css",
+    "plugins/postcss-progressive-custom-properties/test/example.expect.css"
+  ],
+  "harness_files": [
+    "plugins/postcss-progressive-custom-properties/test/_import.mjs",
+    "plugins/postcss-progressive-custom-properties/test/_require.cjs",
+    "plugins/postcss-progressive-custom-properties/test/_tape.mjs"
+  ],
+  "expected_total": "unknown",
+  "collection_status": "not collected: offline dependency probe failed before install"
+}

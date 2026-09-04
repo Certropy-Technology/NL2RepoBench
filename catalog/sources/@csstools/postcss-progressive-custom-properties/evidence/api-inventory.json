@@ -1,0 +1,15 @@
+{
+  "package": "@csstools/postcss-progressive-custom-properties",
+  "revision": "c55f9afa26005f083703dd79659b3b7d198ccd37",
+  "entrypoint": "dist/index.mjs",
+  "exports": ["default", "module.exports"],
+  "creator": {
+    "signature": "creator(options?: null): Plugin",
+    "input": "PostCSS plugin options; the public declaration exposes null options",
+    "output": "PostCSS Plugin object",
+    "side_effects": "Plugin transforms declarations during PostCSS processing"
+  },
+  "runtime_dependency": "postcss-value-parser@^4.2.0",
+  "peer_dependency": "postcss@^8.4",
+  "engine": "node >=20.19.0"
+}
