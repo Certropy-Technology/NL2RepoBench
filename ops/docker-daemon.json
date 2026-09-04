@@ -1,0 +1,10 @@
+{
+  "data-root": "/data/docker-runtime/docker",
+  "default-address-pools": [
+    {
+      "base": "10.240.0.0/12",
+      "size": 24
+    }
+  ],
+  "live-restore": true
+}
