@@ -389,3 +389,78 @@ def test_lane_registry_preserves_explicit_repair_flag(tmp_path: Path) -> None:
     lanes = coordinator._lane_registry(live)
     assert len(lanes) == 1
     assert lanes[0].repair_existing is True
+
+
+def test_start_workers_prioritizes_repair_lanes(tmp_path: Path, monkeypatch) -> None:
+    root = tmp_path / "repo"
+    live = root / ".nl2repo/authoring-live"
+    plans = live / "plans"
+    plans.mkdir(parents=True)
+    normal_plan = plans / "normal.json"
+    repair_plan = plans / "repair.json"
+    normal_plan.write_text('{"tasks":[]}', encoding="utf-8")
+    repair_plan.write_text('{"tasks":[]}', encoding="utf-8")
+    normal = coordinator.Lane(
+        "python", "normal", live / "normal-q", normal_plan, live / "normal-s"
+    )
+    repair = coordinator.Lane(
+        "python",
+        "repair",
+        live / "repair-q",
+        repair_plan,
+        live / "repair-s",
+        repair_existing=True,
+    )
+    records = {
+        normal.state: [
+            {
+                "candidate_id": "normal",
+                "package": "normal",
+                "language": "python",
+                "status": "pending",
+                "attempts": 0,
+            }
+        ],
+        repair.state: [
+            {
+                "candidate_id": "repair",
+                "package": "repair",
+                "language": "python",
+                "status": "pending",
+                "attempts": 0,
+            }
+        ],
+    }
+    commands: list[list[str]] = []
+
+    class FakeProcess:
+        pid = 1234
+
+        def __init__(self, command, **_kwargs):
+            commands.append(command)
+
+    monkeypatch.setattr(coordinator, "_active_workers", lambda *_args: [])
+    monkeypatch.setattr(coordinator, "_active_lease_slots", lambda *_args: 0)
+    monkeypatch.setattr(coordinator, "_lane_registry", lambda *_args: [normal, repair])
+    monkeypatch.setattr(coordinator, "_state_records", lambda path: records[path])
+    monkeypatch.setattr(coordinator, "_python_bin", lambda *_args: Path("/python"))
+    monkeypatch.setattr(coordinator.subprocess, "Popen", FakeProcess)
+    args = SimpleNamespace(
+        max_agents=1,
+        runner=Path("/runner.py"),
+        lease_seconds=18000,
+        agent_timeout_seconds=14400,
+        provider="primary",
+        model="primary-model",
+        thinking="high",
+        fallback_provider="fallback",
+        fallback_model="fallback-model",
+        fallback_thinking="high",
+    )
+
+    started = coordinator._start_workers(
+        root, live, args, disk_capacity={"can_start": True, "worker_slots": 1}
+    )
+
+    assert [item["package"] for item in started] == ["repair"]
+    assert "--repair-existing" in commands[0]

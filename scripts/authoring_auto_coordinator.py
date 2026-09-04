@@ -847,7 +847,10 @@ def _start_workers(
     available = _available_worker_slots(args, active, lease_slots, capacity)
     if available == 0:
         return []
-    lanes = _lane_registry(live)
+    lanes = sorted(
+        _lane_registry(live),
+        key=lambda lane: (not lane.repair_existing, lane.batch_id),
+    )
     reserved = _active_candidate_keys(active)
     candidates: list[tuple[Lane, dict[str, Any]]] = []
     seen: set[str] = set(reserved)
