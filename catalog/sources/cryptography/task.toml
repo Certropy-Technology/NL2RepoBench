@@ -1,0 +1,82 @@
+schema_version = "1.0"
+task_id = "cryptography"
+version = "0.1.0"
+instruction = "blocked.md"
+
+[metadata]
+difficulty = "hard"
+category = "cryptographic-primitives"
+tags = ["python", "rust-extension", "openssl", "cryptography", "x509", "blocked"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/pyca/cryptography"
+revision = "8079ae9f8cf134dbb2a466a53d0d3f8b8880118a"
+license_spdx = "Apache-2.0 OR BSD-3-Clause"
+source_digest = "sha256:27612a01e8d4c33b6215336fbbcb29933768309ffe5a01860abd82d6cbaa2951"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.14"
+os_name = "debian-12-amd64"
+base_image = "python:3.12.14-slim-bookworm@sha256:0f5b26b9518d002b6173fd61daad821fa340635ebfec5bba471013f9ca114579"
+base_image_digest = "sha256:0f5b26b9518d002b6173fd61daad821fa340635ebfec5bba471013f9ca114579"
+system_packages = ["cargo", "rustc", "libssl-dev", "pkg-config"]
+network_mode = "no-network"
+build_command = "Candidate and verifier build/runtime closure is not approved while the task remains blocked. The authoring probe built the exact revision with maturin 1.15.0, Rust 1.97.1, and OpenSSL 3.5.7."
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "Agent, candidate, verifier, Oracle, and controls require no egress. The exact source and a native wheel were frozen during authoring, but a complete hash-locked test closure and faithful child-side protocol for live cryptographic objects are not available."
+
+[dependencies]
+status = "unknown"
+installer = "pip"
+packages = [
+  "maturin>=1.14.1,<2",
+  "cffi>=2.0.0",
+  "setuptools!=74.0.0,!=74.1.0,!=74.1.1,!=74.1.2",
+  "cryptography_vectors",
+  "pytest>=7.4.0",
+  "pytest-benchmark>=4.0",
+  "pytest-cov>=2.10.1",
+  "pytest-xdist>=3.5.0",
+  "pretend>=0.7",
+  "certifi>=2024",
+]
+
+[tests]
+framework = "pytest"
+expected_total = 0
+expected_total_source = "unknown"
+commands = []
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Blocked cryptography candidate: immutable source and native build are proven, but no approved NoNetwork test closure or faithful separate-verifier protocol covers its native cryptographic object model."
+keywords = ["python", "rust", "openssl", "cryptography", "x509", "blocked"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 1800.0
+candidate_install_timeout_sec = 600.0
+candidate_total_timeout_sec = 900.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "blocked"
+owner = "wave10-03-cryptography"
+reason = "Revision 8079ae9 is immutable and a native wheel builds successfully, but the full package exposes live Rust/OpenSSL key, certificate, cipher, backend, and context objects that cannot be faithfully transported by the generic JSON boundary. The 117-file upstream suite also requires a 126 MiB vendored vector tree and an unfrozen test closure. No runtime, Oracle, controls, or reward is claimed."

@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0",
+  "task_id": "cryptography",
+  "revision": "8079ae9f8cf134dbb2a466a53d0d3f8b8880118a",
+  "inventory_kind": "blocked-static-summary",
+  "source_counts": {"python_files": 78, "rust_files": 107},
+  "public_areas": [
+    "cryptography.fernet",
+    "cryptography.exceptions",
+    "cryptography.hazmat.primitives.hashes",
+    "cryptography.hazmat.primitives.hmac",
+    "cryptography.hazmat.primitives.kdf",
+    "cryptography.hazmat.primitives.ciphers",
+    "cryptography.hazmat.primitives.asymmetric",
+    "cryptography.hazmat.primitives.serialization",
+    "cryptography.hazmat.primitives.twofactor",
+    "cryptography.hazmat.primitives.keywrap",
+    "cryptography.hazmat.primitives.poly1305",
+    "cryptography.x509",
+    "cryptography.x509.ocsp",
+    "cryptography.x509.verification",
+    "cryptography.hazmat.backends.openssl"
+  ],
+  "native_object_families": [
+    "private and public keys",
+    "certificates and certificate builders",
+    "cipher and AEAD contexts",
+    "hash, MAC, and KDF contexts",
+    "OpenSSL backend and error-stack state",
+    "X.509, OCSP, PKCS, and SSH structures"
+  ],
+  "boundary": "No complete public API contract or child-side adapter is approved; this inventory does not claim specification completeness."
+}

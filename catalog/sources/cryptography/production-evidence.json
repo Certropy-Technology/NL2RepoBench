@@ -1,0 +1,48 @@
+{
+  "schema_version": "1.0",
+  "task_id": "cryptography",
+  "terminal_kind": "blocked",
+  "status": "blocked",
+  "blocked": {
+    "failure_class": "verifier",
+    "next_step": "Approve a bounded public API scope and a reviewed stateful child-side protocol for live Rust/OpenSSL-backed keys, certificates, cipher contexts, backend error state, binary buffers, and builder objects. Freeze the complete Python, Rust, OpenSSL, and 126 MiB vector dependency closure with hashes, dynamically collect a positive denominator, then compile and run fresh Oracle, empty, installable stub, forgery, and offline controls under NoNetwork.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/pyca/cryptography",
+      "revision": "8079ae9f8cf134dbb2a466a53d0d3f8b8880118a",
+      "tree": "fa81f6476eee361c7dfca8a566e8a88a7bec7d10",
+      "source_digest": "sha256:27612a01e8d4c33b6215336fbbcb29933768309ffe5a01860abd82d6cbaa2951",
+      "license_spdx": "Apache-2.0 OR BSD-3-Clause",
+      "license_path": "LICENSE",
+      "license_digest": "sha256:3e0c7c091a948b82533ba98fd7cbb40432d6f1a9acbf85f5922d2f99a93ae6bb"
+    },
+    "commands": [
+      {
+        "command": "git clone --no-checkout https://github.com/pyca/cryptography SOURCE && git checkout --detach 8079ae9f8cf134dbb2a466a53d0d3f8b8880118a && git archive --format=tar HEAD | sha256sum",
+        "tool_version": "git 2.51.0",
+        "exit_code": 0,
+        "log": {"path": "catalog/sources/cryptography/evidence/source-freeze.txt", "sha256": "sha256:e7135c8ca6be9d3705e0a3a3d066a51b0ab06859279e285a7884b3def967f5c3"}
+      },
+      {
+        "command": "python -m pip wheel --no-deps --no-build-isolation SOURCE -w WHEELS; retry with PATH=BUILD_VENV/bin:$PATH",
+        "tool_version": "CPython 3.14.6; pip 26.0.1; maturin 1.15.0; rustc 1.97.1; cargo 1.97.1; OpenSSL 3.5.7",
+        "exit_code": 0,
+        "log": {"path": "catalog/sources/cryptography/evidence/native-build.txt", "sha256": "sha256:0bc0edc5a0181f7fb42d0e12871d45550d48c73a5622569fc4999d9e2c0c7d65"}
+      },
+      {
+        "command": "static AST/API, native-boundary, vector-closure, and upstream-test assessment at revision 8079ae9f8cf134dbb2a466a53d0d3f8b8880118a",
+        "tool_version": "CPython 3.14.6 ast; git source tree",
+        "exit_code": 1,
+        "log": {"path": "catalog/sources/cryptography/evidence/verifier-assessment.txt", "sha256": "sha256:0e341f2134341e7e65e0caafa65048181e86992f4a3c9b8150690104718ff704"}
+      }
+    ],
+    "test_inventory": "catalog/sources/cryptography/test-inventory.json",
+    "api_inventory": "catalog/sources/cryptography/api-inventory.json",
+    "network_constraint": "NoNetwork is mandatory for Agent, candidate, verifier, Oracle, and every control. Runtime source, dependency, DNS, and external-service access is forbidden."
+  },
+  "residual_risks": [
+    "Native compilation succeeded, but no production Harbor runtime or fixed denominator is claimed.",
+    "The vector tree is large and the upstream suite exercises backend, native-object, binary-buffer, and stateful error-stack semantics not represented by the current generic JSON boundary.",
+    "Blind review, controls, Oracle, model Agent Run, and publication remain pending the verifier protocol and closure work."
+  ]
+}

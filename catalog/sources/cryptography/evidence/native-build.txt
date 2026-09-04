@@ -1,0 +1,19 @@
+cryptography bounded native build remediation
+host_python=CPython 3.14.6
+host_rustc=1.97.1
+host_cargo=1.97.1
+host_openssl=3.5.7
+build_backend=maturin 1.15.0
+cffi=2.0.0
+setuptools=80.10.2
+source_revision=8079ae9f8cf134dbb2a466a53d0d3f8b8880118a
+initial_command=python -m pip wheel --no-deps --no-build-isolation SOURCE
+initial_exit_code=1
+initial_failure=PEP 517 subprocess could not locate the installed maturin executable because the venv scripts directory was absent from PATH
+remediation=prepend the isolated build venv bin directory to PATH
+final_command=PATH=BUILD_VENV/bin:$PATH BUILD_VENV/bin/python -m pip wheel --no-deps --no-build-isolation SOURCE -w WHEELS
+final_exit_code=0
+wheel=cryptography-51.0.0.dev1-cp314-abi3-linux_x86_64.whl
+wheel_size_bytes=2154275
+wheel_sha256=92f38bb850ffa2ec2a66036169918c7fba8247ddf330df61c9228b5fa8e06a66
+classification=build environment successfully remediated; native compilation is not the blocker

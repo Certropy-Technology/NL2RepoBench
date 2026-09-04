@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "task_id": "cryptography",
+  "revision": "8079ae9f8cf134dbb2a466a53d0d3f8b8880118a",
+  "inventory_kind": "blocked-static-summary",
+  "pytest_python_files": 117,
+  "static_test_method_count": 3066,
+  "vendored_vector_files": 2519,
+  "vendored_vector_tree_size_approx_mib": 126,
+  "test_areas": [
+    "recipes and Fernet",
+    "hashes, HMAC, KDF, ciphers, AEAD, and key wrapping",
+    "RSA, DSA, DH, EC, EdDSA, X25519, X448, ML-KEM, and ML-DSA",
+    "serialization, PKCS7, PKCS12, SSH, and two-factor primitives",
+    "X.509 certificates, extensions, OCSP, CRLs, and verification",
+    "OpenSSL bindings, backend feature gates, FIPS behavior, and error stacks",
+    "NIST and Wycheproof vector suites"
+  ],
+  "collection": {"status": "not-run", "expected_total": 0, "reason": "The complete hash-locked test/vector closure and faithful separate-verifier protocol are not available."},
+  "oracle": {"status": "not-run"},
+  "controls": {"status": "not-run"}
+}

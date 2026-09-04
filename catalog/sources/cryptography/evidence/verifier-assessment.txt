@@ -1,0 +1,19 @@
+cryptography verifier and test-closure assessment
+source_python_files=78
+source_rust_files=107
+upstream_test_python_files=117
+static_test_method_count=3066
+vendored_vector_files=2519
+vendored_vector_tree_size_approx_mib=126
+tests_referencing_hazmat_paths=89
+tests_directly_referencing_rust_or_openssl_bindings=16
+tests_with_backend_context_buffer_file_random_or_callback_indicators=114
+cargo_lock_sha256=4a2ac55634ed23a1a4646ae8f18f6be0aaa7c65c80c7713b8d26496f093d984a
+cargo_locked_package_count=40
+build_requirements_lock_sha256=ff619b4e0c0619fdbaf1817fcf286fed1300ef9de72753f0c71d9d3f13876492
+pyproject_sha256=2b6064015881bc78ff28611012668756a40ca94f855acaae5d607225d043308c
+assessment_exit_code=1
+failure_class=verifier
+reason=The package API and upstream assertions depend on live Rust/OpenSSL keys, certificates, cipher contexts, backend state, memory buffers, error stacks, and cryptographic vector fixtures. The generic stateless JSON candidate client cannot preserve object identity, stateful method sequences, exception/backend semantics, or safe binary object lifecycle. No reviewed task-specific child protocol and no complete hash-locked test dependency closure exist.
+network_requirement=Agent, candidate, verifier, Oracle, and controls remain no-network; runtime source or dependency fetch is forbidden.
+next_unblock_action=Approve an explicit public API scope and stateful child-side protocol, freeze the full Python/Rust/OpenSSL/vector closure for Python 3.12, dynamically collect a positive denominator, then compile and run fresh Oracle, empty, installable stub, forgery, and offline controls against one final manifest.
