@@ -1,0 +1,12 @@
+COMMAND: inventory frozen binding and test sources
+EXIT_CODE: 0
+OBSERVED: 172 test methods across 15 modules; native C++ extension with platform assembly,
+CPython thread-state integration, C API exports, frame inspection, and shutdown/GC/leak/crash cases.
+
+BLOCKER: No reviewed child-side JSON adapter currently preserves these operations while keeping
+the trusted verifier separate from candidate code. A positive denominator, hidden verifier bundle,
+Oracle receipt, or controls receipt would therefore be fabricated if recorded now.
+
+NEXT_UNBLOCK_ACTION: Design and review bounded JSON scenarios for the safe core, freeze the complete
+build/test closure and private native Oracle payload, then compile and run the final manifest under
+network_mode=no-network.

@@ -1,0 +1,11 @@
+COMMAND: python3 -m pip wheel <frozen-source> --no-deps --no-build-isolation --wheel-dir <probe>
+EXIT_CODE: 2
+REASON: The host Python had no setuptools, so the PEP 517 backend was unavailable.
+
+COMMAND: uv build --wheel <frozen-source> --out-dir <probe>
+EXIT_CODE: 0
+TOOLCHAIN: CPython 3.12.11; GCC 16.2.1; C++ 16.2.1; uv 0.11.32
+OUTPUT: greenlet-3.5.6.dev0-cp312-cp312-linux_x86_64.whl
+WHEEL_BYTES: 631321
+WHEEL_SHA256: 7fd929af4311f4a2af2a038dca8074a0cab42fa8e6dddde82e5113039b3f7bba
+NOTE: This native wheel remains private and is not copied into catalog/sources or catalog/tasks.

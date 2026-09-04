@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0",
+  "task_id": "greenlet",
+  "source_revision": "6aaf3af698aa7789075a904e5bbb70e24df06553",
+  "upstream_test_files": 15,
+  "upstream_test_methods": 172,
+  "test_modules": [
+    "test_contextvars.py",
+    "test_cpp.py",
+    "test_extension_interface.py",
+    "test_gc.py",
+    "test_generator.py",
+    "test_generator_nested.py",
+    "test_greenlet.py",
+    "test_greenlet_trash.py",
+    "test_interpreter_shutdown.py",
+    "test_leaks.py",
+    "test_stack_saved.py",
+    "test_throw.py",
+    "test_tracing.py",
+    "test_version.py",
+    "test_weakref.py"
+  ],
+  "behavior_groups": {
+    "core_switching": ["test_greenlet.py", "test_generator.py", "test_generator_nested.py"],
+    "exception_and_parent": ["test_throw.py", "test_greenlet.py"],
+    "context_and_tracing": ["test_contextvars.py", "test_tracing.py"],
+    "native_and_c_api": ["test_cpp.py", "test_extension_interface.py"],
+    "lifetime_and_platform": ["test_gc.py", "test_leaks.py", "test_greenlet_trash.py", "test_interpreter_shutdown.py", "test_weakref.py", "test_stack_saved.py", "test_version.py"]
+  },
+  "frozen_total": 0,
+  "collection_status": "not-frozen",
+  "reason": "The current verifier cannot safely preserve the native and process-lifecycle semantics behind a separate child boundary. No production denominator is claimed."
+}

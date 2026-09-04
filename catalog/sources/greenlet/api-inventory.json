@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "task_id": "greenlet",
+  "source_revision": "6aaf3af698aa7789075a904e5bbb70e24df06553",
+  "source_tree": "7afc90cc7a8dc8274e74bcc097b714f7bc363672",
+  "python_files": 16,
+  "nonblank_noncomment_binding_loc": 1479,
+  "public_surface": {
+    "module": ["__version__", "GreenletExit", "error", "getcurrent", "greenlet", "gettrace", "settrace"],
+    "greenlet_attributes": ["dead", "gr_context", "gr_frame", "parent", "run"],
+    "greenlet_methods": ["switch", "throw"]
+  },
+  "native_boundaries": [
+    "C++ stack switching and platform-specific assembly",
+    "CPython thread-state and contextvars integration",
+    "C API extension exports",
+    "frame and suspended-stack introspection",
+    "interpreter shutdown, garbage collection, leak, and crash behavior"
+  ],
+  "deterministic_candidate_scope": "Potential future custom-json-v1 scenarios may cover simple switch/return, parent, throw, dead, context, and tracing behavior in one child process. No scenario is frozen in this blocked record."
+}

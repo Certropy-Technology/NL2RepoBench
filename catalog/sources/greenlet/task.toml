@@ -1,0 +1,73 @@
+schema_version = "1.0"
+task_id = "greenlet"
+version = "1.0.0"
+instruction = "blocked.md"
+
+[metadata]
+difficulty = "hard"
+category = "cooperative-concurrency"
+tags = ["python", "native-extension", "greenlet", "coroutines", "stack-switching", "blocked", "no-network"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/python-greenlet/greenlet"
+revision = "6aaf3af698aa7789075a904e5bbb70e24df06553"
+license_spdx = "MIT AND PSF-2.0"
+source_digest = "sha256:2df80eae5e0ad8d2ea160521f247ef92957c21cdbf232cb9931c94760345071c"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.14"
+os_name = "debian-12-amd64"
+base_image = "python:3.12.14-slim-bookworm"
+base_image_digest = "sha256:0f5b26b9518d002b6173fd61daad821fa340635ebfec5bba471013f9ca114579"
+system_packages = ["build-essential"]
+network_mode = "no-network"
+build_command = "install the hash-locked candidate and verifier dependencies during image build, then build the native extension from the frozen source"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "Agent, candidate, verifier, Oracle, and controls must run without egress. The source and native Oracle payload are frozen before runtime; runtime GitHub, PyPI, DNS, and external-service access is forbidden."
+
+[dependencies]
+status = "unknown"
+installer = "pip"
+packages = []
+
+[tests]
+framework = "pytest"
+expected_total = 0
+expected_total_source = "unknown"
+commands = []
+protected_paths = []
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Blocked audit of greenlet because its native stack-switching, C-API, crash, and thread-state behavior lacks a reviewed JSON child-side verifier and its trusted Oracle requires a private native wheel outside the checked-in Python projection."
+keywords = ["python", "native-extension", "greenlet", "coroutines", "stack-switching", "blocked"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 720.0
+candidate_install_timeout_sec = 240.0
+candidate_total_timeout_sec = 360.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "blocked"
+owner = "wave10-greenlet"
+reason = "The immutable source and native build probe are complete, but publication is blocked by the missing faithful separate verifier and private native Oracle path. No Harbor runtime, frozen denominator, Oracle, controls, or reward is claimed."

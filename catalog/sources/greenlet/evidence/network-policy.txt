@@ -1,0 +1,7 @@
+NETWORK CONTRACT: no-network
+AGENT: network_mode=no-network; no runtime source or dependency fetch.
+CANDIDATE: network_mode=no-network; no GitHub, PyPI, DNS, or external service access.
+VERIFIER: network_mode=no-network; candidate invoked only through a UID-isolated child boundary.
+ORACLE: network_mode=no-network; source and native payload must be injected privately before run.
+CONTROLS: network_mode=no-network; no runtime registry or external-service access.
+STATUS: No Harbor runtime, Oracle, or control was started in this authoring lane.

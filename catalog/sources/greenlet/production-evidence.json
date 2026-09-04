@@ -1,0 +1,91 @@
+{
+  "schema_version": "1.0",
+  "task_id": "greenlet",
+  "task_version": "1.0.0",
+  "terminal_kind": "blocked",
+  "status": "blocked",
+  "blocked": {
+    "failure_class": "verifier",
+    "next_step": "Design and review a bounded custom-json-v1 child-side adapter for the safe greenlet switch, parent, throw, context, and tracing scenarios; freeze the complete hash-locked build/test closure and private native Oracle payload outside the checked-in projection; then compile and run a fresh final manifest with NoNetwork Oracle, empty, installable stub, forgery, and offline controls.",
+    "source_freeze": {
+      "status": "known",
+      "upstream_url": "https://github.com/python-greenlet/greenlet",
+      "revision": "6aaf3af698aa7789075a904e5bbb70e24df06553",
+      "tree": "7afc90cc7a8dc8274e74bcc097b714f7bc363672",
+      "source_digest": "sha256:2df80eae5e0ad8d2ea160521f247ef92957c21cdbf232cb9931c94760345071c",
+      "license_spdx": "MIT AND PSF-2.0",
+      "license_digests": {
+        "LICENSE": "sha256:769831d6e5dfaf2c20802faccff1fafb4c2025dd8f6253dfa47fcad59d4d0979",
+        "LICENSE.PSF": "sha256:e5ff3c23c110e494cd7d736c10fd96d462457bafeca310840db6527298c7d46b"
+      }
+    },
+    "commands": [
+      {
+        "command": "git clone https://github.com/python-greenlet/greenlet; checkout --detach 6aaf3af698aa7789075a904e5bbb70e24df06553; git archive --format=tar HEAD | sha256sum",
+        "tool_version": "git 2.55.0 / GNU tar 1.35",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/greenlet/evidence/source-freeze.txt",
+          "sha256": "sha256:99904f169c99f41e73f390a42f2740aee8b44aecf21bb950624a4de769257fb4"
+        }
+      },
+      {
+        "command": "python3 -m pip wheel <frozen-source> --no-deps --no-build-isolation",
+        "tool_version": "pip / CPython 3.14 host",
+        "exit_code": 2,
+        "log": {
+          "path": "catalog/sources/greenlet/evidence/build-probe.txt",
+          "sha256": "sha256:806964b7ef03bff01ef515699e95181f14d4c969ecfb3c55ef439472fe291295"
+        }
+      },
+      {
+        "command": "uv build --wheel <frozen-source> --out-dir <private-probe>",
+        "tool_version": "uv 0.11.32 / CPython 3.12.11 / GCC 16.2.1",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/greenlet/evidence/build-probe.txt",
+          "sha256": "sha256:806964b7ef03bff01ef515699e95181f14d4c969ecfb3c55ef439472fe291295"
+        }
+      },
+      {
+        "command": "inventory frozen binding and test sources; assess separate-verifier adapter boundary",
+        "tool_version": "Python 3.12 AST inventory",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/greenlet/evidence/verifier-gap.txt",
+          "sha256": "sha256:ca227697f0fc9f232f97877980e6b3c2d9ec8b8855d465d216036072f6b4eba1"
+        }
+      },
+      {
+        "command": "record NoNetwork contract for agent, candidate, verifier, Oracle, and controls",
+        "tool_version": "NL2RepoBench authoring contract",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/greenlet/evidence/network-policy.txt",
+          "sha256": "sha256:a14870ac3aa488632ca634e75615f1bc02423bf043db29ff4b8d7a3dd3d91e4e"
+        }
+      }
+    ],
+    "artifact_audit": {
+      "private_handoff_root": ".nl2repo/authoring-live/handoffs/wave10/greenlet/",
+      "source_archive": {
+        "path": "source.tar",
+        "sha256": "sha256:2df80eae5e0ad8d2ea160521f247ef92957c21cdbf232cb9931c94760345071c",
+        "size_bytes": 839680
+      },
+      "native_probe_wheel": {
+        "path": "wheel-build/greenlet-3.5.6.dev0-cp312-cp312-linux_x86_64.whl",
+        "sha256": "sha256:7fd929af4311f4a2af2a038dca8074a0cab42fa8e6dddde82e5113039b3f7bba",
+        "size_bytes": 631321
+      },
+      "visibility": "private",
+      "not_in_public_projection": true
+    },
+    "network_constraint": "NoNetwork is mandatory for agent, candidate, verifier, Oracle, and controls. Runtime GitHub, PyPI, DNS, npm, Go proxy, and external-service access is forbidden."
+  },
+  "residual_risks": [
+    "No production frozen denominator exists because native stack switching and process-lifecycle semantics are not yet represented by a reviewed child adapter.",
+    "The native reference wheel is private and cannot be copied into catalog/tasks under the current Python projection policy.",
+    "No Harbor runtime, Oracle, controls, reward, or publication status is claimed."
+  ]
+}
