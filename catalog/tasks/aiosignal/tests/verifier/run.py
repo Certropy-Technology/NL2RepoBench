@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -56,24 +57,12 @@ def invoke(scenario: str) -> dict[str, Any]:
         return {"ok": False, "exception_type": type(exc).__name__, "exception_message": str(exc)}
     lines = [line for line in completed.stdout.splitlines() if line.strip()]
     if completed.returncode != 0 or len(lines) != 1:
-        return {
-            "ok": False,
-            "exception_type": "CandidateProcessError",
-            "exception_message": completed.stderr[-1000:],
-        }
+        return {"ok": False, "exception_type": "CandidateProcessError", "exception_message": completed.stderr[-1000:]}
     try:
         result = json.loads(lines[0])
     except json.JSONDecodeError as exc:
-        return {
-            "ok": False,
-            "exception_type": "CandidateProtocolError",
-            "exception_message": str(exc),
-        }
-    return (
-        result
-        if isinstance(result, dict)
-        else {"ok": False, "exception_type": "CandidateProtocolError"}
-    )
+        return {"ok": False, "exception_type": "CandidateProtocolError", "exception_message": str(exc)}
+    return result if isinstance(result, dict) else {"ok": False, "exception_type": "CandidateProtocolError"}
 
 
 def main() -> int:
@@ -85,17 +74,7 @@ def main() -> int:
             passed = actual.startswith(expected)
         else:
             passed = actual == expected
-        leaves.append(
-            {
-                "id": f"aiosignal/{scenario}",
-                "status": "passed" if passed else "failed",
-                "message": ""
-                if passed
-                else json.dumps(
-                    {"actual": actual, "expected": expected}, sort_keys=True
-                )[:1000],
-            }
-        )
+        leaves.append({"id": f"aiosignal/{scenario}", "status": "passed" if passed else "failed", "message": "" if passed else json.dumps({"actual": actual, "expected": expected}, sort_keys=True)[:1000]})
     print(json.dumps({"schema_version": "1.0", "leaves": leaves}, sort_keys=True))
     return 0
 

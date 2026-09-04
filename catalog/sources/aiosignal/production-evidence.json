@@ -1,0 +1,84 @@
+{
+  "schema_version": "1.0",
+  "task_id": "aiosignal",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source": {
+    "upstream_url": "https://github.com/aio-libs/aiosignal",
+    "revision": "1c2bdc6dbd222463627638d2b46e9c3864e07597",
+    "archive_sha256": "sha256:3cce05c57a65da0028ebd03992845c571d9d5368524529acd422a77e9f283bde",
+    "license_spdx": "Apache-2.0",
+    "license_sha256": "sha256:6fd5243e92dd7f98ec69c7ac377728e74905709ff527a5bf98d6d0263c04f5b6"
+  },
+  "environment": {
+    "python": "3.12.14",
+    "base_image": "python:3.12.14-slim-bookworm",
+    "base_image_digest": "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e",
+    "harbor_version": "0.21.0",
+    "task_schema": "1.4",
+    "network_mode": "no-network"
+  },
+  "private_artifacts": {
+    "dependency_lock": {"digest": "sha256:4d1de95a0e21f5796f116eaa9dcf415bdb831e8daac34d42d955f8eeb7c93d31", "size_bytes": 23607},
+    "verifier_bundle": {"digest": "sha256:20615d6e033ed704c4957e1af1b66618b56cf900e24bbf07cea728403bf615a2", "size_bytes": 20480},
+    "oracle_bundle": {"digest": "sha256:31109996aeef8b16591dffa1b46faf86eecfa86b4fedb64cbd6844acf6b1b2e2", "size_bytes": 174080}
+  },
+  "compile": {
+    "command": "uv run nl2repo harbor compile catalog/sources/aiosignal --output .nl2repo/aiosignal-repair-compile-v8 --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+    "exit_code": 0,
+    "bundle_manifest": ".nl2repo/aiosignal-repair-compile-v8/aiosignal/bundle.manifest.json",
+    "bundle_manifest_sha256": "sha256:6102b8c1d6c0c0baea4f1ba401674b8f9631f7db5ecadb8fa6a4e27f5dc58876",
+    "canonical_manifest_digest": "sha256:5258e6a30c9baf98de80bac87c80fb073e958cef4cbb536fed9cf9d764608de6"
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/aiosignal-repair-compile-v8/aiosignal -a oracle --job-name aiosignal-repair-oracle-v8-20260904 --jobs-dir .nl2repo/aiosignal-repair-runs/oracle-v8 --n-concurrent 1 --max-retries 0 --yes",
+    "exit_code": 0,
+    "valid": true,
+    "expected": 13,
+    "collected": 13,
+    "passed": 13,
+    "reward": 1.0,
+    "grading": {"path": ".nl2repo/aiosignal-repair-runs/oracle-v8/aiosignal-repair-oracle-v8-20260904/aiosignal__QtW48gw/verifier/grading.json", "sha256": "sha256:628f0d493569c5eaeb5451bfc97e48782648d1bc260fdf994d54145b579aed3f"},
+    "network": {"path": ".nl2repo/aiosignal-repair-runs/oracle-v8/aiosignal-repair-oracle-v8-20260904/aiosignal__QtW48gw/verifier/network.json", "sha256": "sha256:cf16433d4ea9239c469ddd66448ae8ac1765e52350df468b41dc6f5fc4e53ce4"},
+    "public_network_available": false
+  },
+  "controls": {
+    "empty": {
+      "valid": true,
+      "expected": 13,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {"path": ".nl2repo/aiosignal-repair-runs/controls-v8/empty/aiosignal-repair-empty-v8-20260904/aiosignal-empty__UXjUrjX/verifier/grading.json", "sha256": "sha256:f962e0fa99b06a1231802247535feb445e14c8d2edafea4c6631dcfbb5d03df8"},
+      "network": {"path": ".nl2repo/aiosignal-repair-runs/controls-v8/empty/aiosignal-repair-empty-v8-20260904/aiosignal-empty__UXjUrjX/verifier/network.json", "sha256": "sha256:befe561e3b069f22c9d9464d5b6758ed7e9661abac7af11e3474f4bf2fd6a910"}
+    },
+    "stub": {
+      "valid": true,
+      "expected": 13,
+      "collected": 13,
+      "passed": 2,
+      "reward": 0.15384615384615385,
+      "grading": {"path": ".nl2repo/aiosignal-repair-runs/controls-v8/stub/aiosignal-repair-stub-v8-20260904/aiosignal-stub__uNcMXMn/verifier/grading.json", "sha256": "sha256:5070767ed6e707679caf05179dc861f0a88b1e124f574814cb3937fe0bfd4336"},
+      "network": {"path": ".nl2repo/aiosignal-repair-runs/controls-v8/stub/aiosignal-repair-stub-v8-20260904/aiosignal-stub__uNcMXMn/verifier/network.json", "sha256": "sha256:74ac930434d3372e59abae4faa68186076d3631a9a94dbbd591449f6925e95af"},
+      "public_network_available": false
+    },
+    "forgery": {
+      "valid": true,
+      "expected": 13,
+      "collected": 13,
+      "passed": 2,
+      "reward": 0.15384615384615385,
+      "verifier_owned_reward": true,
+      "workspace_forged_reward_present_but_untrusted": true,
+      "grading": {"path": ".nl2repo/aiosignal-repair-runs/controls-v8/forgery/aiosignal-repair-forgery-v8-20260904/aiosignal-forgery__sYVH7H9/verifier/grading.json", "sha256": "sha256:5070767ed6e707679caf05179dc861f0a88b1e124f574814cb3937fe0bfd4336"},
+      "network": {"path": ".nl2repo/aiosignal-repair-runs/controls-v8/forgery/aiosignal-repair-forgery-v8-20260904/aiosignal-forgery__sYVH7H9/verifier/network.json", "sha256": "sha256:74ac930434d3372e59abae4faa68186076d3631a9a94dbbd591449f6925e95af"},
+      "public_network_available": false
+    }
+  },
+  "residual_risks": [
+    "The fixed production denominator is a focused 13-leaf public API contract rather than the full upstream suite.",
+    "Independent blind review, model-agent pilot, and publication remain pending."
+  ]
+}

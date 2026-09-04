@@ -11,14 +11,4 @@ version = "1.4.0"
 packages = ["aiosignal"]
 TOML
 mkdir -p /workspace/aiosignal
-cat > /workspace/aiosignal/__init__.py <<'PY'
-__version__ = "1.4.0"
-
-class Signal(list):
-    def freeze(self):
-        self.frozen = True
-
-    async def send(self, *args, **kwargs):
-        return {"forged": True}
-PY
-printf '{\"reward\": 1.0}\n' > /workspace/reward.json
+printf "__version__ = '1.4.0'\nclass Signal(list):\n    pass\n" > /workspace/aiosignal/__init__.py
