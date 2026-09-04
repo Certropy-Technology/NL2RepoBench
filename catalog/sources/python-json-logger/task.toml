@@ -1,0 +1,87 @@
+schema_version = "1.0"
+task_id = "python-json-logger"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "structured-logging"
+tags = ["python", "logging", "json", "formatters", "serialization", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/nhairs/python-json-logger"
+revision = "806dba9d9642fbec4c8538b625494c96b288ce59"
+license_spdx = "BSD-2-Clause"
+source_digest = "sha256:b53ce02a9d27ed2c29c7452f4abed9d28cc85d0c75ae9aa4195224276bbd08eb"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.14"
+os_name = "debian-12-amd64"
+base_image = "python:3.12.14-slim-bookworm"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
+network_mode = "no-network"
+build_command = "Install the hash-locked setuptools build closure during image construction; candidate installation uses pip --no-deps --no-build-isolation."
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The build closure is installed during image construction and the trusted Oracle restores a digest-checked private source archive. Agent, candidate, verifier, Oracle, and controls execute without network access."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = ["setuptools==80.9.0"]
+lock_artifact = { digest = "sha256:d978dd32c7d5c8bb3a1f40f9b05fe68f34fb24bef1ae4bd9b3c60af6fb1f87fd", size_bytes = 189, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:d978dd32c7d5c8bb3a1f40f9b05fe68f34fb24bef1ae4bd9b3c60af6fb1f87fd", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 50
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py"]
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:a26c9d008187e385679ae05b9c2565852c5bf249a148078504a2ab1fce1a5ea2", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:a26c9d008187e385679ae05b9c2565852c5bf249a148078504a2ab1fce1a5ea2", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build python-json-logger from an empty workspace and reproduce deterministic JSON logging formatter, field selection, exception serialization, and compatibility behavior through a separate child-process verifier."
+keywords = ["python", "logging", "json", "formatters", "serialization", "separate-verifier"]
+agent_timeout_sec = 2400.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 3072
+storage_mb = 6144
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:bc4e4a28a71daea7db3c9c1afe73ec323d1ceb42dd6b96ae44fa091960943fc4"
+size_bytes = 184320
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:bc4e4a28a71daea7db3c9c1afe73ec323d1ceb42dd6b96ae44fa091960943fc4"
+visibility = "private"
+
+[lifecycle]
+status = "controls-passed"
+owner = "python-author-wave10-20260905-python-json-logger"
+reason = "The final NoNetwork task uses a hash-locked build closure and separate child-process verifier. Oracle passes 50/50; empty, installable stub, and forgery controls are valid and score 0."

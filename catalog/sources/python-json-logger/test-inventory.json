@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "framework": "custom-json-v1",
+  "frozen_total": 50,
+  "source_collection": {"framework": "pytest", "command": "pytest -c /dev/null -q tests", "collected": 218, "passed": 218, "exit_code": 0},
+  "production_groups": {
+    "metadata-and-imports": 5,
+    "format-selection": 12,
+    "record-fields": 12,
+    "exceptions-and-hooks": 7,
+    "json-encoding": 11,
+    "compatibility-and-errors": 3
+  },
+  "protected_behavior": ["separate candidate subprocess", "fixed leaf IDs", "verifier-owned reward", "no-network probes"]
+}

@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0",
+  "task_id": "python-json-logger",
+  "task_version": "1.0.0",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/nhairs/python-json-logger",
+    "revision": "806dba9d9642fbec4c8538b625494c96b288ce59",
+    "git_tree": "12f9ad14d340d3bcd269e9ea889732cb400a3b6d",
+    "source_digest": "sha256:b53ce02a9d27ed2c29c7452f4abed9d28cc85d0c75ae9aa4195224276bbd08eb",
+    "license_spdx": "BSD-2-Clause",
+    "license_sha256": "sha256:18ea95179e3a5e0e24eb6ce16c40fbfbe23133c2502933a2f75f8a3e1a055b54"
+  },
+  "environment": {
+    "runtime": "python 3.12.14",
+    "base_image": "python:3.12.14-slim-bookworm",
+    "base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "network_policy": "no-network",
+    "agent_allowed_hosts": [],
+    "verifier_network_mode": "no-network"
+  },
+  "private_artifacts": {
+    "dependency_lock": {"digest":"sha256:d978dd32c7d5c8bb3a1f40f9b05fe68f34fb24bef1ae4bd9b3c60af6fb1f87fd","size_bytes":189},
+    "verifier_bundle": {"digest":"sha256:a26c9d008187e385679ae05b9c2565852c5bf249a148078504a2ab1fce1a5ea2","size_bytes":20480},
+    "oracle_bundle": {"digest":"sha256:bc4e4a28a71daea7db3c9c1afe73ec323d1ceb42dd6b96ae44fa091960943fc4","size_bytes":184320}
+  },
+  "tests": {"framework":"custom-json-v1","frozen_total":50,"source_collection":{"collected":218,"passed":218,"exit_code":0},"candidate_uid":10001,"separate_verifier":true},
+  "commands": [
+    {"command":"git checkout --detach 806dba9d9642fbec4c8538b625494c96b288ce59; git archive --format=tar HEAD | sha256sum","exit_code":0,"log":"catalog/sources/python-json-logger/provenance.md"},
+    {"command":"uv run --with pytest==9.0.2 --with freezegun==1.5.5 --with tzdata==2025.2 pytest -c /dev/null -q tests","exit_code":0,"collected":218,"passed":218,"log":"catalog/sources/python-json-logger/provenance.md"}
+  ],
+  "bundle": {"status":"bound-final","path":".nl2repo/python-json-logger-final/python-json-logger/bundle.manifest.json","sha256":"sha256:fafed098705995aac3c3a128843b07f2f860d45f78880527311661527c916dbf"},
+  "oracle": {"valid":true,"collected":50,"passed":50,"reward":1.0,"grading":{"path":".nl2repo/python-json-logger-final-runs/oracle/python-json-logger-final-oracle-20260905/python-json-logger__qknuLbZ/verifier/grading.json","sha256":"sha256:2bf6a82e7ff8df6c2ffbb14b38456570c78e8cbcae2e86c3e6db7866502d7291"},"network":{"path":".nl2repo/python-json-logger-final-runs/oracle/python-json-logger-final-oracle-20260905/python-json-logger__qknuLbZ/verifier/network.json","sha256":"sha256:07139fe777d7dda6e0152c859f93178ecbf473e1da16a0bd9ae513953f44f382"},"public_network_available":false},
+  "controls": {
+    "empty":{"valid":true,"collected":0,"passed":0,"reward":0.0,"failure_reason":"candidate-installation-failed","grading":{"path":".nl2repo/python-json-logger-final-runs/empty/python-json-logger-final-empty-20260905/python-json-logger-empty__pYfC84y/verifier/grading.json","sha256":"sha256:cb75b0cff901fb55543a02067b7bc4fed23cd228cd7e62084792bbcbe1612a2c"},"network":{"path":".nl2repo/python-json-logger-final-runs/empty/python-json-logger-final-empty-20260905/python-json-logger-empty__pYfC84y/verifier/network.json","sha256":"sha256:ddee81d173ac148e60f2488fb19c0fac5dc9bc1eb7817fdf358dfcadf204841d"}},
+    "stub":{"valid":true,"collected":50,"passed":0,"reward":0.0,"grading":{"path":".nl2repo/python-json-logger-final-runs/stub/python-json-logger-final-stub-20260905/python-json-logger-stub__ABjnVLq/verifier/grading.json","sha256":"sha256:9fb1c5d9aa3362f2334d0846424a3f602af3e66813ebeb41b8316f8fd5ca1b2d"},"network":{"path":".nl2repo/python-json-logger-final-runs/stub/python-json-logger-final-stub-20260905/python-json-logger-stub__ABjnVLq/verifier/network.json","sha256":"sha256:6e578aca31c6168dd5fa777ffa90775ca4378d37b5779e7e8d9c905bfda6f23d"}},
+    "forgery":{"valid":true,"collected":50,"passed":0,"reward":0.0,"verifier_owned_reward":true,"workspace_forged_reward":1.0,"grading":{"path":".nl2repo/python-json-logger-final-runs/forgery/python-json-logger-final-forgery-20260905/python-json-logger-forgery__A743bYh/verifier/grading.json","sha256":"sha256:9fb1c5d9aa3362f2334d0846424a3f602af3e66813ebeb41b8316f8fd5ca1b2d"},"network":{"path":".nl2repo/python-json-logger-final-runs/forgery/python-json-logger-final-forgery-20260905/python-json-logger-forgery__A743bYh/verifier/network.json","sha256":"sha256:ddee81d173ac148e60f2488fb19c0fac5dc9bc1eb7817fdf358dfcadf204841d"}},
+    "offline":{"completed":true,"public_network_available":false}
+  },
+  "residual_risks": ["Optional orjson/msgspec backends are intentionally not runtime dependencies; their unavailable behavior is tested.","Blind review and model pilot remain separate publication gates."]
+}

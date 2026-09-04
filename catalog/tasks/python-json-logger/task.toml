@@ -1,0 +1,58 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/python-json-logger"
+version = "1.0.0"
+description = "Build python-json-logger from an empty workspace and reproduce deterministic JSON logging formatter, field selection, exception serialization, and compatibility behavior through a separate child-process verifier."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "logging",
+    "json",
+    "formatters",
+    "serialization",
+    "separate-verifier",
+]
+
+[metadata]
+difficulty = "medium"
+category = "structured-logging"
+tags = [
+    "python",
+    "logging",
+    "json",
+    "formatters",
+    "serialization",
+    "separate-verifier",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 50
+canonical_manifest_digest = "sha256:cf7396594a322241ac2d4d9db98ede5ad7b60f4d555a89a827c757c42a68e2ff"
+toolchain_lock_digest = "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366"
+
+[agent]
+timeout_sec = 2400.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 1536
+storage_mb = 12288
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 3072
+storage_mb = 6144
