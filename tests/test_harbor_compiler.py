@@ -128,6 +128,7 @@ def test_development_compiler_generates_separate_verifier_bundle(tmp_path) -> No
     assert "--require-hashes" in verifier_dockerfile
     assert "--index-url https://pypi.org/simple" in verifier_dockerfile
     assert "COPY candidate-requirements.lock.txt" in verifier_dockerfile
+    assert "--ignore-installed" in verifier_dockerfile
     assert "--prefix /opt/candidate-dependencies" in verifier_dockerfile
     assert "--target /opt/candidate-dependencies/site" not in verifier_dockerfile
     assert "COPY dependencies" not in verifier_dockerfile

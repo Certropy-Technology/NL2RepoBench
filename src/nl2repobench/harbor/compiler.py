@@ -330,6 +330,7 @@ RUN python -m pip install --no-cache-dir --require-hashes \\
 COPY candidate-requirements.lock.txt /tmp/candidate-requirements.lock.txt
 RUN python -m pip install \
   --no-cache-dir \
+  --ignore-installed \
   --index-url https://pypi.org/simple \
   --prefix /opt/candidate-dependencies \
   --require-hashes \
