@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "task_id": "tokenizers",
-  "terminal_kind": "awaiting-agent-run",
+  "terminal_kind": "blocked",
   "source": {
     "upstream_url": "https://github.com/huggingface/tokenizers",
     "revision": "d5827816baedcbf1cb5b452dea8048150b6872df",
@@ -35,7 +35,13 @@
   ],
   "oracle": {"status": "not-run", "reason": "Lane contract forbids starting a Harbor Agent Run from this worktree; integrator must run the official Oracle gate from the compiled bundle."},
   "controls": {"status": "not-run", "reason": "Lane contract forbids starting Harbor runs here; control scripts are authored and compiled, but no control receipt is claimed."},
-  "status_boundary": "awaiting-agent-run",
+  "status_boundary": "blocked",
+  "blocker": {
+    "kind": "environment",
+    "reason": "The trusted Oracle requires a private native reference wheel in the compiled solution, while the checked-in Python Harbor projection must not contain vendored wheels.",
+    "affected_path": "catalog/tasks/tokenizers/solution/tokenizers-0.23.2.dev0-cp310-abi3-manylinux_2_34_x86_64.whl",
+    "resolution_required": "Add an out-of-projection private Oracle payload path, then recompile and rerun Oracle and controls against the final bundle."
+  },
   "residual_risks": [
     "Official Harbor Oracle, empty, stub, forgery, timeout, workspace-invalid, and offline receipts remain pending integrator execution.",
     "The Python binding's Rust dependency graph has no upstream Cargo.lock; the candidate lock covers Python build/runtime packages, while the task image supplies cargo/rustc and the Oracle bundle carries a source-derived wheel.",

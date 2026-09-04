@@ -80,6 +80,6 @@ uri = "artifact://private/sha256:c972e5dd4b22aea96ac7abf9b8b13a694a029b1fef700a2
 visibility = "private"
 
 [lifecycle]
-status = "packaged"
+status = "blocked"
 owner = "python-author-wave2-20260828"
-reason = "Source, native build environment, hash-locked Python closure, separate verifier, and Oracle/control bundles are authored; Harbor Oracle and controls remain to be run from the compiled bundle."
+reason = "The native Oracle reference wheel is private and must be present in the compiled Harbor solution for trusted verification, but the checked-in Python projection forbids vendored wheels. Keep source and private artifact references while blocked until private Oracle payloads can remain outside the public projection."

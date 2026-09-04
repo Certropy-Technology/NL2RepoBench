@@ -81,6 +81,6 @@ uri = "artifact://private/sha256:eaef2e408ae249021f4bb30e8cf39f1c745771b31b30946
 visibility = "private"
 
 [lifecycle]
-status = "packaged"
+status = "blocked"
 owner = "python-author-discover-20260902T142741Z-orjson"
-reason = "Frozen native source, verified reference wheel, hash-locked build backend, separate JSON verifier, and task-local controls are authored. Production compile and trusted Harbor Oracle/control receipts remain for the integrator because this lane cannot start Harbor runs."
+reason = "The native Oracle reference wheel is private and must be present in the compiled Harbor solution for the trusted Oracle, but the checked-in Python projection forbids vendored wheels. Keep the source and private artifact references while blocked until private Oracle payloads can remain outside the public projection."

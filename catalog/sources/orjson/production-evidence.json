@@ -1,8 +1,8 @@
 {
   "schema_version": "1.0",
   "task_id": "orjson",
-  "terminal_kind": "authoring-local",
-  "status": "packaged",
+  "terminal_kind": "blocked",
+  "status": "blocked",
   "source": {
     "upstream_url": "https://github.com/ijl/orjson",
     "revision": "6737895a1a4e3e26df0569a40147893a786f9a58",
@@ -51,5 +51,11 @@
   "official_harbor": {
     "started": false,
     "reason": "This authoring lane is explicitly prohibited from starting a Harbor Agent Run."
+  },
+  "blocker": {
+    "kind": "environment",
+    "reason": "The trusted Oracle requires a private native reference wheel in the compiled solution, while the checked-in Python Harbor projection must not contain vendored wheels.",
+    "affected_path": "catalog/tasks/orjson/solution/orjson-3.12.0-cp312-cp312-manylinux_2_34_x86_64.whl",
+    "resolution_required": "Add an out-of-projection private Oracle payload path, then recompile and rerun Oracle and controls against the final bundle."
   }
 }
