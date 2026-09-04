@@ -151,6 +151,7 @@ class HarborCompiler:
         """Create a task-local control bundle without mutating the source task."""
 
         if kind not in {
+            "empty",
             "stub",
             "forgery",
             "install-hang",
@@ -164,8 +165,16 @@ class HarborCompiler:
         }:
             raise HarborCompileError(f"unsupported control kind: {kind}")
         script = task_root / "controls" / f"{kind}.sh"
-        if not script.is_file():
+        if kind == "empty":
+            script_bytes = (
+                b"#!/usr/bin/env bash\n"
+                b"set -euo pipefail\n"
+                b"find /workspace -mindepth 1 -maxdepth 1 -exec rm -rf -- {} +\n"
+            )
+        elif not script.is_file():
             raise HarborCompileError(f"control script is missing: {script}")
+        else:
+            script_bytes = script.read_bytes()
         target_name = f"{task_root.name}-{kind}"
         target = output_root / target_name
         if target.exists() or target.is_symlink():
@@ -175,7 +184,7 @@ class HarborCompiler:
         try:
             self._copy_tree(task_root, temporary)
             solve = temporary / "solution/solve.sh"
-            atomic_write(solve, script.read_bytes())
+            atomic_write(solve, script_bytes)
             os.chmod(solve, 0o755)
             self._refresh_bundle_manifest(temporary, kind)
             os.rename(temporary, target)

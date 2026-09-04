@@ -277,7 +277,7 @@ def prepare_harbor_control(
         str,
         typer.Argument(
             help=(
-                "Task-local control kind. Python supports stub, forgery, "
+                "Task-local control kind. Python supports empty, stub, forgery, "
                 "install-hang, workspace-invalid, call-hang, install-failure, "
                 "panic, hang, oversized-output, and background-process."
             )

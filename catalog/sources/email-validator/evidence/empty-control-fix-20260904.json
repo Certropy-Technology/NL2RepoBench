@@ -1,0 +1,48 @@
+{
+  "schema_version": "1.0",
+  "task_id": "email-validator",
+  "purpose": "Reproducible evidence for the Python compiler empty control fix.",
+  "source_revision": "b73d010bb3db70547199f39fd85d2286a7f6f476",
+  "compiler_change": "Python HarborCompiler.prepare_control_bundle now accepts empty and generates a workspace-clearing solve.sh.",
+  "commands": [
+    {
+      "command": "uv run nl2repo harbor compile catalog/sources/email-validator --output .nl2repo/email-validator-empty-fix-compile --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run nl2repo harbor prepare-control .nl2repo/email-validator-empty-fix-compile/email-validator empty --output .nl2repo/email-validator-empty-fix-controls --toolchain toolchain.lock.toml",
+      "exit_code": 0
+    },
+    {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/email-validator-empty-fix-controls/email-validator-empty -a oracle --job-name email-validator-empty-fixed-20260904 --jobs-dir .nl2repo/email-validator-empty-fix-runs/empty --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "result": ".nl2repo/email-validator-empty-fix-runs/empty/email-validator-empty-fixed-20260904/result.json"
+    }
+  ],
+  "compiled_bundle": {
+    "path": ".nl2repo/email-validator-empty-fix-compile/email-validator/bundle.manifest.json",
+    "sha256": "sha256:fb21df33c97d2e5ba16750b56172ffb5dba043703ac93131200e9626d592cf87"
+  },
+  "grading": {
+    "path": ".nl2repo/email-validator-empty-fix-runs/empty/email-validator-empty-fixed-20260904/email-validator-empty__NhAvsVR/verifier/grading.json",
+    "sha256": "sha256:bce04a181a9aedbba0ae7a4f5b1d89c64bb2d469fecf8219b8b750541760851e",
+    "valid": true,
+    "collected": 0,
+    "passed": 0,
+    "reward": 0.0,
+    "failure_class": "model",
+    "failure_reason": "candidate-installation-failed",
+    "expected_total": 30
+  },
+  "network": {
+    "path": ".nl2repo/email-validator-empty-fix-runs/empty/email-validator-empty-fixed-20260904/email-validator-empty__NhAvsVR/verifier/network.json",
+    "sha256": "sha256:38bcf78cd6a0f4a2e0757c471ebc92d21f2f337e5bb2df3b22338be74e58e516",
+    "public_network_available": false
+  },
+  "gates": {
+    "compiler_target": "python",
+    "harbor_version": "0.21.0",
+    "task_schema": "1.4",
+    "network_mode": "no-network"
+  }
+}

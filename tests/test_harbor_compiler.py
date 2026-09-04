@@ -527,6 +527,17 @@ def test_prepare_stub_control_replaces_only_control_solution(tmp_path) -> None:
     assert json.loads((control / "bundle.manifest.json").read_text())["mode"] == "control-stub"
 
 
+def test_prepare_empty_control_generates_workspace_clearing_solution(tmp_path) -> None:
+    compiler = HarborCompiler(TOOLCHAIN)
+    task_root = compiler.compile_task(SOURCE, tmp_path / "tasks", allow_incomplete=True)
+
+    control = compiler.prepare_control_bundle(task_root, "empty", tmp_path / "controls")
+
+    solve = (control / "solution/solve.sh").read_text(encoding="utf-8")
+    assert "find /workspace -mindepth 1 -maxdepth 1 -exec rm -rf -- {} +" in solve
+    assert json.loads((control / "bundle.manifest.json").read_text())["mode"] == "control-empty"
+
+
 @pytest.mark.parametrize(
     "kind",
     (
