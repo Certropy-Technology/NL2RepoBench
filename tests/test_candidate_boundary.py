@@ -236,6 +236,24 @@ def test_candidate_runner_metadata_protocol(
     assert emitted == {"ok": True, "value": None}
 
 
+def test_candidate_site_precedes_trusted_runtime_and_dependencies(
+    candidate_site: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    dependency_site = Path("/opt/candidate-dependencies/site")
+    original_is_dir = candidate_runner.Path.is_dir
+    monkeypatch.setattr(
+        candidate_runner.Path,
+        "is_dir",
+        lambda self: self == dependency_site or original_is_dir(self),
+    )
+    monkeypatch.setattr(sys, "path", ["/trusted/site"])
+    monkeypatch.setenv("NL2REPO_CANDIDATE_DEPENDENCIES", str(dependency_site))
+
+    candidate_runner._candidate_site(str(candidate_site))  # noqa: SLF001
+
+    assert sys.path == [str(candidate_site), str(dependency_site), "/trusted/site"]
+
+
 def test_candidate_runner_method_protocol(
     candidate_site: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
