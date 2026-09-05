@@ -1,3 +1,78 @@
+# Build `math-verify`
+
+## Project Description
+
+Create the `math_verify` project from an empty workspace. This is a repository-generation task for the frozen `python` package contract, task specification version `0.1.0`, at source revision `68da5f36c72d83e987bda77155c3bb26898913c0`. Implement the public behavior described by the local inventories and the task-specific detail below; do not copy upstream source or tests. The supported scope is python, repository-generation.
+
+## Natural Language Instruction
+
+Starting with an empty `workspace/`, create an installable `math_verify` project. Implement every public/core API named in the API Usage Guide, its package exports, and its documented integration points. Preserve observable input types, return shapes, ordering, determinism, state changes, and documented exception behavior. The project must be usable through its declared `math_verify` import path (or the package root for this Node task), and all required modules must be present in the directory structure below.
+
+The task-specific specification retained below supplies the detailed behavior for each API family. Treat it as the contract: do not add unrelated APIs, replace deterministic behavior with randomized or time-dependent behavior, or weaken error handling.
+
+## Supports
+
+- Language/runtime: `python` on `3.10`; target environment metadata declares `debian-12`.
+- Distribution/package: `math_verify`; import/root name: `math_verify`. Package manager: `pip`.
+- Install from the repository root with `python -m pip install . --no-deps`. Build metadata must be complete and agree with the package entry point.
+- Dependency status in the frozen source metadata is `unknown`. Use only dependencies declared by the task and available in the preinstalled build image; standard-library modules are not third-party runtime dependencies.
+- NoNetwork boundary: agent, candidate, verifier, Oracle, and controls run with `network_mode=no-network`. Do not access GitHub, PyPI, npm registries, Go proxy, DNS, or external services at runtime. Do not fetch source or dependencies during implementation or package use.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── math_verify/
+│   ├── evaluate_model.py
+│   ├── evaluate_model_outputs.py
+│   ├── extract_answers.py
+│   ├── __init__.py
+│   ├── errors.py
+│   ├── few_shots.py
+│   ├── grader.py
+│   ├── metric.py
+│   └── parser.py
+└── README.md
+```
+
+The tree is the minimum public project layout. Add a module only when it corresponds to a documented import path or package resource. Do not place publicly unavailable evaluator code, non-public evaluation material, Oracle payloads, dependency caches, or trusted reports in this workspace.
+
+## API Usage Guide
+
+The public/core API families recorded in the local inventory are: Math-Verify Project Introduction and Objectives, Natural Language Instructions (Prompt), Environment Configuration, Python Version, Core Dependency Versions, Math-Verify Project Architecture, Project Directory Structure, 1. Module Import, 2. parse() Function - Mathematical Expression Parsing, 3. verify() Function - Expression Equivalence Verification, 4. sympy_expr_eq() Function - SymPy Expression Equivalence Verification, Configuration Classes Details, 1. LatexExtractionConfig, 2. ExprExtractionConfig, 3. StringExtractionConfig, Usage Patterns, Basic Usage, Configuration-based Usage, Test Helper Function Pattern, Supported Expression Types, Error Handling, Important Notes.
+
+For each listed family, the detailed contract below defines the import path or CLI entry, signature, accepted inputs, return type/shape, ordering and determinism, state or I/O side effects, errors, and examples. Implement the complete public surface, including root re-exports and aliases where the specification names them. If an API is stateful, preserve mutation and repeated-call behavior; if it is pure, do not introduce global state.
+
+## Implementation Notes
+
+Keep the implementation self-contained and deterministic under the declared runtime. The candidate repository must install from the workspace root, import through the documented public path, and run without external services. Preserve package metadata, module semantics (ESM/CommonJS or Python import behavior), serialization formats, resource cleanup, and boundary behavior described below. publicly unavailable evaluator adapters and non-public evaluation details are not part of the implementation.
+
+## Examples
+
+Ordinary project examples:
+
+```bash
+cd workspace
+python -m pip install . --no-deps
+```
+
+```python
+# Import the public package and use the task-specific APIs documented below.
+import_or_require = "math_verify"
+```
+
+The retained task-specific examples below provide ordinary API calls and combinations grounded in the frozen inventory. Keep their result shapes and ordering exact.
+
+## Error Handling and Boundary Conditions
+
+- Empty inputs, malformed values, missing resources, duplicate values, and unsupported options must follow the task-specific error contracts below; do not silently coerce or discard information unless explicitly specified.
+- Repeated calls must remain deterministic. Filesystem, process, clock, random, native, callback, and serialization boundaries are supported only where the local specification documents them.
+- Network attempts are prohibited and must not be used as a fallback. Installation failures, missing offline dependencies, or unsupported external capabilities are environment/source concerns, not reasons to invent behavior.
+
+
+## Source-derived task detail
+
 ## Math-Verify Project Introduction and Objectives
 
 Math-Verify is a **mathematical answer verification** Python library capable of parsing mathematical expressions (supporting both LaTeX format and plain text) and comparing answer correctness. The tool has demonstrated excellent performance in evaluations on mathematical question datasets like MATH, achieving "the highest accuracy and optimal scores." Its core functionalities include: parsing mathematical answers (automatically extracting and parsing LaTeX or pure mathematical expressions), **numerical and symbolic equivalence checking** (supporting approximate numerical comparison and symbolic equivalence judgment), and intelligent comparison of special expressions such as sets, intervals, matrices, and inequalities. In short, Math-Verify aims to provide a robust mathematical answer verification system for evaluating the correctness of large language model outputs on mathematical problems (for example, using parse() to convert answers into symbolic expressions and the verify() function to determine if two expressions are equivalent).

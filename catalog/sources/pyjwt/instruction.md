@@ -1462,9 +1462,9 @@ print("Selected algorithm:", algorithm)
 ```python
 import jwt
 from jwt.exceptions import (
-    InvalidSignatureError, 
-    ExpiredSignatureError, 
-    InvalidIssuerError, 
+    InvalidSignatureError,
+    ExpiredSignatureError,
+    InvalidIssuerError,
     InvalidTokenError,
     InvalidAlgorithmError,
     MissingRequiredClaimError
@@ -1662,8 +1662,8 @@ except Exception as e:
 # Per-call configuration override
 try:
     decoded = jwt.decode(
-        encoded, 
-        secret_key, 
+        encoded,
+        secret_key,
         algorithms=["HS256"],
         options={"verify_exp": False}  # Override default for this call only
     )
@@ -1914,7 +1914,7 @@ from datetime import datetime, timedelta, timezone
 # Custom PyJWT class with compression support
 class CompressedPyJWT(PyJWT):
     """PyJWT subclass that supports DEFLATE compression"""
-    
+
     def _encode_payload(self, payload, headers=None, json_encoder=None):
         """Compress the payload before encoding"""
         # First, convert payload to JSON string
@@ -1923,19 +1923,19 @@ class CompressedPyJWT(PyJWT):
             separators=(',', ':'),
             cls=json_encoder,
         ).encode('utf-8')
-        
+
         # Compress using zlib (DEFLATE)
         # wbits=-15 means raw DEFLATE without headers/crc
         compressed = zlib.compress(payload_json, level=6)
-        
+
         return compressed
-    
+
     def _decode_payload(self, decoded):
         """Decompress the payload after decoding"""
         # Decompress using zlib
         # wbits=-15 means raw DEFLATE without headers/crc
         decompressed = zlib.decompress(decoded["payload"], wbits=-15)
-        
+
         # Parse JSON
         payload = json.loads(decompressed.decode('utf-8'))
         return payload

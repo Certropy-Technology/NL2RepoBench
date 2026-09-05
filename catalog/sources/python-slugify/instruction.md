@@ -1,82 +1,36 @@
-## Introduction and Goals of the Python-Slugify Project
+# python-slugify
 
-Python-Slugify is a Python library **for slugifying Unicode strings**, capable of intelligently converting text in various languages (including Chinese, Russian, French, etc.) into URL-friendly slug formats. This tool performs exceptionally well in web development, content management systems, and SEO optimization, achieving "optimal Unicode compatibility and the best URL friendliness." Its core functions include: intelligent Unicode processing (automatically identifying and converting characters in various languages to ASCII format), **flexible configuration options** (supporting custom separators, length limits, stopword filtering, etc.), and full parsing support for HTML entities, decimal, and hexadecimal encodings. In short, Python-Slugify aims to provide a robust string slugification system for converting any Unicode text into web-friendly URL fragments (for example, converting "影師嗎" to "ying-shi-ma" and "C'est déjà l'été." to "c-est-deja-l-ete" through the slugify() function).
+## Project Description
 
-## Natural Language Instruction (Prompt)
+Build an installable `python-slugify` project from an empty `workspace/`. The project must reproduce the public, local behavior documented in this instruction, including its package entry points, return shapes, ordering, state changes, and documented exceptions. This is a repository-generation task: the agent creates the build metadata and source modules rather than editing an existing implementation.
 
-Please create a Python project named Python-Slugify to implement a Unicode string slugification library. The project should include the following functions:
+Distribution identity: `python-slugify`; public import package begins at `slugify`.
+The scope is the deterministic local API described below. Network services, undeclared external state, and behavior not represented by the public contract are outside the task.
 
-1. **Unicode Processing Engine**: Capable of intelligently handling Unicode characters in various languages, including Chinese, Russian, French, German, Greek, etc., and converting them into ASCII-formatted URL-friendly strings. Support full parsing of HTML entity resolution (e.g., converting &amp; to &), decimal encoding (e.g., converting &#381; to Ž), and hexadecimal encoding (e.g., converting &#x17D; to Ž).
+## Natural Language Instruction
 
-2. **Intelligent Text Conversion**: Implement the core slugify() function to convert any Unicode text into a slug format, including character normalization, case conversion, special character replacement, and duplicate character cleaning. Support advanced configurations such as custom separators, maximum length limits, word boundary truncation, and stopword filtering.
+Create the complete project in an empty workspace and make it installable with the command in the environment section. Implement these task-specific capability families from the local API contract:
 
-3. **Special Character Processing**: Specifically handle quotes, numbers, punctuation marks, etc. Support user-defined replacement rules (e.g., [['|', 'or'], ['%', 'percent']]) and custom character filtering using regular expression patterns.
+1. `Core API`: expose the documented public entry points, signatures, inputs, outputs, and error behavior.
+2. `1. Module Import`: preserve the documented object or module behavior, including state and side effects.
+3. `2. slugify() Function - Unicode String Slugification`: preserve ordering, determinism, serialization, and boundary semantics where specified.
+4. `3. smart_truncate() Function - Intelligent String Truncation`: make the public package usable through the documented import path or command-line entry.
 
-4. **Command Line Interface**: Provide a complete command-line tool that supports reading text from standard input or command-line parameters and all parameter options of the slugify function, including --separator, --max-length, --word-boundary, --stopwords, --replacements, --allow-unicode, etc.
+Do not add speculative APIs or substitute a different package. Keep the implementation self-contained, ensure imports work after installation, and use the exact public names and signatures in the API Usage Guide. A small implementation is acceptable only when it still satisfies every documented contract.
 
-5. **Examples and Usage Instructions**: Provide rich example code to demonstrate how to handle text in various languages (e.g., converting Chinese "影師嗎" to "ying-shi-ma", French "C'est déjà l'été." to "c-est-deja-l-ete", Russian "Компьютер" to "kompiuter", etc.) and the usage of various configuration options. The above functions need to be combined to build a complete Unicode string slugification toolkit. The project should ultimately include modules such as Unicode processing, text conversion, and command-line interfaces, along with typical usage examples, to form a reproducible slugification process.
+## Supports or Environment Configuration
 
-6. **Core File Requirements**: The project must include a complete setup.py file, which not only configures the project as an installable package (supporting pip install) but also declares a complete list of dependencies (including core libraries such as text-unidecode>=1.3, Unidecode>=1.1.1, etc.). The setup.py file retrieves the value of the '__title__' key from the about dictionary to set the project name, and can verify whether all functional modules work properly. At the same time, it is necessary to provide slugify/__init__.py as a unified API entry, import the slugify core function from the slugify and special modules, export tool functions such as DEFAULT_SEPARATOR and smart_truncate, and provide version information, allowing users to access all major functions through a simple "from slugify import slugify" statement. In the slugify.py file, a complete implementation of the slugify() function is required, including all parameter options and Unicode processing logic. Under the slugify.py file, there should be a smart_truncate function to intelligently truncate strings; in the special.py file, there should be constants such as PRE_TRANSLATIONS, CYRILLIC, GERMAN, GREEK for predefined conversion rules of multilingual characters; in the __main__.py file, there should be slugify_params and parse_args functions for command-line parameter parsing.
+- CPython 3.10 on the pinned Linux image.
+- Distribution identity: `python-slugify`; public import package begins at `slugify`.
+- Install from the workspace with `python -m pip install .`; do not download packages during evaluation.
+- No third-party runtime package is declared by the local task metadata; standard-library support is sufficient unless the API section says otherwise.
+- Build metadata and package data must be present in the workspace and agree with the public import paths below.
+- Agent, candidate, evaluator, Oracle, and control execution are network-isolated. Do not access GitHub, package registries, DNS, databases, or external services at runtime.
+- Use deterministic local inputs. Do not rely on the current wall clock, host-specific absolute paths, undeclared environment variables, or an installed copy of the target package.
 
-## Environment Configuration
+## Project Directory Structure
 
-### Python Version
-
-The Python version used in the current project is: Python 3.10.11
-
-### Core Dependency Library Versions
-
-```Plain
-backports.tarfile  1.2.0
-certifi            2025.8.3
-cffi               1.17.1
-charset-normalizer 3.4.2
-colorama           0.4.6
-cryptography       45.0.6
-docutils           0.22
-exceptiongroup     1.3.0
-flake8             4.0.1
-idna               3.10
-importlib_metadata 8.7.0
-iniconfig          2.1.0
-jaraco.classes     3.4.0
-jaraco.context     6.0.1
-jaraco.functools   4.2.1
-jeepney            0.9.0
-keyring            25.6.0
-mccabe             0.6.1
-more-itertools     10.7.0
-nh3                0.3.0
-packaging          25.0
-pip                23.0.1
-pkginfo            1.12.1.2
-pluggy             1.6.0
-pycodestyle        2.8.0
-pycparser          2.22
-pyflakes           2.4.0
-Pygments           2.19.2
-pytest             8.4.1
-readme_renderer    44.0
-requests           2.32.4
-requests-toolbelt  1.0.0
-rfc3986            2.0.0
-SecretStorage      3.3.3
-setuptools         65.5.1
-text-unidecode     1.3
-tomli              2.2.1
-tqdm               4.67.1
-twine              3.4.1
-typing_extensions  4.14.1
-urllib3            2.5.0
-wheel              0.40.0
-zipp               3.23.0
-```
-
-## Architecture of the Python-Slugify Project
-
-### Project Directory Structure
-
-```Plain
+```text
 workspace/
 ├── .gitignore
 ├── CHANGELOG.md
@@ -94,10 +48,13 @@ workspace/
 │   ├── special.py
 ├── tea.yaml
 └── slugify
-
 ```
 
+The tree lists agent-owned public project files only. Add additional public modules when required by the API Usage Guide, but keep their import paths consistent with package metadata. Do not create evaluator-only files, hidden fixtures, or private reports in the generated project.
+
 ## API Usage Guide
+
+The following is the task-specific public contract recovered from the local instruction and inventory. For every function, class, method, constant, export, and command named below, preserve its complete signature, accepted input domain, return type and shape, ordering, determinism, state/side effects, exceptions, and examples. When the source contract gives an optional argument or a compatibility alias, it is part of the required surface.
 
 ### Core API
 
@@ -208,7 +165,7 @@ def main(argv: list[str] | None = None):
 
 #### 7. Constants and Type Aliases
 
-```python 
+```python
 
 # In __version__.py
 __title__ = 'python-slugify'
@@ -273,7 +230,7 @@ PRE_TRANSLATIONS = CYRILLIC + GERMAN + GREEK
 ```python
 # Russian character conversion
 CYRILLIC = [
-    ('ё', 'e'), ('я', 'ya'), ('х', 'h'), 
+    ('ё', 'e'), ('я', 'ya'), ('х', 'h'),
     ('у', 'y'), ('щ', 'sch'), ('ю', 'u')
 ]
 
@@ -776,3 +733,118 @@ $ slugify --stopwords the in a hurry -- "the quick brown fox jumps over the lazy
 $ slugify --replacements "|->or" "%%->percent" -- "10 | 20 %"
 # Output: "10-or-20-percent"
 ```
+
+## Implementation Notes
+
+- Keep the root exports and module paths stable after installation; do not make behavior depend on the repository's current directory.
+- Preserve explicit ordering guarantees. When the contract does not promise an order, do not introduce a new observable order accidentally.
+- Propagate documented exceptions and avoid replacing them with generic errors. Validate malformed, empty, boundary, and repeated inputs as described by the API contract.
+- Keep filesystem, process, terminal, and resource effects bounded and local. Close files and other resources on both success and failure.
+- Do not copy an upstream checkout, implementation source, or evaluation-only material into the generated project. Implement the public behavior from this specification.
+
+## Examples
+
+The examples below are retained from the local task specification. They are starting points for ordinary calls and boundary/error behavior; their exact output and exception semantics remain governed by the API Usage Guide.
+
+### Example 1: ordinary usage
+```text
+backports.tarfile  1.2.0
+certifi            2025.8.3
+cffi               1.17.1
+charset-normalizer 3.4.2
+colorama           0.4.6
+cryptography       45.0.6
+docutils           0.22
+exceptiongroup     1.3.0
+flake8             4.0.1
+idna               3.10
+importlib_metadata 8.7.0
+iniconfig          2.1.0
+jaraco.classes     3.4.0
+jaraco.context     6.0.1
+jaraco.functools   4.2.1
+jeepney            0.9.0
+keyring            25.6.0
+mccabe             0.6.1
+more-itertools     10.7.0
+nh3                0.3.0
+packaging          25.0
+pip                23.0.1
+pkginfo            1.12.1.2
+pluggy             1.6.0
+pycodestyle        2.8.0
+pycparser          2.22
+pyflakes           2.4.0
+Pygments           2.19.2
+pytest             8.4.1
+readme_renderer    44.0
+requests           2.32.4
+requests-toolbelt  1.0.0
+rfc3986            2.0.0
+SecretStorage      3.3.3
+setuptools         65.5.1
+text-unidecode     1.3
+tomli              2.2.1
+tqdm               4.67.1
+twine              3.4.1
+typing_extensions  4.14.1
+urllib3            2.5.0
+wheel              0.40.0
+zipp               3.23.0
+```
+
+### Example 2: ordinary usage
+```text
+workspace/
+├── .gitignore
+├── CHANGELOG.md
+├── LICENSE
+├── MANIFEST.in
+├── README.md
+├── format.sh
+├── setup.py
+├── slugify
+│   ├── __init__.py
+│   ├── __main__.py
+│   ├── __version__.py
+│   ├── py.typed
+│   ├── slugify.py
+│   ├── special.py
+├── tea.yaml
+└── slugify
+```
+
+### Example 3: boundary or error behavior
+```text
+from slugify import slugify, smart_truncate, DEFAULT_SEPARATOR
+from slugify.special import PRE_TRANSLATIONS, CYRILLIC, GERMAN, GREEK
+from slugify.__main__ import slugify_params, parse_args
+```
+
+### Example 4: boundary or error behavior
+```text
+def slugify(
+    text: str,
+    entities: bool = True,
+    decimal: bool = True,
+    hexadecimal: bool = True,
+    max_length: int = 0,
+    word_boundary: bool = False,
+    separator: str = DEFAULT_SEPARATOR,
+    save_order: bool = False,
+    stopwords: Iterable[str] = (),
+    regex_pattern: re.Pattern[str] | str | None = None,
+    lowercase: bool = True,
+    replacements: Iterable[Iterable[str]] = (),
+    allow_unicode: bool = False,
+) -> str:
+```
+
+
+## Error Handling and Boundary Conditions
+
+- Empty inputs, invalid types, malformed text or paths, unavailable resources, duplicate calls, and cancellation/timeout cases must follow the exception and return-value contracts documented for the relevant API.
+- Do not silently coerce values, reorder results, swallow exceptions, or use a fallback dependency unless the API section explicitly requires that behavior.
+- File and environment operations must use caller-provided paths and documented defaults only; never read undeclared host files or network resources.
+- The implementation must remain usable in the stated NoNetwork environment. A missing optional integration should expose the documented availability or error behavior rather than attempting an online install.
+- Security-sensitive inputs must be treated as data. Do not execute strings, load untrusted code, or interpolate shell commands unless that behavior is explicitly part of the documented public API.

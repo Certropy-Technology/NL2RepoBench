@@ -26,6 +26,44 @@ outside the task.
   512 UTF-8 bytes, JSON requests are at most 128 KiB, and one request contains
   at most 64 array/object elements where the contract needs a bounded sequence.
 
+## Natural Language Instruction
+
+Build the pure-Go `github.com/tomwright/dasel/v3` module from an empty
+workspace. Implement deterministic selector parsing, querying, conversion to
+ordinary Go values, and in-place modification for JSON-shaped inputs as
+specified below. CLI, file format, and interactive features are excluded.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── go.mod
+├── go.sum
+├── vendor/modules.txt
+├── selector.go
+├── value.go
+└── modify.go
+```
+
+Keep package `dasel` at the root and its documented exported types/functions.
+Do not include private verifier or hidden-test files.
+
+## Examples
+
+```go
+value, err := New("{\"name\":\"Ada\"}", String).Select("name")
+```
+
+```go
+updated, err := New("{\"count\":1}", JSON).Set("count", 2)
+```
+
+## Error Handling and Boundary Conditions
+
+Handle malformed JSON, missing selectors, nulls, arrays, escaped names,
+bounded selectors, and modification of absent paths according to the API guide.
+Do not require files, TTYs, clocks, callbacks, or network access.
+
 ## API Usage Guide
 
 Implement package `dasel` at import path `github.com/tomwright/dasel/v3` with:

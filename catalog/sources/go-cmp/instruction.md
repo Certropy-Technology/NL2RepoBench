@@ -23,6 +23,47 @@ through a typed subprocess bridge.
   It rejects malformed requests and must return structured errors without
   writing diagnostics to stdout.
 
+## Natural Language Instruction
+
+Build the bounded `github.com/google/go-cmp/cmp` module from an empty workspace.
+Implement recursive comparison, diffs, filtering, transformations, custom
+comparers, and `cmpopts` helpers exactly as described below.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── go.mod
+├── go.sum
+├── vendor/modules.txt
+├── cmp/
+│   ├── compare.go
+│   ├── options.go
+│   └── path.go
+└── cmpopts/
+    └── options.go
+```
+
+Preserve both import paths and root package names. Do not add private verifier
+or hidden-test material.
+
+## Examples
+
+```go
+equal := cmp.Equal(struct{A int}{1}, struct{A int}{1})
+diff := cmp.Diff([]int{1}, []int{2})
+```
+
+```go
+equal := cmp.Equal(valuesA, valuesB, cmpopts.EquateEmpty())
+```
+
+## Error Handling and Boundary Conditions
+
+Preserve handling of unexported fields, nil values, option conflicts, filtered
+paths/values, transformations, deterministic diffs, and unsupported values.
+Avoid global mutable state and network access.
+
 ## API Usage Guide
 
 The main package is imported as `github.com/google/go-cmp/cmp`.

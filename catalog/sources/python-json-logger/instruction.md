@@ -1,15 +1,48 @@
-# Project Description
+# python-json-logger
 
-Build an installable Python distribution named `python-json-logger` from an empty workspace. It provides logging formatters that turn standard-library `logging.LogRecord` values into deterministic JSON text, with configurable fields, aliases, defaults, static metadata, timestamps, and structured exception information.
+## Project Description
 
-# Supports
+Build an installable `python-json-logger` project from an empty `workspace/`. The project must reproduce the public, local behavior documented in this instruction, including its package entry points, return shapes, ordering, state changes, and documented exceptions. This is a repository-generation task: the agent creates the build metadata and source modules rather than editing an existing implementation.
 
-- Python 3.12 on Linux with a PEP 517 `pyproject.toml` and an installable `src` or flat package layout.
-- Distribution name `python-json-logger`, version `4.2.0`, and import package `pythonjsonlogger`.
-- The standard-library JSON implementation is required. Optional `orjson` and `msgspec` integrations may be absent; expose availability flags accurately and report their missing-package behavior.
-- Runtime operation is local and synchronous. Candidate code, the verifier, and controls run without network access or external services.
+Distribution identity: `python-json-logger`; public import package begins at `pythonjsonlogger`.
+The scope is the deterministic local API described below. Network services, undeclared external state, and behavior not represented by the public contract are outside the task.
 
-# API Usage Guide
+## Natural Language Instruction
+
+Create the complete project in an empty workspace and make it installable with the command in the environment section. Implement these task-specific capability families from the local API contract:
+
+1. `Root and compatibility modules`: expose the documented public entry points, signatures, inputs, outputs, and error behavior.
+2. `JsonFormatter`: preserve the documented object or module behavior, including state and side effects.
+3. `BaseJsonFormatter` and helpers`: preserve ordering, determinism, serialization, and boundary semantics where specified.
+4. `python-json-logger`: make the public package usable through the documented import path or command-line entry.
+
+Do not add speculative APIs or substitute a different package. Keep the implementation self-contained, ensure imports work after installation, and use the exact public names and signatures in the API Usage Guide. A small implementation is acceptable only when it still satisfies every documented contract.
+
+## Supports or Environment Configuration
+
+- CPython 3.12.14 on the pinned Linux image.
+- Distribution identity: `python-json-logger`; public import package begins at `pythonjsonlogger`.
+- Install from the workspace with `python -m pip install .`; do not download packages during evaluation.
+- Declared build/runtime packages are supplied by the frozen evaluation image: `setuptools==80.9.0`
+- Build metadata and package data must be present in the workspace and agree with the public import paths below.
+- Agent, candidate, evaluator, Oracle, and control execution are network-isolated. Do not access GitHub, package registries, DNS, databases, or external services at runtime.
+- Use deterministic local inputs. Do not rely on the current wall clock, host-specific absolute paths, undeclared environment variables, or an installed copy of the target package.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── an/
+│   ├── __init__.py
+│   └── (public modules documented in API Usage Guide)
+```
+
+The tree lists agent-owned public project files only. Add additional public modules when required by the API Usage Guide, but keep their import paths consistent with package metadata. Do not create evaluator-only files, hidden fixtures, or private reports in the generated project.
+
+## API Usage Guide
+
+The following is the task-specific public contract recovered from the local instruction and inventory. For every function, class, method, constant, export, and command named below, preserve its complete signature, accepted input domain, return type and shape, ordering, determinism, state/side effects, exceptions, and examples. When the source contract gives an optional argument or a compatibility alias, it is part of the required surface.
 
 ## Root and compatibility modules
 
@@ -46,6 +79,74 @@ When `record.msg` is a mapping, its entries are merged into the output and the f
 
 `pythonjsonlogger.utils.package_is_available(name, throw_error=False, extras_name=None)` returns whether an importable package exists. With `throw_error=True`, a missing package raises `MissingPackageError` whose message identifies the package and optional extra name.
 
-# Implementation Notes
 
-Preserve standard `logging.Formatter` behavior, deterministic field ordering, JSON types, and exception text. Use a separate installable package and do not import candidate code into trusted verifier code. The optional format backends are not required for the core task and must not be fetched at runtime. Keep compatibility imports and deprecation warnings observable without requiring network, current time, or machine-specific paths.
+Preserve standard `logging.Formatter` behavior, deterministic field ordering, JSON types, and exception text. Use a separate installable package and do not import candidate code into separate evaluator code. The optional format backends are not required for the core task and must not be fetched at runtime. Keep compatibility imports and deprecation warnings observable without requiring network, current time, or machine-specific paths.
+
+## Implementation Notes
+
+- Keep the root exports and module paths stable after installation; do not make behavior depend on the repository's current directory.
+- Preserve explicit ordering guarantees. When the contract does not promise an order, do not introduce a new observable order accidentally.
+- Propagate documented exceptions and avoid replacing them with generic errors. Validate malformed, empty, boundary, and repeated inputs as described by the API contract.
+- Keep filesystem, process, terminal, and resource effects bounded and local. Close files and other resources on both success and failure.
+- Do not copy an upstream checkout, implementation source, or evaluation-only material into the generated project. Implement the public behavior from this specification.
+
+## Examples
+
+The examples below are retained from the local task specification. They are starting points for ordinary calls and boundary/error behavior; their exact output and exception semantics remain governed by the API Usage Guide.
+
+### Example 1: ordinary usage
+```text
+JsonFormatter(
+    fmt=None, datefmt=None, style="%", validate=True, *, prefix="",
+    rename_fields=None, rename_fields_keep_missing=False, static_fields=None,
+    reserved_attrs=None, timestamp=False, defaults=None,
+    exc_info_as_array=False, stack_info_as_array=False,
+    json_default=None, json_encoder=None, json_serializer=json.dumps,
+    json_indent=None, json_ensure_ascii=True, **kwargs
+)
+```
+
+### Example 2: ordinary usage
+```text
+JsonFormatter(
+    fmt=None, datefmt=None, style="%", validate=True, *, prefix="",
+    rename_fields=None, rename_fields_keep_missing=False, static_fields=None,
+    reserved_attrs=None, timestamp=False, defaults=None,
+    exc_info_as_array=False, stack_info_as_array=False,
+    json_default=None, json_encoder=None, json_serializer=json.dumps,
+    json_indent=None, json_ensure_ascii=True, **kwargs
+)
+```
+
+### Example 3: boundary or error behavior
+```text
+JsonFormatter(
+    fmt=None, datefmt=None, style="%", validate=True, *, prefix="",
+    rename_fields=None, rename_fields_keep_missing=False, static_fields=None,
+    reserved_attrs=None, timestamp=False, defaults=None,
+    exc_info_as_array=False, stack_info_as_array=False,
+    json_default=None, json_encoder=None, json_serializer=json.dumps,
+    json_indent=None, json_ensure_ascii=True, **kwargs
+)
+```
+
+### Example 4: boundary or error behavior
+```text
+JsonFormatter(
+    fmt=None, datefmt=None, style="%", validate=True, *, prefix="",
+    rename_fields=None, rename_fields_keep_missing=False, static_fields=None,
+    reserved_attrs=None, timestamp=False, defaults=None,
+    exc_info_as_array=False, stack_info_as_array=False,
+    json_default=None, json_encoder=None, json_serializer=json.dumps,
+    json_indent=None, json_ensure_ascii=True, **kwargs
+)
+```
+
+
+## Error Handling and Boundary Conditions
+
+- Empty inputs, invalid types, malformed text or paths, unavailable resources, duplicate calls, and cancellation/timeout cases must follow the exception and return-value contracts documented for the relevant API.
+- Do not silently coerce values, reorder results, swallow exceptions, or use a fallback dependency unless the API section explicitly requires that behavior.
+- File and environment operations must use caller-provided paths and documented defaults only; never read undeclared host files or network resources.
+- The implementation must remain usable in the stated NoNetwork environment. A missing optional integration should expose the documented availability or error behavior rather than attempting an online install.
+- Security-sensitive inputs must be treated as data. Do not execute strings, load untrusted code, or interpolate shell commands unless that behavior is explicitly part of the documented public API.

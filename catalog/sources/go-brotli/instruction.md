@@ -21,6 +21,53 @@ reusable LZ77 match-finding components.
 - The evaluator invokes a bounded line-oriented JSON subprocess. Keep stdout
   as JSON responses and write diagnostics to stderr.
 
+## Natural Language Instruction
+
+Create the pure-Go `github.com/andybalholm/brotli` module from an empty
+workspace. Implement the root compression/decompression streams and the
+declared `flate` and `matchfinder` APIs, preserving byte output and error
+contracts in the API guide.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── go.mod
+├── go.sum
+├── vendor/modules.txt
+├── brotli.go
+├── writer.go
+├── reader.go
+├── flate/
+│   └── *.go
+└── matchfinder/
+    └── *.go
+```
+
+Keep all package import paths and stream constructors available. Do not add
+private verifier files.
+
+## Examples
+
+```go
+var dst bytes.Buffer
+w := NewWriter(&dst, BestSpeed); _, _ = w.Write([]byte("hello")); _ = w.Close()
+```
+
+```go
+r := NewReader(bytes.NewReader(compressed)); decoded, err := io.ReadAll(r)
+```
+
+## Error Handling and Boundary Conditions
+
+Preserve empty input, truncated data, flush/close, reader/writer errors, stream
+reuse, and deterministic compression settings. The module must not access the
+network or external process.
+
+```go
+import "github.com/andybalholm/brotli"
+```
+
 ## API Usage Guide
 
 Root package `github.com/andybalholm/brotli`:
@@ -60,6 +107,10 @@ block limit; other configuration fields control match distance, hash table, or
 chain search depth.
 
 ## Implementation Notes
+
+Compression levels and writer options are observable where listed below. Keep
+the reader and writer compatible, and return errors from caller-provided I/O
+interfaces rather than swallowing them. Both subpackages remain importable.
 
 Implement the public behavior rather than hard-coding evaluator fixtures.
 Preserve byte-for-byte stream validity, round-trip decompression, streaming

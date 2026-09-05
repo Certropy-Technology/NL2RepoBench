@@ -11,6 +11,58 @@ The project should be usable from a clean checkout and should include the Cora d
 - Keep model inputs and outputs shape-stable for full-graph node classification and preserve sparse adjacency support where the API accepts it.
 - Do not require a remote service or network access when loading the checked-in Cora data.
 
+## Natural Language Instruction
+
+Build the installable `GraphNeuralNetwork` Python package from an empty
+workspace. Implement the `gnn` package, Cora data utilities, GCN/GAT/GraphSAGE
+factories and layers, neighbor sampling, and masked Keras training behavior
+described below. Keep model shapes stable and data loading local.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── setup.py
+├── requirements.txt
+├── gnn/
+│   ├── __init__.py
+│   ├── gcn.py
+│   ├── gat.py
+│   ├── graphsage.py
+│   └── utils.py
+├── data/
+│   └── cora/
+└── examples/
+    ├── gcn.py
+    ├── gat.py
+    └── graphsage.py
+```
+
+The package namespace and model imports must match the API guide. Cora files
+are local resources; do not add evaluation-only files or download data at
+import time.
+
+## Examples
+
+```python
+from gnn.gcn import GCN
+model = GCN(adj_dim=3, feature_dim=4, n_hidden=8, num_class=2)
+```
+
+```python
+from gnn.utils import preprocess_features, preprocess_adj
+features = preprocess_features(features)
+adjacency = preprocess_adj(adjacency, symmetric=True)
+```
+
+## Error Handling and Boundary Conditions
+
+Handle empty feature rows without non-finite values, sparse/dense shape
+contracts, invalid attention heads and dimensions, short-neighbor graphs,
+sampling counts, node-order preservation, and masked training as documented.
+TensorFlow and data operations use the frozen local dependency closure only; no
+network, remote dataset, or credential access is permitted.
+
 ## API Usage Guide
 
 ### Package

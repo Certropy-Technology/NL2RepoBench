@@ -20,6 +20,42 @@ or external services.
 - Deterministic behavior for the same insertion sequence. The tree must not
   require files, clocks, random state, network access, or cgo.
 
+## Natural Language Instruction
+
+Build the pure-Go `github.com/armon/go-radix` module from an empty workspace.
+Implement the root `radix` tree, constructors, exact lookup, prefix lookup,
+ordered walking, snapshots, and deletion operations in the API guide.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── go.mod
+├── go.sum
+├── vendor/modules.txt
+└── radix.go
+```
+
+The package is imported as `github.com/armon/go-radix`; preserve the exported
+`Tree` and `WalkFn` contracts. Do not add private evaluation files.
+
+## Examples
+
+```go
+tree := radix.New(); old, updated := tree.Insert("app/api", 7)
+value, ok := tree.Get("app/api")
+```
+
+```go
+key, value, ok := tree.LongestPrefix("app/api/v1/users")
+```
+
+## Error Handling and Boundary Conditions
+
+Preserve empty keys and values, replacement return values, missing-key results,
+lexicographic walk order, prefix/path boundaries, delete counts, and independent
+`ToMap` snapshots. Methods must not require a service, clock, or network.
+
 ## API Usage Guide
 
 Implement package `radix` at import path `github.com/armon/go-radix` with the

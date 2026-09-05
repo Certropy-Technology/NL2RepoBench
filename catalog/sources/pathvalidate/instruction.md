@@ -1,62 +1,48 @@
-# Project Description
+# pathvalidate
 
-Build `pathvalidate`, an installable pure-Python package for validating and
-sanitizing filenames, file paths, LTSV labels, symbols, ANSI escapes, and
-unprintable characters. The package must expose the public API documented
-below and report validation failures through structured `ValidationError`
-objects.
+## Project Description
 
-The scored contract is deterministic and in-memory. It covers explicit Linux,
-Windows, POSIX, macOS, and universal path rules, plus argparse and Click type
-adapters. It does not create or inspect files, query filesystem capabilities,
-perform network calls, or require locale-specific behavior. The only
-time-dependent API is `NullValueHandler.return_timestamp`; callers require a
-parseable positive timestamp, not an exact value.
+Build an installable `pathvalidate` project from an empty `workspace/`. The project must reproduce the public, local behavior documented in this instruction, including its package entry points, return shapes, ordering, state changes, and documented exceptions. This is a repository-generation task: the agent creates the build metadata and source modules rather than editing an existing implementation.
 
-# Supports
+Distribution identity: `pathvalidate`; public import package begins at `pathvalidate`.
+The scope is the deterministic local API described below. Network services, undeclared external state, and behavior not represented by the public contract are outside the task.
 
-- CPython 3.12 on Debian 12 `linux/amd64`.
-- Distribution and import package name `pathvalidate`.
-- Public module version `pathvalidate.__version__ == "3.3.1"`.
-- Python 3.9-compatible source syntax.
-- A local source install with `pip --no-deps --no-build-isolation`.
-- No required third-party runtime dependency for the top-level API.
-- The optional `pathvalidate.click` adapter; Click is preinstalled.
-- No runtime package download, source fetch, network access, subprocess, native
-  extension, database, or external service.
+## Natural Language Instruction
 
-The build environment already contains pinned `setuptools`, `setuptools-scm`,
-`wheel`, `packaging`, `vcs-versioning`, and `click`. Do not download or vendor
-dependencies.
+Create the complete project in an empty workspace and make it installable with the command in the environment section. Implement these task-specific capability families from the local API contract:
 
-`pathvalidate.__all__` is this tuple in this exact order:
+1. `Platforms`: expose the documented public entry points, signatures, inputs, outputs, and error behavior.
+2. `Validation errors`: preserve the documented object or module behavior, including state and side effects.
+3. `Common text helpers`: preserve ordering, determinism, serialization, and boundary semantics where specified.
+4. `Filename API`: make the public package usable through the documented import path or command-line entry.
 
-```python
-(
-    "__author__", "__copyright__", "__email__", "__license__", "__version__",
-    "AbstractSanitizer", "AbstractValidator", "Platform", "ascii_symbols",
-    "normalize_platform", "replace_ansi_escape", "replace_unprintable_char",
-    "unprintable_ascii_chars", "validate_pathtype", "validate_unprintable_char",
-    "FileNameSanitizer", "FileNameValidator", "is_valid_filename",
-    "sanitize_filename", "validate_filename", "FilePathSanitizer",
-    "FilePathValidator", "is_valid_filepath", "sanitize_filepath",
-    "validate_filepath", "sanitize_ltsv_label", "validate_ltsv_label",
-    "replace_symbol", "validate_symbol", "ErrorReason", "InvalidCharError",
-    "InvalidReservedNameError", "NullNameError", "ReservedNameError",
-    "ValidationError", "ValidReservedNameError",
-)
+Do not add speculative APIs or substitute a different package. Keep the implementation self-contained, ensure imports work after installation, and use the exact public names and signatures in the API Usage Guide. A small implementation is acceptable only when it still satisfies every documented contract.
+
+## Supports or Environment Configuration
+
+- CPython 3.12.14 on the pinned Linux image.
+- Distribution identity: `pathvalidate`; public import package begins at `pathvalidate`.
+- Install from the workspace with `python -m pip install .`; do not download packages during evaluation.
+- Declared build/runtime packages are supplied by the frozen evaluation image: `click==8.5.0`, `packaging==26.3`, `setuptools==84.0.0`, `setuptools-scm==10.2.1`, `vcs-versioning==2.3.1`, `wheel==0.48.0`
+- Build metadata and package data must be present in the workspace and agree with the public import paths below.
+- Agent, candidate, evaluator, Oracle, and control execution are network-isolated. Do not access GitHub, package registries, DNS, databases, or external services at runtime.
+- Use deterministic local inputs. Do not rely on the current wall clock, host-specific absolute paths, undeclared environment variables, or an installed copy of the target package.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── package/
+│   ├── __init__.py
+│   └── (public modules documented in API Usage Guide)
 ```
 
-The metadata values are:
+The tree lists agent-owned public project files only. Add additional public modules when required by the API Usage Guide, but keep their import paths consistent with package metadata. Do not create evaluator-only files, hidden fixtures, or private reports in the generated project.
 
-```python
-__author__ = "Tsuyoshi Hombashi"
-__email__ = "tsuyoshi.hombashi@gmail.com"
-__license__ = "MIT License"
-__version__ = "3.3.1"
-```
+## API Usage Guide
 
-# API Usage Guide
+The following is the task-specific public contract recovered from the local instruction and inventory. For every function, class, method, constant, export, and command named below, preserve its complete signature, accepted input domain, return type and shape, ordering, determinism, state/side effects, exceptions, and examples. When the source contract gives an optional argument or a compatibility alias, it is part of the required surface.
 
 ## Platforms
 
@@ -455,7 +441,6 @@ They also return `""` for empty values. Validation failures become
 `click.BadParameter`. The Click filepath callbacks use the default universal
 platform.
 
-# Implementation Notes
 
 - Keep validation and sanitization deterministic for explicit platform values.
 - Use encoded byte counts, not Python character counts, for length limits.
@@ -528,7 +513,93 @@ deprecated-check-reserved-flag
 ```
 
 Each leaf constructs its values inside a fresh unprivileged candidate process.
-The trusted verifier never imports candidate code. Performance, thread safety,
+The separate evaluator never imports candidate code. Performance, thread safety,
 filesystem existence/permissions, exact timestamp values, deprecated handler
 function warning text, and undocumented private classes are outside the scored
 contract.
+
+## Implementation Notes
+
+- Keep the root exports and module paths stable after installation; do not make behavior depend on the repository's current directory.
+- Preserve explicit ordering guarantees. When the contract does not promise an order, do not introduce a new observable order accidentally.
+- Propagate documented exceptions and avoid replacing them with generic errors. Validate malformed, empty, boundary, and repeated inputs as described by the API contract.
+- Keep filesystem, process, terminal, and resource effects bounded and local. Close files and other resources on both success and failure.
+- Do not copy an upstream checkout, implementation source, or evaluation-only material into the generated project. Implement the public behavior from this specification.
+
+## Examples
+
+The examples below are retained from the local task specification. They are starting points for ordinary calls and boundary/error behavior; their exact output and exception semantics remain governed by the API Usage Guide.
+
+### Example 1: ordinary usage
+```text
+(
+    "__author__", "__copyright__", "__email__", "__license__", "__version__",
+    "AbstractSanitizer", "AbstractValidator", "Platform", "ascii_symbols",
+    "normalize_platform", "replace_ansi_escape", "replace_unprintable_char",
+    "unprintable_ascii_chars", "validate_pathtype", "validate_unprintable_char",
+    "FileNameSanitizer", "FileNameValidator", "is_valid_filename",
+    "sanitize_filename", "validate_filename", "FilePathSanitizer",
+    "FilePathValidator", "is_valid_filepath", "sanitize_filepath",
+    "validate_filepath", "sanitize_ltsv_label", "validate_ltsv_label",
+    "replace_symbol", "validate_symbol", "ErrorReason", "InvalidCharError",
+    "InvalidReservedNameError", "NullNameError", "ReservedNameError",
+    "ValidationError", "ValidReservedNameError",
+)
+```
+
+### Example 2: ordinary usage
+```text
+__author__ = "Tsuyoshi Hombashi"
+__email__ = "tsuyoshi.hombashi@gmail.com"
+__license__ = "MIT License"
+__version__ = "3.3.1"
+```
+
+### Example 3: boundary or error behavior
+```text
+class Platform(enum.Enum):
+    POSIX = "POSIX"
+    UNIVERSAL = "universal"
+    LINUX = "Linux"
+    WINDOWS = "Windows"
+    MACOS = "macOS"
+
+normalize_platform(name: str | Platform | None) -> Platform
+```
+
+### Example 4: boundary or error behavior
+```text
+class ErrorReason(enum.Enum): ...
+
+class ValidationError(ValueError):
+    @property
+    def platform(self) -> Platform | None: ...
+    @property
+    def reason(self) -> ErrorReason: ...
+    @property
+    def description(self) -> str | None: ...
+    @property
+    def reserved_name(self) -> str: ...
+    @property
+    def reusable_name(self) -> bool | None: ...
+    @property
+    def fs_encoding(self) -> str | None: ...
+    @property
+    def byte_count(self) -> int | None: ...
+    def as_slog(self) -> dict[str, str]: ...
+
+class NullNameError(ValidationError): ...
+class InvalidCharError(ValidationError): ...
+class ReservedNameError(ValidationError): ...
+class ValidReservedNameError(ReservedNameError): ...
+class InvalidReservedNameError(ReservedNameError): ...
+```
+
+
+## Error Handling and Boundary Conditions
+
+- Empty inputs, invalid types, malformed text or paths, unavailable resources, duplicate calls, and cancellation/timeout cases must follow the exception and return-value contracts documented for the relevant API.
+- Do not silently coerce values, reorder results, swallow exceptions, or use a fallback dependency unless the API section explicitly requires that behavior.
+- File and environment operations must use caller-provided paths and documented defaults only; never read undeclared host files or network resources.
+- The implementation must remain usable in the stated NoNetwork environment. A missing optional integration should expose the documented availability or error behavior rather than attempting an online install.
+- Security-sensitive inputs must be treated as data. Do not execute strings, load untrusted code, or interpolate shell commands unless that behavior is explicitly part of the documented public API.

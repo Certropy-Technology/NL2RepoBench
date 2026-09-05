@@ -24,6 +24,48 @@ documented behavior below.
 - No runtime network, subprocess, browser, GitHub token, environment download,
   or source checkout behavior is required by the scored contract.
 
+## Natural Language Instruction
+
+Build the installable `ghapi` Python distribution from an empty workspace.
+Implement every public module and symbol listed in the API guide, preserving
+date conversion, dependency-graph, pagination, issue-template, and auth helper
+contracts while keeping deterministic local behavior.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+└── ghapi/
+    ├── __init__.py
+    ├── core.py
+    ├── page.py
+    ├── auth.py
+    └── all.py
+```
+
+The import paths and root re-exports must match the API guide. Do not create
+private verifier, hidden-test, or source-archive files in this project.
+
+## Examples
+
+```python
+from ghapi.core import date2gh, gh2date
+encoded = date2gh(datetime(2024, 1, 2, tzinfo=timezone.utc))
+decoded = gh2date(encoded)
+```
+
+```python
+from ghapi.page import parse_link_hdr
+parse_link_hdr('')
+```
+
+## Error Handling and Boundary Conditions
+
+Keep timezone, malformed-header, empty-input, dependency-cycle, and missing
+optional-value behavior as specified in the API guide. All outputs must be
+deterministic and local; no GitHub request or credential lookup is allowed.
+
 ## API Usage Guide
 
 ### `ghapi.core.date2gh(dt: datetime) -> str`

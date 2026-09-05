@@ -1,59 +1,48 @@
-# Build `parse-npm-tarball-url`
+# parse-npm-tarball-url
 
 ## Project Description
 
-Create an installable npm package named `parse-npm-tarball-url`, version
-`5.0.0`, from an empty workspace. It is a small ESM utility that parses npm
-registry tarball URLs. The scored API is one named runtime export and a
-JSON-only subprocess contract; it must not require a network service, a
-filesystem checkout, a loader, a clock, or mutable process state.
+Build an installable `parse-npm-tarball-url` project from an empty `workspace/`. The project must reproduce the public, local behavior documented in this instruction, including its package entry points, return shapes, ordering, state changes, and documented exceptions. This is a repository-generation task: the agent creates the build metadata and source modules rather than editing an existing implementation.
 
-Reproduce the specified observable behavior with your own package files. The
-task is repository generation, not a request to copy the pinned upstream
-source or tests.
+Distribution/package identity: `parse-npm-tarball-url`; root module entry is the package entry documented below.
+The scope is the deterministic local API described below. Network services, undeclared external state, and behavior not represented by the public contract are outside the task.
 
-## Supports
+## Natural Language Instruction
 
-- Run on Node `24.19.0` with npm `11.17.0` on `linux/amd64`.
-- Use ESM semantics: `package.json` must contain `"type": "module"`.
-- The package root must be importable as `parse-npm-tarball-url` and must
-  expose this root export map:
+Create the complete project in an empty workspace and make it installable with the command in the environment section. Implement these task-specific capability families from the local API contract:
 
-  ```json
-  {
-    "exports": {
-      ".": {
-        "types": "./lib/index.d.ts",
-        "default": "./lib/index.js"
-      }
-    }
-  }
-  ```
+1. `parseNpmTarballUrl`: expose the documented public entry points, signatures, inputs, outputs, and error behavior.
+2. `Errors and JSON boundary`: preserve the documented object or module behavior, including state and side effects.
+3. `Production Slice`: preserve ordering, determinism, serialization, and boundary semantics where specified.
+4. `parse-npm-tarball-url`: make the public package usable through the documented import path or command-line entry.
 
-- The runtime entry must be JavaScript ESM and must expose exactly one named
-  runtime function, `parseNpmTarballUrl`. Do not expose a default function or
-  a CLI as part of the package API. A declaration file may additionally export
-  the public TypeScript type.
-- Include a v3 `package-lock.json` that agrees with `package.json`. Pin the
-  runtime dependency `semver` to exactly `7.7.4`. A clean verifier must be
-  able to run:
+Do not add speculative APIs or substitute a different package. Keep the implementation self-contained, ensure imports work after installation, and use the exact public names and signatures in the API Usage Guide. A small implementation is acceptable only when it still satisfies every documented contract.
 
-  ```bash
-  npm ci --offline --ignore-scripts --no-audit --no-fund
-  ```
+## Supports or Environment Configuration
 
-- The package must be usable without a build step after installation. Do not
-  require TypeScript, pnpm, `npx`, a global loader, a registry, or a checkout
-  path at runtime.
-- Do not add `preinstall`, `install`, `postinstall`, `prepare`, `prepublish`,
-  `prepublishOnly`, `publish`, or `postpublish` scripts. Do not use native
-  addons, workspaces, custom loaders, registry configuration, or network
-  access. Development-only files and tools are outside the scored package.
-- Do not add a CLI, hidden tests, grader, reward writer, Oracle files, npm
-  cache/tarball bytes, credentials, or private verifier material to the
-  candidate repository.
+- Node.js 24.19.0 with npm 11.17.0.
+- Distribution/package identity: `parse-npm-tarball-url`; root module entry is the package entry documented below.
+- Install from the workspace with `npm install --offline` using the declared lockfile.
+- Declared build/runtime packages are supplied by the frozen evaluation image: `semver`
+- Build metadata and package data must be present in the workspace and agree with the public import paths below.
+- Agent, candidate, evaluator, Oracle, and control execution are network-isolated. Do not access GitHub, package registries, DNS, databases, or external services at runtime.
+- Use deterministic local inputs. Do not rely on the current wall clock, host-specific absolute paths, undeclared environment variables, or an installed copy of the target package.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── index.js
+├── index.d.ts
+```
+
+The tree lists agent-owned public project files only. Add additional public modules when required by the API Usage Guide, but keep their import paths consistent with package metadata. Do not create evaluator-only files, hidden fixtures, or private reports in the generated project.
 
 ## API Usage Guide
+
+The following is the task-specific public contract recovered from the local instruction and inventory. For every function, class, method, constant, export, and command named below, preserve its complete signature, accepted input domain, return type and shape, ordering, determinism, state/side effects, exceptions, and examples. When the source contract gives an optional argument or a compatibility alias, it is part of the required surface.
 
 ### `parseNpmTarballUrl`
 
@@ -126,3 +115,58 @@ empty/non-string error behavior, and a null-host URL. Every scored assertion
 is derived from the API contract above. The private adapter invokes only the
 named export with bounded JSON values and returns JSON values or bounded error
 metadata; it never transports source code or JavaScript functions.
+
+## Implementation Notes
+
+- Keep the root exports and module paths stable after installation; do not make behavior depend on the repository's current directory.
+- Preserve explicit ordering guarantees. When the contract does not promise an order, do not introduce a new observable order accidentally.
+- Propagate documented exceptions and avoid replacing them with generic errors. Validate malformed, empty, boundary, and repeated inputs as described by the API contract.
+- Keep filesystem, process, terminal, and resource effects bounded and local. Close files and other resources on both success and failure.
+- Do not copy an upstream checkout, implementation source, or evaluation-only material into the generated project. Implement the public behavior from this specification.
+
+## Examples
+
+The examples below are retained from the local task specification. They are starting points for ordinary calls and boundary/error behavior; their exact output and exception semantics remain governed by the API Usage Guide.
+
+### Example 1: ordinary usage
+```text
+{
+    "exports": {
+      ".": {
+        "types": "./lib/index.d.ts",
+        "default": "./lib/index.js"
+      }
+    }
+  }
+```
+
+### Example 2: ordinary usage
+```text
+npm ci --offline --ignore-scripts --no-audit --no-fund
+```
+
+### Example 3: boundary or error behavior
+```text
+parseNpmTarballUrl(url: string): {
+  host: string,
+  name: string,
+  version: string,
+} | null
+```
+
+### Example 4: boundary or error behavior
+```text
+parseNpmTarballUrl(
+  'https://registry.npmjs.org/@scope%2Fpkg/-/pkg-1.2.3-beta.1.tgz'
+)
+// {host: 'registry.npmjs.org', name: '@scope/pkg', version: '1.2.3-beta.1'}
+```
+
+
+## Error Handling and Boundary Conditions
+
+- Empty inputs, invalid types, malformed text or paths, unavailable resources, duplicate calls, and cancellation/timeout cases must follow the exception and return-value contracts documented for the relevant API.
+- Do not silently coerce values, reorder results, swallow exceptions, or use a fallback dependency unless the API section explicitly requires that behavior.
+- File and environment operations must use caller-provided paths and documented defaults only; never read undeclared host files or network resources.
+- The implementation must remain usable in the stated NoNetwork environment. A missing optional integration should expose the documented availability or error behavior rather than attempting an online install.
+- Security-sensitive inputs must be treated as data. Do not execute strings, load untrusted code, or interpolate shell commands unless that behavior is explicitly part of the documented public API.

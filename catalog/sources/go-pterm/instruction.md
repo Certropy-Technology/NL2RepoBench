@@ -23,7 +23,47 @@ are outside this task.
   with `GOOS=linux GOARCH=amd64 GOWORK=off GOPROXY=off GOSUMDB=off
   GOTOOLCHAIN=local` and `-mod=vendor`.
 - The evaluator uses a bounded JSON subprocess bridge. Candidate code is never
-  imported into the trusted verifier process.
+  imported into the evaluator process.
+
+## Natural Language Instruction
+
+Create the pure-Go `github.com/pterm/pterm` module from an empty workspace.
+Implement only the deterministic string/color/style builders, basic printer,
+bar values, and `putils` helpers listed below. Interactive/live components are
+outside the task.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── go.mod
+├── go.sum
+├── vendor/modules.txt
+├── pterm.go
+├── style.go
+├── printer.go
+└── putils/
+    └── center.go
+```
+
+Preserve the root `pterm` and `putils` import paths. Do not add private verifier
+or live terminal service code.
+
+## Examples
+
+```go
+styled := pterm.Red.Sprint("error")
+```
+
+```go
+bar := pterm.Bar{Label: "done", Value: 1}
+```
+
+## Error Handling and Boundary Conditions
+
+Preserve empty strings, ANSI reset sequences, style composition, Unicode,
+width/alignment, builder immutability, and nil/default printer behavior. Fixed
+inputs must not depend on terminal state, clock, network, or global mutation.
 
 ## API Usage Guide
 

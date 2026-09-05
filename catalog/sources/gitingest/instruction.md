@@ -1,3 +1,8 @@
+## Project Description
+
+GitIngest is a local repository analysis and content extraction tool for
+developers who need a compact, deterministic description of a codebase.
+
 ## Introduction and Goals of the GitIngest Project
 
 GitIngest is a Python tool **for automated analysis of code repositories**. It can parse local directories and remote Git repositories (supporting mainstream platforms such as GitHub, GitLab, and Bitbucket) and extract structured summaries. This tool performs excellently in code repository analysis tasks, achieving "efficient file scanning, intelligent content extraction, and accurate summary generation". Its core functions include: repository cloning management (supporting specification of branches, commits, and sub - paths), **file system scanning and content extraction** (supporting multiple file formats, size limits, and pattern filtering), as well as advanced functions such as Notebook conversion, Gitignore rule handling, and both CLI and Web interfaces. In short, GitIngest aims to provide a robust code repository analysis system for automatically extracting and analyzing the structure and content of code libraries (for example, converting a repository into a structured summary through `ingest_query()`, and converting a Jupyter Notebook into readable code through the `process_notebook()` function).
@@ -206,6 +211,59 @@ workspace/
 ``` 
 
 ---
+
+## Natural Language Instruction
+
+Create the installable `gitingest` Python project from an empty workspace.
+Implement the local repository ingestion, path filtering, notebook conversion,
+configuration, and documented web/CLI surfaces described below. Remote source
+access is outside the offline runtime contract.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── src/
+│   └── gitingest/
+│       ├── __init__.py
+│       ├── cloning.py
+│       ├── ingestion.py
+│       ├── notebook_utils.py
+│       └── config.py
+├── server/
+│   └── main.py
+└── scripts/
+    └── (declared local command entry points)
+```
+
+The source layout must agree with the public imports and entry points listed
+below. Do not include verifier or hidden-test material.
+
+## Examples
+
+```python
+from gitingest import ingest_query
+result = ingest_query(local_path='workspace', max_file_size=1000000)
+```
+
+```python
+from gitingest import ingest_query
+result = ingest_query(local_path='workspace', ignore_patterns='tests/')
+```
+
+## Error Handling and Boundary Conditions
+
+Handle empty directories, binary files, oversized files, notebook cell types,
+ignore patterns, invalid local paths, and malformed query options according to
+the API guide. No runtime stage may contact GitHub, DNS, or another service.
+
+## Implementation Notes
+
+Keep local path traversal, ignore matching, notebook conversion, and output
+formatting deterministic. Authentication and remote cloning are described only
+as public configuration boundaries; runtime execution for this task remains
+offline and must fail clearly rather than attempting an unapproved service.
 
 ## API Usage Guide
 

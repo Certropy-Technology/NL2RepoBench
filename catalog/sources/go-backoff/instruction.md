@@ -19,6 +19,50 @@ subprocess bridge to exercise deterministic policy and retry behavior.
 - The bridge accepts bounded newline-delimited JSON and must emit one structured
   JSON response per request. Diagnostics belong on stderr.
 
+## Natural Language Instruction
+
+Create the `github.com/cenkalti/backoff/v7` Go module from an empty workspace.
+Implement the retry policies, retry loop, error wrappers, and deterministic
+duration behavior specified below. Keep the public package API and typed bridge
+inputs/outputs exact.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── go.mod
+├── go.sum
+├── vendor/modules.txt
+├── backoff.go
+├── retry.go
+├── exponential.go
+└── constant.go
+```
+
+The package is imported from the module root. Do not add verifier or hidden-test
+files to the generated module.
+
+## Examples
+
+```go
+policy := NewExponentialBackOff()
+next := policy.NextBackOff()
+```
+
+```go
+err := Retry(operation, policy)
+```
+
+## Error Handling and Boundary Conditions
+
+Preserve stop, permanent-error, retry-limit, zero-duration, overflow, and
+context/error propagation behavior from the API guide. No clock or network
+service may be required beyond explicitly supplied policy state.
+
+```go
+import backoff "github.com/cenkalti/backoff/v7"
+```
+
 ## API Usage Guide
 
 The main package is imported as `github.com/cenkalti/backoff/v7`. All durations
@@ -149,5 +193,5 @@ single-line error contract. Exact wall-clock scheduling, random samples,
 arbitrary caller callbacks and timers, and HTTP examples are not compared by
 the bounded bridge. The candidate is compiled in its own workspace and called
 as a separate UID-isolated subprocess. Do not import candidate code into the
-trusted verifier, read private tests, write trusted reports, or fetch
+evaluation process, read internal tests, write reports, or fetch
 dependencies during evaluation.

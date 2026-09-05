@@ -1,144 +1,49 @@
-## Introduction and Goals of the pysonDB-v2 Project
-### Project Introduction
+# pysondb-v2
 
-- **pysonDB-v2** allows you to perform Create, Read, Update, and Delete (CRUD) operations directly on local JSON files, just like operating a database, without relying on traditional database servers.
-- It is suitable for scenarios such as small projects, prototype development, script automation, and configuration storage.
+## Project Description
 
-### Main Features
+Build an installable `pysondb-v2` project from an empty `workspace/`. The project must reproduce the public, local behavior documented in this instruction, including its package entry points, return shapes, ordering, state changes, and documented exceptions. This is a repository-generation task: the agent creates the build metadata and source modules rather than editing an existing implementation.
 
-1. **Data Storage**  
-   - Uses JSON files as the storage medium, with a simple and intuitive data structure.
-2. **Basic Operations**  
-   - Supports common database operations such as adding (add), querying (get), updating (update), and deleting (delete).
-3. **Command-Line Interface (CLI)**  
-   - Provides a command-line interface to directly manage and operate database files through the command line.
-4. **Batch Operations**  
-   - Supports batch addition, batch query, batch update, and batch deletion of data.
-5. **Data Query**  
-   - Supports querying by ID, querying by conditions, and paginated query.
-6. **Data Export**  
-   - Can export the database content to a CSV file for easy data analysis and migration.
-7. **Database Merging**  
-   - Supports merging multiple database files with the same key structure.
-8. **Database Migration**  
-   - Supports migrating the old version of the database (v1) to the new version (v2) to maintain data compatibility.
-9. **Database Clearing**  
-   - Provides the function to clear the database, deleting all data but retaining the database structure.
+Distribution identity: `pysondb-v2`; public import package begins at `pysondb`.
+The scope is the deterministic local API described below. Network services, undeclared external state, and behavior not represented by the public contract are outside the task.
 
+## Natural Language Instruction
 
----
+Create the complete project in an empty workspace and make it installable with the command in the environment section. Implement these task-specific capability families from the local API contract:
 
-## Natural Language Instruction (Prompt)
-Please create a Python project named pysonDB-v2 to implement a JSON database. The project should include the following functions and meet the following requirements:
-1. Basic Database Operations
-    - Create a database (JSON file)
-    - Add a single data record to the database (add)
-    - Add multiple data records to the database in batch (add_many)
-    - Query all data (get_all)
-    - Query data by ID (get_by_id)
-    - Query data by conditions (get_by_query)
-    - Update data with a specified ID (update_by_id)
-    - Batch update data by conditions (update_by_query)
-    - Delete data with a specified ID (delete_by_id)
-    - Batch delete data by conditions (delete_by_query)
-    - Clear the database (purge)
+1. `Core API`: expose the documented public entry points, signatures, inputs, outputs, and error behavior.
+2. `1. Module Import`: preserve the documented object or module behavior, including state and side effects.
+3. `Basic import`: preserve ordering, determinism, serialization, and boundary semantics where specified.
+4. `Type definition import`: make the public package usable through the documented import path or command-line entry.
 
-2. Database Structure and Type Support
-    - Support dynamically adding new fields
-    - Support automatically generating unique IDs
-    - Support data type validation
+Do not add speculative APIs or substitute a different package. Keep the implementation self-contained, ensure imports work after installation, and use the exact public names and signatures in the API Usage Guide. A small implementation is acceptable only when it still satisfies every documented contract.
 
-3. Command-Line Interface (CLI) Functions
-    - Create a database file through the command line
-    - Add, query, update, and delete data through the command line
-    - Display the database content through the command line (show)
-    - Export the database to a CSV file through the command line (tocsv)
-    - Merge databases through the command line (merge)
-    - Clear the database through the command line (purge)
-    - Migrate the old version of the database through the command line (migrate)
+## Supports or Environment Configuration
 
-4. Error Handling and Prompting
-    - Provide clear exceptions and prompts for illegal operations, non-existent files, and data format errors.
+- CPython 3.12.14 on the pinned Linux image.
+- Distribution identity: `pysondb-v2`; public import package begins at `pysondb`.
+- Install from the workspace with `python -m pip install .`; do not download packages during evaluation.
+- Declared build/runtime packages are supplied by the frozen evaluation image: `prettytable==3.3.0`, `setuptools==75.8.0`, `wcwidth==0.8.2`, `wheel==0.45.1`
+- Build metadata and package data must be present in the workspace and agree with the public import paths below.
+- Agent, candidate, evaluator, Oracle, and control execution are network-isolated. Do not access GitHub, package registries, DNS, databases, or external services at runtime.
+- Use deterministic local inputs. Do not rely on the current wall clock, host-specific absolute paths, undeclared environment variables, or an installed copy of the target package.
 
-5. Utility Functions and Auxiliary Features
-    - ID generator
-    - Data validation tool
+## Project Directory Structure
 
-6. Interface Design: The code implementation should have a good design. Each functional module (such as database initialization, complex queries, batch operations, database management, enabling high-performance mode, error handling, data validation, data export and conversion, concurrency, and database backup and recovery) should design function interfaces and define clear input and output formats.
-
-7. Examples and Test Scripts: Provide example code and test cases to demonstrate how to initialize the database using the PysonDB() function and how to perform data operations using other APIs (such as db.add()). The above functions need to be combined to construct a complete example code demonstrating database initialization, CRUD operations, data export, and backup, as well as corresponding test cases.
-
-8. Core File Requirements: The project must include a complete setup.py file. This file should not only configure the project as an installable package (supporting pip install) but also declare a complete list of dependencies (including core libraries such as ujson==5.2.0, prettytable==3.3.0, pytest==8.4.1, pytest-mock==3.14.1, and python>=3.7.0). The setup.py file can verify whether all functional modules work properly.
-
----
-
-## Environment Configuration
-### Core Dependency Library Versions
-```bash
-# Python version
-python>=3.7.0
-
-# JSON dependency library (high-performance JSON parsing)
-ujson==5.2.0
-
-# Visualization dependency library (for CLI table display)
-prettytable==3.3.0
-
-# Testing framework
-pytest==8.4.1 # Unit testing framework
-pytest-mock==3.14.1 # Mock support for pytest
-
-# Code formatting tool
-black==23.12.1 # Used to automatically format Python code to maintain a consistent style
-```
-
-### Installation Instructions
-```bash
-# Install the project (in development mode, supporting modifications)
-pip install -e .
-
-# Install only runtime dependencies
-pip install -r requirements.txt
-
-# Install development dependencies (including testing tools)
-pip install -r requirements-dev.txt
-
-# Run tests
-pytest
-
-# Build distribution packages
-python setup.py sdist bdist_wheel
-```
-
-## pysonDB-v2 Project Architecture
-### Project Directory Structure
-
-```markdown
-pysonDB-v2/
-├── pysondb/                  # Main package directory, storing core code
+```text
+workspace/
+├── pyproject.toml
+├── PysonDB/
 │   ├── __init__.py
-│   ├── __main__.py           # Supports running with python -m pysondb
-│   ├── cli.py                # Command-line tool implementation
-│   ├── db.py                 # Database core operations
-│   ├── db_types.py           # Type definitions
-│   ├── errors.py             # Custom exceptions
-│   └── utils.py              # Utility functions
-│
-├── docs/                     # Project documentation
-│   └── docs.md
-│
-├── README.md                 # Project description
-├── LICENSE                   # License
-├── requirements.txt          # Runtime dependencies
-├── requirements-dev.txt      # Development/testing dependencies
-├── setup.py                  # Installation script
-├── setup.cfg                 # Configuration file
-├── py.typed                  # Type hint marker
-└── tox.ini                   # Test automation configuration
+│   └── (public modules documented in API Usage Guide)
 ```
 
+The tree lists agent-owned public project files only. Add additional public modules when required by the API Usage Guide, but keep their import paths consistent with package metadata. Do not create evaluator-only files, hidden fixtures, or private reports in the generated project.
 
 ## API Usage Guide
+
+The following is the task-specific public contract recovered from the local instruction and inventory. For every function, class, method, constant, export, and command named below, preserve its complete signature, accepted input domain, return type and shape, ordering, determinism, state/side effects, exceptions, and examples. When the source contract gives an optional argument or a compatibility alias, it is part of the required surface.
+
 ### Core API
 #### 1. Module Import
 ```python
@@ -453,7 +358,7 @@ def update_by_id(
 **Function Signature**:
 ```python
 def update_by_query(
-    query: QueryType, 
+    query: QueryType,
     new_data: object
 ) -> list:
 ```
@@ -1097,7 +1002,7 @@ python -m pysondb purge test_db.json
 
 ### Database Structure Description
 
-PysonDB-V2 stores data using the following JSON structure: 
+PysonDB-V2 stores data using the following JSON structure:
 **Note**: The fields field does not directly store the id.
 
 ```json
@@ -1127,7 +1032,7 @@ PysonDB-V2 adopts a unified key sorting strategy in different methods:
 db.add({"name": "test", "age": 3})
 # Result: keys = ["age", "name"] (alphabetical sorting)
 
-# Add a record, the field order is age -> name  
+# Add a record, the field order is age -> name
 db.add({"age": 3, "name": "test"})
 # Result: keys = ["age", "name"] (alphabetical sorting)
 ```
@@ -1322,4 +1227,117 @@ except TypeError as e:
     print(f"Type error: {e}")
 ```
 
+## Implementation Notes
 
+- Keep the root exports and module paths stable after installation; do not make behavior depend on the repository's current directory.
+- Preserve explicit ordering guarantees. When the contract does not promise an order, do not introduce a new observable order accidentally.
+- Propagate documented exceptions and avoid replacing them with generic errors. Validate malformed, empty, boundary, and repeated inputs as described by the API contract.
+- Keep filesystem, process, terminal, and resource effects bounded and local. Close files and other resources on both success and failure.
+- Do not copy an upstream checkout, implementation source, or evaluation-only material into the generated project. Implement the public behavior from this specification.
+
+## Examples
+
+The examples below are retained from the local task specification. They are starting points for ordinary calls and boundary/error behavior; their exact output and exception semantics remain governed by the API Usage Guide.
+
+### Example 1: ordinary usage
+```text
+# Python version
+python>=3.7.0
+
+# JSON dependency library (high-performance JSON parsing)
+ujson==5.2.0
+
+# Visualization dependency library (for CLI table display)
+prettytable==3.3.0
+
+# Testing framework
+pytest==8.4.1 # Unit testing framework
+pytest-mock==3.14.1 # Mock support for pytest
+
+# Code formatting tool
+black==23.12.1 # Used to automatically format Python code to maintain a consistent style
+```
+
+### Example 2: ordinary usage
+```text
+# Install the project (in development mode, supporting modifications)
+pip install -e .
+
+# Install only runtime dependencies
+pip install -r requirements.txt
+
+# Install development dependencies (including testing tools)
+pip install -r requirements-dev.txt
+
+# Run tests
+pytest
+
+# Build distribution packages
+python setup.py sdist bdist_wheel
+```
+
+### Example 3: boundary or error behavior
+```text
+pysonDB-v2/
+├── pysondb/                  # Main package directory, storing core code
+│   ├── __init__.py
+│   ├── __main__.py           # Supports running with python -m pysondb
+│   ├── cli.py                # Command-line tool implementation
+│   ├── db.py                 # Database core operations
+│   ├── db_types.py           # Type definitions
+│   ├── errors.py             # Custom exceptions
+│   └── utils.py              # Utility functions
+│
+├── docs/                     # Project documentation
+│   └── docs.md
+│
+├── README.md                 # Project description
+├── LICENSE                   # License
+├── requirements.txt          # Runtime dependencies
+├── requirements-dev.txt      # Development/testing dependencies
+├── setup.py                  # Installation script
+├── setup.cfg                 # Configuration file
+├── py.typed                  # Type hint marker
+└── tox.ini                   # Test automation configuration
+```
+
+### Example 4: boundary or error behavior
+```text
+# Basic import
+from pysondb import PysonDB
+
+# Type definition import
+
+from pysondb.db_types import {
+    DBSchemaType,
+    IdGeneratorType,
+    NewKeyValidTypes,
+    SingleDataType,
+    ReturnWithIdType,
+    QueryType
+}
+
+# Error type import
+from pysondb.errors import (
+    IdDoesNotExistError,
+    UnknownKeyError,
+    SchemaTypeError
+)
+
+# Utility function import
+from pysondb.utils import (
+    migrate,
+    print_db_as_table,
+    merge_n_db,
+    purge_db
+)
+```
+
+
+## Error Handling and Boundary Conditions
+
+- Empty inputs, invalid types, malformed text or paths, unavailable resources, duplicate calls, and cancellation/timeout cases must follow the exception and return-value contracts documented for the relevant API.
+- Do not silently coerce values, reorder results, swallow exceptions, or use a fallback dependency unless the API section explicitly requires that behavior.
+- File and environment operations must use caller-provided paths and documented defaults only; never read undeclared host files or network resources.
+- The implementation must remain usable in the stated NoNetwork environment. A missing optional integration should expose the documented availability or error behavior rather than attempting an online install.
+- Security-sensitive inputs must be treated as data. Do not execute strings, load untrusted code, or interpolate shell commands unless that behavior is explicitly part of the documented public API.

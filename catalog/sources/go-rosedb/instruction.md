@@ -18,6 +18,54 @@ events.
 - Filesystem-backed operation under a caller-provided directory. Do not use
   network services, cgo, plugins, or unbounded background work.
 
+# Natural Language Instruction
+
+Create the filesystem-backed `github.com/rosedblabs/rosedb/v2` module from an
+empty workspace. Implement configuration, durable single-key operations,
+atomic batches, expiration, ordered scans, iterators, and watch events exactly
+as described below.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── go.mod
+├── go.sum
+├── vendor/modules.txt
+├── db.go
+├── options.go
+├── batch.go
+├── iterator.go
+├── item.go
+└── watcher.go
+```
+
+Expose the root package as `rosedb "github.com/rosedblabs/rosedb/v2"`.
+Persistence uses only the caller-provided directory; evaluation-only files are
+not part of the generated module.
+
+# Examples
+
+```go
+db, err := rosedb.Open(rosedb.DefaultOptions("/tmp/rose")); defer db.Close()
+err = db.Put([]byte("name"), []byte("Ada"))
+```
+
+```go
+batch := db.NewBatch(rosedb.DefaultBatchOptions()); _ = batch.Put([]byte("k"), []byte("v")); _ = batch.Commit()
+```
+
+# Error Handling and Boundary Conditions
+
+Preserve empty-key and missing-key errors, close/reopen durability, pending
+batch visibility, rollback, TTL expiry/persistence, iterator closure, ordered
+half-open scans, watch delivery bounds, and all exported error identities.
+Never contact a network service; filesystem paths remain caller-controlled.
+
+```go
+import rosedb "github.com/rosedblabs/rosedb/v2"
+```
+
 # API Usage Guide
 
 Import the root package as `rosedb "github.com/rosedblabs/rosedb/v2"`.

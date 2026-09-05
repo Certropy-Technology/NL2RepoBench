@@ -1,3 +1,72 @@
+# Build `markupsafe`
+
+## Project Description
+
+Create the `markupsafe` project from an empty workspace. This is a repository-generation task for the frozen `python` package contract, task specification version `0.1.0`, at source revision `28ace20b140d15c083e1cbc163ee6b7778ba098c`. Implement the public behavior described by the local inventories and the task-specific detail below; do not copy upstream source or tests. The supported scope is python, repository-generation.
+
+## Natural Language Instruction
+
+Starting with an empty `workspace/`, create an installable `markupsafe` project. Implement every public/core API named in the API Usage Guide, its package exports, and its documented integration points. Preserve observable input types, return shapes, ordering, determinism, state changes, and documented exception behavior. The project must be usable through its declared `markupsafe` import path (or the package root for this Node task), and all required modules must be present in the directory structure below.
+
+The task-specific specification retained below supplies the detailed behavior for each API family. Treat it as the contract: do not add unrelated APIs, replace deterministic behavior with randomized or time-dependent behavior, or weaken error handling.
+
+## Supports
+
+- Language/runtime: `python` on `3.10`; target environment metadata declares `debian-12`.
+- Distribution/package: `markupsafe`; import/root name: `markupsafe`. Package manager: `pip`.
+- Install from the repository root with `python -m pip install . --no-deps`. Build metadata must be complete and agree with the package entry point.
+- Dependency status in the frozen source metadata is `unknown`. Use only dependencies declared by the task and available in the preinstalled build image; standard-library modules are not third-party runtime dependencies.
+- NoNetwork boundary: agent, candidate, verifier, Oracle, and controls run with `network_mode=no-network`. Do not access GitHub, PyPI, npm registries, Go proxy, DNS, or external services at runtime. Do not fetch source or dependencies during implementation or package use.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── markupsafe/
+│   ├── bench.py
+│   ├── __init__.py
+│   └── _native.py
+└── README.md
+```
+
+The tree is the minimum public project layout. Add a module only when it corresponds to a documented import path or package resource. Do not place publicly unavailable evaluator code, non-public evaluation material, Oracle payloads, dependency caches, or trusted reports in this workspace.
+
+## API Usage Guide
+
+The public/core API families recorded in the local inventory are: Introduction and Goals of the MarkupSafe Project, Natural Language Instruction (Prompt), Environment Configuration, Python Version, Core Dependency Library Versions, MarkupSafe Project Architecture, Project Directory Structure, 1. Module Import and Core Interfaces, 2. _escape_inner, 3. `escape(s)` - HTML/XML Character Escaping, 4. `escape_silent(s)` - Safe Escaping for Null Values, 5. `soft_str(s)` - Soft String Conversion, 6. `format(*args: t.Any, **kwargs: t.Any) -> Markup`, 7. `Markup` Class - HTML Safe String Type, 8. `_HasHTML` Class - Protocol for Objects that Implement the `__html__` Method, 9. `_TPEscape` Class - Protocol for Functions that Implement the `__call__` Method, 10. `_MarkupEscapeHelper` Class - Helper for `Markup.__mod__`, 11. `__html__` and `__html_format__` Protocols, 12. Inter-module Call Relationships, 13. Typical Usage Patterns, 1. HTML/XML Safe Escaping (`escape`), 2. HTML Safe String Type (`Markup`), 3. Safe Escaping for Null Values (`escape_silent`), 4. Soft String Conversion (`soft_str`), 5. HTML Entity Unescaping and Tag Stripping (`unescape`, `striptags`), 6. Custom `__html__` and `__html_format__` Protocols, 7. String Method Compatibility and Chained Operations, 8. Exception Handling and Type Safety, 9. C Extension Acceleration and Memory Safety.
+
+For each listed family, the detailed contract below defines the import path or CLI entry, signature, accepted inputs, return type/shape, ordering and determinism, state or I/O side effects, errors, and examples. Implement the complete public surface, including root re-exports and aliases where the specification names them. If an API is stateful, preserve mutation and repeated-call behavior; if it is pure, do not introduce global state.
+
+## Implementation Notes
+
+Keep the implementation self-contained and deterministic under the declared runtime. The candidate repository must install from the workspace root, import through the documented public path, and run without external services. Preserve package metadata, module semantics (ESM/CommonJS or Python import behavior), serialization formats, resource cleanup, and boundary behavior described below. publicly unavailable evaluator adapters and non-public evaluation details are not part of the implementation.
+
+## Examples
+
+Ordinary project examples:
+
+```bash
+cd workspace
+python -m pip install . --no-deps
+```
+
+```python
+# Import the public package and use the task-specific APIs documented below.
+from markupsafe import *
+```
+
+The retained task-specific examples below provide ordinary API calls and combinations grounded in the frozen inventory. Keep their result shapes and ordering exact.
+
+## Error Handling and Boundary Conditions
+
+- Empty inputs, malformed values, missing resources, duplicate values, and unsupported options must follow the task-specific error contracts below; do not silently coerce or discard information unless explicitly specified.
+- Repeated calls must remain deterministic. Filesystem, process, clock, random, native, callback, and serialization boundaries are supported only where the local specification documents them.
+- Network attempts are prohibited and must not be used as a fallback. Installation failures, missing offline dependencies, or unsupported external capabilities are environment/source concerns, not reasons to invent behavior.
+
+
+## Source-derived task detail
+
 ## Introduction and Goals of the MarkupSafe Project
 
 MarkupSafe is a Python library focused on secure text processing for HTML/XML. It is dedicated to providing efficient and reliable string escaping and safe marking capabilities for scenarios such as web applications and template engines. Its core goal is to prevent injection attacks (such as XSS) by automatically escaping special characters and safely inserting untrusted input into HTML or XML documents. The main functions include:

@@ -1,40 +1,48 @@
-# Project Description
+# parse5
 
-Build `parse5`, an offline ECMAScript module that parses HTML documents and
-fragments into a default tree representation and serializes that representation
-back to HTML. The package targets standards-oriented server-side HTML tooling:
-it must perform HTML tree correction, preserve HTML/SVG/MathML namespaces, and
-offer deterministic source-location and parse-error reporting.
+## Project Description
 
-This task covers the package-root document/fragment APIs and the default tree
-adapter. The root compatibility exports listed below must exist, but direct use
-of the low-level tokenizer/parser constructors and custom tree adapters is not
-part of the behavioral surface.
+Build an installable `parse5` project from an empty `workspace/`. The project must reproduce the public, local behavior documented in this instruction, including its package entry points, return shapes, ordering, state changes, and documented exceptions. This is a repository-generation task: the agent creates the build metadata and source modules rather than editing an existing implementation.
 
-# Supports
+Distribution/package identity: `parse5`; root module entry is the package entry documented below.
+The scope is the deterministic local API described below. Network services, undeclared external state, and behavior not represented by the public contract are outside the task.
 
-- Node.js `24.19.0`, npm `11.17.0`, `linux/amd64`, and ESM package semantics.
-- `package.json` must name the package `parse5`, use version `8.0.1`, set
-  `"type": "module"`, and export the package root to a JavaScript ESM entry.
-  It must also identify a TypeScript declaration entry.
-- Commit a lockfile with `lockfileVersion: 3`. A clean verifier runs:
+## Natural Language Instruction
 
-  ```bash
-  npm ci --offline --ignore-scripts --no-audit --no-fund
-  ```
+Create the complete project in an empty workspace and make it installable with the command in the environment section. Implement these task-specific capability families from the local API contract:
 
-- You may implement the package without dependencies. If you use the
-  reference-compatible escaping/entity helper, the only available runtime
-  dependency is exact `entities@8.0.0`; no other runtime package is available.
-- Do not use npm workspaces, native addons, custom loaders, registry settings,
-  generated downloads, or lifecycle scripts (`preinstall`, `install`,
-  `postinstall`, `prepare`, `prepublish`, `prepublishOnly`, `publish`, or
-  `postpublish`). The package has no CLI.
-- Runtime execution is deterministic and offline. Parsing and serialization
-  must not read files or environment-dependent state, use the clock or
-  randomness, start subprocesses, or access the network.
+1. `Default tree representation`: expose the documented public entry points, signatures, inputs, outputs, and error behavior.
+2. `parse(html, options?)`: preserve the documented object or module behavior, including state and side effects.
+3. `parseFragment(...)`: preserve ordering, determinism, serialization, and boundary semantics where specified.
+4. `serialize(node, options?)`: make the public package usable through the documented import path or command-line entry.
 
-# API Usage Guide
+Do not add speculative APIs or substitute a different package. Keep the implementation self-contained, ensure imports work after installation, and use the exact public names and signatures in the API Usage Guide. A small implementation is acceptable only when it still satisfies every documented contract.
+
+## Supports or Environment Configuration
+
+- Node.js 24.19.0 with npm 11.17.0.
+- Distribution/package identity: `parse5`; root module entry is the package entry documented below.
+- Install from the workspace with `npm install --offline` using the declared lockfile.
+- Declared build/runtime packages are supplied by the frozen evaluation image: `entities@8.0.0`
+- Build metadata and package data must be present in the workspace and agree with the public import paths below.
+- Agent, candidate, evaluator, Oracle, and control execution are network-isolated. Do not access GitHub, package registries, DNS, databases, or external services at runtime.
+- Use deterministic local inputs. Do not rely on the current wall clock, host-specific absolute paths, undeclared environment variables, or an installed copy of the target package.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── index.js
+├── index.d.ts
+```
+
+The tree lists agent-owned public project files only. Add additional public modules when required by the API Usage Guide, but keep their import paths consistent with package metadata. Do not create evaluator-only files, hidden fixtures, or private reports in the generated project.
+
+## API Usage Guide
+
+The following is the task-specific public contract recovered from the local instruction and inventory. For every function, class, method, constant, export, and command named below, preserve its complete signature, accepted input domain, return type and shape, ordering, determinism, state/side effects, exceptions, and examples. When the source contract gives an optional argument or a compatibility alias, it is part of the required surface.
 
 ## Default tree representation
 
@@ -220,7 +228,6 @@ contains these exact entries:
 compatibility exports; direct low-level construction or invocation is outside
 this task's supported behavior.
 
-# Implementation Notes
 
 - Input strings are interpreted as JavaScript UTF-16 strings. Offsets therefore
   count UTF-16 code units, while lines and columns are one-based.
@@ -231,3 +238,53 @@ this task's supported behavior.
   adapter is exercised by this task.
 - Preserve deterministic child and attribute ordering. Do not expose internal
   caches or mutable process-global parsing state.
+
+## Implementation Notes
+
+- Keep the root exports and module paths stable after installation; do not make behavior depend on the repository's current directory.
+- Preserve explicit ordering guarantees. When the contract does not promise an order, do not introduce a new observable order accidentally.
+- Propagate documented exceptions and avoid replacing them with generic errors. Validate malformed, empty, boundary, and repeated inputs as described by the API contract.
+- Keep filesystem, process, terminal, and resource effects bounded and local. Close files and other resources on both success and failure.
+- Do not copy an upstream checkout, implementation source, or evaluation-only material into the generated project. Implement the public behavior from this specification.
+
+## Examples
+
+The examples below are retained from the local task specification. They are starting points for ordinary calls and boundary/error behavior; their exact output and exception semantics remain governed by the API Usage Guide.
+
+### Example 1: ordinary usage
+```text
+npm ci --offline --ignore-scripts --no-audit --no-fund
+```
+
+### Example 2: ordinary usage
+```text
+HTML   http://www.w3.org/1999/xhtml
+SVG    http://www.w3.org/2000/svg
+MATHML http://www.w3.org/1998/Math/MathML
+XLINK  http://www.w3.org/1999/xlink
+XML    http://www.w3.org/XML/1998/namespace
+XMLNS  http://www.w3.org/2000/xmlns/
+```
+
+### Example 3: boundary or error behavior
+```text
+function parse(html: string, options?: ParserOptions): Document;
+```
+
+### Example 4: boundary or error behavior
+```text
+import {parse} from 'parse5';
+
+const document = parse('<!doctype html><title>A &amp; B</title><p>hello');
+// document.mode === 'no-quirks'
+// the title text is 'A & B'; html/head/body and the unclosed p are repaired
+```
+
+
+## Error Handling and Boundary Conditions
+
+- Empty inputs, invalid types, malformed text or paths, unavailable resources, duplicate calls, and cancellation/timeout cases must follow the exception and return-value contracts documented for the relevant API.
+- Do not silently coerce values, reorder results, swallow exceptions, or use a fallback dependency unless the API section explicitly requires that behavior.
+- File and environment operations must use caller-provided paths and documented defaults only; never read undeclared host files or network resources.
+- The implementation must remain usable in the stated NoNetwork environment. A missing optional integration should expose the documented availability or error behavior rather than attempting an online install.
+- Security-sensitive inputs must be treated as data. Do not execute strings, load untrusted code, or interpolate shell commands unless that behavior is explicitly part of the documented public API.

@@ -22,6 +22,43 @@ the upstream algorithms repository are out of scope.
   plugins, `unsafe`, `go generate`, a Go workspace, external `replace`
   directives, network access, or external services.
 
+## Natural Language Instruction
+
+Build the pure-Go `github.com/TheAlgorithms/Go` module from an empty workspace.
+Implement the `conversion` package's deterministic base64, integer, string,
+Roman numeral, and packed RGB conversions listed below.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── go.mod
+├── go.sum
+├── vendor/modules.txt
+└── conversion/
+    └── conversion.go
+```
+
+Expose the package at `github.com/TheAlgorithms/Go/conversion`; other upstream
+algorithms and private verifier files are out of scope.
+
+## Examples
+
+```go
+encoded := conversion.EncodeBase64("hello")
+decoded, err := conversion.DecodeBase64(encoded)
+```
+
+```go
+roman, err := conversion.ToRoman(42)
+```
+
+## Error Handling and Boundary Conditions
+
+Preserve invalid base64, numeric overflow, unsupported Roman values, Unicode
+runes, RGB component bounds, and deterministic formatting rules in the API
+guide. No external service or mutable global state is allowed.
+
 ## API Usage Guide
 
 Implement the following declarations in package `conversion`:

@@ -19,6 +19,48 @@ middleware handler that rejects request paths containing non-printable runes.
   uses bounded strings and integers. Return structured errors for malformed
   or unknown requests and do not write diagnostics to stdout.
 
+## Natural Language Instruction
+
+Create the pure-Go `github.com/hashicorp/go-cleanhttp` module from an empty
+workspace. Implement independent default and pooled HTTP clients/transports and
+the documented printable-path handler while preserving standard `net/http`
+semantics.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── go.mod
+├── go.sum
+├── vendor/modules.txt
+├── cleanhttp.go
+├── handlers.go
+└── cmd/bridge/main.go
+```
+
+The root package is the public import path; bridge code is only an executable
+entrypoint when required by the declared build contract.
+
+## Examples
+
+```go
+client := DefaultClient(); response, err := client.Do(request)
+```
+
+```go
+handler := PrintablePathHandler(next); handler.ServeHTTP(w, request)
+```
+
+## Error Handling and Boundary Conditions
+
+Preserve independent transport/client instances, default settings, malformed
+request paths, non-printable runes, request errors, and response cleanup. Do
+not contact an external service during package tests.
+
+```go
+import cleanhttp "github.com/hashicorp/go-cleanhttp"
+```
+
 ## API Usage Guide
 
 Import the package as `github.com/hashicorp/go-cleanhttp`.
@@ -62,6 +104,10 @@ For a nil request the returned handler does not invoke `next` or write a
 response.
 
 ## Implementation Notes
+
+Each constructor returns independently configurable values. Preserve request
+context, redirect, transport, and response-body semantics from `net/http`; the
+path handler validates accepted requests without rewriting their paths.
 
 Use the standard library's `net/http`, `net`, `runtime`, `time`, `strings`,
 and `unicode` packages. Preserve the public signatures and package name.

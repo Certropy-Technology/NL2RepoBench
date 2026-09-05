@@ -1,3 +1,71 @@
+# Build `markdownify`
+
+## Project Description
+
+Create the `markdownify` project from an empty workspace. This is a repository-generation task for the frozen `python` package contract, task specification version `0.1.0`, at source revision `8f70e3952f7f8132777e60ed098f8974e51f7cbd`. Implement the public behavior described by the local inventories and the task-specific detail below; do not copy upstream source or tests. The supported scope is python, repository-generation.
+
+## Natural Language Instruction
+
+Starting with an empty `workspace/`, create an installable `markdownify` project. Implement every public/core API named in the API Usage Guide, its package exports, and its documented integration points. Preserve observable input types, return shapes, ordering, determinism, state changes, and documented exception behavior. The project must be usable through its declared `markdownify` import path (or the package root for this Node task), and all required modules must be present in the directory structure below.
+
+The task-specific specification retained below supplies the detailed behavior for each API family. Treat it as the contract: do not add unrelated APIs, replace deterministic behavior with randomized or time-dependent behavior, or weaken error handling.
+
+## Supports
+
+- Language/runtime: `python` on `3.13`; target environment metadata declares `debian-12`.
+- Distribution/package: `markdownify`; import/root name: `markdownify`. Package manager: `pip`.
+- Install from the repository root with `python -m pip install . --no-deps`. Build metadata must be complete and agree with the package entry point.
+- Dependency status in the frozen source metadata is `unknown`. Use only dependencies declared by the task and available in the preinstalled build image; standard-library modules are not third-party runtime dependencies.
+- NoNetwork boundary: agent, candidate, verifier, Oracle, and controls run with `network_mode=no-network`. Do not access GitHub, PyPI, npm registries, Go proxy, DNS, or external services at runtime. Do not fetch source or dependencies during implementation or package use.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── markdownify/
+│   ├── __init__.py
+│   └── main.py
+└── README.md
+```
+
+The tree is the minimum public project layout. Add a module only when it corresponds to a documented import path or package resource. Do not place publicly unavailable evaluator code, non-public evaluation material, Oracle payloads, dependency caches, or trusted reports in this workspace.
+
+## API Usage Guide
+
+The public/core API families recorded in the local inventory are: Natural Language Instruction (Prompt), Environment Configuration, Python Version, Core Dependency Library Versions, Python-Markdownify Project Architecture, Project Directory Structure, Core Functions, `markdownify(html, **options)`, Core Class, `MarkdownConverter(**options)`, Conversion Options, Tag Control Options, Link Processing Options, Heading Style Options, List and Format Options, Newline and Format Options, Escape Options, Table Options, Text Processing Options, Parser Options, Supported HTML Tag Conversions, Block-level Elements, Inline Elements, Custom Converters, Inheriting the MarkdownConverter Class, Naming Rules for Conversion Functions, Command-line Interface, Basic Usage, Command-line Options, Constant Definitions, Heading Style Constants, Newline Style Constants, Emphasis Symbol Constants, Whitespace Handling Constants, Detailed Function Implementation Nodes.
+
+For each listed family, the detailed contract below defines the import path or CLI entry, signature, accepted inputs, return type/shape, ordering and determinism, state or I/O side effects, errors, and examples. Implement the complete public surface, including root re-exports and aliases where the specification names them. If an API is stateful, preserve mutation and repeated-call behavior; if it is pure, do not introduce global state.
+
+## Implementation Notes
+
+Keep the implementation self-contained and deterministic under the declared runtime. The candidate repository must install from the workspace root, import through the documented public path, and run without external services. Preserve package metadata, module semantics (ESM/CommonJS or Python import behavior), serialization formats, resource cleanup, and boundary behavior described below. publicly unavailable evaluator adapters and non-public evaluation details are not part of the implementation.
+
+## Examples
+
+Ordinary project examples:
+
+```bash
+cd workspace
+python -m pip install . --no-deps
+```
+
+```python
+# Import the public package and use the task-specific APIs documented below.
+from markdownify import *
+```
+
+The retained task-specific examples below provide ordinary API calls and combinations grounded in the frozen inventory. Keep their result shapes and ordering exact.
+
+## Error Handling and Boundary Conditions
+
+- Empty inputs, malformed values, missing resources, duplicate values, and unsupported options must follow the task-specific error contracts below; do not silently coerce or discard information unless explicitly specified.
+- Repeated calls must remain deterministic. Filesystem, process, clock, random, native, callback, and serialization boundaries are supported only where the local specification documents them.
+- Network attempts are prohibited and must not be used as a fallback. Installation failures, missing offline dependencies, or unsupported external capabilities are environment/source concerns, not reasons to invent behavior.
+
+
+## Source-derived task detail
+
 ﻿## Introduction and Goals of the Python-Markdownify Project
 
 Python-Markdownify is a Python library **for converting HTML to Markdown** that can transform HTML markup language into readable Markdown format. Built on the BeautifulSoup4 parser, this tool offers highly configurable conversion options and supports intelligent conversion of various HTML tags, including links, headings, lists, tables, code blocks, etc. Its core functions include: **HTML tag conversion** (automatically recognizing and converting HTML tags to corresponding Markdown syntax), **format preservation** (maintaining the structure and format of the original document, including nested lists and table alignment), and **custom conversion rules** (supporting strip and convert options, allowing users to precisely control which tags need to be converted or ignored). In short, Python-Markdownify aims to provide a robust HTML-to-Markdown conversion system for converting web page content, rich text editor outputs, or other HTML-formatted documents into easily readable and editable Markdown format (for example, converting an HTML string to Markdown via the `markdownify()` function and implementing custom conversion logic through the `MarkdownConverter` class).

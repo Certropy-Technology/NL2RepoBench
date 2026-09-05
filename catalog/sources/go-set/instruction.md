@@ -23,6 +23,50 @@ instances. Only the API listed below belongs to this task's evaluated profile.
 - The set element type must be comparable, and operations must preserve set
   uniqueness.
 
+## Natural Language Instruction
+
+Create the generic `github.com/deckarep/golang-set/v2` module from an empty
+workspace. Implement the comparable-element set constructors, set operations,
+iterators, conversion helpers, and deterministic ordering behavior listed below.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── go.mod
+├── go.sum
+├── vendor/modules.txt
+├── mapset.go
+├── thread_safe.go
+└── iterator.go
+```
+
+Expose the root package as `mapset` and preserve the generic signatures. The
+MongoDB serialization types required by the public method signatures must use
+the declared offline dependency; no service or evaluation-only files belong in
+the project.
+
+## Examples
+
+```go
+s := mapset.NewSet(1, 2); s.Add(3); present := s.Contains(2)
+```
+
+```go
+it := s.Iterator(); for value := range it.C { _ = value }
+```
+
+## Error Handling and Boundary Conditions
+
+Preserve uniqueness, empty sets, duplicate additions, absent removals, nil
+iterators, comparable-type restrictions, copy behavior, and deterministic
+`Sorted` output. Concurrent-safe and thread-unsafe constructors must retain
+their documented distinction.
+
+```go
+import mapset "github.com/deckarep/golang-set/v2"
+```
+
 ## API Usage Guide
 
 Import `github.com/deckarep/golang-set/v2` with the package name `mapset`.
@@ -116,7 +160,7 @@ Keep all state instance-local and use a map-backed representation or another
 bounded deterministic structure. Methods that return sets must not alias the
 mutable storage of their inputs. The evaluator calls the public API through a
 separate typed newline-delimited JSON bridge; it never imports candidate code
-into the trusted verifier. Do not hard-code private requests or write verifier
+into the evaluator. Do not hard-code private requests or write evaluator
 reports, rewards, or test results from candidate code. Random iteration order
 is acceptable where the API documents arbitrary order, so callers should sort
 only when they need presentation order.

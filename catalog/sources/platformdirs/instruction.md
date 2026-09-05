@@ -1,37 +1,48 @@
-# Project Description
+# platformdirs
 
-Create an installable Python package named `platformdirs` that computes the
-standard per-user and shared directories used by applications. The package
-must work from a `src/platformdirs/` layout and expose the public convenience
-functions and `PlatformDirs` classes described below.
+## Project Description
 
-This task freezes a deterministic Linux/Unix slice of the package. The slice
-does not require a desktop session, a Windows registry, macOS APIs, Android
-runtime modules, or mutation of the host platform. Paths are returned as
-strings or `pathlib.Path` objects; callers choose whether directory creation
-is enabled.
+Build an installable `platformdirs` project from an empty `workspace/`. The project must reproduce the public, local behavior documented in this instruction, including its package entry points, return shapes, ordering, state changes, and documented exceptions. This is a repository-generation task: the agent creates the build metadata and source modules rather than editing an existing implementation.
 
-# Supports
+Distribution identity: `platformdirs`; public import package begins at `platformdirs`.
+The scope is the deterministic local API described below. Network services, undeclared external state, and behavior not represented by the public contract are outside the task.
 
-- Support Python 3.10 and newer.
-- Install with `python -m pip install -e .` or a normal local build without
-  downloading runtime dependencies.
-- Use `src/platformdirs/` as the package directory and include a static
-  `platformdirs.version` module with `__version__ = "4.11.3"` and
-  `__version_tuple__ = (4, 11, 3)`.
-- The runtime package uses only the Python standard library.
-- On the verification platform, `platformdirs.PlatformDirs` and
-  `platformdirs.AppDirs` resolve to the Unix implementation. Do not require
-  `sys.platform` mutation to use this contract; the verifier constructs
-  `platformdirs.unix.Unix` directly when it needs explicit Unix behavior.
-- `ensure_exists=False` is the default and must not create directories.
-  `ensure_exists=True` may create only the requested path and its missing
-  parents when a directory property or path property is accessed.
-- Return JSON-safe observations at the package boundary: directory methods
-  return `str`, path properties return `pathlib.Path`, and iterators yield
-  strings. The package itself does not need to implement a JSON protocol.
+## Natural Language Instruction
 
-# API Usage Guide
+Create the complete project in an empty workspace and make it installable with the command in the environment section. Implement these task-specific capability families from the local API contract:
+
+1. `Package exports`: expose the documented public entry points, signatures, inputs, outputs, and error behavior.
+2. `Unix directory properties`: preserve the documented object or module behavior, including state and side effects.
+3. `XDG environment behavior`: preserve ordering, determinism, serialization, and boundary semantics where specified.
+4. `Path properties and convenience functions`: make the public package usable through the documented import path or command-line entry.
+
+Do not add speculative APIs or substitute a different package. Keep the implementation self-contained, ensure imports work after installation, and use the exact public names and signatures in the API Usage Guide. A small implementation is acceptable only when it still satisfies every documented contract.
+
+## Supports or Environment Configuration
+
+- CPython 3.12.14 on the pinned Linux image.
+- Distribution identity: `platformdirs`; public import package begins at `platformdirs`.
+- Install from the workspace with `python -m pip install .`; do not download packages during evaluation.
+- Declared build/runtime packages are supplied by the frozen evaluation image: `setuptools==80.10.2`, `wheel==0.45.1`
+- Build metadata and package data must be present in the workspace and agree with the public import paths below.
+- Agent, candidate, evaluator, Oracle, and control execution are network-isolated. Do not access GitHub, package registries, DNS, databases, or external services at runtime.
+- Use deterministic local inputs. Do not rely on the current wall clock, host-specific absolute paths, undeclared environment variables, or an installed copy of the target package.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── a/
+│   ├── __init__.py
+│   └── (public modules documented in API Usage Guide)
+```
+
+The tree lists agent-owned public project files only. Add additional public modules when required by the API Usage Guide, but keep their import paths consistent with package metadata. Do not create evaluator-only files, hidden fixtures, or private reports in the generated project.
+
+## API Usage Guide
+
+The following is the task-specific public contract recovered from the local instruction and inventory. For every function, class, method, constant, export, and command named below, preserve its complete signature, accepted input domain, return type and shape, ordering, determinism, state/side effects, exceptions, and examples. When the source contract gives an optional argument or a compatibility alias, it is part of the required surface.
 
 ## Package exports
 
@@ -151,7 +162,6 @@ report beginning with `-- platformdirs 4.11.3 --`. The report must include
 the names of the public directory properties for an example application. It
 must not require a desktop session or external service.
 
-# Implementation Notes
 
 - Keep platform-specific imports isolated to their modules. The Linux
   verification contract does not require Windows, macOS, or Android native
@@ -167,4 +177,81 @@ must not require a desktop session or external service.
 
 The verifier observes the package from a separate child process and compares
 only bounded JSON values, path strings, booleans, and command output. It does
-not import the candidate package in the trusted verifier process.
+not import the candidate package in the separate evaluator process.
+
+## Implementation Notes
+
+- Keep the root exports and module paths stable after installation; do not make behavior depend on the repository's current directory.
+- Preserve explicit ordering guarantees. When the contract does not promise an order, do not introduce a new observable order accidentally.
+- Propagate documented exceptions and avoid replacing them with generic errors. Validate malformed, empty, boundary, and repeated inputs as described by the API contract.
+- Keep filesystem, process, terminal, and resource effects bounded and local. Close files and other resources on both success and failure.
+- Do not copy an upstream checkout, implementation source, or evaluation-only material into the generated project. Implement the public behavior from this specification.
+
+## Examples
+
+The examples below are retained from the local task specification. They are starting points for ordinary calls and boundary/error behavior; their exact output and exception semantics remain governed by the API Usage Guide.
+
+### Example 1: ordinary usage
+```text
+PlatformDirs(
+    appname: str | None = None,
+    appauthor: str | False | None = None,
+    version: str | None = None,
+    roaming: bool = False,
+    multipath: bool = False,
+    opinion: bool = True,
+    ensure_exists: bool = False,
+    use_site_for_root: bool = False,
+)
+```
+
+### Example 2: ordinary usage
+```text
+PlatformDirs(
+    appname: str | None = None,
+    appauthor: str | False | None = None,
+    version: str | None = None,
+    roaming: bool = False,
+    multipath: bool = False,
+    opinion: bool = True,
+    ensure_exists: bool = False,
+    use_site_for_root: bool = False,
+)
+```
+
+### Example 3: boundary or error behavior
+```text
+PlatformDirs(
+    appname: str | None = None,
+    appauthor: str | False | None = None,
+    version: str | None = None,
+    roaming: bool = False,
+    multipath: bool = False,
+    opinion: bool = True,
+    ensure_exists: bool = False,
+    use_site_for_root: bool = False,
+)
+```
+
+### Example 4: boundary or error behavior
+```text
+PlatformDirs(
+    appname: str | None = None,
+    appauthor: str | False | None = None,
+    version: str | None = None,
+    roaming: bool = False,
+    multipath: bool = False,
+    opinion: bool = True,
+    ensure_exists: bool = False,
+    use_site_for_root: bool = False,
+)
+```
+
+
+## Error Handling and Boundary Conditions
+
+- Empty inputs, invalid types, malformed text or paths, unavailable resources, duplicate calls, and cancellation/timeout cases must follow the exception and return-value contracts documented for the relevant API.
+- Do not silently coerce values, reorder results, swallow exceptions, or use a fallback dependency unless the API section explicitly requires that behavior.
+- File and environment operations must use caller-provided paths and documented defaults only; never read undeclared host files or network resources.
+- The implementation must remain usable in the stated NoNetwork environment. A missing optional integration should expose the documented availability or error behavior rather than attempting an online install.
+- Security-sensitive inputs must be treated as data. Do not execute strings, load untrusted code, or interpolate shell commands unless that behavior is explicitly part of the documented public API.

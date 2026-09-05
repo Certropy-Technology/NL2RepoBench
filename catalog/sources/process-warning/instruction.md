@@ -1,32 +1,48 @@
-# Build `process-warning`
+# process-warning
 
 ## Project Description
 
-Build an installable CommonJS npm package named `process-warning`, version `5.1.0`, from an
-empty workspace. It creates warning functions that format messages and emit a Node.js process
-warning once by default, or on every call when configured as unlimited. It also provides a
-deprecation-warning helper and a spy facility intended for tests.
+Build an installable `process-warning` project from an empty `workspace/`. The project must reproduce the public, local behavior documented in this instruction, including its package entry points, return shapes, ordering, state changes, and documented exceptions. This is a repository-generation task: the agent creates the build metadata and source modules rather than editing an existing implementation.
 
-## Supports
+Distribution/package identity: `process-warning`; root module entry is the package entry documented below.
+The scope is the deterministic local API described below. Network services, undeclared external state, and behavior not represented by the public contract are outside the task.
 
-- Node.js `24.19.0`, npm `11.17.0`, Linux amd64, glibc, and CommonJS package semantics.
-- A root `package.json` with `name: "process-warning"`, `version: "5.1.0"`,
-  `main: "index.js"`, `type: "commonjs"`, and the TypeScript declaration entry
-  `types: "types/index.d.ts"`.
-- A committed npm v3 `package-lock.json`. The clean verifier installs with:
+## Natural Language Instruction
 
-  ```bash
-  npm ci --offline --ignore-scripts --no-audit --no-fund
-  ```
+Create the complete project in an empty workspace and make it installable with the command in the environment section. Implement these task-specific capability families from the local API contract:
 
-- No runtime dependencies, native addons, workspaces, lifecycle hooks, registry overrides,
-  CLI, network access, or globally installed copy of this package.
-- The package root is usable with both `require('process-warning')` and a TypeScript
-  `export =` declaration. The required object exports are `createWarning`,
-  `createDeprecation`, and `spyWarning`; `default` and `processWarning` refer to the same
-  exported object.
+1. `createWarning(params)`: expose the documented public entry points, signatures, inputs, outputs, and error behavior.
+2. `createDeprecation(params)`: preserve the documented object or module behavior, including state and side effects.
+3. `spyWarning(warning)`: preserve ordering, determinism, serialization, and boundary semantics where specified.
+4. `process-warning`: make the public package usable through the documented import path or command-line entry.
+
+Do not add speculative APIs or substitute a different package. Keep the implementation self-contained, ensure imports work after installation, and use the exact public names and signatures in the API Usage Guide. A small implementation is acceptable only when it still satisfies every documented contract.
+
+## Supports or Environment Configuration
+
+- Node.js 24.19.0 with npm 11.17.0.
+- Distribution/package identity: `process-warning`; root module entry is the package entry documented below.
+- Install from the workspace with `npm install --offline` using the declared lockfile.
+- No third-party runtime package is declared by the local task metadata; standard-library support is sufficient unless the API section says otherwise.
+- Build metadata and package data must be present in the workspace and agree with the public import paths below.
+- Agent, candidate, evaluator, Oracle, and control execution are network-isolated. Do not access GitHub, package registries, DNS, databases, or external services at runtime.
+- Use deterministic local inputs. Do not rely on the current wall clock, host-specific absolute paths, undeclared environment variables, or an installed copy of the target package.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── index.js
+├── index.d.ts
+```
+
+The tree lists agent-owned public project files only. Add additional public modules when required by the API Usage Guide, but keep their import paths consistent with package metadata. Do not create evaluator-only files, hidden fixtures, or private reports in the generated project.
 
 ## API Usage Guide
+
+The following is the task-specific public contract recovered from the local instruction and inventory. For every function, class, method, constant, export, and command named below, preserve its complete signature, accepted input domain, return type and shape, ordering, determinism, state/side effects, exceptions, and examples. When the source contract gives an optional argument or a compatibility alias, it is part of the required surface.
 
 ### `createWarning(params)`
 
@@ -79,7 +95,6 @@ removes the wrapper; subsequent calls again return the normal boolean result and
 recorded. Calling `spyWarning` again for the same active warning returns the existing spy rather
 than stacking wrappers. After `restore()`, a later call creates a fresh active spy.
 
-## Implementation Notes
 
 Preserve CommonJS loading, the default and `processWarning` aliases, uppercase warning codes,
 Node `util.format` interpolation, once-only versus unlimited state, and the exact boolean
@@ -87,5 +102,46 @@ return contract. Warning emission must use `process.emitWarning` with the format
 name, and code. Keep warning state isolated between separately created warnings. Do not read
 files, use the clock or randomness, spawn processes, use a TTY, or access the network in the
 package implementation. The verifier invokes the package only through a UID-isolated child
-adapter; private tests and the Oracle implementation are not available in the candidate
+adapter; evaluation tests and the Oracle implementation are not available in the candidate
 workspace.
+
+## Implementation Notes
+
+- Keep the root exports and module paths stable after installation; do not make behavior depend on the repository's current directory.
+- Preserve explicit ordering guarantees. When the contract does not promise an order, do not introduce a new observable order accidentally.
+- Propagate documented exceptions and avoid replacing them with generic errors. Validate malformed, empty, boundary, and repeated inputs as described by the API contract.
+- Keep filesystem, process, terminal, and resource effects bounded and local. Close files and other resources on both success and failure.
+- Do not copy an upstream checkout, implementation source, or evaluation-only material into the generated project. Implement the public behavior from this specification.
+
+## Examples
+
+The examples below are retained from the local task specification. They are starting points for ordinary calls and boundary/error behavior; their exact output and exception semantics remain governed by the API Usage Guide.
+
+### Example 1: ordinary usage
+```text
+npm ci --offline --ignore-scripts --no-audit --no-fund
+```
+
+### Example 2: ordinary usage
+```text
+npm ci --offline --ignore-scripts --no-audit --no-fund
+```
+
+### Example 3: boundary or error behavior
+```text
+npm ci --offline --ignore-scripts --no-audit --no-fund
+```
+
+### Example 4: boundary or error behavior
+```text
+npm ci --offline --ignore-scripts --no-audit --no-fund
+```
+
+
+## Error Handling and Boundary Conditions
+
+- Empty inputs, invalid types, malformed text or paths, unavailable resources, duplicate calls, and cancellation/timeout cases must follow the exception and return-value contracts documented for the relevant API.
+- Do not silently coerce values, reorder results, swallow exceptions, or use a fallback dependency unless the API section explicitly requires that behavior.
+- File and environment operations must use caller-provided paths and documented defaults only; never read undeclared host files or network resources.
+- The implementation must remain usable in the stated NoNetwork environment. A missing optional integration should expose the documented availability or error behavior rather than attempting an online install.
+- Security-sensitive inputs must be treated as data. Do not execute strings, load untrusted code, or interpolate shell commands unless that behavior is explicitly part of the documented public API.

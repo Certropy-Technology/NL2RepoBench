@@ -1,112 +1,36 @@
-## Introduction and Goals of the python-fsutil Project
+# python-fsutil
 
-python-fsutil is an advanced Python utility library for file system operations. It provides convenient and efficient
-file and directory management functions, supporting various practical features such as cross-platform file operations,
-compression and decompression, and path processing. This tool performs excellently in scenarios like file management,
-automation scripts, and data processing, achieving "efficient file system operations and automated management." Its core
-functions include: file operations (creating, copying, moving, deleting files and directories), path processing (path
-concatenation, splitting, normalization, etc.), file information retrieval (size, creation time, modification time,
-permissions, etc.), compression and decompression (supporting tar and zip formats), file reading and writing (supporting
-multiple encodings and formats), and an extensible operation mechanism (supporting custom file processing rules). In
-short, python-fsutil aims to provide a professional, flexible, and easy-to-use file system operation library to improve
-file management efficiency, simplify the development process, and provide a solid foundation for file processing
-automation (for example, creating files via create_file(), copying directories via copy_dir(), and retrieving file
-information via get_file_size()).
+## Project Description
 
-## Natural Language Instructions (Prompt)
+Build an installable `python-fsutil` project from an empty `workspace/`. The project must reproduce the public, local behavior documented in this instruction, including its package entry points, return shapes, ordering, state changes, and documented exceptions. This is a repository-generation task: the agent creates the build metadata and source modules rather than editing an existing implementation.
 
-Please create a Python project named python-fsutil to implement an advanced file system operation utility library. The
-project should include the following functions:
+Distribution identity: `python-fsutil`; public import package begins at `fsutil`.
+The scope is the deterministic local API described below. Network services, undeclared external state, and behavior not represented by the public contract are outside the task.
 
-1. File Operation Module: Provide basic file operations such as creation, copying, moving, and deletion, supporting
-   cross-platform compatibility and error handling. The operation results should be structured return values or
-   exception information for easy subsequent processing and debugging.
+## Natural Language Instruction
 
-2. Directory Operation Module: Implement functions such as directory creation, copying, moving, deletion, and cleaning,
-   supporting recursive operations and batch processing. It should support various directory operation options to
-   enhance the flexibility and efficiency of file management.
+Create the complete project in an empty workspace and make it installable with the command in the environment section. Implement these task-specific capability families from the local API contract:
 
-3. Path Processing Module: Support operations such as path concatenation, splitting, normalization, and relative path
-   conversion, suitable for complex file path processing scenarios.
+1. `Core API`: expose the documented public entry points, signatures, inputs, outputs, and error behavior.
+2. `1. Module Import`: preserve the documented object or module behavior, including state and side effects.
+3. `Import core functions`: preserve ordering, determinism, serialization, and boundary semantics where specified.
+4. `Import path processing functions`: make the public package usable through the documented import path or command-line entry.
 
-4. File Information Retrieval Module: Provide functions to retrieve information such as file size, creation time,
-   modification time, permissions, and hash values, supporting formatting and batch processing.
+Do not add speculative APIs or substitute a different package. Keep the implementation self-contained, ensure imports work after installation, and use the exact public names and signatures in the API Usage Guide. A small implementation is acceptable only when it still satisfies every documented contract.
 
-5. Compression and Decompression Module: Support the creation and decompression of common compression formats such as
-   tar and zip, suitable for file packaging and distribution scenarios.
+## Supports or Environment Configuration
 
-6. File Reading and Writing Module: Provide reading and writing functions for various file formats such as text files,
-   JSON files, and binary files, supporting multiple encodings and error handling.
+- CPython 3.12 on the pinned Linux image.
+- Distribution identity: `python-fsutil`; public import package begins at `fsutil`.
+- Install from the workspace with `python -m pip install .`; do not download packages during evaluation.
+- No third-party runtime package is declared by the local task metadata; standard-library support is sufficient unless the API section says otherwise.
+- Build metadata and package data must be present in the workspace and agree with the public import paths below.
+- Agent, candidate, evaluator, Oracle, and control execution are network-isolated. Do not access GitHub, package registries, DNS, databases, or external services at runtime.
+- Use deterministic local inputs. Do not rely on the current wall clock, host-specific absolute paths, undeclared environment variables, or an installed copy of the target package.
 
-7. Interface Design: Design independent function interfaces for each functional module, supporting chained calls and
-   batch operations. Each module should define clear input and output formats for easy integration into automated
-   toolchains.
+## Project Directory Structure
 
-8. Examples and Test Scripts: Provide example code and test cases to demonstrate how to use various file operation
-   functions (such as create_file(), copy_dir(), get_file_size(), etc.). The above functions need to be combined to
-   build a complete file system operation toolkit. The project should ultimately include modules for file operations,
-   directory management, path processing, information retrieval, compression and decompression, and file reading and
-   writing, along with typical test cases, to form a reproducible file management process.
-
-9. Core File Requirements: The project must include a complete pyproject.toml file, which needs to configure the
-   project's installable package (supporting pip install and editable mode installation), declare a complete list of
-   dependencies - including test libraries such as pytest and runtime dependencies such as requests (inferred from the
-   require_requests dependency), and specify the supported Python version range. The pyproject.toml file needs to ensure
-   through build configuration that all functional modules (such as file IO, path processing, compression and
-   decompression, permission management, etc.) work properly after installation, and support triggering full-function
-   verification through test commands. At the same time, it is necessary to provide src/fsutil/__init__.py as a unified API
-   entry. This file needs to import the core compression and decompression functions (create_zip_file, extract_zip_file,
-   create_tar_file, extract_tar_file) from the archives module, the existence and type checking functions (exists,
-   is_file, is_dir, is_empty) from the checks module, the format conversion tools (convert_size_bytes_to_string,
-   convert_size_string_to_bytes) from the converters module, the information retrieval functions (get_file_size,
-   get_file_hash, get_dir_size, get_file_creation_date) from the info module, the core file reading and writing
-   functions (create_file, read_file, write_file, read_file_lines, list_files) from the io module, the file operation
-   tools (copy_dir, copy_dir_content, delete_dir, delete_dir_content, clean_dir, make_dirs, remove_dir_content,
-   create_dir, get_unique_name) from the operations module, the path processing functions (join_path, split_filename,
-   get_file_basename, get_file_extension, get_filename, get_parent_dir, join_filename, join_filepath, split_filepath,
-   transform_filepath, split_path, get_path) from the paths module, the permission management tools (get_permissions,
-   set_permissions) from the perms module; in addition, it also needs to import metadata information such as author and
-   version from the metadata module, parameter processing tools such as get_path from the args module, the
-   require_requests dependency checking tool from the deps module, and the FSUtilError exception class from the
-   exceptions module. This API entry needs to integrate the above imports to ensure that users can access all major
-   functions, including file IO, path parsing, compression and decompression, permission control, and dependency
-   checking, through a simple import fsutil statement; at the same time, expose metadata through attributes such as
-   fsutil.__version__. The pyproject.toml file needs to cooperate with MANIFEST.in to ensure the complete packaging of
-   metadata files, type hints, and core modules, guaranteeing the availability of functions and API consistency after
-   installation.
-
-## Environment Configuration
-
-### Python Version
-The Python version used in the current project is: Python 3.12.4
-
-### Core Dependency Library Versions
-
-```python
-# Core library for file system operations
-python - fsutil >= 0.1
-.0  # Main library, implemented in pure Python, no additional dependencies required
-
-# Testing frameworks
-pytest == 8.3. *  # Unit testing framework
-coverage == 7.6. *  # Test coverage statistics (optional in the development environment)
-mypy == 1.15. *  # Type checking (optional in the development environment)
-pre - commit == 4.1. *  # Code quality check (optional in the development environment)
-
-# Optional dependencies
-requests == 2.32. *  # Support for network file downloads (optional)
-tox == 4.24. *  # Multi-environment testing (optional in the development environment)
-pytest - cov == 6.0. *  # Test coverage plugin (optional in the development environment)
-
-# Python version requirements
-python >= 3.10
-```
-
-## python-fsutil Project Architecture
-
-### Project Directory Structure
-
-```
+```text
 workspace/
 ├── .gitignore
 ├── .pre-commit-config.yaml
@@ -136,7 +60,11 @@ workspace/
 └── tox.ini
 ```
 
+The tree lists agent-owned public project files only. Add additional public modules when required by the API Usage Guide, but keep their import paths consistent with package metadata. Do not create evaluator-only files, hidden fixtures, or private reports in the generated project.
+
 ## API Usage Guide
+
+The following is the task-specific public contract recovered from the local instruction and inventory. For every function, class, method, constant, export, and command named below, preserve its complete signature, accepted input domain, return type and shape, ordering, determinism, state/side effects, exceptions, and examples. When the source contract gives an optional argument or a compatibility alias, it is part of the required surface.
 
 ### Core API
 
@@ -1369,3 +1297,145 @@ if __name__ == "__main__":
     for operation, time_taken in dir_results.items():
         print(f"{operation}: {time_taken:.4f} seconds")
 ```
+
+## Implementation Notes
+
+- Keep the root exports and module paths stable after installation; do not make behavior depend on the repository's current directory.
+- Preserve explicit ordering guarantees. When the contract does not promise an order, do not introduce a new observable order accidentally.
+- Propagate documented exceptions and avoid replacing them with generic errors. Validate malformed, empty, boundary, and repeated inputs as described by the API contract.
+- Keep filesystem, process, terminal, and resource effects bounded and local. Close files and other resources on both success and failure.
+- Do not copy an upstream checkout, implementation source, or evaluation-only material into the generated project. Implement the public behavior from this specification.
+
+## Examples
+
+The examples below are retained from the local task specification. They are starting points for ordinary calls and boundary/error behavior; their exact output and exception semantics remain governed by the API Usage Guide.
+
+### Example 1: ordinary usage
+```text
+# Core library for file system operations
+python - fsutil >= 0.1
+.0  # Main library, implemented in pure Python, no additional dependencies required
+
+# Testing frameworks
+pytest == 8.3. *  # Unit testing framework
+coverage == 7.6. *  # Test coverage statistics (optional in the development environment)
+mypy == 1.15. *  # Type checking (optional in the development environment)
+pre - commit == 4.1. *  # Code quality check (optional in the development environment)
+
+# Optional dependencies
+requests == 2.32. *  # Support for network file downloads (optional)
+tox == 4.24. *  # Multi-environment testing (optional in the development environment)
+pytest - cov == 6.0. *  # Test coverage plugin (optional in the development environment)
+
+# Python version requirements
+python >= 3.10
+```
+
+### Example 2: ordinary usage
+```text
+workspace/
+├── .gitignore
+├── .pre-commit-config.yaml
+├── CHANGELOG.md
+├── CODE_OF_CONDUCT.md
+├── LICENSE.txt
+├── MANIFEST.in
+├── README.md
+├── SECURITY.md
+├── pyproject.toml
+├── src
+│   ├── fsutil
+│   │   ├── __init__.py
+│   │   ├── archives.py
+│   │   ├── args.py
+│   │   ├── checks.py
+│   │   ├── converters.py
+│   │   ├── deps.py
+│   │   ├── info.py
+│   │   ├── io.py
+│   │   ├── metadata.py
+│   │   ├── operations.py
+│   │   ├── paths.py
+│   │   ├── perms.py
+│   │   ├── py.typed
+│   │   └── types.py
+└── tox.ini
+```
+
+### Example 3: boundary or error behavior
+```text
+import fsutil
+# Import core functions
+from fsutil import (
+    create_file, copy_dir, get_file_size, read_file, write_file,
+    create_dir, clean_dir, list_files, copy_dir_content, delete_dir,
+    delete_dir_content, read_file_lines, make_dirs, remove_dir_content,
+    get_unique_name
+)
+# Import path processing functions
+from fsutil import (
+    join_path, split_filename, get_file_basename, get_file_extension,
+    get_filename, get_parent_dir, join_filename, join_filepath,
+    split_filepath, transform_filepath, split_path
+)
+# Import checking functions
+from fsutil import (
+    exists, is_file, is_dir, is_empty
+)
+# Import compression and decompression functions
+from fsutil import (
+    create_zip_file, extract_zip_file, create_tar_file, extract_tar_file
+)
+# Import information retrieval functions
+from fsutil import (
+    get_file_hash, get_dir_size, get_file_creation_date
+)
+# Import permission management functions
+from fsutil import (
+    get_permissions, set_permissions
+)
+# Import format conversion functions
+from fsutil import (
+    convert_size_bytes_to_string, convert_size_string_to_bytes
+)
+# Import parameter and dependency functions
+from fsutil import get_path, require_requests
+# Import metadata information
+from fsutil.metadata import (
+    __author__, __copyright__, __description__, __email__,
+    __license__, __title__, __version__
+)
+```
+
+### Example 4: boundary or error behavior
+```text
+# File creation
+fsutil.create_file(path, content="", overwrite=False)
+
+# File copying
+fsutil.copy_file(path, dest, overwrite=False, **kwargs)
+
+# File moving
+fsutil.move_file(path, dest, overwrite=False, **kwargs)
+
+# File deletion
+fsutil.delete_file(path)
+fsutil.remove_file(path)
+
+# File renaming
+fsutil.rename_file(path, name)
+fsutil.rename_file_basename(path, basename)
+fsutil.rename_file_extension(path, extension)
+
+# File replacement
+fsutil.replace_file(path, src, autodelete=False)
+```
+
+
+## Error Handling and Boundary Conditions
+
+- Empty inputs, invalid types, malformed text or paths, unavailable resources, duplicate calls, and cancellation/timeout cases must follow the exception and return-value contracts documented for the relevant API.
+- Do not silently coerce values, reorder results, swallow exceptions, or use a fallback dependency unless the API section explicitly requires that behavior.
+- File and environment operations must use caller-provided paths and documented defaults only; never read undeclared host files or network resources.
+- The implementation must remain usable in the stated NoNetwork environment. A missing optional integration should expose the documented availability or error behavior rather than attempting an online install.
+- Security-sensitive inputs must be treated as data. Do not execute strings, load untrusted code, or interpolate shell commands unless that behavior is explicitly part of the documented public API.

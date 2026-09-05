@@ -1,64 +1,36 @@
-# Introduction and Goals of the Python-Paillier Project
+# paillier
 
-Python-Paillier is a Python 3 library that **supports partial homomorphic encryption** and implements the Paillier partial homomorphic encryption scheme. This library is developed by the Data61 department of the Commonwealth Scientific and Industrial Research Organisation (CSIRO) in Australia and is specifically designed for computing scenarios that require data privacy protection. Its core features include: **Homomorphic encryption operations**: It supports the multiplication of encrypted numbers by unencrypted scalars and the addition of encrypted numbers. **High-performance implementation**: It provides optimized performance through `gmpy2` (about 8 times faster than a pure Python implementation). **Simple and easy-to-use API**: It offers an intuitive interface for encryption, decryption, and homomorphic operations. **Comprehensive test coverage**: It includes a complete unit test suite to ensure the quality and correctness of the code. Python-Paillier is particularly suitable for distributed computing scenarios that require data privacy protection, such as applications like Federated Learning. For example, it allows multiple parties to jointly calculate statistical results of encrypted data without exposing the original data, providing strong support for data security and privacy protection.
+## Project Description
 
-# Natural Language Instruction (Prompt)
+Build an installable `paillier` project from an empty `workspace/`. The project must reproduce the public, local behavior documented in this instruction, including its package entry points, return shapes, ordering, state changes, and documented exceptions. This is a repository-generation task: the agent creates the build metadata and source modules rather than editing an existing implementation.
 
-Please create a Python project named Python-Paillier to implement a complete Paillier partial homomorphic encryption library. The project should include the following functions:
+Distribution identity: `paillier`; public import package begins at `phe`.
+The scope is the deterministic local API described below. Network services, undeclared external state, and behavior not represented by the public contract are outside the task.
 
-1. **Key generation module**: Implement the secure generation of Paillier key pairs, support custom key lengths (default is 3072 bits), and ensure that the 128-bit security requirement is met. This includes the generation and verification of public keys (n, g) and private keys (λ, μ).
+## Natural Language Instruction
 
-2. **Encryption operation module**: Provide encryption functions for integers and floating-point numbers, implement data encryption based on public keys, support the serialization and deserialization of encrypted data, and handle large integer operations and modular exponentiation.
+Create the complete project in an empty workspace and make it installable with the command in the environment section. Implement these task-specific capability families from the local API contract:
 
-3. **Homomorphic operation engine**: Implement the multiplication of encrypted numbers by unencrypted scalars and the addition of encrypted numbers, support chaining operations (such as a.encrypt() + b.encrypt() + c), and ensure the mathematical correctness of homomorphic properties.
+1. `Core API Interfaces`: expose the documented public entry points, signatures, inputs, outputs, and error behavior.
+2. `1. Module Import`: preserve the documented object or module behavior, including state and side effects.
+3. `2. Key Management`: preserve ordering, determinism, serialization, and boundary semantics where specified.
+4. `2.1 Key Generation`: make the public package usable through the documented import path or command-line entry.
 
-4. **Decryption processing module**: Use private keys to decrypt ciphertext, support decryption to integers or floating-point numbers, handle large integer operations and modular operations, and ensure the accuracy and correctness of decryption results.
+Do not add speculative APIs or substitute a different package. Keep the implementation self-contained, ensure imports work after installation, and use the exact public names and signatures in the API Usage Guide. A small implementation is acceptable only when it still satisfies every documented contract.
 
-5. **Floating-point number encoding system**: Implement the `EncodedNumber` class to handle floating-point number encoding, support the representation of floating-point numbers with different precisions, handle precision issues in large integer operations, and ensure the accuracy of numerical calculations.
+## Supports or Environment Configuration
 
-6. **Key management system**: Implement a keyring (Keyring) to manage multiple private keys, support the serialization and deserialization of keys, provide a secure key storage and loading mechanism, and ensure the security of key management.
+- CPython 3.10 on the pinned Linux image.
+- Distribution identity: `paillier`; public import package begins at `phe`.
+- Install from the workspace with `python -m pip install .`; do not download packages during evaluation.
+- No third-party runtime package is declared by the local task metadata; standard-library support is sufficient unless the API section says otherwise.
+- Build metadata and package data must be present in the workspace and agree with the public import paths below.
+- Agent, candidate, evaluator, Oracle, and control execution are network-isolated. Do not access GitHub, package registries, DNS, databases, or external services at runtime.
+- Use deterministic local inputs. Do not rely on the current wall clock, host-specific absolute paths, undeclared environment variables, or an installed copy of the target package.
 
-7. **Performance optimization layer**: Integrate `gmpy2` to accelerate large integer operations, implement lazy evaluation and delayed calculation, optimize memory usage, support the processing of large datasets, and improve the efficiency of encryption, decryption, and homomorphic operations.
-
-8. **Security protection mechanism**: Implement random number obfuscation to prevent information leakage, prevent timing attacks, verify the validity of input parameters, and ensure the security of the system in various attack scenarios.
-
-9. **Test verification system**: Provide unit tests to cover all core functions, performance benchmark tests to evaluate operation efficiency, edge case tests (such as boundary values, empty inputs, etc.), compatibility tests (for different Python versions), and ensure the quality and stability of the code.
-
-10. **Documentation and examples**: Provide complete API documentation, detailed usage examples and tutorials, performance comparison and benchmark test results, as well as development guides and contribution specifications to facilitate developers in understanding and using the library.
-
-11. **Core file requirements**: The project must include a complete setup.py file. This file should not only configure the project as an installable package (supporting pip install) but also declare a complete list of dependencies (including core libraries such as pycrypto>=2.6.1, gmpy2>=2.0.4, numpy>=1.9.1, nose>=1.3.4, etc.). The setup.py file can verify whether all functional modules work properly. At the same time, it should provide phe/__init__.py as a unified API entry, import and export cli, generate_paillier_keypair, PaillierPrivateKey, PaillierPublicKey, powmod, invert, getprimeover, isqrt, improved_i_sqrt, HAVE_GMP, HAVE_CRYPTO, extended_euclidean_algorithm, miller_rabin, first_primes, is_prime, int_to_base64, and the main import and export functions, and provide version information, allowing users to access all main functions through simple "from phe import **" or "from phe.** import **" statements.
-
-# Environment Configuration
-
-## Python Version
-
-The Python version used in the current project is: Python 3.10.18
-
-## Core Dependency Library Versions
-**Python version**: 3.7 - 3.11 (supports 3.4 - 3.9, recommended 3.7+)
-```
-click             8.2.1
-exceptiongroup    1.3.0
-gmpy2             2.2.1
-iniconfig         2.1.0
-nose              1.3.7
-numpy             2.2.6
-packaging         25.0
-phe               1.5.0
-pip               25.2
-pluggy            1.6.0
-pycryptodome      3.23.0
-pytest            8.3.3
-setuptools        65.5.1
-tomli             2.2.1
-typing_extensions 4.14.1
-wheel             0.45.1
-```
-
-# Architecture of the python-paillier Project
 ## Project Directory Structure
 
-```
+```text
 workspace/
 ├── .gitignore
 ├── .travis.yml
@@ -108,10 +80,13 @@ workspace/
     │   ├── README
     └── sphinx
         └── README
-
 ```
 
-# API Usage Guide
+The tree lists agent-owned public project files only. Add additional public modules when required by the API Usage Guide, but keep their import paths consistent with package metadata. Do not create evaluator-only files, hidden fixtures, or private reports in the generated project.
+
+## API Usage Guide
+
+The following is the task-specific public contract recovered from the local instruction and inventory. For every function, class, method, constant, export, and command named below, preserve its complete signature, accepted input domain, return type and shape, ordering, determinism, state/side effects, exceptions, and examples. When the source contract gives an optional argument or a compatibility alias, it is part of the required surface.
 
 ## Core API Interfaces
 ### 1. Module Import
@@ -148,7 +123,7 @@ class PaillierPublicKey:
     def encrypt(self, value, precision=None, r_value=None) -> EncryptedNumber
     def raw_encrypt(self, plaintext: int, r_value=None) -> int
     def get_random_lt_n(self) -> int
-    
+
     # Attributes
     g: int          # Public key parameter g = n + 1
     n: int          # Modulus
@@ -165,7 +140,7 @@ class PaillierPrivateKey:
     def raw_decrypt(self, ciphertext: int) -> int
     @staticmethod
     def from_totient(public_key: PaillierPublicKey, totient: int) -> PaillierPrivateKey
-    
+
     # Attributes
     public_key: PaillierPublicKey
     p: int          # Private key parameter p
@@ -223,12 +198,12 @@ from phe import EncodedNumber
 
 class EncodedNumber:
     def __init__(self, public_key: PaillierPublicKey, encoding: int, exponent: int)
-    
+
     @classmethod
     def encode(cls, public_key: PaillierPublicKey, scalar, precision=None, max_exponent=None) -> EncodedNumber
     def decode(self) -> float
     def decrease_exponent_to(self, new_exp: int) -> EncodedNumber
-    
+
     # Attributes
     public_key: PaillierPublicKey
     encoding: int      # Encoded integer
@@ -259,27 +234,27 @@ class CustomEncodedNumber(EncodedNumber):
 ```python
 class EncryptedNumber:
     def __init__(self, public_key: PaillierPublicKey, ciphertext: int, exponent: int = 0)
-    
+
     # Homomorphic addition
     def __add__(self, other) -> EncryptedNumber
     def __radd__(self, other) -> EncryptedNumber
-    
+
     # Homomorphic multiplication
     def __mul__(self, other) -> EncryptedNumber
     def __rmul__(self, other) -> EncryptedNumber
-    
+
     # Homomorphic subtraction
     def __sub__(self, other) -> EncryptedNumber
     def __rsub__(self, other) -> EncryptedNumber
-    
+
     # Homomorphic division
     def __truediv__(self, scalar) -> EncryptedNumber
-    
+
     # Other methods
     def ciphertext(self, be_secure=True) -> int
     def decrease_exponent_to(self, new_exp: int) -> EncryptedNumber
     def obfuscate(self)
-    
+
     # Attributes
     public_key: PaillierPublicKey
     exponent: int
@@ -370,13 +345,13 @@ Calculate the integer square root of a non-negative integer using an optimized b
 def improved_i_sqrt(n):
     """
     Calculate the integer square root of a non-negative integer n
-    
+
     Parameters:
         n (int): Non-negative integer
-        
+
     Returns:
         int: The largest integer m such that m² ≤ n
-        
+
     Exceptions:
         AssertionError: If n is negative
     """
@@ -702,12 +677,12 @@ key_lengths = [8, 16, 32, 64, 128, 256, 512, 1024, 2048, 3072, 4096]
 
 for key_length in key_lengths:
     public_key, private_key = paillier.generate_paillier_keypair(n_length=key_length)
-    
+
     # Verify key length
     assert public_key.n.bit_length() >= key_length
     assert private_key.p.bit_length() >= key_length // 2
     assert private_key.q.bit_length() >= key_length // 2
-    
+
     # Verify key uniqueness
     assert public_key != private_key
 ```
@@ -724,11 +699,11 @@ private_keys = set()
 
 for _ in range(repeats):
     public_key, private_key = paillier.generate_paillier_keypair(n_length=256)
-    
+
     # Verify public key uniqueness
     assert public_key not in public_keys
     public_keys.add(public_key)
-    
+
     # Verify private key uniqueness
     assert private_key not in private_keys
     private_keys.add(private_key)
@@ -1590,3 +1565,120 @@ result = a + b
 decrypted = private_key.decrypt(result)
 assert decrypted == 0  # Wrap around to 0
 ```
+
+## Implementation Notes
+
+- Keep the root exports and module paths stable after installation; do not make behavior depend on the repository's current directory.
+- Preserve explicit ordering guarantees. When the contract does not promise an order, do not introduce a new observable order accidentally.
+- Propagate documented exceptions and avoid replacing them with generic errors. Validate malformed, empty, boundary, and repeated inputs as described by the API contract.
+- Keep filesystem, process, terminal, and resource effects bounded and local. Close files and other resources on both success and failure.
+- Do not copy an upstream checkout, implementation source, or evaluation-only material into the generated project. Implement the public behavior from this specification.
+
+## Examples
+
+The examples below are retained from the local task specification. They are starting points for ordinary calls and boundary/error behavior; their exact output and exception semantics remain governed by the API Usage Guide.
+
+### Example 1: ordinary usage
+```text
+click             8.2.1
+exceptiongroup    1.3.0
+gmpy2             2.2.1
+iniconfig         2.1.0
+nose              1.3.7
+numpy             2.2.6
+packaging         25.0
+phe               1.5.0
+pip               25.2
+pluggy            1.6.0
+pycryptodome      3.23.0
+pytest            8.3.3
+setuptools        65.5.1
+tomli             2.2.1
+typing_extensions 4.14.1
+wheel             0.45.1
+```
+
+### Example 2: ordinary usage
+```text
+workspace/
+├── .gitignore
+├── .travis.yml
+├── CHANGELOG.rst
+├── LICENSE.txt
+├── README.rst
+├── docs
+│   ├── Makefile
+│   ├── _static
+│   │   ├── Magic-Logo.svg
+│   ├── alternatives.rst
+│   ├── caveats.rst
+│   ├── cli.rst
+│   ├── compatibility.rst
+│   ├── conf.py
+│   ├── index.rst
+│   ├── installation.rst
+│   ├── phe.rst
+│   ├── requirements.txt
+│   ├── serialisation.rst
+│   ├── usage.rst
+├── examples
+│   ├── alternative_base.py
+│   ├── benchmarks.py
+│   ├── federated_learning_with_encryption.py
+│   ├── logistic_regression_encrypted_model.py
+├── phe
+│   ├── __about__.py
+│   ├── __init__.py
+│   ├── command_line.py
+│   ├── encoding.py
+│   ├── paillier.py
+│   ├── util.py
+├── setup.cfg
+├── setup.py
+└── third_party
+    ├── gmpy2
+    │   ├── COPYING.txt
+    │   ├── README
+    ├── nose
+    │   ├── README
+    ├── numpy
+    │   ├── README
+    │   ├── license.txt
+    ├── pycrypto
+    │   ├── COPYRIGHT.txt
+    │   ├── README
+    └── sphinx
+        └── README
+```
+
+### Example 3: boundary or error behavior
+```text
+from phe.command_line import cli
+from phe import paillier
+from phe.paillier import PaillierPrivateKey, PaillierPublicKey
+from phe import util
+```
+
+### Example 4: boundary or error behavior
+```text
+from phe import paillier
+
+# Generate default key pair (3072 bits, 128-bit security level)
+public_key, private_key = paillier.generate_paillier_keypair()
+
+# Generate key pair with custom length
+public_key, private_key = paillier.generate_paillier_keypair(n_length=2048)
+
+# Use a keyring to manage multiple private keys
+keyring = paillier.PaillierPrivateKeyring()
+public_key, private_key = paillier.generate_paillier_keypair(private_keyring=keyring)
+```
+
+
+## Error Handling and Boundary Conditions
+
+- Empty inputs, invalid types, malformed text or paths, unavailable resources, duplicate calls, and cancellation/timeout cases must follow the exception and return-value contracts documented for the relevant API.
+- Do not silently coerce values, reorder results, swallow exceptions, or use a fallback dependency unless the API section explicitly requires that behavior.
+- File and environment operations must use caller-provided paths and documented defaults only; never read undeclared host files or network resources.
+- The implementation must remain usable in the stated NoNetwork environment. A missing optional integration should expose the documented availability or error behavior rather than attempting an online install.
+- Security-sensitive inputs must be treated as data. Do not execute strings, load untrusted code, or interpolate shell commands unless that behavior is explicitly part of the documented public API.
