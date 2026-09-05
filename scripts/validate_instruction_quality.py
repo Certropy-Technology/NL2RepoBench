@@ -56,7 +56,7 @@ def check(path: Path) -> list[str]:
     lowered = text.lower()
     task_id = path.parent.name
     try:
-        task = tomllib.loads((path.parent / "task.toml").read_text())
+        tomllib.loads((path.parent / "task.toml").read_text())
     except (OSError, tomllib.TOMLDecodeError) as exc:
         return [f"{task_id}: cannot read task.toml: {exc}"]
     if is_blocked(path.parent):
