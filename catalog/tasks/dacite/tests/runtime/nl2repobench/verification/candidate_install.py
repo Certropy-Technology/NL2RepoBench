@@ -75,6 +75,37 @@ def _parse_build_environment(entries: tuple[str, ...]) -> tuple[str, ...]:
     return tuple(parsed)
 
 
+def _candidate_environment(
+    *,
+    home: Path,
+    temporary: Path,
+    cflags: str,
+    dependency_root: str | None,
+    dependency_bin: str | None,
+    build_environment: tuple[str, ...],
+) -> list[str]:
+    """Build the fixed environment used by the unprivileged installer."""
+
+    environment = [
+        f"HOME={home}",
+        f"TMPDIR={temporary}",
+        "PYTHONDONTWRITEBYTECODE=1",
+        "PIP_DISABLE_PIP_VERSION_CHECK=1",
+        f"CFLAGS={cflags}",
+    ]
+    if dependency_root:
+        environment.append(f"PYTHONPATH={dependency_root}")
+    path = "/usr/local/bin:/usr/bin:/bin"
+    if dependency_bin:
+        candidate_bin = Path(dependency_bin)
+        if not candidate_bin.is_absolute() or ":" in dependency_bin:
+            raise ValueError("candidate dependency bin must be one absolute path")
+        path = f"{dependency_bin}:{path}"
+    environment.append(f"PATH={path}")
+    environment.extend(_parse_build_environment(build_environment))
+    return environment
+
+
 def install_candidate(
     source: Path,
     target: Path,
@@ -97,17 +128,14 @@ def install_candidate(
         os.chown(candidate_home, 0, 0)
         os.chmod(candidate_home, 0o555)
 
-    dependency_root = os.environ.get("NL2REPO_CANDIDATE_DEPENDENCIES")
-    environment = [
-        f"HOME={home}",
-        f"TMPDIR={temporary}",
-        "PYTHONDONTWRITEBYTECODE=1",
-        "PIP_DISABLE_PIP_VERSION_CHECK=1",
-        f"CFLAGS={cflags}",
-    ]
-    if dependency_root:
-        environment.append(f"PYTHONPATH={dependency_root}")
-    environment.extend(_parse_build_environment(build_environment))
+    environment = _candidate_environment(
+        home=home,
+        temporary=temporary,
+        cflags=cflags,
+        dependency_root=os.environ.get("NL2REPO_CANDIDATE_DEPENDENCIES"),
+        dependency_bin=os.environ.get("NL2REPO_CANDIDATE_DEPENDENCY_BIN"),
+        build_environment=build_environment,
+    )
     command = [
         "runuser",
         "-u",

@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "task_id": "detect-indent",
+  "artifact_digest": "sha256:1697bce7063600a86f08b5b6b587311797ff748346d13d521925adb29d9ae6a8",
+  "artifact_size_bytes": 10240,
+  "artifact_members": ["solve.sh"],
+  "solve_sha256": "sha256:aed5537effe8977516166a50ac6f49f2029c9af98702d88bc7a3ee5086ff75b6",
+  "pinned_revision": "25d3cf12f54807147e56ac3d4f557c9cc7904c96",
+  "expected_source_archive_sha256": "sha256:5a7f9c31bf38023fcedd859af6ad7e212c4267b45dc7b72dd3de7c6d6070dc2e",
+  "runtime_source_fetch": "git fetch from github.com",
+  "source_digest_check_in_payload": true,
+  "no_network_execution": true,
+  "oracle_run": "not-run",
+  "classification": "artifact-or-verifier-blocked",
+  "reason": "The Oracle solver requires a runtime GitHub fetch before it can materialize the frozen source archive. No source-host authorization is permitted by this revalidation contract."
+}

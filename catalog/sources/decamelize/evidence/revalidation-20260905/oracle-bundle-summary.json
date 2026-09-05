@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "task_id": "decamelize",
+  "artifact_digest": "sha256:bbd4f73308982c546ed72715ba772bdb5ef08d8686060c65b60b3e662c0d365b",
+  "artifact_size_bytes": 10240,
+  "members": ["solve.sh"],
+  "solve_script_size_bytes": 1333,
+  "solve_script_sha256": "sha256:ed45fb5fbe20b2eb0f058e3763fc2aae30f2dcf6d9c30e0cf5587f6fa3d8fda3",
+  "source_revision": "365e2e909c93c8a5e7c9398523290ba0b35a3a93",
+  "source_archive_sha256": "sha256:8fe6e3ec9a058ca9a0cf7a944058f4409dcf3c22b2a15cdc8b892e46163c5e55",
+  "network_violation": {
+    "operation": "curl --fail --silent --show-error --location",
+    "host": "codeload.github.com",
+    "url_template": "https://codeload.github.com/sindresorhus/decamelize/tar.gz/365e2e909c93c8a5e7c9398523290ba0b35a3a93",
+    "source_digest_check_after_fetch": "sha256:8fe6e3ec9a058ca9a0cf7a944058f4409dcf3c22b2a15cdc8b892e46163c5e55"
+  },
+  "inspection": "The payload performs the network fetch during solve.sh execution before materializing the workspace."
+}

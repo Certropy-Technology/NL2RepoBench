@@ -3,11 +3,93 @@
   "task_id": "dnspython",
   "terminal_kind": "valid",
   "status": "controls-passed",
-  "source_freeze": {"upstream_url":"https://github.com/rthalley/dnspython","revision":"b723a83a2f192deda4aa341a1447689967e97889","source_digest":"sha256:4babaa40d1ee3c4c92d3d0abc9d16ca29cac08130ef60e83d820fb2961c9d53c","license_spdx":"ISC"},
-  "environment": {"python":"3.12.14","base_image":"python:3.12.14-slim-bookworm","base_image_digest":"sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e","network_mode":"no-network","dependency_bin":"/opt/candidate-dependencies/bin"},
-  "artifacts": {"dependency_lock":"sha256:5d512b9d962906055568862b5f8f45fe4344b394d49933c24559ad020c7f0c21","verifier_bundle":"sha256:18cd6998c3c28e48867eacda73787a11b1356f1cf1d24860775ded00902baf29","oracle_bundle":"sha256:056d49473a9c48c3119cc8e16270872411a9395ddae5adea1bc18034698139bf"},
-  "bundle": {"status":"bound-final","path":".nl2repo/repair-final-compile/dnspython/bundle.manifest.json","sha256":"sha256:cb201a233a92176c04e4f85064c03e4ee3e51d411268661865193294262e00e8"},
-  "oracle": {"valid":true,"collected":20,"passed":20,"reward":1.0,"grading":{"path":".nl2repo/repair-final-runs/dnspython/oracle/dnspython-final-oracle-repair-20260905/dnspython__QJKBXNR/verifier/grading.json","sha256":"sha256:936bb0bfef99095d4bfd70541e1e8976819c23bd2450ebfbb8418eb79e37bf55"},"network":{"path":".nl2repo/repair-final-runs/dnspython/oracle/dnspython-final-oracle-repair-20260905/dnspython__QJKBXNR/verifier/network.json","sha256":"sha256:0baf820f731069ca4a766ca9de4100f92d7b9a34316914ae9acefb90d91c8ac4"},"public_network_available":false},
-  "controls": {"empty":{"valid":true,"collected":0,"passed":0,"reward":0.0,"grading":{"path":".nl2repo/repair-final-runs/dnspython/empty/dnspython-final-empty-repair-20260905/dnspython-empty__cuRMSy8/verifier/grading.json","sha256":"sha256:3ff00184317b956bc685a3e5fb456c1a6d5844794f470da490e8c9077f81b72c"},"network":{"path":".nl2repo/repair-final-runs/dnspython/empty/dnspython-final-empty-repair-20260905/dnspython-empty__cuRMSy8/verifier/network.json","sha256":"sha256:500e8d18ae1228e46e9b829535c9f8c336c49a0e38dcf75981be1cd007606585"}},"stub":{"valid":true,"collected":20,"passed":0,"reward":0.0,"grading":{"path":".nl2repo/repair-final-runs/dnspython/stub/dnspython-final-stub-repair-20260905/dnspython-stub__oQPDH8H/verifier/grading.json","sha256":"sha256:f24f85668f388018e49ed703fb64171e10f1b30820aa7f87ecd4649ee66e18fb"},"network":{"path":".nl2repo/repair-final-runs/dnspython/stub/dnspython-final-stub-repair-20260905/dnspython-stub__oQPDH8H/verifier/network.json","sha256":"sha256:0baf820f731069ca4a766ca9de4100f92d7b9a34316914ae9acefb90d91c8ac4"}},"forgery":{"valid":true,"collected":20,"passed":0,"reward":0.0,"verifier_owned_reward":true,"grading":{"path":".nl2repo/repair-final-runs/dnspython/forgery/dnspython-final-forgery-repair-20260905/dnspython-forgery__dUA9bWQ/verifier/grading.json","sha256":"sha256:f24f85668f388018e49ed703fb64171e10f1b30820aa7f87ecd4649ee66e18fb"},"network":{"path":".nl2repo/repair-final-runs/dnspython/forgery/dnspython-final-forgery-repair-20260905/dnspython-forgery__dUA9bWQ/verifier/network.json","sha256":"sha256:500e8d18ae1228e46e9b829535c9f8c336c49a0e38dcf75981be1cd007606585"}},"offline":{"completed":true,"public_network_available":false}},
+  "source_freeze": {
+    "upstream_url": "https://github.com/rthalley/dnspython",
+    "revision": "b723a83a2f192deda4aa341a1447689967e97889",
+    "source_digest": "sha256:4babaa40d1ee3c4c92d3d0abc9d16ca29cac08130ef60e83d820fb2961c9d53c",
+    "license_spdx": "ISC"
+  },
+  "catalog_source_digest": "sha256:8f5e8eaf9a8199bed19a031ac05062fe8aeae3aa499546f49406e2779165c2bd",
+  "environment": {
+    "python": "3.12.14",
+    "harbor_version": "0.21.0",
+    "base_image_digest": "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e",
+    "network_mode": "no-network",
+    "public_network_available": false
+  },
+  "artifacts": {
+    "dependency_lock": "sha256:5d512b9d962906055568862b5f8f45fe4344b394d49933c24559ad020c7f0c21",
+    "verifier_bundle": "sha256:18cd6998c3c28e48867eacda73787a11b1356f1cf1d24860775ded00902baf29",
+    "oracle_bundle": "sha256:056d49473a9c48c3119cc8e16270872411a9395ddae5adea1bc18034698139bf"
+  },
+  "bundle": {
+    "path": "catalog/sources/dnspython/evidence/revalidation-20260905/bundle-manifest.json",
+    "sha256": "sha256:57a271e4c21541e84b9916931bc11b471e7620676c668d61a1dc25759ed72823",
+    "canonical_manifest_digest": "sha256:566277b31374f5995354e318d888b7e6f565a9145c7ae423a411e1d54e27a043",
+    "raw_manifest_sha256": "sha256:aa3a2bc297ca3fe8be2afc466169fc7d50943480b4b2762b29dec5c092550f60"
+  },
+  "failure_set": {"path": "catalog/sources/dnspython/evidence/revalidation-20260905/failure-set.json", "sha256": "sha256:0e84c73c58488937ae433d249c07b8098b2f3af81cd6e9a30a5eb9e63a92c29f"},
+  "oracle": {
+    "run_id": "dnspython-revalidation-oracle-20260906/dnspython__jLmaE4d",
+    "command": "uv run --frozen --project harbor-runner harbor run on the fresh compiled dnspython bundle with agent oracle, one attempt, no host authorization",
+    "exit_code": 0,
+    "valid": true,
+    "expected_total": 20,
+    "collected": 20,
+    "passed": 20,
+    "reward": 1.0,
+    "grading": {"path": "catalog/sources/dnspython/evidence/revalidation-20260905/oracle-grading.json", "sha256": "sha256:defb05fedeb4c1aa4089488590c7fab15568650d7e1439be176fea0b1066ecff"},
+    "collection": {"path": "catalog/sources/dnspython/evidence/revalidation-20260905/oracle-collection.json", "sha256": "sha256:db241c7aec7abbe9197eaa0627c04e38063de2faf68367e4cb2d05d88108f89c"},
+    "result": {"path": "catalog/sources/dnspython/evidence/revalidation-20260905/oracle-result.json", "sha256": "sha256:9b024afbc6d3f8c2a0b57fa96667ef16a2e2599cc20a54a9195ff15e66e18ca0"},
+    "network": {"path": "catalog/sources/dnspython/evidence/revalidation-20260905/oracle-network.json", "sha256": "sha256:eb8b73b4186f285bc4fa16e904fccb30d19dcb3e2e1d259995bc8548bde3474f"}
+  },
+  "controls": {
+    "empty": {
+      "run_id": "dnspython-revalidation-empty-20260906/dnspython-empty__Mprg8yJ",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 20,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {"path": "catalog/sources/dnspython/evidence/revalidation-20260905/empty-grading.json", "sha256": "sha256:f3be3e7e9b261bf47c8f474bc68286d4b82b739ec8525b3752fffe855c1f9b1d"},
+      "result": {"path": "catalog/sources/dnspython/evidence/revalidation-20260905/empty-result.json", "sha256": "sha256:3165a3756e229b0a6b7299576be55406c9d51d0a296890692dc341ca050df8f1"},
+      "network": {"path": "catalog/sources/dnspython/evidence/revalidation-20260905/empty-network.json", "sha256": "sha256:9cb10931e6ca65ef109238c177f057b6e1897368bcbed2c234c5e3493eae4961"}
+    },
+    "stub": {
+      "run_id": "dnspython-revalidation-stub-20260906/dnspython-stub__GtNpXFs",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 20,
+      "collected": 20,
+      "passed": 0,
+      "reward": 0.0,
+      "grading": {"path": "catalog/sources/dnspython/evidence/revalidation-20260905/stub-grading.json", "sha256": "sha256:966e79c84d722482300c027858f2e68c330b1f93d84727746d0a7eff9f55e159"},
+      "collection": {"path": "catalog/sources/dnspython/evidence/revalidation-20260905/stub-collection.json", "sha256": "sha256:ff8c3eb691c1c3d8f18546e3838e6f1eb24040c54fc762bcc6428737ab09b791"},
+      "result": {"path": "catalog/sources/dnspython/evidence/revalidation-20260905/stub-result.json", "sha256": "sha256:6b5c59bbee56e98d661b644db7e457792b1fc3b2b9c4e49c8736f405607ffd7d"},
+      "network": {"path": "catalog/sources/dnspython/evidence/revalidation-20260905/stub-network.json", "sha256": "sha256:4f32661f73d1764e94a3d4083e0023c84ea1468b293a8596cc2d109234c4f47e"}
+    },
+    "forgery": {
+      "run_id": "dnspython-revalidation-forgery-20260906/dnspython-forgery__YsNp8QJ",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 20,
+      "collected": 20,
+      "passed": 0,
+      "reward": 0.0,
+      "verifier_owned_reward": true,
+      "grading": {"path": "catalog/sources/dnspython/evidence/revalidation-20260905/forgery-grading.json", "sha256": "sha256:c39050661bbb3378e8b35dfe533ed6bd950f9b5949b223b8e60e6d7527c2f79a"},
+      "collection": {"path": "catalog/sources/dnspython/evidence/revalidation-20260905/forgery-collection.json", "sha256": "sha256:cdbb51bc06d7fbc5b20fc52977e9e12fb7b37576f129121cfb6556cb33210528"},
+      "result": {"path": "catalog/sources/dnspython/evidence/revalidation-20260905/forgery-result.json", "sha256": "sha256:d4c28ccc99b3a85a8150fb780e7e096ae7f6b24a858015629756924ffdc21aee"},
+      "network": {"path": "catalog/sources/dnspython/evidence/revalidation-20260905/forgery-network.json", "sha256": "sha256:2d638786e1236df87b1a7fd2c858e24d683792085d0bc3a8070860d715ebe2af"}
+    },
+    "offline": {
+      "completed": true,
+      "public_network_available": false,
+      "evidence": {"path": "catalog/sources/dnspython/evidence/revalidation-20260905/offline.json", "sha256": "sha256:6118bf543733f32db0462959961530470717ec81562697b583fe646038bf0a0a"}
+    }
+  },
   "residual_risks": ["The fixed verifier covers 20 locally reproducible DNS scenarios; blind review and model pilot remain separate gates."]
 }

@@ -1,0 +1,9 @@
+{
+  "schema_version": "1.0",
+  "task_id": "css-tree",
+  "failure_class": "verifier",
+  "failure_stage": "oracle-payload-inspection",
+  "failure_set": [],
+  "reason": "No test leaf was executed. The Oracle payload requires runtime HTTPS source acquisition under a forbidden NoNetwork contract.",
+  "next_step": "Replace the Oracle bundle with a local source payload verified against revision 88e3d965c0b1628642a30a841745b410d6835052 and source archive digest 8b568680478944896703c6bc412665f5abb0720efe9f39372d3cb66ffa7ad778, then recompile and run the complete matrix."
+}

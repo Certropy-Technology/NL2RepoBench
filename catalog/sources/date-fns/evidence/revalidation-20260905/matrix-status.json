@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "task_id": "date-fns",
+  "source_digest": "sha256:36b24b55587f07a9bb5b635df0fd1e3b1c4df897733e7392644b84ad3c38d9cc",
+  "network_policy": "no-network",
+  "status": "blocked-before-run",
+  "reason": "The inspected Oracle solve script performs a runtime git fetch from github.com, and the Oracle bundle has no local source archive.",
+  "oracle": {"status": "not-run", "receipt": null},
+  "empty": {"status": "not-run", "receipt": null},
+  "stub": {"status": "not-run", "receipt": null},
+  "forgery": {"status": "not-run", "receipt": null},
+  "offline": {"status": "not-run", "receipt": null},
+  "timeout": {"status": "not-run", "receipt": null},
+  "collection_summary": {"status": "not-run", "reason": "No verifier run was started."},
+  "grading_summary": {"status": "not-run", "reason": "No verifier run was started."},
+  "network_summary": {"status": "not-run", "reason": "No verifier run was started."},
+  "failure_set": {"status": "not-applicable", "reason": "No test leaves were collected."}
+}

@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "task_id": "decamelize",
+  "task_version": "1.0.0",
+  "catalog_source_digest": "sha256:e63d8c7bb62c0c1c557042507d1dcd9512e34df4be99824470f2a2ebd795c77b",
+  "upstream_source_digest": "sha256:4bc589382527a52de984f5768d6eece961d0a532439d894cdd4e2aef7a82696e",
+  "canonical_manifest_digest": "sha256:705cb32e1057ae20d21e34678f4e38d29f5875b10e61a6248f6c5e006d78ec86",
+  "bundle_manifest_sha256": "sha256:83ad1a8a7acbc055341bedd8749315b69b79f9650dc1274a165edac673a0da34",
+  "file_count": 76,
+  "toolchain": "toolchain.node.lock.toml",
+  "harbor": "0.21.0",
+  "deterministic_second_compile": true,
+  "compile_outputs": [
+    ".nl2repo/decamelize-revalidation-compile-a/decamelize",
+    ".nl2repo/decamelize-revalidation-compile-b/decamelize"
+  ]
+}

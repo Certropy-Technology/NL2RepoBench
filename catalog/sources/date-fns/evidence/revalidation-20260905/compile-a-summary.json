@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "task_id": "date-fns",
+  "compile": "first",
+  "command": "uv run nl2repo harbor compile catalog/sources/date-fns --output .nl2repo/revalidation-20260905/date-fns-a --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+  "exit_code": 0,
+  "source_digest": "sha256:36b24b55587f07a9bb5b635df0fd1e3b1c4df897733e7392644b84ad3c38d9cc",
+  "canonical_manifest_digest": "sha256:e3b35fb75ff36e4bb19e20bb1750deaad31429974898ffe384bbd76043126bd5",
+  "raw_bundle_manifest_sha256": "sha256:3615c15ba5ff155192d7d1837def9c7956b0bfaf6fda75a922ca00b4ee44791e",
+  "bundle_file_count": 76,
+  "toolchain": "toolchain.node.lock.toml",
+  "harbor_version": "0.21.0",
+  "runtime": "Node.js 24.19.0 / npm 11.17.0",
+  "network_policy": "no-network"
+}

@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "task_id": "crypto-random-string",
+  "source_digest": "sha256:f23624d39f95ab92d8ff4f8360f55e2d27c2e137d11da9c5870258a7b7514ba4",
+  "source_task_sha256": "sha256:4ce8b2e1d4bf422dc661256547cc8f425fa2526bc717d7482b1bc5a20ff74eb0",
+  "canonical_manifest_digest": "sha256:131e052a9c684385042ca3c911301827edef16bcc367642b677106938157d965",
+  "bundle_manifest_file_sha256": "sha256:658a24cc4a324c1ad01a41382a8128b0d22c7863c2b1a6dbb0485d4530e61c46",
+  "file_count": 75,
+  "controls": [
+    "empty.sh",
+    "forgery.sh",
+    "hang.sh",
+    "install-script.sh",
+    "loader-hook.sh",
+    "offline.sh",
+    "stub.sh"
+  ],
+  "toolchain": "toolchain.node.lock.toml",
+  "harbor_version": "0.21.0",
+  "deterministic_second_compile": true,
+  "compile_commands": [
+    "uv run nl2repo harbor compile catalog/sources/crypto-random-string --output revalidation-a --toolchain toolchain.node.lock.toml --artifact-root private-CAS --allow-private",
+    "uv run nl2repo harbor compile catalog/sources/crypto-random-string --output revalidation-b --toolchain toolchain.node.lock.toml --artifact-root private-CAS --allow-private"
+  ]
+}

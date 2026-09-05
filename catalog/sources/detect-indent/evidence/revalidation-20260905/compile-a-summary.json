@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "task_id": "detect-indent",
+  "stage": "production-compile-a",
+  "command": "uv run nl2repo harbor compile catalog/sources/detect-indent --output .nl2repo/detect-indent-revalidation-20260905-a --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+  "artifact_root": "authorized parent private CAS (repository-relative view: .nl2repo/artifacts)",
+  "toolchain": "toolchain.node.lock.toml",
+  "exit_code": 0,
+  "bundle_manifest_sha256": "sha256:cf1fce309b624189bb12573a6295526a4eeec0014fac6aff689b10fbb811300e",
+  "canonical_manifest_digest": "sha256:741c46409679eb81119007b4d9b39ed0f89ead1fd189b843f8f8aea564c76f87",
+  "file_count": 73,
+  "source_digest": "sha256:6d745e20c2aef62dae5f3ce74dfb27a65f50de6d7b50850245af88a2c34578a2",
+  "allow_incomplete": false
+}

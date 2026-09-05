@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "task_id": "editables",
+  "artifact_role": "oracle_bundle",
+  "artifact_digest": "sha256:0449e5d45bbc63fe5e0feafeafe4fe83ba490362ff25263419d53c670f3418bf",
+  "artifact_size_bytes": 10240,
+  "artifact_sha256_verified": true,
+  "members": ["solve.sh"],
+  "solve_script": {
+    "source_revision": "e54908a593a1062be201d1acdb80e379e0776d4b",
+    "source_archive_sha256": "sha256:d82a26dd246c6b5f37bc9881975d3fe2af535b390f90dc452575c0ebfea5f2aa",
+    "runtime_source_fetch": "git fetch origin e54908a593a1062be201d1acdb80e379e0776d4b from https://github.com/pfmoore/editables"
+  },
+  "inspection": "The payload requires a runtime GitHub fetch before restoring the reference source. No Harbor Oracle or control run was started under the NoNetwork contract."
+}

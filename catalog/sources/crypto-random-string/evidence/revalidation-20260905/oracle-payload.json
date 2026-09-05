@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "task_id": "crypto-random-string",
+  "oracle_bundle_sha256": "sha256:c02d574eafcb4c0f7c7bec645dda501f72d414c9914bef059bbbb2003f34d618",
+  "oracle_bundle_size_bytes": 2243,
+  "payload_files": ["solve.sh"],
+  "solve_sha256": "sha256:ade5c272eac6f75d5cb890ac20c7cb3b1c2a1ccfc61e5c3c4fd77fb729cf1774",
+  "source_revision": "09e2f1d01be98dff129f52555a733cf25a319067",
+  "source_archive_sha256": "sha256:f2c17dd0596c7e2b89f506f78b22ea49265ecda48d6822051413a401b29d177c",
+  "runtime_network_behavior": "blocked",
+  "runtime_network_reason": "solve.sh runs git fetch against https://github.com/sindresorhus/crypto-random-string before creating the local Oracle implementation",
+  "required_remediation": "Replace the runtime source fetch with a hash-verified local source archive or an equivalent offline Oracle payload, then rerun the complete matrix."
+}

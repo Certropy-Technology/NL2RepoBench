@@ -2,10 +2,12 @@
   "schema_version": "1.0",
   "task_id": "dacite",
   "terminal_kind": "valid",
+  "status": "controls-passed",
   "source": {
     "upstream_url": "https://github.com/konradhalas/dacite",
     "revision": "9898ccbb783e7e6a35ae165e7deb9fa84edfe21c",
     "archive_sha256": "sha256:bd30874ca55029421d5279be2d1b327dda2b86ab1865e3bdc3cfb91e48f7e834",
+    "catalog_source_digest": "sha256:32826939c2c4f2b429537747a815c1cc36c908df7a13d65e8ed5e99a6084e484",
     "license_spdx": "MIT",
     "license_sha256": "sha256:e1741cee11fc82b815210f5368d301c940e7e3def89af718da81550150ba3277"
   },
@@ -15,116 +17,188 @@
     "base_image": "python:3.12.14-slim-bookworm",
     "base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
     "harbor_version": "0.21.0",
-    "task_schema": "1.4",
-    "toolchain_sha256": "sha256:ca5ea4c3af1d7941b42d90db80ee63d76bb5acba4876a96158bac6c284a40676",
-    "harbor_runner_lock_sha256": "sha256:715cb5a02d19b3baae3a2e3879b94ea3e5f39c8ab19232c93466b1cf385d8e42",
-    "verifier_requirements_sha256": "sha256:1c6a336c41958823e7803911f3572f6fe271fadef32eeb74a3e0f366fef86fdb"
+    "toolchain": "toolchain.lock.toml",
+    "network_mode": "no-network",
+    "public_network_available": false
   },
-  "private_artifacts": {
-    "dependency_lock": {
-      "digest": "sha256:53615811dc1d1f22b94617262702e9d02d56d5d8a0a180227344c700fcddae60",
-      "size_bytes": 373
-    },
-    "verifier_bundle": {
-      "digest": "sha256:041d1d84b83b61449093de2b9222cbb945db6bb001cb8ffe8809eef7e33d89cc",
-      "size_bytes": 40960
-    },
-    "oracle_bundle": {
-      "digest": "sha256:53c0cc852f9becb74f54476c30d73e0b139e2998459da61daed59c732393cbe9",
-      "size_bytes": 174080
-    }
+  "frozen_collection": {
+    "framework": "pytest",
+    "expected_total": 45,
+    "source": "catalog/sources/dacite/task.toml"
   },
-  "baseline": {
-    "command": "PYTEST_DISABLE_PLUGIN_AUTOLOAD unset; python -m pytest -q --benchmark-disable --junitxml=<run>.xml tests",
-    "runs": [
-      {"exit_code": 0, "passed": 203, "junit": ".nl2repo/authoring-work/python-discovery-wave2-20260827-r1/dacite/baseline-1.xml", "sha256": "sha256:ba4f980076be01f2cea4b978379829790ac159b373505330057addc52b74c9dd"},
-      {"exit_code": 0, "passed": 203, "junit": ".nl2repo/authoring-work/python-discovery-wave2-20260827-r1/dacite/baseline-2.xml", "sha256": "sha256:f797efad4c474734b4089c2c913e35c52adb5934c3c85ec94cb503585030bdcb"},
-      {"exit_code": 0, "passed": 203, "junit": ".nl2repo/authoring-work/python-discovery-wave2-20260827-r1/dacite/baseline-3.xml", "sha256": "sha256:879f36f38fc3caf4a8bd2fc9ce43fdddd87e5db6436d3c9572ee23fccdf93419"}
-    ]
-  },
-  "compile": {
-    "command": "uv run nl2repo harbor compile catalog/sources/dacite --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private --output .nl2repo/compiled/dacite-production-v2",
-    "exit_code": 0,
-    "bundle_manifest": ".nl2repo/compiled/dacite-production-v2/dacite/bundle.manifest.json",
-    "bundle_manifest_sha256": "sha256:48a269bba031869c114f6bf3d54713d9175ccb072e7ee4a16a66e79c410c61bb"
+  "bundle": {
+    "manifest": "catalog/sources/dacite/evidence/revalidation-20260905/bundle-manifest.json",
+    "manifest_sha256": "sha256:bdf72e56f20fe0e6922206714a62f8a5dde4bb7bf9cf651d6545728ac554b1eb",
+    "canonical_manifest_digest": "sha256:59ea7ee45367ea3aad7cc7850929a7a8445ea749cc2e3124376310c2ff725c02",
+    "compile_a_and_b_byte_identical": true
   },
   "oracle": {
-    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/dacite-production-v2/dacite -a oracle --jobs-dir .nl2repo/runs/dacite/final --job-name dacite-oracle-45 --n-concurrent 1 --yes",
+    "run_id": "dacite-revalidation-oracle-20260905-retry1/dacite__XksrivR",
+    "trial_id": "6a2c6ff2-3a57-4bef-992f-d33194812e0e",
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/dacite-revalidation-compile-a/dacite -a oracle --job-name dacite-revalidation-oracle-20260905-retry1 -o .nl2repo/dacite-revalidation-runs/oracle-retry1 --n-concurrent 1 --max-retries 0 --yes",
     "exit_code": 0,
     "valid": true,
-    "expected": 45,
+    "expected_total": 45,
     "collected": 45,
     "passed": 45,
+    "failed": 0,
+    "skipped": 0,
     "reward": 1.0,
-    "grading": ".nl2repo/runs/dacite/final/dacite-oracle-45/dacite__H3kFE8T/verifier/grading.json",
+    "collection": "catalog/sources/dacite/evidence/revalidation-20260905/oracle-collection.json",
+    "collection_sha256": "sha256:b4489c538a5516bdcabeba759e46ac15c2b6f10cec6dfb2b2d62557beb1f1940",
+    "grading": "catalog/sources/dacite/evidence/revalidation-20260905/oracle-grading.json",
     "grading_sha256": "sha256:3427988fadd9069dc5db8ecca8843b33a3cb55225200f9c39ac0e15b6c051e6a",
-    "network": ".nl2repo/runs/dacite/final/dacite-oracle-45/dacite__H3kFE8T/verifier/network.json",
-    "network_sha256": "sha256:0d541683d2d1b5b61acd42851c0ff9c3dd5c2c16418f8dbd73faaf8f2df57043",
-    "public_network_available": false
+    "network": "catalog/sources/dacite/evidence/revalidation-20260905/oracle-network.json",
+    "network_sha256": "sha256:40a32268f01cafcf94d36804101a1753938a02523a73f07415850ac1a72b94af",
+    "failure_set": "catalog/sources/dacite/evidence/revalidation-20260905/oracle-failure-set.json",
+    "failure_set_sha256": "sha256:a9e4d90c4f267f11bc721a775fa60b3a22ccc7fe4e2048913cead088b61f2d7b",
+    "result": "catalog/sources/dacite/evidence/revalidation-20260905/oracle-trial-result.json",
+    "result_sha256": "sha256:a03e157f7fa39004bb5e66996d4b01d51d79e7dc535ab26d988b8501f9609e8e"
   },
   "controls": {
     "empty": {
+      "run_id": "dacite-revalidation-empty-20260905/dacite__M3uGhSX",
+      "trial_id": "62bd64f3-e558-41ef-baa1-339de99877bd",
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/dacite-revalidation-compile-a/dacite -a nop --job-name dacite-revalidation-empty-20260905 -o .nl2repo/dacite-revalidation-runs/empty --n-concurrent 1 --max-retries 0 --yes",
       "exit_code": 0,
       "valid": true,
       "collected": 0,
+      "passed": 0,
       "reward": 0.0,
-      "grading": ".nl2repo/runs/dacite/final/dacite-empty-45/dacite__fYV4Ht7/verifier/grading.json",
-      "grading_sha256": "sha256:83c2961ae9389dbbb5e8ada2af11b27926d1470f90e49d7225622799459e0b12"
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": "catalog/sources/dacite/evidence/revalidation-20260905/empty-grading.json",
+      "grading_sha256": "sha256:83c2961ae9389dbbb5e8ada2af11b27926d1470f90e49d7225622799459e0b12",
+      "network": "catalog/sources/dacite/evidence/revalidation-20260905/empty-network.json",
+      "network_sha256": "sha256:6273e7485305d49ef6f633b9f516ae8adb6c167c81010162d66594ca47389fde",
+      "result": "catalog/sources/dacite/evidence/revalidation-20260905/empty-trial-result.json",
+      "result_sha256": "sha256:fc5aaa655c79374f45318d6bfac42b35e075aa8e5a8ff40f21c128bec6cec5cb"
     },
     "stub": {
+      "run_id": "dacite-revalidation-stub-20260905/dacite-stub__tJ24UoA",
+      "trial_id": "e45cac14-4a75-4bd3-8a1d-e8319fe06a32",
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/dacite-revalidation-controls/dacite-stub -a oracle --job-name dacite-revalidation-stub-20260905 -o .nl2repo/dacite-revalidation-runs/stub --n-concurrent 1 --max-retries 0 --yes",
       "exit_code": 0,
       "valid": true,
+      "expected_total": 45,
       "collected": 45,
       "passed": 3,
+      "failed": 42,
       "reward": 0.06666666666666667,
-      "grading": ".nl2repo/runs/dacite/final/dacite-stub-45/dacite-stub__MNbQurJ/verifier/grading.json",
-      "grading_sha256": "sha256:69b4340f397a71854136bf3356a34a3fe8224d8ee649a80a62c7b831d5414d48"
+      "collection": "catalog/sources/dacite/evidence/revalidation-20260905/stub-collection.json",
+      "collection_sha256": "sha256:b4489c538a5516bdcabeba759e46ac15c2b6f10cec6dfb2b2d62557beb1f1940",
+      "grading": "catalog/sources/dacite/evidence/revalidation-20260905/stub-grading.json",
+      "grading_sha256": "sha256:69b4340f397a71854136bf3356a34a3fe8224d8ee649a80a62c7b831d5414d48",
+      "failure_set": "catalog/sources/dacite/evidence/revalidation-20260905/stub-failure-set.json",
+      "failure_set_sha256": "sha256:c0b6bbb3c54d489b1aa8dd8d16af4a7df7eddc42a9b682887d83516332a58da1",
+      "network": "catalog/sources/dacite/evidence/revalidation-20260905/stub-network.json",
+      "network_sha256": "sha256:0aae6d51439b7a2c43a306adb1bb049c4c322269aed84b851dcd57d23e2640b5",
+      "result": "catalog/sources/dacite/evidence/revalidation-20260905/stub-trial-result.json",
+      "result_sha256": "sha256:3dcdf1a423934e7312c5ec563602f9938e23d390e2212f080e5040e63dce5ab0"
     },
     "forgery": {
+      "run_id": "dacite-revalidation-forgery-20260905/dacite-forgery__BnN4Wvo",
+      "trial_id": "263b5ce6-46bd-46b4-baff-f073989fb75b",
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/dacite-revalidation-controls/dacite-forgery -a oracle --job-name dacite-revalidation-forgery-20260905 -o .nl2repo/dacite-revalidation-runs/forgery --n-concurrent 1 --max-retries 0 --yes",
       "exit_code": 0,
       "valid": true,
+      "expected_total": 45,
       "collected": 45,
       "passed": 2,
+      "failed": 43,
       "reward": 0.044444444444444446,
       "verifier_owned_reward": true,
-      "workspace_forged_reward_absent": true,
-      "grading": ".nl2repo/runs/dacite/final/dacite-forgery-45/dacite-forgery__ccvt4nn/verifier/grading.json",
-      "grading_sha256": "sha256:25a38352b46ea5c61caead3867445d613d89f96e5eddb47394f5467a9e36da6b"
+      "collection": "catalog/sources/dacite/evidence/revalidation-20260905/forgery-collection.json",
+      "collection_sha256": "sha256:b4489c538a5516bdcabeba759e46ac15c2b6f10cec6dfb2b2d62557beb1f1940",
+      "grading": "catalog/sources/dacite/evidence/revalidation-20260905/forgery-grading.json",
+      "grading_sha256": "sha256:25a38352b46ea5c61caead3867445d613d89f96e5eddb47394f5467a9e36da6b",
+      "failure_set": "catalog/sources/dacite/evidence/revalidation-20260905/forgery-failure-set.json",
+      "failure_set_sha256": "sha256:62fbd75a6760bdad58af66a1d6c96919537b3bc98ea02650e44924e27b6de21f",
+      "network": "catalog/sources/dacite/evidence/revalidation-20260905/forgery-network.json",
+      "network_sha256": "sha256:19fcac6f7015a46a817079b4bbd65faaa7ed8e5a73fadab90caaa718f9cdb678",
+      "result": "catalog/sources/dacite/evidence/revalidation-20260905/forgery-trial-result.json",
+      "result_sha256": "sha256:2606004070581142d551f531144b5264008d15b0386b11ee97bbe05b42b69f5b"
     },
     "install_hang": {
+      "run_id": "dacite-revalidation-install-hang-20260905/dacite-install-hang__QhWv8Rz",
+      "job_id": "8b6870a3-118f-406a-b680-1742b8916b35",
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/dacite-revalidation-controls/dacite-install-hang -a oracle --job-name dacite-revalidation-install-hang-20260905 -o .nl2repo/dacite-revalidation-runs/install-hang --n-concurrent 1 --max-retries 0 --yes",
       "exit_code": 0,
       "valid": true,
       "collected": 0,
+      "passed": 0,
       "reward": 0.0,
-      "candidate_install_outcome": "timeout",
-      "grading": ".nl2repo/runs/dacite/final/dacite-install-hang-45/dacite-install-hang__mHZuzpJ/verifier/grading.json",
-      "grading_sha256": "sha256:83c2961ae9389dbbb5e8ada2af11b27926d1470f90e49d7225622799459e0b12"
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": "catalog/sources/dacite/evidence/revalidation-20260905/install-hang-grading.json",
+      "grading_sha256": "sha256:83c2961ae9389dbbb5e8ada2af11b27926d1470f90e49d7225622799459e0b12",
+      "network": "catalog/sources/dacite/evidence/revalidation-20260905/install-hang-network.json",
+      "network_sha256": "sha256:1c8b77ac9c99f6fa8267100f19fb6f4aed4695072c8679fca7e8a05697a33e9a",
+      "result": "catalog/sources/dacite/evidence/revalidation-20260905/install-hang-job-result.json",
+      "result_sha256": "sha256:fc1d34f87fa2d27caf6da9daeb880b27cab47782958f3fca62b4ab2c922f4e2a"
     },
     "call_hang": {
+      "run_id": "dacite-revalidation-call-hang-20260905/dacite-call-hang__Vayb68P",
+      "trial_id": "090a66c0-8da5-44d9-8bfc-f4eeed6a6b92",
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/dacite-revalidation-controls/dacite-call-hang -a oracle --job-name dacite-revalidation-call-hang-20260905 -o .nl2repo/dacite-revalidation-runs/call-hang --n-concurrent 1 --max-retries 0 --yes",
       "exit_code": 0,
       "valid": true,
+      "expected_total": 45,
       "collected": 45,
       "passed": 1,
+      "failed": 44,
       "reward": 0.022222222222222223,
-      "grading": ".nl2repo/runs/dacite/final/dacite-call-hang-45/dacite-call-hang__5vstD6J/verifier/grading.json",
-      "grading_sha256": "sha256:a8b729e3ee7d874bb50e25ec06aa84a22a8d9e62724ec32adf14328d3ad07839"
+      "collection": "catalog/sources/dacite/evidence/revalidation-20260905/call-hang-collection.json",
+      "collection_sha256": "sha256:b4489c538a5516bdcabeba759e46ac15c2b6f10cec6dfb2b2d62557beb1f1940",
+      "grading": "catalog/sources/dacite/evidence/revalidation-20260905/call-hang-grading.json",
+      "grading_sha256": "sha256:a8b729e3ee7d874bb50e25ec06aa84a22a8d9e62724ec32adf14328d3ad07839",
+      "failure_set": "catalog/sources/dacite/evidence/revalidation-20260905/call-hang-failure-set.json",
+      "failure_set_sha256": "sha256:513a059aaed77665c28895c0cb63bc5a60571e2d91cb9de67e5a6e8283d57f65",
+      "network": "catalog/sources/dacite/evidence/revalidation-20260905/call-hang-network.json",
+      "network_sha256": "sha256:c8103998544c10557c980f799cbebb5bc0c8f791adb71426f6589606eff8772e",
+      "result": "catalog/sources/dacite/evidence/revalidation-20260905/call-hang-trial-result.json",
+      "result_sha256": "sha256:3595ea6189dc7635d6b4436093ad86de36806578c46d8e1573520a4553396e8b"
     },
     "offline": {
-      "completed": true,
+      "run_id": "dacite-revalidation-offline-20260905/dacite__mQ3VZTg",
+      "trial_id": "e9abe7e8-3d49-49a7-a7be-a2148093cfd5",
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/dacite-revalidation-compile-a/dacite -a oracle --job-name dacite-revalidation-offline-20260905 -o .nl2repo/dacite-revalidation-runs/offline --n-concurrent 1 --max-retries 0 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 45,
+      "collected": 45,
+      "passed": 45,
+      "reward": 1.0,
       "public_network_available": false,
-      "source": "oracle.network"
+      "grading": "catalog/sources/dacite/evidence/revalidation-20260905/offline-grading.json",
+      "grading_sha256": "sha256:3427988fadd9069dc5db8ecca8843b33a3cb55225200f9c39ac0e15b6c051e6a",
+      "network": "catalog/sources/dacite/evidence/revalidation-20260905/offline-network.json",
+      "network_sha256": "sha256:ed792c401f2b054be0a24763a0fa1969b22109fda94cadb70eb9598e9d4b8cab",
+      "result": "catalog/sources/dacite/evidence/revalidation-20260905/offline-trial-result.json",
+      "result_sha256": "sha256:b85521c331fd9364867515b92458b6b816ffbea1e86fa45ebf56f77b8a48ca18"
     }
   },
+  "infrastructure_retries": [
+    {
+      "stage": "oracle",
+      "attempt": 1,
+      "outcome": "cumulative-budget-kill",
+      "evidence": "catalog/sources/dacite/evidence/revalidation-20260905/oracle-infrastructure-attempt.json",
+      "evidence_sha256": "sha256:a9e27f88c8e082314c349d72d147dad95cb70cf74ce3b5a3ecf3e3e537780f7e",
+      "bounded_retry": "The next isolated attempt completed 45/45 and is the final Oracle receipt."
+    }
+  ],
   "gates": {
-    "validate_source_exit_code": 0,
-    "network_lint_exit_code": 0,
-    "network_lint_error_count": 0,
-    "dacite_network_findings": 0,
-    "python_compile_exit_code": 0,
-    "shell_syntax_exit_code": 0
+    "validate_source": {"exit_code": 0, "source_digest": "sha256:32826939c2c4f2b429537747a815c1cc36c908df7a13d65e8ed5e99a6084e484"},
+    "compile_a": {"exit_code": 0},
+    "compile_b": {"exit_code": 0},
+    "compile_byte_identity": true,
+    "shell_syntax": {"exit_code": 0},
+    "network_lint": {"target_task_errors": 0},
+    "instruction_quality": {"exit_code": 0}
   },
   "residual_risks": [
     "The production denominator is a bounded 45-scenario behavioral subset rather than all 203 upstream tests.",
-    "The task has not received independent blind/spec review or a model-agent pilot in this lane."
+    "Review, pilot, and publication remain separate integrator gates."
   ]
 }

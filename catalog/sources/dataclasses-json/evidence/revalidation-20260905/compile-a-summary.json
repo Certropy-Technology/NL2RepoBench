@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "task_id": "dataclasses-json",
+  "source_digest": "sha256:ffdfada24b0013c56bd5480f558758b35aeeba5927cd2cf0e4c5e7041f9ea5c5",
+  "compile_attempt": "a",
+  "command": "uv run nl2repo harbor compile catalog/sources/dataclasses-json --output .nl2repo/dataclasses-json-revalidation-compile-a --toolchain toolchain.lock.toml --artifact-root <parent-private-CAS> --allow-private",
+  "exit_code": 0,
+  "canonical_manifest_digest": "sha256:420d9df622be8e03c76288a95c4663b08e81424d0e01a0338408cc3fad8c4bbc",
+  "bundle_manifest_sha256": "sha256:24c28210e9d23294f7a5ecb966589d7a202d8eebd794c2f445bfa50ecfacf6a6",
+  "bundle_file_count": 58,
+  "mode": "production",
+  "toolchain": "toolchain.lock.toml",
+  "artifact_root_contract": "parent private CAS; no runtime network access"
+}

@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "task_id": "dot-prop",
+  "stage": "oracle-payload-review",
+  "status": "blocked",
+  "source_digest": "sha256:1aefd87929070ef049a70fdfa1d690c6a917216b0795fea648d9c2f80a6f26ab",
+  "oracle_bundle_digest": "sha256:020d3838568380c53e8e4c071289b05a3bdc13bd588733733068c506afcbfa00",
+  "solution_sha256": "sha256:2bb9126a9498ede69b952100419d3636901d3203c21fc87ce8b2cc5323ed7efd",
+  "reference_source_fetch": "git fetch from the upstream source host",
+  "network_policy": "no-network",
+  "source_host_authorization": false,
+  "oracle_run": "not-run",
+  "reason": "The generated Oracle must fetch the upstream revision at runtime. Running it would violate the assigned NoNetwork policy; no source-host authorization was granted.",
+  "required_remediation": "Provide a locally materialized, revision- and digest-verified Oracle payload, then rerun the complete changed-bundle matrix.",
+  "controls_run": {
+    "empty": "not-run",
+    "stub": "not-run",
+    "forgery": "not-run",
+    "offline": "not-run"
+  }
+}

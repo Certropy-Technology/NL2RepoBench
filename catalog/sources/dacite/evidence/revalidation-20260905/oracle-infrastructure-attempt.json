@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "task_id": "dacite",
+  "run": "dacite-revalidation-oracle-20260905/dacite__x9QeWxB",
+  "classification": "infrastructure",
+  "raw_grading_sha256": "sha256:24ee5e05ee01bca078e4c2aa18736e116b323ca1e4274222fa705a0328fdd157",
+  "raw_junit_sha256": "sha256:e47895720017d5bc95c0a01152900abfe70f5561f219cc43a6bfa0dfc6850cc8",
+  "valid": true,
+  "expected_total": 45,
+  "collected": 45,
+  "passed": 39,
+  "failed": 6,
+  "reward": 0.8666666666666667,
+  "failed_ids": [
+    "post-init-derived-field",
+    "init-var",
+    "type-field",
+    "generic-dataclass",
+    "nested-generic-dataclass",
+    "any-value"
+  ],
+  "failure": "Each failed leaf reported RuntimeError: Killed after the cumulative execution budget was exhausted. A single bounded retry completed 45/45."
+}

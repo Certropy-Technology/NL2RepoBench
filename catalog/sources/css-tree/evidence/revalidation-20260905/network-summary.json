@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "task_id": "css-tree",
+  "declared_mode": "no-network",
+  "candidate": "no-network",
+  "verifier": "no-network",
+  "oracle": "no-network",
+  "controls": "no-network",
+  "source_lint": {"tasks_scanned": 480, "global_errors": 0, "task_specific_errors": 0},
+  "generated_lint": {"tasks_scanned": 824, "global_errors": 1, "task_specific_findings": 0, "task_specific_errors": 0, "unrelated_global_error": true},
+  "oracle_runtime_fetch_detected": true,
+  "oracle_run": "not-run",
+  "controls_run": "not-run",
+  "authorization_granted": false
+}

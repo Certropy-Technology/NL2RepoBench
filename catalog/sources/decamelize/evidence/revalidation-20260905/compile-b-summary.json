@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "task_id": "decamelize",
+  "attempt": "compile-b",
+  "command": "uv run nl2repo harbor compile catalog/sources/decamelize --output .nl2repo/decamelize-revalidation-compile-b --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+  "exit_code": 0,
+  "bundle_manifest_sha256": "sha256:83ad1a8a7acbc055341bedd8749315b69b79f9650dc1274a165edac673a0da34",
+  "canonical_manifest_digest": "sha256:705cb32e1057ae20d21e34678f4e38d29f5875b10e61a6248f6c5e006d78ec86",
+  "file_count": 76,
+  "network_authorization": "none"
+}

@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "task_id": "crypto-random-string",
+  "source_digest": "sha256:f23624d39f95ab92d8ff4f8360f55e2d27c2e137d11da9c5870258a7b7514ba4",
+  "canonical_manifest_digest": "sha256:131e052a9c684385042ca3c911301827edef16bcc367642b677106938157d965",
+  "terminal_kind": "revalidation-blocked",
+  "status": "pending",
+  "expected_total": 32,
+  "network_policy": "no-network",
+  "runs": {
+    "oracle": {"status": "not-run", "reason": "Oracle payload performs a runtime GitHub fetch"},
+    "empty": {"status": "not-run", "reason": "Complete matrix is withheld until the current bundle has an offline Oracle payload"},
+    "stub": {"status": "not-run", "reason": "Complete matrix is withheld until the current bundle has an offline Oracle payload"},
+    "forgery": {"status": "not-run", "reason": "Complete matrix is withheld until the current bundle has an offline Oracle payload"},
+    "hang": {"status": "not-run", "reason": "Complete matrix is withheld until the current bundle has an offline Oracle payload"},
+    "install-script": {"status": "not-run", "reason": "Complete matrix is withheld until the current bundle has an offline Oracle payload"},
+    "loader-hook": {"status": "not-run", "reason": "Complete matrix is withheld until the current bundle has an offline Oracle payload"},
+    "offline": {"status": "not-run", "reason": "Complete matrix is withheld until the current bundle has an offline Oracle payload"}
+  },
+  "grading": null,
+  "network": null,
+  "collection": null,
+  "result": null,
+  "failure_set": null
+}

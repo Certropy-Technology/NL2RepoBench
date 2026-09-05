@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "task_id": "distro",
+  "catalog_source_digest": "sha256:24b260692b3b5a3bf700df0a189bb1217ce896ae225bb535905dd3eef73546ec",
+  "canonical_manifest_digest": "sha256:dab9e308ebb402c8c10324b5e66b375a6c665a694689ea86f30c9a2c2e6ab436",
+  "raw_bundle_manifest_sha256": "sha256:51cfd901cc9e09142665c3eb4c35ec74cc2ec8a5313f13591258fe54d71957a8",
+  "file_count": 60,
+  "controls": ["call-hang.sh", "forgery.sh", "install-hang.sh", "stub.sh"],
+  "deterministic_second_compile": true,
+  "toolchain": "toolchain.lock.toml",
+  "harbor": "0.21.0"
+}

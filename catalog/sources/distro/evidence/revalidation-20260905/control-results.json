@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0",
+  "task_id": "distro",
+  "controls": {
+    "stub": {
+      "run_id": "60d50d4f-ffa7-48a7-9016-5ecf28a50841",
+      "raw_result_sha256": "sha256:33ad96202ae561212323ed24bb964d8d80cfe5eff70394182e6fcd6a37a49917",
+      "exit_code": 0,
+      "reward": 0.0
+    },
+    "forgery": {
+      "run_id": "ecfc51b5-5923-4059-b0ff-aac9a2c961a6",
+      "raw_result_sha256": "sha256:87a81176288862ae781f00b6ede24c64362e4ad1015ec090a4734f0a1da4c3ba",
+      "exit_code": 0,
+      "reward": 0.0
+    },
+    "call_hang": {
+      "run_id": "48763924-67c2-4ca6-99ca-1c9a62c904e8",
+      "raw_result_sha256": "sha256:7a6974530f35e9f49d7a293e074a5505d5ed4769f55ccde4523d3f33c7089234",
+      "exit_code": 0,
+      "reward": 0.0
+    },
+    "install_hang": {
+      "run_id": "c57ddfde-f64e-4f37-a0a5-2d06c60bde6e",
+      "raw_result_sha256": "sha256:048e133a270d98e2235ebbeccb2d0eec57eeb39e6c7b2c0c888d36b6ca95763d",
+      "exit_code": 0,
+      "reward": 0.0,
+      "failure_reason": "candidate-installation-failed"
+    }
+  }
+}

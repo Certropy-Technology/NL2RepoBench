@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "task_id": "cross-fetch",
+  "artifact_digest": "sha256:fcd0d99646f0e2f19395ab23673035d37c9e8b87913b3df37fa64c61eb4e18e9",
+  "artifact_size_bytes": 1487,
+  "run_id": null,
+  "harbor_run": "not-run",
+  "source_revision": "9e6898ee848ba6dc942f787f2c35ca6fa30eb014",
+  "source_archive_sha256": "sha256:2924f22280494620dfee8fd974a0a85f6668334b16eed7b540b7fe4d24706491",
+  "payload_entries": ["cross-fetch.package-lock.json", "solve.sh"],
+  "forbidden_runtime_operations": [
+    "git clone https://github.com/lquixada/cross-fetch.git",
+    "git fetch --depth=1 origin 9e6898ee848ba6dc942f787f2c35ca6fa30eb014"
+  ],
+  "network_policy_result": "blocked-before-run",
+  "raw_receipt_hashes": [],
+  "reason": "The Oracle materializer performs source-host access at runtime. No host authorization was supplied and no Oracle/control run was started."
+}

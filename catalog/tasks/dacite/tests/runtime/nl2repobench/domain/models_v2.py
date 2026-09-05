@@ -34,6 +34,10 @@ from .models import (
 SCHEMA_VERSION_V2: Literal["2.0"] = "2.0"
 NODE_VERSION_PATTERN = r"^(?:22|24)\.[0-9]+\.[0-9]+(?:[-+][0-9A-Za-z.-]+)?$"
 SEMVER_PATTERN = r"^[0-9]+\.[0-9]+\.[0-9]+(?:[-+][0-9A-Za-z.-]+)?$"
+TASK_ID_PATTERN_V2 = (
+    r"^(?:[A-Za-z0-9][A-Za-z0-9._-]*|@[A-Za-z0-9][A-Za-z0-9._-]*/"
+    r"[A-Za-z0-9][A-Za-z0-9._-]*)$"
+)
 
 
 class V2RecordModel(BaseModel):
@@ -236,7 +240,7 @@ class TaskMetadataV2(V2RecordModel):
 class DeclarativeTaskSourceV2(V2RecordModel):
     """Human-maintained v2 task definition loaded from ``task.toml``."""
 
-    task_id: str = Field(pattern=r"^[A-Za-z0-9][A-Za-z0-9._-]*$")
+    task_id: str = Field(pattern=TASK_ID_PATTERN_V2)
     version: str = "2.0.0"
     instruction: str = "instruction.md"
     metadata: TaskMetadataV2 = Field(default_factory=TaskMetadataV2)
@@ -262,7 +266,7 @@ class DeclarativeTaskSourceV2(V2RecordModel):
 class TaskRefV2(V2RecordModel):
     """Stable reference to a v2 canonical task manifest."""
 
-    task_id: str = Field(pattern=r"^[A-Za-z0-9][A-Za-z0-9._-]*$")
+    task_id: str = Field(pattern=TASK_ID_PATTERN_V2)
     version: str
     manifest_digest: Annotated[str, Field(pattern=r"^sha256:[0-9a-f]{64}$")]
     manifest_uri: str
@@ -271,7 +275,7 @@ class TaskRefV2(V2RecordModel):
 class TaskManifestV2(V2RecordModel):
     """Canonical Node task record produced by the additive catalog path."""
 
-    task_id: str = Field(pattern=r"^[A-Za-z0-9][A-Za-z0-9._-]*$")
+    task_id: str = Field(pattern=TASK_ID_PATTERN_V2)
     version: str = "2.0.0"
     metadata: TaskMetadataV2 = Field(default_factory=TaskMetadataV2)
     instruction: ArtifactRef

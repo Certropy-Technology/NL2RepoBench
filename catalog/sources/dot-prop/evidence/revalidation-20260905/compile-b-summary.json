@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "task_id": "dot-prop",
+  "stage": "production-compile",
+  "attempt": "b",
+  "status": "passed",
+  "source_digest": "sha256:1aefd87929070ef049a70fdfa1d690c6a917216b0795fea648d9c2f80a6f26ab",
+  "toolchain": "toolchain.node.lock.toml",
+  "harbor_version": "0.21.0",
+  "artifact_root": ".nl2repo/artifacts",
+  "allow_private": true,
+  "allow_incomplete": false,
+  "bundle_file_sha256": "sha256:e671070552754f4bc0abc3fdbe15849ade455acb821008aaac47b7b66ae17101",
+  "canonical_manifest_digest": "sha256:40189e9c0156c7c1ef07afb258d3da61df1718d2f9907816af42031f36831707",
+  "file_count": 78,
+  "controls": ["empty.sh", "stub.sh", "forgery.sh", "hang.sh", "offline.sh"],
+  "command": "uv run nl2repo harbor compile catalog/sources/dot-prop --output .nl2repo/dot-prop-revalidation-compile-b --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+  "exit_code": 0,
+  "network": "no-network",
+  "byte_identical_to": "compile-a-summary.json"
+}

@@ -8,7 +8,7 @@ RUN python -m pip install --no-cache-dir --require-hashes \
   -r /tmp/requirements.lock.txt
 
 COPY candidate-requirements.lock.txt /tmp/candidate-requirements.lock.txt
-RUN python -m pip install   --no-cache-dir   --index-url https://pypi.org/simple   --prefix /opt/candidate-dependencies   --require-hashes   -r /tmp/candidate-requirements.lock.txt   && ln -s /opt/candidate-dependencies/lib/python3.12/site-packages     /opt/candidate-dependencies/site
+RUN python -m pip install   --no-cache-dir   --ignore-installed   --index-url https://pypi.org/simple   --prefix /opt/candidate-dependencies   --require-hashes   -r /tmp/candidate-requirements.lock.txt   && ln -s /opt/candidate-dependencies/lib/python3.12/site-packages     /opt/candidate-dependencies/site
 
 COPY runtime/nl2repobench /usr/local/lib/python3.12/site-packages/nl2repobench
 COPY command-plan.json /tests/command-plan.json

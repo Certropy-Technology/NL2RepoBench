@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "task_id": "cross-fetch",
+  "check": "private-cas-availability",
+  "artifact_root": ".nl2repo/artifacts",
+  "artifacts": [
+    {"kind": "npm-dependency-bundle", "digest": "sha256:3c8a0a42e0c0f0cbaa4f0ee1146bd6f211682c488e12a0fee9f718d44838a087", "size_bytes": 338439, "present": true, "sha256_verified": true},
+    {"kind": "commands", "digest": "sha256:551f5567cb1596b32239491e0f1cf9266ffc012730b50e096a9e632b23f9b57d", "size_bytes": 256, "present": true, "sha256_verified": true},
+    {"kind": "test-bundle", "digest": "sha256:6b5338759538dab13741e061900c81f89a2929d37599497aa5616e9e2ce9b285", "size_bytes": 2709, "present": true, "sha256_verified": true},
+    {"kind": "oracle-bundle", "digest": "sha256:fcd0d99646f0e2f19395ab23673035d37c9e8b87913b3df37fa64c61eb4e18e9", "size_bytes": 1487, "present": true, "sha256_verified": true}
+  ],
+  "run_ids": [],
+  "raw_receipt_hashes": []
+}

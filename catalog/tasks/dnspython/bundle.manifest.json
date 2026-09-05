@@ -1,15 +1,25 @@
 {
-  "canonical_manifest_digest": "sha256:a888752e0539106adce983876cecec9bcbc28cb3bb2e50cafb639e36b049fc35",
+  "canonical_manifest_digest": "sha256:566277b31374f5995354e318d888b7e6f565a9145c7ae423a411e1d54e27a043",
   "files": [
     {
       "path": "README.md",
-      "sha256": "8846985dac99e0563c15912391f1556dc0a32bec595c9b22ef0ec74699c0f881",
+      "sha256": "8e5de78f7cf862e4942ffb60cddbf2472fdded706cd92cfd26a4f39c4f37b2d9",
       "size_bytes": 514
+    },
+    {
+      "path": "controls/empty.sh",
+      "sha256": "97548131648305c900379442c20af11c469dce852cf59ffc877ecc1c82cbb4a7",
+      "size_bytes": 99
     },
     {
       "path": "controls/forgery.sh",
       "sha256": "570a524b94d5b44319081a6eb705b077a404a7a9f2756d116f48f700ea118631",
       "size_bytes": 591
+    },
+    {
+      "path": "controls/offline.sh",
+      "sha256": "e4c7b9cccb448f07152173267dfb4d480fb925cb239827934bdf6521021f20ac",
+      "size_bytes": 481
     },
     {
       "path": "controls/stub.sh",
@@ -28,8 +38,8 @@
     },
     {
       "path": "instruction.md",
-      "sha256": "c334e8da4249f8ccc5c2d061dc422b8e7dbe220ecee8d0aa665dc6b8f6c1df3e",
-      "size_bytes": 8117
+      "sha256": "953776dd685f2781c576bba94b2dc7e05066b9ad1f32d3b64547520ce5ffa116",
+      "size_bytes": 9888
     },
     {
       "path": "solution/solve.sh",
@@ -43,13 +53,13 @@
     },
     {
       "path": "task.toml",
-      "sha256": "e5147d4d4fcec1dc087bf1471e186edb04952db65f59235648b45406844958f6",
+      "sha256": "6f95a9169ec72442ffd9e3dcdc7f40fa000b3bce39baba8dfaf1e4d99f5621f7",
       "size_bytes": 1301
     },
     {
       "path": "tests/Dockerfile",
-      "sha256": "a8012b9637fa99562d4ffcdb7e1bffff01ec6b874e01fe75fa2bd69af87ae53d",
-      "size_bytes": 1198
+      "sha256": "e7b1568fc6ec39cbb80c53f695f1dbda72e7a6c4af58e529df380d5966c7c1b7",
+      "size_bytes": 1219
     },
     {
       "path": "tests/candidate-requirements.lock.txt",
@@ -138,8 +148,8 @@
     },
     {
       "path": "tests/runtime/nl2repobench/verification/candidate_runner.py",
-      "sha256": "3b57b77d2097535362432f4b60353e2f58b181d5e34adde55ff0f3949492b55e",
-      "size_bytes": 9672
+      "sha256": "46503bbbba1fc6812358606e3b94278d02473c3caf53511da04b0dd9479a95ca",
+      "size_bytes": 9675
     },
     {
       "path": "tests/runtime/nl2repobench/verification/cli.py",

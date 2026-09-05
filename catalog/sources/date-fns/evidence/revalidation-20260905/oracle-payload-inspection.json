@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "task_id": "date-fns",
+  "oracle_bundle_digest": "sha256:addcaac3664c5db6ea8d205b2feb5d30e4dff6808dd404025c369a971d9c956e",
+  "oracle_bundle_contents": ["build.mjs", "solve.sh"],
+  "solve_script_revision": "a0a39220522ed1228445792c768ed887709aea5f",
+  "solve_script_source_digest": "sha256:636db05bafd090414a7d3f6d72aa8f50a4e9afdd0624f86c92f46a3084be170d",
+  "runtime_source_fetch": true,
+  "runtime_fetch_kind": "git fetch from github.com",
+  "network_authorization": "none",
+  "revalidation_decision": "blocked",
+  "reason": "The Oracle payload cannot execute under the required NoNetwork policy and contains no local frozen source archive."
+}

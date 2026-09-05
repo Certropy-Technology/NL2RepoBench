@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "task_id": "css-tree",
+  "artifact_digest": "sha256:88cd55254a577f2cec7641465478f2e0f31e1ce0d048a3e1afebf554faf7d27c",
+  "declared_size_bytes": 150371,
+  "observed_size_bytes": 150371,
+  "artifact_sha256_verified": true,
+  "solver_entrypoint": "solution/solve.sh",
+  "fetch_entrypoint": "solution/fetch-source.mjs",
+  "fetch_url": "https://codeload.github.com/csstree/csstree/tar.gz/88e3d965c0b1628642a30a841745b410d6835052",
+  "runtime_network_operation": "node:https.get",
+  "revalidation_result": "blocked-before-run",
+  "reason": "The frozen Oracle solver fetches the source archive at runtime, which violates the assigned NoNetwork contract."
+}

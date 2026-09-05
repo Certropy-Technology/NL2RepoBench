@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "task_id": "dataclasses-json",
+  "artifact_digest": "sha256:22f864a7aedfeb65a887ad3bab0ce612f51e386007ed327bf9eafb8b666f6a78",
+  "artifact_size_bytes": 10240,
+  "artifact_sha256_verified": true,
+  "solve_script_sha256": "sha256:e9ce25dd7b0b9a7418c8e362c5ad65fc26b6eeb6f19e96d1ad8c8bc8009b34d5",
+  "source_revision": "dc63902eeb5e1c5ce1ea4e078c50e0eb9bc1a541",
+  "source_archive_sha256": "sha256:113c90da5957f13cc49f80d535cde965e66850f72559498a9ebfd934c4db449f",
+  "network_fetch_detected": true,
+  "network_fetch": "git -C \"$SOURCE_DIR\" fetch --depth 1 origin \"$UPSTREAM_REVISION\" from https://github.com/lidatong/dataclasses-json.git",
+  "runtime_execution": "not run",
+  "reason": "The current hash-verified Oracle payload requires a GitHub fetch at runtime, which violates the task no-network contract."
+}

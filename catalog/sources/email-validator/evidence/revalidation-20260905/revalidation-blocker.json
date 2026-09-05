@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0",
+  "task_id": "email-validator",
+  "terminal_kind": "pending-revalidation",
+  "source_digest": "sha256:101661beb1249f38b1fa643d27146a4f26e26077d5e9352b875ba8bed89ace5e",
+  "upstream_archive_digest": "sha256:6645b1719e7183f35d0ec20900e67391d0a3c2d570f442957203d64758609801",
+  "network_policy": "no-network",
+  "harbor_version": "0.21.0",
+  "run_ids": [],
+  "raw_receipt_hashes": [],
+  "compile": {
+    "attempts": 2,
+    "exit_codes": [0, 0],
+    "byte_identical": true,
+    "canonical_manifest_digest": "sha256:b5175bbe14b282da28bb921ae4c457b4bdd68e80bf3bfa1583447cde152499bb",
+    "bundle_manifest": "catalog/sources/email-validator/evidence/revalidation-20260905/bundle-manifest.json",
+    "bundle_manifest_sha256": "sha256:827de16b7821670198fedc4d1e6fa59ce4e877beeef67c2f284b5c1c34865978"
+  },
+  "oracle": {
+    "status": "not-run",
+    "payload_sha256": "sha256:f5576dbabd237dd03b4ae43c888b7514f6efcc1b512e9ce41f80028fc9f3b764",
+    "solve_sha256": "sha256:ba318eeaf8f8a1ec8742f7ebddabba9559a367ec6e5f7afd7867aef7662bb780",
+    "reason": "The payload contains only solve.sh, which executes git fetch against the upstream source host at runtime."
+  },
+  "controls": {
+    "status": "not-run",
+    "required_matrix": ["empty", "stub", "forgery", "offline"],
+    "reason": "Controls were not run against a stale or network-fetching Oracle payload."
+  },
+  "remediation": "Register an offline local Oracle payload containing the exact frozen source archive, verify its archive digest, compile again, and run the complete NoNetwork Oracle/control matrix. Keep the lifecycle and historical production evidence unchanged until then."
+}

@@ -1,0 +1,56 @@
+{
+  "schema_version": "1.0",
+  "task_id": "dataclasses-json",
+  "revalidation_date": "2026-09-05",
+  "terminal_kind": "revalidation-blocked",
+  "expected_source_digest": "sha256:ffdfada24b0013c56bd5480f558758b35aeeba5927cd2cf0e4c5e7041f9ea5c5",
+  "prior_lifecycle": "controls-passed",
+  "lifecycle_changed": false,
+  "historical_production_evidence_changed": false,
+  "failure_class": "verifier",
+  "blocker": "The hash-verified private Oracle bundle's solve.sh performs a runtime git fetch from GitHub before copying the frozen source. No-network execution forbids that fetch, so the Oracle and all dependent revalidation controls were not run.",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/lidatong/dataclasses-json",
+    "revision": "dc63902eeb5e1c5ce1ea4e078c50e0eb9bc1a541",
+    "source_digest": "sha256:113c90da5957f13cc49f80d535cde965e66850f72559498a9ebfd934c4db449f",
+    "license_spdx": "MIT"
+  },
+  "artifacts": {
+    "dependency_lock": {"digest": "sha256:bbeec4fd66ac676902fce0d2563c4802804066a7ab8c5417e6e0d1403080fffd", "size_bytes": 1374, "sha256_verified": true},
+    "verifier_bundle": {"digest": "sha256:ee682297dbc6981c04a84dabebdf313c915450ca2a0b85bf9f2c5e8310e01153", "size_bytes": 10240, "sha256_verified": true},
+    "oracle_bundle": {"digest": "sha256:22f864a7aedfeb65a887ad3bab0ce612f51e386007ed327bf9eafb8b666f6a78", "size_bytes": 10240, "sha256_verified": true}
+  },
+  "compile": {
+    "attempts": 2,
+    "byte_identical": true,
+    "canonical_manifest_digest": "sha256:420d9df622be8e03c76288a95c4663b08e81424d0e01a0338408cc3fad8c4bbc",
+    "bundle_manifest_sha256": "sha256:24c28210e9d23294f7a5ecb966589d7a202d8eebd794c2f445bfa50ecfacf6a6",
+    "bundle_file_count": 58,
+    "summaries": [
+      "catalog/sources/dataclasses-json/evidence/revalidation-20260905/compile-a-summary.json",
+      "catalog/sources/dataclasses-json/evidence/revalidation-20260905/compile-b-summary.json"
+    ]
+  },
+  "oracle_bundle_summary": "catalog/sources/dataclasses-json/evidence/revalidation-20260905/oracle-bundle-summary.json",
+  "commands": [
+    {"command": "uv run nl2repo task validate-source catalog/sources/dataclasses-json", "tool_version": "nl2repo current checkout", "exit_code": 0, "log": "catalog/sources/dataclasses-json/evidence/revalidation-20260905/source-validation.log", "log_sha256": "sha256:9ecec7a437dc3230e1ad357a0c98e15ced29760d20bfedcbdad52c26bb6a9f53"},
+    {"command": "uv run python scripts/validate_instruction_quality.py", "tool_version": "CPython 3.12.11 via uv", "exit_code": 0, "log": "catalog/sources/dataclasses-json/evidence/revalidation-20260905/instruction-quality.log", "log_sha256": "sha256:08a365cc4463a729f6a37271d7691f4e90c2e49828c44d1c7011ba4b0fdc7f75"},
+    {"command": "uv run nl2repo task lint-network --tasks-root catalog/sources", "tool_version": "nl2repo current checkout", "exit_code": 0, "log": "catalog/sources/dataclasses-json/evidence/revalidation-20260905/network-lint.log", "log_sha256": "sha256:7e63c35c76cd058243472273b5ae99050157ce57276eacf560935db32b62998f"},
+    {"command": "uv run nl2repo harbor compile catalog/sources/dataclasses-json --output .nl2repo/dataclasses-json-revalidation-compile-a --toolchain toolchain.lock.toml --artifact-root <parent-private-CAS> --allow-private", "tool_version": "Harbor compiler current checkout", "exit_code": 0, "log": "catalog/sources/dataclasses-json/evidence/revalidation-20260905/compile-a.log", "log_sha256": "sha256:3b458dd3a1724e76639fd6a412c20ff65f1d1d8d018fe2095fef55c7467c0d63"},
+    {"command": "uv run nl2repo harbor compile catalog/sources/dataclasses-json --output .nl2repo/dataclasses-json-revalidation-compile-b --toolchain toolchain.lock.toml --artifact-root <parent-private-CAS> --allow-private", "tool_version": "Harbor compiler current checkout", "exit_code": 0, "log": "catalog/sources/dataclasses-json/evidence/revalidation-20260905/compile-b.log", "log_sha256": "sha256:be3ee2cab85ef48560c27346df4cab215eeca1776c8be669ae3b73e072d2467f"},
+    {"command": "inspect verified private Oracle tar before Harbor execution", "tool_version": "Python 3.12.11 tarfile and hashlib", "exit_code": 0, "log": "catalog/sources/dataclasses-json/evidence/revalidation-20260905/oracle-inspection.log", "log_sha256": "sha256:21b4448a9742a1ea247ba69f24195bd7cc50482d79942ee589738b96957635fb"}
+  ],
+  "gates": {
+    "source_validation": "passed",
+    "instruction_quality": "passed",
+    "source_network_lint": "passed; zero dataclasses-json findings and zero errors",
+    "compile": "passed",
+    "oracle_no_network": "blocked-before-run",
+    "empty": "not-run",
+    "stub": "not-run",
+    "forgery": "not-run",
+    "offline": "not-run"
+  },
+  "next_step": "Replace the Oracle bundle with a local, revision- and source-digest-verified payload whose solve.sh performs no runtime source fetch, then recompile and run the complete NoNetwork Oracle/control matrix."
+}

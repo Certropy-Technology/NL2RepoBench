@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "task_id": "editables",
+  "attempt": "compile-b",
+  "command": "uv run nl2repo harbor compile catalog/sources/editables --output /tmp/editables-revalidation-compile-b --toolchain toolchain.lock.toml --artifact-root <parent-private-CAS> --allow-private",
+  "toolchain": "toolchain.lock.toml",
+  "harbor": "0.21.0",
+  "exit_code": 0,
+  "output_tree": "editables",
+  "bundle_manifest_sha256": "sha256:3e70d585851d33dc1e1aa5118771608b36c5c138d91a4e1f7e30651667dfee0a",
+  "canonical_manifest_digest": "sha256:c95504502c58e52b7b6844401e7666b9a35a0cf1e1ad374987b80e8139a0ed9d",
+  "file_count": 57
+}

@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "task_id": "dnspython",
+  "catalog_source_digest": "sha256:8f5e8eaf9a8199bed19a031ac05062fe8aeae3aa499546f49406e2779165c2bd",
+  "canonical_manifest_digest": "sha256:566277b31374f5995354e318d888b7e6f565a9145c7ae423a411e1d54e27a043",
+  "raw_bundle_manifest_sha256": "sha256:aa3a2bc297ca3fe8be2afc466169fc7d50943480b4b2762b29dec5c092550f60",
+  "controls": ["empty.sh", "stub.sh", "forgery.sh", "offline.sh"],
+  "file_count": 60,
+  "deterministic_second_compile": true,
+  "toolchain": "toolchain.lock.toml",
+  "harbor": "0.21.0"
+}
