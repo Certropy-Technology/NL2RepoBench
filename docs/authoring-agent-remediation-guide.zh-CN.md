@@ -121,6 +121,31 @@ Oracle bundle 完成前必须解包自检，而不是只核对外层 tar digest�
 版本时，使用该revision公开规格中冻结的版本配置 `fallback_version`，不要在运行时恢复
 git metadata 或访问上游。
 
+### NoNetwork blocker 的本地恢复优先级
+
+发现旧 Oracle `solve.sh` 使用 GitHub、codeload、PyPI、npm、Go proxy 或 DNS 时，不要
+把“记录 blocker”当成默认终点。Worker 应按以下顺序在完全断网条件下修复：
+
+1. 检查当前私有 Oracle bundle 是否已经包含 `source.tar`、`oracle-package/` 或其他
+   可安装 payload；验证内部 bytes、revision、archive digest 和 source-freeze evidence
+   一致。
+2. 检索本题已有的 task-local evidence、历史 handoff、authoring archive 和已授权本地
+   CAS；只接受能与声明 digest/size 严格匹配的文件，不按文件名或目录名猜测。
+3. Worker 不写共享 CAS，但可以在自己的 ignored worktree 中构造 replacement private
+   bundle，并在 handoff 中返回绝对临时路径、外层 digest、内部 inventory、每个文件
+   digest 和建议的 `task.toml` 变更。公开 source 中只保留不含 payload bytes 的提案和
+   remediation evidence。
+4. Parent 串行复核 replacement bundle、注册 CAS、更新 artifact ref、重新计算 source
+   digest，双重 compile，并对新 final manifest 重跑 Oracle 和完整 controls。
+5. 只有本地可信来源中不存在匹配 bytes、payload 无法关联冻结 revision，或当前 adapter
+   无法忠实承载行为时，才记录 truthful artifact/verifier blocker。
+
+缺失 CAS artifact 也采用相同原则：先查找可信本地备份与 handoff，再 blocked。禁止
+为了通过门禁重新联网下载、授权 source host、复用旧 receipt、降低分母或把 artifact
+故障改写成模型失败。每个大规模 repair/revalidation wave 仍使用恰好 16 个隔离 worker，
+每题一个 writer；Worker 必须同时复核并维护
+`docs/instruction-authoring-standard.zh-CN.md` 要求的公开 Instruction 结构。
+
 ### Deterministic expectations
 
 Verifier 不得把 `set`、`frozenset`、hash map 或其他未承诺顺序的容器直接转成 list 后
