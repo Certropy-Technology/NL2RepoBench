@@ -154,6 +154,11 @@ def build_plan(
             break
     batch_id = batch_id or f"{language}-author-{datetime.now(UTC).strftime('%Y%m%dT%H%M%SZ')}"
     tasks = []
+    worker_guidance = (
+        "docs/java-maven-task-authoring-guide.zh-CN.md"
+        if language == "java"
+        else "docs/authoring-agent-remediation-guide.zh-CN.md"
+    )
     for record in selected:
         candidate_id = str(record.get("candidate_id") or record.get("package"))
         remediation_reasons = _remediation_reasons(record)
@@ -167,7 +172,7 @@ def build_plan(
                 "source_digest": record.get("source_digest"),
                 "stages": list(STAGES),
                 "remediation_policy": REMEDIATION_POLICY,
-                "worker_guidance": "docs/authoring-agent-remediation-guide.zh-CN.md",
+                "worker_guidance": worker_guidance,
                 "worker_boundary": f"catalog/sources/{record['package']}/** only",
                 "remediation_required": bool(remediation_reasons),
                 "remediation_reasons": remediation_reasons,
@@ -217,7 +222,7 @@ def build_plan(
         "status": "planned",
         "risk_policy": "allow-risk" if allow_risk else "remediate-before-gate",
         "remediation_policy": REMEDIATION_POLICY,
-        "worker_guidance": "docs/authoring-agent-remediation-guide.zh-CN.md",
+        "worker_guidance": worker_guidance,
         "agent_run_loop": "separate downstream consumer; not executed by this plan",
     }
 

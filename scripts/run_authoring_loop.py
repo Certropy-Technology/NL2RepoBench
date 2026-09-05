@@ -271,6 +271,11 @@ def _agent_prompt(
     allow_internal_subagent: bool,
 ) -> str:
     package = task["package"]
+    language_guidance = (
+        f"- {worktree / 'docs/java-maven-task-authoring-guide.zh-CN.md'}\n"
+        if plan["language"] == "java"
+        else ""
+    )
     subagent_guidance = (
         "You may use subagent only for bounded read-only probes or independent analysis; "
         "the Loop still owns task concurrency and you remain the sole writer."
@@ -290,6 +295,7 @@ Read these files first:
 - {worktree / ".nl2repo/authoring-claim.json"}
 - {brief_path}
 - {worktree / "docs/authoring-agent-remediation-guide.zh-CN.md"}
+{language_guidance}
 
 Your package is {package!r}, language is {plan["language"]!r}, and your only
 authoring source target is catalog/sources/{package}/ plus task-local private
