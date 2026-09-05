@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "task_id": "eslint",
+  "artifact_check": "passed",
+  "artifacts": [
+    {"name": "dependency_bundle", "digest": "sha256:1da1b847f34dc599a15227303a513ce9f8f1141879b03784d5862b1d12760573", "size_bytes": 11806720, "present": true},
+    {"name": "commands_bundle", "digest": "sha256:5dfd03f3f2b3b9277e32bdbb3b3f39f0d228aca278d0686ae823352640634c1e", "size_bytes": 10240, "present": true},
+    {"name": "test_bundle", "digest": "sha256:924a6b6366e3a63f56c4d3e2fa5e3cc209bcd2098492072221974e87765bd073", "size_bytes": 20480, "present": true},
+    {"name": "oracle_bundle", "digest": "sha256:8737925e27ba190fa20dc3cfa4ec19bc014e638ee65a7197cdeac03c0bfdfc87", "size_bytes": 40960, "present": true}
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "task_id": "fast-string-width",
+  "artifact_digest": "sha256:c7b8ef4bb8fe687ada3c71537b7ff9f617fbac64104c381391d9e54aa8c8d05b",
+  "artifact_size_bytes": 10240,
+  "artifact_sha256_verified": true,
+  "members": ["oracle-package-lock.json", "solve.sh"],
+  "solve_script_sha256": "sha256:2e2bc636f490c91541aee6cc88625f619400713d82afe8e2c640a7fc76853014",
+  "source_revision": "f49e7b7662906e0028a68a16b5358500b2f3152d",
+  "source_digest": "sha256:352c8745134753593e770f0ffd8cb6e6ff2ef7f516b11ae56059f43e27d30698",
+  "network_fetch_detected": true,
+  "network_fetch": "git fetch --depth=1 origin f49e7b7662906e0028a68a16b5358500b2f3152d from https://github.com/fabiospampinato/fast-string-width",
+  "runtime_execution": "not run",
+  "reason": "The Oracle payload fetches the pinned source from GitHub at runtime, violating the required NoNetwork contract."
+}

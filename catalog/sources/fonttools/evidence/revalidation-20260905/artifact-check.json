@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "task_id": "fonttools",
+  "artifact_root": "private CAS",
+  "artifacts": [
+    {
+      "role": "dependencies.lock_artifact",
+      "digest": "sha256:7c331718b77eb1c0ff026e6512f5767a486d0ceb7ee99bc1159f55cb5f3a7861",
+      "size_bytes": 3654,
+      "observed_size_bytes": 3654,
+      "digest_verified": true
+    },
+    {
+      "role": "verifier.bundle",
+      "digest": "sha256:ead33af9b7228551170d691933f39a9aa146afa1e07be5137deec106c927bdc1",
+      "size_bytes": 20480,
+      "observed_size_bytes": 20480,
+      "digest_verified": true
+    },
+    {
+      "role": "oracle_bundle",
+      "digest": "sha256:9662cc24bf31908462722c478afac87da804f2c0456b55eb7de126bb198893c3",
+      "size_bytes": 10240,
+      "observed_size_bytes": 10240,
+      "digest_verified": true
+    }
+  ]
+}

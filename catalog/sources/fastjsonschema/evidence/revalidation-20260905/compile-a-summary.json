@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "task_id": "fastjsonschema",
+  "command": "uv run nl2repo harbor compile catalog/sources/fastjsonschema --output <private-run-root> --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+  "exit_code": 0,
+  "mode": "production",
+  "file_count": 272,
+  "canonical_manifest_digest": "sha256:0d34c32fca54b8ab6475b4e27829466fe5901451e8631709d43af915d475b0e1",
+  "raw_manifest_sha256": "sha256:ce0d01f7b5a30a69595662da341a94b4fb2ef934569be074be77bb5124546a1c",
+  "source_digest": "sha256:dec3464a533c404b8e3a348ebb386c9c0c6a8c62cbc356a09aab833397fd40ff"
+}

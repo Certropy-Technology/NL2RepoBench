@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0",
+  "task_id": "fonttools",
+  "oracle_bundle_digest": "sha256:9662cc24bf31908462722c478afac87da804f2c0456b55eb7de126bb198893c3",
+  "bundle_member_count": 1,
+  "bundle_members": [
+    {
+      "path": "solve.sh",
+      "size_bytes": 1212,
+      "sha256": "sha256:0e7c198e0cbaddec98317c4655f842508d46612a16f8af303ad65327c0aea515"
+    }
+  ],
+  "source_revision": "e7e00f1b16aef6ede850206df3c100ccde27b2d3",
+  "source_archive_sha256": "sha256:2c7719e06724e5f34b4677eb4e7a5cb17a9cdee1225f829b2881b097d61d666c",
+  "runtime_network_operations": ["git init", "git remote add", "git fetch", "git checkout"],
+  "runtime_source_host": "github.com",
+  "inspection_result": "blocked-by-no-network-policy",
+  "oracle_run": "not-run",
+  "controls_run": "not-run"
+}

@@ -1,0 +1,10 @@
+{
+  "schema_version": "1.0",
+  "task_id": "figures",
+  "source_digest": "sha256:c0893a6cfd5482159f6f576df9f3f0250d18132c799ce75c40c8dc8a91435dad",
+  "command": "uv run nl2repo harbor compile catalog/sources/figures --output <fresh-output-a> --toolchain toolchain.node.lock.toml --artifact-root <parent-private-CAS> --allow-private",
+  "exit_code": 0,
+  "manifest_file_sha256": "sha256:4ec7e2e9d3ad5ab6297438c484248f9f643d5a1a61ab2c2ab6a2d8a6341e60bb",
+  "canonical_manifest_digest": "sha256:84a91c6da5290bd1958a6edc820894ac900c14c0059a11d0db3b336dccf1c809",
+  "manifest_file_count": 86
+}

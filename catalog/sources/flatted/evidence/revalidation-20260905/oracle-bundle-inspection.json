@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "task_id": "flatted",
+  "oracle_artifact_digest": "sha256:f33902a997285622fa7db94a835017d776403b784fc2ee1829d8205ee201ece8",
+  "oracle_artifact_size_bytes": 10240,
+  "members": ["solve.sh"],
+  "solve_sha256": "sha256:415361c0637f15f6d8a540574853537a6b8f97328036e105b8d8b2b34723ee8c",
+  "pinned_revision": "e6f5ca700c4ca8104a6a83472c8219e267bd5e84",
+  "pinned_source_archive_sha256": "sha256:e784adfcfef6c281d5700256dc1762b704eb11943cad7a46c18029c1a9e04c2a",
+  "runtime_source_fetch": {"host": "github.com", "operations": ["git clone", "git fetch"], "forbidden": true},
+  "oracle_run": "not-run"
+}

@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "task_id": "fonttools",
+  "compile": "b",
+  "command": "uv run nl2repo harbor compile catalog/sources/fonttools --output <local-revalidation-output> --toolchain toolchain.lock.toml --artifact-root <private-CAS> --allow-private",
+  "exit_code": 0,
+  "manifest_raw_sha256": "sha256:3251979b68e4c1accf023677081d60603654a7dd36e058aa580c8e84a6b76743",
+  "canonical_manifest_digest": "sha256:924a947ef56828ee50aac66583fd38d8d00072c0ac056ffabc8e7b8295c245a6",
+  "file_count": 58,
+  "source_digest": "sha256:4fd2c0687dfcd23765652337a92adbb40ed8e7ac1dc9e747ff0d1d6020e3b1b1",
+  "byte_identical_to": "compile-a-summary.json"
+}

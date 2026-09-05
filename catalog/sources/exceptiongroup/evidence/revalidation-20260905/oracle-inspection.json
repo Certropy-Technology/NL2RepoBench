@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "task_id": "exceptiongroup",
+  "artifact": "artifact://private/sha256:beb286855eb8bdb41c23cb1303920f856b6d6448660a2d9aad5463ac48025779",
+  "artifact_sha256": "sha256:beb286855eb8bdb41c23cb1303920f856b6d6448660a2d9aad5463ac48025779",
+  "members": [
+    {"path": "solve.sh", "sha256": "sha256:e6bd303eff55ebdca86e56148eb058d13bf826af08d5173f1df54750e3f2e60e", "size_bytes": 1537}
+  ],
+  "runtime_source_fetch": "git clone https://github.com/agronholm/exceptiongroup",
+  "revision_assertion": "0c6cfbf677f6b50df17311cfdad01e9ff17310aa",
+  "archive_digest_assertion": "sha256:70913d01619162478935e3cf3a56721e85375e4f535928aa59f1273e7572e3bd",
+  "no_network_result": "blocked-before-run",
+  "reason": "Oracle payload requires a runtime GitHub fetch, forbidden by the revalidation NoNetwork contract."
+}

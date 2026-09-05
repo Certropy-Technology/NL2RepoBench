@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "task_id": "fast-string-truncated-width",
+  "compile": "a",
+  "command": "uv run nl2repo harbor compile catalog/sources/fast-string-truncated-width --output .nl2repo/revalidation-20260905-compile-a --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+  "exit_code": 0,
+  "raw_manifest_sha256": "sha256:ddac5aea76abdc4fcb21491da7e1c34d79ca6b2affe8eba95cd7280cb62fa725",
+  "canonical_manifest_digest": "sha256:c02a823ce86386d58346c7410c333b4083e78e09c1157b3e1a57c77956ccfc9e",
+  "file_count": 86,
+  "mode": "production",
+  "harbor": "0.21.0",
+  "toolchain": "toolchain.node.lock.toml"
+}

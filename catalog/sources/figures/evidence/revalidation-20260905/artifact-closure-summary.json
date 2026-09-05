@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "task_id": "figures",
+  "source_digest": "sha256:c0893a6cfd5482159f6f576df9f3f0250d18132c799ce75c40c8dc8a91435dad",
+  "artifact_store": "parent private CAS",
+  "artifacts": [
+    {"role": "dependency", "digest": "sha256:1cdce374091ed7c2da8a08d31e3db22747693308e6b138505e26dacbf75c7173", "size_bytes": 12062, "sha256_verified": true},
+    {"role": "commands", "digest": "sha256:cab621dcaf7260f80d7c66f04c60ed005c26aa2b0a374856ead7c4cd08bf995e", "size_bytes": 236, "sha256_verified": true},
+    {"role": "tests", "digest": "sha256:6b7303a7bc9da39c009efc675b85e389310e96df18dc3632aa288898b09e17eb", "size_bytes": 1844, "sha256_verified": true},
+    {"role": "oracle", "digest": "sha256:c9fb351b1c4c85e576f4acae322aa7b66f5db1a3f33a6aa39f116ed8168f3ee4", "size_bytes": 1165, "sha256_verified": true}
+  ],
+  "all_declared_artifacts_verified": true
+}

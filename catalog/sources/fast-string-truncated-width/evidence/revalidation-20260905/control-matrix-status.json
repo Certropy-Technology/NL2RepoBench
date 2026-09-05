@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "task_id": "fast-string-truncated-width",
+  "status": "blocked-before-run",
+  "expected_total": 39,
+  "controls": {
+    "empty": "not-run",
+    "stub": "not-run",
+    "forgery": "not-run",
+    "hang": "not-run",
+    "install-script": "not-run",
+    "loader-hook": "not-run",
+    "oversized-output": "not-run",
+    "offline": "not-run"
+  },
+  "reason": "Controls consume the same production bundle but no complete matrix was run after the NoNetwork Oracle inspection blocker.",
+  "remediation": "Register a local immutable Oracle payload, compile twice, then run Oracle and every control with no runtime network authorization."
+}

@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "task_id": "eslint",
+  "status": "blocked-before-harbor-run",
+  "denominator": 20,
+  "oracle": "not-run",
+  "controls": {
+    "empty": "not-run",
+    "stub": "not-run",
+    "forgery": "not-run",
+    "offline": "not-run"
+  },
+  "reason": "The frozen Oracle solve script requires runtime codeload access, so no Oracle or control run can satisfy the mandatory no-network policy.",
+  "lifecycle_unchanged": true
+}

@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "task_id": "eslint",
+  "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+  "exit_code": 0,
+  "tasks_scanned": 480,
+  "global_error_count": 0,
+  "target_findings": [],
+  "runtime_network_policy": "no-network",
+  "oracle_authorizations_granted": []
+}

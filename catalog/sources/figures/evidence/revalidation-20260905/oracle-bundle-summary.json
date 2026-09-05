@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "task_id": "figures",
+  "artifact_digest": "sha256:c9fb351b1c4c85e576f4acae322aa7b66f5db1a3f33a6aa39f116ed8168f3ee4",
+  "artifact_size_bytes": 1165,
+  "members": [
+    {"path": "solve.sh", "size_bytes": 1404, "sha256": "sha256:77ca3a4e1bf9a194397f9403d86471b8ae6a77ab0297138b45596b04ef9aaa0f"},
+    {"path": "package-lock.json", "size_bytes": 783, "sha256": "sha256:0c065441e3d89cb11333322355b1ab2a2293b8cad797db525508940456e5b625"}
+  ],
+  "network_access_detected": true,
+  "network_operation": "git fetch --quiet --no-tags --depth=1 origin 3da3d1713e9a09dbfcfc99eac86af8f4377597b6",
+  "network_host": "github.com",
+  "inspection_result": "blocked-before-run",
+  "run_id": null,
+  "raw_receipt_hashes": []
+}

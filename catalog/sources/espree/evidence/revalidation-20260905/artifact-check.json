@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "task_id": "espree",
+  "check": "private-cas-availability",
+  "artifact_root": ".nl2repo/artifacts",
+  "artifacts": [
+    {"kind": "npm-dependency-bundle", "digest": "sha256:124f8b7f93d42eb9e501d8133a3d38b3f8c9e747fc4a5d445764ce416b1fb808", "size_bytes": 757760, "present": true, "sha256_verified": true},
+    {"kind": "commands", "digest": "sha256:19ea8e39b98d06e97fe75abd413c576218cb3ef452e47c5378b5f3b426f2f389", "size_bytes": 10240, "present": true, "sha256_verified": true},
+    {"kind": "test-bundle", "digest": "sha256:2d797f79cfb983d20fe93f8d2fce484466a40f0e7dec7111ab505e56b950ec81", "size_bytes": 20480, "present": true, "sha256_verified": true},
+    {"kind": "oracle-bundle", "digest": "sha256:96668915feb309c788da5933f368c7d619db7ef0d3a5e4e41012e08b19b2bdc4", "size_bytes": 10240, "present": true, "sha256_verified": true}
+  ],
+  "run_ids": [],
+  "raw_receipt_hashes": []
+}

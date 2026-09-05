@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "task_id": "es-to-primitive",
+  "artifact_digest": "sha256:2baa630953d8f9411021a7c5ef57a2f93c3e16586a076f00d3ac4ce9eaa79783",
+  "artifact_size_bytes": 20480,
+  "run_id": null,
+  "harbor_run": "not-run",
+  "source_revision": "f33dccb3a8950f4abc67f43bec81f776da9cdf13",
+  "source_archive_sha256": "sha256:ed5eecf6d29ef3e59e0ef91694d2e4a5814af572b238e1c1df278189560d44bf",
+  "payload_entries": ["./package-lock.json", "./solve.sh"],
+  "forbidden_runtime_operations": [
+    "git remote add origin https://github.com/ljharb/es-to-primitive",
+    "git fetch -q --depth=1 origin f33dccb3a8950f4abc67f43bec81f776da9cdf13"
+  ],
+  "network_policy_result": "blocked-before-run",
+  "raw_receipt_hashes": [],
+  "reason": "The Oracle materializer fetches the frozen source from github.com at runtime. No host authorization was supplied and no Oracle/control run was started."
+}

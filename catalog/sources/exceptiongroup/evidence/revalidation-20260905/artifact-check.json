@@ -1,0 +1,10 @@
+{
+  "schema_version": "1.0",
+  "task_id": "exceptiongroup",
+  "status": "passed",
+  "artifacts": [
+    {"kind": "lock", "uri": "artifact://private/sha256:2c72a304c9e815bf0f280369ec62ed342fed5872cc810c999fc606aba1fa8f33", "size_bytes": 1330, "sha256": "sha256:2c72a304c9e815bf0f280369ec62ed342fed5872cc810c999fc606aba1fa8f33"},
+    {"kind": "verifier", "uri": "artifact://private/sha256:2753e3495ef38c4bc928596760201ca170a2d9bae1acfd5982ebe7a15a60e0b2", "size_bytes": 30720, "sha256": "sha256:2753e3495ef38c4bc928596760201ca170a2d9bae1acfd5982ebe7a15a60e0b2"},
+    {"kind": "oracle", "uri": "artifact://private/sha256:beb286855eb8bdb41c23cb1303920f856b6d6448660a2d9aad5463ac48025779", "size_bytes": 10240, "sha256": "sha256:beb286855eb8bdb41c23cb1303920f856b6d6448660a2d9aad5463ac48025779"}
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "task_id": "es-to-primitive",
+  "check": "private-cas-availability",
+  "artifact_root": ".nl2repo/artifacts",
+  "artifacts": [
+    {"kind": "npm-dependency-bundle", "digest": "sha256:7992ea519f7fce4d9d71c308c7c5b6e245c6f753a85c2cff9d839462418ee454", "size_bytes": 962560, "present": true, "sha256_verified": true},
+    {"kind": "commands", "digest": "sha256:10e70a89b271a2cd71d8dbaa6848530c6550ac4d87e65ae87d7332265e5eedd9", "size_bytes": 10240, "present": true, "sha256_verified": true},
+    {"kind": "test-bundle", "digest": "sha256:ebdf99ae719ca7b12506da173db24d7415a419afbdc0de44fa3542f4c2dd8654", "size_bytes": 20480, "present": true, "sha256_verified": true},
+    {"kind": "oracle-bundle", "digest": "sha256:2baa630953d8f9411021a7c5ef57a2f93c3e16586a076f00d3ac4ce9eaa79783", "size_bytes": 20480, "present": true, "sha256_verified": true}
+  ],
+  "run_ids": [],
+  "raw_receipt_hashes": []
+}

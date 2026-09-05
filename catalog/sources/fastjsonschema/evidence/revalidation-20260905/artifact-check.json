@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0",
+  "task_id": "fastjsonschema",
+  "source_digest": "sha256:dec3464a533c404b8e3a348ebb386c9c0c6a8c62cbc356a09aab833397fd40ff",
+  "checked_artifacts": [
+    {
+      "kind": "dependency-lock",
+      "digest": "sha256:7bfb46ca04ea5cd56d55954030b3fbafb1f8ccba3580c01048d13df94a32bb01",
+      "size_bytes": 377,
+      "cas_verified": true
+    },
+    {
+      "kind": "verifier-bundle",
+      "digest": "sha256:03355c1dca9c063d8e5b55be9dbeeb0dfdbac6d1f734f71dc91235c64fa70608",
+      "size_bytes": 860160,
+      "cas_verified": true
+    },
+    {
+      "kind": "oracle-bundle",
+      "digest": "sha256:21ac1473fd0093f61613e6d6f545beacc845c6fd779d692cc4d338a01bab7afd",
+      "size_bytes": 10240,
+      "cas_verified": true
+    }
+  ],
+  "cas_root": "private CAS under .nl2repo/artifacts (not persisted as a path reference)"
+}

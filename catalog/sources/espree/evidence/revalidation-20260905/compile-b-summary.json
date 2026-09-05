@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "task_id": "espree",
+  "command": "uv run nl2repo harbor compile catalog/sources/espree --output .nl2repo/revalidate-espree-20260905-compile-b --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+  "exit_code": 0,
+  "allow_incomplete": false,
+  "file_count": 102,
+  "manifest_sha256": "sha256:3163ec40c61b95578fa65c9b2394919ae5cd50c757f5fe7717380cc70baef42e",
+  "canonical_manifest_digest": "sha256:101826bb580f2c1b755a69bc3aa129eae8fec1e065eac9f68ca8e685e98acb32",
+  "byte_identical_to_compile_a": true
+}

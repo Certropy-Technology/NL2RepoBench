@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "task_id": "fast-string-truncated-width",
+  "artifact_digest": "sha256:2988312115f70e5f8b7adb941b18eaa55bff738964057cf0edf9d7006ae595da",
+  "artifact_size_bytes": 10240,
+  "members": ["solve.sh", "prepare-build.mjs", "finalize-package.mjs", "package-lock.build.json"],
+  "solve_script_size_bytes": 1591,
+  "solve_script_sha256": "sha256:58ef8157b438498dde7f835d992127aaccbfafa48af2ae7a3bfb8a1010a45d67",
+  "source_revision": "1d50ce0c1497c1399eed50f87926817587049358",
+  "source_archive_sha256": "sha256:910a980a127ca70626d2bc0dbe673601e7c65c8778548cd1c3f94472c59c2f79",
+  "network_violation": {
+    "operation": "git fetch -q --depth 1 origin 1d50ce0c1497c1399eed50f87926817587049358",
+    "host": "github.com",
+    "url": "https://github.com/fabiospampinato/fast-string-truncated-width",
+    "source_digest_check_after_fetch": "sha256:910a980a127ca70626d2bc0dbe673601e7c65c8778548cd1c3f94472c59c2f79"
+  },
+  "inspection": "The hash-valid Oracle payload fetches the frozen source from github.com during solve.sh execution before materializing /workspace."
+}

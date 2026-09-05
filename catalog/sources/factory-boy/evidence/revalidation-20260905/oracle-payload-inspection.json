@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "task_id": "factory-boy",
+  "oracle_bundle_sha256": "sha256:59e66008af475f70b1681c2e1ff6d0410472df63a517ce2da3789b58a71e8506",
+  "payload_sha256": "sha256:a8ecac61316e06d8446843f3719845f4ded29a314efdd8312b32778eb53c9cf5",
+  "status": "blocked",
+  "network_policy": "no-network",
+  "forbidden_runtime_operations": ["git clone https://github.com/FactoryBoy/factory_boy", "git fetch --no-tags origin ae9f2f4650afef0bc9b0925de97f618603233ff8"],
+  "reason": "The private Oracle solve.sh obtains the reference source from github.com during the Harbor run instead of using a local immutable payload.",
+  "oracle_and_controls_run": false
+}

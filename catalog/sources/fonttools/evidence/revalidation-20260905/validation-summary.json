@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "task_id": "fonttools",
+  "source_validation": {"command": "uv run nl2repo task validate-source catalog/sources/fonttools", "exit_code": 0, "source_digest": "sha256:4fd2c0687dfcd23765652337a92adbb40ed8e7ac1dc9e747ff0d1d6020e3b1b1"},
+  "instruction_quality": {"command": "uv run python scripts/validate_instruction_quality.py", "exit_code": 0},
+  "network_lint": {"command": "uv run nl2repo task lint-network --tasks-root catalog/sources", "exit_code": 0, "tasks_scanned": 480, "task_errors": 0, "task_findings": 0},
+  "syntax": {"shell_controls": "passed", "toml_parse": "passed", "json_parse": "passed"},
+  "diff_check": "passed",
+  "oracle_and_controls": "not-run: Oracle payload performs forbidden runtime source fetch",
+  "lifecycle": "unchanged",
+  "historical_production_evidence": "unchanged"
+}

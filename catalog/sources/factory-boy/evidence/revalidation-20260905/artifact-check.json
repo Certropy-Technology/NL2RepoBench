@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "task_id": "factory-boy",
+  "status": "passed",
+  "artifacts": {
+    "dependency_lock": {"digest": "sha256:2b8c9dcc9de8a352ac4f40a43befccbe84ffc5b0339ef4db27528e740b05b40d", "size_bytes": 1737},
+    "verifier_bundle": {"digest": "sha256:d9831f55f49d9803f779fc0522ad950b565f685465b73d930aaf4fc6c22e0578", "size_bytes": 20480, "members": [{"path": "run.py", "size_bytes": 11463, "sha256": "sha256:5b671df047e837a747e09897666a7b8e294e0e6d84c0dc35177bc0b73964bbc3"}]},
+    "oracle_bundle": {"digest": "sha256:59e66008af475f70b1681c2e1ff6d0410472df63a517ce2da3789b58a71e8506", "size_bytes": 10240, "members": [{"path": "solve.sh", "size_bytes": 1329, "sha256": "sha256:a8ecac61316e06d8446843f3719845f4ded29a314efdd8312b32778eb53c9cf5"}]}
+  },
+  "all_declared_cas_objects_present_and_hash_verified": true
+}

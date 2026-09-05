@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "task_id": "eslint",
+  "oracle_bundle_digest": "sha256:8737925e27ba190fa20dc3cfa4ec19bc014e638ee65a7197cdeac03c0bfdfc87",
+  "oracle_bundle_size_bytes": 40960,
+  "members": [
+    {"path": "oracle-package-lock.json", "sha256": "sha256:e07bc5d14297a8685d442cad3ecdd0fb3c226e311b52523edc7633c87a09a8f2"},
+    {"path": "solve.sh", "sha256": "sha256:e341c9d201248da5738531a2c10d7acf41d0fd4466b7f7d6f076045401a6b100"}
+  ],
+  "revision": "c27bc926e496985eb7911c09eb60914b2e4b5d0f",
+  "source_archive_sha256": "sha256:a02160c6f87fa83ba6082361d085ea32d5937dd2063bb6735b8d649d04b03ca0",
+  "runtime_fetch": {
+    "detected": true,
+    "method": "node:https.get",
+    "url_host": "codeload.github.com",
+    "url_path": "/eslint/eslint/tar.gz/<pinned revision>",
+    "source_digest_check_after_fetch": true
+  },
+  "revalidation_decision": "blocked-before-harbor-run",
+  "network_authorization": []
+}

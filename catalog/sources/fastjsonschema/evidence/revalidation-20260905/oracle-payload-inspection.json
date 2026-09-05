@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "task_id": "fastjsonschema",
+  "artifact_digest": "sha256:21ac1473fd0093f61613e6d6f545beacc845c6fd779d692cc4d338a01bab7afd",
+  "artifact_size_bytes": 10240,
+  "members": [
+    {
+      "path": "solve.sh",
+      "size_bytes": 883,
+      "sha256": "sha256:b2a42008384180c9aad05191ee2e0315841ae16418adc2609ddb81d6de6d5978",
+      "runtime_network_hosts": ["github.com"],
+      "runtime_network_operation": "git fetch"
+    }
+  ],
+  "pinned_revision": "b88fa37cd46bb81e8d9dce91a7e1bc4debedd3a2",
+  "declared_source_archive_sha256": "sha256:c6d2c4ec7d81009b52c35430082ab13a29a32a92e323e64ffff1d6f304ca717d",
+  "no_network_compatible": false,
+  "oracle_run_id": null
+}

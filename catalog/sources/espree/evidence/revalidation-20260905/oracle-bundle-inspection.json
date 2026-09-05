@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "task_id": "espree",
+  "artifact_digest": "sha256:96668915feb309c788da5933f368c7d619db7ef0d3a5e4e41012e08b19b2bdc4",
+  "artifact_size_bytes": 10240,
+  "members": ["solve.sh"],
+  "solve_sha256": "sha256:1b248bdd4359debd96c6fc39e97efa6b4638a546af2e5446b76d2750d9bbeebd",
+  "revision": "8173ecfeb7473bff90d1da11b1347082f47e262e",
+  "source_digest": "sha256:bc2f79fda450ef344b0696f374d492f95fee28b74254abbc1584440fd9739ac4",
+  "runtime_source_fetch": {
+    "repository": "https://github.com/eslint/js",
+    "operation": "git fetch --depth=1 origin <revision>",
+    "host": "github.com",
+    "detected": true
+  },
+  "oracle_run_started": false,
+  "host_authorization_granted": false
+}
