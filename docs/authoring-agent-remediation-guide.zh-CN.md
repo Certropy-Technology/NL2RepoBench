@@ -140,10 +140,13 @@ git metadata 或访问上游。
 5. 只有本地可信来源中不存在匹配 bytes、payload 无法关联冻结 revision，或当前 adapter
    无法忠实承载行为时，才记录 truthful artifact/verifier blocker。
 
-缺失 CAS artifact 也采用相同原则：先查找可信本地备份与 handoff，再 blocked。禁止
+缺失 CAS artifact 也采用相同原则：先查找可信本地备份与 handoff，再 blocked。恢复题的
+revalidation wave 在 Docker、磁盘、CPU 和限流允许时可以扩展到最多 32 个隔离 worker；
+新题 authoring wave 仍使用恰好 16 个 worker。禁止
 为了通过门禁重新联网下载、授权 source host、复用旧 receipt、降低分母或把 artifact
-故障改写成模型失败。每个大规模 repair/revalidation wave 仍使用恰好 16 个隔离 worker，
-每题一个 writer；Worker 必须同时复核并维护
+故障改写成模型失败。每个大规模 repair/revalidation wave 可按资源使用最多 32 个隔离
+worker；新题 authoring wave 仍使用恰好 16 个worker。无论并发数如何变化，每题一个
+writer；Worker 必须同时复核并维护
 `docs/instruction-authoring-standard.zh-CN.md` 要求的公开 Instruction 结构。
 
 ### Deterministic expectations

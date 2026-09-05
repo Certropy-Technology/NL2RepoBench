@@ -74,6 +74,10 @@ runtime/package-manager identity；未知组合必须 fail closed。Python bundl
   统一报告和发布索引由父 agent 串行集成。
 - worker 只能修改自己负责的 `catalog/sources/<task-id>/` 和必要的对应 generated
   runtime；父 agent 复核 source、runtime、evidence、hash 和门禁后再提交。
+- 恢复/revalidation wave 在 Docker、磁盘、CPU 和 provider 限流允许时可扩展到最多 32 个
+  隔离 worker；新题 authoring wave 仍默认使用恰好 16 个 worker。无论并发数如何变化，
+  同一 task 只能有一个 writer，CAS、projection、dataset、merge 和 push 仍由父 agent
+  串行执行。
 - 不修改与任务无关的用户 dirty worktree。不要使用 `git reset --hard`、
   `git checkout --`、批量删除或 force-push。
 - 发生镜像、Docker、网络、API、磁盘或 Harbor 调度故障时，分类为
