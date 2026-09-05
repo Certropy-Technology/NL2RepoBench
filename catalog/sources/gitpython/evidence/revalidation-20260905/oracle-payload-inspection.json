@@ -1,0 +1,14 @@
+{
+  "task_id": "gitpython",
+  "oracle_artifact_digest": "sha256:6a90a2b12a0a98503ccc8dcea2ee07f81962230b536fd7fb8a5c5711147943ec",
+  "members": ["solve.sh"],
+  "solve_sha256": "sha256:01fdfef444bf8726a12a9a82f3eabb021ead515c757ff2ab0037c86c523d33c3",
+  "solve_size_bytes": 990,
+  "runtime_network_operations": [
+    "git clone https://github.com/gitpython-developers/GitPython",
+    "git fetch origin <frozen-revision>"
+  ],
+  "classification": "network-fetching-oracle",
+  "harbor_runs_started": false,
+  "reason": "Oracle source restoration requires runtime access to github.com, forbidden by the revalidation NoNetwork contract."
+}

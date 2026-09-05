@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-backoff",
+  "source_digest": "sha256:3b1dc67d0ae75011132c29f9cd74f1a88532ee245de474be6bc3f33f22edb918",
+  "checked_at": "2026-09-05",
+  "artifact_root": "parent-local CAS",
+  "artifacts": [
+    {
+      "kind": "oracle",
+      "digest": "sha256:4c07c256f0413b2b21455de4fbbb73582a43638d73b4c6e7facf679cb319187d",
+      "size_bytes": 609,
+      "sha256_verified": true
+    },
+    {
+      "kind": "module_bundle",
+      "digest": "sha256:2bfcba113ddb1d3849a3e59d425747e95f49ea0d52a309d162fb96ca5b695f86",
+      "size_bytes": 469,
+      "sha256_verified": true
+    },
+    {
+      "kind": "verifier",
+      "digest": "sha256:647b22046f6bc976663b83dac74a624ee302bc4b5086876ed964227313d23d74",
+      "size_bytes": 1038,
+      "sha256_verified": true
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "task_id": "ghapi",
+  "source_digest": "sha256:cfbe67bf7dac8a1134293a75ccef6f1df920d8fd56c33cfaf279debe4ef2ee5e",
+  "checked_artifacts": [
+    {"kind": "dependency-lock", "digest": "sha256:e307326db7e70468d4be4c68ad3d76707a887dbb71e1dd5d9c2388520d8def68", "size_bytes": 3326, "cas_verified": true},
+    {"kind": "verifier-bundle", "digest": "sha256:5377e8e6eef79f931a6ca76e64a91355a7024c6c4033dd4f90d5bffb5aeef021", "size_bytes": 20480, "cas_verified": true},
+    {"kind": "oracle-bundle", "digest": "sha256:f5c49e739eb6e6d64470a600aedca804a79c7388bc2057d4735af92464e131a7", "size_bytes": 10240, "cas_verified": true}
+  ],
+  "cas_root": "private CAS verified offline; no filesystem path retained"
+}

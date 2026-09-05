@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "task_id": "furl",
+  "controls": {
+    "empty": {"status": "not-run"},
+    "stub": {"status": "not-run"},
+    "forgery": {"status": "not-run"},
+    "offline": {"status": "not-run"}
+  },
+  "reason": "The current Oracle payload is not runnable under NoNetwork; no control receipts are fabricated or reused.",
+  "lifecycle_preserved": true,
+  "production_evidence_preserved": true
+}

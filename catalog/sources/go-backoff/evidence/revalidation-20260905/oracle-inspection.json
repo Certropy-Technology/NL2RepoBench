@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-backoff",
+  "oracle_artifact_sha256": "sha256:4c07c256f0413b2b21455de4fbbb73582a43638d73b4c6e7facf679cb319187d",
+  "payload_files": ["solve.sh"],
+  "source_revision_asserted": "ffcfd8ab39e2910a1180ba0b7a02a52f0485adc9",
+  "source_archive_digest_asserted": "sha256:2cb02d3324fb2aaa1c02d0d348427bc2e5b0e27bf2b8402b30df4482adbd63ab",
+  "runtime_network_operation": "git fetch --depth 1 origin <revision>",
+  "runtime_network_host": "github.com",
+  "no_network_compatible": false,
+  "inspection_result": "blocked-before-harbor"
+}

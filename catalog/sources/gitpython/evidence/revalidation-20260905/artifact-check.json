@@ -1,0 +1,25 @@
+{
+  "task_id": "gitpython",
+  "revalidation_date": "2026-09-05",
+  "source_digest": "sha256:b4a4979c5e53fa9603ed95ccd4689b33c5bfe032f02bac97b65751144916e253",
+  "artifacts": [
+    {
+      "role": "lock",
+      "digest": "sha256:d55a081480947517cb2d5e2699af5450462c3607e8d05fa04e6d4d3d6524940d",
+      "size_bytes": 796,
+      "status": "present-and-matching"
+    },
+    {
+      "role": "verifier",
+      "digest": "sha256:18d22a99ca201dab306bcdda9b8e440adfe352c000b5ce67fe6dffa10a737aae",
+      "size_bytes": 20480,
+      "status": "present-and-matching"
+    },
+    {
+      "role": "oracle",
+      "digest": "sha256:6a90a2b12a0a98503ccc8dcea2ee07f81962230b536fd7fb8a5c5711147943ec",
+      "size_bytes": 10240,
+      "status": "present-and-matching"
+    }
+  ]
+}

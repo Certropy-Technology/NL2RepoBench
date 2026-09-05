@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-backoff",
+  "attempt": "b",
+  "command": "uv run nl2repo harbor compile catalog/sources/go-backoff --output <local-output> --toolchain toolchain.go.lock.toml --artifact-root <parent-local-artifacts> --allow-private",
+  "exit_code": 0,
+  "file_count": 68,
+  "bundle_manifest_sha256": "sha256:bd826a647af7a4d13e4fc1d9b449ebb911e8199cdd412a03c5818e6dfcf59c75",
+  "canonical_manifest_digest": "sha256:f07fc5461a01300cfe64958b9691f1d7f6cf6f80e98a7c45ac01e0771ad939d5",
+  "byte_identity_checked": true
+}

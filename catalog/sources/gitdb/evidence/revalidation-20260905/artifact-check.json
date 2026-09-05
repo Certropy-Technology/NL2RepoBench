@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "task_id": "gitdb",
+  "catalog_source_digest": "sha256:1977d32ee88490b2e11f88395e5250689434d8e47bbd2bc7808431f0e066d72a",
+  "artifacts": [
+    {"kind": "lock", "digest": "sha256:00715ac5bf2a20051b68e61d9da975ef60c7a89f4cd0e57b7ee775dd1ca8c48f", "size_bytes": 372, "present_and_verified": true},
+    {"kind": "verifier", "digest": "sha256:4605a78afda663f8bdf69934bd89c40aaefd87e7d923436f00dd7269da5bb367", "size_bytes": 61440, "present_and_verified": true},
+    {"kind": "oracle", "digest": "sha256:9729ed00ffedf0c454764a00a72f79be84054850e0589015c2ad75738caa3f8c", "size_bytes": 686080, "present_and_verified": true}
+  ],
+  "checked_against": "parent integration private CAS (local authoring input)",
+  "durable_evidence_note": "The CAS path above is authoring input only and is not referenced by production evidence."
+}

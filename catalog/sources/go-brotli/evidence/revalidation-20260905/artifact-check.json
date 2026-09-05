@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-brotli",
+  "source_digest": "sha256:1e4eb80c0f603305e7d2d2d0499df3729ceec7bdd8ea30f5d34c8c1b2e1e1048",
+  "private_artifacts": [
+    {"kind": "module-bundle", "size_bytes": 3718, "sha256": "sha256:4854de7af87eefab85cc787f0a852a6025d78048adb5416d8e7810162cbd2073", "status": "verified"},
+    {"kind": "verifier-bundle", "size_bytes": 3183, "sha256": "sha256:9d2390fba59c73bebfe20107d5231377df6ff4ad046333cd55aac6d6b982ec27", "status": "verified"},
+    {"kind": "oracle-bundle", "size_bytes": 846, "sha256": "sha256:96e61ce9c9fdbce9baef135a7c85f3d026909253397dabf103c2a5c0e3700c08", "status": "verified"}
+  ],
+  "toolchain": {"go": "1.26.5", "harbor": "0.21.0", "platform": "linux/amd64", "cgo_enabled": false},
+  "status": "passed"
+}

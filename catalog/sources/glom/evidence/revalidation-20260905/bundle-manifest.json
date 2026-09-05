@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "task_id": "glom",
+  "source_digest": "sha256:07bd788ae0b2414b93a1e73bfaab8211a2708441707e496cecc53835992fb0bd",
+  "compile_a": {
+    "manifest_sha256": "sha256:24eaf39ccf07414de3ec894b4dde4ce12eee02f4110aff0b896879a8c7ee197d",
+    "canonical_manifest_digest": "sha256:af80300d83ff3b17fbe243e82ddb2a7b8ff0ac065c01f43d0158cc2a33979cd6",
+    "file_count": 60
+  },
+  "compile_b": {
+    "manifest_sha256": "sha256:24eaf39ccf07414de3ec894b4dde4ce12eee02f4110aff0b896879a8c7ee197d",
+    "canonical_manifest_digest": "sha256:af80300d83ff3b17fbe243e82ddb2a7b8ff0ac065c01f43d0158cc2a33979cd6",
+    "file_count": 60
+  },
+  "byte_identical": true,
+  "controls": ["empty", "forgery", "stub"],
+  "offline_proof": "Every final Oracle/control verifier network receipt reported public_network_available=false."
+}

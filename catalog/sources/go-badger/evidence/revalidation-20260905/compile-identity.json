@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-badger",
+  "source_digest": "sha256:7143cc6ace710f6d42f9cdb23b8f75936ed7b2ff359bd13a218f7bc57b3591b0",
+  "attempts": ["a", "b"],
+  "byte_identical": true,
+  "file_count": 2017,
+  "manifest_sha256": "sha256:a08b225f1cede3029d70f6aa180caf763a0d48d9bae25db95db47b8ab3fa1906",
+  "canonical_manifest_digest": "sha256:72315e45a147e88d34ad21f7f8f26b0fc4c754f75d58946c98214b03b8e8f981",
+  "toolchain": "toolchain.go.lock.toml",
+  "harbor_version": "0.21.0"
+}

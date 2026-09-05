@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "task_id": "fs-extra",
+  "checked_at": "2026-09-05T07:53:17Z",
+  "source_digest": "sha256:9acb6908c3940b637ef5bdd066da1a94f5c3e9ae0e471d50dee2876935ef7059",
+  "private_artifacts": [
+    {"kind": "dependency", "digest": "sha256:bda5ce68643d2bc32988b956a2512aaae5e293c993fada81a7dd7d2efbf30883", "size_bytes": 266240, "present": true, "sha256_matches": true},
+    {"kind": "commands", "digest": "sha256:f72ad603b8f0f137239afa956847655e61af493c71eb1f03e0c96bae180fd35d", "size_bytes": 10240, "present": true, "sha256_matches": true},
+    {"kind": "tests", "digest": "sha256:b026568d9e81557c7767c39e0757ed9376a57624a5fe89894bd4589c3b4e3887", "size_bytes": 40960, "present": true, "sha256_matches": true},
+    {"kind": "oracle", "digest": "sha256:76e8c0d7eb1a715c3ffb6b648e6fca1ff8d9edcd1542e42e64cfef6e87034fb4", "size_bytes": 10240, "present": true, "sha256_matches": true}
+  ],
+  "all_artifacts_verified": true
+}

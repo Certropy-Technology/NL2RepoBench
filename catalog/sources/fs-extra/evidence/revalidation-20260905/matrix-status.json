@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "task_id": "fs-extra",
+  "status": "blocked-before-harbor",
+  "oracle": {"status": "not-run", "reason": "Oracle solve.sh fetches GitHub at runtime."},
+  "controls": {
+    "empty": "not-run",
+    "stub": "not-run",
+    "forgery": "not-run",
+    "offline": "not-run"
+  },
+  "expected_total": 50,
+  "receipts_created": false,
+  "historical_production_evidence_replaced": false
+}

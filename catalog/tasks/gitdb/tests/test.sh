@@ -5,6 +5,7 @@ mkdir -p /logs/verifier /tmp/trusted-results /tmp/candidate-site
 chmod 0700 /logs/verifier /tmp/trusted-results
 
 export NL2REPO_CANDIDATE_DEPENDENCIES=/opt/candidate-dependencies/site
+export NL2REPO_CANDIDATE_DEPENDENCY_BIN=/opt/candidate-dependencies/bin
 python -I -m nl2repobench.verification.network_check   --output /logs/verifier/network.json
 if [[ "$?" -ne 0 ]]; then
   python -I -m nl2repobench.verification.cli     --expected 16 --runtime python --metric-contract fixed-test-pass-rate-v1     --reason verifier-network-available

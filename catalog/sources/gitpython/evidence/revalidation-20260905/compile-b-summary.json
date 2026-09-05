@@ -1,0 +1,12 @@
+{
+  "task_id": "gitpython",
+  "compile": "b",
+  "command": "uv run nl2repo harbor compile catalog/sources/gitpython --output <compile-b> --toolchain toolchain.lock.toml --artifact-root <artifact-root> --allow-private",
+  "exit_code": 0,
+  "allow_incomplete": false,
+  "file_count": 59,
+  "bundle_manifest_sha256": "sha256:df46977287e8116a71dae9660b91dedfb936c88a431812c32dc0508f23ab77b3",
+  "canonical_manifest_digest": "sha256:5c90c18ca36cda2f4d0c6a3496ee4dd7c63c5708bfbc7c55304a79ef4c75e16e",
+  "byte_identical_to": "compile-a",
+  "harbor_version": "0.21.0"
+}

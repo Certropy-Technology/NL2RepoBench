@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-brotli",
+  "oracle_bundle_sha256": "sha256:96e61ce9c9fdbce9baef135a7c85f3d026909253397dabf103c2a5c0e3700c08",
+  "members": [{"path": "./solve.sh", "size_bytes": 1336, "sha256": "sha256:69a3e3ad02076e36a0077b0280a571e5e0815019e7b9f1e0246ba5dadfe3a24a"}],
+  "network_access_detected": true,
+  "network_host": "github.com",
+  "network_operation": "git fetch -q --depth 1 origin 6b8aef6ece266fa87b925ce3a913bc30dc4b7b70",
+  "source_archive_digest_check": "sha256:98f4e975d6de4ee7da812c21d147b57663e25e72a5e53db6673a1d5ffcaa14f8",
+  "inspection_result": "blocked-before-run"
+}

@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "task_id": "get-stream",
+  "oracle_artifact_digest": "sha256:d197ce113ec9136bd12ccb23c5203b0e7d7c3846780efa462a02f761d6870056",
+  "archive_members": ["solve.sh"],
+  "source_archive_digest_in_script": "sha256:85c68c24e1216863eb41e79754b10b50dcdbf94137b2f0b7821f802fd7ec2a06",
+  "fetch_revision": "cdbd77bebf332f28a2949613fc1534d8a7a04c95",
+  "runtime_source_fetch": true,
+  "fetch_hosts": ["github.com"],
+  "run_allowed": false,
+  "reason": "solve.sh invokes git fetch against github.com during the Oracle run; source-host authorization is forbidden by this revalidation NoNetwork contract."
+}

@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-brotli",
+  "source_digest": "sha256:1e4eb80c0f603305e7d2d2d0499df3729ceec7bdd8ea30f5d34c8c1b2e1e1048",
+  "status": "passed",
+  "file_count": 75,
+  "manifest_size_bytes": 14280,
+  "manifest_sha256": "sha256:afd00b6ee85a31a348b0869597c91508f29e9be0dbd1a470de6483f4cbeb9aea",
+  "canonical_manifest_digest": "sha256:8ebab398f14f44563d0ce66d6147787f374e058229d9716e8a6c83ec7f2ee5cc",
+  "toolchain": "toolchain.go.lock.toml",
+  "allow_private": true,
+  "allow_incomplete": false,
+  "byte_identical_to": "compile-a-summary.json"
+}

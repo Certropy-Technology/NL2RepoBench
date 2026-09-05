@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "task_id": "get-east-asian-width",
+  "expected_total": 26,
+  "controls": {
+    "empty": {"collected": 0, "passed": 0, "reward": 0.0, "failure_class": "candidate-installation-failed", "grading_sha256": "sha256:9b884cbcee28892d6eb2ebf6afa565a04c139efbaaa0d699fe545c70da911b63", "network_sha256": "sha256:f71248a809b68bd459fe27f58f684b76d50441c7860e00d12a552449098586d8"},
+    "stub": {"collected": 26, "passed": 5, "reward": 0.19230769230769232, "grading_sha256": "sha256:06c67bdf7c37135c5e4fd095ed2c62667a450ec1dcacedf92c2dd91b1de81af", "network_sha256": "sha256:0aae6d51439b7a2c43a306adb1bb049c4c322269aed84b851dcd57d23e2640b5"},
+    "forgery": {"collected": 26, "passed": 5, "reward": 0.19230769230769232, "verifier_owned_reward": true, "grading_sha256": "sha256:06c67bdf7c37135c5e4fd095ed2c62667a450ec1dcacedf92c2dd91b1de81af", "network_sha256": "sha256:aed9fbcb71ec65a633711bc99ce614dba56e730cfe95c4b3472a8e12a84191a0"},
+    "offline": {"collected": 26, "passed": 4, "reward": 0.15384615384615385, "public_network_available": false, "grading_sha256": "sha256:08099f7473f49b3949c90ada6d6e82ecf927ff401a456738a1f082d170a5837a", "network_sha256": "sha256:0afdbb9d22a64870cae36a8aa23aa4f3649d7825101713a97f429616d8e761d7"},
+    "install-script": {"collected": 0, "passed": 0, "reward": 0.0, "failure_class": "candidate-installation-failed", "grading_sha256": "sha256:9b884cbcee28892d6eb2ebf6afa565a04c139efbaaa0d699fe545c70da911b63", "network_sha256": "sha256:3b8f9341456ad8400a61b5dbc6ea2c6dd3e02f4f701669f2db62ebe0df19c324"},
+    "loader-hook": {"collected": 26, "passed": 5, "reward": 0.19230769230769232, "grading_sha256": "sha256:06c67bdf7c37135c5e4fd095ed2c62667a450ec1dcacedf92c2dd91b1de81af", "network_sha256": "sha256:3b8f9341456ad8400a61b5dbc6ea2c6dd3e02f4f701669f2db62ebe0df19c324"},
+    "hang": {"collected": 26, "passed": 2, "reward": 0.07692307692307693, "grading_sha256": "sha256:1f0547efd737ebbeb0cdb4cc30edbace8498b4b52b404feb5606a4278b6e04c8", "network_sha256": "sha256:0aae6d51439b7a2c43a306adb1bb049c4c322269aed84b851dcd57d23e2640b5"}
+  }
+}

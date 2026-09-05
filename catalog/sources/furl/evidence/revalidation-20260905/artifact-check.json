@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "task_id": "furl",
+  "source_digest": "sha256:11dfb073771de0ecf9117808aa37282afff150be2ba809f15e01f9802b21a197",
+  "instruction_digest": "sha256:f5e2e3638f23791bfd3d8dac33493bcd9480a5f0ca4351fdbb2a8dcec8dd6404",
+  "artifacts": [
+    {"kind": "lock", "digest": "sha256:a6169993cc695b56153692317828c9ba72ee1921820111d473db5344e48a76c0", "size_bytes": 2043, "present": true, "verified": true},
+    {"kind": "verifier", "digest": "sha256:5dc032d4002cfa310a7eaff0dab5104e6521ae3628bdb4533d33a52c4ce436c2", "size_bytes": 122880, "present": true, "verified": true},
+    {"kind": "oracle", "digest": "sha256:9c6e5c9b4e350ef1529901765c1fdbd39af9a4c9cf5decba878a736230ad10fe", "size_bytes": 10240, "present": true, "verified": true}
+  ],
+  "result": "all declared private artifacts were present with matching size and SHA-256"
+}

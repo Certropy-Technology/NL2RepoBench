@@ -27,6 +27,48 @@ external services after installation.
 - Deterministic local behavior only. Do not use subprocesses, network calls,
   mutable environment state, or random values in the implementation.
 
+## Natural Language Instruction
+
+Create the installable `glom` package from an empty workspace. Implement the
+root exports and all evaluation, specification, matching, mutation, iteration,
+registration, and exception behavior listed in the API guide.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+└── glom/
+    ├── __init__.py
+    ├── core.py
+    ├── matching.py
+    ├── streaming.py
+    ├── mutation.py
+    └── glommer.py
+```
+
+The modules above represent the public import surface; internal organization
+may vary while preserving every documented import and root re-export. Do not
+include verifier or hidden-test files.
+
+## Examples
+
+```python
+from glom import glom
+glom({'name': 'Ada'}, 'name')
+```
+
+```python
+from glom import T, Spec
+glom({'user': {'name': 'Ada'}}, Spec({'name': ('user', T)}))
+```
+
+## Error Handling and Boundary Conditions
+
+Preserve missing-path, default, `SKIP`/`STOP`, matching failure, mutation,
+iterator exhaustion, callable, and registration error contracts. Evaluation is
+deterministic, bounded, and offline; do not depend on time or network state.
+
 ## API Usage Guide
 
 ### Core evaluation

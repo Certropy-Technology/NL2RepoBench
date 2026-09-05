@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "task_id": "ghapi",
+  "oracle_artifact_digest": "sha256:f5c49e739eb6e6d64470a600aedca804a79c7388bc2057d4735af92464e131a7",
+  "oracle_artifact_size_bytes": 10240,
+  "members": ["solve.sh"],
+  "solve_sha256": "sha256:72ca6a5862b6ba69a9a1d9846632268388796da1f43ba1b62715936d47a892e1",
+  "pinned_revision": "7acab1fa0571968aff2bf6508a6f51c5334d7584",
+  "pinned_source_archive_sha256": "sha256:9f823d7704bf929b3afb8f772399dce2b240521bb7570b34c6c8bb893d0b2bf2",
+  "runtime_source_fetch": {"host": "github.com", "operations": ["git clone", "git fetch"], "forbidden": true},
+  "oracle_run": "not-run"
+}

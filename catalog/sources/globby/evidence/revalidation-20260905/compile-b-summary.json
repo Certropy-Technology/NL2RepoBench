@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "task_id": "globby",
+  "command": "uv run nl2repo harbor compile catalog/sources/globby --output <run-root> --artifact-root <private-artifact-root> --toolchain toolchain.node.lock.toml --allow-private",
+  "exit_code": 0,
+  "file_count": 257,
+  "manifest_sha256": "sha256:907b0f280b0b9ae076092b4a87e0b7c114c3d91cf446904f83465d5f7e907a61",
+  "canonical_manifest_digest": "sha256:8c0a9f5d7eca8f1422fae09d36c8b464c9d83fbd35553e837cdd78b9386e9510",
+  "byte_identity_with": "compile-a-summary.json",
+  "durability": "summary-only; compiled run tree retained outside source"
+}

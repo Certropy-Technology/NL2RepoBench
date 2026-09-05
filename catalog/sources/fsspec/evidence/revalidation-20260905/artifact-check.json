@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "task_id": "fsspec",
+  "source_digest": "sha256:a503c59e7e64983faeba87edcc25c924eeacfd44dbebb094d48313823fd9c012",
+  "artifact_root": ".nl2repo/artifacts",
+  "artifacts": [
+    {
+      "kind": "lock",
+      "digest": "sha256:742f447ef50010fc01803a0891b0caa66f1c78cea241b9120505a9f3a4382267",
+      "size_bytes": 2151,
+      "verified": true
+    },
+    {
+      "kind": "verifier",
+      "digest": "sha256:b80c8a565ee994a8f47d0bd5f2c9b49e19bc5a1c8d794e620ef86ce08eb64be5",
+      "size_bytes": 10240,
+      "verified": true
+    },
+    {
+      "kind": "oracle",
+      "digest": "sha256:7fdfbd6de69936e1d56fa35f75f73f0b01c1a29de795a26125530a7cdabb35c4",
+      "size_bytes": 10240,
+      "verified": true
+    }
+  ],
+  "result": "all declared private artifacts matched size and SHA-256"
+}

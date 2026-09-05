@@ -4,6 +4,7 @@
   "task_version": "0.1.0",
   "terminal_kind": "valid",
   "status": "controls-passed",
+  "catalog_source_digest": "sha256:1977d32ee88490b2e11f88395e5250689434d8e47bbd2bc7808431f0e066d72a",
   "source_freeze": {
     "status": "known",
     "upstream_url": "https://github.com/gitpython-developers/gitdb",
@@ -44,9 +45,10 @@
     "deterministic_verifier_leaves": 16
   },
   "compiled_bundle": {
-    "path": ".nl2repo/authoring-work/gitdb/compiled-final/gitdb/bundle.manifest.json",
-    "sha256": "sha256:a9c8cf69f445bc4fe405dfd0b76f0f8dc4893f2b52efeab4f80bb53ae725a826",
-    "canonical_manifest_digest": "sha256:e356d21b9bb11e17b15743753812272e52b3ed8717c2f461ee2343a5128227ae",
+    "path": "catalog/sources/gitdb/evidence/revalidation-20260905/bundle-manifest.json",
+    "sha256": "sha256:95eb49228791c14ee10e7c74ff36506a54a2ed1fe09cd4d6edef035bf9237b2f",
+    "raw_bundle_manifest_sha256": "sha256:c8af642c110f9b1ba512b3f077c226b0f30ce49b8a0e0c6102b79026f5736d44",
+    "canonical_manifest_digest": "sha256:e5ea31bce8465ec4749b295ad8de7f41eb0719f66eb89ef47312de766314b9f4",
     "mode": "production",
     "schema_version": "1.0",
     "file_count": 63
@@ -61,20 +63,19 @@
     "boundary": "trusted runner invokes candidate-owned code through UID-isolated child processes and bounded JSON leaf reports"
   },
   "oracle": {
-    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/gitdb/compiled-final/gitdb -a oracle --job-name gitdb-oracle-final-20260828 -o .nl2repo/runs/gitdb-oracle-final-20260828 --n-concurrent 1 --yes",
+    "command": "uv run --frozen --project harbor-runner harbor run -p <fresh-compiled-gitdb-bundle> -a oracle --job-name gitdb-revalidation-final-oracle-20260906 -o <fresh-run-root> --n-concurrent 1 --yes",
     "exit_code": 0,
     "harbor_version": "0.21.0",
     "valid": true,
     "passed": 16,
     "total": 16,
     "reward": 1.0,
-    "grading": {
-      "path": ".nl2repo/runs/gitdb-oracle-final-20260828/gitdb-oracle-final-20260828/gitdb__ATi6zq4/verifier/grading.json",
-      "sha256": "sha256:10367925fabfd3047e44232277e248e7288651e04373c397291df6efeb098a5c"
-    },
+    "grading": {"path": "catalog/sources/gitdb/evidence/revalidation-20260905/oracle-grading.json", "sha256": "sha256:bba0eccfe1c5ebbce7d649a79ac1cc0a4e4795acafa09f81e6b123c7cc4f2196"},
+    "collection": {"path": "catalog/sources/gitdb/evidence/revalidation-20260905/oracle-collection.json", "sha256": "sha256:ff412931338540f08c4fb8e1f30bdbc6d745351c32933ab6f098804afd71d665"},
+    "result": {"path": "catalog/sources/gitdb/evidence/revalidation-20260905/oracle-result.json", "sha256": "sha256:fea20e9c186169d7349628cd63f8549a139eea2f6f69f285647b780dceb0a223"},
     "network": {
-      "path": ".nl2repo/runs/gitdb-oracle-final-20260828/gitdb-oracle-final-20260828/gitdb__ATi6zq4/verifier/network.json",
-      "sha256": "sha256:5f5f8355f56672fc239b9ddbc753035e1a7aa5bfa0a79903f678c4bfdab0c84e",
+      "path": "catalog/sources/gitdb/evidence/revalidation-20260905/oracle-network.json",
+      "sha256": "sha256:2f6f547a9b209f2074b700be20bf38516a9d733244464cddea1b45440b67f603",
       "public_network_available": false
     },
     "source_archive_check": "passed"
@@ -89,21 +90,24 @@
       "reward": 0.0,
       "failure_class": "model",
       "failure_reason": "candidate-installation-failed",
-      "grading": {"path": ".nl2repo/evidence/gitdb-final/empty-logs/verifier/grading.json", "sha256": "sha256:3725efe3bd17b437b0ab747a908bbb40b3bb485913a9451ddfb9348c3142ccf3"},
-      "network": {"path": ".nl2repo/evidence/gitdb-final/empty-logs/verifier/network.json", "sha256": "sha256:ba99be1bb2809f082562a8efeef101a27d94bedcdc687841aed2582a2c670070", "public_network_available": false}
+      "grading": {"path": "catalog/sources/gitdb/evidence/revalidation-20260905/empty-grading.json", "sha256": "sha256:f5f75cb9a605739e4f0c4ed52a462e81ffafe2a2d3cab874333246532a4af58a"},
+      "result": {"path": "catalog/sources/gitdb/evidence/revalidation-20260905/empty-result.json", "sha256": "sha256:2206bde2b1371ee6dabcd4904780de52bc1b1c2cd2449039f0bd86e6f237127f"},
+      "network": {"path": "catalog/sources/gitdb/evidence/revalidation-20260905/empty-network.json", "sha256": "sha256:152771c426b3e76504dc2981504f1f887104a4b2eee5ddaa0861888efc7ea547", "public_network_available": false}
     },
     "stub": {
-      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-controls/gitdb-final-v2/gitdb-stub -a oracle --job-name gitdb-stub-final-20260828 -o .nl2repo/runs/gitdb-stub-final-20260828 --n-concurrent 1 --yes",
+      "command": "uv run --frozen --project harbor-runner harbor run -p <fresh-stub-control-bundle> -a oracle --job-name gitdb-revalidation-final-stub-20260906 -o <fresh-run-root> --n-concurrent 1 --yes",
       "exit_code": 0,
       "valid": true,
       "passed": 0,
       "total": 16,
       "reward": 0.0,
-      "grading": {"path": ".nl2repo/runs/gitdb-stub-final-20260828/gitdb-stub-final-20260828/gitdb-stub__aSpy5Js/verifier/grading.json", "sha256": "sha256:d52e0056551a0db3760d1dfebd01beedec198a132353c7eb8c33c08c0a3cd2cd"},
-      "network": {"path": ".nl2repo/runs/gitdb-stub-final-20260828/gitdb-stub-final-20260828/gitdb-stub__aSpy5Js/verifier/network.json", "sha256": "sha256:1e05289a5c5281d80660bebf1ec5039b7e3397ed2329a42fb76406f2785216a5", "public_network_available": false}
+      "grading": {"path": "catalog/sources/gitdb/evidence/revalidation-20260905/stub-grading.json", "sha256": "sha256:d22e3df264cf7dbd49c55b5157114f235c4d101d676a730bcf8b1fa8aca8378a"},
+      "collection": {"path": "catalog/sources/gitdb/evidence/revalidation-20260905/stub-collection.json", "sha256": "sha256:7ab51f3428850ba6492d319d84f27845411d7a6c9509b2f0599e2e9f91816351"},
+      "result": {"path": "catalog/sources/gitdb/evidence/revalidation-20260905/stub-result.json", "sha256": "sha256:e8468bcff5499993903a2b9da6e232ec70844abd51814aca071be54a22aae921"},
+      "network": {"path": "catalog/sources/gitdb/evidence/revalidation-20260905/stub-network.json", "sha256": "sha256:4ad2c0840b8070ea5e48c516525684447cdd818cf01462eaf10f5d10b8975abe", "public_network_available": false}
     },
     "forgery": {
-      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-controls/gitdb-final/gitdb-forgery -a oracle --job-name gitdb-forgery-20260828-r2 -o .nl2repo/runs/gitdb-forgery-20260828-r2 --n-concurrent 1 --yes",
+      "command": "uv run --frozen --project harbor-runner harbor run -p <fresh-forgery-control-bundle> -a oracle --job-name gitdb-revalidation-final-forgery-20260906 -o <fresh-run-root> --n-concurrent 1 --yes",
       "exit_code": 0,
       "valid": true,
       "passed": 0,
@@ -111,11 +115,13 @@
       "reward": 0.0,
       "verifier_owned_reward": true,
       "grading_matches_stub": true,
-      "grading": {"path": ".nl2repo/runs/gitdb-forgery-final-20260828/gitdb-forgery-final-20260828/gitdb-forgery__WKD8ZJW/verifier/grading.json", "sha256": "sha256:d52e0056551a0db3760d1dfebd01beedec198a132353c7eb8c33c08c0a3cd2cd"},
-      "network": {"path": ".nl2repo/runs/gitdb-forgery-final-20260828/gitdb-forgery-final-20260828/gitdb-forgery__WKD8ZJW/verifier/network.json", "sha256": "sha256:bbf92aa9d9a5a5dcc334ca0a12954829a0d4f744d7076de78726ccb09a47a0d2", "public_network_available": false}
+      "grading": {"path": "catalog/sources/gitdb/evidence/revalidation-20260905/forgery-grading.json", "sha256": "sha256:d704b9d34711d86486595c39bac045f34cc80c8f7b0c55dc50c1ea384645980b"},
+      "collection": {"path": "catalog/sources/gitdb/evidence/revalidation-20260905/forgery-collection.json", "sha256": "sha256:7ab51f3428850ba6492d319d84f27845411d7a6c9509b2f0599e2e9f91816351"},
+      "result": {"path": "catalog/sources/gitdb/evidence/revalidation-20260905/forgery-result.json", "sha256": "sha256:3c79d49fcce2a4ef7c97705a2a4294ba10cfb6fdf69a6888997c53476ce0c8eb"},
+      "network": {"path": "catalog/sources/gitdb/evidence/revalidation-20260905/forgery-network.json", "sha256": "sha256:db9408e95a290b85a39ba55b04fc9efa3ccc6e6b26ee913713fc61e73412b903", "public_network_available": false}
     },
     "install_timeout": {
-      "command": "Harbor Oracle run of .nl2repo/authoring-controls/gitdb-final-v2/gitdb-install-hang",
+      "command": "uv run --frozen --project harbor-runner harbor run -p <fresh-install-hang-control-bundle> -a oracle --job-name gitdb-revalidation-final-install-hang-20260906 -o <fresh-run-root> --n-concurrent 1 --yes",
       "exit_code": 0,
       "valid": true,
       "reward": 0.0,
@@ -123,48 +129,48 @@
       "failure_reason": "candidate-installation-failed",
       "candidate_install_outcome": "timeout",
       "candidate_install_returncode": -9,
-      "grading": {"path": ".nl2repo/runs/gitdb-install-hang-final-20260828/gitdb-install-hang-final-20260828/gitdb-install-hang__nXAwrdD/verifier/grading.json", "sha256": "sha256:3725efe3bd17b437b0ab747a908bbb40b3bb485913a9451ddfb9348c3142ccf3"},
-      "network": {"path": ".nl2repo/runs/gitdb-install-hang-final-20260828/gitdb-install-hang-final-20260828/gitdb-install-hang__nXAwrdD/verifier/network.json", "sha256": "sha256:5f5f8355f56672fc239b9ddbc753035e1a7aa5bfa0a79903f678c4bfdab0c84e", "public_network_available": false}
+      "grading": {"path": "catalog/sources/gitdb/evidence/revalidation-20260905/install-hang-grading.json", "sha256": "sha256:3bd61b515aa981b062115b3443df07f88b3c1a519cf34423ea3554d6f5cbce50"},
+      "result": {"path": "catalog/sources/gitdb/evidence/revalidation-20260905/install-hang-result.json", "sha256": "sha256:59bd56ef854608275b81137512444e3046518b8a62c600b5ae895c95ae38135a"},
+      "network": {"path": "catalog/sources/gitdb/evidence/revalidation-20260905/install-hang-network.json", "sha256": "sha256:4ad2c0840b8070ea5e48c516525684447cdd818cf01462eaf10f5d10b8975abe", "public_network_available": false}
     },
     "workspace_invalid": {
-      "command": "Harbor Oracle run of .nl2repo/authoring-controls/gitdb-final-v2/gitdb-workspace-invalid",
+      "command": "uv run --frozen --project harbor-runner harbor run -p <fresh-workspace-invalid-control-bundle> -a oracle --job-name gitdb-revalidation-final-workspace-invalid-20260906 -o <fresh-run-root> --n-concurrent 1 --yes",
       "exit_code": 0,
       "valid": true,
       "reward": 0.0,
       "failure_class": "model",
       "failure_reason": "candidate-workspace-rejected",
-      "grading": {"path": ".nl2repo/runs/gitdb-workspace-invalid-final-20260828/gitdb-workspace-invalid-final-20260828/gitdb-workspace-invalid__bVP4HzU/verifier/grading.json", "sha256": "sha256:a2a549beecd03793c31d0b148f5d568c8934defd9a30664fdfec417413ead900"},
-      "network": {"path": ".nl2repo/runs/gitdb-workspace-invalid-final-20260828/gitdb-workspace-invalid-final-20260828/gitdb-workspace-invalid__bVP4HzU/verifier/network.json", "sha256": "sha256:1e05289a5c5281d80660bebf1ec5039b7e3397ed2329a42fb76406f2785216a5", "public_network_available": false}
+      "grading": {"path": "catalog/sources/gitdb/evidence/revalidation-20260905/workspace-invalid-grading.json", "sha256": "sha256:79666b7d5bb4f81815ecdec67a63cfb91d185c44251779cdfe7a1cef1722abe9"},
+      "result": {"path": "catalog/sources/gitdb/evidence/revalidation-20260905/workspace-invalid-result.json", "sha256": "sha256:f18e20163544a5a21fad2170b8e8f4ef86bcd0b6228250b308d94584c46951ef"},
+      "network": {"path": "catalog/sources/gitdb/evidence/revalidation-20260905/workspace-invalid-network.json", "sha256": "sha256:b867d36320d4085768a6ca1052539438f73f23df0602bba8557529382c80bdee", "public_network_available": false}
     },
     "call_timeout": {
-      "command": "Harbor Oracle run of .nl2repo/authoring-controls/gitdb-final-v2/gitdb-call-hang",
+      "command": "uv run --frozen --project harbor-runner harbor run -p <fresh-call-hang-control-bundle> -a oracle --job-name gitdb-revalidation-final-call-hang-20260906 -o <fresh-run-root> --n-concurrent 1 --yes",
       "exit_code": 0,
       "valid": true,
       "passed": 0,
       "total": 16,
       "reward": 0.0,
-      "grading": {"path": ".nl2repo/runs/gitdb-call-hang-final-20260828/gitdb-call-hang-final-20260828/gitdb-call-hang__Xw3L7tZ/verifier/grading.json", "sha256": "sha256:d52e0056551a0db3760d1dfebd01beedec198a132353c7eb8c33c08c0a3cd2cd"},
-      "network": {"path": ".nl2repo/runs/gitdb-call-hang-final-20260828/gitdb-call-hang-final-20260828/gitdb-call-hang__Xw3L7tZ/verifier/network.json", "sha256": "sha256:f7a996799a0fc181b8df4d4500d5828da8ece749963cb4300767bc23f5135114", "public_network_available": false}
+      "grading": {"path": "catalog/sources/gitdb/evidence/revalidation-20260905/call-hang-grading.json", "sha256": "sha256:d22e3df264cf7dbd49c55b5157114f235c4d101d676a730bcf8b1fa8aca8378a"},
+      "collection": {"path": "catalog/sources/gitdb/evidence/revalidation-20260905/call-hang-collection.json", "sha256": "sha256:7ab51f3428850ba6492d319d84f27845411d7a6c9509b2f0599e2e9f91816351"},
+      "result": {"path": "catalog/sources/gitdb/evidence/revalidation-20260905/call-hang-result.json", "sha256": "sha256:0b7c8f56e809f074ea61547b6f3f7ba04c7b8122c3d2e94b60e98c3aa5b8b695"},
+      "network": {"path": "catalog/sources/gitdb/evidence/revalidation-20260905/call-hang-network.json", "sha256": "sha256:aaa4ea01f3c32ce6f1f4df75da5264362ea66e27fe09d9237f935a832b968580", "public_network_available": false}
     },
     "offline": {
-      "command": "docker run --rm --network none with the Oracle workspace and nl2repobench/gitdb-verifier:authoring-final",
-      "exit_code": 0,
-      "completed": true,
-      "valid": true,
-      "passed": 16,
-      "total": 16,
-      "reward": 1.0,
-      "grading": {"path": ".nl2repo/evidence/gitdb-final/offline-logs/verifier/grading.json", "sha256": "sha256:10367925fabfd3047e44232277e248e7288651e04373c397291df6efeb098a5c"},
-      "network": {"path": ".nl2repo/evidence/gitdb-final/offline-logs/verifier/network.json", "sha256": "sha256:a16df705c177152f3e30f2dee7b1d0f3c44cd2492d777da182b86996fdc5fd96", "public_network_available": false}
+      "standalone_control_kind_available": false,
+      "registry_result": "unsupported control kind: offline",
+      "network_receipts": "catalog/sources/gitdb/evidence/revalidation-20260905/oracle-network.json and every supported-control network summary",
+      "public_network_available": false,
+      "note": "The current Harbor 0.21.0 registry has no offline control kind; all fresh supported runs had verifier network probes disabled."
     }
   },
   "commands": {
     "source_validation": {"command": "uv run nl2repo task validate-source catalog/sources/gitdb", "exit_code": 0},
     "network_lint": {"command": "uv run nl2repo task lint-network --tasks-root catalog/sources", "exit_code": 0, "error_count": 0, "warning_count": 139, "warning_scope": "pre-existing findings in other catalog tasks; no gitdb finding"},
-    "production_compile": {"command": "uv run nl2repo harbor compile catalog/sources/gitdb --output .nl2repo/authoring-work/gitdb/compiled-final --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "exit_code": 0},
-    "upstream_tests": {"command": ".nl2repo/authoring-work/gitdb-probe-venv/bin/python -m pytest -c /dev/null -q", "exit_code": 0, "collected": 25, "passed": 24, "skipped": 1},
+    "production_compile": {"command": "uv run nl2repo harbor compile catalog/sources/gitdb --output <ephemeral-bundle> --toolchain toolchain.lock.toml --artifact-root <private-CAS> --allow-private", "exit_code": 0},
+    "upstream_tests": {"command": "python -m pytest -c /dev/null -q", "exit_code": 0, "collected": 25, "passed": 24, "skipped": 1},
     "syntax": {"command": "python3 -m py_compile verifier/adapter.py verifier/run.py && bash -n oracle/solve.sh harbor/controls/*.sh", "exit_code": 0},
-    "verifier_image_build": {"command": "docker build -t nl2repobench/gitdb-verifier:authoring-final compiled-final/gitdb/tests", "exit_code": 0, "log": ".nl2repo/authoring-work/gitdb/verifier-image-build.log"}
+    "verifier_image_build": {"command": "docker build -t nl2repobench/gitdb-verifier:revalidation <compiled-bundle>/gitdb/tests", "exit_code": 0, "log": "revalidation verifier image build log retained outside the source catalog"}
   },
   "versions": {
     "harbor": "0.21.0",

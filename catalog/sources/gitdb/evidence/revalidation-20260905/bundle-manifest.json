@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "task_id": "gitdb",
+  "catalog_source_digest": "sha256:1977d32ee88490b2e11f88395e5250689434d8e47bbd2bc7808431f0e066d72a",
+  "raw_manifest_sha256": "sha256:c8af642c110f9b1ba512b3f077c226b0f30ce49b8a0e0c6102b79026f5736d44",
+  "canonical_manifest_digest": "sha256:e5ea31bce8465ec4749b295ad8de7f41eb0719f66eb89ef47312de766314b9f4",
+  "compile_a_and_b_byte_identical": true,
+  "bundle_file_count": 66,
+  "harbor_version": "0.21.0",
+  "toolchain": "toolchain.lock.toml",
+  "network_policy": "no-network",
+  "controls_in_bundle": ["call-hang.sh", "empty.sh", "forgery.sh", "install-hang.sh", "stub.sh", "workspace-invalid.sh"]
+}

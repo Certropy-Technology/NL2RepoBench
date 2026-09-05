@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0",
+  "task_id": "fsspec",
+  "failure_class": "artifact-or-verifier-blocked",
+  "source_digest": "sha256:a503c59e7e64983faeba87edcc25c924eeacfd44dbebb094d48313823fd9c012",
+  "oracle_bundle_digest": "sha256:7fdfbd6de69936e1d56fa35f75f73f0b01c1a29de795a26125530a7cdabb35c4",
+  "oracle_payload": "catalog/sources/fsspec/harbor/solution/solve.sh",
+  "inspection": {
+    "runtime_source_fetch": true,
+    "hosts": ["github.com"],
+    "operations": ["git clone", "git fetch"],
+    "source_digest_verification": true
+  },
+  "matrix": {
+    "oracle": "not-run",
+    "empty": "not-run",
+    "stub": "not-run",
+    "forgery": "not-run",
+    "offline": "not-run"
+  },
+  "reason": "The immutable Oracle payload fetches the upstream source from github.com at runtime. NoNetwork forbids this, and no source-host authorization was used.",
+  "next_step": "Replace the runtime source fetch with a private, digest-bound Oracle source artifact, then recompile and rerun the complete Oracle/control matrix.",
+  "historical_evidence_preserved": true
+}

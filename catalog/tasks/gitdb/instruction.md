@@ -30,6 +30,47 @@ observable contract here, including normal Python error behavior.
 - Use `bytes` for object content and binary SHA values. A binary SHA is exactly
   20 bytes and its hexadecimal form is 40 lowercase ASCII characters/bytes.
 
+## Natural Language Instruction
+
+Create the installable `gitdb` package from an empty workspace. Reproduce all
+public object records, streams, memory/loose/Git database operations, and error
+contracts listed below, including deterministic byte and offset behavior.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+└── gitdb/
+    ├── __init__.py
+    ├── base.py
+    ├── db.py
+    ├── stream.py
+    ├── loose.py
+    └── exc.py
+```
+
+Use the exact submodule paths named in the API guide; package metadata must
+install the `gitdb` import package. Private verifier files are excluded.
+
+## Examples
+
+```python
+from gitdb.db import MemoryDB
+db = MemoryDB(); stream = db.store(b'payload')
+```
+
+```python
+from gitdb.stream import Sha1Writer
+writer = Sha1Writer(); writer.write(b'abc'); writer.close()
+```
+
+## Error Handling and Boundary Conditions
+
+Preserve missing-object, invalid-object, short-read, offset, empty-byte, and
+closed-stream behavior. File-backed operations must stay within caller paths,
+remain deterministic, and never use network access.
+
 ## API Usage Guide
 
 ### Package exports and constants

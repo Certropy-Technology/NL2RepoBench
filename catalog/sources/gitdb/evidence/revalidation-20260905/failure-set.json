@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "task_id": "gitdb",
+  "oracle_failed_or_skipped": [],
+  "controls": {
+    "empty": {"failed_leaf_ids": [], "collection": 0, "failure_reason": "candidate-installation-failed"},
+    "stub": {"failed_leaf_ids": "all 16 frozen leaf IDs", "collection": 16},
+    "forgery": {"failed_leaf_ids": "all 16 frozen leaf IDs", "collection": 16, "verifier_owned_reward": true},
+    "install-hang": {"failed_leaf_ids": [], "collection": 0, "failure_reason": "candidate-installation-failed"},
+    "workspace-invalid": {"failed_leaf_ids": [], "collection": 0, "failure_reason": "candidate-workspace-rejected"},
+    "call-hang": {"failed_leaf_ids": "all 16 frozen leaf IDs", "collection": 16}
+  }
+}

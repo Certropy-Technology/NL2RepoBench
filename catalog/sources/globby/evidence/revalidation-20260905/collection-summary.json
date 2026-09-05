@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "task_id": "globby",
+  "framework": "node:test",
+  "metric_contract": "node-test-leaf-pass-rate-v1",
+  "expected_total": 10,
+  "runs": {
+    "oracle": {"collected": 10, "collection_errors": 0, "runner_exit_code": 0},
+    "empty": {"collected": 0, "collection_errors": 0, "runner_exit_code": 0},
+    "stub": {"collected": 10, "collection_errors": 0, "runner_exit_code": 1},
+    "forgery": {"collected": 10, "collection_errors": 0, "runner_exit_code": 1},
+    "call-hang": {"collected": 0, "collection_errors": 0, "runner_exit_code": 0},
+    "offline": {"collected": 10, "collection_errors": 0, "runner_exit_code": 1}
+  }
+}

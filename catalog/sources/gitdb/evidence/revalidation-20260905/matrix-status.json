@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "task_id": "gitdb",
+  "catalog_source_digest": "sha256:1977d32ee88490b2e11f88395e5250689434d8e47bbd2bc7808431f0e066d72a",
+  "matrix": [
+    {"kind": "oracle", "valid": true, "expected_total": 16, "collected": 16, "passed": 16, "reward": 1.0},
+    {"kind": "empty", "valid": true, "expected_total": 16, "collected": 0, "passed": 0, "reward": 0.0, "failure_reason": "candidate-installation-failed"},
+    {"kind": "stub", "valid": true, "expected_total": 16, "collected": 16, "passed": 0, "reward": 0.0},
+    {"kind": "forgery", "valid": true, "expected_total": 16, "collected": 16, "passed": 0, "reward": 0.0, "verifier_owned_reward": true},
+    {"kind": "install-hang", "valid": true, "expected_total": 16, "collected": 0, "passed": 0, "reward": 0.0, "failure_reason": "candidate-installation-failed"},
+    {"kind": "workspace-invalid", "valid": true, "expected_total": 16, "collected": 0, "passed": 0, "reward": 0.0, "failure_reason": "candidate-workspace-rejected"},
+    {"kind": "call-hang", "valid": true, "expected_total": 16, "collected": 16, "passed": 0, "reward": 0.0}
+  ],
+  "offline": {"standalone_control_kind_available": false, "registry_command_result": "unsupported control kind: offline", "network_probes_checked_on_every_fresh_run": true, "all_public_network_available": false},
+  "no_infrastructure_retries": true
+}

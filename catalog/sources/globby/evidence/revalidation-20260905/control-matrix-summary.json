@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "task_id": "globby",
+  "expected_total": 10,
+  "controls": {
+    "empty": {"collected": 0, "passed": 0, "reward": 0.0, "failure_reason": "candidate-installation-failed", "grading_sha256": "sha256:a489d7a669c5791b507476f2e99f2a5525f781ead853b2d5682f124358b26b33", "network_sha256": "sha256:f71248a809b68bd459fe27f58f684b76d50441c7860e00d12a552449098586d8"},
+    "stub": {"collected": 10, "passed": 1, "reward": 0.1, "grading_sha256": "sha256:5feeb5ff80dbfc82f5a9d53f289663e060f01146f7ab61cbe0d058a623c8e81f", "network_sha256": "sha256:953e1e2f3662d4a7090125aefeafed7896a95691a447095299429a219d21d89f"},
+    "forgery": {"collected": 10, "passed": 1, "reward": 0.1, "verifier_owned_reward": true, "grading_sha256": "sha256:5feeb5ff80dbfc82f5a9d53f289663e060f01146f7ab61cbe0d058a623c8e81f", "network_sha256": "sha256:9b0231c2cdc17b19ac54260cc6a3a3dc963a782b8e6faff227e3ca1dc1ed2c26"},
+    "call-hang": {"collected": 0, "passed": 0, "reward": 0.0, "failure_reason": "candidate-call-failed", "grading_sha256": "sha256:ce359f6e704ce0fabdb882ffe922b695022b7fbf9c69c20ead219d90f69ca3d8", "network_sha256": "sha256:1c8b77ac9c99f6fa8267100f19fb6f4aed4695072c8679fca7e8a05697a33e9a"},
+    "offline": {"collected": 10, "passed": 1, "reward": 0.1, "runner_exit_code": 1, "reason": "network-dependent candidate call was blocked", "grading_sha256": "sha256:5feeb5ff80dbfc82f5a9d53f289663e060f01146f7ab61cbe0d058a623c8e81f", "network_sha256": "sha256:0aae6d51439b7a2c43a306adb1bb049c4c322269aed84b851dcd57d23e2640b5"}
+  },
+  "all_network_receipts": {"public_network_available": false},
+  "stub_and_forgery_ceiling": 0.2,
+  "durability": "summary-only; raw Harbor run trees retained outside source"
+}

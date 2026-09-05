@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "task_id": "fs-extra",
+  "oracle_artifact": "sha256:76e8c0d7eb1a715c3ffb6b648e6fca1ff8d9edcd1542e42e64cfef6e87034fb4",
+  "oracle_artifact_sha256_matches": true,
+  "solve_sha256": "sha256:7069b6f0ee10c1f1b763c1992381bce3dfc9390d0851cb094341bb748f36ad00",
+  "source_revision": "53a8d1a63c8eb30573110ed0f6528975f98801f0",
+  "runtime_source_fetch": {
+    "present": true,
+    "command": "git -C SOURCE_ROOT fetch --depth 1 origin SOURCE_REVISION",
+    "host": "github.com",
+    "policy": "forbidden"
+  },
+  "oracle_run_permitted": false,
+  "reason": "NoNetwork revalidation forbids runtime source fetch and no offline Oracle source payload is declared."
+}

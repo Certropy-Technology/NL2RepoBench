@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "task_id": "ghapi",
+  "network_policy": "no-network",
+  "oracle": "not-run",
+  "empty": "not-run",
+  "stub": "not-run",
+  "forgery": "not-run",
+  "offline": "not-run",
+  "reason": "Oracle solve.sh performs forbidden runtime git clone/fetch from github.com; no host authorization was supplied."
+}

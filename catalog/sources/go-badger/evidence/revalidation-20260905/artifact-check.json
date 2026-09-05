@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-badger",
+  "source_digest": "sha256:7143cc6ace710f6d42f9cdb23b8f75936ed7b2ff359bd13a218f7bc57b3591b0",
+  "artifacts": [
+    {"kind": "oracle", "digest": "sha256:0224ce1d3cedbef4a6d98759f41bd54e4f65b7ed01e382f7a9a165ed85f47562", "size_bytes": 714, "sha256_verified": true},
+    {"kind": "module-bundle", "digest": "sha256:d43f1d2178cb48ad3d6b83def70f5fc9d2dbe73f5b1b6e70a4fc6ce467cbdd83", "size_bytes": 2429649, "sha256_verified": true},
+    {"kind": "verifier", "digest": "sha256:98de3f3f037ad08c20c221559d3e384a6535c839a6477c78ba5a3ec0279dc67a", "size_bytes": 924, "sha256_verified": true}
+  ],
+  "checked_against": "private artifact CAS",
+  "checked_offline": true
+}

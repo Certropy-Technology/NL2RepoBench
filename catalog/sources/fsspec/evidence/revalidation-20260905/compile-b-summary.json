@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "task_id": "fsspec",
+  "compile": "B",
+  "command": "uv run nl2repo harbor compile catalog/sources/fsspec --output <temporary-output> --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+  "exit_code": 0,
+  "file_count": 58,
+  "manifest_sha256": "sha256:6a970af5ddc302abc04ed6b3d4c0b2cbbf9b1b1b0b184e10e430a9f30392f4ff",
+  "canonical_manifest_digest": "sha256:81e3aab959b880d75e018ece7894adcbfbc4c8461b8bfcd63e24089e393ae3f3",
+  "output_path": "temporary compile output (not retained)",
+  "byte_identity": {
+    "file_list_identical": true,
+    "tree_diff": "no differences"
+  }
+}

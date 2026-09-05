@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "task_id": "get-stream",
+  "command": "uv run nl2repo harbor compile catalog/sources/get-stream --output revalidation/compile-a --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+  "result": "passed",
+  "manifest_sha256": "sha256:efe4342ee49299ef8d78ac3af9a379c9c45683b5cd4570567d4a312ece43b565",
+  "canonical_manifest_digest": "sha256:0d874a48966ef431f8e0fbaf68f139867e46d6ec59d5d967274300b8c42d5139",
+  "bundle_file_count": 95,
+  "toolchain_lock_digest": "sha256:aac76d5c1a423cd3c5c9c96870198475e0fed151793b60eeb830a7c053692dc8",
+  "absolute_path_entries": 0
+}

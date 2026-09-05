@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "task_id": "glom",
+  "source_digest": "sha256:07bd788ae0b2414b93a1e73bfaab8211a2708441707e496cecc53835992fb0bd",
+  "harbor_version": "0.21.0",
+  "network_policy": "no-network",
+  "source_validation_exit_code": 0,
+  "instruction_quality": "passed",
+  "compile_count": 2,
+  "compile_byte_identical": true,
+  "bundle_manifest_sha256": "sha256:24eaf39ccf07414de3ec894b4dde4ce12eee02f4110aff0b896879a8c7ee197d",
+  "canonical_manifest_digest": "sha256:af80300d83ff3b17fbe243e82ddb2a7b8ff0ac065c01f43d0158cc2a33979cd6",
+  "bundle_file_count": 60,
+  "oracle": {"passed": 28, "total": 28, "reward": 1.0},
+  "empty": {"collected": 0, "reward": 0.0, "failure_reason": "candidate-installation-failed"},
+  "stub": {"passed": 0, "total": 28, "reward": 0.0},
+  "forgery": {"passed": 0, "total": 28, "reward": 0.0, "verifier_owned_reward": true},
+  "offline": {"completed": true, "public_network_available": false},
+  "lifecycle_unchanged": true,
+  "historical_production_evidence_unchanged_before_refresh": true
+}

@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-badger",
+  "oracle_bundle_digest": "sha256:0224ce1d3cedbef4a6d98759f41bd54e4f65b7ed01e382f7a9a165ed85f47562",
+  "solve_script_sha256": "sha256:114906d05d0cc0172968ce4bdb00935eb28264e99d7f9380118e161bb0c01cf4",
+  "source_revision": "679bf5b72c9e1788fe7454a28fb4e140221b6668",
+  "runtime_source_fetch": true,
+  "fetch_host": "github.com",
+  "fetches_fixed_revision": true,
+  "archive_digest_check": true,
+  "network_policy": "no-network",
+  "decision": "blocked-before-harbor"
+}

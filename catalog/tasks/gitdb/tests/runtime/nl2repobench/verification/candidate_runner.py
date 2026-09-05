@@ -45,7 +45,7 @@ def _candidate_site(value: str) -> Path:
     path = Path(value).resolve()
     if path != Path("/tmp/candidate-site") or not path.is_dir():
         raise ValueError("candidate site is unavailable")
-    sys.path.append(str(path))
+    sys.path.insert(0, str(path))
     dependency_root = os.environ.get("NL2REPO_CANDIDATE_DEPENDENCIES")
     if dependency_root:
         dependency_path = Path(dependency_root).resolve()

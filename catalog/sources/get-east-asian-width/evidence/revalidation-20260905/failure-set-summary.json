@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "task_id": "get-east-asian-width",
+  "oracle": {"failed": 0, "skipped": 0, "collection_errors": 0},
+  "controls": {
+    "stub": {"failed": 21, "passed": 5},
+    "forgery": {"failed": 21, "passed": 5},
+    "offline": {"failed": 22, "passed": 4},
+    "loader-hook": {"failed": 21, "passed": 5},
+    "hang": {"failed": 24, "passed": 2}
+  },
+  "note": "Failure counts are summarized without hidden leaf identifiers; intentional empty and install-script controls failed during candidate installation before collection."
+}

@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "task_id": "furl",
+  "bundle_digest": "sha256:9c6e5c9b4e350ef1529901765c1fdbd39af9a4c9cf5decba878a736230ad10fe",
+  "solve_script_sha256": "sha256:7a7efec6fb53c55bb32ee9ccbb5bec1114f25e54cab93802dd8e98427ba027c7",
+  "upstream_host": "github.com",
+  "runtime_operations": ["git clone", "git fetch"],
+  "network_policy": "no-network",
+  "classification": "artifact-or-verifier-blocked",
+  "reason": "Oracle solve.sh retrieves the frozen source from GitHub at runtime; source-host authorization is forbidden for this revalidation.",
+  "harbor_run_started": false
+}
