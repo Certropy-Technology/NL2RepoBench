@@ -1,0 +1,11 @@
+{
+  "task_id": "go-glob",
+  "command": "uv run nl2repo harbor compile catalog/sources/go-glob --output <ignored-compile-root-b> --toolchain toolchain.go.lock.toml --artifact-root <private-cas-root> --allow-private",
+  "exit_code": 0,
+  "harbor_version": "0.21.0",
+  "file_count": 68,
+  "manifest_sha256": "sha256:828317a8d56180a04b74021401252f7139de0d1dab3912c2880d0af7d2871fda",
+  "canonical_manifest_digest": "sha256:1d599bd19982ba6d11a3634ce0369439c13669bde1985ad62d07341f14e08120",
+  "allow_incomplete": false,
+  "byte_identity_with_compile_a": true
+}

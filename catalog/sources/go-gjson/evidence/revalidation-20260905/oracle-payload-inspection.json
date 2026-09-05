@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-gjson",
+  "oracle_bundle_digest": "sha256:045d5af2641c5d19c9367398e9f3a76367987bd96eaa68ff42ef139e2c2e1c31",
+  "bundle_members": [
+    "module-bundle/go.mod",
+    "module-bundle/go.sum",
+    "module-bundle/module.manifest.json",
+    "module-bundle/vendor/**",
+    "solve.sh"
+  ],
+  "source_payload_present": false,
+  "solve_script": {
+    "fetches_at_runtime": true,
+    "upstream_url": "https://github.com/tidwall/gjson",
+    "revision_asserted": "7d8b3821e9d2acf35e8a226b63fcf801078e9b96",
+    "source_archive_digest_asserted": "sha256:91ec8257d29e04f0b67cac8641197ddb86d975138a8588d128bf4f27b447692a",
+    "network_operations": ["git fetch", "git archive"],
+    "runtime_source_paths": ["temporary source directory", "temporary source archive"]
+  },
+  "local_recovery_search": {
+    "searched_scopes": [
+      "current private Oracle bundle",
+      "historical generated go-gjson projections",
+      "isolated authoring worktrees containing generated solutions",
+      "task-specific authoring session artifacts",
+      "preserved local run and authoring archives"
+    ],
+    "historical_generated_solution_directories_checked": 53,
+    "matching_source_archives_found": 0,
+    "matching_revision_payload_found": false
+  },
+  "replacement_bundle": null,
+  "conclusion": "No hash-verifiable local source payload was found. Running Harbor would require forbidden runtime source-host access."
+}

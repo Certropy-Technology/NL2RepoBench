@@ -1,0 +1,18 @@
+{
+  "task_id": "go-glob",
+  "search_mode": "offline",
+  "search_paths": [
+    "private CAS object referenced by the oracle_bundle digest",
+    "local authoring worktrees under the integration author's workspace",
+    "local task source and generated projection worktrees",
+    "local session worktrees containing go-glob projections",
+    "catalog/tasks/go-glob",
+    "git history for catalog/tasks/go-glob and catalog/sources/go-glob"
+  ],
+  "matching_source_archive_found": false,
+  "matching_module_source_found": false,
+  "matching_verifier_source_found": false,
+  "replacement_bundle_created": false,
+  "reason": "The current Oracle CAS contains only solve.sh; historical projections contain the same runtime-fetching solve.sh and no frozen source archive or module source bytes. No source host, registry, DNS, or external service was contacted.",
+  "status": "no-hash-verifiable-local-payload"
+}

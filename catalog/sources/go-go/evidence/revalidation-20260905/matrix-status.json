@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-go",
+  "oracle": "not-run",
+  "controls": {
+    "empty": "not-run",
+    "stub": "not-run",
+    "forgery": "not-run",
+    "offline": "not-run"
+  },
+  "failure_class": "artifact-or-verifier-blocked",
+  "blocker": "Oracle solve.sh performs runtime fetch from github.com; source host authorization is forbidden."
+}

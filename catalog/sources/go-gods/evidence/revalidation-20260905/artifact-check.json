@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-gods",
+  "source_digest": "sha256:a92231b4759f195eb0dc3467badc410494761aeefedbf1afed96411b5f6f2b34",
+  "catalog_digest": "sha256:188cd80d8ace62618ceeee49e6ebbef354f5d6c3dab03ccdeb639a161943166c",
+  "artifacts": [
+    {
+      "name": "oracle_bundle",
+      "digest": "sha256:ec410f4c4da4b3694ffbd59b599bb958f7bee82036b5e141d4568e551927bef6",
+      "size_bytes": 836,
+      "verified": true,
+      "inventory": ["solve.sh"]
+    },
+    {
+      "name": "module_bundle",
+      "digest": "sha256:77876a99db85ec8ae3f7691ef62254bd5df22d31a318efe284b58d71e2f6f9fc",
+      "size_bytes": 587,
+      "verified": true,
+      "inventory": ["go.mod", "go.sum", "vendor/modules.txt", "module.manifest.json"]
+    },
+    {
+      "name": "verifier_bundle",
+      "digest": "sha256:50c81a438eb3da19aa8ecad3e2393ab55b62cf5768c605d4782d3facd47b5db2",
+      "size_bytes": 1608,
+      "verified": true,
+      "inventory": ["verifier bundle bytes present; private inventory not copied to public evidence"]
+    }
+  ],
+  "oracle_payload": {
+    "solve_sha256": "sha256:ef6549d6fce0dbca61f864badf1b06d8c245206b565f5e7b6101c6a987131f3a",
+    "contains_source_archive": false,
+    "runtime_source_fetch": true,
+    "fetch_hosts": ["github.com"],
+    "frozen_revision": "1d83d5ae39fbb0de45a60365791ff1c8b9bae953",
+    "frozen_source_digest": "sha256:a92231b4759f195eb0dc3467badc410494761aeefedbf1afed96411b5f6f2b34"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-concurrent-map",
+  "status": "infrastructure-blocked",
+  "oracle": {"valid": true, "collected": 1, "passed": 1, "reward": 1.0},
+  "controls": {"empty": "not-run", "stub": "not-run", "forgery": "not-run", "offline": "not-run"},
+  "reason": "Parent steering checkpoint stopped continuation after the bounded Oracle retry. The retry produced a passing verifier receipt, but Harbor did not finalize the outer job within the 1800-second command timeout. No controls were started.",
+  "lifecycle_unchanged": true,
+  "projection_unchanged": true
+}

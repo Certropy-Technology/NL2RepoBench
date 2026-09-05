@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-errgroup",
+  "oracle_bundle_digest": "sha256:6ded7dd6601d887f20aba3e19b1db2602a69970ecb69f67801a9a6a98041268b",
+  "payload_sha256": "sha256:52ea1015b37b052d0da5be2abe46e3575fe9f85826bfcba1448470292f54901a",
+  "payload_inventory": ["solve.sh"],
+  "runtime_network_operations": ["git remote add origin https://github.com/golang/sync", "git fetch --depth=1 origin f75267d8412fc1dfd12b343644a7ea46e4d9c85d"],
+  "frozen_source_archive_present": false,
+  "replacement_bundle": null,
+  "oracle_run": "not-run",
+  "controls_run": "not-run",
+  "reason": "Oracle needs a runtime GitHub fetch, which is forbidden by the task NoNetwork contract."
+}

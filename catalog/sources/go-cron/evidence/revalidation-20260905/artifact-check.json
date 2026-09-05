@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-cron",
+  "expected_instruction_source_digest": "sha256:076475cbe1531bbbf2765596e8335b2b36945c029d790b959c2ebfbae1e5a36f",
+  "frozen_upstream_revision": "bc59245fe10efaed9d51b56900192527ed733435",
+  "frozen_source_digest": "sha256:0cedb5d66d073dc2201d192e0ca89c11b722134a03d9323134280ec647570139",
+  "artifacts": [
+    {
+      "name": "oracle_bundle",
+      "digest": "sha256:51a2e3ef7cbecfc6bd924d46f6aeaf86417b0456bd78351290a630179528be33",
+      "size_bytes": 10240,
+      "cas_verified": true,
+      "inventory": ["solve.sh"]
+    },
+    {
+      "name": "module_bundle",
+      "digest": "sha256:dbd077902bf333014c9a15de08af5b3a641907ec10d25a9d638e36aefc2bf7a4",
+      "size_bytes": 10240,
+      "cas_verified": true,
+      "inventory": ["go.mod", "go.sum", "module.manifest.json", "vendor/modules.txt"]
+    },
+    {
+      "name": "verifier_bundle",
+      "digest": "sha256:e1270b7643c372448ef4483ea84d740ecd85350a214d9547ddcf8c5af2215412",
+      "size_bytes": 10240,
+      "cas_verified": true,
+      "inventory": ["contract.py", "contract.sh"]
+    }
+  ],
+  "result": "all three declared private CAS objects are present, size-valid, and SHA-256-valid"
+}

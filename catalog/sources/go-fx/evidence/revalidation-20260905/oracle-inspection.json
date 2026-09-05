@@ -1,0 +1,27 @@
+{
+  "task_id": "go-fx",
+  "oracle_bundle_digest": "sha256:7e1a9be3b4e8ce2853a0dc102a841b6fd4373698de15f475905ae81a1904ea94",
+  "solve_sha256": "sha256:cc3a605e7af9bb6d07c3b23a7099aded464f554566cdfbdc2413b4e86841a6bd",
+  "source_archive_expected": "sha256:efe539dae8dab090b45e4224eaae1e476e61fc3ec4156212087d67dd39f5297c",
+  "bundle_contains_source_archive": false,
+  "runtime_source_fetch": {
+    "detected": true,
+    "hosts": ["github.com"],
+    "operations": ["git init", "git remote add", "git fetch", "git archive"],
+    "revision_assertion": "4f31cd3a0c5d66f1b4290a2719bab14a5cee8ebe"
+  },
+  "local_recovery": {
+    "searched": true,
+    "searches": [
+      "current private CAS objects",
+      "historical go-fx authoring worktree",
+      "historical go-fx generated projections",
+      "historical authoring archives and CAS bundles containing source.tar"
+    ],
+    "embedded_source_tar_candidates_checked": 61,
+    "matching_source_archive_found": false,
+    "replacement_bundle_created": false,
+    "network_authorization_used": false
+  },
+  "decision": "blocked-until-hash-equivalent-local-source-payload-is-available"
+}

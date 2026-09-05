@@ -1,0 +1,11 @@
+{
+  "task_id": "go-copier",
+  "attempt": "compile-b",
+  "command": "uv run nl2repo harbor compile catalog/sources/go-copier --output .nl2repo/go-copier-revalidation/compile-b --toolchain toolchain.go.lock.toml --artifact-root <integration-root>/.nl2repo/artifacts --allow-private",
+  "exit_code": 0,
+  "file_count": 67,
+  "raw_manifest_sha256": "sha256:beaf58230e4a9bb2873ab57600de139054c34861e71cfe165a37aaa34884a77e",
+  "canonical_manifest_digest": "sha256:f95aea7eb0698111542bf1586767282eeab82b5cedd9755a23be6ef7409fb40f",
+  "byte_identical_to": "compile-a",
+  "network": "no-network"
+}

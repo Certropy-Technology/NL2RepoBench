@@ -1,0 +1,12 @@
+{
+  "task_id": "go-dasel",
+  "stage": "compile-a",
+  "command": "uv run nl2repo harbor compile catalog/sources/go-dasel --output .nl2repo/revalidation-20260905/go-dasel-compile-a --toolchain toolchain.go.lock.toml --artifact-root <private-CAS-root> --allow-private",
+  "exit_code": 0,
+  "harbor_version": "0.21.0",
+  "toolchain": "toolchain.go.lock.toml",
+  "file_count": 2377,
+  "bundle_manifest_sha256": "sha256:5543decb4fcb87a80537e892c43ddd51777ee5bd3a79365705a7bc00950ef7c6",
+  "canonical_manifest_digest": "sha256:b16565ec329fbee24211d07cf020697be106f689a561dbdc6e5badddfcf03bb6",
+  "allow_incomplete": false
+}

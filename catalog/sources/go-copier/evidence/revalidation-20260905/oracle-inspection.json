@@ -1,0 +1,10 @@
+{
+  "task_id": "go-copier",
+  "oracle_bundle_digest": "sha256:0bf40ed9050e2392068fdd8c8e0e73baf3b5f3d24b2ce39112df8f091642c3df",
+  "archive_listing": ["solve.sh"],
+  "solve_sha256": "sha256:1ad0ed674d3b431e3d4cde5700e40e754946a9b67e0e542d6dc7e1905aeb0d5c",
+  "frozen_revision": "c6b47b092d9840406d0abc347e68a28a7b812643",
+  "frozen_archive_sha256": "sha256:11b05c7a410dc39fd2cbcfb0f6cb307c1a694d3c33fff7a422109921f704cf18",
+  "observed_behavior": "solve.sh invokes git clone --no-checkout https://github.com/jinzhu/copier, checks out the frozen revision, verifies git archive SHA-256, and copies copier.go and errors.go into the workspace.",
+  "no_network_decision": "Oracle and controls were not run because the payload requires forbidden runtime GitHub access. No source host was authorized."
+}

@@ -1,0 +1,17 @@
+{
+  "task_id": "go-bytebufferpool",
+  "command": "uv run --frozen --project harbor-runner harbor run -p <fresh-compiled-task> -a oracle --job-name go-bytebufferpool-revalidation-20260906 -o <fresh-run-root> --n-concurrent 1 --yes",
+  "exit_code": 0,
+  "job_exit": 0,
+  "run_elapsed_seconds": 999,
+  "valid": true,
+  "frozen_total": 1,
+  "collected": 0,
+  "passed": 0,
+  "reward": 0.0,
+  "failure_class": "artifact",
+  "failure_reason": "candidate-installation-failed",
+  "oracle_stderr": "fatal: unable to access github.com/valyala/bytebufferpool: gnutls_handshake() failed: The TLS connection was non-properly terminated.",
+  "verifier_reason": "go.mod must be a bounded regular file",
+  "network": "public_network_available=false"
+}

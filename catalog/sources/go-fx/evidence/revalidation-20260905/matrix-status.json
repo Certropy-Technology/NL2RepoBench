@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-fx",
+  "status": "artifact-or-verifier-blocked",
+  "source_digest_validated": true,
+  "cas_artifacts_validated": true,
+  "compile_a_validated": true,
+  "compile_b_validated": true,
+  "compile_byte_identical": true,
+  "oracle": {"status": "not-run", "reason": "Oracle solve.sh requires forbidden runtime GitHub fetch and no hash-equivalent local source archive was found."},
+  "controls": {"status": "not-run", "reason": "Controls require a current Oracle/reference payload; no controls were run after the Oracle payload inspection blocker."},
+  "frozen_total": 1,
+  "network": "no-network"
+}

@@ -1,0 +1,15 @@
+{
+  "task_id": "go-cmp",
+  "oracle_bundle_digest": "sha256:e73bfabf457d91d81a4648c7a2a28eb673f1b8226ffb3078ca42f3aa3f43e7eb",
+  "bundle_inventory": [
+    {"path": "solve.sh", "size_bytes": 1259, "sha256": "sha256:6441d3c52af89f5a33dddd3de1b85afd80c1ac3119deed8ce66489602d5cd143"}
+  ],
+  "runtime_source_access": {
+    "network_fetch": true,
+    "host": "github.com",
+    "commands": ["git fetch --depth 1 origin b133f1f1932e48f466f597a3346ce6f5a49a0dc1", "git archive --format=tar b133f1f1932e48f466f597a3346ce6f5a49a0dc1"],
+    "policy": "forbidden",
+    "harbor_run": "not-run"
+  },
+  "reason": "The Oracle payload is not a self-contained local source payload. It fetches the frozen revision at runtime, which cannot be authorized under this task's NoNetwork revalidation contract."
+}

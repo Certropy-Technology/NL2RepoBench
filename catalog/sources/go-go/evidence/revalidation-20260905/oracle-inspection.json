@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-go",
+  "oracle_bundle_digest": "sha256:1a98f1381296346c3cd662ebfb85caa827964388fb07c9490c4ddb17ff66ae01",
+  "solve_script_sha256": "sha256:135674e6935e539bfc096ad714a936859a9e2315e6d1469f5067afd683ce0356",
+  "source_revision": "5ba447ec5ff3d1213de65b92e726ee74c5d5cc19",
+  "runtime_source_fetch": true,
+  "fetch_host": "github.com",
+  "fetch_operation": "git fetch --depth 1 origin <revision>",
+  "fetches_fixed_revision": true,
+  "archive_digest_check": true,
+  "network_policy": "no-network",
+  "decision": "blocked-before-harbor"
+}

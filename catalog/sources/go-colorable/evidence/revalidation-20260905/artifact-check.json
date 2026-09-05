@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-colorable",
+  "expected_catalog_digest": "sha256:f185adf752530f75548145d4db19ea7ffafc5a86a8bc90d0859b8e9a54888615",
+  "actual_catalog_digest": "sha256:f185adf752530f75548145d4db19ea7ffafc5a86a8bc90d0859b8e9a54888615",
+  "private_artifacts": [
+    {"kind": "oracle_bundle", "digest": "sha256:412d090b670eaf44cc0df3eb2359bb2a0beb8a6e5dfa4185448dce0b89b16d4c", "size_bytes": 797, "sha256_verified": true, "inventory": ["solve.sh"]},
+    {"kind": "go_module_bundle", "digest": "sha256:e80546b0cbc56f4ea49ad1d6cd8406226e26b02ed91d6bb54344dece3a75ef36", "size_bytes": 1028872, "sha256_verified": true},
+    {"kind": "verifier_bundle", "digest": "sha256:92bdce7eca061a53f05798820c48b9ef7313654d987e463038b08d88f2f3e0c7", "size_bytes": 864, "sha256_verified": true, "inventory": ["contract.sh"]}
+  ],
+  "source_freeze": {
+    "revision": "8bf39a204f13f0cfcf86ab9b297c3d6e0668e54a",
+    "source_digest": "sha256:920a15ba309669f30091349025493e370edc0aeee39eec63642c2e44a848197a",
+    "digest_definition": "git archive --format=tar --prefix=source/ at the frozen commit"
+  }
+}

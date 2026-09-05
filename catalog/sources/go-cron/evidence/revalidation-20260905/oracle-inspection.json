@@ -1,0 +1,22 @@
+{
+  "task_id": "go-cron",
+  "oracle_bundle_digest": "sha256:51a2e3ef7cbecfc6bd924d46f6aeaf86417b0456bd78351290a630179528be33",
+  "solve_script_inventory": ["solve.sh"],
+  "source_fetch": {
+    "mode": "runtime-git-fetch",
+    "host": "github.com",
+    "revision": "bc59245fe10efaed9d51b56900192527ed733435",
+    "archive_digest_constant": "sha256:0cedb5d66d073dc2201d192e0ca89c11b722134a03d9323134280ec647570139"
+  },
+  "local_recovery_search": {
+    "searched": [
+      "current private Oracle CAS bundle",
+      "catalog/sources/go-cron task-local evidence and inventory",
+      "historical go-cron handoffs, authoring state, and archived sessions",
+      ".nl2repo compiled/runtime trees and local source archive files"
+    ],
+    "matching_source_payload_found": false,
+    "replacement_bundle_created": false
+  },
+  "decision": "Oracle and controls were not run because the only Oracle payload requires forbidden runtime GitHub access and no hash-verifiable local source payload was found."
+}

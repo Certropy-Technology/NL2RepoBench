@@ -1,0 +1,12 @@
+{
+  "task_id": "go-glob",
+  "source_digest": "sha256:dcf7c3e6caf75b32e832bc6236e056904ae3d96ffc23904d0a1662b84a684a07",
+  "frozen_total": 1,
+  "manifest_digest": "sha256:1d599bd19982ba6d11a3634ce0369439c13669bde1985ad62d07341f14e08120",
+  "oracle": {"status": "not-completed", "reason": "network-fetch-blocker"},
+  "empty": {"status": "not-run", "reason": "Oracle payload is not locally executable under NoNetwork"},
+  "stub": {"status": "not-run", "reason": "Oracle payload is not locally executable under NoNetwork"},
+  "forgery": {"status": "not-run", "reason": "Oracle payload is not locally executable under NoNetwork"},
+  "offline": {"status": "not-run", "reason": "No standalone offline control exists in the source; fresh supported controls require a runnable final Oracle payload"},
+  "status": "blocked-pending-local-oracle-payload"
+}

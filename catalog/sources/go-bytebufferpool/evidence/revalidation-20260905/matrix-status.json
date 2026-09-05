@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-bytebufferpool",
+  "source_digest_verified": true,
+  "expected_catalog_digest": "sha256:836956c9153954e4cf20382d0a639a6a14e504e4251b319f446b72d560cb0da0",
+  "compile_twice_byte_identical": true,
+  "oracle": {"status": "blocked", "valid": true, "collected": 0, "total": 1, "reward": 0.0},
+  "controls": {"status": "not-run", "reason": "Oracle source payload failed before controls could be prepared"},
+  "lifecycle_unchanged": true,
+  "projection_unchanged": true,
+  "status": "artifact-or-verifier-blocked"
+}

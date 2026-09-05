@@ -1,0 +1,8 @@
+{
+  "task_id": "go-codeforces-go",
+  "oracle_failures": [],
+  "oracle_skips": [],
+  "controls_not_run": ["empty", "stub", "forgery", "install-failure", "panic", "hang", "oversized-output", "background-process", "offline"],
+  "failure_class": "infrastructure",
+  "reason": "No Harbor receipts were generated because the only available Oracle implementation requires forbidden runtime source fetch."
+}

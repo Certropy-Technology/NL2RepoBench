@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-glob",
+  "expected_catalog_digest": "sha256:e2b3ff94aed0705173baee23cf3866d3343e4e7b21ee30f09462bc58ba8f613b",
+  "source_digest": "sha256:dcf7c3e6caf75b32e832bc6236e056904ae3d96ffc23904d0a1662b84a684a07",
+  "source_revision": "986c05fb7000e63414ddc61162d0067b7a1f5639",
+  "cas": [
+    {
+      "kind": "oracle_bundle",
+      "digest": "sha256:0a1e7dd2f478186a4ff2a2b050b4d72182e03479ea2de0d08371af868488dd8f",
+      "size_bytes": 635,
+      "sha256_verified": true,
+      "payload_inventory": ["solve.sh"]
+    },
+    {
+      "kind": "module_bundle",
+      "digest": "sha256:eb1014c320101771ebc61f1a3a1c5a0f47b450329ef4bac8e25576c2e3814ab1",
+      "size_bytes": 513,
+      "sha256_verified": true,
+      "payload_inventory": ["go.mod", "go.sum", "module.manifest.json", "vendor/modules.txt"]
+    },
+    {
+      "kind": "verifier_bundle",
+      "digest": "sha256:8231431ec2c565d65a7485a49e48f39d7fea2ba4024cfb60ceff3c891911d8b1",
+      "size_bytes": 1504,
+      "sha256_verified": true,
+      "payload_inventory": ["contract.sh"]
+    }
+  ],
+  "status": "verified"
+}

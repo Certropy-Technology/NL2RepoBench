@@ -1,0 +1,8 @@
+{
+  "task_id": "go-copier",
+  "status": "not-run",
+  "network_policy": "no-network",
+  "public_network_available": false,
+  "source_host_authorized": false,
+  "reason": "Oracle payload performs a runtime git clone from github.com, which is forbidden."
+}

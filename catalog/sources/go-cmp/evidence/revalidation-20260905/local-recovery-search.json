@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-cmp",
+  "search_policy": "NoNetwork; accept only bytes whose revision and archive digest are both verified",
+  "searched_locations": [
+    "catalog/sources/go-cmp",
+    "catalog/tasks/go-cmp",
+    "private CAS root",
+    "historical authoring archive",
+    "historical go-cmp authoring session records",
+    "local Go module cache"
+  ],
+  "findings": [
+    {
+      "location": "private CAS root",
+      "result": "contains only the 774-byte fetch-based Oracle script; no source archive",
+      "accepted": false
+    },
+    {
+      "location": "catalog/tasks/go-cmp",
+      "result": "contains only generated solution/solve.sh and runtime projection; no source archive",
+      "accepted": false
+    },
+    {
+      "location": "historical go-cmp authoring session records",
+      "result": "contains command transcripts and fetch-based solve script, but no matching source bytes",
+      "accepted": false
+    },
+    {
+      "location": "local Go module cache",
+      "result": "has pseudo-version metadata and extracted released versions v0.5.9, v0.6.0, and v0.7.0; no archive for the frozen pseudo-version and no tree matching the frozen archive digest",
+      "accepted": false
+    }
+  ],
+  "replacement_bundle": null,
+  "conclusion": "No hash-verifiable local source payload was found within the bounded offline search."
+}

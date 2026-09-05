@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-errgroup",
+  "command": "uv run nl2repo harbor compile catalog/sources/go-errgroup --output <task-local-compile-b> --toolchain toolchain.go.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+  "exit_code": 0,
+  "allow_incomplete": false,
+  "toolchain": "toolchain.go.lock.toml",
+  "bundle_file_count": 67,
+  "raw_manifest_sha256": "sha256:7f834c18ee8d68dd6028e0c5f5784bfd28d0f8c75aa4a9b6f49a371b3b16476c",
+  "canonical_manifest_digest": "sha256:26f03463b91293487c2a4fbef994c6bf35679d339f36de6b916d82857884ecea",
+  "byte_identical_to": "compile-a-summary.json",
+  "result": "passed"
+}

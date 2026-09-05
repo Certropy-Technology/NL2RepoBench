@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-errgroup",
+  "expected_catalog_digest": "sha256:faef5bc0954d996f0415150708feaf05874d628e211d1b81c11dc1aa3c528798",
+  "source_digest": "sha256:22414d7297aba3d45f32f30a1f58564a680efbf6cbfe89d30b6e3aa87c38ce09",
+  "revision": "f75267d8412fc1dfd12b343644a7ea46e4d9c85d",
+  "artifacts": [
+    {"kind": "oracle_bundle", "digest": "sha256:6ded7dd6601d887f20aba3e19b1db2602a69970ecb69f67801a9a6a98041268b", "size_bytes": 586, "present": true, "sha256_verified": true},
+    {"kind": "verifier_bundle", "digest": "sha256:574fba567af36436084260a9d6a48d567f3104ba75af69b23d9bde0aa744e4bf", "size_bytes": 933, "present": true, "sha256_verified": true},
+    {"kind": "module_bundle", "digest": "sha256:257538bcb3027c2b476fc8a0d575175e1aeab0dbc1695d2de9d5a05ce31636b5", "size_bytes": 635, "present": true, "sha256_verified": true}
+  ],
+  "oracle_payload": {
+    "archive_members": ["solve.sh"],
+    "solve_sha256": "sha256:52ea1015b37b052d0da5be2abe46e3575fe9f85826bfcba1448470292f54901a",
+    "contains_frozen_source_archive": false,
+    "runtime_source_fetch": true
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "task_id": "go-colorable",
+  "command": "uv run nl2repo harbor compile catalog/sources/go-colorable --output <task-local-compile-a> --toolchain toolchain.go.lock.toml --artifact-root <parent-private-artifacts> --allow-private",
+  "exit_code": 0,
+  "allow_incomplete": false,
+  "file_count": 725,
+  "manifest_sha256": "sha256:5d32c5ec7886f9bf81c5be93824fd8eef449483115a7793f221fc8ba06f1989f",
+  "canonical_manifest_digest": "sha256:55e61c1be543c7914773717fe24c78a7b10eb1c8c46f5afeaef7edd15444c720"
+}

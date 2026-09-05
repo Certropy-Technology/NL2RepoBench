@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-gods",
+  "catalog_digest": "sha256:188cd80d8ace62618ceeee49e6ebbef354f5d6c3dab03ccdeb639a161943166c",
+  "status": "artifact-or-verifier-blocked",
+  "oracle": {"status": "not-run", "reason": "Oracle payload performs forbidden runtime GitHub fetch."},
+  "controls": {"status": "not-run", "reason": "Controls require a valid final Oracle/reference payload and were not run with the unsafe runtime-fetching payload."},
+  "compile": {"status": "passed", "byte_identical": true, "canonical_manifest_digest": "sha256:20343439b1dd7a3c0de5b1adfbe9b35de3f773ebcbda71aa0697092a4a7443f6"},
+  "lifecycle_unchanged": true,
+  "projection_unchanged": true
+}

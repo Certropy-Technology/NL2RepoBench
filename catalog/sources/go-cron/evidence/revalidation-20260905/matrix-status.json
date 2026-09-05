@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-cron",
+  "network_policy": "no-network",
+  "status": "artifact-or-verifier-blocked",
+  "oracle": {"status": "not-run", "reason": "runtime GitHub fetch in frozen solve.sh"},
+  "controls": {"status": "not-run", "reason": "Oracle payload is not runnable under NoNetwork"},
+  "frozen_total": 1,
+  "retry_count": 0,
+  "replacement_bundle": {"created": false, "reason": "no matching local hash-verifiable source payload"},
+  "lifecycle_unchanged": true,
+  "historical_receipts_reused": false
+}

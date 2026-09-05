@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-concurrent-map",
+  "attempts": [
+    {"kind": "oracle", "exit_class": "infrastructure", "reason": "EnvironmentStartTimeoutError", "trial_started": false},
+    {"kind": "oracle-retry", "verifier_exit_code": 0, "valid": true, "collected": 1, "passed": 1, "frozen_total": 1, "reward": 1.0, "public_network_available": false, "network_probes": {"1.1.1.1:443": false, "pypi.org:443": false}}
+  ],
+  "oracle_source": "local digest-verified source.tar in the private Oracle bundle",
+  "oracle_runtime_network_fetch": false,
+  "receipt_durability": "raw run artifacts remain task-local ignored evidence; parent must bind durable receipts before production-evidence update"
+}

@@ -1,0 +1,12 @@
+{
+  "task_id": "go-dasel",
+  "status": "blocked-before-verifier",
+  "command": "uv run --frozen --project harbor-runner harbor run -p <compiled-go-dasel-bundle> -a oracle --job-name go-dasel-revalidation-20260905 -o <run-root> --n-concurrent 1 --yes",
+  "exit_code": 128,
+  "failure_class": "artifact-or-verifier",
+  "failure_reason": "oracle-source-fetch-forbidden",
+  "harbor_version": "0.21.0",
+  "verifier_entered": false,
+  "source_revision_assertion": "not reached",
+  "source_digest_assertion": "not reached"
+}

@@ -1,0 +1,11 @@
+{
+  "task_id": "go-dasel",
+  "phase": "oracle-source-fetch",
+  "public_network_available": false,
+  "network_mode": "no-network",
+  "allowed_hosts": [],
+  "dns_probe": "not available",
+  "numeric_ip_probe": "egress denied",
+  "egress_observation": "the Harbor egress sidecar denied the attempted GitHub HTTPS connection",
+  "source_host_authorized": false
+}

@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-cmp",
+  "source_digest": "sha256:58390d2ae77c9595b8293140ab9bf59b46b168f20ac17d9eedefefdb623c2dc0",
+  "network_policy": "no-network",
+  "artifacts": [
+    {
+      "kind": "module-bundle",
+      "digest": "sha256:1c4723da7fcbb24a329f7fbe98a320a462a0228b28e3845ed00bcfd78f091d69",
+      "size_bytes": 461,
+      "sha256_verified": true,
+      "inventory": ["go.mod", "go.sum", "module.manifest.json", "vendor/modules.txt"]
+    },
+    {
+      "kind": "verifier-bundle",
+      "digest": "sha256:adea29f45f13e3ea4ec9370b3758f733dbf0e374c1710f278943f58b8fc3fcc4",
+      "size_bytes": 2590,
+      "sha256_verified": true,
+      "inventory": ["contract.sh"]
+    },
+    {
+      "kind": "oracle-bundle",
+      "digest": "sha256:e73bfabf457d91d81a4648c7a2a28eb673f1b8226ffb3078ca42f3aa3f43e7eb",
+      "size_bytes": 774,
+      "sha256_verified": true,
+      "inventory": ["solve.sh"]
+    }
+  ],
+  "source_freeze": {
+    "revision": "b133f1f1932e48f466f597a3346ce6f5a49a0dc1",
+    "archive_digest": "sha256:0db58f99e9ff0c467df202b87cd72b97b8518b01ada824b8d9259e6a09b017fe",
+    "license_digest": "sha256:17b5d209ba8f9684257ecfcff87df6ceda6194143a8fbd074f29727cff6f0c40",
+    "verified": true
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "task_id": "go-codeforces-go",
+  "source_catalog_digest": "sha256:f96d0526dd0cd4fedafccbd706bb2c1130f5c1812137217056818f2febefd950",
+  "source_archive_digest": "sha256:4430dd7dc9bdddc82768874bc08ecfe694234af0367f7422c612e78ddd566563",
+  "private_artifacts": [
+    {
+      "kind": "oracle_bundle",
+      "digest": "sha256:e03b7f84ddbe7985eb5cea4e80891b86b248a71d5799b14aa5d388cf719fe646",
+      "size_bytes": 735,
+      "cas_path": ".nl2repo/artifacts/private/sha256/e0/e03b7f84ddbe7985eb5cea4e80891b86b248a71d5799b14aa5d388cf719fe646",
+      "sha256_matches": true,
+      "payload_inventory": ["solve.sh"]
+    },
+    {
+      "kind": "module_bundle",
+      "digest": "sha256:3ac5dc681248f165c6e1976f6053ac0e112455dbdd5c93d08ed2581ad75fdaff",
+      "size_bytes": 477,
+      "cas_path": ".nl2repo/artifacts/private/sha256/3a/3ac5dc681248f165c6e1976f6053ac0e112455dbdd5c93d08ed2581ad75fdaff",
+      "sha256_matches": true,
+      "payload_inventory": ["go.mod", "go.sum", "module.manifest.json", "vendor/modules.txt"]
+    },
+    {
+      "kind": "verifier_bundle",
+      "digest": "sha256:378ac67f48e7924c10e123fa6dfcaa5089ace428a29581c2f609aaad6b059a1a",
+      "size_bytes": 1256,
+      "cas_path": ".nl2repo/artifacts/private/sha256/37/378ac67f48e7924c10e123fa6dfcaa5089ace428a29581c2f609aaad6b059a1a",
+      "sha256_matches": true,
+      "payload_inventory": ["contract.sh"]
+    }
+  ],
+  "verified_at": "2026-09-05",
+  "network": "no-network"
+}

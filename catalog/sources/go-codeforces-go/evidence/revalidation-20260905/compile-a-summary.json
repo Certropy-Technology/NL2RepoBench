@@ -1,0 +1,12 @@
+{
+  "task_id": "go-codeforces-go",
+  "attempt": "compile-a",
+  "command": "uv run nl2repo harbor compile catalog/sources/go-codeforces-go --output <task-local-output> --toolchain toolchain.go.lock.toml --artifact-root <parent-artifact-root> --allow-private",
+  "exit_code": 0,
+  "allow_incomplete": false,
+  "file_count": 67,
+  "raw_manifest_sha256": "sha256:980400bb3fc31f121de9c323cde284997f0961a9742c9b24f33dfd8b40f73c23",
+  "canonical_manifest_digest": "sha256:9c9287b29d5fc8d5da21a7408d693cae0a7397b46084e6f53ff05e8c2b30abb5",
+  "toolchain": "toolchain.go.lock.toml",
+  "network": "no-network"
+}

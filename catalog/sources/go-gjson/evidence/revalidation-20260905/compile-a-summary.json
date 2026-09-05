@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-gjson",
+  "compile": "A",
+  "command": "uv run nl2repo harbor compile catalog/sources/go-gjson --output <compile-a> --toolchain toolchain.go.lock.toml --artifact-root <private-CAS> --allow-private",
+  "exit_code": 0,
+  "allow_incomplete": false,
+  "file_count": 90,
+  "raw_manifest_sha256": "sha256:598a4e4a7b4708275bde299f9262b69905b8c223bc89a8f32709458d215fdb9f",
+  "canonical_manifest_digest": "sha256:ecea2b4601fee0153f7c9ca6ff50b395970adc005528845251ddb138ad2b425c"
+}

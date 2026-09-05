@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-fastjson",
+  "source_revision": "d652a1b1909d3520389b2c287ca3cf3aa3791451",
+  "source_archive_digest": "sha256:e7d863c47fbe692c97f5148a75dcda72695fca9dc672642dcdb4a22da28861a2",
+  "search_policy": "bounded offline exact-digest search",
+  "searched_sources": [
+    "current Oracle bundle contents",
+    "task-local source and evidence files",
+    "historical authoring claim and attempt logs",
+    "private artifact CAS metadata and payload filenames",
+    "repository tracked objects and local authoring archives"
+  ],
+  "matching_source_payload_found": false,
+  "replacement_bundle_created": false,
+  "reason": "The current Oracle bundle contains only solve.sh and control helper files; no source archive or module source matching the frozen archive digest was available in the bounded local search.",
+  "network_used": false
+}

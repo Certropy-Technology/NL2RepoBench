@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-copier",
+  "expected_source_digest": "sha256:25cd0d0928cd4cb5f99bf5a4766fa811d3e371b93fb69e3c49ff176447a03715",
+  "declared_private_artifacts": [
+    {
+      "kind": "oracle",
+      "digest": "sha256:0bf40ed9050e2392068fdd8c8e0e73baf3b5f3d24b2ce39112df8f091642c3df",
+      "size_bytes": 517,
+      "verified": true
+    },
+    {
+      "kind": "go-module-bundle",
+      "digest": "sha256:f9176ea41c05e736fef693c3a4397779d89ac6691f840b42b8f5bb10ac1d4bfd",
+      "size_bytes": 540,
+      "verified": true
+    },
+    {
+      "kind": "verifier",
+      "digest": "sha256:24a9113142afb314dabdd3df52698f8c3175aa4fddef816887d89ddb361b1655",
+      "size_bytes": 783,
+      "verified": true
+    }
+  ],
+  "verification_command": "Python size and SHA-256 verification against task.toml and the local private CAS artifact root",
+  "result": "all three declared CAS objects exist and match size and SHA-256"
+}

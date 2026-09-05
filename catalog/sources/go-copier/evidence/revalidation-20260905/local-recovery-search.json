@@ -1,0 +1,32 @@
+{
+  "task_id": "go-copier",
+  "policy": "NoNetwork local recovery first",
+  "searched_paths": [
+    "private CAS artifact inventory",
+    "go-copier archived authoring receipt and object inventory",
+    "go-copier local authoring claim and agent logs",
+    "historical go-yq control module bundles",
+    "go-copier supervisor compile output"
+  ],
+  "candidate_source_material": {
+    "source": "historical go-yq stub control module bundle, vendor/github.com/jinzhu/copier",
+    "module_version_observed": "github.com/jinzhu/copier v0.4.0",
+    "files": [
+      {"path": ".gitignore", "size_bytes": 12, "sha256": "sha256:4d6f07344826f837e521a37fae4a7a3f70839161082ddf7b181050fab69a7fa5"},
+      {"path": "License", "size_bytes": 1073, "sha256": "sha256:04a07632499685c7614e52e822b0ac0ec0767b4e9b2a3e8ae7cb52ed0d4df3c7"},
+      {"path": "README.md", "size_bytes": 3438, "sha256": "sha256:299843348308b646e52e0e49a7ed9bad33f452c482ced578aed637b79967084a"},
+      {"path": "copier.go", "size_bytes": 21536, "sha256": "sha256:af9b1fed7762a24418a6b3501b716785244ba175c3c3bcc51ac847d495ebcf3b"},
+      {"path": "errors.go", "size_bytes": 472, "sha256": "sha256:2da40878cbf602a407931706e2b5a7a3e0cce929eaa4ed6f64f28786de873b93"}
+    ]
+  },
+  "recovery_result": "rejected: local material is v0.4.0 and is not proven to be the frozen c6b47b092d9840406d0abc347e68a28a7b812643 archive; no replacement bundle was constructed",
+  "archived_receipt_only": {
+    "receipt": "go-copier-21088293e2dac1af.json",
+    "historical_oracle_workspace_files": [
+      {"path": "attempt4/oracle/.../artifacts/workspace/copier.go", "size_bytes": 23640, "sha256": "sha256:7c705f653251b4563e67ab57809d8197ad8e104a5f9487f270f5183e0f927668"},
+      {"path": "attempt4/oracle/.../artifacts/workspace/errors.go", "size_bytes": 472, "sha256": "sha256:2da40878cbf602a407931706e2b5a7a3e0cce929eaa4ed6f64f28786de873b93"}
+    ],
+    "availability": "receipt inventory exists locally, but the referenced archive object bytes are not present in the local authoring/CAS directories"
+  },
+  "replacement_bundle": null
+}

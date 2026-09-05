@@ -1,0 +1,14 @@
+{
+  "task_id": "go-glob",
+  "oracle_bundle_digest": "sha256:0a1e7dd2f478186a4ff2a2b050b4d72182e03479ea2de0d08371af868488dd8f",
+  "solve_sha256": "sha256:ff272ddb557e9e448b0001469995dcbf0297bbe7276239a363d944839c5d725c",
+  "payload_contains_source_archive": false,
+  "payload_contains_module_source": false,
+  "runtime_fetches": [
+    "git clone https://github.com/gobwas/glob .oracle-source",
+    "git checkout --detach 986c05fb7000e63414ddc61162d0067b7a1f5639"
+  ],
+  "required_source_digest": "sha256:dcf7c3e6caf75b32e832bc6236e056904ae3d96ffc23904d0a1662b84a684a07",
+  "no_network_policy_allows_runtime_fetch": false,
+  "status": "network-fetch-blocker"
+}

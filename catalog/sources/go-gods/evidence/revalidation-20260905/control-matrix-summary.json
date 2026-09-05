@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-gods",
+  "status": "not-run",
+  "controls": {
+    "empty": "not-run",
+    "stub": "not-run",
+    "forgery": "not-run",
+    "offline": "not-run"
+  },
+  "reason": "Controls depend on a valid final Oracle/reference payload; the only declared payload performs forbidden runtime source acquisition."
+}

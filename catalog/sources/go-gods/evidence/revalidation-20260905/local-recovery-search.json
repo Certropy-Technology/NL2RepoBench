@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-gods",
+  "search_policy": "NoNetwork",
+  "candidate_paths_checked": [
+    "local authoring archive roots/**/go-gods/**",
+    "local authoring archive roots/**/go-gods*/**",
+    "catalog/tasks/go-gods/**",
+    "catalog/sources/go-gods/**",
+    ".nl2repo/artifacts/private/sha256/**"
+  ],
+  "matching_payload_found": false,
+  "required_match": {
+    "revision": "1d83d5ae39fbb0de45a60365791ff1c8b9bae953",
+    "source_digest": "sha256:a92231b4759f195eb0dc3467badc410494761aeefedbf1afed96411b5f6f2b34"
+  },
+  "found_only": [
+    "the 836-byte Oracle solve.sh bundle, which has no source archive",
+    "the existing generated projection, which contains the same runtime-fetching solve.sh",
+    "historical authoring metadata and claims without source payload bytes"
+  ],
+  "replacement_bundle": null,
+  "next_step": "Provide a trusted local source archive or equivalent module payload whose bytes verify against the frozen revision and source digest, then register it in private CAS and recompile before running Oracle and controls."
+}

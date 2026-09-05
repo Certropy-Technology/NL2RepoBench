@@ -1,0 +1,12 @@
+{
+  "task_id": "go-dasel",
+  "source_digest": "sha256:44f4cb85b7ccba3782d3faf6cb6bd89b4cc0847b526b508c6c4eec53bf6a4c95",
+  "canonical_manifest_digest": "sha256:b16565ec329fbee24211d07cf020697be106f689a561dbdc6e5badddfcf03bb6",
+  "status": "artifact-or-verifier-blocked",
+  "oracle": {"status": "blocked-before-verifier", "exit_code": 128},
+  "empty": {"status": "not-run", "reason": "Oracle payload is not safe for NoNetwork"},
+  "stub": {"status": "not-run", "reason": "Oracle payload is not safe for NoNetwork"},
+  "forgery": {"status": "not-run", "reason": "Oracle payload is not safe for NoNetwork"},
+  "offline": {"status": "not-run", "reason": "Oracle payload is not safe for NoNetwork"},
+  "controls_not_claimed": true
+}

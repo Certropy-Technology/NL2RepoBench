@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-gods",
+  "oracle_bundle_digest": "sha256:ec410f4c4da4b3694ffbd59b599bb958f7bee82036b5e141d4568e551927bef6",
+  "archive_inventory": ["solve.sh"],
+  "source_archive_present": false,
+  "source_module_payload_present": false,
+  "solve_behavior": "Initializes a temporary git repository, adds the upstream URL, fetches the frozen revision from GitHub, archives it, verifies the upstream archive digest, extracts it, and edits go.mod for the locked runtime.",
+  "network_hosts": ["github.com"],
+  "runtime_source_fetch_allowed": false,
+  "oracle_run": "not-run",
+  "controls_run": "not-run",
+  "reason": "Running this payload would violate the task's NoNetwork policy; no matching local replacement payload was found."
+}

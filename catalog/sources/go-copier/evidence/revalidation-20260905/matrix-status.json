@@ -1,0 +1,12 @@
+{
+  "task_id": "go-copier",
+  "status": "artifact-or-verifier-blocked",
+  "oracle": {"status": "not-run", "reason": "runtime GitHub fetch forbidden under NoNetwork"},
+  "empty": {"status": "not-run", "reason": "Oracle payload unavailable offline"},
+  "stub": {"status": "not-run", "reason": "Oracle payload unavailable offline"},
+  "forgery": {"status": "not-run", "reason": "Oracle payload unavailable offline"},
+  "offline": {"status": "not-run", "reason": "Oracle payload unavailable offline"},
+  "frozen_total": 1,
+  "historical_production_evidence_unchanged": true,
+  "generated_projection_unchanged": true
+}

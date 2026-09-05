@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-colorable",
+  "policy": "NoNetwork local recovery before blocker",
+  "searches": [
+    {"source": "current private Oracle bundle", "result": "solve.sh only; no source archive or module payload"},
+    {"source": "task-local source/evidence and compiled projections", "result": "no exact frozen source archive; generated solution retains the same fetch-only solve script"},
+    {"source": "historical local authoring handoffs and archives", "result": "authoring receipt metadata and source snapshots were not available as readable bytes in this checkout"},
+    {"source": "preinstalled Go module cache", "candidate": "github.com/mattn/go-colorable v0.1.15", "origin_revision": "8bf39a204f13f0cfcf86ab9b297c3d6e0668e54a", "file_count": 16, "result": "same revision and source file contents; module zip is not the declared git-archive byte stream and has a different digest"}
+  ],
+  "declared_source_digest": "sha256:920a15ba309669f30091349025493e370edc0aeee39eec63642c2e44a848197a",
+  "candidate_module_zip_digest": "sha256:221144f51cc5eeda0a72bd7b5831b8b1b94240c1d760bde0b3428895e63e63339",
+  "replacement_bundle": null,
+  "conclusion": "No hash-verifiable payload matching the declared git-archive source digest was found in the bounded offline search; do not register the module zip as an Oracle replacement."
+}

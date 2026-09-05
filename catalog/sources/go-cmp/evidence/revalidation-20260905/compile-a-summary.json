@@ -1,0 +1,11 @@
+{
+  "task_id": "go-cmp",
+  "attempt": "a",
+  "command": "uv run nl2repo harbor compile catalog/sources/go-cmp --output <ignored-local-output> --toolchain toolchain.go.lock.toml --artifact-root <private-artifact-root> --allow-private",
+  "exit_code": 0,
+  "mode": "production",
+  "allow_incomplete": false,
+  "file_count": 67,
+  "manifest_sha256": "sha256:e5586d325fe5b6d12a6cea86a7365f1427c91793eb783482238798f98df4887a",
+  "canonical_manifest_digest": "sha256:5f17202bed13788349a27106bd1601176e5921fe6f0b694c83a46606edf4a807"
+}

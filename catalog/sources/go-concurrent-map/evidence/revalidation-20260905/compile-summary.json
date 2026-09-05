@@ -1,0 +1,10 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-concurrent-map",
+  "command": "uv run nl2repo harbor compile catalog/sources/go-concurrent-map --output <task-local-output> --toolchain toolchain.go.lock.toml --artifact-root <private-artifact-root> --allow-private",
+  "toolchain": "toolchain.go.lock.toml",
+  "allow_incomplete": false,
+  "compile_a": {"exit_code": 0, "file_count": 68, "manifest_sha256": "sha256:9e965494ec497000f633870eff7a5d9aac2ab0e8c4c9ffb1b44bc1a47fb512c8", "canonical_manifest_digest": "sha256:da243e6e19f5df6b7113c47d5b922eab2aba9d040a05f91679f87d819dd3b0c5"},
+  "compile_b": {"exit_code": 0, "file_count": 68, "manifest_sha256": "sha256:9e965494ec497000f633870eff7a5d9aac2ab0e8c4c9ffb1b44bc1a47fb512c8", "canonical_manifest_digest": "sha256:da243e6e19f5df6b7113c47d5b922eab2aba9d040a05f91679f87d819dd3b0c5"},
+  "byte_identical": true
+}

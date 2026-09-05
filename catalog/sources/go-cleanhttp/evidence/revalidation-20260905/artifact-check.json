@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-cleanhttp",
+  "expected_catalog_digest": "sha256:81b51b3cbeea9d6cbe964503f4c182a36ce774453cec3a059ce15d211841ef3d",
+  "actual_catalog_digest": "sha256:81b51b3cbeea9d6cbe964503f4c182a36ce774453cec3a059ce15d211841ef3d",
+  "artifacts": [
+    {"role": "oracle", "digest": "sha256:ad1516211c7f2ab4a51af7eb68c9473815147a552c04c5a1695b0d82e6e1ba27", "size_bytes": 10240, "digest_verified": true, "size_verified": true},
+    {"role": "go-module-closure", "digest": "sha256:7b74c1c70ffc4bde63557c255edd2b5ae43594b6a367d185c1ce1f91fe11e275", "size_bytes": 10240, "digest_verified": true, "size_verified": true},
+    {"role": "verifier", "digest": "sha256:e5577cff9bfe763addac792834f99540011405d6132fca823f2509d2a047e51c", "size_bytes": 10240, "digest_verified": true, "size_verified": true}
+  ]
+}

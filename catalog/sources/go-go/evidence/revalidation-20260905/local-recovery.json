@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-go",
+  "checked_offline": true,
+  "source_revision": "5ba447ec5ff3d1213de65b92e726ee74c5d5cc19",
+  "source_archive_sha256": "sha256:b3c92e9e75f682b5543bf069e4c2fc8fce0eda7067639185bd92e686cc648507",
+  "oracle_bundle_sha256": "sha256:1a98f1381296346c3cd662ebfb85caa827964388fb07c9490c4ddb17ff66ae01",
+  "oracle_bundle_inventory": ["solve.sh"],
+  "oracle_payload_contains_source_archive": false,
+  "oracle_runtime_fetch": {"host": "github.com", "operation": "git fetch", "fixed_revision": true, "archive_digest_check": true},
+  "searches": [
+    "task-local evidence and local authoring handoff roots",
+    "local authoring archives",
+    "local authoring worktrees",
+    "local authoring session records",
+    "local supervisor compile outputs",
+    "catalog/tasks/*/solution",
+    "local private CAS oracle artifact"
+  ],
+  "archive_scan": {
+    "integration_local_state_same_size_candidates": 43,
+    "integration_local_state_matching_digest": 0,
+    "worker_artifact_same_size_candidates": 0,
+    "matching_digest": "none"
+  },
+  "matching_source_payload_found": false,
+  "replacement_bundle": null,
+  "decision": "No hash-verifiable offline source payload was found; do not authorize source hosts or construct a replacement from nonmatching bytes."
+}

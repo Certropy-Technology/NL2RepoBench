@@ -1,0 +1,18 @@
+{
+  "task_id": "go-codeforces-go",
+  "oracle_bundle_digest": "sha256:e03b7f84ddbe7985eb5cea4e80891b86b248a71d5799b14aa5d388cf719fe646",
+  "bundle_size_bytes": 735,
+  "bundle_files": ["solve.sh"],
+  "solve_sha256": "sha256:27b76bd2e6ce473b808929b1b3e9cb9a07c453862916075c212eb745958ed81f",
+  "solve_behavior": [
+    "initializes a temporary Git repository",
+    "adds https://github.com/EndlessCheng/codeforces-go as origin",
+    "fetches revision 4996b3d7733aabafe25ba045bbc87f794d963ac4",
+    "recomputes and checks source archive digest 4430dd7dc9bdddc82768874bc08ecfe694234af0367f7422c612e78ddd566563",
+    "copies copypasta/bitset.go into /workspace"
+  ],
+  "local_source_payload_present": false,
+  "replacement_bundle_constructed": false,
+  "network": "no-network",
+  "oracle_run": "not-run: runtime source fetch is forbidden"
+}

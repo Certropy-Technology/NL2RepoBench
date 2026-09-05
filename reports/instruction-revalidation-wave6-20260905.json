@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0",
+  "report_kind": "instruction-revalidation-wave",
+  "wave": 6,
+  "workflow_run": "325010ef-320c-4810-89a1-3df69f886719",
+  "queue": "reports/instruction-revalidation-queue-20260905.json",
+  "base_commit": "12c5ac3f1914509046e3f1202ee024e09990e523",
+  "integration_commit": "02472cffcc0a0c5ef64acdc20c6d2d522099ed07",
+  "network_policy": "no-network",
+  "concurrency": 16,
+  "model_api_cost_usd": 0,
+  "counts": {
+    "task_count": 16,
+    "fully_revalidated": 0,
+    "artifact_or_verifier_blocked": 15,
+    "infrastructure_pending": 1,
+    "projection_refreshed": 0,
+    "replacement_bundles_proposed": 0
+  },
+  "tasks": [
+    {"task_id": "go-bytebufferpool", "status": "artifact-or-verifier-blocked", "reason": "Reconstructed local archive sha256:1f721918... did not match required frozen archive sha256:a070768e...; Oracle could only collect 0/1.", "evidence": "catalog/sources/go-bytebufferpool/evidence/revalidation-20260905/"},
+    {"task_id": "go-cleanhttp", "status": "artifact-or-verifier-blocked", "reason": "No hash-matching frozen source archive was found; Oracle solve performs runtime GitHub fetch.", "evidence": "catalog/sources/go-cleanhttp/evidence/revalidation-20260905/"},
+    {"task_id": "go-cmp", "status": "artifact-or-verifier-blocked", "reason": "Bounded local recovery found no hash-verifiable frozen source payload; Oracle performs runtime GitHub fetch.", "evidence": "catalog/sources/go-cmp/evidence/revalidation-20260905/"},
+    {"task_id": "go-codeforces-go", "status": "artifact-or-verifier-blocked", "reason": "Bounded recovery found no matching source archive or replacement payload.", "evidence": "catalog/sources/go-codeforces-go/evidence/revalidation-20260905/"},
+    {"task_id": "go-colorable", "status": "artifact-or-verifier-blocked", "reason": "Go module cache bytes were not the declared Git archive bytes and no matching local archive was found.", "evidence": "catalog/sources/go-colorable/evidence/revalidation-20260905/"},
+    {"task_id": "go-concurrent-map", "status": "infrastructure_pending", "reason": "A local source.tar matched and one retry collected 1/1 with reward 1.0, but the outer Oracle attempt exceeded 1800 seconds and controls were not run.", "evidence": "catalog/sources/go-concurrent-map/evidence/revalidation-20260905/"},
+    {"task_id": "go-copier", "status": "artifact-or-verifier-blocked", "reason": "Only an older v0.4.0 vendored snapshot was found; frozen Oracle copier.go bytes were unavailable.", "evidence": "catalog/sources/go-copier/evidence/revalidation-20260905/"},
+    {"task_id": "go-cron", "status": "artifact-or-verifier-blocked", "reason": "No matching local source payload was found and Oracle solve performs runtime GitHub fetch.", "evidence": "catalog/sources/go-cron/evidence/revalidation-20260905/"},
+    {"task_id": "go-dasel", "status": "artifact-or-verifier-blocked", "reason": "Generated network lint has a target error from a vendor AGENTS.md reference-source endpoint; Oracle also uses runtime source fetch.", "evidence": "catalog/sources/go-dasel/evidence/revalidation-20260905/"},
+    {"task_id": "go-errgroup", "status": "artifact-or-verifier-blocked", "reason": "No full frozen source archive or replacement payload was found after bounded local recovery.", "evidence": "catalog/sources/go-errgroup/evidence/revalidation-20260905/"},
+    {"task_id": "go-fastjson", "status": "artifact-or-verifier-blocked", "reason": "No matching source archive or replacement payload was found; Oracle is fetch-only.", "evidence": "catalog/sources/go-fastjson/evidence/revalidation-20260905/"},
+    {"task_id": "go-fx", "status": "artifact-or-verifier-blocked", "reason": "No matching frozen source digest was found in current or historical local payloads.", "evidence": "catalog/sources/go-fx/evidence/revalidation-20260905/"},
+    {"task_id": "go-gjson", "status": "artifact-or-verifier-blocked", "reason": "Oracle solve performs runtime GitHub fetch and no local replacement payload was established.", "evidence": "catalog/sources/go-gjson/evidence/revalidation-20260905/"},
+    {"task_id": "go-glob", "status": "artifact-or-verifier-blocked", "reason": "No hash-verifiable local source payload was established; Oracle uses runtime source fetch.", "evidence": "catalog/sources/go-glob/evidence/revalidation-20260905/"},
+    {"task_id": "go-go", "status": "artifact-or-verifier-blocked", "reason": "Oracle solve performs runtime GitHub fetch and no matching local payload was found.", "evidence": "catalog/sources/go-go/evidence/revalidation-20260905/"},
+    {"task_id": "go-gods", "status": "artifact-or-verifier-blocked", "reason": "Oracle solve performs runtime GitHub fetch and no matching local payload was found.", "evidence": "catalog/sources/go-gods/evidence/revalidation-20260905/"}
+  ],
+  "reliability": {
+    "source_validation_passed": 16,
+    "instruction_quality_passed": true,
+    "changed_json_parsed": 117,
+    "target_source_network_errors": 0,
+    "target_generated_network_errors": 1,
+    "expected_oracle_host_warnings": 17,
+    "replacement_payloads": "none accepted",
+    "lifecycle_changes": 0,
+    "production_evidence_changes": 0,
+    "projection_changes": 0
+  }
+}

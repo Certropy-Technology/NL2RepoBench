@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-bytebufferpool",
+  "source": "catalog/sources/go-bytebufferpool/evidence/revalidation-20260905/oracle-run-grading.json",
+  "sha256": "sha256:f50f1c97834aae0757eb19f7b1926b462c178862bac6df8d7f04e6f4d30db843",
+  "valid": true,
+  "frozen_total": 1,
+  "collected": 0,
+  "passed": 0,
+  "failed": 0,
+  "skipped": 0,
+  "reward": 0.0,
+  "failure_class": "model",
+  "failure_reason": "candidate-installation-failed",
+  "interpretation": "artifact/verifier setup failure; not a model score"
+}

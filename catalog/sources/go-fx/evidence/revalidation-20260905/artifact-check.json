@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-fx",
+  "expected_catalog_digest": "sha256:00be8bb906f8e6e4217d596f29891f0f142fcd8a83de5cce8ccb30fde3efcf5d",
+  "source_archive_digest": "sha256:efe539dae8dab090b45e4224eaae1e476e61fc3ec4156212087d67dd39f5297c",
+  "artifacts": [
+    {
+      "name": "oracle_bundle",
+      "digest": "sha256:7e1a9be3b4e8ce2853a0dc102a841b6fd4373698de15f475905ae81a1904ea94",
+      "size_bytes": 267779,
+      "sha256_verified": true,
+      "payload_inventory": ["solve.sh", "module-bundle/go.mod", "module-bundle/go.sum", "module-bundle/vendor"]
+    },
+    {
+      "name": "module_bundle",
+      "digest": "sha256:3fb6d7d41b10fd6f7340a6c02b90f0c00201057c097bb89b49e543762e374014",
+      "size_bytes": 267079,
+      "sha256_verified": true
+    },
+    {
+      "name": "verifier_bundle",
+      "digest": "sha256:9d9a54451c6f8af95e33a83908ce390faec30baff5070fa531c72885715e1669",
+      "size_bytes": 863,
+      "sha256_verified": true
+    }
+  ],
+  "checked_at": "2026-09-05",
+  "network": "disabled"
+}

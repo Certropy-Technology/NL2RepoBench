@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-fastjson",
+  "source_digest": "sha256:229bc88eb28614fa8d3e1789df847fe2ac00e21b6201d89138793b1294117738",
+  "oracle": "not-run",
+  "controls": {
+    "empty": "not-run",
+    "stub": "not-run",
+    "forgery": "not-run",
+    "offline": "not-run"
+  },
+  "failure_class": "artifact-or-verifier-blocked",
+  "blocker": "Oracle solve.sh performs a runtime fetch from github.com; the required NoNetwork policy forbids source-host authorization, and local recovery found no matching source payload.",
+  "lifecycle_unchanged": true,
+  "historical_production_evidence_unchanged": true,
+  "generated_projection_unchanged": true,
+  "denominator_unchanged": true
+}

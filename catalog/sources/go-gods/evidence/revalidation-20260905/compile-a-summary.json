@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-gods",
+  "compile": "a",
+  "command": "uv run nl2repo harbor compile catalog/sources/go-gods --output <task-local-compile-a> --toolchain toolchain.go.lock.toml --artifact-root <private-artifact-root> --allow-private",
+  "exit_code": 0,
+  "toolchain": "toolchain.go.lock.toml",
+  "allow_incomplete": false,
+  "network": "no-network",
+  "catalog_digest": "sha256:188cd80d8ace62618ceeee49e6ebbef354f5d6c3dab03ccdeb639a161943166c",
+  "manifest_sha256": "sha256:4a372e3a7201ab38ed71f7274736a91cc91de01859e2dd54a2f52962f648b684",
+  "canonical_manifest_digest": "sha256:20343439b1dd7a3c0de5b1adfbe9b35de3f773ebcbda71aa0697092a4a7443f6",
+  "file_count": 68
+}

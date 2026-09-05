@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-gjson",
+  "network_policy": "no-network",
+  "current_manifest_digest": "sha256:ecea2b4601fee0153f7c9ca6ff50b395970adc005528845251ddb138ad2b425c",
+  "frozen_total": 1,
+  "oracle": {"status": "not-run", "reason": "Oracle solve.sh fetches the missing source archive at runtime."},
+  "controls": {"status": "not-run", "reason": "Controls require a valid current Oracle/reference payload and must not reuse historical receipts."},
+  "offline": {"status": "not-run", "reason": "No standalone control run is meaningful while the current source payload is unavailable."},
+  "status": "artifact-or-verifier-blocked",
+  "failure_class": "verifier",
+  "next_step": "Materialize a trusted archive matching the frozen revision and source digest in private CAS, replace the runtime-fetching Oracle payload, recompile, then run a fresh complete Harbor matrix."
+}

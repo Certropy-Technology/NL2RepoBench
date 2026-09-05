@@ -271,7 +271,8 @@ _ = value.GetArray()
 
 ```go
 var arena fastjson.Arena
-value := arena.NewObject().Set("ok", arena.NewTrue())
+value := arena.NewObject()
+value.Set("ok", arena.NewTrue())
 encoded := value.MarshalTo(nil)
 ```
 

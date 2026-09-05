@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-fastjson",
+  "source_digest": "sha256:229bc88eb28614fa8d3e1789df847fe2ac00e21b6201d89138793b1294117738",
+  "checked_offline": true,
+  "artifacts": [
+    {"kind": "oracle", "digest": "sha256:7d8b1152cd3b2ccd1bd55131cac400fcbcacf690da54de90b6527b3c13c2998a", "size_bytes": 2018, "sha256_verified": true},
+    {"kind": "module-bundle", "digest": "sha256:d44cfc3cfb1099c571ac2ffb8bf83f792a85936152c64829939e3b1e7e3eaab1", "size_bytes": 443, "sha256_verified": true},
+    {"kind": "verifier", "digest": "sha256:ef8f1a48de94f74a038885533bef1b2e7e1dc6a69c8794d504d1c82bf8324a95", "size_bytes": 2192, "sha256_verified": true}
+  ],
+  "oracle_bundle_inventory": ["control/control-api.go", "control/mode-forgery.go", "control/mode-hang.go", "control/mode-oversized.go", "control/mode-panic.go", "control/mode-stub.go", "solve.sh"],
+  "oracle_source_payload_present": false
+}

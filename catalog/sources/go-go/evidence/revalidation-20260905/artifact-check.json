@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-go",
+  "source_digest": "sha256:1ed106ac7934fe89a1048c429708f97a6cdfb8513533e18d4390f98cb58eff16",
+  "checked_offline": true,
+  "artifacts": [
+    {"kind": "oracle", "digest": "sha256:1a98f1381296346c3cd662ebfb85caa827964388fb07c9490c4ddb17ff66ae01", "size_bytes": 10240, "sha256_verified": true},
+    {"kind": "module-bundle", "digest": "sha256:d06a57d70a9f6d7927a5f0a516a8a771dbaa7626506f28a2f7888587eadf8885", "size_bytes": 10240, "sha256_verified": true},
+    {"kind": "verifier", "digest": "sha256:aaf6dc6ed64ba5703cd8ead1d06fc030f55acdfb25f926f204f1b4ee09ddeed1", "size_bytes": 10240, "sha256_verified": true}
+  ]
+}

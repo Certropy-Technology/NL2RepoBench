@@ -1,0 +1,11 @@
+{
+  "task_id": "go-colorable",
+  "oracle_bundle_digest": "sha256:412d090b670eaf44cc0df3eb2359bb2a0beb8a6e5dfa4185448dce0b89b16d4c",
+  "bundle_inventory": ["solve.sh"],
+  "revision_assertion": "8bf39a204f13f0cfcf86ab9b297c3d6e0668e54a",
+  "runtime_source_fetch": true,
+  "source_hosts": ["github.com"],
+  "network_policy": "no-network",
+  "oracle_run": "not-run",
+  "reason": "solve.sh executes git fetch from GitHub and no exact source archive replacement was available offline"
+}

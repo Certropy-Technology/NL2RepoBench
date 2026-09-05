@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-errgroup",
+  "status": "artifact-or-verifier-blocked",
+  "source_validation": "passed",
+  "instruction_quality": "passed",
+  "double_compile": "passed",
+  "oracle": "not-run",
+  "empty": "not-run",
+  "stub": "not-run",
+  "forgery": "not-run",
+  "offline": "not-run",
+  "blocker": "runtime-fetching Oracle has no local hash-verified source payload",
+  "lifecycle_unchanged": true,
+  "generated_projection_unchanged": true
+}

@@ -1,0 +1,12 @@
+{
+  "task_id": "go-fx",
+  "compile": "A",
+  "command": "uv run nl2repo harbor compile catalog/sources/go-fx --output <compile-a> --toolchain toolchain.go.lock.toml --artifact-root <private-artifact-root> --allow-private",
+  "exit_code": 0,
+  "allow_incomplete": false,
+  "file_count": 138,
+  "raw_manifest_sha256": "sha256:d44e2f0c3c31d172807c958089acef874fcee3fac79ea6337370a8cfb9d1f6cf",
+  "canonical_manifest_digest": "sha256:789432e1c31f465a76d046053de5d3b06fab79ab1c0adb780f93f72f9d117cc2",
+  "toolchain": "toolchain.go.lock.toml",
+  "network": "disabled"
+}

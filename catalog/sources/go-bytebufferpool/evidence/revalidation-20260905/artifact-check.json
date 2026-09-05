@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-bytebufferpool",
+  "expected_catalog_digest": "sha256:836956c9153954e4cf20382d0a639a6a14e504e4251b319f446b72d560cb0da0",
+  "instruction_sha256": "sha256:8aaaa3d66e4c9a104c53e563e9aca83c025f59b90c0bf9c2e335b105594da4a4",
+  "upstream_revision": "18533face0dfe7042f8157bba9010bd7f8df54b1",
+  "source_archive_sha256": "sha256:a070768e029bc8a99e64611b6cf9905c193fe51b7a17044d3fb5b5fec7ca08cd",
+  "source_archive_bytes": 30720,
+  "private_artifacts": [
+    {"name": "module_bundle", "digest": "sha256:47f336a69aff8a84fdd375c3f9acd13c4172f9d509c36b5eca59e50c16ba460c", "size_bytes": 505, "verified": true},
+    {"name": "verifier_bundle", "digest": "sha256:dd0ca9e0aa581dd9dbc3b6ac6d9e803203331e8ce6ae8a448e9d69f971067290", "size_bytes": 1239, "verified": true},
+    {"name": "oracle_bundle", "digest": "sha256:7b59ac69ba057ecd1669a47381d2cc195bc6da1f89952ac44213fcb39b82f4e2", "size_bytes": 1023, "verified": true}
+  ],
+  "checked_at": "2026-09-05T18:10:56Z"
+}

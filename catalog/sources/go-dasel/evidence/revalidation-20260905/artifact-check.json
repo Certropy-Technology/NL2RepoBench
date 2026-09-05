@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-dasel",
+  "source_digest_expected": "sha256:44f4cb85b7ccba3782d3faf6cb6bd89b4cc0847b526b508c6c4eec53bf6a4c95",
+  "source_digest_validated": true,
+  "source_revision": "c5cf675972e68f17d0072c0e29801d09ca5c3951",
+  "artifacts": [
+    {"name": "module_bundle", "digest": "sha256:1614d318bea93da429dced0e338071c59c971cfc879d9910e06f5db63fc3fab2", "size_bytes": 4401408, "hash_valid": true},
+    {"name": "verifier_bundle", "digest": "sha256:66ea8b65e6a9ca426d0f71303ffcda4064e15198834b3791be1b4cfc37798469", "size_bytes": 1255, "hash_valid": true},
+    {"name": "oracle_bundle", "digest": "sha256:950bd43644fbf749c44b86894d7729c66a8ca01227236312ccc0d0ece913a930", "size_bytes": 842, "hash_valid": true}
+  ],
+  "oracle_bundle_inventory": ["solve.sh"],
+  "oracle_bundle_contains_source_payload": false,
+  "oracle_bundle_contains_runtime_source_fetch": true
+}

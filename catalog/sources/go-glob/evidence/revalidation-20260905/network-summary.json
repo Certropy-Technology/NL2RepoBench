@@ -1,0 +1,19 @@
+{
+  "task_id": "go-glob",
+  "policy": "no-network",
+  "lint": {
+    "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+    "exit_code": 0,
+    "task_findings": 0,
+    "task_errors": 0
+  },
+  "oracle_attempt": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p <compiled-go-glob-bundle> -a oracle --job-name go-glob-revalidation-oracle-20260906 -o <ignored-run-root> --n-concurrent 1 --yes",
+    "bounded_timeout_seconds": 300,
+    "completed": false,
+    "exit_code": null,
+    "failure_class": "infrastructure",
+    "reason": "The run remained pending while the Oracle solve script required a forbidden runtime GitHub clone; the worker terminated only its own run process group after the timeout.",
+    "public_network_available": false
+  }
+}

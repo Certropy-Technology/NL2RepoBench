@@ -1,0 +1,11 @@
+{
+  "task_id": "go-bytebufferpool",
+  "command": "uv run nl2repo harbor compile catalog/sources/go-bytebufferpool --output .nl2repo/revalidation-go-bytebufferpool-b --toolchain toolchain.go.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+  "exit_code": 0,
+  "file_count": 67,
+  "raw_manifest_sha256": "sha256:8f81b40a866f227d4a1c79323e9e12a9ed021817085c00e7186f10a5e9962406",
+  "canonical_manifest_digest": "sha256:7d5b87d08c4b95ac660014213cdfa8831d9a9eae8df56f95d93e4fc5f5851c48",
+  "byte_identical_to_compile_a": true,
+  "allow_incomplete": false,
+  "network": "no-network"
+}

@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-cmp",
+  "source_digest": "sha256:58390d2ae77c9595b8293140ab9bf59b46b168f20ac17d9eedefefdb623c2dc0",
+  "status": "artifact-or-verifier-blocked",
+  "compile": {
+    "attempt_a": "passed",
+    "attempt_b": "passed",
+    "byte_identical": true,
+    "canonical_manifest_digest": "sha256:5f17202bed13788349a27106bd1601176e5921fe6f0b694c83a46606edf4a807"
+  },
+  "oracle": {"status": "not-run", "reason": "runtime GitHub source fetch forbidden under NoNetwork"},
+  "controls": {"status": "not-run", "reason": "Oracle payload is not available as a local hash-verifiable source payload"},
+  "replacement_bundle": {"status": "not-found"},
+  "lifecycle_unchanged": true,
+  "generated_projection_unchanged": true,
+  "production_evidence_unchanged": true
+}

@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-gjson",
+  "expected_catalog_digest": "sha256:4fa887067e300b0d87108f905ff1fe6a6f62f689ad61ab828335a295a6d3b752",
+  "source_revision": "7d8b3821e9d2acf35e8a226b63fcf801078e9b96",
+  "source_archive_digest": "sha256:91ec8257d29e04f0b67cac8641197ddb86d975138a8588d128bf4f27b447692a",
+  "artifacts": [
+    {
+      "kind": "oracle_bundle",
+      "digest": "sha256:045d5af2641c5d19c9367398e9f3a76367987bd96eaa68ff42ef139e2c2e1c31",
+      "declared_size_bytes": 9699,
+      "observed_size_bytes": 9699,
+      "observed_sha256": "sha256:045d5af2641c5d19c9367398e9f3a76367987bd96eaa68ff42ef139e2c2e1c31",
+      "present_and_hash_valid": true
+    },
+    {
+      "kind": "module_bundle",
+      "digest": "sha256:fc252f8a424717d8370b50ae874a2ad088d6def9b8e997dc0725eeab9aefdb1c",
+      "declared_size_bytes": 9128,
+      "observed_size_bytes": 9128,
+      "observed_sha256": "sha256:fc252f8a424717d8370b50ae874a2ad088d6def9b8e997dc0725eeab9aefdb1c",
+      "present_and_hash_valid": true
+    },
+    {
+      "kind": "verifier_bundle",
+      "digest": "sha256:f7173db9c94d96b2fe860fe36096592065b03052e0af89f5423af5c575b032b0",
+      "declared_size_bytes": 1251,
+      "observed_size_bytes": 1251,
+      "observed_sha256": "sha256:f7173db9c94d96b2fe860fe36096592065b03052e0af89f5423af5c575b032b0",
+      "present_and_hash_valid": true
+    }
+  ],
+  "verification": "All three private CAS objects were checked by size and SHA-256 before compilation."
+}

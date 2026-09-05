@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-errgroup",
+  "search_policy": "NoNetwork local-recovery-first",
+  "searched_paths": [
+    "private Oracle CAS object",
+    "authorized local handoff archives",
+    "authorized local authoring worktrees",
+    "generated Go module cache errgroup.go",
+    "catalog/tasks/go-errgroup/solution"
+  ],
+  "matching_payloads": [],
+  "near_matches_rejected": [
+    {"path": "generated Go module cache errgroup.go", "reason": "single package file only; does not provide the frozen repository archive or declared source digest"},
+    {"path": "private Oracle CAS object", "reason": "Oracle script only; no source archive member"}
+  ],
+  "replacement_bundle": null,
+  "conclusion": "No local bytes were found that can be hash-verified against revision f75267d8412fc1dfd12b343644a7ea46e4d9c85d and source digest sha256:22414d7297aba3d45f32f30a1f58564a680efbf6cbfe89d30b6e3aa87c38ce09."
+}
