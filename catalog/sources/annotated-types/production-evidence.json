@@ -124,7 +124,7 @@
     }
   },
   "residual_risks": [
-    "The committed catalog/tasks projection must be regenerated and bound to canonical manifest sha256:6213eef071df8289223ba4278ba9d5c56c4f71c0d6d183fb20147dd8098aa93d before this source evidence is accepted by the production catalog gate.",
+    "The parent regenerated catalog/tasks/annotated-types and byte-compared it with an independent compile; its bundle manifest file hash is sha256:d0550b360f19c50d1ccce2d8ac11a1c3c359e5f9119a8457e395e5fb9d513ab5 and its canonical manifest digest is sha256:6213eef071df8289223ba4278ba9d5c56c4f71c0d6d183fb20147dd8098aa93d.",
     "The first stub attempt failed before collection with infrastructure OSError Errno 11; the bounded retry completed and is the receipt used above."
   ]
 }

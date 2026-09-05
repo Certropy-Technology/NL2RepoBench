@@ -1,0 +1,155 @@
+{
+  "schema_version": "1.0",
+  "report_kind": "instruction-revalidation-wave",
+  "wave": 1,
+  "workflow_run": "2a7b5d20-c626-4fc4-b3bd-a788e1c5a2d4",
+  "queue": "reports/instruction-revalidation-queue-20260905.json",
+  "queue_base_commit": "c012398d1846e0a16ff71ebfa83e666401a04482",
+  "integration_commits": [
+    "591959848cf0d3ecd0c3d733881d60f98436e10b",
+    "5722a1ae9511b8ec20a52b5df71a770b6cbffe62"
+  ],
+  "network_policy": "no-network",
+  "attempts_per_task": 1,
+  "concurrency": 16,
+  "model_api_cost_usd": 0,
+  "counts": {
+    "task_count": 16,
+    "fully_revalidated": 4,
+    "artifact_or_verifier_blocked": 7,
+    "run_passed_but_receipts_not_durable": 5,
+    "projection_refreshed": 4
+  },
+  "tasks": [
+    {
+      "task_id": "aiobotocore",
+      "status": "artifact-or-verifier-blocked",
+      "failure_class": "infrastructure",
+      "evidence": "catalog/sources/aiobotocore/evidence/revalidation-20260905.md",
+      "reason": "The local Oracle payload still fetches GitHub and the frozen source archive sha256:6118ac737ce18ff5e3ed0190e7cf8298a98ef2acd68e046f733050fe8934bc0d is absent from CAS. Lifecycle was not changed."
+    },
+    {
+      "task_id": "aiohappyeyeballs",
+      "status": "fully-revalidated",
+      "source_digest": "sha256:6d79a6352a74630f56361971de123d7911e734bea97c43fb60a6c133f25a153d",
+      "canonical_manifest_digest": "sha256:e1c3667f3aec7bba4ec9711282ac79ce1eb91ff0942a8c78d0f95358e21abf43",
+      "oracle": {"passed": 17, "total": 17, "reward": 1.0},
+      "stub": {"passed": 3, "total": 17, "reward": 0.17647058823529413},
+      "forgery": {"passed": 3, "total": 17, "reward": 0.17647058823529413},
+      "empty": {"passed": 0, "total": 0, "reward": 0.0, "reason": "candidate-installation-failed"},
+      "projection": "catalog/tasks/aiohappyeyeballs"
+    },
+    {
+      "task_id": "aiosignal",
+      "status": "run-passed-receipts-not-durable",
+      "oracle": {"passed": 13, "total": 13, "reward": 1.0},
+      "reason": "The proposed production evidence referenced eight paths under the removed worker worktree. The patch was not integrated."
+    },
+    {
+      "task_id": "ajv-formats",
+      "status": "run-passed-receipts-not-durable",
+      "oracle": {"passed": 27, "total": 27, "reward": 1.0},
+      "reason": "The proposed production evidence referenced sixteen non-durable worker paths. The patch was not integrated."
+    },
+    {
+      "task_id": "alembic",
+      "status": "artifact-or-verifier-blocked",
+      "failure_class": "verifier",
+      "evidence": "catalog/sources/alembic/evidence/revalidation-20260905.md",
+      "reason": "The Oracle bundle contains a network-fetching solve script but no local archive matching sha256:d152069190bef5403affcb73bd9b25cdeb34b4662a9bc8b70f9fe65968b72e72. Lifecycle was not changed."
+    },
+    {
+      "task_id": "annotated-doc",
+      "status": "run-passed-receipts-not-durable",
+      "oracle": {"passed": 18, "total": 18, "reward": 1.0},
+      "reason": "The proposed production evidence referenced twelve non-durable worker paths. The patch was not integrated."
+    },
+    {
+      "task_id": "annotated-types",
+      "status": "fully-revalidated",
+      "source_digest": "sha256:c6c4d1757f274a02a6a71504951f192054a84af06dbda201958e168f9d386467",
+      "canonical_manifest_digest": "sha256:6213eef071df8289223ba4278ba9d5c56c4f71c0d6d183fb20147dd8098aa93d",
+      "oracle": {"passed": 60, "total": 60, "reward": 1.0},
+      "stub": {"passed": 1, "total": 60, "reward": 0.016666666666666666},
+      "forgery": {"passed": 2, "total": 60, "reward": 0.03333333333333333},
+      "empty": {"passed": 0, "total": 0, "reward": 0.0, "reason": "candidate-installation-failed"},
+      "infra_retry": "The first stub attempt hit Errno 11 before collection; one bounded retry completed.",
+      "projection": "catalog/tasks/annotated-types"
+    },
+    {
+      "task_id": "ansi-regex",
+      "status": "run-passed-receipts-not-durable",
+      "oracle": {"passed": 24, "total": 24, "reward": 1.0},
+      "reason": "The proposed production evidence referenced eighteen non-durable worker paths. The patch was not integrated."
+    },
+    {
+      "task_id": "ansi-styles",
+      "status": "artifact-or-verifier-blocked",
+      "failure_class": "verifier",
+      "evidence": "catalog/sources/ansi-styles/evidence/no-network-revalidation-blocker.md",
+      "reason": "The private Oracle bundle overrides the task-local solve script with a codeload fetch. A local materializer proposal is retained; lifecycle was not changed."
+    },
+    {
+      "task_id": "anytree",
+      "status": "artifact-or-verifier-blocked",
+      "failure_class": "infrastructure",
+      "evidence": "catalog/sources/anytree/evidence/revalidation-20260905.md",
+      "reason": "All three declared private artifacts are absent from the parent CAS. Lifecycle was not changed."
+    },
+    {
+      "task_id": "argparse",
+      "status": "artifact-or-verifier-blocked",
+      "failure_class": "verifier",
+      "evidence": "catalog/sources/argparse/evidence/source-freeze.txt",
+      "reason": "The Oracle bundle contains a codeload fetch and no local source archive. The worker's proposed lifecycle transition was rejected; lifecycle was not changed."
+    },
+    {
+      "task_id": "arrow",
+      "status": "fully-revalidated",
+      "source_digest": "sha256:fd0b796b1433554e0d5709150bfcbf607ad90221c19ac82b37bc45661cf266cc",
+      "canonical_manifest_digest": "sha256:6b21d8cc2e5326b90ce64c2f23b693355f4ed5849b4861f50629893dcb99fa34",
+      "oracle": {"passed": 48, "total": 48, "reward": 1.0},
+      "stub": {"passed": 0, "total": 48, "reward": 0.0},
+      "forgery": {"passed": 0, "total": 48, "reward": 0.0},
+      "projection": "catalog/tasks/arrow"
+    },
+    {
+      "task_id": "async",
+      "status": "run-passed-receipts-not-durable",
+      "oracle": {"passed": 27, "total": 27, "reward": 1.0},
+      "reason": "The proposed production evidence referenced twenty-five non-durable worker paths. The patch was not integrated."
+    },
+    {
+      "task_id": "attrs",
+      "status": "artifact-or-verifier-blocked",
+      "failure_class": "infrastructure",
+      "evidence": "catalog/sources/attrs/evidence/revalidation-20260905.md",
+      "reason": "All three declared private artifacts are absent from the parent CAS. Lifecycle was not changed."
+    },
+    {
+      "task_id": "autojump",
+      "status": "artifact-or-verifier-blocked",
+      "failure_class": "infrastructure",
+      "evidence": "catalog/sources/autojump/revalidation-blocker.md",
+      "reason": "All three declared private artifacts are absent from the parent CAS. Lifecycle was not changed."
+    },
+    {
+      "task_id": "axios",
+      "status": "fully-revalidated",
+      "source_digest": "sha256:fd2d7ce17988470b91085ef5df896c250af3b2647d3869144539782f398bcffd",
+      "canonical_manifest_digest": "sha256:f46af14d968a0cd972a96a1dabbc7a139fb02f0a3ec150f0a9f0061ec319a021",
+      "bundle_manifest_sha256": "sha256:0192066c8c9f133d781ee2551070004818cfccc9953f71a572d16c3543e073a7",
+      "oracle": {"passed": 16, "total": 16, "reward": 1.0},
+      "stub": {"passed": 0, "total": 16, "reward": 0.0},
+      "forgery": {"passed": 0, "total": 16, "reward": 0.0},
+      "empty": {"passed": 0, "total": 0, "reward": 0.0, "reason": "candidate-installation-failed"},
+      "parent_repair": "Added a standalone empty control and reran the complete final bundle matrix.",
+      "projection": "catalog/tasks/axios"
+    }
+  ],
+  "residual_risks": [
+    "Five successful worker runs require a parent rerun or restored tracked receipts before integration.",
+    "Seven tasks require exact local Oracle/CAS payload remediation and remain at their prior lifecycle status.",
+    "The full generated network lint has one unrelated historical error; none of the four refreshed tasks has a finding."
+  ]
+}
