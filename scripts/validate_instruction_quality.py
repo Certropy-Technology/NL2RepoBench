@@ -36,7 +36,7 @@ FORBIDDEN = re.compile(
 )
 SIGNATURE = re.compile(
     r"(?:def\s+[A-Za-z_]\w*\s*\(|class\s+[A-Za-z_]\w*|"
-    r"[A-Za-z_][\w.]*\s*\([^\n]{0,240}\))"
+    r"(?:func\s+)?[A-Za-z_][\w.]*\s*\([^\n]{0,240}\))"
 )
 IMPORT = re.compile(r"(?:from\s+[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)*\s+import|"
                     r"import\s+[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)*)")
