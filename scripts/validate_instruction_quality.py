@@ -38,8 +38,14 @@ SIGNATURE = re.compile(
     r"(?:def\s+[A-Za-z_]\w*\s*\(|class\s+[A-Za-z_]\w*|"
     r"(?:func\s+)?[A-Za-z_][\w.]*\s*\([^\n]{0,240}\))"
 )
-IMPORT = re.compile(r"(?:from\s+[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)*\s+import|"
-                    r"import\s+[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)*)")
+IMPORT = re.compile(
+    r"(?:"
+    r"from\s+[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)*\s+import|"
+    r"import\s+[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)*|"
+    r"import\s+(?:\{[^}\n]+\}|\*\s+as\s+[A-Za-z_$][\w$]*)\s+from\s+['\"]|"
+    r"import\s+['\"][^'\"\n]+['\"]"
+    r")"
+)
 
 
 def is_blocked(task_dir: Path) -> bool:
