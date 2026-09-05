@@ -1,7 +1,10 @@
 {
   "expected_total": 9,
+  "grading_details": [
+    "{\"category\":\"pom-forbidden-build-configuration\",\"message\":\"candidate POM contains forbidden build or dependency configuration\",\"path\":\"pom.xml\",\"phase\":\"candidate-installation\",\"policy\":\"java-candidate-policy-v1\",\"policy_version\":\"java-candidate-policy-v1\",\"status\":\"rejected\",\"workspace_root\":\"/tmp/java-candidate\"}"
+  ],
   "grading_path": "catalog/datasets/nl2repobench-java-pilot/model-pilot-evidence/opus-java-semver4j/grading.json",
-  "grading_sha256": "sha256:c911b3187f669552710685e72edcb8552da6c30a793d580b012f482577c3d0c0",
+  "grading_sha256": "sha256:2f2d7bce02eb002f49e7b57745aeb039d17f2b17c50ba2d187cd45588e116759",
   "model": "claude-opus-5",
   "network_path": "catalog/datasets/nl2repobench-java-pilot/model-pilot-evidence/opus-java-semver4j/network.json",
   "network_sha256": "sha256:7a3f89d94805128858602d9c2a25b3a2f114cfe5832a61e55db4be7f6e0b8ffe",
@@ -11,7 +14,7 @@
   "schema_version": "1.0",
   "task_id": "java-semver4j",
   "valid": true,
-  "verifier_generation": "current-final-v2",
+  "verifier_generation": "detail-enabled-final",
   "workspace_source": "preserved Harbor model workspace",
   "workspace_tree_sha256": "sha256:4c93e8fad2d6611f70503f1f25fbca255ffeb041c306ae327c825a20b1346c98"
 }

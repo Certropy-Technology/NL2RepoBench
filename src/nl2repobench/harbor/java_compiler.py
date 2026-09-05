@@ -872,8 +872,9 @@ if ! python3 -I -c "$PYTHON_ROOT from nl2repobench.verification.workspace_copy i
   exit 0
 fi
 if ! python3 -I -c "$PYTHON_ROOT from nl2repobench.verification.java_candidate import main; main()" \\
-  --root /tmp/java-candidate; then
-  grade --reason candidate-installation-failed
+  --root /tmp/java-candidate --report /logs/verifier/candidate-installation.json; then
+  candidate_install_detail=$(python3 -c 'import json; print(json.dumps(json.load(open("/logs/verifier/candidate-installation.json")), sort_keys=True, separators=(",", ":")))' 2>/dev/null || true)
+  grade --reason candidate-installation-failed --detail "$candidate_install_detail"
   exit 0
 fi
 rm -rf /tmp/java-harness /tmp/java-private /tmp/java-dependencies

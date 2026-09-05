@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import stat
 from pathlib import Path
 
@@ -61,7 +62,10 @@ def validate_java_workspace(root: Path) -> dict[str, int | bool]:
             continue
         if relative.parts == ("pom.xml",):
             data = _regular(path)
-            validate_candidate_pom(data)
+            try:
+                validate_candidate_pom(data)
+            except ValueError as exc:
+                raise JavaWorkspaceRejected(str(exc)) from exc
         elif (
             len(relative.parts) >= 4
             and relative.parts[:3] == ("src", "main", "java")
@@ -99,10 +103,48 @@ def main() -> None:
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--root", type=Path, required=True)
+    parser.add_argument("--report", type=Path)
     args = parser.parse_args()
     try:
-        validate_java_workspace(args.root)
+        summary = validate_java_workspace(args.root)
+        if args.report is not None:
+            args.report.parent.mkdir(parents=True, exist_ok=True)
+            args.report.write_text(
+                json.dumps(
+                    {"policy": "java-candidate-policy-v1", "status": "accepted", **summary},
+                    sort_keys=True,
+                )
+                + "\n",
+                encoding="utf-8",
+            )
     except JavaWorkspaceRejected as exc:
+        if args.report is not None:
+            message = str(exc)
+            lowered = message.casefold()
+            category = (
+                "pom-forbidden-build-configuration"
+                if "forbidden build or dependency" in lowered
+                else "pom-unsupported-metadata"
+                if "pom" in lowered
+                else "workspace-boundary"
+            )
+            args.report.parent.mkdir(parents=True, exist_ok=True)
+            detail = {
+                "policy_version": "java-candidate-policy-v1",
+                "phase": "candidate-installation",
+                "category": category,
+                "path": "pom.xml" if "pom" in lowered else None,
+                "message": message,
+                "workspace_root": str(args.root),
+            }
+            args.report.write_text(
+                json.dumps(
+                    {"policy": "java-candidate-policy-v1", "status": "rejected", **detail},
+                    sort_keys=True,
+                )
+                + "\n",
+                encoding="utf-8",
+            )
         print(str(exc))
         raise SystemExit(20) from None
 

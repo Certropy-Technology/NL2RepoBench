@@ -1,17 +1,18 @@
 {
   "expected_total": 9,
+  "grading_details": [],
   "grading_path": "catalog/datasets/nl2repobench-java-pilot/model-pilot-evidence/sol-java-semver4j/grading.json",
   "grading_sha256": "sha256:c7f3053fc5fe6625c0f6d570196749ab81bfd1d2edf6817766fad6637e7f6b1a",
   "model": "gpt-5.6-sol",
   "network_path": "catalog/datasets/nl2repobench-java-pilot/model-pilot-evidence/sol-java-semver4j/network.json",
-  "network_sha256": "sha256:7a3f89d94805128858602d9c2a25b3a2f114cfe5832a61e55db4be7f6e0b8ffe",
+  "network_sha256": "sha256:500e8d18ae1228e46e9b829535c9f8c336c49a0e38dcf75981be1cd007606585",
   "public_network_available": false,
   "result": "verifier-only-passed",
   "reward": 1.0,
   "schema_version": "1.0",
   "task_id": "java-semver4j",
   "valid": true,
-  "verifier_generation": "current-final-v2",
+  "verifier_generation": "detail-enabled-final",
   "workspace_source": "preserved Harbor model workspace",
   "workspace_tree_sha256": "sha256:2f622e32f097d0d213e329a577c8488d9b1cb8cf46b84273f3d45b83671db1dc"
 }

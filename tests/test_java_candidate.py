@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import sys
 from pathlib import Path
 
@@ -111,3 +112,32 @@ def test_java_candidate_cli_returns_bounded_error(
 
     assert raised.value.code == 20
     assert "root is not a directory" in capsys.readouterr().out
+
+
+def test_java_candidate_cli_records_structured_pom_rejection(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    root = _workspace(tmp_path)
+    pom = root / "pom.xml"
+    pom.write_text(
+        "<project><artifactId>candidate</artifactId><build><plugins /></build></project>",
+        encoding="utf-8",
+    )
+    report = tmp_path / "candidate-installation.json"
+
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        ["java-candidate", "--root", str(root), "--report", str(report)],
+    )
+    with pytest.raises(SystemExit) as raised:
+        java_candidate.main()
+
+    assert raised.value.code == 20
+    detail = json.loads(report.read_text(encoding="utf-8"))
+    assert detail["policy_version"] == "java-candidate-policy-v1"
+    assert detail["phase"] == "candidate-installation"
+    assert detail["category"] == "pom-forbidden-build-configuration"
+    assert detail["path"] == "pom.xml"
+    assert "forbidden build or dependency" in detail["message"]
+    assert "forbidden" in capsys.readouterr().out
