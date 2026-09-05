@@ -103,6 +103,23 @@ public `catalog/sources`。custom report 必须包含固定数量的唯一 leaf 
 `passed|failed|skipped` 状态；wrapper 负责 timeout、UID、no-network、JUnit/collection
 和 reward。
 
+### Oracle payload
+
+Oracle bundle 完成前必须解包自检，而不是只核对外层 tar digest：内部 source archive
+的 SHA-256 必须与 `solve.sh` 常量和 source-freeze evidence 三方一致；执行 solve 后，
+`/workspace` 根必须直接包含可安装入口（如 `pyproject.toml`、`setup.py` 或
+`package.json`）。若 source archive 带单一目录前缀，先验证所有 entry 都属于该前缀，
+再使用 `--strip-components=1`。git archive 丢失 `.git` 导致 setuptools-scm 无法推导
+版本时，使用该revision公开规格中冻结的版本配置 `fallback_version`，不要在运行时恢复
+git metadata 或访问上游。
+
+### Deterministic expectations
+
+Verifier 不得把 `set`、`frozenset`、hash map 或其他未承诺顺序的容器直接转成 list 后
+断言固定顺序。先按公开契约判断顺序是否有语义：无语义时在 child adapter 中排序；有
+语义时用位置/索引 API 单独断言。至少用多个 `PYTHONHASHSEED` 重放涉及hash容器的场景，
+确认每个leaf结果稳定。
+
 ## QA 门禁
 
 Worker 在 handoff 前至少运行并保存：
