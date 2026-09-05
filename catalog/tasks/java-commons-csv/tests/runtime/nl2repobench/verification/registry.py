@@ -31,6 +31,7 @@ class VerifierAdapter(Protocol):
         pytest_exit_code: int | None,
         runner_exit_code: int | None,
         explicit_reason: VerificationReason | None,
+        details: tuple[str, ...] = (),
     ) -> Any: ...
 
     def write(self, result: Any, output_dir: Path) -> None: ...
@@ -113,6 +114,7 @@ class _JavaVerifierAdapter:
             report_data=kwargs["report_data"],
             runner_exit_code=kwargs["runner_exit_code"],
             explicit_reason=kwargs["explicit_reason"],
+            details=kwargs.get("details", ()),
         )
 
     def write(self, result: Any, output_dir: Path) -> None:

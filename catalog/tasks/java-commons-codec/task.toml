@@ -5,7 +5,7 @@ artifacts = [
 
 [task]
 name = "nl2repobench/java-commons-codec"
-version = "1.1.0"
+version = "1.2.0"
 description = "Recreate Apache Commons Codec Base64 and hexadecimal string behavior."
 authors = [
     { name = "NL2RepoBench" },
@@ -35,8 +35,8 @@ package_manager = "maven"
 package_manager_version = "3.9.11"
 metric_contract = "fixed-test-pass-rate-v1"
 expected_test_count = 4
-canonical_manifest_digest = "sha256:eb95cbbd9ae997679e6550d985b0df11179a2a4fcc555993ecf29686fd8e4ad7"
-toolchain_lock_digest = "sha256:22760c00c5c72822c811e2413d3cf7dceefb44aa9c5cb2197e1c897c255eaa08"
+canonical_manifest_digest = "sha256:d487418cfcb1bc12e6a06486dc5bbd644a94059f7eef3c62e096bfbab158d8f3"
+toolchain_lock_digest = "sha256:d2f9d182875c4f98dd3625d6fd280894104006b6e64611e68ce67e7a74605517"
 
 [agent]
 timeout_sec = 1200.0

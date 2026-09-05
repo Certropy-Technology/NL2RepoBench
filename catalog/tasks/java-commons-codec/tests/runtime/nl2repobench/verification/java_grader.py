@@ -28,6 +28,7 @@ def grade_java_report(
     runner_exit_code: int | None = None,
     metric_contract: MetricContract | str = "fixed-test-pass-rate-v1",
     explicit_reason: VerificationReason | None = None,
+    details: tuple[str, ...] = (),
 ) -> EvaluationResult:
     """Normalize a trusted JUnit report and score it using the common metric."""
 
@@ -38,7 +39,7 @@ def grade_java_report(
             expected_total=1,
             reason=VerificationReason.REPORT_MALFORMED,
             runner_exit_code=runner_exit_code,
-            details=(f"expected_total must be positive (got {expected_total!r})",),
+            details=details + (f"expected_total must be positive (got {expected_total!r})",),
         )
     if explicit_reason is not None:
         return failure_result_for_reason(
@@ -46,6 +47,7 @@ def grade_java_report(
             expected_total=expected_total,
             reason=explicit_reason,
             runner_exit_code=runner_exit_code,
+            details=details,
         )
     if runner_exit_code is not None and runner_exit_code not in {0, 1}:
         return failure_result_for_reason(
@@ -53,6 +55,7 @@ def grade_java_report(
             expected_total=expected_total,
             reason=VerificationReason.RUNNER_ABNORMAL_EXIT,
             runner_exit_code=runner_exit_code,
+            details=details,
         )
     try:
         report = normalize_junit_open_test_report(
@@ -66,7 +69,7 @@ def grade_java_report(
             expected_total=expected_total,
             reason=exc.reason,
             runner_exit_code=runner_exit_code,
-            details=exc.details,
+            details=details + exc.details,
         )
     return evaluate_leaf_report(report, contract)
 

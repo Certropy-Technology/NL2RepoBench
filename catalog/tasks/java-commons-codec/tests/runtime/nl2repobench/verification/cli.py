@@ -50,6 +50,7 @@ def main() -> None:
     parser.add_argument("--report", type=Path, help="Verifier-owned node:test JSON report.")
     parser.add_argument("--runner-exit-code", type=int)
     parser.add_argument("--reason")
+    parser.add_argument("--detail", action="append", default=[])
     parser.add_argument("--output", type=Path, default=Path("/logs/verifier"))
     args = parser.parse_args()
 
@@ -77,6 +78,7 @@ def main() -> None:
         pytest_exit_code=args.pytest_exit_code,
         runner_exit_code=args.runner_exit_code,
         explicit_reason=reason,
+        details=tuple(args.detail),
     )
     adapter.write(result, args.output)
 

@@ -1,107 +1,176 @@
-# Project Description
+# Introduction and Goals of the Commons CSV Project
 
-Implement the selected deterministic CSV parsing and formatting behavior of
-Apache Commons CSV as a single Maven Java library. The project must parse
-ordinary CSV text, expose record fields and sizes, and format values into one
-CSV record through the public classes in `org.apache.commons.csv`.
-
-## Introduction and Goals
-
-The library preserves CSV record order, handles quoted commas, exposes
-zero-based field access, and formats values using the default comma delimiter.
-The evaluator uses a separate offline verifier, an empty private Maven
-repository, and a fixed JDK 21/Maven environment.
+Apache Commons CSV is a Java library for parsing and formatting delimited
+records. This task implements a deterministic public slice covering CSV
+format selection, record parsing, field access, iteration, and resource
+management. The project must remain a self-contained single-module Maven
+library.
 
 ## Natural Language Instruction (Prompt)
 
-Please create a Java Maven project that provides the following public behavior:
+Please create a Java Maven project named Commons CSV with the following public
+behavior:
 
-1. `CSVParser.parse(String, CSVFormat)` parses CSV text into records.
-2. `CSVRecord.get(int)` returns a field by zero-based index.
-3. `CSVRecord.size()` returns the number of fields in a record.
-4. `CSVFormat.DEFAULT.format(Object...)` formats values as one CSV record.
-5. Preserve ordinary comma-delimited rows, quoted commas, empty fields, record
-   order, and deterministic formatting.
-6. Keep Java sources under `src/main/java` in a normal single-module Maven
+1. Parse comma-separated text into records while preserving source order.
+2. Expose record field access by zero-based index and by header name when a
+   header is configured.
+3. Support the documented default CSV format and explicit header behavior.
+4. Provide deterministic iteration, record counts, and `AutoCloseable`/`close`
+   behavior for parsers.
+5. Preserve quoted commas, escaped quotes, empty fields, and line boundaries.
+6. Keep the implementation under `src/main/java` in a single-module Maven
    project without external runtime dependencies.
 
 ## Environment Configuration
 
-- Java runtime: Temurin JDK `21.0.12+8`
-- Maven: `3.9.11`
-- Platform: Linux `amd64`
-- Build and verification: offline, verifier-owned Maven/Javac harness
-- Candidate compilation: `javac --release 21`
-- Runtime dependencies: none
-- Network access: unavailable to the agent and verifier
+### Core Dependency Library Versions
 
-## Project Architecture
-
-Use the standard Maven layout:
-
-```text
-project/
-├── pom.xml
-└── src/
-    └── main/
-        └── java/
-            └── org/apache/commons/csv/
-                ├── CSVFormat.java
-                ├── CSVParser.java
-                └── CSVRecord.java
+```Plain
+Temurin JDK 21.0.12+8       # Java runtime
+Maven 3.9.11                # Offline project tooling
+Linux amd64                 # Fixed platform
+Runtime dependencies: none  # Java standard library only
+Network access: unavailable # Agent and verifier are offline
 ```
 
-The required public package is `org.apache.commons.csv`. Keep the
-implementation self-contained and do not execute the upstream Maven build,
-profiles, plugins, tests, or repository configuration.
+## Commons CSV Project Architecture
+
+### Project Directory Structure
+
+```Plain
+workspace/
+├── pom.xml
+└── src
+    └── main
+        └── java
+            └── org
+                └── apache
+                    └── commons
+                        └── csv
+                            ├── CSVFormat.java
+                            ├── CSVParser.java
+                            └── CSVRecord.java
+```
+
+The candidate POM is metadata only. Do not use candidate-controlled build
+plugins, dependencies, profiles, repositories, modules, or custom extensions.
 
 ## API Usage Guide
+
+### Core APIs
+
+#### 1. Module Import
 
 ```java
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
-
-CSVParser parser = CSVParser.parse("name,value\nAda,42", CSVFormat.DEFAULT);
-// The returned parser preserves record order and exposes the parsed records.
-parser.close();
-String line = CSVFormat.DEFAULT.format("Ada", 42);
+import org.apache.commons.csv.CSVRecord;
 ```
 
-The required public signatures are:
+#### 2. CSVFormat - Select Parsing Rules
 
 ```java
-CSVParser CSVParser.parse(String text, CSVFormat format)
-List<CSVRecord> CSVParser.getRecords()
-String CSVRecord.get(int index)
-int CSVRecord.size()
-String CSVFormat.DEFAULT.format(Object... values)
+CSVFormat format = CSVFormat.DEFAULT;
 ```
 
-`CSVParser` implements `AutoCloseable`; `close()` releases parser resources and
-does not change already parsed record values. `getRecords()` returns records in
-source order. Quoted fields may contain commas and are unquoted when returned
-by `CSVRecord.get(int)`. Formatting uses the default comma delimiter and quotes
-values only when CSV syntax requires it.
+Use the public default format and its documented header configuration methods.
+Formatting options must be deterministic and must not depend on locale.
 
-## Examples and Boundary Conditions
+#### 3. CSVParser - Parse Records
 
 ```java
-try (CSVParser parser = CSVParser.parse("name,value\nAda,42", CSVFormat.DEFAULT)) {
-    parser.getRecords().get(1).get(0); // Ada
-    parser.getRecords().get(1).size(); // 2
+try (CSVParser parser = CSVParser.parse("a,b\n1,2\n", format)) {
+    for (CSVRecord record : parser.getRecords()) {
+        System.out.println(record.get(0));
+    }
 }
-CSVFormat.DEFAULT.format("Ada", 42); // Ada,42
-CSVParser.parse("a,\"b,c\"", CSVFormat.DEFAULT); // quoted comma is one field
 ```
 
-Preserve empty fields, quoted commas, row order, zero-based indexing, and
-deterministic output. Malformed input must follow the selected library's
-ordinary exception behavior. Do not use network access or external runtime
-dependencies.
+The parser is `AutoCloseable`; `getRecords()` returns records in source order.
+The parser must not reorder or silently drop records.
 
-## Implementation Notes
+#### 4. CSVRecord - Read Fields
 
-The verifier compiles candidate sources directly and calls only the selected
-public methods through a separate candidate JVM. The candidate `pom.xml` is
-validated as metadata; upstream plugins, profiles, repositories, tests,
-modules, and release configuration are outside the task contract.
+```java
+String first = record.get(0);
+long number = record.getRecordNumber();
+boolean present = record.isMapped("name");
+String value = record.get("name");
+```
+
+Index access is zero-based. Header-name access follows the configured header
+map and reports missing names through the public exception contract.
+
+### Actual Usage Modes
+
+#### Basic Parsing
+
+```java
+CSVParser parser = CSVParser.parse("a,b\n1,2\n", CSVFormat.DEFAULT);
+List<CSVRecord> records = parser.getRecords();
+parser.close();
+```
+
+#### Quoted Fields
+
+```java
+CSVParser parser = CSVParser.parse("\"a,b\",c\n", CSVFormat.DEFAULT);
+CSVRecord record = parser.getRecords().get(0);
+// record.get(0) is "a,b"
+```
+
+#### Header Access
+
+Configure a header through the public `CSVFormat` API, then use
+`record.get("header")` and `record.isMapped("header")` consistently.
+
+### Supported Function Types
+
+The supported function types are format configuration, parser construction,
+record collection and iteration, indexed field access, header-name access,
+record numbering, and close/resource behavior.
+
+### Error Handling
+
+Malformed quotes, invalid field access, missing header names, null inputs, and
+use after close must follow the public exception and lifecycle behavior. Do
+not silently repair malformed CSV or change record order.
+
+## Detailed Implementation Nodes of Functions
+
+### Node 1: Default CSV Parsing
+
+Parse comma-separated records using the documented default delimiter and line
+handling rules.
+
+### Node 2: Quoting and Escaping
+
+Preserve commas and newlines inside quoted fields and unescape doubled quotes.
+
+### Node 3: Record Ordering
+
+Return records in exact source order and maintain deterministic record numbers.
+
+### Node 4: Indexed Field Access
+
+Implement zero-based access, including empty fields and boundary indexes.
+
+### Node 5: Header Mapping
+
+Implement configured header-name lookup and distinguish mapped names from
+missing names without silently returning another field.
+
+### Node 6: Iteration and getRecords()
+
+Make iteration and `getRecords()` consistent, repeatable where promised, and
+free from accidental record loss.
+
+### Node 7: AutoCloseable Lifecycle
+
+Implement `close()` and the documented behavior for parser operations after
+close while avoiding resource leaks.
+
+### Node 8: Offline Maven Layout
+
+Use the exact public packages, standard Maven source layout, Java 21, and no
+network or candidate-controlled Maven build configuration.

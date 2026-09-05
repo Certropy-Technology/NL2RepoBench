@@ -5,7 +5,7 @@ artifacts = [
 
 [task]
 name = "nl2repobench/java-semver4j"
-version = "1.3.0"
+version = "1.4.0"
 description = "Recreate the serializable Semver parsing, comparison, stability, and requirement behavior of vdurmont/semver4j."
 authors = [
     { name = "NL2RepoBench" },
@@ -35,8 +35,8 @@ package_manager = "maven"
 package_manager_version = "3.9.11"
 metric_contract = "fixed-test-pass-rate-v1"
 expected_test_count = 9
-canonical_manifest_digest = "sha256:de9d80c2d8a8aa9bc94f21ee38639271c1a3bad60af1980916fc302dfe19c315"
-toolchain_lock_digest = "sha256:22760c00c5c72822c811e2413d3cf7dceefb44aa9c5cb2197e1c897c255eaa08"
+canonical_manifest_digest = "sha256:e5f2bebc55ab847eb77f273869962ff94cb4ca82d55b2025fe3bbcf7fee99981"
+toolchain_lock_digest = "sha256:d2f9d182875c4f98dd3625d6fd280894104006b6e64611e68ce67e7a74605517"
 
 [agent]
 timeout_sec = 1200.0

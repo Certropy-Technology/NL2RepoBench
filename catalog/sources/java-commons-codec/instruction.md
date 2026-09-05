@@ -1,100 +1,192 @@
-# Project Description
+# Introduction and Goals of the Commons Codec Project
 
-Implement the selected serializable binary encoding behavior of Apache Commons
-Codec as a single Maven Java library. The project must provide standard padded
-Base64 encoding/decoding and lowercase hexadecimal encoding through the public
-classes in `org.apache.commons.codec.binary`.
-
-## Introduction and Goals
-
-The library converts byte arrays to stable text representations and converts
-standard Base64 text back to bytes. The evaluator uses a separate offline
-verifier, an empty private Maven repository, and a fixed JDK 21/Maven
-environment. Do not copy or execute the upstream build, tests, plugins,
-profiles, or repository configuration.
+Apache Commons Codec is a Java library for encoding and decoding common text
+and binary representations. This task focuses on a deterministic public slice
+of the library: Base64 and hexadecimal conversion, UTF-8 text handling, and
+the documented exception behavior. The result must be a normal single-module
+Maven project with the requested public classes and methods.
 
 ## Natural Language Instruction (Prompt)
 
-Please create a Java Maven project that provides the following public behavior:
+Please create a Java Maven project named Commons Codec that implements the
+following public behavior:
 
-1. `Base64.encodeBase64String(byte[])` returns standard padded Base64 text.
-2. `Base64.decodeBase64(String)` decodes standard Base64 text into the original
-   bytes.
-3. `Hex.encodeHexString(byte[])` returns lowercase hexadecimal text.
-4. Preserve ordinary empty-input behavior, deterministic output, byte order,
-   and UTF-8 usage in examples.
-5. Keep Java sources under `src/main/java` in a normal single-module Maven
-   project with no external runtime dependencies.
+1. Provide Base64 encoding and decoding for byte arrays and UTF-8 strings.
+2. Provide hexadecimal encoding and decoding with deterministic lowercase
+   output and clear malformed-input errors.
+3. Preserve empty input, binary zero bytes, padding, and non-ASCII UTF-8 data.
+4. Expose the public static APIs described below in the Apache Commons Codec
+   packages.
+5. Keep all implementation under `src/main/java` in a single-module Maven
+   project and do not add external runtime dependencies.
 
 ## Environment Configuration
 
-- Java runtime: Temurin JDK `21.0.12+8`
-- Maven: `3.9.11`
-- Platform: Linux `amd64`
-- Build and verification: offline, verifier-owned Maven/Javac harness
-- Candidate compilation: `javac --release 21`
-- Runtime dependencies: none
-- Network access: unavailable to the agent and verifier
+### Core Dependency Library Versions
 
-## Project Architecture
-
-Use the standard Maven layout:
-
-```text
-project/
-├── pom.xml
-└── src/
-    └── main/
-        └── java/
-            └── org/apache/commons/codec/binary/
-                ├── Base64.java
-                └── Hex.java
+```Plain
+Temurin JDK 21.0.12+8       # Java runtime
+Maven 3.9.11                # Offline project tooling
+Linux amd64                 # Fixed platform
+Runtime dependencies: none  # Java standard library only
+Network access: unavailable # Agent and verifier are offline
 ```
 
-The required public classes are `org.apache.commons.codec.binary.Base64` and
-`org.apache.commons.codec.binary.Hex`. Keep the implementation self-contained.
+## Commons Codec Project Architecture
+
+### Project Directory Structure
+
+```Plain
+workspace/
+├── pom.xml
+└── src
+    └── main
+        └── java
+            └── org
+                └── apache
+                    └── commons
+                        └── codec
+                            ├── binary
+                            │   ├── Base64.java
+                            │   └── Hex.java
+                            └── DecoderException.java
+```
+
+The candidate POM is metadata only. Do not use Maven plugins, repositories,
+dependencies, profiles, modules, or custom build extensions to control the
+verifier.
 
 ## API Usage Guide
+
+### Core APIs
+
+#### 1. Module Import
 
 ```java
 import java.nio.charset.StandardCharsets;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
+```
 
-byte[] input = "hello".getBytes(StandardCharsets.UTF_8);
-String encoded = Base64.encodeBase64String(input);
+#### 2. Base64 Encoding
+
+```java
+byte[] encoded = Base64.encodeBase64("hello".getBytes(StandardCharsets.UTF_8));
+```
+
+Signature:
+
+```java
+static byte[] encodeBase64(byte[] binaryData)
+```
+
+The output uses the standard Base64 alphabet and padding.
+
+#### 3. Base64 Decoding
+
+```java
 byte[] decoded = Base64.decodeBase64(encoded);
-String hexadecimal = Hex.encodeHexString(decoded);
 ```
 
-The required public signatures are:
+Signature:
 
 ```java
-String Base64.encodeBase64String(byte[] data)
-byte[] Base64.decodeBase64(String encoded)
-String Hex.encodeHexString(byte[] data)
+static byte[] decodeBase64(byte[] base64Data)
 ```
 
-The methods are static, deterministic, and do not access the network or
-filesystem. `encodeBase64String` uses standard padded Base64. `decodeBase64`
-returns bytes in their original order. `encodeHexString` uses lowercase
-hexadecimal digits.
+Decoding returns the original bytes for valid input and follows the public
+library contract for malformed input.
 
-## Examples and Boundary Conditions
+#### 4. Hexadecimal Encoding and Decoding
 
 ```java
-Base64.encodeBase64String("hello".getBytes(StandardCharsets.UTF_8)); // aGVsbG8=
-Hex.encodeHexString(new byte[] {0, 15, -1});                         // 000fff
-Base64.decodeBase64("");                                             // empty bytes
+String text = Hex.encodeHexString(new byte[] {0, 15, -1});
+byte[] bytes = Hex.decodeHex("000fff");
 ```
 
-Preserve empty input, UTF-8 byte values, padding, lowercase hexadecimal
-output, and deterministic behavior. Do not add external dependencies or rely
-on Maven Central during verification.
+Signatures:
 
-## Implementation Notes
+```java
+static char[] encodeHex(byte[] data)
+static String encodeHexString(byte[] data)
+static byte[] decodeHex(String data)
+```
 
-The verifier compiles candidate sources directly and calls only the selected
-public methods through a separate candidate JVM. The candidate `pom.xml` is
-checked as safe metadata; upstream plugins, profiles, repositories, tests,
-modules, and release configuration are outside the task contract.
+Hex output is deterministic lowercase. Odd-length or invalid hex input must
+follow the documented decoder exception behavior.
+
+### Actual Usage Modes
+
+#### Basic Encoding
+
+```java
+String encoded = Base64.encodeBase64String(
+    "hello".getBytes(StandardCharsets.UTF_8));
+```
+
+#### Binary Round Trip
+
+```java
+byte[] original = new byte[] {0, 1, 2, -1};
+byte[] roundTrip = Base64.decodeBase64(Base64.encodeBase64(original));
+```
+
+#### Hex Round Trip
+
+```java
+String hex = Hex.encodeHexString(original);
+byte[] roundTrip = Hex.decodeHex(hex);
+```
+
+### Supported Function Types
+
+The supported function types are Base64 byte-array conversion, Base64 string
+conversion where explicitly shown, hexadecimal conversion, and deterministic
+exception handling. Do not implement unrelated codecs or invent alternate
+public contracts.
+
+### Error Handling
+
+Null, empty, malformed, odd-length, and binary boundary inputs must not produce
+silently corrupted output. Use the public exception types and return shapes
+expected by the API.
+
+## Detailed Implementation Nodes of Functions
+
+### Node 1: Base64 Encoding
+
+Encode arbitrary bytes using the standard alphabet and required padding.
+
+### Node 2: Base64 Decoding
+
+Decode valid padded and unpadded forms according to the public contract and
+preserve every byte, including zero and negative byte values.
+
+### Node 3: UTF-8 Text Handling
+
+Treat caller-provided UTF-8 bytes as binary data and preserve non-ASCII text
+through an encode/decode round trip.
+
+### Node 4: Hexadecimal Encoding
+
+Convert each byte to exactly two lowercase hexadecimal characters.
+
+### Node 5: Hexadecimal Decoding
+
+Parse valid pairs, reject invalid characters and odd-length values, and expose
+the expected decoder exception.
+
+### Node 6: Empty and Boundary Inputs
+
+Handle empty arrays and empty strings deterministically without changing the
+public return type or introducing sentinel text.
+
+### Node 7: Maven Project Layout
+
+Use the exact public packages and standard Java source layout. Compile with
+Java 21 and no external runtime dependency.
+
+### Node 8: Offline Build Behavior
+
+Do not access the network or rely on candidate-controlled Maven configuration;
+the implementation must work in the fixed offline verifier.

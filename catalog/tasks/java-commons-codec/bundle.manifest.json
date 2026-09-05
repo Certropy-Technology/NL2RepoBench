@@ -1,5 +1,5 @@
 {
-  "canonical_manifest_digest": "sha256:eb95cbbd9ae997679e6550d985b0df11179a2a4fcc555993ecf29686fd8e4ad7",
+  "canonical_manifest_digest": "sha256:d487418cfcb1bc12e6a06486dc5bbd644a94059f7eef3c62e096bfbab158d8f3",
   "files": [
     {
       "path": "README.md",
@@ -43,8 +43,8 @@
     },
     {
       "path": "instruction.md",
-      "sha256": "55b1ddd6272f2712df4bc4d33dcf860f0c8b6144f5672117657008e1e6e575f2",
-      "size_bytes": 3612
+      "sha256": "8074412d2856eaa34577e27335a935f19971f95a4e59f7225bc015c72c193185",
+      "size_bytes": 5340
     },
     {
       "path": "solution/oracle-ref.json",
@@ -58,7 +58,7 @@
     },
     {
       "path": "task.toml",
-      "sha256": "188259fe1c893dc8980b111e543281a07673170c6d84fd4bc52a15418b00cb84",
+      "sha256": "ac12deb15fe309fd8abb8cbb1c42bcc3716d5154f297df147ab6410a406a3062",
       "size_bytes": 1089
     },
     {
@@ -73,7 +73,7 @@
     },
     {
       "path": "tests/private-artifact-refs.json",
-      "sha256": "08036d27690a169969f762d9b2756501f2c6dd315aae54996d781f10bfc765a9",
+      "sha256": "c73e424d3c8d06d213dc5de0912af7cd47fa2fd61e38805f5028db95160f32dd",
       "size_bytes": 1446
     },
     {
@@ -163,8 +163,8 @@
     },
     {
       "path": "tests/runtime/nl2repobench/verification/cli.py",
-      "sha256": "98d295b684800e5901fb2b2722d4ada2f50d9bce8c63fbd35e948965fc147476",
-      "size_bytes": 3047
+      "sha256": "8bf49c04ec9e0fc90c0fe6700512203a2742799097fffa061fd40f749bb59b77",
+      "size_bytes": 3148
     },
     {
       "path": "tests/runtime/nl2repobench/verification/command_plan.py",
@@ -218,13 +218,13 @@
     },
     {
       "path": "tests/runtime/nl2repobench/verification/java_candidate.py",
-      "sha256": "fb268e57604270e5e429dafc9fe2d13f6fa3b81c467677ce77997388b4fb9649",
-      "size_bytes": 4234
+      "sha256": "79777ad561cfa6da08aa0e89ed0e762efa9f8a4f80b3949af7c7e7a2393ae57c",
+      "size_bytes": 5884
     },
     {
       "path": "tests/runtime/nl2repobench/verification/java_grader.py",
-      "sha256": "70637f3e55c610e4647085e68223b801e4fbb6f4713c18003d0457c38b4e9a1c",
-      "size_bytes": 3986
+      "sha256": "8a82be8cce1852ead30e0c598d28e1e3c7dbf4fb72c5e9fb6c84ca56bb2d1b03",
+      "size_bytes": 4099
     },
     {
       "path": "tests/runtime/nl2repobench/verification/java_private_artifacts.py",
@@ -308,8 +308,8 @@
     },
     {
       "path": "tests/runtime/nl2repobench/verification/registry.py",
-      "sha256": "2139a1ed7d87bdd4954ead03e4f779b01855451b1d4c91ee93ebade8bafb913e",
-      "size_bytes": 4895
+      "sha256": "866f207fa31783705b688daa3f5896ae48d66f0e10962823b691d639272f884c",
+      "size_bytes": 4981
     },
     {
       "path": "tests/runtime/nl2repobench/verification/run_pytest.py",
@@ -333,8 +333,8 @@
     },
     {
       "path": "tests/test.sh",
-      "sha256": "5a879917cd18d75ad4e87d0b6d3a3d280fa2686717f35e91eedf059e50606d64",
-      "size_bytes": 6584
+      "sha256": "d2904decac3d3c61990bef1fce1ce09d00908b7ff5ec879e6a79a54ac5d410ad",
+      "size_bytes": 6869
     }
   ],
   "jdk_version": "temurin-21.0.12+8",
@@ -344,6 +344,6 @@
   "runtime": "java",
   "schema_version": "1.0",
   "task_id": "java-commons-codec",
-  "task_version": "1.1.0",
-  "toolchain_lock_digest": "sha256:22760c00c5c72822c811e2413d3cf7dceefb44aa9c5cb2197e1c897c255eaa08"
+  "task_version": "1.2.0",
+  "toolchain_lock_digest": "sha256:d2f9d182875c4f98dd3625d6fd280894104006b6e64611e68ce67e7a74605517"
 }
