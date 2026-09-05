@@ -1,0 +1,65 @@
+{
+  "schema_version": "1.0",
+  "report_kind": "instruction-revalidation-wave",
+  "wave": 5,
+  "workflow_run": "8d1863db-579f-46e0-8967-c73d85fa4b75",
+  "queue": "reports/instruction-revalidation-queue-20260905.json",
+  "base_commit": "4e628f4899a93d3bdbbc650a8e98686df82a4e37",
+  "integration_commit": "4fe9eb1309d6004077f5527af5d787ef14a5ad1f",
+  "network_policy": "no-network",
+  "concurrency": 16,
+  "model_api_cost_usd": 0,
+  "counts": {
+    "task_count": 16,
+    "fully_revalidated": 2,
+    "artifact_or_verifier_blocked": 11,
+    "run_passed_production_evidence_pending": 3,
+    "projection_refreshed": 2
+  },
+  "tasks": [
+    {"task_id": "freezegun", "status": "artifact-or-verifier-blocked", "reason": "Three required CAS objects are absent.", "evidence": "catalog/sources/freezegun/evidence/revalidation-20260905/cas-remediation.md"},
+    {"task_id": "frozenlist", "status": "run-passed-production-evidence-pending", "oracle": {"passed": 21, "total": 21, "reward": 1.0}, "stub": {"passed": 2, "total": 21, "reward": 0.09523809523809523}, "forgery": {"passed": 1, "total": 21, "reward": 0.047619047619047616}, "evidence": "catalog/sources/frozenlist/evidence/revalidation-20260905/matrix-status.json"},
+    {"task_id": "fs-extra", "status": "artifact-or-verifier-blocked", "reason": "Oracle performs runtime GitHub fetch.", "evidence": "catalog/sources/fs-extra/evidence/revalidation-20260905/blocker.md"},
+    {"task_id": "fsspec", "status": "artifact-or-verifier-blocked", "reason": "Oracle performs runtime GitHub clone/fetch.", "evidence": "catalog/sources/fsspec/evidence/revalidation-20260905/oracle-blocker.json"},
+    {"task_id": "funcy", "status": "artifact-or-verifier-blocked", "reason": "Three required CAS objects are absent.", "evidence": "catalog/sources/funcy/evidence/revalidation-20260905.md"},
+    {"task_id": "furl", "status": "artifact-or-verifier-blocked", "reason": "Oracle performs runtime GitHub clone/fetch; lifecycle remains packaged.", "evidence": "catalog/sources/furl/evidence/revalidation-20260905/blocker.md"},
+    {"task_id": "get-east-asian-width", "status": "run-passed-production-evidence-pending", "oracle": {"passed": 26, "total": 26, "reward": 1.0}, "stub": {"passed": 5, "total": 26, "reward": 0.19230769230769232}, "forgery": {"passed": 5, "total": 26, "reward": 0.19230769230769232}, "evidence": "catalog/sources/get-east-asian-width/evidence/revalidation-20260905/revalidation-summary.md"},
+    {"task_id": "get-stream", "status": "artifact-or-verifier-blocked", "reason": "Oracle performs runtime GitHub fetch.", "evidence": "catalog/sources/get-stream/evidence/revalidation-20260905/blocker.md"},
+    {"task_id": "ghapi", "status": "artifact-or-verifier-blocked", "reason": "Oracle performs runtime GitHub clone/fetch.", "evidence": "catalog/sources/ghapi/evidence/revalidation-20260905/blocker.md"},
+    {
+      "task_id": "gitdb",
+      "status": "fully-revalidated",
+      "source_digest": "sha256:1977d32ee88490b2e11f88395e5250689434d8e47bbd2bc7808431f0e066d72a",
+      "canonical_manifest_digest": "sha256:e5ea31bce8465ec4749b295ad8de7f41eb0719f66eb89ef47312de766314b9f4",
+      "oracle": {"passed": 16, "total": 16, "reward": 1.0},
+      "empty": {"passed": 0, "total": 0, "reward": 0.0},
+      "stub": {"passed": 0, "total": 16, "reward": 0.0},
+      "forgery": {"passed": 0, "total": 16, "reward": 0.0},
+      "offline": "All seven fresh run network receipts report public_network_available=false; the Python control registry has no standalone offline kind.",
+      "projection": "catalog/tasks/gitdb"
+    },
+    {"task_id": "gitpython", "status": "artifact-or-verifier-blocked", "reason": "Oracle performs runtime GitHub clone/fetch.", "evidence": "catalog/sources/gitpython/evidence/revalidation-20260905/blocker.md"},
+    {"task_id": "globby", "status": "run-passed-production-evidence-pending", "oracle": {"passed": 10, "total": 10, "reward": 1.0}, "stub": {"passed": 1, "total": 10, "reward": 0.1}, "forgery": {"passed": 1, "total": 10, "reward": 0.1}, "offline": {"passed": 1, "total": 10, "reward": 0.1}, "evidence": "catalog/sources/globby/evidence/revalidation-20260905/validation-summary.json"},
+    {
+      "task_id": "glom",
+      "status": "fully-revalidated",
+      "source_digest": "sha256:07bd788ae0b2414b93a1e73bfaab8211a2708441707e496cecc53835992fb0bd",
+      "canonical_manifest_digest": "sha256:af80300d83ff3b17fbe243e82ddb2a7b8ff0ac065c01f43d0158cc2a33979cd6",
+      "oracle": {"passed": 28, "total": 28, "reward": 1.0},
+      "empty": {"passed": 0, "total": 0, "reward": 0.0},
+      "stub": {"passed": 0, "total": 28, "reward": 0.0},
+      "forgery": {"passed": 0, "total": 28, "reward": 0.0},
+      "projection": "catalog/tasks/glom"
+    },
+    {"task_id": "go-backoff", "status": "artifact-or-verifier-blocked", "reason": "Oracle performs runtime GitHub fetch.", "evidence": "catalog/sources/go-backoff/evidence/revalidation-20260905/blocker.md"},
+    {"task_id": "go-badger", "status": "artifact-or-verifier-blocked", "reason": "Oracle performs runtime GitHub fetch.", "evidence": "catalog/sources/go-badger/evidence/revalidation-20260905/blocker.md"},
+    {"task_id": "go-brotli", "status": "artifact-or-verifier-blocked", "reason": "Oracle performs runtime GitHub fetch.", "evidence": "catalog/sources/go-brotli/evidence/revalidation-20260905/blocker.md"}
+  ],
+  "reliability": {
+    "source_validation_passed": 16,
+    "changed_json_parsed": 114,
+    "target_generated_network_errors": 0,
+    "expected_network_warnings": 8,
+    "global_generated_network_errors_unrelated": 1
+  }
+}
