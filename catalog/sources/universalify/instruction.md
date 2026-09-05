@@ -22,9 +22,9 @@ its tests.
 - Commit an npm v3 `package-lock.json` agreeing with `package.json`. A clean
   verifier installs the package with:
 
-  ```text
+  ~~~text
   npm ci --offline --ignore-scripts --no-audit --no-fund
-  ```
+  ~~~
 
 - The runtime dependency closure is empty. Do not declare dependencies,
   optional dependencies, peer dependencies, development dependencies,
@@ -33,6 +33,27 @@ its tests.
 - Runtime behavior is local and deterministic. The wrapper factories may use
   native `Promise`; they must not inspect files, environment variables, the
   clock, randomness, subprocesses, a TTY, or the network.
+
+## Natural Language Instruction
+
+Import path: `require('universalify')`. Create the installable CommonJS
+`universalify` package from an empty workspace.
+Implement both wrapper factories below, preserving receiver, arguments,
+callback results, Promise identity, rejection reasons, and function names.
+
+The public import path is the package root: `const {fromCallback, fromPromise}
+= require("universalify")`. A wrapper must accept ordinary JavaScript values,
+including falsey callback results and rejection reasons, without serializing or
+cloning them.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+└── index.js
+```
 
 ## API Usage Guide
 
@@ -133,6 +154,27 @@ double.call({label: 'callback'}, 4, (error, result) => {
   // error is null; result is {receiver: 'callback', value: 8}
 });
 ```
+
+## Examples
+
+```js
+const {fromCallback} = require('universalify');
+const read = fromCallback((value, callback) => callback(null, value + 1));
+read(2).then(value => console.log(value));
+```
+
+```js
+const {fromPromise} = require('universalify');
+const double = fromPromise(async value => value * 2);
+double(3, (error, value) => console.log(error, value));
+```
+
+## Error Handling and Boundary Conditions
+
+Only a function in the final argument selects callback mode. Callback errors
+reject with any non-nullish value, including falsey values; Promise rejection
+reasons reach callbacks unchanged. Source and callback synchronous exceptions
+retain normal JavaScript propagation.
 
 ## Implementation Notes
 

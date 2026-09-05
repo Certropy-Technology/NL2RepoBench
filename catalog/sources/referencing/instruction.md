@@ -13,7 +13,14 @@ fragment, JSON Pointer, and named-anchor references. The package supports the
 JSON Schema drafts from draft-03 through draft 2020-12. It is a library, not a
 JSON validator, HTTP client, or file loader.
 
-## Supports
+# Natural Language Instruction
+
+Build `referencing` from an empty workspace. Implement specification-aware
+resources, immutable registries, JSON Pointer and anchor resolution, JSON
+Schema dialect helpers, cached retrieval, and the documented exception types.
+All ordinary operations are local and deterministic.
+
+# Supports or Environment Configuration
 
 - Support CPython 3.13 and newer on Linux.
 - Provide an installable `referencing` package with the modules
@@ -27,7 +34,26 @@ JSON validator, HTTP client, or file loader.
   operations are local and deterministic. Applications may supply a retrieval
   callback, but the library itself must not make network or subprocess calls.
 
-## Public API
+# Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── README.md
+├── LICENSE
+└── referencing/
+    ├── __init__.py
+    ├── exceptions.py
+    ├── _core.py
+    ├── jsonschema.py
+    ├── retrieval.py
+    └── typing.py
+```
+
+The root package exports `Anchor`, `Registry`, `Resource`, and `Specification`;
+the listed modules retain their public import paths.
+
+# API Usage Guide
 
 The root package exports exactly `Anchor`, `Registry`, `Resource`, and
 `Specification` through `referencing.__all__`.
@@ -169,3 +195,33 @@ updates, resource crawling, exact and relative lookup, JSON Pointers and
 escaping, named anchors, error types, subresource bases, registry combining and
 removal, retrieval wrapping, cached retrieval, dialect selection, exception
 identity, dynamic anchors, and recursive references.
+
+# Implementation Notes
+
+Registry updates are persistent and must not mutate an earlier registry.
+Reference resolution preserves base URIs, fragment distinctions, JSON Pointer
+escaping, named-anchor behavior, and specification-defined discovery. Retrieval
+callbacks run only for missing URIs and failures map to the documented errors.
+
+# Examples
+
+```python
+from referencing import Registry, Resource
+resource = Resource.opaque({"answer": 42})
+registry = Registry().with_resource("urn:example", resource)
+```
+
+```python
+registry.contents("urn:example")
+```
+
+```python
+registry.resolver("urn:example").lookup("#")
+```
+
+# Error Handling and Boundary Conditions
+
+Unknown specifications raise `CannotDetermineSpecification`; missing resources
+raise `NoSuchResource` or `Unresolvable`; missing anchors raise `NoSuchAnchor`;
+bad pointers raise `PointerToNowhere`. Do not perform filesystem or network
+lookups implicitly.

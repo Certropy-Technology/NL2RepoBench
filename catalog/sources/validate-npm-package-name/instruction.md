@@ -1,9 +1,23 @@
 # Project Description
 
+```text
+workspace/
+├── package.json
+├── package-lock.json
+└── index.js
+```
+
 Build an installable CommonJS npm package named `validate-npm-package-name`,
 version `8.0.0`, from an empty workspace. The package validates npm package
 names and preserves the distinction between names accepted for new packages,
 names accepted only for legacy packages, and names that were never valid.
+
+# Natural Language Instruction
+
+Create the package from an empty `workspace/`. Implement the root validator,
+its result object, ordered errors and warnings, npm core-module checks, and
+legacy-package compatibility behavior described below. Keep the package
+synchronous, deterministic, stateless, and independent of registries.
 
 # Supports
 
@@ -22,6 +36,18 @@ names accepted only for legacy packages, and names that were never valid.
 - Runtime behavior is synchronous, deterministic, stateless, and offline. It
   must not read or write files, use the clock or randomness, spawn processes,
   access a TTY, or access the network.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+└── index.js
+```
+
+The package root is the only public runtime entry point. Do not add a CLI,
+loader, lifecycle hook, generated download, or verifier-owned file.
 
 # API Usage Guide
 
@@ -144,3 +170,24 @@ The evaluator invokes the root export through a bounded, UID-isolated child
 process and verifies JSON-serializable result objects. Private tests, the
 Oracle implementation, and grading reports are not part of the package to
 implement.
+
+# Examples
+
+```js
+const validate = require('validate-npm-package-name');
+
+validate('demo-package');
+validate('@scope/package');
+```
+
+Both calls return an object with `validForOldPackages`,
+`validForNewPackages`, `errors`, and `warnings`. Warning and error arrays keep
+their documented order and do not contain duplicates.
+
+# Error Handling and Boundary Conditions
+
+Non-string inputs follow the documented invalid-result contract rather than
+being silently accepted. Empty names, malformed scopes, reserved Node core
+module names, leading dots, and names containing invalid characters must be
+classified deterministically. The final path segment controls the
+special-character warning for scoped names.

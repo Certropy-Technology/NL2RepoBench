@@ -4,6 +4,13 @@ Build an installable ESM npm package named `camelcase` from an empty workspace.
 It converts dash, dot, underscore, and space separated text into camelCase or
 PascalCase while handling Unicode letters and numeric boundaries.
 
+# Natural Language Instruction
+
+Create the `camelcase` package from an empty workspace. Implement the default
+ESM conversion function, all documented options, and the package metadata and
+entry files below. Preserve input immutability, Unicode handling, option
+defaults, and deterministic string output.
+
 # Supports
 
 - Node.js 24.19.0 and npm 11.17.0 on Linux amd64 with glibc.
@@ -14,6 +21,16 @@ PascalCase while handling Unicode letters and numeric boundaries.
   loaders, registry configuration, or runtime network access.
 - String input or a read-only array of strings. Evaluation uses a JSON child
   process and does not require a CLI.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── index.js
+└── index.d.ts
+```
 
 # API Usage Guide
 
@@ -62,3 +79,25 @@ entirely offline with lifecycle scripts disabled. The evaluator observes only
 the documented default export through an isolated child process; private tests,
 the Oracle implementation, and verifier internals are not part of the package
 to implement.
+
+# Examples
+
+```js
+import camelCase from 'camelcase';
+camelCase('foo-bar'); // 'fooBar'
+camelCase('foo-bar', {pascalCase: true}); // 'FooBar'
+```
+
+# Error Handling and Boundary Conditions
+
+```js
+camelCase([' foo ', '', 'bar']); // 'fooBar'
+// Non-string, non-array input must throw TypeError; punctuation and Unicode
+// characters remain stable except where documented case conversion applies.
+```
+
+The generated project must also expose package metadata consistently from the
+root entry and declaration file. The lockfile must describe the same package
+name and version, and installation must work offline with scripts disabled.
+Options with omitted fields use the documented defaults. Results are ordinary
+primitive strings and must not retain mutable references to array input.

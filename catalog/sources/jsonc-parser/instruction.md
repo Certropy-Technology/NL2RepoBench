@@ -1,3 +1,12 @@
+# Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+└── lib/esm/main.js
+```
+
 # Project Description
 
 Build an installable npm package named `jsonc-parser`, version
@@ -8,6 +17,14 @@ formats JSONC text by returning textual edits.
 This task covers a bounded, JSON-compatible slice of the package. It preserves
 the meaningful parse/modify/format behavior that can cross a fixed subprocess
 boundary without passing JavaScript functions or object identities.
+
+# Natural Language Instruction
+
+Create the ESM `jsonc-parser` package from an empty workspace. Implement the
+root parse, diagnostic-name, modify, format, and apply-edits APIs with tolerant
+JSON-with-comments parsing, JSON-safe path edits, safe formatting, stable UTF-16
+offsets, and deterministic diagnostics. Keep callback-valued and scanner-only
+surfaces outside the documented JSON boundary.
 
 # Supports
 
@@ -36,6 +53,21 @@ boundary without passing JavaScript functions or object identities.
 The scanner, tree/location helpers, visitor callbacks, custom insertion
 callbacks, and values that JSON cannot represent are outside the scored slice.
 They may be implemented, but they are not required.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── README.md
+└── lib/
+    └── esm/
+        ├── main.js
+        ├── parser.js
+        ├── modify.js
+        └── formatter.js
+```
 
 # API Usage Guide
 
@@ -220,3 +252,27 @@ in the original document, throw `Error("Overlapping edit")`.
   parse/modify/format/apply operations. It bounds request/response sizes and
   validates every option, path segment, range, and edit before invoking the
   package.
+
+# Examples
+
+```js
+import { parse, modify, applyEdits } from 'jsonc-parser'
+const errors = []
+const value = parse('{ // note\n "a": 1 }', errors)
+const edits = modify('{"a":1}', ['a'], 2)
+assert.equal(applyEdits('{"a":1}', edits), '{"a":2}')
+```
+
+```js
+import { format } from 'jsonc-parser'
+format('{"a":1}', undefined, { tabSize: 2, insertSpaces: true })
+```
+
+# Error Handling and Boundary Conditions
+
+- Invalid JSONC returns the recoverable value and appends structured
+  diagnostics; unsupported error codes print `<unknown ParseErrorCode>`.
+- Edits must stay within the original text and overlapping edits throw
+  `Error("Overlapping edit")` without mutating the caller's array.
+- UTF-16 offsets, comments, malformed tokens, and line endings remain stable;
+  no filesystem, clock, subprocess, or network affects results.

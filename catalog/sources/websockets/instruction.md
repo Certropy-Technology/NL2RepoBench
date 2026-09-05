@@ -1,5 +1,11 @@
 # Build `websockets`
 
+```text
+workspace/
+├── pyproject.toml
+└── websockets/__init__.py
+```
+
 Create an installable Python distribution named `websockets`, version `17.1`,
 from an empty workspace. Implement the deterministic local protocol library
 described below. The evaluator does not provide the reference source and the
@@ -12,6 +18,13 @@ asynchronous applications. The scored contract focuses on the pure local data
 structures and RFC 6455 wire handling that do not require a live server, DNS,
 TLS, a proxy, or an external service.
 
+## Natural Language Instruction
+
+Create the `websockets` package from an empty `workspace/`. Implement the
+documented headers, URI value object, frame and close codecs, protocol state,
+and asyncio message assembly contracts. Keep live services, DNS, TLS, and
+optional native acceleration outside the task.
+
 ## Supports
 
 - CPython 3.12 on Linux and a standard setuptools/PEP 517 installation.
@@ -23,7 +36,26 @@ TLS, a proxy, or an external service.
   `websockets.asyncio.messages`.
 - Deterministic behavior for the local APIs below. Live networking, servers,
   clients, TLS, proxies, Trio integration, legacy compatibility, and the
-  optional C speedups are outside the scored subset.
+optional C speedups are outside the scored subset.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+└── websockets/
+    ├── __init__.py
+    ├── py.typed
+    ├── datastructures.py
+    ├── uri.py
+    ├── frames.py
+    ├── protocol.py
+    └── asyncio/messages.py
+```
+
+The root re-exports the documented public names and each module remains
+importable after installation.
+
 
 ## API Usage Guide
 
@@ -103,6 +135,25 @@ assemble one complete message, or iterate `get_iter(decode: bool | None = None)
 -> AsyncIterator[str | bytes]` for fragments. Text defaults to `str`, binary
 defaults to `bytes`, and an explicit `decode` converts the opposite way.
 Concurrent reads raise `ConcurrencyError`; an ended queue raises `EOFError`.
+
+## Examples
+
+```python
+from websockets.frames import Frame, Opcode
+from websockets.uri import parse_uri
+
+parse_uri('ws://localhost:8765/chat')
+Frame(Opcode.TEXT, b'hello')
+```
+
+Encode and parse local frames, close values, headers, and URI objects using
+the documented return types.
+
+## Error Handling and Boundary Conditions
+
+Reject malformed headers and URIs, invalid opcodes, bad masking, fragmented
+control frames, oversized control payloads, and invalid close codes according
+to the public protocol exceptions.
 
 ## Implementation Notes
 

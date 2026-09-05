@@ -2,6 +2,70 @@
 
 Create a complete, installable Python distribution named `email-validator` from an empty workspace. It must expose a small, dependency-backed library for validating Internet email addresses, normalizing Unicode and IDNA forms, and optionally checking domain deliverability through an injected DNS resolver. The implementation should be pure Python and deterministic when deliverability is disabled or a resolver is supplied.
 
+# Natural Language Instruction
+
+Create the installable `email-validator` project and `email_validator` import
+package. Implement validation, Unicode/IDNA normalization, resolver injection,
+result objects, exceptions, and the CLI exactly as specified below.
+
+# Supports or Environment Configuration
+
+- Use CPython 3.12 with distribution version `2.3.0`, declared `dnspython` and
+  `idna` runtime dependencies, and the build metadata in `task.toml`.
+- Provide `email_validator/__init__.py`, `__main__.py`, implementation modules,
+  and `py.typed`; standard-library modules are not dependencies.
+- Agent, candidate, verifier, Oracle, and controls run with no network access.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+└── email_validator/
+    ├── __init__.py
+    ├── __main__.py
+    ├── deliverability.py
+    ├── syntax.py
+    ├── types.py
+    └── py.typed
+```
+
+# API Usage Guide
+
+The API Usage Guide below is authoritative for exports, signatures, normalized
+values, resolver behavior, and exception types.
+
+# Implementation Notes
+
+Normalization and syntax decisions must be deterministic. Resolver access is
+only through the caller-supplied resolver and is never public DNS access.
+
+# Examples
+
+```python
+from email_validator import validate_email
+result = validate_email("User@example.com", check_deliverability=False)
+print(result.normalized)
+```
+
+```python
+validate_email("用户@例子.中国", check_deliverability=False)
+```
+
+# Error Handling and Boundary Conditions
+
+```python
+from email_validator import EmailNotValidError
+try:
+    validate_email("not-an-email", check_deliverability=False)
+except EmailNotValidError:
+    pass
+```
+
+```python
+validate_email("person@example.com", check_deliverability=False)
+```
+
 # Supports
 
 - Support Python 3.10 and newer, including Python 3.12.

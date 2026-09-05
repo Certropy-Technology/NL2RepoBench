@@ -1,4 +1,4 @@
-# Build `jsonpointer`
+# Project Description
 
 Create a complete, installable Python distribution named `jsonpointer` from an
 empty workspace. The library identifies nodes in JSON-like documents using the
@@ -6,7 +6,15 @@ JSON Pointer syntax from RFC 6901. The scored contract is the public API below;
 do not depend on an upstream checkout, a preinstalled `jsonpointer`, or runtime
 network access.
 
-## Supports
+# Natural Language Instruction
+
+From an empty workspace, implement RFC 6901 JSON Pointer resolution and
+mutation as the installable `jsonpointer` package. Preserve pointer escaping,
+mapping and sequence traversal, append markers, immutable-copy mode, duck-typed
+getitem behavior, comparison/representation, and the documented exception
+types. The package has no CLI requirement beyond the optional entry point.
+
+# Supports or Environment Configuration
 
 - Python 3.12 on Linux, with an installable distribution and import module both
   named `jsonpointer`.
@@ -17,7 +25,19 @@ network access.
 - The optional `bin/jsonpointer` console script may be provided, but the scored
   API is the importable module.
 
-## API Usage Guide
+# Project Directory Structure
+
+```text
+workspace/
+├── setup.py
+├── setup.cfg
+├── README.md
+└── jsonpointer/
+    ├── __init__.py
+    └── py.typed
+```
+
+# API Usage Guide
 
 ### Module functions
 
@@ -92,7 +112,7 @@ returned for the `-` position and its representation identifies the list.
 public marker class. The module's existing public classes and functions must
 remain importable with these names.
 
-## Implementation Notes
+# Implementation Notes
 
 - Keep pointer component order deterministic and preserve Unicode and literal
   characters exactly.
@@ -103,3 +123,30 @@ remain importable with these names.
 - The verifier imports candidate code only in a bounded unprivileged child
   process. Trusted expected values and test logic are outside the candidate
   workspace, and the verifier runs with no network.
+
+# Examples
+
+```python
+from jsonpointer import resolve_pointer, set_pointer
+
+doc = {"a": [1, 2]}
+assert resolve_pointer(doc, "/a/1") == 2
+set_pointer(doc, "/a/-", 3)
+```
+
+```python
+from jsonpointer import JsonPointer
+
+pointer = JsonPointer.from_parts(["a/b", "~key"])
+assert pointer.path == "/a~1b/~0key"
+```
+
+# Error Handling and Boundary Conditions
+
+- Invalid leading forms, malformed escapes, missing mapping members, invalid
+  indexes, leading-zero indexes, and out-of-range indexes raise
+  `JsonPointerException` unless a default is supplied for resolution.
+- `-` is valid only as the final sequence append marker; walking beyond it is
+  an error.
+- `inplace=False` must not mutate the caller's document, and pointers are not
+  URL-decoded.

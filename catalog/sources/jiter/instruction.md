@@ -1,72 +1,128 @@
 # Project Description
 
-Build an installable Python package named `jiter` from an empty workspace. The
-upstream project is a fast JSON parser, but this task uses a deterministic
-pure-Python adaptation so it can run without a compiler, native library, or
-network access during evaluation. Do not copy verifier files, depend on a
-preinstalled `jiter`, or add a benchmark-specific server or CLI.
+Build an installable pure-Python package named `jiter` from an empty workspace.
+It parses UTF-8 JSON bytes and exposes partial parsing, duplicate-key checks,
+float modes, lossless numeric values, and a small process-local cache API. The
+upstream native/Rust implementation is outside this task; implement the
+JSON-safe public contract without a compiler or runtime network.
 
-## Supports
+# Natural Language Instruction
 
-- Import the top-level package `jiter` on CPython 3.12 with no runtime
-  dependency outside the standard library.
-- Implement `jiter.from_json` with the exact positional and keyword-only
-  signature described below.
-- Implement `jiter.cache_clear`, `jiter.cache_usage`, and the public
-  `jiter.LosslessFloat` class.
-- Accept JSON bytes and return ordinary Python `dict`, `list`, `str`, `int`,
-  `float`, `bool`, or `None` values. Unicode must be decoded correctly.
-- Support strict parsing, partial parsing modes, duplicate-key detection,
-  non-finite values, decimal floats, and lossless float values.
+Create the top-level `jiter` package with `from_json`, `cache_clear`,
+`cache_usage`, and `LosslessFloat`. Match the positional-only and keyword-only
+signature, JSON primitive/container behavior, partial modes, float choices,
+duplicate detection, deterministic errors, and lossless conversions. Make the
+project installable from a normal `pyproject.toml` or `setup.py` and do not add
+the verifier, tests, native code, or a benchmark server.
 
-## API Usage Guide
+# Supports or Environment Configuration
 
-`jiter.from_json(json_data: bytes, /, *, allow_inf_nan: bool = True,
-cache_mode: bool | Literal['all', 'keys', 'none'] = 'all',
-partial_mode: bool | Literal['off', 'on', 'trailing-strings'] = False,
-catch_duplicate_keys: bool = False,
-float_mode: Literal['float', 'decimal', 'lossless-float'] = 'float') -> Any`
+- Python 3.12 on Linux; import and distribution name are `jiter`.
+- Runtime dependencies are standard-library only. Build with the preinstalled
+  `setuptools==80.9.0` closure.
+- Install from the repository root without network access. Agent, candidate,
+  verifier, Oracle, and controls use no network at run time.
+- Input is bytes-like JSON text; output must be ordinary Python values or the
+  documented `decimal.Decimal`/`LosslessFloat` numeric objects.
 
-The input must be bytes-like JSON text. Leading and trailing JSON whitespace
-is accepted. Return values preserve object insertion order. Integers remain
-Python `int`; ordinary decimals and exponents become `float`. Invalid JSON,
-invalid UTF-8, unsupported option values, incomplete strict input, recursion
-overflow, and duplicate keys when requested raise `ValueError` (or
-`TypeError` when the option has the wrong Python type). Error text must be
-deterministic and include a useful line and column for syntax errors.
+# Project Directory Structure
 
-`allow_inf_nan=True` accepts `NaN`, `Infinity`, and `-Infinity` as floats;
-false rejects them. `float_mode='decimal'` returns `decimal.Decimal` for
-decimal/exponent tokens while integers remain `int`. `float_mode='lossless-float'`
-returns `LosslessFloat` for decimal/exponent tokens while integers remain `int`.
+```text
+workspace/
+├── pyproject.toml
+├── README.md
+└── jiter/
+    ├── __init__.py
+    └── py.typed
+```
 
-`cache_mode` accepts `True`/`'all'` to cache keys and values, `False`/`'none'`
-to disable caching, or `'keys'` to cache object keys only. `cache_clear()`
-resets the process-global cache, and `cache_usage() -> int` reports the number
-of cached strings. The exact cache count is observable and deterministic for
-the exercised inputs.
+# API Usage Guide
 
-`partial_mode=False` and `'off'` require one complete JSON value. `True` and
-`'on'` accept an incomplete final container or string and return the complete
-prefix, discarding an unfinished final value. `'trailing-strings'` also keeps
-an unfinished final string or object string value. Valid UTF-8 prefixes are
-handled at a code-point boundary; malformed UTF-8 still raises `ValueError`.
+```python
+from_json(
+    json_data: bytes, /, *, allow_inf_nan=True, cache_mode="all",
+    partial_mode=False, catch_duplicate_keys=False, float_mode="float",
+) -> Any
+cache_clear() -> None
+cache_usage() -> int
+LosslessFloat(json_float: bytes)
+```
 
-`LosslessFloat(raw: bytes)` validates one decimal/exponent token. It exposes
-`as_decimal() -> decimal.Decimal`, `float(value) -> float`, `bytes(value) -> bytes`,
-`str(value) -> str`, and `repr(value) -> str` in the form
-`LosslessFloat(<token>)`. Invalid tokens raise `ValueError`.
+`from_json` accepts bytes-like UTF-8 JSON with surrounding JSON whitespace.
+Objects preserve insertion order and JSON values become `dict`, `list`,
+`str`, `int`, `float`, `bool`, or `None`. `allow_inf_nan=True` accepts
+`NaN`, `Infinity`, and `-Infinity`; false rejects them. `float_mode="float"`
+returns normal floats, `"decimal"` returns `decimal.Decimal` for decimal or
+exponent tokens, and `"lossless-float"` returns `LosslessFloat`; integers remain
+integers. `catch_duplicate_keys=True` rejects duplicate object keys.
 
-## Implementation Notes
+`partial_mode=False`/`"off"` requires one complete value. `True`/`"on"`
+accepts an incomplete final container or string and returns the complete prefix;
+`"trailing-strings"` additionally keeps an unfinished final string value.
+`cache_mode=True`/`"all"`, false/`"none"`, and `"keys"` control process-local
+key/value caching. `cache_clear` resets it and `cache_usage` reports its count.
 
-Use only the standard library. A small recursive-descent parser is sufficient;
-it must not use `eval`, execute input as Python, contact the network, or rely
-on JSON serialization as a substitute for option semantics. Preserve escape
-handling, nested arrays/objects, duplicate-key order, and deterministic error
-categories. Keep the package installable from a normal `pyproject.toml` or
-`setup.py` using the build tools already present in the task image.
+`LosslessFloat(raw: bytes)` validates one decimal/exponent token. Its methods
+are `as_decimal() -> decimal.Decimal`, `__float__() -> float`,
+`__bytes__() -> bytes`, `__str__() -> str`, and `__repr__() -> str`; repr has
+the form `LosslessFloat(<token>)`.
 
-The hidden verifier calls the package only through an unprivileged JSON child
-process. It checks the public behavior above and does not import candidate code
-into the trusted verifier process. Private tests, the upstream archive, and
-reference implementation details are not available in the workspace.
+# Implementation Notes
+
+Use a deterministic parser rather than `eval`. Decode UTF-8 strictly, retain
+object insertion order, and report invalid option types separately from invalid
+JSON. Cache state is process-local and must not depend on time, hash order, or
+environment. The installed package must work without the upstream checkout.
+
+# Examples
+
+```python
+from jiter import from_json, LosslessFloat
+
+assert from_json(b'{"a":[1,true,null]}') == {"a": [1, True, None]}
+assert isinstance(from_json(b"1.20", float_mode="lossless-float"), LosslessFloat)
+```
+
+```python
+from jiter import from_json
+assert from_json(b'{"a": 1', partial_mode=True) == {"a": 1}
+```
+
+# Error Handling and Boundary Conditions
+
+- Invalid UTF-8, malformed JSON, incomplete strict input, and duplicate keys
+  when requested raise `ValueError` with deterministic syntax context.
+- Wrong option types raise `TypeError`; unsupported option values raise
+  `ValueError`.
+- `allow_inf_nan=False` rejects non-finite tokens.
+- `LosslessFloat` rejects tokens that are not decimal/exponent numbers.
+- Do not execute input as Python or contact package registries or external
+services.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── README.md
+└── jiter/
+    ├── __init__.py
+    └── py.typed
+```
+
+# Additional Examples
+
+```python
+from jiter import cache_clear, cache_usage
+cache_clear()
+assert cache_usage() >= 0
+```
+
+```python
+from jiter import LosslessFloat
+assert float(LosslessFloat(b"1.25")) == 1.25
+```
+
+The task id and import package are `jiter`; invalid UTF-8, malformed JSON,
+unsupported options, duplicate keys when requested, and invalid number tokens
+must fail deterministically.

@@ -1,5 +1,11 @@
 # Build `websocket-client`
 
+```text
+workspace/
+├── setup.py
+└── websocket/__init__.py
+```
+
 Create an installable Python package named `websocket-client` from an empty
 workspace. The import package is `websocket`; it must run on CPython 3.12 on
 Debian 12 amd64 and must not contact any network service during evaluation.
@@ -11,6 +17,13 @@ task evaluates its deterministic RFC 6455 frame representation and the utility
 code used to prepare a connection. Live sockets, TLS handshakes, proxies, and
 threads are deliberately outside the scored surface.
 
+## Natural Language Instruction
+
+Create the `websocket-client` package from an empty `workspace/`. Implement
+the deterministic frame, URL/proxy, cookie, handshake-header, logging, object
+state, and exception contracts below. Keep live sockets, TLS, and external
+services outside the implementation boundary.
+
 ## Supports
 
 - `pip install .` from a clean workspace using the traditional `setup.py`
@@ -20,7 +33,27 @@ threads are deliberately outside the scored surface.
   `websocket._core`, `websocket._app`, `websocket._logging`,
   `websocket._utils`, and `websocket._exceptions`.
 - Standard-library-only runtime behavior. Do not add network clients,
-  subprocesses, generated endpoint code, or mandatory optional dependencies.
+subprocesses, generated endpoint code, or mandatory optional dependencies.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── setup.py
+├── websocket/
+│   ├── __init__.py
+│   ├── _abnf.py
+│   ├── _url.py
+│   ├── _cookiejar.py
+│   ├── _handshake.py
+│   ├── _logging.py
+│   └── _exceptions.py
+└── bin/wsdump
+```
+
+The `websocket` package and `wsdump` entry point are public; verifier files
+and private fixtures are not package-owned files.
+
 
 ## API Usage Guide
 
@@ -87,6 +120,25 @@ the Upgrade/Connection/Accept contract and returns `(valid, subprotocol)`.
 `isEnabledForTrace()` reports the state. The exception classes in
 `websocket._exceptions` preserve their documented inheritance and the
 `WebSocketBadStatusException` status fields.
+
+## Examples
+
+```python
+from websocket import ABNF
+from websocket._url import parse_url
+
+frame = ABNF.create_frame('hello', ABNF.OPCODE_TEXT)
+parse_url('ws://localhost:8765/chat')
+```
+
+Use the documented frame and URL helpers for deterministic local preparation;
+live socket operations are outside this bounded surface.
+
+## Error Handling and Boundary Conditions
+
+Reject malformed URLs, unsupported schemes, invalid frame opcodes, unmasked
+frames where masking is required, oversized control frames, and invalid close
+codes with the documented exception classes.
 
 ## Implementation Notes
 

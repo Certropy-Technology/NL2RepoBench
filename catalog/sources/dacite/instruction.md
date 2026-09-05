@@ -1,5 +1,15 @@
 # Project Description
 
+```text
+workspace/
+├── pyproject.toml
+├── README.md
+└── dacite/
+    ├── __init__.py
+    ├── core.py
+    └── py.typed
+```
+
 Create a complete, installable Python distribution named `dacite` from an
 empty workspace. The package converts dictionaries into instances of
 standard-library dataclasses while respecting their declared type hints,
@@ -180,3 +190,62 @@ nested and collection members, not a dictionary proxy. Keep exception objects
 inspectable through the attributes described above. Implement the behavior
 without retrieving the upstream repository or any reference implementation at
 runtime.
+
+# Natural Language Instruction
+
+Create the `dacite` project from an empty workspace. Implement
+dictionary-to-dataclass construction, nested type-aware conversion, explicit
+`Config` customization, cache controls, and inspectable exceptions exactly as
+specified below. Keep the package local and deterministic; do not wrap an
+installed copy or fetch the upstream project.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── README.md
+└── dacite/
+    ├── __init__.py
+    ├── core.py
+    ├── config.py
+    ├── dataclasses.py
+    ├── types.py
+    └── py.typed
+```
+
+The root package exports `from_dict`, `Config`, cache controls, and the public
+exception classes. The exact internal split may vary, but the installed import
+path and package metadata must agree with this project layout.
+
+# Examples
+
+```python
+from dataclasses import dataclass
+from dacite import from_dict
+
+@dataclass
+class User:
+    name: str
+    age: int
+
+user = from_dict(User, {"name": "Ada", "age": 36})
+```
+
+```python
+from dataclasses import dataclass
+from dacite import Config, from_dict
+
+@dataclass
+class Item:
+    item_id: int
+
+item = from_dict(Item, {"item_id": "7"}, Config(cast=[int]))
+```
+
+# Error Handling and Boundary Conditions
+
+Missing required fields raise `MissingValueError`; incompatible values raise
+`WrongTypeError` or the documented union error. With `strict=True`, unknown
+input keys raise `UnexpectedDataError`. Optional values may become `None`, but
+arbitrary JSON parsing, serialization, and network access are outside scope.

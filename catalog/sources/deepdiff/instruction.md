@@ -1,8 +1,8 @@
-# Introduction and Goals of the DeepDiff Project
+# Project Description
 
 DeepDiff is a Python library **designed for in-depth object comparison and difference analysis**. It can perform a thorough comparison of any Python objects/data structures and detect differences. This tool excels in comparing complex data structures, achieving "the most comprehensive difference detection and the most flexible configuration options." Its core functions include: in-depth object comparison (automatically recursively comparing nested structures), **creation and application of difference objects** (supporting Delta objects to implement Git-like commit functionality), and intelligent comparison of complex data structures such as sets, dictionaries, lists, and custom objects. In short, DeepDiff aims to provide a powerful in-depth comparison system for detecting and analyzing differences between Python objects (for example, creating a difference object through DeepDiff() and applying the difference to the target object through the Delta() function).
 
-## Natural Language Instruction (Prompt)
+# Natural Language Instruction
 
 Please create a Python project named DeepDiff to implement an in-depth object comparison library. The project should include the following functions:
 
@@ -35,7 +35,41 @@ Please create a Python project named DeepDiff to implement an in-depth object co
    - Test configuration options (various ignore options, path filtering, etc.)
 
 10. **Core File Requirements**: The project must include a complete pyproject.toml file, which needs to configure the project as an installable package (supporting pip install and editable mode installation) and declare a complete list of dependencies, including deepdiff==8.5.0 (core library), numpy==1.26.4 (support for array comparison), pandas==2.2.3 (data structure comparison), pytest==8.4.0 (testing framework), click (command line tool), orjson (efficient JSON processing), tomli-w (TOML writing), pyyaml (YAML serialization), jsonpickle (object serialization), polars (data frame comparison), and other core libraries. At the same time, it is necessary to provide deepdiff/__init__.py as a unified API entry. This file needs to integrate key components from each core module: import DeepDiff (core difference calculation class) from the diff module; import Delta (difference increment class) from the delta module; import DeepHash (object hash generation class) and sha256hex (hashing algorithm) from the deephash module; import DeepSearch (in-depth search class) and grep (pattern matching function) from the search module; import tool functions such as diff, patch (difference application), and extract (data extraction) from the commands module; import parse_path, stringify_path (path parsing and conversion), GET/GETATTR (path operation constants) from the path module; import structural classes such as DiffLevel (difference level model) and DictRelationship (dictionary relationship handling) from the model module; import auxiliary types such as AnySet (unordered set comparison) and SetOrdered (ordered set handling) from the helper module; import json_dumps, pickle_load (cross-format serialization) from the serialization module; in addition, it is also necessary to export extended functions such as summarize (difference summary), LFUCache (caching mechanism), and BaseOperator (base class for custom operators), and provide version information through __version__. Ensure that users can access all major functions through concise statements such as from deepdiff import DeepDiff, Delta, DeepHash, grep, parse_path. In grader.py, the deepdiff_expr_eq() function needs to use multiple strategies to verify the in-depth difference equivalence of two objects: handle set order differences through the ignore_order parameter of DeepDiff, use the cutoff_distance to control the tolerance range for numerical types (such as numpy arrays and floating-point numbers), and ignore irrelevant fields through exclude_paths; combine Delta to verify the reversibility of differences (whether the original object is restored after applying the patch); use the datetime_normalize function in the helper module to handle time format differences, and use diff_numpy_array to specifically verify array elements; support custom BaseOperator to handle special types (such as Pydantic models and enums), and finally return a boolean value and difference details to ensure the accuracy and flexibility of complex object comparison.
-## Environment Configuration
+# Supports or Environment Configuration
+
+Use Python 3.10 and provide an installable `deepdiff` distribution and import
+package. Optional NumPy, pandas, Polars, YAML, TOML, and high-performance JSON
+features are available only when their declared packages are present; the
+current catalog has not frozen this dependency closure. Do not install or
+download dependencies during evaluation. Agent, candidate, verifier, Oracle,
+and controls operate with NoNetwork and may not contact PyPI, GitHub, DNS, or
+external services.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── README.md
+└── deepdiff/
+    ├── __init__.py
+    ├── anyset.py
+    ├── commands.py
+    ├── deephash.py
+    ├── delta.py
+    ├── diff.py
+    ├── helper.py
+    ├── model.py
+    ├── operator.py
+    ├── path.py
+    ├── search.py
+    ├── serialization.py
+    └── summarize.py
+```
+
+The package root re-exports the major comparison, delta, hashing, search, path,
+and summary interfaces. Command functions remain in `deepdiff.commands`; no
+evaluation-only module belongs in the generated workspace.
 
 ### Python Version
 
@@ -101,9 +135,9 @@ wcwidth           0.2.13
 wheel             0.40.0
 ```
 
-## DeepDiff Project Architecture
+## Architecture Reference
 
-### Project Directory Structure
+### Extended Source Layout
 
 ```Plain
 workspace/
@@ -6870,3 +6904,31 @@ def test_path_performance_optimization():
     assert result == "value"
     assert (end_time - start_time) < 0.01  # Path parsing should be very fast
 ```
+# Implementation Notes
+
+Keep comparisons deterministic and preserve the input objects. Separate the
+comparison, delta, search, hash, path, command, and serialization concerns
+behind the public imports described above. Optional integrations must degrade
+according to their documented availability and never fetch dependencies at
+runtime.
+
+# Examples
+
+```python
+from deepdiff import DeepDiff
+
+diff = DeepDiff({"count": 1}, {"count": 2})
+```
+
+```python
+from deepdiff import DeepSearch
+
+matches = DeepSearch({"name": "Ada"}, "Ada")
+```
+
+# Error Handling and Boundary Conditions
+
+Invalid options, malformed paths, unsupported serialization inputs, and
+incompatible delta operations raise inspectable exceptions. Empty values,
+unordered sets, numeric tolerances, excluded paths, cycles, and optional data
+libraries follow the API contract. All evaluation is local and NoNetwork.

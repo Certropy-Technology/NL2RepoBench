@@ -5,6 +5,61 @@ empty workspace. The package exposes a deterministic catalogue of terminal
 symbols and ASCII-compatible replacements for symbols that are not supported
 by an older terminal.
 
+# Natural Language Instruction
+
+Create the installable ESM `figures` package from an empty workspace. Export
+the default terminal-selected symbol namespace and the named main, fallback,
+and replacement tables exactly as specified below.
+
+# Supports or Environment Configuration
+
+- Use Node.js 24.19.0 and npm 11.17.0 with the exact package metadata and
+  offline dependency closure in `task.toml`.
+- Values are deterministic strings; no runtime network access is permitted.
+- Agent, candidate, verifier, Oracle, and controls run with no network access.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── index.js
+├── index.d.ts
+└── license
+```
+
+# API Usage Guide
+
+The API Usage Guide below is authoritative for symbol names, values, table
+shapes, replacement behavior, and default export identity.
+
+# Implementation Notes
+
+Keep all symbol tables stable and ensure the default namespace has exactly the
+documented property names.
+
+# Examples
+
+```js
+import figures, {mainSymbols} from 'figures';
+figures.tick;
+```
+
+```js
+mainSymbols.arrowUp;
+```
+
+# Error Handling and Boundary Conditions
+
+```js
+Object.keys(figures).sort();
+```
+
+```js
+figures.cross;
+```
+
 # Supports
 
 - Node.js `24.19.0`, npm `11.17.0`, Linux amd64, and ESM package semantics.

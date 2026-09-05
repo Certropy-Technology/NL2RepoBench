@@ -8,7 +8,15 @@ directories for locally installed executables and the running Node executable.
 Reproduce the observable behavior of the pinned `sindresorhus/npm-run-path`
 revision on the declared Linux runtime.
 
-## Supports
+# Natural Language Instruction
+
+Build the complete `npm-run-path` ESM package from an empty workspace. The two
+named exports must construct deterministic PATH strings and cloned environment
+objects using the local executable-search rules below. Preserve option defaults,
+URL path handling, parent traversal, delimiter edge cases, and exact dependency
+versions.
+
+# Supports or Environment Configuration
 
 - Node `24.19.0`, npm `11.17.0`, Linux amd64 with glibc.
 - ESM package semantics using `"type": "module"`.
@@ -17,9 +25,7 @@ revision on the declared Linux runtime.
   `index.d.ts`.
 - A committed npm v3 lockfile that installs with:
 
-  ```text
-  npm ci --offline --ignore-scripts --no-audit --no-fund
-  ```
+  Run `npm ci --offline --ignore-scripts --no-audit --no-fund`.
 
 - Declare the runtime dependencies `path-key` and `unicorn-magic`. Resolve them
   to the exact versions available in the supplied offline closure. Do not use
@@ -28,7 +34,20 @@ revision on the declared Linux runtime.
   on a prepare hook, generated files, a global compiler, or a download at
   evaluation time.
 
-## API Usage Guide
+# Project Directory Structure
+
+```text
+workspace/
+├── package.json       # ESM metadata, exports, and exact dependencies
+├── package-lock.json  # npm lockfile version 3
+├── index.js           # npmRunPath and npmRunPathEnv
+└── index.d.ts         # public TypeScript declarations
+```
+
+The package has no CLI or build-generated runtime files. Install with the
+offline scripts-disabled npm command in Supports.
+
+# API Usage Guide
 
 ### `npmRunPath(options?)`
 
@@ -140,6 +159,38 @@ input.PATH; // '/bin'
   segment handling, option defaults, and environment cloning.
 - Do not add a CLI, subprocess execution, filesystem writes, network access,
   native addon, custom loader, or extra runtime export.
-- Do not include hidden tests, verifier code, Oracle files, reward files,
-  credentials, private npm cache bytes, or generated Harbor assets in the
-  candidate repository.
+- Do not include evaluation files, verifier code, source-reference files,
+  grading files,
+ credentials, private npm cache bytes, or generated Harbor assets in the
+ candidate repository.
+
+# Examples
+
+```js
+import {npmRunPath} from 'npm-run-path';
+npmRunPath({cwd: '/work/app', path: '/bin', preferLocal: false,
+  execPath: '/opt/node/bin/node'});
+// '/opt/node/bin:/bin'
+```
+
+```js
+import {npmRunPathEnv} from 'npm-run-path';
+const input = {PATH: '/bin', KEEP: 'yes'};
+const output = npmRunPathEnv({env: input, preferLocal: false});
+// input remains unchanged; output retains KEEP.
+```
+
+```js
+npmRunPath({path: '/a:/b', preferLocal: false, addExecPath: false});
+```
+
+# Error Handling and Boundary Conditions
+
+- A non-string PATH retains ordinary Node `TypeError` behavior.
+- Empty PATH strings and a delimiter-only PATH preserve the specified empty
+  segment semantics without extra separators.
+- Disabling both generated-entry switches returns the original PATH, including
+  an empty string.
+- `npmRunPathEnv` returns a shallow clone and never mutates `env`.
+- URL and path operations are local calculations; no filesystem lookup,
+  subprocess, DNS, registry, or network access is permitted.

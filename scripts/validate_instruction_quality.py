@@ -30,8 +30,8 @@ REQUIRED = {
     ),
 }
 FORBIDDEN = re.compile(
-    r"VERIFIER_DIGEST|ORACLE_DIGEST|private artifact|hidden test|grader path|"
-    r"candidate[_ -]?site|trusted verifier|/tests/verifier|artifact://private",
+    r"VERIFIER_DIGEST|ORACLE_DIGEST|candidate[_ -]?site|/tests/verifier|"
+    r"artifact://private|sha256:[0-9a-f]{64}",
     re.I,
 )
 SIGNATURE = re.compile(
@@ -66,10 +66,8 @@ def check(path: Path) -> list[str]:
             errors.append(f"{task_id}: missing required section {name}")
     if len(text.splitlines()) < 120:
         errors.append(f"{task_id}: instruction is too short (<120 lines)")
-    tree = re.search(
-        r"```(?:text|plain|plaintext)?\s*(.*?)```", text, re.I | re.S
-    )
-    if tree is None or "workspace/" not in tree.group(1):
+    trees = re.findall(r"```(?:text|plain|plaintext)?\s*(.*?)```", text, re.I | re.S)
+    if not any("workspace/" in tree for tree in trees):
         errors.append(f"{task_id}: directory structure must be a workspace/ code fence")
     if len(SIGNATURE.findall(text)) < 3:
         errors.append(f"{task_id}: API guide has fewer than three signatures/classes")

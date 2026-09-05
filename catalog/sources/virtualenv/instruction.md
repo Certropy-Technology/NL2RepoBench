@@ -1,9 +1,24 @@
 # Build `virtualenv`
 
+```text
+workspace/
+├── pyproject.toml
+└── src/virtualenv/
+    ├── __init__.py
+    └── __main__.py
+```
+
 Create an installable Python package named `virtualenv` from an empty
 workspace. This task targets the POSIX behavior of virtualenv 21.7.5 on
 CPython 3.12. The package creates isolated Python environments locally; it
 must never download Python, pip, wheels, or source code while it runs.
+
+## Natural Language Instruction
+
+Create the package from an empty `workspace/`. Implement the POSIX environment
+creation entry point and `PyEnvCfg` reader/writer described below. The result
+must create the documented interpreter prefix, configuration, and package
+directories without seeding or downloading packages.
 
 ## Project Description
 
@@ -32,6 +47,41 @@ without seeding pip or other packages.
   path-list separator (`:`), returning a non-zero CLI status.
 - Do not seed pip, setuptools, wheel, or any downloaded artifact. Creation
   must work with network access unavailable.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+└── src/
+    └── virtualenv/
+        ├── __init__.py
+        ├── __main__.py
+        ├── run/__init__.py
+        └── create/pyenv_cfg.py
+```
+
+Generated environment directories are caller outputs, not source files.
+
+## Examples
+
+```bash
+python -m virtualenv --no-seed /tmp/demo-env
+/tmp/demo-env/bin/python -c "import sys; print(sys.prefix != sys.base_prefix)"
+```
+
+```python
+from virtualenv.create.pyenv_cfg import PyEnvCfg
+cfg = PyEnvCfg.from_file('pyvenv.cfg')
+cfg['prompt'] = 'demo'
+cfg.write()
+```
+
+## Error Handling and Boundary Conditions
+
+Reject regular-file destinations and names containing the POSIX path-list
+separator. Missing or malformed configuration entries follow the documented
+parser behavior. Creation remains unseeded and does not download artifacts.
 
 ## API Usage Guide
 

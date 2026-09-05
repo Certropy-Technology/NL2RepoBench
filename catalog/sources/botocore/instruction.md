@@ -1,119 +1,132 @@
 # Build `botocore`
 
-Create a complete, installable Python package named `botocore` from an empty
-workspace. The package is the local, data-driven core used by AWS SDK clients.
-The implementation must be usable without network access, AWS credentials, an
-AWS account, or a running service. The frozen source revision is the behavior
-reference, but do not copy the upstream source or tests into the generated
-workspace.
-
 ## Project Description
 
-Implement a compatible subset of botocore centered on deterministic local
-operations: session and credential configuration, service-model loading,
-request construction, Signature Version 4 signing, retry configuration,
-exception classes, and the `Stubber` test double. Keep the package modular and
-installable from a source-only workspace.
+Create an installable Python package named `botocore` from an empty workspace.
+It is a local, data-driven AWS core for sessions, service models, request
+construction, Signature Version 4 signing, retries, exceptions, and `Stubber`.
+The contract is offline and does not require an AWS account or a live service.
 
-The task intentionally excludes live AWS calls, metadata-service calls,
-credential-process commands, CRT acceleration, TLS/network integration, and
-all behavior requiring an account or remote data. Local model files for the
-S3 and DynamoDB services must be available after installation so that model and
-client operations can be created offline.
+## Natural Language Instruction
 
-## Supports
+Implement five connected capabilities: session/configuration and credentials;
+local service-model and client creation; request preparation and signing;
+ordered stub responses; and typed errors/retry helpers. Keep APIs modular and
+installable, include the local S3 and DynamoDB model data, and preserve public
+exception identities. Do not call metadata services, credential processes,
+`curl`, `wget`, `git`, CRT, or live AWS endpoints.
 
-- CPython 3.12 on Linux amd64.
-- A normal setuptools source build with `pip install .` or the Harbor
-  candidate installer.
-- Runtime dependencies: `jmespath==1.0.1`, `python-dateutil==2.9.0.post0`,
-  and `urllib3==2.5.0`.
-- No runtime network access and no subprocesses for the tested APIs.
-- Stable behavior for fixed inputs and fixed local model data.
+## Supports or Environment Configuration
+
+- CPython 3.12 on Linux amd64 with glibc.
+- Package name/import name `botocore`; install with `pip install .` or the
+  equivalent source build.
+- Runtime dependencies are `jmespath==1.0.1`,
+  `python-dateutil==2.9.0.post0`, and `urllib3==2.5.0`. The package version
+  must be stable and exposed as `botocore.__version__`.
+- Agent, candidate, verifier, Oracle, controls, and runtime use
+  `network_mode=no-network`; all model data and test inputs are local.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── setup.py
+├── pyproject.toml
+└── botocore/
+    ├── __init__.py
+    ├── session.py
+    ├── config.py
+    ├── awsrequest.py
+    ├── auth.py
+    ├── stub.py
+    ├── exceptions.py
+    ├── retryhandler.py
+    ├── translate.py
+    └── data/
+        ├── s3/2006-03-01/service-2.json
+        └── dynamodb/2012-08-10/service-2.json
+```
+
+Include package data in installation and preserve the import paths above.
 
 ## API Usage Guide
 
-### Session and credentials
-
-`botocore.session.get_session()` returns a fresh `Session`. Support
-`set_config_variable(name, value)`, `get_config_variable(name)`,
+`botocore.session.get_session() -> Session` returns a fresh session. `Session`
+implements `set_config_variable(name, value)`, `get_config_variable(name)`,
 `set_credentials(access_key, secret_key, token=None, account_id=None)`,
 `get_credentials()`, `get_available_services()`,
 `get_available_regions(service_name)`, `get_service_model(service_name)`,
 `get_paginator_model(service_name)`, `get_waiter_model(service_name)`, and
-`create_client(service_name, region_name=..., aws_access_key_id=...,
-aws_secret_access_key=..., aws_session_token=..., endpoint_url=...,
-config=...)`.
+`create_client(service_name, region_name=None, aws_access_key_id=None,
+aws_secret_access_key=None, aws_session_token=None, endpoint_url=None,
+config=None)`. Explicit session values take precedence over environment values;
+credential records expose `access_key`, `secret_key`, `token`, and `method`.
 
-Explicit session configuration takes precedence over environment variables.
-Credential objects expose `access_key`, `secret_key`, `token`, and
-`method`. Missing credentials for a client must raise the documented
-botocore credential exception instead of contacting the instance metadata
-service. Service and region lists come from bundled model data.
+```python
+from botocore.session import get_session
+session = get_session()
+session.set_config_variable("region", "us-east-1")
+session.set_credentials("access", "secret")
+print(session.get_available_services())
+```
 
-### Configuration
-
-`botocore.config.Config` accepts common client options including
-`region_name`, `signature_version`, `connect_timeout`, `read_timeout`,
-`retries`, `s3`, and `user_agent_extra`. Config objects are immutable-like:
-`merge()` returns a new config and does not mutate either input. The unsigned
-constant `botocore.UNSIGNED` is supported as a signature choice.
-
-### Service models and clients
-
-`Session.get_service_model("s3")` returns a service model loaded from the
-installed JSON data. It must expose service metadata, operation lookup, input
-shape lookup, and operation names. A created S3 client exposes modeled
-operations such as `list_objects_v2` and `put_object`; client metadata includes
-the service model and region. Invalid service names raise a normal botocore
-exception.
-
-### Requests and signing
+`botocore.config.Config(region_name=None, signature_version=None,
+connect_timeout=60, read_timeout=60, retries=None, s3=None,
+user_agent_extra=None)` is immutable-like; `merge(other) -> Config` returns a
+new object. `botocore.UNSIGNED` disables signing. `Session.get_service_model("s3")`
+loads local JSON and exposes service metadata, operation names, operation
+lookup, and input shapes; a created client exposes modeled operations such as
+`list_objects_v2` and `put_object` without making a request at construction.
 
 `botocore.awsrequest.AWSRequest(method, url, data=None, headers=None)` stores a
-request and `prepare()` returns a prepared request with normalized headers and
-body. `botocore.auth.SigV4Auth(credentials, service_name, region_name)` signs
-an `AWSRequest` using the standard `Authorization`, `X-Amz-Date`, and payload
-hash behavior. Fixed credentials, request, and timestamp must produce stable
-header values. `botocore.UNSIGNED` leaves the request unsigned.
+request; `prepare() -> AWSPreparedRequest` normalizes headers/body. `botocore.auth.SigV4Auth(credentials,
+service_name, region_name).add_auth(request)` adds deterministic
+`Authorization`, `X-Amz-Date`, and payload-hash headers. Fixed credentials,
+request, and timestamp give stable output.
 
-### Stubber
+`botocore.stub.Stubber(client)` is a context manager. `add_response(operation,
+response, expected_params=None)` queues a response and `add_client_error(operation,
+error_code, error_message=None, expected_params=None, modeled_fields=None)`
+queues an error. Activation consumes calls in insertion order; unexpected,
+mismatched, or exhausted calls raise `StubAssertionError`,
+`StubResponseError`, or `UnStubbedResponseError` as appropriate.
 
-`botocore.stub.Stubber(client)` is a local context manager and activation
-helper. `add_response(operation, response, expected_params=None)` queues a
-successful modeled response and `add_client_error(operation, error_code,
-error_message=None, expected_params=None, modeled_fields=None)` queues a
-modeled error. Activated stubs are consumed in order; unexpected calls,
-parameter mismatches, and exhausted queues raise the corresponding botocore
-stub exceptions. No network call may happen while a stub is active.
-
-### Exceptions and retry helpers
-
-Preserve the public exception classes and their inheritance relationships,
-including `ClientError`, `NoCredentialsError`, `ParamValidationError`,
-`ProfileNotFound`, `StubAssertionError`, `StubResponseError`, and
-`UnStubbedResponseError`. `botocore.retryhandler.create_retry_handler` and
-`botocore.translate.build_retry_config` must accept the documented local
-configuration shapes and return deterministic retry behavior for success,
-throttling, and capped-attempt cases.
-
-## Determinism and Error Boundaries
-
-- Model loading, serialization, request construction, signing, config merging,
-  and stub responses are local and deterministic.
-- Preserve insertion order where the API exposes order; do not rely on hash
-  iteration for generated request or model output.
-- Invalid parameters, missing credentials, unknown models, unexpected stub
-  calls, and malformed configuration raise normal typed exceptions.
-- Do not invoke `curl`, `wget`, `git`, a credential process, the metadata
-  service, or any other subprocess to satisfy this task.
-- Do not require `awscrt`, Graphviz, an AWS account, or a live HTTP endpoint.
+Preserve `ClientError`, `NoCredentialsError`, `ParamValidationError`,
+`ProfileNotFound`, and the stub exceptions. `retryhandler.create_retry_handler(config,
+operation_name=None) -> callable` and `translate.build_retry_config(config) ->
+dict` accept documented local shapes and provide deterministic capped retry
+behavior for success and throttling.
 
 ## Implementation Notes
 
-Keep public re-exports and exception identity consistent across modules. The
-installed package must include the local service-model JSON data required by
-the S3 and DynamoDB scenarios. The build must succeed without a `.git`
-directory and must expose a stable `botocore.__version__` matching the chosen
-package metadata. Hidden verification compares observable API results and
-typed failures, not object identities or memory addresses.
+Load models from installed package data instead of hard-coding remote answers.
+Preserve insertion order where request/model output exposes it. Keep signing
+and stub state local to the relevant request/client. Invalid configuration,
+unknown services, absent credentials, malformed requests, and unexpected stub
+calls must retain typed failures.
+
+## Examples
+
+```python
+from botocore.config import Config
+base = Config(region_name="us-east-1")
+merged = base.merge(Config(user_agent_extra="local"))
+```
+
+```python
+from botocore.stub import Stubber
+client = get_session().create_client("s3", region_name="us-east-1")
+with Stubber(client) as stubber:
+    stubber.add_response("list_objects_v2", {"Contents": []})
+```
+
+## Error Handling and Boundary Conditions
+
+- Missing credentials raise the documented credential exception and must not
+  trigger metadata-service access.
+- `Config.merge` leaves both input objects unchanged; invalid config shapes
+  raise typed validation errors.
+- `UNSIGNED` leaves an AWS request without SigV4 authorization headers.
+- Stub queues are ordered: an unexpected operation or parameter mismatch fails
+  immediately, and an unused queued response is reported when the context ends.

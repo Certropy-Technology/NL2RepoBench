@@ -1,17 +1,4 @@
-# Build `sqlparse`
-
-Create a complete, installable Python project named `sqlparse` from an empty
-workspace. The package is a non-validating SQL lexer, splitter, parser, and
-formatter. Implement the bounded public contract below with behavior compatible
-with the frozen `sqlparse` source revision whose package version is
-`0.5.4.dev0`.
-
-Do not depend on a preinstalled copy of `sqlparse`, an upstream checkout, or
-network access at runtime. Do not copy source or tests from the reference
-project. The implementation must tokenize and group the specified inputs for
-real; hard-coded answers for the examples are not an acceptable parser.
-
-## Project Description
+# Project Description
 
 `sqlparse` recognizes lexical SQL tokens without connecting to a database and
 without validating a statement against a database-specific grammar. It can:
@@ -29,25 +16,57 @@ without validating a statement against a database-specific grammar. It can:
 The scored surface is the local parsing/formatting/tokenization slice in this
 specification. It does not require a SQL execution engine or database schema.
 
+## Natural Language Instruction
+
+Create `sqlparse` from an empty workspace as a complete installable python project. Implement
+the public operations, data or state behavior, input validation, deterministic ordering, and
+error contracts documented below. Keep package metadata, root exports, module imports, and any
+subpath entry points consistent across files. Implement the behavior rather than hard-coding the
+examples, and do not retrieve or copy a reference implementation.
+
+The finished repository must install from its root, expose every documented API family, preserve
+the specified side effects and resource lifecycle, and remain usable in a fresh process.
+
 ## Supports
 
-- Support CPython 3.8 and newer Python 3.x versions.
-- Provide an installable distribution and import package both named
-  `sqlparse`; `sqlparse.__version__` is exactly `"0.5.4.dev0"`.
-- The package has no third-party runtime dependency. Build tools such as
-  Hatchling are build dependencies, not runtime imports.
-- Provide a PEP 517 `pyproject.toml` and a source-only build that does not need
-  `.git` metadata.
-- Preserve input spelling, comments, whitespace, and newline characters unless
-  a documented formatting option asks to transform them.
-- All operations are deterministic and local. They must not access a network,
-  invoke a database, or launch a subprocess.
+- Package/distribution name: `sqlparse`. Primary import or package entry: `sqlparse`.
+- CPython 3.12.14 on debian-12-amd64 with pip.
+- Install from `workspace/` using `python -m pip install .`.
+- Declared dependency closure: hatchling==1.27.0, packaging==26.3, pathspec==1.1.1, pluggy==1.6.0, trove-classifiers==2026.6.1.19. Standard-library modules are not dependencies.
+- Build requirements are supplied before execution; do not add undeclared dependencies,
+  registry overrides, download hooks, or source-fetch steps.
+- Agent, candidate, verifier, Oracle, and controls use `network_mode=no-network`. Runtime access
+  to GitHub, PyPI, npm, the Go proxy, DNS, and external services is forbidden.
+- The declared test framework is `pytest`. A fixed collection
+  contains `26` cases when that value is frozen in metadata;
+  test implementation details are not part of the package surface.
 
-The command-line `sqlformat` program, documentation files, every upstream SQL
-dialect edge case, and undocumented filter internals are outside this bounded
-contract. They may be implemented, but the APIs below must not depend on them.
+## Project Directory Structure
 
-## Package and API Surface
+```text
+workspace/
+├── pyproject.toml
+├── sqlparse/
+│   ├── __init__.py
+│   ├── exceptions.py
+│   ├── formatter.py
+│   ├── keywords.py
+│   ├── lexer.py
+│   ├── sql.py
+│   ├── tokens.py
+│   ├── utils.py
+│   ├── engine/
+│   │   └── __init__.py
+│   └── filters/
+│       └── __init__.py
+└── README.md
+```
+
+This is the required public project shape. Additional implementation modules are allowed only
+when they support the documented API; evaluation, source-fetch, and private runtime files are
+not agent-owned project files.
+
+## API Usage Guide
 
 The root package provides these callables:
 
@@ -71,7 +90,7 @@ These modules are importable: `sqlparse.engine`, `sqlparse.filters`,
 subclass imported from `sqlparse.exceptions`; `Lexer` is imported from
 `sqlparse.lexer`.
 
-## Token Types and `Token`
+### Token Types and `Token`
 
 `sqlparse.tokens` supplies hierarchical singleton token types. Their string
 forms and ancestry behave as follows:
@@ -105,7 +124,7 @@ has normalized value `SELECT` and matches both `"SELECT"` and regex
 `Token.within(group_class)`, `is_child_of(parent)`, and
 `has_ancestor(ancestor)` inspect grouped-parent relationships.
 
-## Lexing and Tokenization
+### Lexing and Tokenization
 
 `sqlparse.lexer.tokenize(sql, encoding=None)` returns a generator. It delegates
 to `Lexer.get_default_instance().get_tokens(...)`.
@@ -179,7 +198,7 @@ whitespace, Name `baz`. `default_initialization()` restores standard syntax, so
 `"select foobar"` becomes DML `select`, whitespace, Name `foobar`.
 `is_keyword("select")` returns `(T.Keyword.DML, "select")`.
 
-## Statement Splitting and Streams
+### Statement Splitting and Streams
 
 `split()` returns stripped statement strings while retaining a trailing
 semicolon unless `strip_semicolon=True`.
@@ -217,7 +236,7 @@ sqlparse.split(
 two `Statement` objects. Their strings are `"SELECT 1; "` and
 `"UPDATE t SET x = 2;"`; their `get_type()` values are `SELECT` and `UPDATE`.
 
-## Parsing and Grouped Objects
+### Parsing and Grouped Objects
 
 `parse()` returns a tuple of `sqlparse.sql.Statement` objects and preserves the
 original text. Parsing `"select\r\n* from café;"` returns one statement whose
@@ -295,7 +314,7 @@ age >= 18          | age    | >= | 18
 status = 'active'  | status | =  | 'active'
 ```
 
-## Formatting
+### Formatting
 
 `format()` always returns a string. Quoted identifiers and comment contents are
 not case-converted.
@@ -428,3 +447,63 @@ comma_first="yes"          -> comma_first requires a boolean value
   a transformed serialization without mutating the caller's input string.
 - The default lexer singleton must be initialized safely, while separately
   constructed lexers remain independently configurable.
+
+Use the public language semantics described by each API family. Keep repeated calls deterministic
+unless state mutation is explicitly part of the contract. Public re-exports and declarations must
+match runtime behavior, and installation must not rely on a repository checkout or network access.
+
+## Examples
+
+The API-specific examples above are normative demonstrations of ordinary behavior. These four
+local snippets also provide ordinary and boundary-oriented calls without external services:
+
+```python
+sqlparse.parse(sql, encoding=None) -> tuple
+sqlparse.parsestream(stream, encoding=None) -> generator
+sqlparse.format(sql, encoding=None, **options) -> str
+sqlparse.split(sql, encoding=None, strip_semicolon=False) -> list[str]
+```
+
+```python
+sqlparse.__version__ == "0.5.4.dev0"
+sqlparse.__all__ == ["engine", "filters", "formatter", "sql", "tokens", "cli"]
+```
+
+```python
+str(T.Keyword)               == "Token.Keyword"
+str(T.Keyword.DML)           == "Token.Keyword.DML"
+str(T.Name.Placeholder)      == "Token.Name.Placeholder"
+str(T.Literal.String.Single) == "Token.Literal.String.Single"
+str(T.Number.Float)          == "Token.Literal.Number.Float"
+
+T.Keyword.DML in T.Keyword             is True
+T.Name.Placeholder in T.Name           is True
+T.String.Single in T.Literal           is True
+T.Operator.Comparison in T.Operator    is True
+T.Punctuation in T.Keyword             is False
+T.DML is T.Keyword.DML                 is True
+T.String is T.Literal.String           is True
+T.Number is T.Literal.Number           is True
+```
+
+```python
+(Token.Keyword.DML, "select")
+(Token.Text.Whitespace, " ")
+(Token.Wildcard, "*")
+(Token.Text.Whitespace, " ")
+(Token.Keyword, "from")
+(Token.Text.Whitespace, " ")
+(Token.Name, "foo")
+(Token.Punctuation, ";")
+```
+
+## Error Handling and Boundary Conditions
+
+Empty values, malformed values, unsupported types, exhausted inputs, invalid options, and missing
+local resources must follow the API-specific contracts above. Preserve documented exception types
+and messages where they are stated. Do not silently coerce an unsupported value merely to produce
+a result, and do not mutate caller-owned data unless the relevant API explicitly promises it.
+
+All filesystem, process, terminal, clock, randomness, and service interactions are forbidden unless
+the API guide explicitly includes that local behavior. Even for an API that models remote or async
+work, evaluation must remain bounded, deterministic, and disconnected from public networks.

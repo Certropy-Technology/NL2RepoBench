@@ -1,3 +1,66 @@
+# Project Description
+
+Build the pinned ESM `fast-glob` package from an empty `workspace/`. Implement
+local filesystem globbing, asynchronous/synchronous/stream results, task
+generation, dynamic-pattern detection, escaping, filtering, and ordering.
+
+# Natural Language Instruction
+
+Create the package and implement every public function and option documented in
+the API guide below. Preserve returned path forms, pattern precedence, and
+filesystem boundary behavior.
+
+# Supports or Environment Configuration
+
+- Use Node.js 24.19.0 and npm 11.17.0 with the exact ESM metadata and frozen
+  offline dependency closure in `task.toml`.
+- This library has no CLI or network behavior. Agent, candidate, verifier,
+  Oracle, and controls run with no network access.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+└── out/
+    ├── index.js
+    ├── managers/
+    ├── providers/
+    └── utils/
+```
+
+# API Usage Guide
+
+The detailed API Usage Guide below is authoritative for functions, options,
+task shapes, streams, path results, and ordering.
+
+# Implementation Notes
+
+Resolve only caller-selected local filesystem paths and keep results
+deterministic. Do not use network or hidden global state.
+
+# Examples
+
+```js
+import fg from 'fast-glob';
+await fg('src/**/*.js', {cwd: '/workspace'});
+```
+
+```js
+fg.sync(['*.js'], {cwd: '/workspace'});
+```
+
+# Error Handling and Boundary Conditions
+
+```js
+await fg('missing/**/*.js', {cwd: '/workspace'});
+```
+
+```js
+fg.isDynamicPattern('src/**/index.js');
+```
+
 # fast-glob
 
 ## Project Description

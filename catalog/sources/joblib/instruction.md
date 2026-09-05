@@ -1,3 +1,39 @@
+# Project Description
+
+The task id is `joblib`; build its public Python package from an empty workspace.
+
+# Natural Language Instruction
+
+Build joblib from an empty workspace as an installable Python distribution.
+Implement the public parallel, persistence, hashing, compression, memory-cache,
+disk, and utility contracts described below. Preserve deterministic ordering and
+normal Python exceptions while keeping the implementation local and offline.
+
+# Supports or Environment Configuration
+
+Use Python 3.12 on Linux with the frozen local dependency closure and no network.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── README.md
+└── joblib/
+    ├── __init__.py
+    ├── parallel.py
+    ├── memory.py
+    ├── numpy_pickle.py
+    ├── hashing.py
+    ├── compressor.py
+    ├── disk.py
+    └── testing.py
+```
+
+# API Usage Guide
+
+The public API guide below is the contract for `joblib`.
+
 # Build `joblib`
 
 Create a complete, installable Python project named `joblib` from an empty
@@ -6,7 +42,7 @@ deterministic disk caching, object persistence, hashing, compression, and
 bounded filesystem helpers. Do not depend on a preinstalled copy of joblib or
 on network access at runtime.
 
-## Project Description
+## Legacy Project Description
 
 Implement the public package `joblib` for CPython 3.12. It must be usable as a
 normal installed package and must keep candidate code separate from verifier
@@ -113,7 +149,35 @@ check. This helper is not needed by normal application code.
 - Keep `Memory` and persistence behavior deterministic for fixed inputs and
   temporary directories. Do not share mutable defaults between calls.
 - The verifier exercises behavior through a child process and a JSON protocol;
-  it will not import candidate modules in the trusted verifier process.
+  it will not import candidate modules in the verifier process.
+
+# Examples
+
+```python
+from joblib import Parallel, delayed
+assert Parallel(n_jobs=2)(delayed(lambda x: x * 2)(x) for x in [1, 2]) == [2, 4]
+```
+
+```python
+from joblib import Memory, dump, load
+from pathlib import Path
+path = Path("value.joblib")
+dump({"answer": 42}, path)
+assert load(path)["answer"] == 42
+```
+
+# Error Handling and Boundary Conditions
+
+- Invalid backend, compressor, hash, cache, and persistence inputs raise the
+  documented Python exception instead of silently changing behavior.
+- Array order, object hashing, compression round trips, and cache keys are
+  deterministic for fixed inputs.
+- Dask, platform-specific branches, external services, timing benchmarks, and
+  network access are outside this task.
+
+The task id and import/distribution package are `joblib`. The API inventory
+freezes 33 deterministic local scenarios across parallel, persistence,
+hashing, memory, and utility behavior.
 - The hidden contract intentionally excludes Dask integration, distributed
   services, benchmark timing thresholds, platform-specific Windows behavior,
   and private implementation helpers. Correctness on the documented local

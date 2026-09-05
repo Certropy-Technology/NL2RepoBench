@@ -1,5 +1,15 @@
 # Build `distro`
 
+```text
+workspace/
+├── pyproject.toml
+├── README.md
+└── src/distro/
+    ├── __init__.py
+    ├── distro.py
+    └── __main__.py
+```
+
 Create a complete, installable Python distribution named `distro` from an
 empty workspace. The import package must be `distro` and the command
 `python -m distro` must be available after installation. Implement the
@@ -118,3 +128,52 @@ supplies temporary fixture roots, so do not read the evaluator's private
 files or rely on the host's `/etc` contents. Build metadata must be stable
 when the project is unpacked without `.git`; do not derive the runtime version
 from a mutable branch or a network lookup.
+
+# Natural Language Instruction
+
+Create `distro` from an empty workspace. Implement local Linux distribution
+identity parsing, the `LinuxDistribution` object, module-level accessors, and
+the JSON/text CLI using documented files and deterministic fixture roots. Do
+not assume the host distribution or an external command is present.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── README.md
+└── src/
+    └── distro/
+        ├── __init__.py
+        ├── distro.py
+        ├── __main__.py
+        └── py.typed
+```
+
+The `src/distro` package is the installed import path, and `__main__.py`
+provides `python -m distro`. Fixture files used by callers live below their
+chosen `root_dir`; they are not bundled source files.
+
+# Examples
+
+```python
+from distro import LinuxDistribution
+
+distribution = LinuxDistribution(
+    root_dir="/tmp/fixture",
+    include_lsb=False,
+    include_uname=False,
+)
+print(distribution.info())
+```
+
+```text
+python -m distro --root-dir /tmp/fixture --json
+```
+
+# Error Handling and Boundary Conditions
+
+Malformed `os-release` entries are ignored as data, while unsafe root-directory
+combinations raise `ValueError`. Missing source files yield empty strings or
+empty dictionaries. Invalid CLI arguments use the normal parser error path;
+JSON mode emits valid JSON only. No network access is permitted.

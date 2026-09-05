@@ -1,3 +1,76 @@
+# Project Description
+
+Build the pinned `factory_boy` Python distribution from an empty `workspace/`.
+Its import package `factory` provides declarative factories, lazy declarations,
+strategies, fuzzy values, random-state controls, and helper constructors.
+
+# Natural Language Instruction
+
+Create the installable distribution and every core symbol listed in the local
+API inventory and guide below. Preserve declaration order, overrides, nested
+factories, traits, post-generation hooks, random reproducibility, and errors.
+ORM integrations are outside this contract.
+
+# Supports or Environment Configuration
+
+- Use CPython 3.12 on Linux and the exact package/build closure in `task.toml`.
+- Distribution name is `factory_boy`; import package is `factory`, including
+  its metadata and typing marker.
+- Agent, candidate, verifier, Oracle, and controls run with no network access.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+└── factory/
+    ├── __init__.py
+    ├── base.py
+    ├── declarations.py
+    ├── enums.py
+    ├── errors.py
+    ├── faker.py
+    ├── fuzzy.py
+    ├── helpers.py
+    ├── random.py
+    ├── utils.py
+    └── py.typed
+```
+
+# API Usage Guide
+
+The existing guide and local inventories are authoritative for factory classes,
+declarations, helpers, fuzzy values, random APIs, and utility signatures.
+
+# Implementation Notes
+
+Keep generation deterministic under a fixed random state. Do not add ORM or
+database integrations, or import-time network behavior.
+
+# Examples
+
+```python
+import factory
+class UserFactory(factory.Factory):
+    class Meta:
+        model = dict
+    name = factory.Sequence(lambda n: f"user-{n}")
+```
+
+```python
+factory.build_batch(UserFactory, 2)
+```
+
+# Error Handling and Boundary Conditions
+
+```python
+factory.reseed_random(17)
+```
+
+```python
+factory.use_strategy(factory.STUB_STRATEGY)
+```
+
 # Build `factory-boy`
 
 ## Project Description

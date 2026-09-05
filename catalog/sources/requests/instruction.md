@@ -13,7 +13,7 @@ building requests, preparing headers and bodies, managing sessions and cookies,
 authenticating requests, and consuming responses. The package and import name
 are both `requests` and its version must be `2.34.2`.
 
-## Supports
+# Supports or Environment Configuration
 
 - Support CPython 3.10+ and provide a standard PEP 517 build using
   `pyproject.toml` (or an equivalent supported build configuration).
@@ -27,7 +27,36 @@ are both `requests` and its version must be `2.34.2`.
   present and must not use subprocesses, filesystem state, or environment
   services for ordinary request construction and response handling.
 
-## Public API
+# Natural Language Instruction
+
+Build `requests` from an empty workspace. Implement deterministic local HTTP
+client behavior for request preparation, headers and bodies, responses,
+sessions, cookies, authentication, redirects, and utilities. Live services are
+outside the task; transports are supplied locally.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── README.md
+├── LICENSE
+└── requests/
+    ├── __init__.py
+    ├── api.py
+    ├── models.py
+    ├── sessions.py
+    ├── structures.py
+    ├── cookies.py
+    ├── auth.py
+    ├── utils.py
+    └── status_codes.py
+```
+
+The root re-exports the documented classes, helpers, exceptions, and version;
+the module paths above remain importable after installation.
+
+# Public API
 
 The following import paths and names are required.
 
@@ -173,3 +202,28 @@ request = requests.Request("GET", "https://example.test/items", params={"page": 
 prepared = session.prepare_request(request)
 assert prepared.path_url == "/items?page=2"
 ```
+
+# Examples
+
+```python
+import requests
+response = requests.get("https://example.test/items")
+```
+
+```python
+request = requests.Request("GET", "https://example.test/items", params={"page": 2})
+prepared = request.prepare()
+```
+
+```python
+response = requests.Response()
+response.status_code = 200
+response._content = b'{"ok": true}'
+```
+
+# Error Handling and Boundary Conditions
+
+Invalid URLs, headers, conflicting bodies, and malformed response data raise
+the documented Requests exceptions or value errors. A local adapter is the
+only transport required. Preserve response history, redirect limits, and
+caller-owned request isolation without using external services.

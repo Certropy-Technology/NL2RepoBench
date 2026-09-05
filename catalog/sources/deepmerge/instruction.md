@@ -1,5 +1,12 @@
 # Project Description
 
+```text
+workspace/
+├── package.json
+├── package-lock.json
+└── index.js
+```
+
 Build an installable CommonJS npm package named `deepmerge`, version `4.3.1`,
 from an empty workspace. It deeply merges enumerable own properties of objects
 and provides a convenience operation for merging a list of objects. The
@@ -83,3 +90,46 @@ Do not copy the reference repository or its tests. Do not implement only the
 README example: boundary cases include empty arrays, nested arrays of objects,
 type replacement, `clone: false`, custom array and property merges, invalid
 `merge.all` input, key order, and an own `__proto__` key.
+
+## Natural Language Instruction
+
+Create `deepmerge` from an empty workspace. Implement recursive object and
+array merging, `merge.all`, clone behavior, custom merge hooks, and
+prototype-sensitive key handling exactly as specified. Keep the callable root
+export compatible with `require('deepmerge')`.
+
+```js
+import merge from 'deepmerge';
+```
+
+## Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+└── index.js
+```
+
+`package.json` declares CommonJS metadata and `index.js` is both the callable
+root export and the home of `merge.all`. No hidden verifier or test file is an
+agent-owned project file.
+
+## Examples
+
+```js
+const merge = require('deepmerge');
+const result = merge({user: {name: 'A'}}, {user: {active: true}});
+```
+
+```js
+const merge = require('deepmerge');
+merge.all([{a: 1}, {b: 2}]);
+```
+
+## Error Handling and Boundary Conditions
+
+Neither input is mutated. Arrays concatenate by default, top-level kind
+mismatches replace with a clone, and `merge.all` rejects a non-array argument.
+Own enumerable `__proto__` data must not change the result prototype. Custom
+hooks receive the options object and remain local JavaScript calls.

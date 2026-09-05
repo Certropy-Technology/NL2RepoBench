@@ -16,6 +16,13 @@ Users of this library are Python developers. The boundary is command
 construction, argument parsing, value conversion, terminal output and process
 exit codes. You are not building a shell, a daemon or a plugin system.
 
+## Natural Language Instruction
+
+Create the installable `typer` package from an empty workspace. Implement the
+type-hint-driven command construction, conversion, output helpers, testing
+runner, completion generation, and meta-CLI described below. Preserve public
+imports and process-facing exit behavior.
+
 ## Supports
 
 - Python `3.12` on Linux, `x86_64`.
@@ -39,6 +46,22 @@ exit codes. You are not building a shell, a daemon or a plugin system.
 Preserve the project's MIT license text. If you vendor or adapt another
 project's parser or terminal code, its own notice must be retained alongside
 the MIT license; do not relicense adapted bytes.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+└── typer/
+    ├── __init__.py
+    ├── main.py
+    ├── core.py
+    ├── colors.py
+    ├── testing.py
+    ├── cli.py
+    ├── completion.py
+    └── py.typed
+```
 
 ## API Usage Guide
 
@@ -224,3 +247,29 @@ runs it, and can render Markdown documentation for its commands.
 
   # runner.invoke(app, ["ada", "--count", "3"]).stdout == "ada 3 int\n"
   ```
+
+## Examples
+
+```python
+import typer
+
+app = typer.Typer(add_completion=False)
+
+@app.command()
+def greet(name: str):
+    typer.echo(f"Hello {name}")
+```
+
+```python
+from typer.testing import CliRunner
+
+result = CliRunner().invoke(app, ["Ada"])
+assert result.exit_code == 0
+```
+
+## Error Handling and Boundary Conditions
+
+Missing options, unknown commands, and conversion failures are usage errors
+with exit code 2 and diagnostic output. User exceptions follow the
+`catch_exceptions` setting; prompt and temporary environment state is restored
+after each runner invocation.

@@ -1,4 +1,4 @@
-# Build `annotated-types`
+# Project Description
 
 Create a complete, installable Python project named `annotated-types` from an
 empty workspace.  It provides reusable metadata objects for
@@ -13,7 +13,19 @@ downstream annotation consumers can unpack by iteration, plus convenient
 generic aliases for common string and floating-point predicates.  The public
 distribution is imported as `annotated_types` and reports version `0.8.0`.
 
-## Supports
+# Natural Language Instruction
+
+Create the `annotated-types` project from an empty `workspace/`. Build an installable implementation, not a loose demonstration script. The public API guide below is the complete source of the task contract; preserve its import paths, signatures, return shapes, ordering, state changes, and exceptions.
+
+Required capabilities:
+- immutable Annotated metadata: implement the documented public behavior and preserve its input/output and error contract.
+- grouped metadata iteration: implement the documented public behavior and preserve its input/output and error contract.
+- numeric and length constraints: implement the documented public behavior and preserve its input/output and error contract.
+- predicate and documentation aliases: implement the documented public behavior and preserve its input/output and error contract.
+
+Do not copy an upstream checkout or tests. Keep behavior deterministic and local, and make the package usable from the installation layout described below. The principal public entry points include: `Predicate(func)`, `Predicate(str.isascii)`, `__iter__()`, `MinLen(min_length)`.
+
+# Supports
 
 - Support CPython 3.10 and newer Python 3.x versions in the source's supported
   range; the evaluation runtime is CPython 3.12.
@@ -26,7 +38,23 @@ distribution is imported as `annotated_types` and reports version `0.8.0`.
   equality, hashing, iteration, and representation must not access the
   network or depend on the current time.
 
-## API Usage Guide
+
+## NoNetwork boundary
+
+Agent, candidate, verifier, Oracle, controls, and normal runtime execution are network-isolated. Do not access GitHub, package registries, Go proxies, DNS, or external services during execution; use only the frozen local build inputs.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+└── annotated_types/
+    ├── __init__.py
+    ├── test_cases.py
+    └── py.typed
+```
+
+# API Usage Guide
 
 ### Root exports and metadata classes
 
@@ -119,7 +147,7 @@ has a `documentation` attribute containing the supplied value.  Prefer the
 standard library where possible, but if `typing_extensions.Doc` is available
 it may be reused; the aliases and attribute behavior must remain consistent.
 
-## Implementation Notes
+# Implementation Notes
 
 - Preserve dataclass value semantics, frozen assignment errors, slots, and
   useful `repr` output for the metadata classes.  Type annotations on fields
@@ -135,3 +163,40 @@ it may be reused; the aliases and attribute behavior must remain consistent.
 - A minimal package layout is sufficient; documentation and development-only
   lint configuration are not required, but installation must work from the
   project root without network access during evaluation.
+
+# Examples
+
+## Ordinary bounds metadata
+
+```python
+from typing import Annotated
+from annotated_types import Ge, Le
+
+Percentage = Annotated[int, Ge(0), Le(100)]
+```
+
+## Ordinary grouped metadata
+
+```python
+from annotated_types import Len
+
+items = list(Len(1, 5))
+```
+
+## Boundary: metadata does not validate
+
+```python
+from annotated_types import Gt
+metadata = Gt(0)
+# Constructing metadata does not reject application values by itself.
+```
+
+## Boundary: frozen value
+
+```python
+metadata.gt = 2  # raises the normal frozen-dataclass assignment error
+```
+
+# Error Handling and Boundary Conditions
+
+Reject invalid inputs using the documented exception or error result. Preserve empty-input behavior, ordering, Unicode/encoding behavior, cancellation or timeout semantics, and local filesystem boundaries where the API specifies them. Never turn a failed local operation into a network request, subprocess, or silent success.

@@ -9,7 +9,19 @@ The project must work from an empty workspace and must preserve paths as the
 user entered them. It should be usable without a network service or a
 third-party runtime dependency.
 
-## Supports
+# Natural Language Instruction
+
+Create the `autojump` project from an empty `workspace/`. Build an installable implementation, not a loose demonstration script. The public API guide below is the complete source of the task contract; preserve its import paths, signatures, return shapes, ordering, state changes, and exceptions.
+
+Required capabilities:
+- weighted directory database persistence: implement the documented public behavior and preserve its input/output and error contract.
+- anywhere, consecutive, and fuzzy matching: implement the documented public behavior and preserve its input/output and error contract.
+- command-line argument modes: implement the documented public behavior and preserve its input/output and error contract.
+- shell and installer integration: implement the documented public behavior and preserve its input/output and error contract.
+
+Do not copy an upstream checkout or tests. Keep behavior deterministic and local, and make the package usable from the installation layout described below. The principal public entry points include: `load(config) -> dict[str, float]`, `save(config, data) -> None`, `dictify(entries) -> dict`, `entriefy(data) -> iterator[Entry]`.
+
+# Supports
 
 - Provide the implementation modules under `bin/`, the shell integration
   files, `tools/autojump_ipython.py`, `install.py`, and `uninstall.py`.
@@ -32,7 +44,29 @@ third-party runtime dependency.
 - Provide shell scripts for the supported shells and an IPython helper. Shell
   commands should quote paths safely and should not require a network service.
 
-## API Usage Guide
+
+## NoNetwork boundary
+
+Agent, candidate, verifier, Oracle, controls, and normal runtime execution are network-isolated. Do not access GitHub, package registries, Go proxies, DNS, or external services during execution; use only the frozen local build inputs.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── bin/
+│   ├── __init__.py
+│   ├── autojump.py
+│   ├── autojump_data.py
+│   ├── autojump_match.py
+│   ├── autojump_utils.py
+│   └── autojump.{bash,zsh,fish,tcsh}
+├── install.py
+├── uninstall.py
+└── tools/autojump_ipython.py
+```
+
+# API Usage Guide
 
 ### Directory Database: `bin.autojump_data`
 
@@ -126,7 +160,7 @@ needed by the project as a compatible command-line parsing surface.
 `tools.autojump_ipython.j(path)` should provide the IPython directory-jump
 helper when IPython is available.
 
-## Implementation Notes
+# Implementation Notes
 
 Use deterministic ordering wherever an API returns multiple entries. Keep
 database writes safe against interrupted replacement and preserve a usable
@@ -150,3 +184,40 @@ matches = list(match_anywhere(["projects"], (Entry(path, weight) for path, weigh
 The repository should include a usable installation flow and shell assets,
 but it must not depend on copying the verifier's tests or on test-specific
 fixtures to implement the behavior above.
+
+# Examples
+
+## Ordinary database conversion
+
+```python
+from bin.autojump_data import Entry, dictify, entriefy
+
+entries = [Entry("/work/project", 10.0)]
+data = dictify(entries)
+round_trip = list(entriefy(data))
+```
+
+## Ordinary matching
+
+```python
+from bin.autojump_match import match_anywhere
+
+matches = list(match_anywhere(["project"], entries, ignore_case=True))
+```
+
+## Boundary: absent database
+
+```python
+from bin.autojump_data import load
+data = load({"data_path": "/tmp/missing-autojump-data"})
+```
+
+## Boundary: no matching path
+
+```python
+assert list(match_anywhere(["missing"], entries, ignore_case=True)) == []
+```
+
+# Error Handling and Boundary Conditions
+
+Reject invalid inputs using the documented exception or error result. Preserve empty-input behavior, ordering, Unicode/encoding behavior, cancellation or timeout semantics, and local filesystem boundaries where the API specifies them. Never turn a failed local operation into a network request, subprocess, or silent success.

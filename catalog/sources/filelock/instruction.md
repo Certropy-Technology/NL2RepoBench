@@ -1,3 +1,68 @@
+# Project Description
+
+Build the pinned `filelock` Python project from an empty `workspace/`. Implement
+the synchronous, asynchronous, reader/writer, strict-claim, and lease APIs in
+the existing task-specific contract.
+
+# Natural Language Instruction
+
+Create an installable `filelock` package. Preserve lock acquisition/release,
+timeouts, reentrancy, platform selection, marker records, ownership claims,
+and cleanup exactly as documented below.
+
+# Supports or Environment Configuration
+
+- Use CPython 3.12 with the exact package/build closure in `task.toml`.
+- Behavior is local filesystem coordination; do not use services or network.
+- Agent, candidate, verifier, Oracle, and controls run with no network access.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+└── filelock/
+    ├── __init__.py
+    ├── _api.py
+    ├── _windows.py
+    ├── _unix.py
+    ├── asyncio.py
+    └── py.typed
+```
+
+# API Usage Guide
+
+The detailed API inventory and guide below are authoritative for all classes,
+methods, signatures, state, and exceptions.
+
+# Implementation Notes
+
+Lock state must be deterministic and safely released on errors. Respect caller
+paths and platform capabilities without hidden global coordination.
+
+# Examples
+
+```python
+from filelock import FileLock
+with FileLock('/tmp/example.lock'):
+    pass
+```
+
+```python
+lock = FileLock('/tmp/example.lock', timeout=1)
+lock.acquire(); lock.release()
+```
+
+# Error Handling and Boundary Conditions
+
+```python
+FileLock('/tmp/example.lock', timeout=0).acquire()
+```
+
+```python
+lock.release()  # preserve documented release behavior
+```
+
 # Build `filelock`
 
 Create a complete, installable Python project named `filelock` from an empty

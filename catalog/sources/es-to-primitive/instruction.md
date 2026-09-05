@@ -8,7 +8,69 @@ implicit coercion as a substitute for the specified method-selection rules.
 This is a repository-generation task. Implement the described public contract
 with your own package files; do not fetch or copy a reference repository.
 
-# Supports
+# Natural Language Instruction
+
+Create the CommonJS package root and `es5`, `es6`, and `es2015` modules with
+their declarations. Implement every ToPrimitive variant and method-selection,
+fallback, return, and error rule in the API guide below.
+
+# Supports or Environment Configuration
+
+- Use Node.js 24.19.0 and npm 11.17.0 with CommonJS semantics and the exact
+  package/export metadata in `task.toml`.
+- Install only the frozen npm v3 dependency closure offline; do not use
+  lifecycle scripts, native modules, or runtime downloads.
+- Agent, candidate, verifier, Oracle, and controls run with no network access.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── index.js
+├── es5.js
+├── es6.js
+├── es2015.js
+├── index.d.ts
+├── es5.d.ts
+├── es6.d.ts
+└── es2015.d.ts
+```
+
+# API Usage Guide
+
+The API Usage Guide below is authoritative for root and variant exports,
+accepted object shapes, primitive returns, and exceptions.
+
+# Implementation Notes
+
+Preserve explicit Symbol.toPrimitive and ordinary conversion ordering. Do not
+substitute an implicit JavaScript coercion shortcut.
+
+# Examples
+
+```js
+const ToPrimitive = require('es-to-primitive');
+ToPrimitive({valueOf: () => 4, toString: () => 'x'}, 'number');
+```
+
+```js
+const ES2015 = require('es-to-primitive/es2015');
+ES2015('value', 'default');
+```
+
+# Error Handling and Boundary Conditions
+
+```js
+ToPrimitive(Object.create(null), 'number');
+```
+
+```js
+ToPrimitive({[Symbol.toPrimitive]: () => 7}, 'string');
+```
+
+# Project Description
 
 - Node.js `24.19.0`, npm `11.17.0`, `linux/amd64`, and CommonJS semantics.
 - `package.json` must identify `es-to-primitive` version `1.3.4`, set

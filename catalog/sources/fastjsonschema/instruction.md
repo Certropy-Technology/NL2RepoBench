@@ -2,6 +2,64 @@
 
 Build `fastjsonschema`, a Python library that validates JSON-compatible data against JSON Schema drafts 04, 06, 07, and the supported 2019-09 subset. Start from an empty workspace and produce a normal installable Python package; do not copy verifier files or depend on this task's test directory.
 
+## Natural Language Instruction
+
+Create the installable `fastjsonschema` package from an empty workspace.
+Implement validation, compiler, generated-code, defaults, formats, references,
+and deterministic exception behavior described below.
+
+## Supports or Environment Configuration
+
+- Use CPython 3.12 and the exact metadata in `task.toml`; runtime behavior uses
+  only the standard library and never resolves references over the network.
+- Agent, candidate, verifier, Oracle, and controls run with no network access.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+└── fastjsonschema/
+    ├── __init__.py
+    ├── draft04.py
+    ├── draft06.py
+    ├── draft07.py
+    ├── draft2019-09.py
+    └── exceptions.py
+```
+
+## API Usage Guide
+
+The API Usage Guide below is authoritative for all signatures, JSON domains,
+return values, defaults, generated source, and exception classes.
+
+## Implementation Notes
+
+Keep validation deterministic and treat schemas as data. Generated code must
+not execute schema-provided strings as Python.
+
+## Examples
+
+```python
+import fastjsonschema
+fastjsonschema.validate({"type": "string"}, "ok")
+```
+
+```python
+check = fastjsonschema.compile({"type": "integer"})
+check(3)
+```
+
+## Error Handling and Boundary Conditions
+
+```python
+fastjsonschema.validate({"type": "string"}, 1)
+```
+
+```python
+fastjsonschema.compile_to_code({"type": "null"})
+```
+
 ## Supports
 
 - Python 3.10 or newer, with no runtime dependency outside the standard library.

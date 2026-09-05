@@ -1,3 +1,69 @@
+# Project Description
+
+Build the pinned `exceptiongroup` Python distribution from an empty
+`workspace/`. It provides portable exception-group classes and catch, suppress,
+and traceback helpers.
+
+# Natural Language Instruction
+
+Create the installable `exceptiongroup` package and implement all root exports,
+group construction, matching/catching, suppression, and formatting behavior in
+the API guide below. Preserve native-class compatibility on Python 3.11+.
+
+# Supports or Environment Configuration
+
+- Use CPython 3.12 with the exact package version and build closure in
+  `task.toml`; behavior is local and deterministic.
+- Agent, candidate, verifier, Oracle, and controls run with no network access.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+└── exceptiongroup/
+    ├── __init__.py
+    ├── _exceptions.py
+    ├── _catch.py
+    ├── _suppress.py
+    ├── _formatting.py
+    └── py.typed
+```
+
+# API Usage Guide
+
+The API Usage Guide below is authoritative for exception classes, constructors,
+`catch`, `suppress`, traceback helpers, and context behavior.
+
+# Implementation Notes
+
+Preserve exception ordering and traceback context. Do not flatten groups or
+swallow unmatched exceptions unless the documented helper requires it.
+
+# Examples
+
+```python
+from exceptiongroup import ExceptionGroup
+group = ExceptionGroup("errors", [ValueError("bad"), TypeError("wrong")])
+```
+
+```python
+from exceptiongroup import catch
+with catch({ValueError: lambda exc: None}):
+    raise ExceptionGroup("errors", [ValueError("bad")])
+```
+
+# Error Handling and Boundary Conditions
+
+```python
+ExceptionGroup("empty", [])
+```
+
+```python
+with catch({KeyError: lambda exc: None}):
+    raise ExceptionGroup("mixed", [ValueError("unmatched")])
+```
+
 # Build `exceptiongroup`
 
 Create a complete, installable Python distribution named `exceptiongroup`

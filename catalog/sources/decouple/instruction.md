@@ -1,8 +1,8 @@
-## Introduction and Goals of the Python-Decouple Project
+# Project Description
 
 Python-Decouple is a Python library **oriented towards configuration management separation**. It can achieve strict separation between code and configuration, support reading configuration parameters from environment variables, .env files, and .ini files, and provide intelligent type conversion capabilities. This tool is widely used in Web frameworks such as Django and Flask, enabling "complete decoupling of configuration and code" and "unified management of multi-environment configurations". Its core functions include: **multi-source configuration reading** (supporting priority reading from environment variables, .env files, and .ini files), **intelligent type conversion** (automatically converting string configurations into Python native types such as booleans, integers, and lists), and **configuration validation and default value management** (supporting advanced functions such as Choices validation, CSV parsing, and Docker secrets). In short, Python-Decouple is committed to providing a robust configuration management solution to simplify the configuration management of applications (for example, converting string configurations to boolean values through `config('DEBUG', default=False, cast=bool)`, and converting comma-separated strings to lists through `config('ALLOWED_HOSTS', cast=Csv())`), allowing developers to modify configuration parameters without redeploying the application.
 
-## Natural Language Instruction (Prompt)
+# Natural Language Instruction
 
 Please create a Python project named Python-Decouple to implement a configuration management separation library. The project should include the following functions:
 
@@ -24,7 +24,29 @@ Please create a Python project named Python-Decouple to implement a configuratio
 
 
 
-## Environment Configuration
+# Supports or Environment Configuration
+
+Use Python 3.12 and publish the `python-decouple` distribution with the
+single-file import module `decouple`. The documented implementation is based
+on the standard library; optional application frameworks are consumers, not
+runtime dependencies. The catalog dependency closure is not yet frozen, so
+do not fetch build tools while running. Agent, candidate, verifier, Oracle,
+and controls use NoNetwork and must not access PyPI, DNS, Docker services, or
+external configuration providers.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── README.md
+└── decouple.py
+```
+
+`decouple.py` is the public import surface and contains `Config`, repositories,
+`AutoConfig`, `Csv`, `Choices`, exceptions, constants, and the module-level
+`config` object described below. The project must install that module from the
+repository root.
 
 ### Python Version
 
@@ -84,9 +106,9 @@ wheel              0.45.1
 zipp               3.23.0
 ```
 
-## Python-Decouple Project Architecture
+## Architecture Reference
 
-### Project Directory Structure
+### Extended Source Layout
 
 ```Plain
 workspace/
@@ -1171,3 +1193,28 @@ def test_cast_to_int_with_booth_flat_list_and_django_like_choices():
         choices('1')
 
 ```
+## Implementation Notes
+
+Keep configuration lookup deterministic and local. Environment values take
+priority over file repositories, defaults apply only when a key is absent, and
+casts raise their normal conversion errors. Do not import an installed
+reference package or use network access.
+
+## Examples
+
+```python
+from decouple import config
+debug = config("DEBUG", default=False, cast=bool)
+```
+
+```python
+from decouple import Csv
+hosts = Csv(post_process=tuple)("api.example,web.example")
+```
+
+## Error Handling and Boundary Conditions
+
+Missing values without a default raise `UndefinedValueError`. Invalid boolean,
+choice, and CSV values raise their documented conversion errors. Repository
+files use the requested encoding, Docker secrets remain local files, and
+environment or filesystem reads never contact external services.

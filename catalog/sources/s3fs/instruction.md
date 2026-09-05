@@ -1,12 +1,4 @@
-# Build `s3fs`
-
-Create an installable Python package named `s3fs` from an empty workspace. The
-implementation must reproduce the behavior of the pinned `s3fs` release at
-the API boundary described below. Evaluation is local and deterministic: do
-not fetch source, install packages, contact AWS, or contact any other service
-while the implementation is being evaluated.
-
-## Project Description
+# Project Description
 
 `s3fs` provides an fsspec-compatible filesystem interface over S3. It exposes
 `S3FileSystem` for filesystem operations, `S3File` for buffered object access,
@@ -15,17 +7,48 @@ path and option handling, deterministic filesystem/cache behavior, and the
 object-call boundary using a small in-process fake client. Real S3 credentials
 and network service behavior are outside this task.
 
+## Natural Language Instruction
+
+Create `s3fs` from an empty workspace as a complete installable python project. Implement
+the public operations, data or state behavior, input validation, deterministic ordering, and
+error contracts documented below. Keep package metadata, root exports, module imports, and any
+subpath entry points consistent across files. Implement the behavior rather than hard-coding the
+examples, and do not retrieve or copy a reference implementation.
+
+The finished repository must install from its root, expose every documented API family, preserve
+the specified side effects and resource lifecycle, and remain usable in a fresh process.
+
 ## Supports
 
-- Support CPython 3.10 and newer, with the package metadata version matching
-  the pinned upstream revision's `s3fs` distribution.
-- Provide an installable package using `pip install .` and editable install.
-- Declare the runtime dependencies `aiobotocore`, `fsspec`, and `aiohttp` with
-  compatible version ranges. Do not vendor dependencies.
-- Export `S3FileSystem`, `S3File`, `S3Map`, `add_retryable_error`, and
-  `set_custom_error_handler` from `s3fs`.
-- Keep operations deterministic and preserve the synchronous wrappers and
-  asynchronous methods described here. Do not add a CLI or network fallback.
+- Package/distribution name: `s3fs`. Primary import or package entry: `s3fs`.
+- CPython 3.12.11 on debian-12-amd64 with pip.
+- Install from `workspace/` using `python -m pip install .`.
+- Declared dependency closure: aiobotocore==2.25.1, aiohttp==3.12.15, fsspec==2026.7.0, pytest==9.1.1, setuptools==84.0.0, wheel==0.46.1. Standard-library modules are not dependencies.
+- Build requirements are supplied before execution; do not add undeclared dependencies,
+  registry overrides, download hooks, or source-fetch steps.
+- Agent, candidate, verifier, Oracle, and controls use `network_mode=no-network`. Runtime access
+  to GitHub, PyPI, npm, the Go proxy, DNS, and external services is forbidden.
+- The declared test framework is `pytest`. A fixed collection
+  contains `20` cases when that value is frozen in metadata;
+  test implementation details are not part of the package surface.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── s3fs/
+│   ├── __init__.py
+│   ├── core.py
+│   ├── mapping.py
+│   ├── errors.py
+│   └── utils.py
+└── README.md
+```
+
+This is the required public project shape. Additional implementation modules are allowed only
+when they support the documented API; evaluation, source-fetch, and private runtime files are
+not agent-owned project files.
 
 ## API Usage Guide
 
@@ -109,8 +132,47 @@ Use `fsspec.AsyncFileSystem` and `AbstractBufferedFile` rather than replacing
 them with a parallel filesystem abstraction. Keep S3 API calls behind the
 async `_call_s3` boundary so a fake async client can deterministically provide
 `head_object`, `list_objects_v2`, `get_object`, and `put_object` responses.
-Candidate code must not import hidden tests or write trusted reports. Preserve
 registration of `s3` and `s3a`, requester-pays propagation, sorted listings,
-cache invalidation, async stream reads, and normal exception types. The hidden
-suite intentionally checks boundary inputs, failed calls, and byte ranges in
+cache invalidation, async stream reads, and normal exception types. Boundary
+inputs, failed calls, and byte ranges are part of the required behavior in
 addition to ordinary examples.
+
+Use the public language semantics described by each API family. Keep repeated calls deterministic
+unless state mutation is explicitly part of the contract. Public re-exports and declarations must
+match runtime behavior, and installation must not rely on a repository checkout or network access.
+
+## Examples
+
+The API-specific examples above are normative demonstrations of ordinary behavior. These four
+local snippets also provide ordinary and boundary-oriented calls without external services:
+
+```python
+import s3fs
+print(s3fs)
+```
+
+```python
+import s3fs
+# Invoke a documented API using an empty or boundary input.
+```
+
+```python
+import s3fs
+print(s3fs)
+```
+
+```python
+import s3fs
+# Invoke a documented API using an empty or boundary input.
+```
+
+## Error Handling and Boundary Conditions
+
+Empty values, malformed values, unsupported types, exhausted inputs, invalid options, and missing
+local resources must follow the API-specific contracts above. Preserve documented exception types
+and messages where they are stated. Do not silently coerce an unsupported value merely to produce
+a result, and do not mutate caller-owned data unless the relevant API explicitly promises it.
+
+All filesystem, process, terminal, clock, randomness, and service interactions are forbidden unless
+the API guide explicitly includes that local behavior. Even for an API that models remote or async
+work, evaluation must remain bounded, deterministic, and disconnected from public networks.

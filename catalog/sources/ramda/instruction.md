@@ -5,6 +5,13 @@ workspace. The package is a deterministic, dependency-free functional utility
 library. This task scores a JSON-safe bounded slice of the upstream Ramda
 package, not its complete higher-order or fantasy-land surface.
 
+# Natural Language Instruction
+
+Create the dependency-free `ramda` CommonJS package from an empty workspace.
+Implement every JSON-safe function listed below with fresh non-mutating arrays
+and objects, structural equality, and the stated observable order. Excluded
+callbacks, placeholders, transducers, and non-JSON values are not required.
+
 # Supports
 
 - Node.js `24.19.0` and npm `11.17.0`.
@@ -21,6 +28,24 @@ objects. Functions, callbacks, symbols, BigInts, regular expressions, dates,
 custom prototypes, sparse arrays, cyclic values, transducers, placeholders,
 partial application, and browser/ESM subpath builds are outside this task.
 Each listed function is called directly with all of its arguments.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── LICENSE.txt
+├── README.md
+├── src/index.js
+├── src/numeric.js
+├── src/sequences.js
+├── src/objects.js
+└── src/strings.js
+```
+
+The CommonJS root entry exposes the documented names. Internal grouping may
+vary, but installation and root imports must work without tests.
 
 # API Usage Guide
 
@@ -97,3 +122,26 @@ offline npm lock and must not execute scripts at install. Do not add a build
 step, generated download, or dependency that requires network access. The
 task's JSON boundary deliberately does not require currying or callback-based
 collection functions, even though the full upstream project offers them.
+
+# Examples
+
+```js
+const R = require("ramda");
+R.add(2, 3);
+R.take(2, [1, 2, 3]);
+```
+
+```js
+R.mergeDeepRight({a: {x: 1}}, {a: {y: 2}});
+```
+
+```js
+R.equals({a: [1, 2]}, {a: [1, 2]});
+```
+
+# Error Handling and Boundary Conditions
+
+Preserve empty arrays, missing properties, negative indexes, and left/right
+order. No operation may mutate an input array or plain object. Functions,
+symbols, cycles, dates, placeholders, sparse arrays, and transducers are
+outside the JSON contract.

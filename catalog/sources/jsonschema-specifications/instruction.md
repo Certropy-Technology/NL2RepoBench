@@ -1,3 +1,14 @@
+# Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── README.md
+└── jsonschema_specifications/
+    ├── __init__.py
+    └── schemas/
+```
+
 # Build `jsonschema-specifications`
 
 Create a complete, installable Python project named `jsonschema-specifications`
@@ -103,3 +114,28 @@ do not hard-code absolute filesystem paths.
 - The hidden verifier invokes the public entry point through an isolated child
   process.  Do not copy tests, verifier code, or reference source into the
   generated workspace.
+
+# Natural Language Instruction
+
+Create the installable `jsonschema-specifications` project from an empty
+workspace. Export its deterministic `jsonschema_specifications.REGISTRY` of
+JSON Schema metaschema and vocabulary resources using the local package data;
+do not implement a network loader or validator.
+
+# Examples
+
+```python
+from jsonschema_specifications import REGISTRY
+assert REGISTRY.contents("http://json-schema.org/draft-07/schema")["$id"]
+```
+
+```python
+from jsonschema_specifications import REGISTRY
+assert REGISTRY.crawl() == REGISTRY.crawl()
+```
+
+# Error Handling and Boundary Conditions
+
+Missing canonical resources, malformed package data, absolute path assumptions,
+and network access are errors. Registry values remain mappings and lookups do
+not mutate package data.

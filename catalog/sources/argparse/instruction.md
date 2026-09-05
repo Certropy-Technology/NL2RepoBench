@@ -6,18 +6,26 @@ from an empty workspace. The package is a CommonJS port of Python's
 actions, formatters, namespace type, and parsing constants from the package
 root.
 
+# Natural Language Instruction
+
+Create the `argparse` project from an empty `workspace/`. Build an installable implementation, not a loose demonstration script. The public API guide below is the complete source of the task contract; preserve its import paths, signatures, return shapes, ordering, state changes, and exceptions.
+
+Required capabilities:
+- CommonJS parser construction: implement the documented public behavior and preserve its input/output and error contract.
+- typed positional and optional arguments: implement the documented public behavior and preserve its input/output and error contract.
+- actions, groups, and subparsers: implement the documented public behavior and preserve its input/output and error contract.
+- help, namespace, and parser-error behavior: implement the documented public behavior and preserve its input/output and error contract.
+
+Do not copy an upstream checkout or tests. Keep behavior deterministic and local, and make the package usable from the installation layout described below. The principal public entry points include: `add_argument(name, ...namesAndOptions)`, `parse_args(args?, namespace?)`, `add_argument_group(options?)`, `add_mutually_exclusive_group(options?)`.
+
 # Supports
 
 - Node `24.19.0`, npm `11.17.0`, `linux/amd64`, and glibc.
 - `package.json` must identify the package as `argparse` version `3.0.1`, use
   `main: "lib/argparse.js"`, and declare the PSF-2.0 license.
-- A committed npm v3 lockfile must allow both of these commands in a clean
-  offline verifier without lifecycle scripts:
-
-  ```bash
-  npm ci --offline --ignore-scripts --no-audit --no-fund
-  npm pack --ignore-scripts
-  ```
+- A committed npm v3 lockfile must allow `npm ci --offline --ignore-scripts
+  --no-audit --no-fund` and `npm pack --ignore-scripts` in a clean offline
+  environment without lifecycle scripts.
 
 - The package must be self-contained. Do not use runtime dependencies,
   workspaces, native addons, custom loaders, network access, runtime
@@ -25,6 +33,26 @@ root.
 - The packed package must contain the runtime JavaScript and its TypeScript
   declaration file under `lib/`; source tests and development-only files need
   not be packaged.
+
+
+## NoNetwork boundary
+
+Agent, candidate, verifier, Oracle, controls, and normal runtime execution are network-isolated. Do not access GitHub, package registries, Go proxies, DNS, or external services during execution; use only the frozen local build inputs.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+└── lib/
+    ├── argparse.js
+    ├── argparse.d.ts
+    ├── action/
+    ├── argument_parser.js
+    ├── namespace.js
+    └── help/
+```
 
 # API Usage Guide
 
@@ -106,3 +134,40 @@ unknown arguments, namespace input, parser constants, and deterministic
 repeated calls. Callbacks, file descriptors, process termination, arbitrary
 filesystem paths, custom prototypes, external argument files, and locale or
 TTY behavior are outside the fixed scored subset.
+
+# Examples
+
+## Ordinary parsing
+
+```javascript
+const {ArgumentParser} = require('argparse')
+const parser = new ArgumentParser({prog: 'tool'})
+parser.add_argument('--count', {type: 'int', default: 1})
+const args = parser.parse_args(['--count', '3'])
+```
+
+## Ordinary subparser
+
+```javascript
+const commands = parser.add_subparsers({dest: 'command'})
+commands.add_parser('run').add_argument('file')
+```
+
+## Boundary: required option
+
+```javascript
+const strict = new ArgumentParser({exit_on_error: false})
+strict.add_argument('--name', {required: true})
+strict.parse_args([]) // throws an argument error
+```
+
+## Boundary: invalid choice
+
+```javascript
+parser.add_argument('--mode', {choices: ['fast', 'full']})
+parser.parse_args(['--mode', 'other']) // rejected
+```
+
+# Error Handling and Boundary Conditions
+
+Reject invalid inputs using the documented exception or error result. Preserve empty-input behavior, ordering, Unicode/encoding behavior, cancellation or timeout semantics, and local filesystem boundaries where the API specifies them. Never turn a failed local operation into a network request, subprocess, or silent success.

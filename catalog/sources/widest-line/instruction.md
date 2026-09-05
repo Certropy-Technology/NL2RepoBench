@@ -1,11 +1,24 @@
 # Project Description
 
+```text
+workspace/
+├── package.json
+├── package-lock.json
+└── index.js
+```
+
 Build a complete installable npm package named `widest-line`, version `6.0.0`,
 from an empty workspace. Its default export returns the maximum terminal display
 width of any line in a string.
 
 This is a repository-generation task. Create the package files yourself; do not
 fetch or copy the reference repository.
+
+# Natural Language Instruction
+
+Create this package from an empty `workspace/`. Implement the single default
+function using the declared `string-width` dependency. Split on line-feed
+characters, measure each line, and return the largest display width.
 
 # Supports
 
@@ -20,6 +33,18 @@ fetch or copy the reference repository.
   `npm ci --offline --ignore-scripts --no-audit --no-fund` without network access.
 - The function is synchronous, deterministic, stateless, and has no CLI, file,
   clock, randomness, subprocess, or network behavior.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── index.js
+└── index.d.ts
+```
+
+Publish the root default export and its declaration; no CLI is required.
 
 # API Usage Guide
 
@@ -59,6 +84,23 @@ widestLine('a\nbe'); // 2
 widestLine('古\n\u001B[1m@\u001B[22m'); // 2
 widestLine('😀\né'); // 2
 ```
+
+# Examples
+
+```js
+import widestLine from 'widest-line';
+widestLine('alpha\nbeta');
+widestLine('表\nhello');
+```
+
+Line feeds separate measurements and ANSI or combining characters use the
+declared terminal-width dependency.
+
+# Error Handling and Boundary Conditions
+
+The input must be a string; other values raise `TypeError`. Empty lines,
+trailing newlines, wide characters, emoji, ANSI sequences, and controls use
+the dependency's documented width semantics.
 
 # Implementation Notes
 

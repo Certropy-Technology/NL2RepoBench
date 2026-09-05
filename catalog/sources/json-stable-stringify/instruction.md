@@ -1,34 +1,84 @@
 # Project Description
 
-Implement the npm package `json-stable-stringify` from an empty workspace. The package must expose the CommonJS entry point `require('json-stable-stringify')` and return deterministic JSON text: object keys are sorted lexicographically by default while array order is preserved.
+Build the installable CommonJS npm package `json-stable-stringify` from an
+empty workspace. It serializes JSON-compatible values to deterministic JSON
+text, sorting object keys while preserving array order.
 
-# Supports
+The task id is `json-stable-stringify` and its package name is
+`json-stable-stringify`.
 
-- Node.js 24.19.0 on Linux amd64 with CommonJS `index.js` as the package entry point.
-- Runtime dependencies declared in `package.json` and installed by `npm ci --ignore-scripts`.
-- JSON-compatible values, including nested objects, arrays, strings, numbers, booleans, `null`, `undefined`, `toJSON` methods, and circular references.
+# Natural Language Instruction
+
+Implement the package root `require('json-stable-stringify')` with stable
+recursive serialization, replacers, custom comparators, spacing, empty-collapse,
+`toJSON`, and active-path cycle handling. Preserve native JSON omission and
+number semantics and the documented TypeError contracts. Keep the package
+self-contained and offline.
+
+# Supports or Environment Configuration
+
+- Node.js 24.19.0 on Linux amd64 with CommonJS `index.js` as the package entry.
+- Use `package.json` and a v3 `package-lock.json`; installation uses
+  `npm ci --offline --ignore-scripts --no-audit --no-fund`.
+- Declare only dependencies supported by the frozen local lockfile; no runtime
+  download, lifecycle hook, native addon, or external service is allowed.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── README.md
+└── index.js
+```
 
 # API Usage Guide
 
-`const stringify = require('json-stable-stringify')`
-
-`stringify(obj, opts?) -> string | undefined`
-
-The first argument is the value to serialize. Primitive values follow native `JSON.stringify` semantics. An object is emitted with its enumerable string keys in deterministic order, recursively. Arrays retain their original order; an undefined array element is represented as `null`; object properties whose serialized value is undefined are omitted. The result is a JSON string, or `undefined` when the root value is not JSON-representable.
-
-`opts` may be an options object or a comparator function; passing `null` as the second argument is not supported and throws `TypeError`. `opts.space` accepts a string indentation unit or a number of spaces (bounded by the normal string repetition behavior). `opts.cmp` or a function supplied directly as `opts` compares `{ key, value }` records and determines object-key order. A comparator with a third argument receives `{ get(key) }` for the object currently being sorted. `opts.replacer`, when supplied, is invoked with `(key, value)` and with its `this` value set to the parent container; it may replace a value or return `undefined` to omit it. `opts.cycles: true` serializes repeated object references on the active path as the string `"__cycle__"`; otherwise circular input throws `TypeError`. `opts.collapseEmpty: true` keeps empty arrays and objects compact when pretty-printing. A provided non-boolean `collapseEmpty` throws `TypeError`.
-
-Examples:
+Import path: `require('json-stable-stringify')`; an equivalent module example
+is `import stringify from 'json-stable-stringify'`.
 
 ```js
-const stringify = require('json-stable-stringify');
-stringify({ c: 8, b: [{ z: 6, x: 4 }], a: 3 });
-// '{"a":3,"b":[{"x":4,"z":6}],"c":8}'
-
-stringify({ b: 1, a: { y: 2, x: 1 } }, { space: 2 });
-// '{\n  "a": {\n    "x": 1,\n    "y": 2\n  },\n  "b": 1\n}'
+const stringify = require('json-stable-stringify')
+stringify(obj, opts?) // string | undefined
 ```
+
+Primitive values follow `JSON.stringify`; object keys are sorted
+lexicographically by default and arrays retain order. `opts` may be an options
+object or comparator function. `space` accepts a string or number. `cmp`
+receives `{key, value}` records and may receive `{get(key)}` for the current
+object. `replacer(key, value)` runs with the parent as `this`; returning
+`undefined` omits object properties. `cycles: true` emits `"__cycle__"` for
+active-path cycles; otherwise cycles throw `TypeError`. `collapseEmpty: true`
+keeps empty collections compact in pretty output, and non-boolean values throw.
 
 # Implementation Notes
 
-Keep the package self-contained behind the documented CommonJS entry point. Do not add network access, lifecycle installation hooks, generated build output, or a dependency on the reference repository. Preserve native JSON escaping and number handling, stable recursive ordering, comparator behavior, replacer behavior, cycle detection, and the exact `TypeError` contract for invalid `collapseEmpty` and circular values.
+Keep native JSON escaping and number handling, recursive key ordering,
+comparator/replacer context, and active-path cleanup stable. Do not use network
+access, current time, random state, or the reference repository.
+
+# Examples
+
+```js
+const stringify = require('json-stable-stringify')
+stringify({ c: 8, b: [{ z: 6, x: 4 }], a: 3 })
+stringify({ b: 1, a: 2 }, { space: 2 })
+```
+
+```js
+const stringify = require('json-stable-stringify')
+const value = {}; value.self = value
+stringify(value, { cycles: true })
+```
+
+# Error Handling and Boundary Conditions
+
+- Undefined root values return `undefined`; undefined object properties are
+  omitted and undefined array values become `null`.
+- Active-path cycles throw `TypeError` unless `cycles: true`; repeated values
+  on separate branches are serialized normally.
+- Invalid `collapseEmpty` and unsupported options fail deterministically.
+
+The implementation must not read external files, contact a network, or depend
+on the current clock or random state.

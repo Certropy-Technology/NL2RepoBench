@@ -1,4 +1,4 @@
-# Build `async`
+# Project Description
 
 ## Project Description
 
@@ -12,7 +12,19 @@ This is a repository-generation task. Implement the described behavior with
 your own source files. Do not retrieve the reference repository or hidden
 tests.
 
-## Supports
+# Natural Language Instruction
+
+Create the `async` project from an empty `workspace/`. Build an installable implementation, not a loose demonstration script. The public API guide below is the complete source of the task contract; preserve its import paths, signatures, return shapes, ordering, state changes, and exceptions.
+
+Required capabilities:
+- callback collection helpers: implement the documented public behavior and preserve its input/output and error contract.
+- ordered and limited concurrency: implement the documented public behavior and preserve its input/output and error contract.
+- series and waterfall control flow: implement the documented public behavior and preserve its input/output and error contract.
+- retry, timeout, and JSON adapter operations: implement the documented public behavior and preserve its input/output and error contract.
+
+Do not copy an upstream checkout or tests. Keep behavior deterministic and local, and make the package usable from the installation layout described below. The principal public entry points include: `require('async')`, `require('async/adapter').run(request)`, `times(n, iteratee)`, `retry(times, task)`.
+
+# Supports
 
 - Node `24.19.0`, npm `11.17.0`, CommonJS, and `linux/amd64` with glibc.
 - `require('async')` must expose the documented public functions. Set `main`
@@ -29,7 +41,30 @@ tests.
   native-addon, git, file, workspace, custom-loader, or lifecycle-hook
   dependencies.
 
-## API Usage Guide
+
+## NoNetwork boundary
+
+Agent, candidate, verifier, Oracle, controls, and normal runtime execution are network-isolated. Do not access GitHub, package registries, Go proxies, DNS, or external services during execution; use only the frozen local build inputs.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── dist/async.js
+├── adapter.js
+└── lib/
+    ├── map.js
+    ├── mapLimit.js
+    ├── parallel.js
+    ├── series.js
+    ├── waterfall.js
+    ├── retry.js
+    └── timeout.js
+```
+
+# API Usage Guide
 
 ### Root package
 
@@ -96,7 +131,7 @@ The adapter must delegate these operations to the root package functions, not
 to a network service or external process. Keep timing deterministic: `delay`
 and members of `delays` are nonnegative milliseconds.
 
-## Implementation Notes
+# Implementation Notes
 
 The verifier invokes only `require('async/adapter').run` through a bounded,
 non-root subprocess with JSON input/output. It cannot pass callbacks, source
@@ -109,3 +144,38 @@ with timers, but should not depend on wall-clock precision beyond the supplied
 relative delays. Async iterables, queues, cargo workers, auto dependency
 graphs, filesystem/network helpers, browser builds, and callback cancellation
 are outside this fixed denominator.
+
+# Examples
+
+## Ordinary ordered map
+
+```javascript
+const async = require('async')
+async.map([1, 2, 3], (value, done) => done(null, value * 2), (error, values) => {
+  if (error) throw error
+  console.log(values)
+})
+```
+
+## Ordinary adapter operation
+
+```javascript
+const {run} = require('async/adapter')
+const result = await run({op: 'reduce', values: [1, 2, 3], memo: 0, reducer: 'sum'})
+```
+
+## Boundary: timeout result
+
+```javascript
+await run({op: 'timeout', delay: 20, milliseconds: 1, value: 'late'})
+```
+
+## Boundary: unknown operation
+
+```javascript
+await run({op: 'unknown'}) // rejects with the documented request error
+```
+
+# Error Handling and Boundary Conditions
+
+Reject invalid inputs using the documented exception or error result. Preserve empty-input behavior, ordering, Unicode/encoding behavior, cancellation or timeout semantics, and local filesystem boundaries where the API specifies them. Never turn a failed local operation into a network request, subprocess, or silent success.

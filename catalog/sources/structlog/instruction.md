@@ -1,87 +1,35 @@
-## Introduction and Goals of the structlog Project
+# Project Description
 
 structlog is a Python library **for structured logging** that provides a simple, powerful, and fast logging solution. This tool performs exceptionally well in production environments and has been widely used in systems of various scales since 2013, achieving "the highest performance and optimal flexibility." Its core functions include: structured logging (supporting arbitrary key-value pairs and context binding), **support for multiple output formats** (including JSON, logfmt, and colored console output), and seamless integration with the standard library `logging`. In short, structlog is dedicated to providing a modern logging system that allows developers to easily create structured, searchable, and analyzable log outputs (for example, creating a logger via `get_logger()`, binding context via the `bind()` method, and recording structured logs via methods such as `info()`).
 
-## Natural Language Instruction (Prompt)
+## Natural Language Instruction
 
-Please create a Python project named `structlog` to implement a structured logging library. The project should include the following functions:
+Create `structlog` from an empty workspace as a complete installable python project. Implement
+the public operations, data or state behavior, input validation, deterministic ordering, and
+error contracts documented below. Keep package metadata, root exports, module imports, and any
+subpath entry points consistent across files. Implement the behavior rather than hard-coding the
+examples, and do not retrieve or copy a reference implementation.
 
-1. Configuration Management System: It should be able to manage global logging configurations and support core functions such as `configure()`, `configure_once()`, `get_logger()`, and `wrap_logger()`. The configuration system should support flexible configuration of components such as processor chains, wrapper classes, context classes, and logger factories, and provide functions for querying and resetting the configuration status. The `_Configuration` class needs to be implemented in `src/structlog/_config.py` to manage the global configuration status.
+The finished repository must install from its root, expose every documented API family, preserve
+the specified side effects and resource lifecycle, and remain usable in a fresh process.
 
-2. Structured Logging: Implement the `BoundLogger` class to support structured logging, including methods such as `bind()`, `unbind()`, `try_unbind()`, and `new()` for context management. It should support arbitrary key-value pairs as log fields, automatic timestamps and log levels, exception stack traces, and context information. The `BoundLoggerBase` base class needs to be implemented in `src/structlog/_base.py`.
+## Supports
 
-3. Processor System: Implement a rich processor chain, including processors such as `KeyValueRenderer`, `LogfmtRenderer`, `JSONRenderer`, `TimeStamper`, `StackInfoRenderer`, `CallsiteParameterAdder`, `UnicodeEncoder`, and `UnicodeDecoder`. Each processor should support custom configuration and serialization. All processor classes need to be implemented in `src/structlog/processors.py`.
+- Package/distribution name: `structlog`. Primary import or package entry: `structlog`.
+- CPython 3.13 on debian-12 with pip.
+- Install from `workspace/` using `python -m pip install .`.
+- Declared dependency closure: no declared third-party runtime packages. Standard-library modules are not dependencies.
+- Build requirements are supplied before execution; do not add undeclared dependencies,
+  registry overrides, download hooks, or source-fetch steps.
+- Agent, candidate, verifier, Oracle, and controls use `network_mode=no-network`. Runtime access
+  to GitHub, PyPI, npm, the Go proxy, DNS, and external services is forbidden.
+- The declared test framework is `pytest`. A fixed collection
+  contains `828` cases when that value is frozen in metadata;
+  test implementation details are not part of the package surface.
 
-4. Development Tool Support: Implement the `ConsoleRenderer` to provide colored console output, supporting exception formatting tools such as `RichTracebackFormatter`, `better_traceback`, and `plain_traceback`. It should support advanced features such as color configuration, column formatting, and level styles. The `ConsoleRenderer` and exception formatters need to be implemented in `src/structlog/dev.py`.
+## Project Directory Structure
 
-5. Standard Library Integration: Implement seamless integration with the Python standard library `logging`, including classes such as `BoundLogger`, `AsyncBoundLogger`, `LoggerFactory`, and `ProcessorFormatter`. It should support both synchronous and asynchronous logging and provide full compatibility with the `logging` interface. All standard library integration classes need to be implemented in `src/structlog/stdlib.py`.
-
-6. Context Management: Implement support for thread-local storage and asynchronous context variables, including functions such as `ThreadLocalDict`, `merge_contextvars`, and `clear_contextvars`. It should support context binding, passing, and cleaning operations. Functions such as `bind_contextvars()` and `clear_contextvars()` need to be implemented in `src/structlog/contextvars.py`, and functions such as `bind_threadlocal()` and `clear_threadlocal()` need to be implemented in `src/structlog/threadlocal.py`.
-
-7. Output System: Implement support for multiple output formats, including `PrintLogger`, `WriteLogger`, `BytesLogger`, and their corresponding factory classes. It should support different output methods such as file output, byte output, and print output. All output logger classes need to be implemented in `src/structlog/_output.py`.
-
-8. Testing Framework: Implement testing tools such as `ReturnLogger`, `ReturnLoggerFactory`, and `CaptureLogs` to support log capturing, verification, and simulation. It should provide complete testing auxiliary functions. All testing tool classes need to be implemented in `src/structlog/testing.py`.
-
-9. Exception Handling: Implement the `DropEvent` exception class and an exception handling mechanism to support exception capturing and graceful degradation in the processor chain. It should provide a comprehensive error handling strategy. The `DropEvent` exception class needs to be implemented in `src/structlog/exceptions.py`.
-
-10. Type System: Implement complete type annotations and type checking support, including type definitions such as `EventDict`, `WrappedLogger`, and `Processor`. It should support static type checking and IDE intelligent prompts. All type definitions need to be implemented in `src/structlog/types.py` and `src/structlog/typing.py`.
-
-11. Framework Integration: Implement support for integration with the Twisted asynchronous framework, including classes such as `TwistedLogger` and `TwistedLoggerFactory`. It should provide asynchronous logging and event loop integration. All Twisted integration classes need to be implemented in `src/structlog/twisted.py`.
-
-12. Utility Functions: Implement utility functions such as `get_processname()`, `_format_exception()`, and `_format_stack()` to support functions such as process name retrieval, exception formatting, and stack formatting. The `get_processname()` function needs to be implemented in `src/structlog/_utils.py`, and the `_format_exception()` and `_format_stack()` functions need to be implemented in `src/structlog/_frames.py`.
-
-13. Exception Tracing System: Implement complete exception tracing and formatting functions, including functions such as `ExceptionDictTransformer`, `safe_str()`, and `to_repr()`. It should support JSON formatting and safe string representation of exception stacks. All exception tracing-related functions need to be implemented in `src/structlog/tracebacks.py`.
-
-14. Configuration Verification: Implement configuration verification and default value management, including functions such as `is_configured()`, `get_config()`, and `reset_defaults()`. It should provide functions for querying and resetting the configuration status. These configuration verification functions need to be implemented in `src/structlog/_config.py`.
-
-15. Performance Optimization: Implement log caching and performance optimization mechanisms, including functions such as `cache_logger_on_first_use` and `make_filtering_bound_logger`. It should support high-performance logging and memory optimization. The `make_filtering_bound_logger()` function needs to be implemented in `src/structlog/_native.py`.
-
-16. Scalability Design: Implement a scalable architecture design, supporting custom components such as processors, renderers, and factory classes. It should provide complete extension interfaces and documentation.
-
-17. Interface Design: Design independent function interfaces for each functional module (such as configuration, logging, processors, and output) to support terminal call testing. Each module should define clear input and output formats.
-
-18. Example and Evaluation Scripts: Provide example code and test cases to demonstrate how to use the `get_logger()` and `configure()` functions for log configuration and recording (for example, `get_logger().info("message", key="value")` should output structured logs). The above functions need to be combined to build a complete structured logging toolkit. The final project should include modules for configuration, recording, processing, output, and testing, along with typical test cases, to form a reproducible logging process.
-
-19. Core File Requirements: The project must include a complete `pyproject.toml` file, which needs to configure the project's installable packages (supporting `pip install` and editable mode installation), declare a complete list of dependencies - including dependencies related to type support, and clearly support Python 3.6 and above. The `pyproject.toml` file needs to ensure through build configuration that all functional modules (such as logger creation, configuration management, log rendering, and context processing) can work properly and support triggering full-function verification through test commands. At the same time, `src/structlog/__init__.py` needs to be provided as a unified API entry. This file needs to import key components from each core module: import configuration and logger management tools such as `configure`, `get_logger`, `wrap_logger`, `configure_once`, and `BoundLoggerLazyProxy` from `_config`; import basic logger classes such as `BoundLoggerBase` and `BoundLogger` from `_base` and `_generic`; import log level constants such as `NAME_TO_LEVEL`, `LEVEL_TO_NAME`, `CRITICAL`, and `WARN` from `_log_levels`; import log processors such as `KeyValueRenderer`, `JSONRenderer`, `TimeStamper`, and `ExceptionRenderer` from `processors`; import thread-local context tools such as `bind_threadlocal` and `clear_threadlocal` from `threadlocal`; import context variable management functions such as `bind_contextvars` and `merge_contextvars` from `contextvars`; import standard library adaptation tools such as `ProcessorFormatter` and `add_log_level` from `stdlib`; import testing auxiliary tools such as `CapturingLogger`, `ReturnLogger`, and `LogCapture` from `testing`; import type hints such as `BindableLogger` and `EventDict` from `typing`; import development tools such as `ConsoleRenderer` from `dev`; import the `DropEvent` exception class from `exceptions`; in addition, import logger implementations such as `PrintLogger` and `BytesLogger` and utility functions such as `get_processname`, and provide version information such as `__version__`. Ensure that users can access all major functions through a simple `from structlog import get_logger, configure, BoundLogger, JSONRenderer` statement. In `src/structlog/_config.py`, in addition to `configure()`, `get_logger()`, and `wrap_logger()`, `configure_once()` also needs to be implemented to ensure that the configuration takes effect only once, define `BoundLoggerLazyProxy` for lazy initialization of the logger, and manage the global configuration object `_CONFIG` and default configuration items such as `_BUILTIN_DEFAULT_PROCESSORS` and `_BUILTIN_DEFAULT_LOGGER_FACTORY` to support the core logic of global logging configuration and logger creation and provide a unified configuration entry for other modules.
-
-## Environment Configuration
-
-### Python Version
-
-The Python version used in the current project is: Python 3.13.0
-
-### Versions of Core Dependent Libraries
-
-```Plain
-# Core logging library
-typing-extensions>=4.0.0              # Type annotation extension support
-
-
-# Type checking
-mypy>=1.4                             # Static type checking
-rich                                  # Rich text terminal support
-twisted                               # Asynchronous framework support
-
-# Documentation generation
-cogapp                                # Code generation tool
-furo                                  # Sphinx theme
-myst-parser                           # Markdown parser
-sphinx                                # Documentation generator
-sphinx-notfound-page                  # 404 page generation
-sphinxcontrib-mermaid                 # Diagram support
-sphinxext-opengraph                   # Open Graph support
-
-# Development tools
-ruff                                  # Code formatting and checking
-coverage                              # Code coverage
-interrogate                           # Documentation coverage
-```
-
-## structlog Project Architecture
-
-### Project Directory Structure
-
-```Plain
+```text
 workspace/
 ├── .git_archival.txt           
 ├── .gitattributes              
@@ -173,6 +121,10 @@ workspace/
 └── zizmor.yml
 ```
 
+This is the required public project shape. Additional implementation modules are allowed only
+when they support the documented API; evaluation, source-fetch, and private runtime files are
+not agent-owned project files.
+
 ## API Usage Guide
 
 ### Core API
@@ -246,7 +198,7 @@ from structlog.dev import ConsoleRenderer
 
 ##### 2.1. structlog.stdlib.get_logger
 
-**Function**: 
+**Function**:
 This function is a wrapper around the core `structlog.get_logger`, providing more specific type hints (returning `structlog.stdlib.BoundLogger`). It is used to obtain a logger generated according to the current *structlog* configuration and integrated with the standard library `logging`. Before calling this function, you must ensure that *structlog* has been correctly configured to work with the standard library.
 
 **Function Signature**:
@@ -261,9 +213,9 @@ def get_logger(*args: Any, **initial_values: Any) -> BoundLogger:
 **Return Value**:
 - `BoundLogger`: An instance or a proxy of `structlog.stdlib.BoundLogger`. This is a logger that has already bound the initial context, and its methods (such as `info`, `debug`, etc.) are compatible with the standard library `logging.Logger`.
 
-##### 2.2. structlog._config.get_logger 
+##### 2.2. structlog._config.get_logger
 
-**Function**: 
+**Function**:
 This is a convenience function that returns a logger proxy according to the global configuration. When this proxy is used for the first time, it creates a correctly configured bound logger. This is the general entry point for obtaining a *structlog* logger.
 
 **Function Signature**:
@@ -304,7 +256,7 @@ def configure(
 
 **Note**: There are three different BoundLogger class definitions in structlog, located in different files:
 
-**4.1 Generic `BoundLogger` Class** 
+**4.1 Generic `BoundLogger` Class**
 **Class Signature**:
 ```python
 from structlog._generic import BoundLogger
@@ -321,7 +273,7 @@ class BoundLogger(BoundLoggerBase):
 
 ---
 
-**4.2 Standard Library BoundLogger Class** 
+**4.2 Standard Library BoundLogger Class**
 **Class Signature**:
 ```python
 from structlog.stdlib import BoundLogger
@@ -333,129 +285,129 @@ class BoundLogger(BoundLoggerBase):
 
     def unbind(self, *keys: str) -> Self:
         """Return a new logger with keys removed from the context. Raises KeyError if key not found."""
-       
+
     def try_unbind(self, *keys: str) -> Self:
         """Like unbind, but best effort: missing keys are ignored."""
-       
+
     def new(self, **new_values: Any) -> Self:
         """Clear context and binds initial_values using bind."""
-       
-    
+
+
     # Synchronous logging methods
     def debug(self, event: str | None = None, *args: Any, **kw: Any) -> Any:
         """Process event and call logging.Logger.debug with the result."""
-       
+
     def info(self, event: str | None = None, *args: Any, **kw: Any) -> Any:
         """Process event and call logging.Logger.info with the result."""
-       
+
     def warning(self, event: str | None = None, *args: Any, **kw: Any) -> Any:
         """Process event and call logging.Logger.warning with the result."""
-       
+
     def warn(self, event: str | None = None, *args: Any, **kw: Any) -> Any:
         """Alias for warning method."""
-       
+
     def error(self, event: str | None = None, *args: Any, **kw: Any) -> Any:
         """Process event and call logging.Logger.error with the result."""
-       
+
     def critical(self, event: str | None = None, *args: Any, **kw: Any) -> Any:
         """Process event and call logging.Logger.critical with the result."""
-       
+
     def fatal(self, event: str | None = None, *args: Any, **kw: Any) -> Any:
         """Process event and call logging.Logger.critical with the result."""
-       
+
     def exception(self, event: str | None = None, *args: Any, **kw: Any) -> Any:
         """Process event and call logging.Logger.exception with the result, after setting exc_info to True if not already set."""
-       
+
     def log(self, level: int, event: str | None = None, *args: Any, **kw: Any) -> Any:
         """Process event and call the appropriate logging method depending on level."""
-       
-    
+
+
     # Asynchronous logging methods (version 23.1.0+)
     async def adebug(self, event: str, *args: Any, **kw: Any) -> None:
         """Log using debug(), but asynchronously in a separate thread."""
-       
+
     async def ainfo(self, event: str, *args: Any, **kw: Any) -> None:
         """Log using info(), but asynchronously in a separate thread."""
-       
+
     async def awarning(self, event: str, *args: Any, **kw: Any) -> None:
         """Log using warning(), but asynchronously in a separate thread."""
-       
+
     async def aerror(self, event: str, *args: Any, **kw: Any) -> None:
         """Log using error(), but asynchronously in a separate thread."""
-       
+
     async def acritical(self, event: str, *args: Any, **kw: Any) -> None:
         """Log using critical(), but asynchronously in a separate thread."""
-       
+
     async def afatal(self, event: str, *args: Any, **kw: Any) -> None:
         """Log using critical(), but asynchronously in a separate thread."""
-       
+
     async def aexception(self, event: str, *args: Any, **kw: Any) -> None:
         """Log using exception(), but asynchronously in a separate thread."""
-       
+
     async def alog(self, level: Any, event: str, *args: Any, **kw: Any) -> None:
         """Log using log(), but asynchronously in a separate thread."""
-       
-    
+
+
     # Pass-through properties to mimic stdlib logger interface
     @property
     def name(self) -> str:
         """Returns logging.Logger.name"""
-       
+
     @property
     def level(self) -> int:
         """Returns logging.Logger.level"""
-       
+
     @property
     def parent(self) -> Any:
         """Returns logging.Logger.parent"""
-       
+
     @property
     def propagate(self) -> bool:
         """Returns logging.Logger.propagate"""
-       
+
     @property
     def handlers(self) -> Any:
         """Returns logging.Logger.handlers"""
-       
+
     @property
     def disabled(self) -> int:
         """Returns logging.Logger.disabled"""
-       
-    
+
+
     # Pass-through methods to mimic stdlib logger interface
     def setLevel(self, level: int) -> None:
         """Calls logging.Logger.setLevel with unmodified arguments."""
-       
+
     def findCaller(self, stack_info: bool = False) -> tuple[str, int, str, str | None]:
         """Calls logging.Logger.findCaller with unmodified arguments."""
-       
+
     def makeRecord(self, name: str, level: int, fn: str, lno: int, msg: str, args: tuple[Any,...], exc_info: ExcInfo, func: str | None = None, extra: Any = None) -> logging.LogRecord:
         """Calls logging.Logger.makeRecord with unmodified arguments."""
-        
+
     def handle(self, record: logging.LogRecord) -> None:
         """Calls logging.Logger.handle with unmodified arguments."""
-        
+
     def addHandler(self, hdlr: logging.Handler) -> None:
         """Calls logging.Logger.addHandler with unmodified arguments."""
-        
+
     def removeHandler(self, hdlr: logging.Handler) -> None:
         """Calls logging.Logger.removeHandler with unmodified arguments."""
-        
+
     def hasHandlers(self) -> bool:
         """Calls logging.Logger.hasHandlers with unmodified arguments."""
-        
+
     def callHandlers(self, record: logging.LogRecord) -> None:
         """Calls logging.Logger.callHandlers with unmodified arguments."""
-        
+
     def getEffectiveLevel(self) -> int:
         """Calls logging.Logger.getEffectiveLevel with unmodified arguments."""
-        
+
     def isEnabledFor(self, level: int) -> bool:
         """Calls logging.Logger.isEnabledFor with unmodified arguments."""
-        
+
     def getChild(self, suffix: str) -> logging.Logger:
         """Calls logging.Logger.getChild with unmodified arguments."""
-        
+
 ```
 
 **Function**: BoundLogger compatible with Python standard library logging module, providing complete logging methods and pass-through access to underlying logger properties and methods.
@@ -505,7 +457,7 @@ class KeyValueRenderer:
     ) -> None:
         # Initialize renderer with provided configuration
         # Returns: None (initializer method)
-    
+
     def __call__(self, logger: WrappedLogger, method_name: str, event_dict: EventDict) -> str:
         # Render event_dict to key=value formatted string
         # Returns: Formatted string representation of the event dictionary
@@ -539,7 +491,7 @@ class LogfmtRenderer:
     ) -> None:
         # Initialize logfmt renderer with configuration options
         # Returns: None (initializer method)
-    
+
     def __call__(self, logger: WrappedLogger, method_name: str, event_dict: EventDict) -> str:
         # Convert event_dict to logfmt formatted string (key=value pairs)
         # Returns: String in logfmt format
@@ -570,7 +522,7 @@ class JSONRenderer:
     def __init__(self, serializer: Callable[..., str] | None = None) -> None:
         # Initialize JSON renderer with optional custom serializer
         # Returns: None (initializer method)
-    
+
     def __call__(self, logger: WrappedLogger, method_name: str, event_dict: EventDict) -> str:
         # Convert event_dict to JSON formatted string
         # Returns: String in JSON format
@@ -677,7 +629,7 @@ class StackInfoRenderer:
     def __init__(self, additional_ignores: Sequence[str] | None = None) -> None:
         # Initialize stack info renderer with optional module ignore list
         # Returns: None (initializer method)
-    
+
     def __call__(self, logger: WrappedLogger, method_name: str, event_dict: EventDict) -> EventDict:
         # Add stack information to event dictionary if 'stack_info' is True
         # Returns: Modified event dictionary with stack information
@@ -707,7 +659,7 @@ class CallsiteParameterAdder:
     ) -> None:
         # Initialize with parameters to capture and modules to ignore
         # Returns: None (initializer method)
-    
+
     def __call__(self, logger: WrappedLogger, method_name: str, event_dict: EventDict) -> EventDict:
         # Add callsite information (filename, line number, etc.) to event_dict
         # Returns: Event dictionary with callsite parameters
@@ -733,7 +685,7 @@ class UnicodeEncoder:
     def __init__(self, encoding: str = "utf-8", errors: str = "backslashreplace") -> None:
         # Initialize encoder with specified encoding and error handling
         # Returns: None (initializer method)
-    
+
     def __call__(self, logger: WrappedLogger, method_name: str, event_dict: EventDict) -> EventDict:
         # Encode Unicode strings in event_dict to byte strings
         # Returns: Event dictionary with encoded strings
@@ -759,7 +711,7 @@ class UnicodeDecoder:
     def __init__(self, encoding: str = "utf-8", errors: str = "replace") -> None:
         # Initialize decoder with specified encoding and error handling
         # Returns: None (initializer method)
-    
+
     def __call__(self, logger: WrappedLogger, method_name: str, event_dict: EventDict) -> EventDict:
         # Decode byte strings in event_dict to Unicode strings
         # Returns: Event dictionary with decoded strings
@@ -789,7 +741,7 @@ class ExceptionPrettyPrinter:
     ) -> None:
         # Initialize pretty printer with output file and formatter
         # Returns: None (initializer method)
-    
+
     def __call__(self, logger: WrappedLogger, method_name: str, event_dict: EventDict) -> EventDict:
         # Pretty print exception information to configured output
         # Returns: Unmodified event dictionary
@@ -825,7 +777,7 @@ class ProcessorFormatter(logging.Formatter):
     ) -> None:
         # Initialize formatter with processor chain and logging configuration
         # Returns: None (initializer method)
-    
+
     def format(self, record: logging.LogRecord) -> str:
         # Process and format log record using configured processors
         # Returns: Formatted log message as string
@@ -857,7 +809,7 @@ class LoggerFactory:
     def __init__(self, ignore_frame_names: Sequence[str] | None = None) -> None:
         # Initialize factory with optional frame names to ignore
         # Returns: None (initializer method)
-    
+
     def __call__(self, *args: Any) -> logging.Logger:
         # Create and return a new logging.Logger instance
         # Returns: Configured logging.Logger object
@@ -889,58 +841,58 @@ class AsyncBoundLogger:
         _loop: Any = None,
     ):
         """Initialize AsyncBoundLogger with logger, processors, and context."""
-        
-    
+
+
     @property
     def _context(self) -> Context:
         """Return the context from the wrapped synchronous logger."""
-    
+
     @property
     def sync_bl(self) -> BoundLogger:
         """The wrapped synchronous logger. Useful for occasional synchronous logging."""
-    
+
     # Context management methods
     def bind(self, **new_values: Any) -> Self:
         """Return a new AsyncBoundLogger with new_values added to the existing context."""
-       
+
     def unbind(self, *keys: str) -> Self:
         """Return a new AsyncBoundLogger with keys removed from the context."""
-        
+
     def try_unbind(self, *keys: str) -> Self:
         """Like unbind, but best effort: missing keys are ignored."""
-       
+
     def new(self, **new_values: Any) -> Self:
         """Clear context and binds initial_values using bind."""
-       
-    
+
+
     # Asynchronous logging methods
     async def debug(self, event: str, *args: Any, **kw: Any) -> None:
         """Log using debug(), but asynchronously in a separate thread."""
-        
+
     async def info(self, event: str, *args: Any, **kw: Any) -> None:
         """Log using info(), but asynchronously in a separate thread."""
-        
+
     async def warning(self, event: str, *args: Any, **kw: Any) -> None:
         """Log using warning(), but asynchronously in a separate thread."""
-       
+
     async def warn(self, event: str, *args: Any, **kw: Any) -> None:
         """Log using warning(), but asynchronously in a separate thread."""
-        
+
     async def error(self, event: str, *args: Any, **kw: Any) -> None:
         """Log using error(), but asynchronously in a separate thread."""
-        
+
     async def critical(self, event: str, *args: Any, **kw: Any) -> None:
         """Log using critical(), but asynchronously in a separate thread."""
-        
+
     async def fatal(self, event: str, *args: Any, **kw: Any) -> None:
         """Log using critical(), but asynchronously in a separate thread."""
-        
+
     async def exception(self, event: str, *args: Any, **kw: Any) -> None:
         """Log using exception(), but asynchronously in a separate thread."""
-        
+
     async def log(self, level: Any, event: str, *args: Any, **kw: Any) -> None:
         """Log using log(), but asynchronously in a separate thread."""
-        
+
 ```
 
 **Function**: Wraps a BoundLogger & exposes its logging methods as async versions. Instead of blocking the program, they are run asynchronously in a thread pool executor. This means more computational overhead per log call, but also means that the processor chain (e.g. JSON serialization) and I/O won't block your whole application. Only available for Python 3.7 and later.
@@ -1013,8 +965,8 @@ def clear_contextvars() -> None:
 from structlog.contextvars import merge_contextvars
 
 def merge_contextvars(
-    logger: WrappedLogger, 
-    method_name: str, 
+    logger: WrappedLogger,
+    method_name: str,
     event_dict: EventDict
 ) -> EventDict:
 ```
@@ -1158,7 +1110,7 @@ def bind_threadlocal(**kw: Any) -> None:
 from structlog.threadlocal import clear_threadlocal
 
 def clear_threadlocal() -> None:
-    _deprecated()    
+    _deprecated()
 ```
 
 **Function**: Clear thread-local storage.
@@ -1174,8 +1126,8 @@ def clear_threadlocal() -> None:
 from structlog.threadlocal import merge_threadlocal
 
 def merge_threadlocal(
-    logger: WrappedLogger, 
-    method_name: str, 
+    logger: WrappedLogger,
+    method_name: str,
     event_dict: EventDict
 ) -> EventDict:
     _deprecated()
@@ -1326,7 +1278,7 @@ from structlog.threadlocal import tmp_bind
 
 @contextlib.contextmanager
 def tmp_bind(logger: TLLogger, **tmp_values: Any) -> Generator[TLLogger, None, None]:
-    _deprecated()    
+    _deprecated()
 ```
 
 **Function**: Bind tmp_values to logger & memorize current state. Rewind afterwards. Only works with `structlog.threadlocal.wrap_dict`-based contexts.
@@ -1352,21 +1304,21 @@ def tmp_bind(logger: TLLogger, **tmp_values: Any) -> Generator[TLLogger, None, N
 ```python
 class PrintLogger:
     def __init__(self, file: TextIO | None = None):
-     
+
 
     def __getstate__(self) -> str:
-      
+
 
     def __setstate__(self, state: Any) -> None:
-        
+
 
     def __deepcopy__(self, memodict: dict[str, object]) -> PrintLogger:
-       
+
     def __repr__(self) -> str:
-        
+
 
     def msg(self, message: str) -> None:
-        
+
 
     log = debug = info = warn = warning = msg
     fatal = failure = err = error = critical = exception = msg
@@ -1443,22 +1395,22 @@ class BytesLogger:
     __slots__ = ("_file", "_flush", "_lock", "_write")
 
     def __init__(self, file: BinaryIO | None = None):
-     
+
 
     def __getstate__(self) -> str:
-       
+
 
     def __setstate__(self, state: Any) -> None:
-       
+
 
     def __deepcopy__(self, memodict: dict[str, object]) -> BytesLogger:
-      
+
 
     def __repr__(self) -> str:
-       
+
 
     def msg(self, message: bytes) -> None:
-     
+
 
     log = debug = info = warn = warning = msg
     fatal = failure = err = error = critical = exception = msg
@@ -1534,7 +1486,7 @@ class PrintLoggerFactory:
     def __init__(self, file: TextIO | None = None):
         # Initialize with the specified file or use sys.stdout as default
         pass
-    
+
     def __call__(self, *args: Any) -> PrintLogger:
         # Create and return a new PrintLogger instance
         # args are passed through to the PrintLogger constructor
@@ -1558,7 +1510,7 @@ class WriteLoggerFactory:
     def __init__(self, file: TextIO | None = None):
         # Initialize with the specified file or use sys.stdout as default
         pass
-    
+
     def __call__(self, *args: Any) -> WriteLogger:
         # Create and return a new WriteLogger instance
         # args are passed through to the WriteLogger constructor
@@ -1583,7 +1535,7 @@ class BytesLoggerFactory:
     def __init__(self, file: BinaryIO | None = None):
         # Initialize the BytesLoggerFactory with an optional binary output file
         # If file is None, uses sys.stderr.buffer by default
-    
+
     def __call__(self, *args: Any) -> BytesLogger:
         # Create and return a new BytesLogger instance
         # args are passed through to the BytesLogger constructor
@@ -1625,7 +1577,7 @@ from structlog.testing import ReturnLoggerFactory
 class ReturnLoggerFactory:
     def __init__(self) -> None:
         # Initialize the ReturnLoggerFactory instance
-    
+
     def __call__(self, *args: Any) -> ReturnLogger:
         # Create and return a new ReturnLogger instance
 ```
@@ -1645,7 +1597,7 @@ from structlog.testing import CapturingLogger
 class CapturingLogger:
     def __init__(self) -> None:
         # Initialize CapturingLogger with an empty calls list
-    
+
     def __getattr__(self, name: str) -> Callable[..., None]:
         # Return a callable that captures method calls and their arguments
 ```
@@ -1666,7 +1618,7 @@ from structlog.testing import CapturingLoggerFactory
 class CapturingLoggerFactory:
     def __init__(self) -> None:
         # Initialize the CapturingLoggerFactory instance
-    
+
     def __call__(self, *args: Any) -> CapturingLogger:
         # Create and return a new CapturingLogger instance
 ```
@@ -1688,7 +1640,7 @@ from structlog.testing import CapturingLoggerFactory
 class CapturingLoggerFactory:
     def __init__(self) -> None:
         # Initialize the CapturingLoggerFactory instance
-    
+
     def __call__(self, *args: Any) -> CapturingLogger:
         # Create and return a new CapturingLogger instance
 ```
@@ -1854,8 +1806,8 @@ class BoundLoggerLazyProxy:
     @property
     def _context(self) -> dict[str, str]:
         # Return the current context dictionary
-        
-    
+
+
     def __init__(
         self,
         logger: WrappedLogger | None,
@@ -1867,17 +1819,17 @@ class BoundLoggerLazyProxy:
         logger_factory_args: Any = None,
     ) -> None:
         # Initialize the BoundLoggerLazyProxy with the given parameters
-        
-    
+
+
     def bind(self, **new_values: Any) -> BindableLogger:
         # Bind new key-value pairs to context
-    
+
     def unbind(self, *keys: str) -> BindableLogger:
         # Remove specified keys from context
-    
+
     def try_unbind(self, *keys: str) -> BindableLogger:
         # Safely remove specified keys from context (ignore non-existent keys)
-    
+
     def new(self, **new_values: Any) -> BindableLogger:
         # Clear current context and bind new key-value pairs
 ```
@@ -1895,15 +1847,15 @@ from structlog.tracebacks import ExceptionDictTransformer
 class ExceptionDictTransformer:
     def __init__(self) -> None:
         # Initialize the ExceptionDictTransformer instance
-        
-    
+
+
     def __call__(self, exc_info: ExcInfo) -> list[dict[str, Any]]:
         # Convert exception info to a list of dictionaries
-       
-    
+
+
     def _as_dict(self, trace: Trace) -> list[dict[str, Any]]:
         # Convert Trace object to dictionary list format
-       
+
 ```
 **Function**: Convert exception information to structured dictionary format.
 
@@ -1981,7 +1933,7 @@ def to_repr(
     max_string: int = 1000,
     use_rich: bool = False,
 ) -> str:
-    
+
 ```
 
 **Function**: Convert object to safe string representation with length limits.
@@ -2004,9 +1956,9 @@ from structlog.twisted import BoundLogger
 
 class BoundLogger(BoundLoggerBase):
     def msg(self, event: str, *args: Any, **kw: Any) -> Any:
-        
+
     def err(self, event: str, *args: Any, **kw: Any) -> Any:
-        
+
 ```
 
 **Function**: BoundLogger compatible with Twisted async framework, providing Twisted-style logging methods.
@@ -2025,7 +1977,7 @@ from structlog.twisted import LoggerFactory
 
 class LoggerFactory:
     def __call__(self, *args: Any) -> BoundLogger:
-        
+
 ```
 
 **Function**: Factory class for creating Twisted BoundLogger instances.
@@ -2042,14 +1994,14 @@ from structlog.twisted import EventAdapter
 
 class EventAdapter:
     def __init__(self, dictRenderer: Callable[..., str]) -> None:
-    
+
     def __call__(
-        self, 
-        logger: WrappedLogger, 
-        name: str, 
+        self,
+        logger: WrappedLogger,
+        name: str,
         eventDict: EventDict
     ) -> EventDict:
-        
+
 ```
 
 **Function**: Adapt structlog event dictionary to Twisted log format.
@@ -2069,12 +2021,12 @@ from structlog.twisted import JSONRenderer
 
 class JSONRenderer(GenericJSONRenderer):
     def __call__(
-        self, 
-        logger: WrappedLogger, 
-        name: str, 
+        self,
+        logger: WrappedLogger,
+        name: str,
         eventDict: EventDict
     ) -> str:
-        
+
 ```
 
 **Function**: Render event dictionary as JSON format string.
@@ -2198,7 +2150,7 @@ from structlog._native import make_filtering_bound_logger
 def make_filtering_bound_logger(
     min_level: int | str,
 ) -> type[FilteringBoundLogger]:
- 
+
     if isinstance(min_level, str):
         min_level = NAME_TO_LEVEL[min_level.lower()]
 
@@ -2216,7 +2168,7 @@ from structlog._native import BoundLoggerFilteringAtNotset
 BoundLoggerFilteringAtNotset = _make_filtering_bound_logger(NOTSET)
 ```
 
-**Description**: 
+**Description**:
 - This is a type alias created through `_make_filtering_bound_logger(NOTSET)`
 - Log level is NOTSET (0), records logs of all levels
 - Supports pickle serialization
@@ -2233,7 +2185,7 @@ from structlog._native import BoundLoggerFilteringAtDebug
 BoundLoggerFilteringAtDebug = _make_filtering_bound_logger(DEBUG)
 ```
 
-**Description**: 
+**Description**:
 - This is a type alias created through `_make_filtering_bound_logger(DEBUG)`
 - Log level is DEBUG (10), records logs of DEBUG level and above
 - Supports pickle serialization
@@ -2250,7 +2202,7 @@ from structlog._native import BoundLoggerFilteringAtInfo
 BoundLoggerFilteringAtInfo = _make_filtering_bound_logger(INFO)
 ```
 
-**Description**: 
+**Description**:
 - This is a type alias created through `_make_filtering_bound_logger(INFO)`
 - Log level is INFO (20), records logs of INFO level and above
 - Supports pickle serialization
@@ -2267,7 +2219,7 @@ from structlog._native import BoundLoggerFilteringAtWarning
 BoundLoggerFilteringAtWarning = _make_filtering_bound_logger(WARNING)
 ```
 
-**Description**: 
+**Description**:
 - This is a type alias created through `_make_filtering_bound_logger(WARNING)`
 - Log level is WARNING (30), records logs of WARNING level and above
 - Supports pickle serialization
@@ -2284,7 +2236,7 @@ from structlog._native import BoundLoggerFilteringAtError
 BoundLoggerFilteringAtError = _make_filtering_bound_logger(ERROR)
 ```
 
-**Description**: 
+**Description**:
 - This is a type alias created through `_make_filtering_bound_logger(ERROR)`
 - Log level is ERROR (40), records logs of ERROR level and above
 - Supports pickle serialization
@@ -2301,7 +2253,7 @@ from structlog._native import BoundLoggerFilteringAtCritical
 BoundLoggerFilteringAtCritical = _make_filtering_bound_logger(CRITICAL)
 ```
 
-**Description**: 
+**Description**:
 - This is a type alias created through `_make_filtering_bound_logger(CRITICAL)`
 - Log level is CRITICAL (50), only records logs of CRITICAL level
 - Supports pickle serialization
@@ -2325,7 +2277,7 @@ LEVEL_TO_FILTERING_LOGGER = {
 }
 ```
 
-**Description**: 
+**Description**:
 - Maps integer log levels to pre-created filtering bound logger types
 - The `make_filtering_bound_logger()` function uses this dictionary to return corresponding filter types
 - All types are pre-created to ensure pickle serializability
@@ -2339,22 +2291,22 @@ from structlog._output import WriteLogger
 class WriteLogger:
     def __init__(self, file: TextIO | None = None) -> None:
         # Initialize write logger with specified output file
-    
+
     def __getstate__(self) -> str:
         # Serialization support
-    
+
     def __setstate__(self, state: Any) -> None:
         # Deserialization support
-    
+
     def __deepcopy__(self, memodict: dict[str, object]) -> WriteLogger:
         # Deep copy support
-    
+
     def __repr__(self) -> str:
         # String representation
-    
+
     def msg(self, message: str) -> None:
         # Write and flush message
-    
+
     # All log level methods point to msg method
     log = debug = info = warn = warning = msg
     fatal = failure = err = error = critical = exception = msg
@@ -2473,7 +2425,7 @@ from structlog.dev import ColumnFormatter
 
 class ColumnFormatter(Protocol):
     def __call__(self, key: str, value: Any) -> str:
-        
+
 ```
 
 **Function**: Define column formatter protocol type for customizing column formatting in console output.
@@ -2504,9 +2456,9 @@ class KeyValueColumnFormatter:
         # value_style: Style string for values
         # reset_style: Style string to reset formatting
         pass
-    
+
     def __call__(self, key: str, value: Any) -> str:
-        
+
 ```
 
 **Function**: Provide styled column formatter for key-value pairs, supporting custom color styles for keys and values.
@@ -2538,7 +2490,7 @@ class LogLevelColumnFormatter:
         # reset_style: Style string to reset formatting
         # width: Column width for alignment
         pass
-    
+
     def __call__(self, key: str, value: Any) -> str:
         # Format log level with appropriate style based on level
         # Returns: Formatted log level string with padding
@@ -2691,9 +2643,9 @@ class _ThreadLocalDictWrapper:
     """
     _tl: Any
     _dict_class: type[dict[str, Any]]
-    
+
     def __init__(self, *args: Any, **kw: Any) -> None:
-        
+
 ```
 
 **Function**: Wrap dictionary class, keeping state global but thread-local. Used to isolate context in multi-threaded environments.
@@ -2742,7 +2694,7 @@ class PlainFileLogObserver:
     def __init__(self, file: TextIO) -> None:
         # Initialize with output file stream
         pass
-    
+
     def __call__(self, eventDict: EventDict) -> None:
         # Process and write log event to file
         pass
@@ -2767,7 +2719,7 @@ class JSONLogObserverWrapper:
     def __init__(self, observer: Any) -> None:
         # Initialize with the observer to wrap
         pass
-    
+
     def __call__(self, eventDict: EventDict) -> str:
         # Convert log event to JSON string
         pass
@@ -2793,15 +2745,15 @@ class GreenThreadLocal:
     def __init__(self) -> None:
         # Initialize greenlet-local storage
         pass
-    
+
     def __getattr__(self, name: str) -> Any:
         # Get attribute from greenlet-local storage
         pass
-    
+
     def __setattr__(self, name: str, val: Any) -> None:
         # Set attribute in greenlet-local storage
         pass
-    
+
     def __delattr__(self, name: str) -> None:
         # Delete attribute from greenlet-local storage
         pass
@@ -3037,7 +2989,7 @@ def _extractStuffAndWhy(eventDict: EventDict) -> tuple[Any, EventDict]:
     """
     Removes all possible *_why*s and *_stuff*s, analyzes exc_info and returns
     a tuple of ``(_stuff, _why, eventDict)``.
-    
+
     **Modifies** *eventDict*!
     """
 ```
@@ -3396,7 +3348,7 @@ def _get_lock_for_file(file: IO[Any]) -> threading.Lock:
 
 
 
-## Detailed Implementation Nodes of Functions
+### Detailed Implementation Nodes of Functions
 
 ### Node 1: Basic Logger Binding Operations
 
@@ -4674,7 +4626,7 @@ print("Pickle test:", unpickled is not None)  # True
 
 ```python
 from structlog.dev import (
-    RichTracebackFormatter, better_traceback, Column, 
+    RichTracebackFormatter, better_traceback, Column,
     LogLevelColumnFormatter, ConsoleRenderer
 )
 from io import StringIO
@@ -4736,7 +4688,7 @@ timestamp_column = Column("timestamp", timestamp_formatter)
 user_column = Column("user", custom_formatter)
 
 cr_multi = ConsoleRenderer(
-    colors=False, 
+    colors=False,
     columns=[timestamp_column, level_column, user_column]
 )
 
@@ -4967,3 +4919,106 @@ print("Metadata caching test:", version1 == version2)  # True
 ```
 
 ---
+
+## Implementation Notes
+
+Preserve all public return shapes, ordering, state transitions, and exception contracts described above. Keep installation metadata and public imports consistent and deterministic.
+
+Use the public language semantics described by each API family. Keep repeated calls deterministic
+unless state mutation is explicitly part of the contract. Public re-exports and declarations must
+match runtime behavior, and installation must not rely on a repository checkout or network access.
+
+## Examples
+
+The API-specific examples above are normative demonstrations of ordinary behavior. These four
+local snippets also provide ordinary and boundary-oriented calls without external services:
+
+```python
+from structlog._output import (
+    PrintLogger, BytesLogger, WriteLogger,
+    BytesLoggerFactory, PrintLoggerFactory, WriteLoggerFactory
+)
+from structlog.testing import ReturnLogger
+from structlog._config import (
+    configure, configure_once, get_logger,
+    get_context, wrap_logger, get_config
+)
+from structlog._native import make_filtering_bound_logger
+from structlog._log_levels import (
+    NAME_TO_LEVEL, LEVEL_TO_NAME, CRITICAL, WARN,
+)
+from structlog._utils import get_processname
+from structlog._config import (
+    _CONFIG, _BUILTIN_DEFAULT_CONTEXT_CLASS, _BUILTIN_DEFAULT_LOGGER_FACTORY,
+    _BUILTIN_DEFAULT_PROCESSORS, _BUILTIN_DEFAULT_WRAPPER_CLASS, BoundLoggerLazyProxy,
+)
+from structlog._base import BoundLoggerBase
+from structlog._output import WRITE_LOCKS, stderr, stdout
+from structlog._native import _nop
+from structlog._frames import (
+    _find_first_app_frame_and_name, _format_exception, _format_stack,
+)
+from structlog._generic import BoundLogger
+from structlog.processors import (
+    KeyValueRenderer, JSONRenderer, LogfmtRenderer,
+    MaybeTimeStamper, TimeStamper, ExceptionRenderer, CallsiteParameter,
+    CallsiteParameterAdder, EventRenamer, ExceptionPrettyPrinter,
+    StackInfoRenderer, UnicodeDecoder,  UnicodeEncoder,
+    format_exc_info, _json_fallback_handler, _figure_out_exc_info,
+)
+from structlog.threadlocal import (
+    _CONTEXT, as_immutable, bind_threadlocal, bound_threadlocal,
+    clear_threadlocal, get_merged_threadlocal, get_threadlocal,
+    merge_threadlocal, merge_threadlocal_context, tmp_bind,
+    unbind_threadlocal, wrap_dict,
+)
+from structlog.contextvars import (
+    _CONTEXT_VARS, bind_contextvars, bound_contextvars, clear_contextvars,
+    get_contextvars, get_merged_contextvars, merge_contextvars,
+    reset_contextvars, unbind_contextvars,
+)
+from structlog.stdlib import (
+    AsyncBoundLogger, BoundLogger, ExtraAdder, LoggerFactory, PositionalArgumentsFormatter,
+    ProcessorFormatter, _FixedFindCallerLogger, add_log_level, add_log_level_number,
+    add_logger_name, filter_by_level, recreate_defaults, render_to_log_args_and_kwargs,
+    render_to_log_kwargs,
+)
+from structlog.testing import (
+    ReturnLogger, CapturedCall,  CapturingLogger, CapturingLoggerFactory,
+    LogCapture, ReturnLoggerFactory,
+)
+from structlog.exceptions import DropEvent
+from structlog.typing import (
+    BindableLogger, EventDict, FilteringBoundLogger, ExcInfo,
+)
+from structlog.dev import ConsoleRenderer
+```
+
+```python
+def get_logger(*args: Any, **initial_values: Any) -> BoundLogger:
+```
+
+```python
+def get_logger(*args: Any, **initial_values: Any) -> Any:
+```
+
+```python
+def configure(
+    processors: Iterable[Processor] | None = None,
+    wrapper_class: type[BindableLogger] | None = None,
+    context_class: type[Context] | None = None,
+    logger_factory: Callable[..., WrappedLogger] | None = None,
+    cache_logger_on_first_use: bool | None = None,
+) -> None:
+```
+
+## Error Handling and Boundary Conditions
+
+Empty values, malformed values, unsupported types, exhausted inputs, invalid options, and missing
+local resources must follow the API-specific contracts above. Preserve documented exception types
+and messages where they are stated. Do not silently coerce an unsupported value merely to produce
+a result, and do not mutate caller-owned data unless the relevant API explicitly promises it.
+
+All filesystem, process, terminal, clock, randomness, and service interactions are forbidden unless
+the API guide explicitly includes that local behavior. Even for an API that models remote or async
+work, evaluation must remain bounded, deterministic, and disconnected from public networks.

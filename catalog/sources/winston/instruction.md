@@ -1,5 +1,12 @@
 # Build `winston`
 
+```text
+workspace/
+├── package.json
+├── package-lock.json
+└── lib/winston.js
+```
+
 ## Project Description
 
 Create a complete installable npm package named `winston`, version `3.19.0`,
@@ -9,6 +16,13 @@ to stream-like transports.
 
 This is a repository-generation task. Implement the behavior described below
 with your own source files. Do not copy the reference repository or its tests.
+
+## Natural Language Instruction
+
+Create the CommonJS package from an empty `workspace/`. Implement the listed
+logger, format, transport, container, profiling, and lifecycle APIs with local
+stream behavior. Preserve levels, metadata, callbacks, and EventEmitter
+conventions.
 
 ## Supports
 
@@ -28,6 +42,18 @@ with your own source files. Do not copy the reference repository or its tests.
 - The scored behavior is deterministic and local. File rotation, HTTP
   delivery, process exit handling, and stress-scale concurrency are outside
   this task.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+└── lib/{winston.js,winston/logger.js,winston/create-logger.js}
+```
+
+The package root resolves to `lib/winston.js` and retains documented CommonJS
+submodules.
 
 ## API Usage Guide
 
@@ -95,6 +121,24 @@ do not require a particular wall-clock duration.
 `winston.Container` manages named loggers. `get(id, options)` creates or
 returns a logger, `has(id)` reports membership, and `close(id)` closes one or
 all managed loggers. `winston.loggers` is the default Container.
+
+## Examples
+
+```js
+const winston = require('winston');
+const logger = winston.createLogger({format: winston.format.json(), transports: []});
+logger.info('started', {service: 'demo'});
+logger.startTimer().done('finished');
+```
+
+Use local stream transports to inspect records, configure levels and formats,
+and manage named loggers with a `Container`.
+
+## Error Handling and Boundary Conditions
+
+Unknown levels, invalid transport options, missing callbacks, and lifecycle
+changes follow the documented errors and return values. File, HTTP, and
+process-termination behavior is outside this local task.
 
 ## Implementation Notes
 

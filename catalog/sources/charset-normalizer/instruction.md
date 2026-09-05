@@ -1,13 +1,41 @@
 # Project Description
 
+```text
+workspace/
+├── pyproject.toml
+└── charset_normalizer/
+    ├── __init__.py
+    ├── models.py
+    ├── utils.py
+    └── __main__.py
+```
+
 Build an installable Python package named `charset-normalizer` from an empty workspace. It detects the most plausible Python codec for raw text, exposes decoded candidates and metadata, and provides a compatibility-oriented legacy detector and command-line interface. Implement the behavior contract below for CPython 3.12 on Linux without runtime network access.
 
-# Supports
+## Natural Language Instruction
+
+Create `charset-normalizer` from an empty workspace. Implement deterministic
+codec detection, match models, Unicode helpers, legacy detection, and the CLI
+described below. Keep all runtime inputs and file operations local.
+
+## Supports or Environment Configuration
 
 - Provide distribution `charset-normalizer` version `3.5.1`, import package `charset_normalizer`, and a `normalizer` console command.
 - Provide a PEP 517 `pyproject.toml` and an installable package. Runtime dependencies are not required; standard-library codecs, Unicode metadata, logging, filesystem access, and subprocess invocation for the CLI are sufficient.
 - Expose the names listed in `charset_normalizer.__all__`. Keep detection deterministic for identical input and options.
 - Evaluation runs from an empty workspace with a separate verifier. Do not fetch source, packages, or services at runtime.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+└── charset_normalizer/
+    ├── __init__.py
+    ├── models.py
+    ├── utils.py
+    └── __main__.py
+```
 
 # API Usage Guide
 
@@ -41,4 +69,29 @@ Unicode helpers in `charset_normalizer.utils` include `unicode_range(character)`
 
 # Implementation Notes
 
-Keep candidate code independent of hidden tests and verifier files. Use a separate child-process boundary for all hidden calls, preserve deterministic exception types and output shapes, and keep all runtime operations local. The implementation may use pure Python; the optional Cython accelerator is not required. Do not contact GitHub, PyPI, DNS, or external services during candidate, verifier, Oracle, or control execution.
+Keep candidate code independent of evaluation assets. Use a separate
+child-process boundary for isolated calls, preserve deterministic exception
+types and output shapes, and keep all runtime operations local. The
+implementation may use pure Python; the optional Cython accelerator is not
+required. Do not contact package hosts, DNS, or external services during any
+execution.
+
+## Examples
+
+```python
+from charset_normalizer import from_bytes
+match = from_bytes('hello'.encode()).best()
+assert match is not None
+assert match.encoding in {'ascii', 'utf_8'}
+```
+
+```python
+from charset_normalizer import detect
+assert detect(b'hello')['encoding'] in {'ascii', 'utf-8'}
+```
+
+## Error Handling and Boundary Conditions
+
+Text strings passed where bytes are required raise `TypeError`. Empty input
+returns the documented empty UTF-8 match; missing paths and invalid CLI paths
+fail locally with the documented non-zero status.

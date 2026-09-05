@@ -1,4 +1,4 @@
-# Introduction and Goals of the DESlib Project
+# Project Description
 
 DESlib is a Python machine learning library **focused on Dynamic Ensemble Selection (DES) and Dynamic Classifier Selection (DCS) techniques**. It is dedicated to providing researchers and engineers with implementations of the latest ensemble learning methods. Based on scikit-learn, this library is compatible with its API (fit, predict, predict_proba, score) and supports various mainstream ensemble methods and baseline algorithms, making it suitable for both academic research and practical engineering applications.
 
@@ -14,7 +14,7 @@ In short, DESlib aims to provide a one-stop, professional solution for the resea
 
 ---
 
-# Natural Language Instruction (Prompt)
+# Natural Language Instruction
 
 Please create a Python project named DESlib to implement a Dynamic Ensemble Selection (DES) and Dynamic Classifier Selection (DCS) algorithm library. This project should include the following functions:
 
@@ -67,7 +67,58 @@ Please create a Python project named DESlib to implement a Dynamic Ensemble Sele
 11. **Core file requirements**: The project must include a complete setup.py file, which needs to configure the project as a standard Python package that can be installed via pip install, declaring a complete list of dependencies — including scikit-learn>=1.0.2 (support for basic machine learning algorithms), numpy>=1.17.0 (core for numerical computation), scipy>=1.4.0 (scientific computing tools), and other core libraries, ensuring the compatibility of functions such as dynamic selection algorithms, diversity metrics, and dataset processing. The setup.py file needs to be able to verify that all functional modules work properly, supporting full verification triggered by test commands, covering the consistency of base class interfaces (e.g., the method implementation of BaseDS), the prediction logic of dynamic selection algorithms (KNORAE, METADES, etc.), the effectiveness of static selection strategies (Oracle, SingleBest, etc.), and the correctness of utility functions in the util module (e.g., dataset generation make_xor, diversity metric Q_statistic). At the same time, it is necessary to provide deslib/__init__.py as the unified API entry, which needs to integrate key components from each core module: import dynamic ensemble selection algorithms (KNORAE, KNORAU, METADES, DESP, KNOP, DESKNN, DESClustering, DESMI, etc.) from the des module; import dynamic classifier selection algorithms (OLA, LCA, MCB, APriori, APosteriori, Rank, etc.) from the dcs module; import static selection methods (Oracle, SingleBest, StaticSelection, StackedClassifier, etc.) from the static module; import the base class BaseDS from the base module; import core utility functions (e.g., dataset generation make_P2, diversity calculation ratio_errors_errors, probability function softmax, etc.) from the util module. In addition, version information needs to be provided through __version__, ensuring that users can directly access the main functions through a simple from deslib import KNORAE, OLA, Oracle statement without paying attention to the internal module structure. In deslib/base.py, the BaseDS base class needs to define the general interface for dynamic selection algorithms, standardizing the implementation standards for all subclasses: the core methods include fit(X, y) (training the model, fitting the base classifiers and the dynamic selection mechanism), predict(X) (predicting sample labels), predict_proba(X) (outputting the class probability distribution), ensuring the consistency of the basic training and prediction processes of the algorithms; the abstract methods include estimate_competence(X) (estimating the competence of base classifiers on samples), select(X) (selecting the optimal subset of base classifiers based on competence), classify_with_ds(X) (performing the final prediction based on the selection results), forcing subclasses with different dynamic selection strategies (e.g., neighborhood selection in KNORAU, global accuracy competence evaluation in OLA) to provide a unified extension framework. The base class also needs to integrate the tools in the util module (e.g., faiss_knn_wrapper for neighborhood search, hardness_region_competence for sample hardness evaluation), providing basic tool support for subclasses and ensuring the consistency of all dynamic selection algorithms at the API level, reducing the user's learning cost and the migration cost of switching between algorithms.
 ---
 
-## Environment Configuration
+# Supports or Environment Configuration
+
+Use Python 3.12 and expose the `deslib` package through a project installable
+with `python -m pip install .`. NumPy, SciPy, and scikit-learn are required for
+the numerical estimator APIs; FAISS is optional. The current catalog record
+has not frozen these dependencies, so do not attempt to retrieve them during
+execution. Agent, candidate, verifier, Oracle, and controls use NoNetwork and
+must not access PyPI, GitHub, DNS, remote datasets, or external services.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── README.rst
+└── deslib/
+    ├── __init__.py
+    ├── base.py
+    ├── dcs/
+    │   ├── __init__.py
+    │   ├── a_posteriori.py
+    │   ├── a_priori.py
+    │   ├── lca.py
+    │   ├── mcb.py
+    │   ├── ola.py
+    │   └── rank.py
+    ├── des/
+    │   ├── __init__.py
+    │   ├── des_p.py
+    │   ├── knop.py
+    │   ├── knora_e.py
+    │   ├── knora_u.py
+    │   └── meta_des.py
+    ├── static/
+    │   ├── __init__.py
+    │   ├── oracle.py
+    │   ├── single_best.py
+    │   ├── stacked.py
+    │   └── static_selection.py
+    └── util/
+        ├── __init__.py
+        ├── aggregation.py
+        ├── datasets.py
+        ├── diversity.py
+        ├── instance_hardness.py
+        ├── knne.py
+        └── prob_functions.py
+```
+
+Subpackage `__init__.py` files expose the algorithm families named below.
+Public estimator classes follow the scikit-learn `fit`, `predict`, and where
+applicable `predict_proba` conventions.
 
 ### Python Version
 The Python version used in the current project is: Python 3.12.4
@@ -100,9 +151,9 @@ nose                            # Testing framework
 
 ---
 
-## DESlib Project Architecture
+## Architecture Reference
 
-### Project Directory Structure
+### Extended Source Layout
 
 ```
 workspace/
@@ -7298,4 +7349,35 @@ The system provides a complete error handling mechanism:
 7. **Tool Function Parameters**: `majority_voting` requires a classifier ensemble and input data to be passed in, and `Q_statistic` requires the true labels and the prediction results of two classifiers to be passed in.
 
 ---
+## Implementation Notes
+
+Keep estimator state compatible with the scikit-learn `fit`, `predict`,
+`predict_proba`, and `score` conventions. Selection and aggregation must be
+deterministic for equal competence; FAISS remains optional and no remote data
+source is allowed.
+
+## Examples
+
+```python
+from deslib.dcs.ola import OLA
+
+selector = OLA(pool_classifiers=[])
+selector.fit(X_train, y_train)
+predictions = selector.predict(X_test)
+```
+
+```python
+from deslib.static.oracle import Oracle
+
+oracle = Oracle(pool_classifiers=pool)
+oracle.fit(X_train, y_train)
+probabilities = oracle.predict_proba(X_test)
+```
+
+## Error Handling and Boundary Conditions
+
+Reject mismatched feature and label shapes, unfitted prediction calls, and
+unsupported classifier-pool inputs with inspectable exceptions. Empty pools,
+single-class data, ties, optional FAISS, and numerical edge cases must follow
+the estimator contracts; no network or uncontrolled randomness is permitted.
 

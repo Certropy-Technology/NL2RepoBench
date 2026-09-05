@@ -1,5 +1,13 @@
 # Build `chokidar`
 
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── index.js
+└── index.d.ts
+```
+
 ## Project Description
 
 Create an installable ESM npm package named `chokidar`, version `5.0.0`, from an
@@ -11,7 +19,13 @@ addon.
 This is a repository-generation task. Implement the behavior with your own
 source files; do not copy the reference repository or its tests.
 
-## Supports
+## Natural Language Instruction
+
+Create `chokidar` from an empty workspace. Implement local file and directory
+watching, event normalization, filtering, traversal, and watcher lifecycle
+behavior specified below.
+
+## Supports or Environment Configuration
 
 - Node.js `24.19.0` and npm `11.17.0` on Linux amd64 with glibc.
 - ESM package semantics with `"type": "module"`; the package root is imported
@@ -29,6 +43,18 @@ source files; do not copy the reference repository or its tests.
 - Do not use CommonJS-only entry points, lifecycle scripts, workspaces, glob
   expansion, native addons, loaders, registry configuration, or runtime network
   access. The documented filesystem paths are ordinary local paths.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── index.js
+├── index.d.ts
+├── handler.js
+└── handler.d.ts
+```
 
 ## API Usage Guide
 
@@ -99,3 +125,18 @@ local filesystem behavior; do not fetch the upstream project or dependencies
 during candidate installation or verification. The private evaluator exercises
 the JSON-serializable behavior of the API through a child process, so native
 watcher handles and callbacks must remain inside the candidate process.
+
+## Examples
+
+```js
+import {watch} from 'chokidar';
+const watcher = watch('src', {ignoreInitial: true});
+watcher.on('add', path => console.log(path));
+await watcher.close();
+```
+
+## Error Handling and Boundary Conditions
+
+`close()` is idempotent and stops later events. Invalid paths report ordinary
+watcher errors; event paths use normalized separators and respect `cwd`,
+filters, depth, and symlink options.

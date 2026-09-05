@@ -1,8 +1,19 @@
-## Introduction and Goals of the DictDataBase Project
+# Project Description
+
+```text
+workspace/
+├── pyproject.toml
+├── README.md
+└── dictdatabase/
+    ├── __init__.py
+    ├── models.py
+    ├── sessions.py
+    └── io_safe.py
+```
 
 DictDataBase is a **high-performance document-oriented database** Python library that stores data using JSON files or compressed JSON files. Designed specifically for concurrent environments, this tool ensures ACID compliance and can run without a database server. Its core features include: **multi-threaded and multi-process safe access** (avoiding conflicts through lock-based access control), **efficient partial read and write operations** (supporting rapid access to individual key-value pairs without parsing the entire file), **an intelligent indexing system** (automatically creating indexes for keys in JSON files to accelerate queries), and **flexible session management** (providing a context manager to ensure data consistency). In short, DictDataBase aims to provide a lightweight, high-performance, and concurrency-safe JSON database solution, particularly suitable for application scenarios that require frequent reading and writing of large amounts of JSON data (for example, selecting files or folders through the `at()` method, performing transactional operations through `session()`, and conducting conditional queries through the `where` callback).
 
-## Natural Language Instructions (Prompt)
+# Natural Language Instruction
 
 Please create a Python project named DictDataBase to implement a high-performance document-oriented database library. The project should include the following features:
 
@@ -26,7 +37,69 @@ Please create a Python project named DictDataBase to implement a high-performanc
 
 10. **Performance Optimization**: Implement efficient concurrent read and write operations, support folder operations and conditional queries, and implement data filtering through the `where` callback function. Ensure read and write performance on large JSON files, supporting a read speed of approximately 2000 times per second.
 
-## Environment Configuration
+# Supports or Environment Configuration
+
+Use Python 3.12 and publish the `dictdatabase` import package from a standard
+`pyproject.toml` project. The documented JSON backend may use `orjson` and
+`path-dict` when available, but the catalog dependency closure is not yet
+frozen; no package may be fetched during evaluation. All persistence is local
+to the configured storage directory. Agent, candidate, verifier, Oracle, and
+controls run with NoNetwork and must not contact PyPI, DNS, a remote database,
+or any external service.
+
+# Implementation Notes
+
+Keep file writes atomic and preserve JSON data types and insertion order where
+the API promises them. Sessions must commit or roll back as documented, locks
+must not leak after exceptions, and path traversal must remain inside the
+configured storage directory. Optional encoders and compression cannot trigger
+network access or silently replace standard behavior.
+
+# Examples
+
+```python
+import dictdatabase as DDB
+
+DDB.at("users").create({"u1": {"name": "Ada"}})
+user = DDB.at("users", key="u1").read()
+```
+
+```python
+with DDB.at("users").session() as (session, users):
+    users["u1"]["active"] = True
+    session.write(users)
+```
+
+# Error Handling and Boundary Conditions
+
+Missing files and keys, invalid paths, malformed JSON, lock timeouts, and
+conflicting sessions raise the documented exceptions. Wildcards and `where`
+callbacks return deterministic selections. Compression, indexing, and local
+file operations remain offline and must not escape the storage directory.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── README.md
+└── dictdatabase/
+    ├── __init__.py
+    ├── byte_codes.py
+    ├── configuration.py
+    ├── indexing.py
+    ├── io_bytes.py
+    ├── io_safe.py
+    ├── io_unsafe.py
+    ├── locking.py
+    ├── models.py
+    ├── sessions.py
+    └── utils.py
+```
+
+The package root exports `at`, the global configuration object, and the public
+modules described below. Storage files, lock files, and indexes are runtime
+data beneath the configured directory, not source files in this tree.
 
 ### Python Version
 
@@ -52,9 +125,9 @@ pytest==8.3.5                        # Unit test framework
 requires-python=">=3.8,<3.14"        # Supports Python versions from 3.8 to 3.13
 ```
 
-## DictDataBase Project Architecture
+## Architecture Reference
 
-### Project Directory Structure
+### Extended Source Layout
 
 ```Plain
 workspace/

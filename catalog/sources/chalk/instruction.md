@@ -1,5 +1,13 @@
 # Build `chalk`
 
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── index.js
+└── index.d.ts
+```
+
 ## Project Description
 
 Create a complete installable npm package named `chalk`, version `6.0.0`, from
@@ -12,7 +20,13 @@ The package is a repository-generation task, not a request to copy the pinned
 upstream source or tests. Reproduce the specified behavior with your own
 implementation and package files.
 
-## Supports
+## Natural Language Instruction
+
+Create `chalk` from an empty workspace. Implement the ESM package, callable
+style builders, color models, capability values, and deterministic terminal
+behavior specified below. Keep formatting local and preserve input text.
+
+## Supports or Environment Configuration
 
 - Run on Node `24.19.0` with npm `11.17.0` on `linux/amd64`.
 - Use ESM package semantics. `package.json` must contain `"type": "module"`.
@@ -39,6 +53,16 @@ implementation and package files.
   the JSON boundary below. Ambient terminal detection is tested only in a
   separately controlled process and must not leak host state into ordinary
   formatting calls.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── index.js
+└── index.d.ts
+```
 
 ## API Usage Guide
 
@@ -211,6 +235,11 @@ is specified below; a verifier must launch a new child process for each
 environment/argv case rather than mutating environment variables after
 import.
 
+## Implementation Notes
+
+Keep the package ESM-compatible and deterministic. Preserve chainable styles,
+level propagation, ANSI close ordering, and the explicit capability policy.
+
 ## Terminal determinism
 
 Color detection may inspect `FORCE_COLOR`, `TERM`, `COLORTERM`, `CI`, selected
@@ -286,3 +315,31 @@ At level 3, `rgb(255, 0, 0)('x')` uses
 level 1 it uses basic bright red SGR 91. `ansi256(196)` stays in ANSI-256 form
 at levels 2 and 3. Background color models use SGR 48/49 and underline color
 models use SGR 58/59.
+
+## Examples
+
+```js
+import chalk, {Chalk} from 'chalk';
+const style = new Chalk({level: 1});
+style.red('error');
+chalk.bold('message');
+```
+
+## Error Handling and Boundary Conditions
+
+Levels outside `0..3` throw an `Error`. Empty text emits no ANSI sequences;
+newlines remain intact and styling must not leak across line boundaries.
+
+## Examples
+
+```js
+import chalk, {Chalk} from 'chalk';
+const style = new Chalk({level: 1});
+style.red('error');
+chalk.bold('message');
+```
+
+## Error Handling and Boundary Conditions
+
+Levels outside `0..3` throw an `Error`. Empty text emits no ANSI sequences;
+newlines remain intact and styling must not leak across line boundaries.

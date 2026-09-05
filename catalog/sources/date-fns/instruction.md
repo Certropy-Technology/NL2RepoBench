@@ -1,5 +1,20 @@
 # Project Description
 
+```text
+workspace/
+├── package.json
+├── package-lock.json
+└── index.js
+```
+
+The public module is imported with `import dateFns from date-fns`-style ESM
+syntax (the package export itself is named below); all scored functions are
+named exports and accept JSON-safe date values.
+
+```js
+import * as dateFns from 'date-fns';
+```
+
 Build an installable ESM npm package named `date-fns` from an empty workspace.
 It provides a bounded set of date arithmetic, parsing, formatting, calendar,
 predicate, and selection utilities. Evaluation uses a JSON subprocess boundary
@@ -82,3 +97,51 @@ input values. The scored JSON boundary intentionally excludes locale and
 context objects, custom `Date` subclasses, callbacks, FP modules, browser
 builds, CLIs, and TypeScript-only behavior. The package must install and pack
 entirely offline with lifecycle scripts disabled.
+
+# Natural Language Instruction
+
+Create `date-fns` from an empty workspace. Implement the documented date
+arithmetic, parsing, formatting, calendar predicates, and selection functions
+as named root exports. Return fresh date values, preserve UTC determinism, and
+keep the package self-contained.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── index.js
+└── src/
+    ├── arithmetic.js
+    ├── calendar.js
+    ├── format.js
+    ├── parse.js
+    └── predicates.js
+```
+
+The package root exports every function named in this instruction. The source
+module split represents responsibilities; do not add a CLI or runtime
+dependency not stated in `package.json`.
+
+# Examples
+
+```js
+import {addDays, parseISO, formatISO} from 'date-fns';
+
+const date = addDays(parseISO('2024-02-28'), 1);
+formatISO(date, {representation: 'date'});
+```
+
+```js
+import {eachDayOfInterval} from 'date-fns';
+
+const days = eachDayOfInterval({start: '2024-01-01', end: '2024-01-03'});
+```
+
+# Error Handling and Boundary Conditions
+
+Invalid dates produce invalid dates for parsing and predicates as specified;
+formatters throw `RangeError` for invalid dates. Reversed intervals and leap
+days follow the documented normalization rules. No function may consult the
+network, locale, wall clock, or host timezone during evaluation.

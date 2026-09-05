@@ -8,6 +8,61 @@ an input string must be truncated for a width limit and optional ellipsis.
 This is a repository-generation task. Implement the described public contract
 with your own package files; do not fetch or copy a reference repository.
 
+# Natural Language Instruction
+
+Create the ESM package `fast-string-truncated-width` from an empty workspace.
+Implement its default width-aware truncation function and the three public
+types, preserving UTF-16 indexes, terminal width, ellipsis, and option rules.
+
+# Supports or Environment Configuration
+
+- Use Node.js 24.19.0 and npm 11.17.0 with the package metadata and offline
+  lockfile contract in `task.toml`.
+- Export the default function and declarations from the package root; do not
+  use runtime network access.
+- Agent, candidate, verifier, Oracle, and controls run with no network access.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── index.js
+└── index.d.ts
+```
+
+# API Usage Guide
+
+The API Usage Guide below is authoritative for the default signature, options,
+public types, returned truncation index, and width behavior.
+
+# Implementation Notes
+
+Count terminal columns according to the documented width dependency and return
+UTF-16 slice positions without mutating input strings.
+
+# Examples
+
+```js
+import truncateWidth from 'fast-string-truncated-width';
+truncateWidth('hello', {maxWidth: 4});
+```
+
+```js
+truncateWidth('界面', {maxWidth: 2});
+```
+
+# Error Handling and Boundary Conditions
+
+```js
+truncateWidth('', {maxWidth: 0});
+```
+
+```js
+truncateWidth('hello', {maxWidth: 20});
+```
+
 # Supports
 
 - Node.js `24.19.0`, npm `11.17.0`, `linux/amd64`, and ESM package semantics.

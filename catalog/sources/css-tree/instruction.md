@@ -1,5 +1,12 @@
 # Build `css-tree`
 
+```text
+workspace/
+├── package.json
+├── package-lock.json
+└── lib/index.js
+```
+
 ## Project Description
 
 Create an installable npm package named `css-tree`, version `3.2.1`, from an
@@ -10,7 +17,13 @@ nodes, validates CSS values with its lexer, and parses CSS definition syntax.
 This is a repository-generation task. Implement the package behavior with your
 own source files. Do not copy the pinned upstream repository or its tests.
 
-## Supports
+## Natural Language Instruction
+
+Create `css-tree` from an empty workspace. Implement local CSS tokenization,
+parsing, generation, AST traversal, definition syntax, lexer matching, and
+escape utilities with deterministic JSON-safe output.
+
+## Supports or Environment Configuration
 
 - Node `24.19.0`, npm `11.17.0`, Linux amd64 with glibc.
 - ESM package semantics: `package.json` must contain `"type": "module"` and
@@ -25,6 +38,19 @@ own source files. Do not copy the pinned upstream repository or its tests.
   a browser bundle or a terminal UI.
 - The scored contract is JSON-safe and deterministic. Do not require a TTY,
   filesystem fixture, clock, random state, browser, or network service.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+└── lib/
+    ├── index.js
+    ├── parser.js
+    ├── tokenizer.js
+    └── lexer.js
+```
 
 ## API Usage Guide
 
@@ -149,6 +175,12 @@ and `url.encode(value)` escapes a URL-compatible CSS token. Their decode
 functions reverse valid escapes deterministically. Inputs are finite strings;
 custom encoders and non-string objects are outside the boundary.
 
+## Implementation Notes
+
+Keep the package ESM-compatible and deterministic. Preserve plain-object AST
+round trips, ordered traversal, stable token boundaries, and local escape and
+lexer behavior. Runtime calls must not require a browser, TTY, clock, or network.
+
 ## JSON-safe subprocess boundary
 
 The verifier-owned adapter launches a fresh child Node process for each JSONL
@@ -173,4 +205,32 @@ success/failure, and deterministic CSS escape utilities. Every scored leaf is
 described in task-local traceability; the contract is intentionally narrower
 than the 16,725-case upstream suite while retaining behavior across the core
 public modules.
+
+## Examples
+
+```js
+import {parse, generate} from 'css-tree';
+const ast = parse('a{color:red}');
+generate(ast); // 'a{color:red}'
+```
+
+## Error Handling and Boundary Conditions
+
+Malformed CSS and invalid definition syntax throw ordinary errors. JSON-safe
+calls use finite strings and plain objects; callbacks, cyclic values, source
+maps, and native host objects are outside this contract.
+
+## Examples
+
+```js
+import {parse, generate} from 'css-tree';
+const ast = parse('a{color:red}');
+generate(ast); // 'a{color:red}'
+```
+
+## Error Handling and Boundary Conditions
+
+Malformed CSS and invalid definition syntax throw ordinary errors. JSON-safe
+calls use finite strings and plain objects; callbacks, cyclic values, source
+maps, and native host objects are outside this contract.
 

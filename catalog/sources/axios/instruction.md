@@ -1,4 +1,4 @@
-# Build an Axios-compatible Node package
+# Project Description
 
 ## Project Description
 
@@ -8,7 +8,19 @@ serialization, cancellation, errors, and status-code helpers. The evaluation sli
 public ESM entry point and uses an injected adapter for request tests; it does not contact a remote
 HTTP service.
 
-## Supports
+# Natural Language Instruction
+
+Create the `axios` project from an empty `workspace/`. Build an installable implementation, not a loose demonstration script. The public API guide below is the complete source of the task contract; preserve its import paths, signatures, return shapes, ordering, state changes, and exceptions.
+
+Required capabilities:
+- request configuration and preparation: implement the documented public behavior and preserve its input/output and error contract.
+- case-insensitive headers: implement the documented public behavior and preserve its input/output and error contract.
+- form serialization: implement the documented public behavior and preserve its input/output and error contract.
+- cancellation, errors, and status helpers: implement the documented public behavior and preserve its input/output and error contract.
+
+Do not copy an upstream checkout or tests. Keep behavior deterministic and local, and make the package usable from the installation layout described below. The principal public entry points include: `set(name, value, rewrite?)`, `get(name)`, `has(name)`, `delete(name)`.
+
+# Supports
 
 - Runtime: Node.js 24.x on Linux amd64 with npm 11.x.
 - Package format: ESM (`"type": "module"`) with `index.js` as the runtime entry point.
@@ -20,7 +32,29 @@ HTTP service.
 - The package and its install must work with `npm ci --offline --ignore-scripts`; do not fetch
   source code or dependencies at runtime and do not add native addons or install hooks.
 
-## API Usage Guide
+
+## NoNetwork boundary
+
+Agent, candidate, verifier, Oracle, controls, and normal runtime execution are network-isolated. Do not access GitHub, package registries, Go proxies, DNS, or external services during execution; use only the frozen local build inputs.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── index.js
+├── index.d.ts
+└── lib/
+    ├── axios.js
+    ├── core/
+    ├── adapters/
+    ├── cancel/
+    ├── defaults/
+    └── helpers/
+```
+
+# API Usage Guide
 
 The root module must expose exactly these named exports in addition to the default `axios` export:
 `Axios`, `AxiosError`, `AxiosHeaders`, `Cancel`, `CancelToken`, `CanceledError`, `HttpStatusCode`,
@@ -71,10 +105,47 @@ The root module must expose exactly these named exports in addition to the defau
 - `all(iterable)` resolves all promises in input order. `spread(callback)(array)` invokes the
   callback with the array elements as positional arguments.
 
-## Implementation Notes
+# Implementation Notes
 
 Keep the implementation deterministic and JSON-safe at the public boundary. The test adapter may
 inject a non-network adapter, so request behavior must be observable through the resolved config
 and returned response without opening sockets. Do not hard-code the private test operation names,
 test cases, or expected scores. Preserve the public export shape, input immutability, prototype
 pollution defenses, and error identities while avoiding any browser-only or native-only dependency.
+
+# Examples
+
+## Ordinary headers
+
+```javascript
+import axios, {AxiosHeaders} from 'axios'
+
+const headers = new AxiosHeaders({'Content-Type': 'application/json'})
+headers.set('X-Trace', 'abc')
+```
+
+## Ordinary merged configuration
+
+```javascript
+import {mergeConfig} from 'axios'
+const config = mergeConfig({headers: {Accept: 'text/plain'}}, {timeout: 250})
+```
+
+## Boundary: header normalization
+
+```javascript
+headers.set('X-Value', 'line1\\r\\nline2')
+headers.get('x-value') // control characters are removed
+```
+
+## Boundary: cancellation identity
+
+```javascript
+import {CanceledError, isCancel, isAxiosError} from 'axios'
+const error = new CanceledError('stop')
+isCancel(error) && isAxiosError(error) // true
+```
+
+# Error Handling and Boundary Conditions
+
+Reject invalid inputs using the documented exception or error result. Preserve empty-input behavior, ordering, Unicode/encoding behavior, cancellation or timeout semantics, and local filesystem boundaries where the API specifies them. Never turn a failed local operation into a network request, subprocess, or silent success.

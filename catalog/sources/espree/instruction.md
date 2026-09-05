@@ -5,6 +5,67 @@ from an empty workspace. It must be an ESM package that exposes the public
 Espree parser surface used by ESLint: parsing JavaScript into ESTree-compatible
 AST objects and tokenizing source text.
 
+# Natural Language Instruction
+
+Create the ESM package `espree`, declarations, and public exports `parse`,
+`tokenize`, `version`, `name`, `Syntax`, `VisitorKeys`,
+`latestEcmaVersion`, and `supportedEcmaVersions`. Match the parse/token
+contracts and all options below.
+
+# Supports or Environment Configuration
+
+- Use Node.js 24.19.0 and npm 11.17.0 on Linux amd64 with ESM semantics and the
+  frozen offline dependencies in `task.toml`.
+- Provide runnable JavaScript, declarations, package metadata, and the
+  `./package.json` export. Do not use lifecycle downloads or native addons.
+- Agent, candidate, verifier, Oracle, and controls run with no network access.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── espree.js
+├── espree.d.ts
+└── lib/
+    ├── espree.js
+    ├── options.js
+    ├── token-translator.js
+    └── types.js
+```
+
+# API Usage Guide
+
+The API Usage Guide below is authoritative for parse/tokenize signatures,
+AST/token shapes, locations, ranges, supported versions, and syntax errors.
+
+# Implementation Notes
+
+Return JSON-safe ESTree data with stable ordering. Validate options before
+parsing and preserve source locations and ranges exactly.
+
+# Examples
+
+```js
+import {parse, tokenize} from 'espree';
+parse('const answer = 42;', {ecmaVersion: 2022, sourceType: 'script'});
+```
+
+```js
+tokenize('x + 1', {ecmaVersion: 2022});
+```
+
+# Error Handling and Boundary Conditions
+
+```js
+parse('const =', {ecmaVersion: 2022});
+```
+
+```js
+parse('<div/>', {ecmaVersion: 2022, ecmaFeatures: {jsx: true}});
+```
+
 # Supports
 
 - Node.js 24.19.0 and npm 11.17.0 on Linux amd64 with glibc.

@@ -95,3 +95,50 @@ contract and must be ordinary typed errors with actionable messages.
 
 The verifier's JSONL adapter supplies only plain JSON values and serializes the
 runtime callback results. It is not an additional public API requirement.
+
+# Natural Language Instruction
+
+Create the package from an empty workspace. Implement HAST/MDX-HAST conversion
+to an automatic JSX runtime with deterministic properties, child selection, key
+generation, development metadata, and actionable errors. Keep the normal
+public API and do not evaluate arbitrary code.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── index.js
+├── index.d.ts
+└── lib/
+    ├── index.js
+    ├── state.js
+    ├── hast.js
+    ├── mdx.js
+    └── property-information.js
+```
+
+The root ESM entry exports `toJsxRuntime`; metadata and lockfile must agree.
+No CLI, verifier, or adapter files belong in this tree.
+
+# Examples
+
+```js
+import {toJsxRuntime} from 'hast-util-to-jsx-runtime';
+const runtime = {Fragment: 'Fragment', jsx: (type, props) => ({type, props}), jsxs: (type, props) => ({type, props})};
+toJsxRuntime({type: 'element', tagName: 'p', properties: {}, children: []}, runtime);
+```
+
+```js
+toJsxRuntime({type: 'root', children: [{type: 'text', value: 'hello'}]}, {Fragment: 'F', jsx: (t, p) => ({t, p}), jsxs: (t, p) => ({t, p}));
+```
+
+# Error Handling and Boundary Conditions
+
+- `Fragment` is required; production requires callable `jsx` and `jsxs`, while
+  development requires callable `jsxDEV`.
+- Preserve text, child selection, deterministic keys, component replacement,
+  table alignment, SVG context, and style errors.
+- MDX ESTree nodes require the declared evaluator. Do not accept filesystem
+  paths through the JSON boundary. All runtime phases are offline.

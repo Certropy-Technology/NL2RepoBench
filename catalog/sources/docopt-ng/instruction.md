@@ -1,8 +1,8 @@
-## Introduction and Goals of the Docopt-NG Project
+# Project Description
 
 Docopt-NG is a Python library for **command-line argument parsing**. It aims to define command-line interfaces through simple docstrings and automatically generate parsers. It is compatible with the original docopt syntax and supports various parameter types, options, subcommands, and complex command-line structures. Docopt-NG follows the concept of "documentation as code", allowing developers to obtain consistent and powerful command-line parsing capabilities by maintaining just one piece of documentation.
 
-## Natural Language Instruction (Prompt)
+# Natural Language Instruction
 
 Please create a Python project called docopt-ng to create a beautiful and powerful command-line interface (CLI). The project should include the following features:
 
@@ -18,7 +18,30 @@ Please create a Python project called docopt-ng to create a beautiful and powerf
 
 6. Requirements for core files: The project must include a complete pyproject.toml file, which needs to configure the project's installable package (supporting pip install and editable mode installation) and declare a complete list of dependencies, including but not limited to test libraries such as pytest and coverage, as well as the core dependencies required for docopt to run (such as typing-extensions). The pyproject.toml file needs to configure the complete build process through the [build-system] and [project] sections and support managing extended dependencies such as testing and documentation through [project.optional-dependencies] groups, ensuring that the complete test environment can be installed via pip install . Additionally, docopt/__init__.py needs to be provided as a unified API entry. This file should import version information from the _version module and provides all core functions including docopt, DocoptExit, DocoptLanguageError, and internal classes such as _Argument, _Option, _Pattern, etc. The API design ensures that users can access all major functions, including command-line parameter parsing, pattern matching, error handling, and type conversion, through a simple statement like from docopt import docopt, DocoptExit, _Argument. The _version.py file contains only the version information that conforms to the semantic versioning specification through the __version__ variable, ensuring that users can obtain the current version via docopt.__version__.
 
-## Dependent Environment
+# Supports or Environment Configuration
+
+Use Python 3.10 and publish the distribution `docopt-ng` with import package
+`docopt`. The parser itself is a local text-processing library; development
+tools listed below are not automatically runtime dependencies. The catalog
+has not frozen a complete dependency closure, so no package may be downloaded
+during the run. Agent, candidate, verifier, Oracle, and controls use NoNetwork
+and must not contact PyPI, GitHub, DNS, or external command services.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── README.md
+└── docopt/
+    ├── __init__.py
+    ├── _version.py
+    └── py.typed
+```
+
+`docopt/__init__.py` provides the parser, pattern model, helper functions, and
+exceptions documented below. `_version.py` supplies package version metadata;
+the root `pyproject.toml` makes the package installable with `pip install .`.
 
 ### Python Version
 
@@ -46,7 +69,7 @@ typing_extensions 4.14.1
 wheel             0.40.0
 ```
 
-## Project Directory Structure
+## Architecture Reference
 
 ```plain
 workspace/
@@ -1387,3 +1410,34 @@ assert docopt(doc, argv=[]) == {'<a>': None, '<b>': None}
 ```
 
 ---
+## Implementation Notes
+
+Parse usage declarations deterministically, preserve option and argument names,
+and return the documented mapping shape. Keep the parser local and compatible
+with the `docopt` import package; do not depend on a registry, subprocess, or
+network service.
+
+## Examples
+
+```python
+from docopt import docopt
+
+usage = "Usage: tool [--verbose] <file>"
+args = docopt(usage, ["input.txt"])
+```
+
+```python
+from docopt import DocoptExit
+
+try:
+    docopt("Usage: tool <file>", [])
+except DocoptExit:
+    pass
+```
+
+## Error Handling and Boundary Conditions
+
+Malformed usage text raises `DocoptLanguageError`; invalid argv raises
+`DocoptExit` with usage information. Support missing option values, repeated
+arguments, `--`, subcommands, aliases, defaults, and empty argv according to
+the API contract. No CLI command may perform network access.

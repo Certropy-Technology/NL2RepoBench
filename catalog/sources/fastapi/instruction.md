@@ -1,3 +1,68 @@
+# Project Description
+
+Build the pinned `fastapi` Python package from an empty `workspace/`. Implement
+the deterministic application, router, validation metadata, encoding, security,
+OpenAPI, SSE, and selected Starlette re-export APIs documented below.
+
+# Natural Language Instruction
+
+Create an installable `fastapi` package and implement every public class,
+function, model, descriptor, response, exception, and helper in the API guide.
+Preserve route ordering, metadata, validation, and deterministic OpenAPI output.
+
+# Supports or Environment Configuration
+
+- Use CPython 3.12 and the exact package/dependency closure declared in
+  `task.toml`; runtime execution has no network access.
+- Exclude live servers, sockets, browser clients, multipart, templates, and
+  external services unless explicitly covered by the API guide.
+- Agent, candidate, verifier, Oracle, and controls run with no network access.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+└── fastapi/
+    ├── __init__.py
+    ├── applications.py
+    ├── routing.py
+    ├── params.py
+    ├── encoders.py
+    ├── responses.py
+    ├── exceptions.py
+    └── security/
+```
+
+# API Usage Guide
+
+The detailed API Usage Guide below is authoritative for all imports, signatures,
+return shapes, metadata, errors, and re-exports.
+
+# Implementation Notes
+
+Keep schema and route results deterministic. Do not add service access or
+framework behavior outside the documented bounded contract.
+
+# Examples
+
+```python
+from fastapi import FastAPI
+app = FastAPI()
+```
+
+```python
+from fastapi import APIRouter
+router = APIRouter()
+```
+
+# Error Handling and Boundary Conditions
+
+```python
+from fastapi.encoders import jsonable_encoder
+jsonable_encoder({"ok": True})
+```
+
 # Build `fastapi`
 
 Create an installable Python package named `fastapi`, version `0.141.1`, from

@@ -1,10 +1,10 @@
-## Introduction and Goals of the aiofiles Project
+# Project Description
 
 aiofiles is a Python library **for asynchronous file operations**, providing asynchronous processing capabilities for local disk files in asyncio applications. This library is licensed under the Apache 2 license. It delegates blocking file I/O operations to separate threads through a thread pool executor, thus avoiding blocking the asyncio event loop. Its core features include: **asynchronous file operation interfaces** (providing asynchronous file APIs very similar to Python's standard blocking APIs), **support for various file types** (including buffered and unbuffered binary files, buffered text files), **support for asynchronous iteration** (supporting async for loops for file line iteration), and an **asynchronous temporary file module** (providing asynchronous interfaces such as TemporaryFile, NamedTemporaryFile, SpooledTemporaryFile, and TemporaryDirectory).
 
 In short, aiofiles aims to solve the problem of file I/O blocking in asyncio applications. By delegating file operations to a thread pool executor, developers can safely perform file read and write operations in asynchronous applications without interfering with the execution of the event loop. This library supports Python 3.9 and above, providing a complete solution for asynchronous file operations, including file opening, reading and writing, directory operations, and temporary file handling. It is an important tool for building high-performance asynchronous applications.
 
-## Natural Language Instruction (Prompt)
+# Natural Language Instruction
 
 Please create a Python project named aiofiles to implement an asynchronous file operation library. The project should include the following features:
 
@@ -26,7 +26,7 @@ Please create a Python project named aiofiles to implement an asynchronous file 
 
 9. Core file requirements: The project must include a complete pyproject.toml file, configuring the project as an installable package (supporting pip install), declaring the project version information and a complete list of dependencies (including asyncio>=3.9.0, io>=3.9.0, mypy>=1.16.0, tempfile>=3.9.0, ruff>=0.11.12, pytest>=8.3.5, etc., standard libraries), providing src/aiofiles/__init__.py as a unified API entry point, importing and exporting aioopen, wrap, stderr, stderr_bytes, stdin, stdin_bytes, stdout, stdout_bytes, and main functions, allowing users to access all main functions through simple "from aiofiles import **" and "from aiofiles.threadpool import**" statements.
 
-## Environment Configuration
+# Supports
 
 ### Python Version
 
@@ -34,51 +34,42 @@ The Python version used in the current project is: Python 3.11.7
 
 ### Versions of Core Dependent Libraries
 
-```Plain
-iniconfig      2.1.0
-packaging      25.0
-pip            23.2.1
-pluggy         1.6.0
-Pygments       2.19.2
-pytest         8.4.1
-pytest-asyncio 1.1.0
-setuptools     65.5.1
-wheel          0.42.0
-```
+    iniconfig      2.1.0
+    packaging      25.0
+    pip            23.2.1
+    pluggy         1.6.0
+    Pygments       2.19.2
+    pytest         8.4.1
+    pytest-asyncio 1.1.0
+    setuptools     65.5.1
+    wheel          0.42.0
 
 ## Aiofiles Project Architecture
 
-### Project Directory Structure
 
-```Plain
+## NoNetwork boundary
+
+Agent, candidate, verifier, Oracle, controls, and normal runtime execution are network-isolated. Do not access GitHub, package registries, Go proxies, DNS, or external services during execution; use only the frozen local build inputs.
+
+# Project Directory Structure
+
+```text
 workspace/
-├── .gitignore
-├── CHANGELOG.md
-├── Justfile
-├── LICENSE
-├── NOTICE
-├── README.md
 ├── pyproject.toml
-├── src
-│   ├── aiofiles
-│   │   ├── __init__.py
-│   │   ├── base.py
-│   │   ├── os.py
-│   │   ├── ospath.py
-│   │   ├── tempfile
-│   │   │   ├── __init__.py
-│   │   │   ├── temptypes.py
-│   │   └── threadpool
-│   │       ├── __init__.py
-│   │       ├── binary.py
-│   │       ├── text.py
-│   │       └── utils.py
-├── tox.ini
-└── uv.lock
-
+└── src/aiofiles/
+    ├── __init__.py
+    ├── base.py
+    ├── os.py
+    ├── ospath.py
+    ├── tempfile/__init__.py
+    └── threadpool/
+        ├── __init__.py
+        ├── binary.py
+        ├── text.py
+        └── utils.py
 ```
 
-## API Usage Guide
+# API Usage Guide
 
 ### Core API
 
@@ -966,7 +957,7 @@ __all__ = (
     "stderr_bytes",
 )
 ```
-## Detailed Implementation Nodes of Functions
+# Implementation Notes
 
 ### Node 1: Async File Opening and Basic Operations
 
@@ -1531,3 +1522,46 @@ class AsyncFileWrapper:
 **Test Interfaces**:
 - `tests/threadpool/test_binary.py`: Test the application of utility functions in binary files
 - `tests/threadpool/test_text.py`: Test the application of utility functions in text files
+
+# Examples
+
+## Ordinary text file
+
+```python
+import aiofiles
+
+async with aiofiles.open("notes.txt", "w", encoding="utf-8") as stream:
+    await stream.write("one
+two
+")
+async with aiofiles.open("notes.txt", encoding="utf-8") as stream:
+    lines = [line async for line in stream]
+```
+
+## Ordinary local metadata
+
+```python
+from aiofiles import os
+
+info = await os.stat("notes.txt")
+names = await os.listdir(".")
+```
+
+## Boundary: empty file
+
+```python
+async with aiofiles.open("empty.txt", "w+") as stream:
+    await stream.seek(0)
+    assert await stream.read() == ""
+```
+
+## Boundary: missing path
+
+```python
+async with aiofiles.open("does-not-exist.txt") as stream:
+    await stream.read()  # raises FileNotFoundError
+```
+
+# Error Handling and Boundary Conditions
+
+Reject invalid inputs using the documented exception or error result. Preserve empty-input behavior, ordering, Unicode/encoding behavior, cancellation or timeout semantics, and local filesystem boundaries where the API specifies them. Never turn a failed local operation into a network request, subprocess, or silent success.

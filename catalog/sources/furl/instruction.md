@@ -1,3 +1,67 @@
+# Project Description
+
+Build the pinned `furl` Python package from an empty workspace. It models URL
+scheme, authority, path, ordered repeated query parameters, and fragment as
+coordinated local components.
+
+# Natural Language Instruction
+
+Create the installable package and implement the component classes, helpers,
+validation, encoding, IDNA, and `furl` facade documented in the API guide.
+Preserve ordering and deterministic string/URL transformations.
+
+# Supports or Environment Configuration
+
+- Use CPython 3.12 with version `2.1.4` and the exact `six` and
+  `orderedmultidict` dependency closure declared in `task.toml`.
+- Do not use network, subprocesses, current time, or randomness. Agent,
+  candidate, verifier, Oracle, and controls run with no network access.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+└── furl/
+    ├── __init__.py
+    ├── furl.py
+    ├── __version__.py
+    ├── compat.py
+    └── py.typed
+```
+
+# API Usage Guide
+
+The API Usage Guide below is authoritative for exports, helper signatures,
+component classes, validation, encoding, and return values.
+
+# Implementation Notes
+
+Preserve insertion order for path segments and repeated query values. Keep URL
+operations pure and deterministic, with no service or filesystem access.
+
+# Examples
+
+```python
+from furl import furl
+url = furl('https://example.com/a?x=1')
+```
+
+```python
+url.add({'x': '2'}); str(url)
+```
+
+# Error Handling and Boundary Conditions
+
+```python
+from furl import is_valid_port
+is_valid_port(443)
+```
+
+```python
+url.set(path='/next', fragment='part')
+```
+
 # Build `furl`
 Create a complete, installable Python package named `furl` from an empty workspace. It is a local URL parsing and manipulation library. The package must run on CPython 3.12 without network access after its declared build-time dependencies have been installed.
 ## Project Description

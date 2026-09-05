@@ -1,5 +1,12 @@
 # Build `zod`
 
+```text
+workspace/
+├── package.json
+├── package-lock.json
+└── index.js
+```
+
 ## Project Description
 
 Create an installable npm package named `zod`, version `4.4.3`, from an empty
@@ -12,6 +19,12 @@ records.
 This is a bounded rescope of the package, not a claim of complete upstream API
 or test parity. Implement the behavior described below with your own source.
 Do not copy a reference implementation or upstream tests into the repository.
+
+## Natural Language Instruction
+
+Create the ESM package from an empty `workspace/`. Implement the bounded Zod
+classic namespace: primitive schemas, checks, collections, objects, unions,
+wrappers, safe parsing, and stable issue records.
 
 ## Supports
 
@@ -36,6 +49,17 @@ Do not copy a reference implementation or upstream tests into the repository.
 
 The package may expose more Zod-compatible API surface, but only the contract
 below is scored.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+└── index.js
+```
+
+The root exports named `z` and the identical default namespace.
 
 ## JSON Boundary
 
@@ -229,6 +253,23 @@ present: `min`, `max`, `length`, `email`, `trim`, `toLowerCase`. Number checks
 use `int`, `min`, `max`, `positive`, `nonnegative`. Array checks use `min`,
 `max`, `length`. The descriptor is only a deterministic verifier transport;
 the package itself implements the ordinary Zod API calls.
+
+## Examples
+
+```js
+import {z} from 'zod';
+const User = z.object({name: z.string().min(1), age: z.number().int()});
+User.safeParse({name: 'Ada', age: 37});
+z.union([z.string(), z.number()]).safeParse(true);
+```
+
+Compose schemas with arrays, objects, literals, enums, unions, and wrappers.
+
+## Error Handling and Boundary Conditions
+
+Wrong primitive types, failed checks, invalid enum members, missing keys,
+unknown-key policies, nested paths, union failures, `null`, and `undefined`
+wrappers produce stable result shapes and issue paths.
 
 ## Implementation Notes
 

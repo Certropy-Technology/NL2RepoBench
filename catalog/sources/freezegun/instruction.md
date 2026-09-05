@@ -12,6 +12,65 @@ does not require real-time ticking, asyncio integration, ignore-list
 configuration, framework plugins, static typing parity, or the upstream test
 suite.
 
+# Natural Language Instruction
+
+Create the installable `freezegun` package from an empty workspace. Implement
+the bounded synchronous `freeze_time` context manager/decorator, manual time
+movement, timezone offsets, and restoration behavior described below.
+
+# Supports or Environment Configuration
+
+- Use CPython 3.12 with the exact version and build/runtime metadata in
+  `task.toml`; runtime behavior is local and deterministic.
+- Agent, candidate, verifier, Oracle, and controls run with no network access.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+└── freezegun/
+    ├── __init__.py
+    ├── api.py
+    ├── config.py
+    └── py.typed
+```
+
+# API Usage Guide
+
+The API Usage Guide below is authoritative for `freeze_time`, decorators,
+frozen clock objects, movement, offsets, and return/error behavior.
+
+# Implementation Notes
+
+Patch only the documented time views and restore every patched object when the
+freeze exits, including exceptional exits and nested contexts.
+
+# Examples
+
+```python
+from freezegun import freeze_time
+with freeze_time('2020-01-01'):
+    pass
+```
+
+```python
+@freeze_time('2020-01-01')
+def today():
+    pass
+```
+
+# Error Handling and Boundary Conditions
+
+```python
+with freeze_time('2020-01-01', tz_offset=2):
+    pass
+```
+
+```python
+freezer = freeze_time('2020-01-01'); freezer.start(); freezer.stop()
+```
+
 # Supports
 
 - Python 3.12 on Debian 13, installed as the distribution `freezegun==1.5.5`.

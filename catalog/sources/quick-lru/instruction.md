@@ -1,13 +1,11 @@
-# Build `quick-lru`
-
-## Project Description
+# Project Description
 
 Create an installable npm package named `quick-lru`, version `7.3.0`, from an empty workspace.
 It is a small `Map` subclass implementing a Least Recently Used cache with a dual-cache design.
 The implementation must preserve JavaScript key and value identity while providing bounded
 recency operations, optional lazy time-to-live expiration, and explicit eviction controls.
 
-## Supports
+# Supports or Environment Configuration
 
 - Node.js `24.19.0` with npm `11.17.0` on Linux amd64 with glibc.
 - An ESM package with `package.json` containing `name`, `version`, `type: "module"`, and an
@@ -18,7 +16,29 @@ recency operations, optional lazy time-to-live expiration, and explicit eviction
 - A self-contained implementation. Do not use network services, native addons, workspaces,
   install hooks, custom loaders, or a globally installed copy of the package.
 
-## API Usage Guide
+# Natural Language Instruction
+
+Create `quick-lru` from an empty workspace. Implement the default `QuickLRU`
+class with Map identity semantics, recency promotion, bounded capacity, lazy
+TTL expiration, callback timing, iteration, resizing, and explicit eviction.
+Keep behavior local and do not rely on a globally installed package.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── index.js
+├── index.d.ts
+├── README.md
+└── LICENSE
+```
+
+`index.js` is the ESM package entry and `index.d.ts` describes the public
+generic cache API. No private evaluator or test file is required at runtime.
+
+# API Usage Guide
 
 ### `QuickLRU` and `Options`
 
@@ -78,7 +98,7 @@ cache.set('user:3', {name: 'Sam'});
 // The oldest live entry is evicted; user:1 was promoted by get().
 ```
 
-## Implementation Notes
+# Implementation Notes
 
 Keep the package root and declaration file compatible with Node ESM resolution. Preserve Map
 identity semantics for object and symbol keys, insertion/recency order, `undefined` values, and
@@ -88,3 +108,23 @@ entry before it disappears, and user values must not be stringified or mutated. 
 verifier exercises constructor validation, all public methods, iteration order, callback timing,
 TTL behavior, resize/evict boundaries, and package metadata through a bounded child-process
 boundary.
+
+# Examples
+
+```js
+import QuickLRU from "quick-lru";
+const cache = new QuickLRU({maxSize: 2});
+cache.set("a", 1).set("b", 2).get("a").set("c", 3);
+```
+
+```js
+const expiring = new QuickLRU({maxSize: 2, maxAge: 1000});
+expiring.set("token", "value", {maxAge: 50});
+```
+
+# Error Handling and Boundary Conditions
+
+Reject non-positive capacities and invalid zero TTL values using normal
+package errors. `evict(0)`, negative counts, `NaN`, and empty-cache eviction
+are no-ops. Expired entries are removed lazily and callbacks run before
+removal. Do not stringify or mutate user keys or values.

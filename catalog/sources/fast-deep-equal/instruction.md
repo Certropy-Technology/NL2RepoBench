@@ -6,6 +6,59 @@ comparing bounded JSON values. The scored task is intentionally narrower than
 the upstream package: it preserves the root equality behavior for JSON values,
 but does not expose the React or ES6-specific entry points.
 
+# Natural Language Instruction
+
+Create the CommonJS `fast-deep-equal` package from an empty workspace. Export
+the callable root equality function and preserve the documented comparison
+semantics, supported JSON values, and deterministic result behavior.
+
+# Supports or Environment Configuration
+
+- Use Node.js 24.19.0 and npm 11.17.0 with the exact package metadata in
+  `task.toml`; this package has no runtime dependencies.
+- Agent, candidate, verifier, Oracle, and controls run with no network access.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── index.js
+└── index.d.ts
+```
+
+# API Usage Guide
+
+The API Usage Guide below is authoritative for the root callable export, input
+domains, equality rules, and return type.
+
+# Implementation Notes
+
+Keep comparisons deterministic and side-effect free for the documented JSON
+values. Do not expose unrequested React or ES6 entry points.
+
+# Examples
+
+```js
+const equal = require('fast-deep-equal');
+equal({a: 1}, {a: 1});
+```
+
+```js
+equal([1, 2], [1, 2]);
+```
+
+# Error Handling and Boundary Conditions
+
+```js
+equal({a: 1}, {a: 2});
+```
+
+```js
+equal(null, null);
+```
+
 # Supports
 
 - Run on Node.js `24.19.0` with npm `11.17.0` on Linux x86-64.

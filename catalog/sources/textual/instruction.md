@@ -7,6 +7,13 @@ framework. Start from an empty workspace and implement the documented, determini
 utility and value-object behavior below. The package must be usable with Python 3.12
 and must not require a network connection at runtime.
 
+## Natural Language Instruction
+
+Create `textual` from an empty workspace. Implement the documented slug,
+case-conversion, terminal-cell, wrapping, geometry, color, and markup APIs as
+an ordinary installable package. Preserve module paths, return shapes,
+deterministic ordering, and exception names across these related utilities.
+
 ## Supports
 
 - A Poetry-backed `pyproject.toml` with package source under `src/textual/`.
@@ -16,6 +23,23 @@ and must not require a network connection at runtime.
 - Text, slug, wrapping, geometry, color, and markup escaping behavior
   described in the API guide. Results crossing the task boundary are JSON-compatible
   scalars, arrays, and strings.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+└── src/
+    └── textual/
+        ├── __init__.py
+        ├── _cells.py
+        ├── _slug.py
+        ├── _wrap.py
+        ├── case.py
+        ├── color.py
+        ├── geometry.py
+        └── markup.py
+```
 
 ## API Usage Guide
 
@@ -58,3 +82,47 @@ arguments, so public functions should not depend on mutable global state for the
 behaviors. Snapshot tests, terminal rendering, live application event loops, and
 optional syntax-highlighting integrations are outside this deterministic contract; do
 not claim them as implemented solely because the package imports.
+
+## Examples
+
+```python
+from textual._slug import slug_for_tcss_id
+from textual.geometry import Region
+
+assert slug_for_tcss_id("Main View") == "main-view"
+assert Region.from_corners(1, 2, 6, 8).width == 5
+```
+
+```python
+from textual.color import Color
+from textual.markup import escape
+
+assert Color.parse("#ff0000").r == 255
+assert escape("plain") == "plain"
+```
+
+## Error Handling and Boundary Conditions
+
+Malformed color text raises `ColorParseError`. Width and geometry helpers
+preserve deterministic integer boundaries. Empty strings and combining
+characters remain valid inputs where their signatures permit them; no helper
+may access a terminal, network, or mutable external service.
+
+## Additional Contract Details
+
+`slug` trims surrounding whitespace before applying its transliteration rules;
+`slug_for_tcss_id` applies its identifier rules independently. Cell width is
+the width of rendered text, so combining characters do not add a column and
+tabs advance to the next configured tab stop. Wrapping offsets are code-point
+boundaries and never split an invalid surrogate pair.
+
+`Offset`, `Size`, and `Region` compare by value and retain integer coordinates.
+Region intersection and containment use half-open right and bottom edges.
+Color alpha values remain in the documented numeric range, and HSL conversion
+is deterministic for equivalent inputs. Markup escaping affects only syntax
+characters, not ordinary backslashes or Unicode text.
+
+The package metadata, `src/` layout, and all listed modules must be included in
+the built distribution. Imports should not initialize an application, inspect
+the terminal, write files, or contact a service. A caller may use the helpers
+from any current working directory after installation.

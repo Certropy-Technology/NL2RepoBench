@@ -1,5 +1,12 @@
 # Build the scoped `vite` configuration utilities
 
+```text
+workspace/
+├── package.json
+├── package-lock.json
+└── dist/node/index.js
+```
+
 ## Project Description
 
 Create an installable npm package named `vite` that implements a deterministic,
@@ -11,6 +18,13 @@ development server, a production bundler, a browser, a CLI, or native addons.
 Start from an empty workspace and write your own implementation. The evaluator
 uses local files and JSON-safe values only. It does not contact an external
 service or inspect an upstream implementation.
+
+## Natural Language Instruction
+
+Create this ESM package from an empty `workspace/`. Implement the documented
+configuration, path, stylesheet, environment-file, alias, plugin-ordering,
+and workspace-root utilities. Preserve local deterministic behavior and the
+documented return shapes without implementing a development server.
 
 ## Supports
 
@@ -28,6 +42,20 @@ service or inspect an upstream implementation.
 - Export every function below as a named export from the package root. Include
   all runnable JavaScript under the package files selected by `npm pack`; no
   build step runs during installation.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+└── dist/node/
+    ├── index.js
+    └── shared/{config.js,constants.js,utils.js}
+```
+
+The root export resolves to `dist/node/index.js`; caller-created workspace
+marker files are not package-owned resources.
 
 ## API Usage Guide
 
@@ -148,6 +176,24 @@ Walk upward from `current` and return the nearest directory containing any of:
 If no workspace marker is found, return `root`. When `root` is omitted, derive
 it by walking upward to the nearest `package.json`, falling back to `current` if
 none exists. Ignore unreadable and malformed JSON workspace marker files.
+
+## Examples
+
+```js
+import {normalizePath, mergeAlias, loadEnv} from 'vite';
+normalizePath('src\\main.js');
+mergeAlias([{find: 'app', replacement: './src'}], []);
+loadEnv('development', '/tmp/project', 'VITE_');
+```
+
+Use `mergeConfig` and `sortUserPlugins` for local JSON-safe configuration
+objects, preserving merge and ordering rules.
+
+## Error Handling and Boundary Conditions
+
+Missing environment files produce the documented empty result. Invalid alias,
+config, or plugin shapes raise a regular JavaScript error. Workspace discovery
+is bounded by the supplied root and never accesses a network.
 
 ## Implementation Notes
 

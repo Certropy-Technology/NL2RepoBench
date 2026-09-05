@@ -1,11 +1,25 @@
 # Project Description
 
+```text
+workspace/
+├── package.json
+├── package-lock.json
+└── index.js
+```
+
 Build an installable Node.js package named `ws` from an empty workspace. The
 package implements RFC 6455 WebSocket clients and servers for Node.js. It must
 support CommonJS and ESM consumers, event-driven client/server communication,
 local HTTP upgrades, control frames, compression negotiation, and a duplex
 stream adapter without depending on a browser, database, native addon, public
 network service, or runtime download.
+
+# Natural Language Instruction
+
+Create the package from an empty `workspace/`. Implement the documented
+CommonJS/ESM exports, local RFC 6455 client/server behavior, frame handling,
+control messages, negotiation, and stream adapter. Keep external services and
+runtime downloads out of the package.
 
 # Supports
 
@@ -25,6 +39,20 @@ network service, or runtime download.
   outside the task.
 
 # API Usage Guide
+
+## Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── index.js
+├── wrapper.mjs
+├── browser.js
+└── lib/{websocket.js,websocket-server.js,sender.js,receiver.js}
+```
+
+The root supports the documented CommonJS and ESM exports.
 
 ## Package exports
 
@@ -152,6 +180,24 @@ separated by `; ` and repeated configurations by `, `.
 Parse a `Sec-WebSocket-Protocol` header into an insertion-ordered `Set` of RFC
 tokens. Empty entries, invalid characters, malformed separators, and duplicate
 protocol names throw `SyntaxError`.
+
+# Examples
+
+```js
+const {WebSocketServer, WebSocket} = require('ws');
+const server = new WebSocketServer({port: 0});
+server.on('connection', socket => socket.on('message', value => socket.send(value)));
+```
+
+Use local loopback for client/server tests and `createWebSocketStream` for a
+duplex stream interface.
+
+# Error Handling and Boundary Conditions
+
+Reject invalid upgrade headers, unsupported versions, malformed frames,
+oversized control payloads, invalid close codes, and messages over
+`maxPayload`. Fragmentation, masking, ping/pong, and graceful close retain
+their documented state and event behavior.
 
 # Implementation Notes
 

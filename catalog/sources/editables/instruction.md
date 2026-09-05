@@ -1,3 +1,66 @@
+# Project Description
+
+Build the pinned `editables` Python distribution from an empty `workspace/`.
+It exposes local editable-project mappings and emits deterministic import
+redirectors for caller-supplied source directories.
+
+# Natural Language Instruction
+
+Create the installable `editables` package and implement every public project,
+mapping, redirector, and validation API documented below. Preserve the exact
+file formats, import behavior, path validation, and error contracts.
+
+# Supports or Environment Configuration
+
+- Use CPython 3.12 and the exact package version, build backend, and dependency
+  closure declared in `task.toml`.
+- Distribution and import package are `editables`; standard-library modules are
+  not runtime dependencies.
+- Agent, candidate, verifier, Oracle, and controls run with `no-network`.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+└── editables/
+    ├── __init__.py
+    ├── editable.py
+    └── redirector.py
+```
+
+# API Usage Guide
+
+The API Usage Guide below is authoritative for every public import path,
+signature, generated file, return value, and exception.
+
+# Implementation Notes
+
+Keep generated paths deterministic and confined to caller-supplied directories.
+Do not inspect a reference checkout or fetch source at runtime.
+
+# Examples
+
+```python
+from editables import EditableProject
+project = EditableProject("demo", "/workspace/src")
+project.add_to_path("/workspace/src")
+```
+
+```python
+project.add_to_subpackage("demo", "demo")
+```
+
+# Error Handling and Boundary Conditions
+
+```python
+project.add_to_path("")  # apply the documented path validation error
+```
+
+```python
+project.files()  # repeated calls have stable ordering
+```
+
 # Build `editables`
 
 Create a complete, installable Python project named `editables` from an empty

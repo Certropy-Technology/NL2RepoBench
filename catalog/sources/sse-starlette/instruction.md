@@ -1,10 +1,4 @@
-# Build `sse-starlette`
-
-Create an installable Python package named `sse-starlette`, version `3.4.8`,
-from an empty workspace. It implements a local, deterministic subset of a
-Server-Sent Events response library for Starlette and FastAPI.
-
-## Project Description
+# Project Description
 
 The package turns event values into SSE wire bytes and exposes an ASGI
 `EventSourceResponse` that streams those bytes. It must preserve the async and
@@ -12,26 +6,50 @@ synchronous iterable boundary, response headers, ping serialization, bounded
 send timeouts, client disconnect callbacks, cooperative shutdown, and safe
 websocket denial message adaptation described below.
 
-Evaluation is local and has no network access. The verifier supplies only
-JSON-safe scenarios to a separate child process; do not contact a server,
-download source, invoke a subprocess, or depend on files outside the package.
+Operation is local and has no network access. Do not contact a server, download
+source, invoke a subprocess, or depend on files outside the package.
+
+## Natural Language Instruction
+
+Create `sse-starlette` from an empty workspace as a complete installable python project. Implement
+the public operations, data or state behavior, input validation, deterministic ordering, and
+error contracts documented below. Keep package metadata, root exports, module imports, and any
+subpath entry points consistent across files. Implement the behavior rather than hard-coding the
+examples, and do not retrieve or copy a reference implementation.
+
+The finished repository must install from its root, expose every documented API family, preserve
+the specified side effects and resource lifecycle, and remain usable in a fresh process.
 
 ## Supports
 
-- CPython 3.12 on Debian 12 amd64.
-- A PEP 517 installable package with import package `sse_starlette`.
-- Runtime dependencies `starlette` and `anyio` from the supplied build-time
-  closure. Do not add a runtime dependency on uvicorn, FastAPI, SQLAlchemy,
-  Graphviz, or any external service.
-- Root exports `EventSourceResponse`, `ServerSentEvent`, and
-  `JSONServerSentEvent`; `sse_starlette.event` also exports `ensure_bytes`.
-- Version `3.4.8` and a `py.typed` marker. Metadata must be deterministic and
-  must not be obtained from the network.
+- Package/distribution name: `sse-starlette`. Primary import or package entry: `sse_starlette`.
+- CPython 3.12.14 on debian-12-amd64 with pip.
+- Install from `workspace/` using `python -m pip install .`.
+- Declared dependency closure: anyio==4.14.2, idna==3.19, iniconfig==2.3.0, packaging==26.3, pluggy==1.6.0, pygments==2.20.0, pytest==9.1.1, pytest-asyncio==1.4.0, setuptools==80.9.0, starlette==0.49.3, typing-extensions==4.16.0, wheel==0.45.1. Standard-library modules are not dependencies.
+- Build requirements are supplied before execution; do not add undeclared dependencies,
+  registry overrides, download hooks, or source-fetch steps.
+- Agent, candidate, verifier, Oracle, and controls use `network_mode=no-network`. Runtime access
+  to GitHub, PyPI, npm, the Go proxy, DNS, and external services is forbidden.
+- The declared test framework is `pytest`. A fixed collection
+  contains `28` cases when that value is frozen in metadata;
+  test implementation details are not part of the package surface.
 
-The scored contract excludes live HTTP servers, database streaming, uvicorn
-signal installation, real sockets, threads, and the upstream experimentation
-and integration suites. ASGI scopes and messages are represented by ordinary
-JSON-compatible dictionaries in the verifier.
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── sse_starlette/
+│   ├── __init__.py
+│   ├── event.py
+│   ├── sse.py
+│   └── py.typed
+└── README.md
+```
+
+This is the required public project shape. Additional implementation modules are allowed only
+when they support the documented API; evaluation, source-fetch, and private runtime files are
+not agent-owned project files.
 
 ## API Usage Guide
 
@@ -119,14 +137,57 @@ sent. A background task runs after the response completes.
 the static methods `disable_automatic_graceful_drain()` and
 `enable_automatic_graceful_drain_mode()` toggle the automatic mode.
 `SendTimeoutError` subclasses `TimeoutError`. These names are available from
-`sse_starlette.sse`, but only the deterministic behavior above is scored.
+`sse_starlette.sse`, with the deterministic behavior above forming the task contract.
 
 ## Implementation Notes
 
 Keep package imports safe when uvicorn is absent. Preserve event order and
 header precedence exactly. Do not solve this task with a fake response that
-only returns precomputed strings: the verifier exercises async generators,
-sync iterables, callbacks, locking, timeout cancellation, shutdown, and ASGI
-message transformation through a child-side adapter. Keep the candidate and
-trusted verifier processes separate; hidden test files and expected values are
-not available in the workspace.
+only returns precomputed strings: async generators, sync iterables, callbacks,
+locking, timeout cancellation, shutdown, and ASGI message transformation are
+all part of the documented behavior.
+
+Use the public language semantics described by each API family. Keep repeated calls deterministic
+unless state mutation is explicitly part of the contract. Public re-exports and declarations must
+match runtime behavior, and installation must not rely on a repository checkout or network access.
+
+## Examples
+
+The API-specific examples above are normative demonstrations of ordinary behavior. These four
+local snippets also provide ordinary and boundary-oriented calls without external services:
+
+```python
+ServerSentEvent(data=None, *, event=None, id=None, retry=None,
+                comment=None, sep=None)
+```
+
+```python
+EventSourceResponse(
+    content, status_code=200, headers=None,
+    media_type="text/event-stream", background=None, ping=None, sep=None,
+    ping_message_factory=None, data_sender_callable=None, send_timeout=None,
+    client_close_handler_callable=None, shutdown_event=None,
+    shutdown_grace_period=0,
+)
+```
+
+```python
+import sse_starlette
+print(sse_starlette)
+```
+
+```python
+import sse_starlette
+# Invoke a documented API using an empty or boundary input.
+```
+
+## Error Handling and Boundary Conditions
+
+Empty values, malformed values, unsupported types, exhausted inputs, invalid options, and missing
+local resources must follow the API-specific contracts above. Preserve documented exception types
+and messages where they are stated. Do not silently coerce an unsupported value merely to produce
+a result, and do not mutate caller-owned data unless the relevant API explicitly promises it.
+
+All filesystem, process, terminal, clock, randomness, and service interactions are forbidden unless
+the API guide explicitly includes that local behavior. Even for an API that models remote or async
+work, evaluation must remain bounded, deterministic, and disconnected from public networks.

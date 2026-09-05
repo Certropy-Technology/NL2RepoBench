@@ -4,14 +4,45 @@ Build an installable CommonJS Node.js package named `nock` from an empty workspa
 
 The package must work on Node.js 24.19.0. Each evaluation scenario starts a fresh process and uses only loopback-free, synthetic origins. No request in the required behavior may need DNS, public networking, a browser, a database, a native addon, or an external service.
 
-# Supports
+# Natural Language Instruction
+
+Build `nock` as a complete CommonJS package from an empty workspace. Implement
+the callable root, scope and interceptor matching, asynchronous HTTP and native
+fetch interception, replies, lifecycle state, definitions, and network controls
+described below. Preserve registration order and cardinality deterministically
+without opening a listening socket or contacting an external service.
+
+# Supports or Environment Configuration
 
 - Package metadata with name `nock`, version `0.0.0-development`, license `MIT`, `main = "./index.js"`, and a CommonJS package-root export callable as `require('nock')(basePath, options?)`.
 - npm 11.17.0 with a v3 `package-lock.json`. The repository must install using `npm ci --offline --ignore-scripts`, then pack and install as a regular npm tarball. Runtime dependencies are optional; a self-contained implementation with no dependencies is valid.
 - JSON-compatible request bodies and replies, strings, regular expressions created by the caller, asynchronous reply functions, and Node `Error` objects where described below.
 - Deterministic interception of `node:http` and native `fetch()` calls. HTTPS pass-through, proxying, recording, filesystem fixtures, and real network access are outside this task.
 
+# Project Directory Structure
+
+```text
+workspace/
+├── package.json       # CommonJS metadata and root export
+├── package-lock.json  # npm lockfile version 3
+├── index.js           # callable root and package-level methods
+└── lib/
+    ├── scope.js       # Scope chain and lifecycle methods
+    ├── interceptor.js # request matching and replies
+    └── intercept.js   # in-process request hooks
+```
+
+`main` must resolve `index.js`; `lib/` contains package-owned runtime modules.
+Recorder/back fixtures, evaluation files, verifier assets, and restricted cache files
+must not be placed in this project tree.
+
 # API Usage Guide
+
+Import path: the callable CommonJS package root.
+
+```js
+const nock = require('nock');
+```
 
 ## Package root
 
@@ -113,3 +144,31 @@ Matching mocks must work for ordinary `node:http` requests and native `fetch()` 
 Keep global interception state deterministic and cleanly removable. Match origin, method, path, query, headers, and body before consuming an interceptor. Preserve registration order when multiple active interceptors are candidates. Avoid external requests even for unmatched scenarios when network connections are disabled.
 
 Streams, delays, `replyWithFile`, Unix sockets, TLS certificate behavior, live `allowUnmocked` pass-through, recorder output, and `nock.back` fixture modes are intentionally outside the evaluated contract. Do not copy the upstream source or tests; recreate the documented behavior from this specification.
+
+# Examples
+
+```js
+const nock = require('nock');
+const scope = nock('http://service.test').get('/health').reply(200, {ok: true});
+scope.done();
+```
+
+```js
+const scope = nock('http://service.test')
+  .post('/items', {name: 'one'})
+  .reply(201, 'created', {'x-result': 'ok'});
+```
+
+```js
+nock.disableNetConnect();
+nock.enableNetConnect();
+```
+
+# Error Handling and Boundary Conditions
+
+- Required unused mocks make `done()` throw `AssertionError`.
+- Header names match case-insensitively; mismatched origin, method, path,
+  query, or body must not consume another interceptor.
+- `activate()` must not duplicate hooks, and `cleanAll()` removes all mocks.
+- Disabled unmatched connections fail locally with the documented network error
+  and never fall through to DNS, loopback, proxy, or public network access.

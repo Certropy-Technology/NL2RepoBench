@@ -1,4 +1,4 @@
-# Build `anytree`
+# Project Description
 
 Create a complete, installable Python package named `anytree` from an empty
 workspace. It is a pure-Python tree data structure library. The package must
@@ -26,7 +26,19 @@ copy source files or upstream tests into the generated project, and do not
 implement a generic tree with a superficially similar API. Implement the
 observable contracts in this document.
 
-## Supports
+# Natural Language Instruction
+
+Create the `anytree` project from an empty `workspace/`. Build an installable implementation, not a loose demonstration script. The public API guide below is the complete source of the task contract; preserve its import paths, signatures, return shapes, ordering, state changes, and exceptions.
+
+Required capabilities:
+- ordered parent/child tree mutation: implement the documented public behavior and preserve its input/output and error contract.
+- traversal, search, and path resolution: implement the documented public behavior and preserve its input/output and error contract.
+- text and Mermaid rendering: implement the documented public behavior and preserve its input/output and error contract.
+- dictionary and JSON import/export: implement the documented public behavior and preserve its input/output and error contract.
+
+Do not copy an upstream checkout or tests. Keep behavior deterministic and local, and make the package usable from the installation layout described below. The principal public entry points include: `to_picture()`, `repr(Node("root"))`, `Node('/root/child')`, `str(node)`.
+
+# Supports
 
 - Support CPython `>=3.9.2,<4.0` using only the Python standard library at
   runtime.
@@ -68,15 +80,13 @@ because Graphviz is absent.
 The root package must expose these names. `LevelGroupOrderIter` is a legacy
 alias of `LevelOrderGroupIter`.
 
-```text
-AbstractStyle, AnyNode, AsciiStyle, ChildResolverError,
-ContRoundStyle, ContStyle, CountError, DoubleStyle,
-LevelGroupOrderIter, LevelOrderGroupIter, LevelOrderIter,
-LightNodeMixin, LoopError, Node, NodeMixin, PostOrderIter, PreOrderIter,
-RenderTree, Resolver, ResolverError, RootResolverError, SymlinkNode,
-SymlinkNodeMixin, TreeError, WalkError, Walker, ZigZagGroupIter,
-cachedsearch, find, find_by_attr, findall, findall_by_attr, util
-```
+    AbstractStyle, AnyNode, AsciiStyle, ChildResolverError,
+    ContRoundStyle, ContStyle, CountError, DoubleStyle,
+    LevelGroupOrderIter, LevelOrderGroupIter, LevelOrderIter,
+    LightNodeMixin, LoopError, Node, NodeMixin, PostOrderIter, PreOrderIter,
+    RenderTree, Resolver, ResolverError, RootResolverError, SymlinkNode,
+    SymlinkNodeMixin, TreeError, WalkError, Walker, ZigZagGroupIter,
+    cachedsearch, find, find_by_attr, findall, findall_by_attr, util
 
 The root also exposes the source metadata constants `__version__`,
 `__author__`, `__author_email__`, `__description__`, and `__url__`. Metadata
@@ -98,9 +108,7 @@ The following submodule exports are required:
 
 #### `Node`
 
-```python
-Node(name, parent=None, children=None, **kwargs)
-```
+    Node(name, parent=None, children=None, **kwargs)
 
 `name` is the node identifier used in paths and representations. `parent` is
 an optional `NodeMixin` or `LightNodeMixin`. `children` is an optional
@@ -115,9 +123,7 @@ representation for this class.
 
 #### `AnyNode`
 
-```python
-AnyNode(parent=None, children=None, **kwargs)
-```
+    AnyNode(parent=None, children=None, **kwargs)
 
 `AnyNode` has no required `name`; all keyword arguments become ordinary
 attributes. Its repr is `AnyNode(...)` with public attributes rendered in
@@ -133,22 +139,20 @@ using it must provide compatible slots for its own attributes.
 
 The relationship properties and methods are:
 
-```text
-parent                 get/set one parent or None
-children               get a tuple; set/delete an iterable of children
-path                   tuple from root to this node, inclusive
-iter_path_reverse()    generator from this node to its root
-ancestors              tuple of parents from root down to the parent
-descendants            tuple of all descendants in preorder
-root                   root node of this tree
-siblings               tuple of other children of the same parent
-leaves                 tuple of leaf descendants, including self if leaf
-is_leaf                whether children is empty
-is_root                whether parent is None
-height                 maximum edge distance from this node to a leaf
-depth                  edge distance from the root
-size                   number of nodes in the subtree rooted here
-```
+    parent                 get/set one parent or None
+    children               get a tuple; set/delete an iterable of children
+    path                   tuple from root to this node, inclusive
+    iter_path_reverse()    generator from this node to its root
+    ancestors              tuple of parents from root down to the parent
+    descendants            tuple of all descendants in preorder
+    root                   root node of this tree
+    siblings               tuple of other children of the same parent
+    leaves                 tuple of leaf descendants, including self if leaf
+    is_leaf                whether children is empty
+    is_root                whether parent is None
+    height                 maximum edge distance from this node to a leaf
+    depth                  edge distance from the root
+    size                   number of nodes in the subtree rooted here
 
 The legacy misspelling `anchestors` is a deprecated alias of `ancestors` and
 may emit `DeprecationWarning`. The class attribute `separator` defaults to
@@ -165,21 +169,17 @@ corresponding operation rejected.
 The attach/detach hook methods are callable extension points and execute in
 the order implied by their names:
 
-```text
-_pre_detach(parent)       _post_detach(parent)
-_pre_attach(parent)       _post_attach(parent)
-_pre_detach_children(children)  _post_detach_children(children)
-_pre_attach_children(children)  _post_attach_children(children)
-```
+    _pre_detach(parent)       _post_detach(parent)
+    _pre_attach(parent)       _post_attach(parent)
+    _pre_detach_children(children)  _post_detach_children(children)
+    _pre_attach_children(children)  _post_attach_children(children)
 
 They receive the affected parent or child tuple and do not change the
 relationship semantics.
 
 #### `SymlinkNode` and `SymlinkNodeMixin`
 
-```python
-SymlinkNode(target, parent=None, children=None, **kwargs)
-```
+    SymlinkNode(target, parent=None, children=None, **kwargs)
 
 The target is another tree node. A symlink has its own parent and children, but
 ordinary non-tree attribute access and assignment is forwarded to `target`.
@@ -194,15 +194,13 @@ remains local to the symlink.
 
 Provide these exception classes at the indicated import paths:
 
-```text
-anytree.node.TreeError
-anytree.node.LoopError             subclass of TreeError
-anytree.search.CountError          subclass of RuntimeError
-anytree.resolver.ResolverError     subclass of RuntimeError
-anytree.resolver.RootResolverError subclass of ResolverError
-anytree.resolver.ChildResolverError subclass of ResolverError
-anytree.walker.WalkError           subclass of RuntimeError
-```
+    anytree.node.TreeError
+    anytree.node.LoopError             subclass of TreeError
+    anytree.search.CountError          subclass of RuntimeError
+    anytree.resolver.ResolverError     subclass of RuntimeError
+    anytree.resolver.RootResolverError subclass of ResolverError
+    anytree.resolver.ChildResolverError subclass of ResolverError
+    anytree.walker.WalkError           subclass of RuntimeError
 
 `ResolverError` instances expose the relevant `node` and `child` attributes.
 `CountError` reports the requested count and the observed matching tuple.
@@ -212,9 +210,7 @@ anytree.walker.WalkError           subclass of RuntimeError
 Each iterator is stateful and supports `iter(iterator) is iterator` and
 `next(iterator)`. The common constructor contract is:
 
-```python
-Iterator(node, filter_=None, stop=None, maxlevel=None)
-```
+    Iterator(node, filter_=None, stop=None, maxlevel=None)
 
 `filter_` is called for each visited node and controls whether the node is
 returned. `stop` prevents descent below a node for which it returns true.
@@ -243,18 +239,14 @@ honor the shared filtering, stopping, and level rules.
 provides an `empty` property consisting of spaces of the same width. Its repr
 is `ClassName()`. The no-argument styles have these exact values:
 
-```text
-AsciiStyle:     vertical="|   ", cont="|-- ", end="+-- "
-ContStyle:      vertical="\u2502   ", cont="\u251c\u2500\u2500 ", end="\u2514\u2500\u2500 "
-ContRoundStyle:  vertical="\u2502   ", cont="\u251c\u2500\u2500 ", end="\u2570\u2500\u2500 "
-DoubleStyle:    vertical="\u2551   ", cont="\u2560\u2550\u2550 ", end="\u255a\u2550\u2550 "
-```
+    AsciiStyle:     vertical="|   ", cont="|-- ", end="+-- "
+    ContStyle:      vertical="\u2502   ", cont="\u251c\u2500\u2500 ", end="\u2514\u2500\u2500 "
+    ContRoundStyle:  vertical="\u2502   ", cont="\u251c\u2500\u2500 ", end="\u2570\u2500\u2500 "
+    DoubleStyle:    vertical="\u2551   ", cont="\u2560\u2550\u2550 ", end="\u255a\u2550\u2550 "
 
 #### `RenderTree`
 
-```python
-RenderTree(node, style=ContStyle(), childiter=list, maxlevel=None)
-```
+    RenderTree(node, style=ContStyle(), childiter=list, maxlevel=None)
 
 Iteration yields a three-field `Row(pre, fill, node)` named tuple. `pre` is
 the branch prefix for the first line of a node, `fill` is the prefix for
@@ -271,14 +263,12 @@ tuple attribute is rendered as multiple lines with `fill` prefixes.
 
 ### Search and cached search
 
-```python
-findall(node, filter_=None, stop=None, maxlevel=None,
-        mincount=None, maxcount=None)
-findall_by_attr(node, value, name="name", maxlevel=None,
-                mincount=None, maxcount=None)
-find(node, filter_=None, stop=None, maxlevel=None)
-find_by_attr(node, value, name="name", maxlevel=None)
-```
+    findall(node, filter_=None, stop=None, maxlevel=None,
+            mincount=None, maxcount=None)
+    findall_by_attr(node, value, name="name", maxlevel=None,
+                    mincount=None, maxcount=None)
+    find(node, filter_=None, stop=None, maxlevel=None)
+    find_by_attr(node, value, name="name", maxlevel=None)
 
 `findall` returns a tuple in preorder. `find` returns the first matching node
 or `None`; if more than one node matches it raises `CountError`. The
@@ -292,12 +282,10 @@ uncached functions, and the no-accelerator path must use the standard library.
 
 ### Path resolution
 
-```python
-Resolver(pathattr="name", ignorecase=False, relax=False)
-Resolver.get(node, path)
-Resolver.glob(node, path)
-Resolver.is_wildcard(path)
-```
+    Resolver(pathattr="name", ignorecase=False, relax=False)
+    Resolver.get(node, path)
+    Resolver.glob(node, path)
+    Resolver.is_wildcard(path)
 
 `get` resolves relative paths using `/`, `.` and `..`, and absolute paths
 starting at the root. `glob` returns a list and additionally supports `*` for
@@ -313,20 +301,16 @@ match cache must not change results.
 
 ### Walking and utilities
 
-```python
-Walker.walk(start, end)
-```
+    Walker.walk(start, end)
 
 The result is `(upwards, common, downwards)`. `upwards` is a tuple from
 `start` toward, but excluding, the common node; `common` is the lowest common
 ancestor; `downwards` is a tuple from below `common` to `end`. Nodes from
 different roots raise `WalkError`.
 
-```python
-util.commonancestors(*nodes)
-util.leftsibling(node)
-util.rightsibling(node)
-```
+    util.commonancestors(*nodes)
+    util.leftsibling(node)
+    util.rightsibling(node)
 
 `commonancestors` returns common ancestors from root toward the nodes;
 zero arguments return `()`. Sibling helpers return the adjacent sibling or
@@ -336,10 +320,8 @@ zero arguments return `()`. Sibling helpers return the adjacent sibling or
 
 #### `DictExporter`
 
-```python
-DictExporter(dictcls=dict, attriter=None, childiter=list, maxlevel=None)
-DictExporter.export(node)
-```
+    DictExporter(dictcls=dict, attriter=None, childiter=list, maxlevel=None)
+    DictExporter.export(node)
 
 Each node becomes a mapping containing its ordinary public instance
 attributes. Relationship internals are omitted. A nonempty child list is
@@ -349,11 +331,9 @@ order `(key, value)` pairs, `childiter` can filter or order children, and
 
 #### `JsonExporter`
 
-```python
-JsonExporter(dictexporter=None, maxlevel=None, **kwargs)
-JsonExporter.export(node)
-JsonExporter.write(node, filehandle)
-```
+    JsonExporter(dictexporter=None, maxlevel=None, **kwargs)
+    JsonExporter.export(node)
+    JsonExporter.write(node, filehandle)
 
 It delegates tree conversion to a `DictExporter` and passes `kwargs` to
 `json.dumps` or `json.dump`. JSON options such as `indent`, `sort_keys`, and
@@ -362,14 +342,12 @@ returns the underlying JSON writer result.
 
 #### `DictImporter` and `JsonImporter`
 
-```python
-DictImporter(nodecls=AnyNode)
-DictImporter.import_(data)
+    DictImporter(nodecls=AnyNode)
+    DictImporter.import_(data)
 
-JsonImporter(dictimporter=None, **kwargs)
-JsonImporter.import_(data)
-JsonImporter.read(filehandle)
-```
+    JsonImporter(dictimporter=None, **kwargs)
+    JsonImporter.import_(data)
+    JsonImporter.read(filehandle)
 
 Dictionary input is not mutated. Each mapping becomes `nodecls(**attrs)` with
 the `children` key removed and recursively attached. JSON import first calls
@@ -379,14 +357,12 @@ importer preserves attributes and child order.
 
 ### Mermaid export
 
-```python
-MermaidExporter(
-    node, graph="graph", name="TD", options=None, indent=0,
-    nodenamefunc=None, nodefunc=None, edgefunc=None,
-    filter_=None, stop=None, maxlevel=None,
-)
-MermaidExporter.to_file(filename)
-```
+    MermaidExporter(
+        node, graph="graph", name="TD", options=None, indent=0,
+        nodenamefunc=None, nodefunc=None, edgefunc=None,
+        filter_=None, stop=None, maxlevel=None,
+    )
+    MermaidExporter.to_file(filename)
 
 Iteration returns Mermaid lines: the graph header, options, node lines, and
 edge lines. The default node identifiers are assigned in preorder as `N0`,
@@ -414,7 +390,7 @@ stable.
   resolver paths, count bounds, and JSON decoding failures must raise normal
   Python exceptions rather than silently changing the tree.
 
-## Implementation Notes
+## Legacy implementation details
 
 Keep the implementation modular across node classes, iterators, renderers,
 search/resolver utilities, and import/export modules. Preserve public aliases
@@ -426,3 +402,69 @@ The package must be installable from a source-only candidate workspace. The
 upstream revision declares a PDM SCM-dynamic version and falls back to
 `0.0.0` when `.git` is absent; resolve that packaging issue deterministically
 in the generated repository instead of relying on a VCS checkout.
+
+
+## NoNetwork boundary
+
+Agent, candidate, verifier, Oracle, controls, and normal runtime execution are network-isolated. Do not access GitHub, package registries, Go proxies, DNS, or external services during execution; use only the frozen local build inputs.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+└── anytree/
+    ├── __init__.py
+    ├── node/
+    ├── iterators/
+    ├── search.py
+    ├── resolver.py
+    ├── walker.py
+    ├── render.py
+    ├── importer/
+    └── exporter/
+```
+
+# API Usage Guide
+
+Preserve every public import path, signature, return shape, ordering rule, and error condition stated in this document.
+
+# Implementation Notes
+
+Keep parent and child links consistent when attaching or detaching nodes. Preserve insertion order for traversals, search results, render output, and exported children; only an explicitly supplied iterator may change that order. File and JSON helpers operate on caller-selected local paths and must not invoke external commands. Resolve version metadata without requiring VCS state in the installed workspace.
+
+# Examples
+
+## Ordinary tree traversal
+
+```python
+from anytree import Node, PreOrderIter
+
+root = Node("root")
+child = Node("child", parent=root)
+assert [node.name for node in PreOrderIter(root)] == ["root", "child"]
+```
+
+## Ordinary rendering
+
+```python
+from anytree import RenderTree
+rows = [(prefix, node.name) for prefix, _, node in RenderTree(root)]
+```
+
+## Boundary: cycle rejection
+
+```python
+root.parent = child  # raises LoopError and leaves the tree consistent
+```
+
+## Boundary: missing path
+
+```python
+from anytree import Resolver
+Resolver("name").get(root, "/root/missing")  # raises ResolverError
+```
+
+# Error Handling and Boundary Conditions
+
+Reject invalid inputs using the documented exception or error result. Preserve empty-input behavior, ordering, Unicode/encoding behavior, cancellation or timeout semantics, and local filesystem boundaries where the API specifies them. Never turn a failed local operation into a network request, subprocess, or silent success.

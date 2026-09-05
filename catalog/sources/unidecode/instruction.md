@@ -9,6 +9,13 @@ This is not language detection or language-specific romanization. Each Unicode
 code point is mapped independently. Except when the `preserve` error policy is
 selected, the result must be encodable with the ASCII codec.
 
+# Natural Language Instruction
+
+Create the installable `Unidecode` distribution and `unidecode` package from
+an empty workspace. Implement lazy block-table transliteration, error policy,
+cache behavior, command-line decoding, and exact public exports below as a
+local deterministic library.
+
 # Supports
 
 - Python 3.7 or later; grading uses CPython 3.12 on Linux.
@@ -19,6 +26,19 @@ selected, the result must be encodable with the ASCII codec.
 - Console entry point `unidecode = unidecode.util:main`.
 - The project is self-contained. Do not depend on another transliteration
   package or access the network at runtime.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+└── unidecode/
+    ├── __init__.py
+    ├── util.py
+    ├── __main__.py
+    ├── py.typed
+    └── x001.py
+```
 
 # API Usage Guide
 
@@ -203,3 +223,24 @@ UTF-8 standard input containing `革` produces `Ge `.
 - Keep trusted tests out of the submitted repository. The repository may have
   its own tests, but grading installs the package and exercises it from a
   separate subprocess verifier.
+
+# Examples
+
+```python
+from unidecode import unidecode
+
+assert unidecode("ČŽŠ") == "CZS"
+```
+
+```python
+from unidecode import unidecode
+
+assert unidecode("test \U000f0000 test", errors="replace") == "test ? test"
+```
+
+# Error Handling and Boundary Conditions
+
+ASCII characters pass through unchanged. Unmapped characters obey `ignore`,
+`replace`, `preserve`, and `strict`; strict mode reports the original index.
+Surrogates emit the documented warning before applying the selected policy,
+and unknown table sections are cached as misses.

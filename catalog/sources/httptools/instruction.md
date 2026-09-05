@@ -127,3 +127,54 @@ input raises `TypeError`.
   required C/Cython inputs and a deterministic version in the project itself.
 - The verifier focuses on the documented Linux/amd64 JSON-safe behavior. It
   does not require private implementation names, test files, or network access.
+
+## Natural Language Instruction
+
+Create the `httptools` distribution and native import package from an empty
+workspace. Build incremental request and response parsers, callback dispatch,
+upgrade handling, parser state getters, and immutable URL parsing. Preserve
+native exception classes, byte-oriented input, and the Cython extension boundary.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── setup.py
+├── httptools/
+│   ├── __init__.py
+│   ├── parser/{__init__.py,protocol.py,errors.py,parser.pyx,url_parser.pyx}
+│   ├── parser/py.typed
+│   └── _version.py
+└── README.md
+```
+
+The build metadata must compile `parser` and `url_parser` as native modules and
+retain the public modules listed in the API guide.
+
+## Examples
+
+```python
+from httptools import HttpRequestParser
+class Protocol:
+    def on_message_complete(self): pass
+parser = HttpRequestParser(Protocol())
+parser.feed_data(b"GET / HTTP/1.1\\r\\nHost: example.test\\r\\n\\r\\n")
+```
+
+```python
+from httptools import parse_url
+url = parse_url(b"https://example.test/a?b=1")
+assert url.host == b"example.test"
+```
+
+## Error Handling and Boundary Conditions
+
+- Incremental feeds accept bytes-like values only; non-bytes input raises
+  `TypeError`. Callback exceptions are wrapped with their context.
+- Invalid methods, status lines, URLs, NUL bytes, oversized URLs, and malformed
+  authorities raise documented parser exception subclasses.
+- Upgrade offsets and callback order are observable. URL objects reject
+  assignment to parsed attributes and parsers retain state between feeds.
+- No parser operation opens a socket or contacts an external service; all
+  runtime phases use `network_mode=no-network`.

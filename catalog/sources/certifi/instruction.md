@@ -20,7 +20,13 @@ PEP 517 build. It may use `setuptools` and `wheel` as build tools, but it has
 no third-party runtime dependencies. Support CPython 3.7 and newer Python 3
 versions, including the Python 3.12 environment used for evaluation.
 
-## Supports
+## Natural Language Instruction
+
+Create the `certifi` distribution from an empty workspace. Include the frozen
+PEM resource, package metadata, root exports, and module CLI. Resource lookup
+must remain local to the installed package and must not use a system trust store.
+
+## Supports or Environment Configuration
 
 - Import `certifi` after installation from either a regular checkout or an
   installed wheel.
@@ -31,6 +37,18 @@ versions, including the Python 3.12 environment used for evaluation.
 - Preserve the exact root exports `contents` and `where` and the version value
   `2026.07.22`.
 - Provide the module entry point `python -m certifi`.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+└── certifi/
+    ├── __init__.py
+    ├── __main__.py
+    ├── cacert.pem
+    └── py.typed
+```
 
 ## API Usage Guide
 
@@ -88,3 +106,43 @@ than 100 KiB. Implementations may organize helper code as they choose, but
 the public behavior, output ordering, bytes, and CLI exit behavior above are
 the contract. Do not include tests, verifier code, or reference source in the
 generated distribution.
+
+## Examples
+
+```python
+import certifi
+path = certifi.where()
+assert path.endswith('cacert.pem')
+assert certifi.contents().endswith('\n')
+```
+
+```text
+python -m certifi
+python -m certifi --contents
+```
+
+## Error Handling and Boundary Conditions
+
+Unknown module CLI options must exit non-zero with usage text. `where()` must
+return the bundled regular file, and `contents()` must match that file after
+ASCII decoding; neither may fall back to an operating-system trust store.
+
+## Examples
+
+```python
+import certifi
+path = certifi.where()
+assert path.endswith('cacert.pem')
+assert certifi.contents().endswith('\n')
+```
+
+```text
+python -m certifi
+python -m certifi --contents
+```
+
+## Error Handling and Boundary Conditions
+
+Unknown module CLI options must exit non-zero with usage text. `where()` must
+return the bundled regular file, and `contents()` must match that file after
+ASCII decoding; neither may fall back to an operating-system trust store.

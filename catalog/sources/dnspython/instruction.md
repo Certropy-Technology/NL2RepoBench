@@ -148,7 +148,73 @@ keyring keyed by `dns.name.Name`; malformed base64 raises a decoding error.
 Keep public imports compatible with the `dns` package layout: the verifier
 imports modules directly, so do not replace them with a single monolithic
 module.  Separate parsing, name, wire, message, zone, and record concerns in
-maintainable modules.  Use explicit bounds checks for wire input and avoid
-network fallbacks.  The hidden verifier uses a subprocess child boundary and
-only the deterministic APIs described above.  Do not add hidden test files,
+maintainable modules. Use explicit bounds checks for wire input and avoid
+network fallbacks. The evaluator uses a subprocess child boundary and
+only the deterministic APIs described above. Do not add evaluator test files,
 fake reward reports, or a dependency wheelhouse to the workspace.
+
+# Natural Language Instruction
+
+Create `dnspython` from an empty workspace. Implement the deterministic `dns`
+package slice described above: names, type/class symbols, addresses, records,
+zone parsing, wire helpers, messages, reverse names, updates, options, and
+keyrings. Keep parser operations local and preserve the documented exception
+contracts.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── README.md
+└── dns/
+    ├── __init__.py
+    ├── name.py
+    ├── rdatatype.py
+    ├── rdataclass.py
+    ├── ttl.py
+    ├── rrset.py
+    ├── rdataset.py
+    ├── zone.py
+    ├── message.py
+    ├── wire.py
+    ├── tokenizer.py
+    └── py.typed
+```
+
+The root `dns` package must expose the modules and functions named in the API
+guide. Keep wire, zone, name, and record concerns in importable modules; do
+not add a resolver service, test bundle, or runtime network dependency.
+
+# Examples
+
+```python
+from dns.name import from_text
+from dns.rdatatype import from_text as type_code
+
+name = from_text("www.example.")
+assert name.is_absolute()
+assert type_code("A") == 1
+```
+
+```python
+from dns.zone import from_text
+
+zone = from_text("$ORIGIN example.\n@ 300 IN A 192.0.2.1\n", check_origin=False)
+```
+
+```python
+from dns.message import make_query
+
+query = make_query("example.", "A")
+query.id = 7
+wire = query.to_wire()
+```
+
+# Error Handling and Boundary Conditions
+
+Reject malformed names, labels, wire input, TTLs, addresses, zone records,
+and unknown type/class symbols with the documented DNS exceptions or
+`ValueError`. Wire parsers must fail on truncation and compression loops. Query
+construction never sends packets; all APIs remain deterministic and
+NoNetwork.

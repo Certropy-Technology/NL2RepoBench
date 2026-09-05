@@ -5,7 +5,14 @@ workspace. It is a small ESM library for generating URL-friendly random string
 identifiers. The package must work on Node.js 24.19.0 with npm 11.17.0 and must
 not require network access at install or run time.
 
-## Supports
+# Natural Language Instruction
+
+Build the complete `nanoid` repository from an empty `workspace/`. Implement
+the secure and non-secure identifier generators, custom alphabet factories,
+random-byte helper, package exports, subpath export, and CLI described below.
+Preserve the size coercion, alphabet, random-source, and error contracts.
+
+# Supports or Environment Configuration
 
 - Use an ESM package (`"type": "module"`) with the package name and version
   above.
@@ -16,7 +23,25 @@ not require network access at install or run time.
 - Do not use lifecycle scripts, native addons, network calls, loaders, or
   registry configuration. Keep the public package self-contained.
 
-## API Usage Guide
+# Project Directory Structure
+
+```text
+workspace/
+├── package.json          # npm metadata, ESM mode, exports, and bin
+├── package-lock.json     # npm lockfile version 3
+├── index.js              # secure root exports
+├── non-secure/
+│   └── index.js          # non-secure subpath exports
+└── bin/
+    └── nanoid.js         # nanoid CLI entry point
+```
+
+The root package and subpath must be importable after installation. Keep the
+runtime package self-contained; evaluation files, verifier files, restricted
+payloads, and
+generated Harbor files are not agent-owned project files.
+
+# API Usage Guide
 
 The package root must export these named values:
 
@@ -93,11 +118,44 @@ non-zero and print a useful error containing the rejected argument or
 `Size must be positive integer`. Valid CLI output must use only the requested
 alphabet and requested length.
 
-## Implementation Notes
+# Implementation Notes
 
 Keep the package root importable through its declared `exports` map and keep
 the subpath importable without reaching files outside the package. The verifier
 will install the packed package in a clean prefix with scripts disabled, then
 exercise the public exports and CLI through isolated subprocesses. Do not rely
 on the repository's development tools, test files, pnpm workspace, or a
-registry during evaluation.
+ registry during evaluation.
+
+# Examples
+
+```js
+import {nanoid, customAlphabet} from 'nanoid';
+const id = nanoid(12);
+const fixed = customAlphabet('ab', 4)();
+```
+
+```js
+import {customRandom} from 'nanoid';
+const generator = customRandom('0123456789', 6, count =>
+  new Uint8Array(count).fill(7));
+generator();
+```
+
+```bash
+nanoid --size 8
+nanoid --alphabet abc
+```
+
+# Error Handling and Boundary Conditions
+
+- Zero-size requests return an empty string or empty `Uint8Array` without
+  requesting random bytes.
+- Secure negative sizes fail promptly with `RangeError` or an equivalent
+  typed-array length error; non-secure negative sizes return `""`.
+- CLI sizes must be positive integers; invalid options exit non-zero.
+- A one-character alphabet always emits that character. A positive request with
+  an empty alphabet is invalid.
+- Large alphabets and fractional-size calls must not hang or reuse a stale
+  random pool.
+- No generator or CLI operation may contact a registry, DNS, or external host.

@@ -6,7 +6,15 @@ instrumentation: semantic attribute keys, metric names, and schema-version enum 
 The package is a namespace package under `opentelemetry.semconv`; the implementation must
 not contact a network or require an external service at import time.
 
-# Supports
+# Natural Language Instruction
+
+Build the complete installable `opentelemetry-semantic-conventions` package
+from an empty workspace. Recreate the deterministic stable semantic attributes,
+metric names, schema enum, namespace imports, version metadata, and typed marker
+listed below. Generated constants must remain exact strings and enum members
+must preserve declaration order.
+
+# Supports or Environment Configuration
 
 - Support CPython 3.10 and newer, with a standard PEP 517 build and editable installation.
 - Set the distribution and runtime semantic-conventions version to `0.66b0.dev`.
@@ -18,7 +26,40 @@ not contact a network or require an external service at import time.
 - Keep constants as strings and enum members as real `enum.Enum` members. Do not replace
   enums with dictionaries or expose mutable substitutes for constants.
 
+# Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml                    # distribution metadata and build backend
+└── src/opentelemetry/semconv/
+    ├── py.typed                       # typing marker
+    ├── version.py                     # __version__
+    ├── schemas.py                     # Schemas enum
+    ├── attributes/                    # HTTP, DB, service, client, server,
+    │   ├── http_attributes.py        # exception, and error constants
+    │   ├── db_attributes.py
+    │   └── ...
+    └── metrics/                       # HTTP and DB metric constants
+```
+
+Use namespace-compatible package configuration and make all documented import
+paths available after installation. Do not add the unavailable unreleased
+`opentelemetry-api` sibling as a runtime dependency.
+
 # API Usage Guide
+
+Import path: `import opentelemetry.semconv` and the module paths shown below.
+The API families are the schema enum, HTTP/DB attribute constants and enums,
+service/client/server/exception/error constants, metric constants, package
+version metadata, and the `py.typed` marker.
+
+Representative declarations have these shapes:
+
+```python
+class Schemas(enum.Enum): ...
+def import_stable_constants() -> None: ...
+__version__: str
+```
 
 ## Schema versions
 
@@ -100,3 +141,31 @@ imports side-effect free and avoid fetching the source repository or package dep
 runtime. The independent task intentionally excludes the monorepo's unreleased
 `opentelemetry-api==1.45.0.dev` sibling requirement because it is unavailable from the package
 index and is not imported by the scored stable semantic-convention modules.
+
+# Examples
+
+```python
+from opentelemetry.semconv.schemas import Schemas
+Schemas.V1_44_0.value
+```
+
+```python
+from opentelemetry.semconv.attributes.http_attributes import HTTP_ROUTE
+from opentelemetry.semconv.metrics.http_metrics import HTTP_CLIENT_REQUEST_DURATION
+```
+
+```python
+from opentelemetry.semconv.attributes.db_attributes import DbSystemNameValues
+list(DbSystemNameValues)
+```
+
+# Error Handling and Boundary Conditions
+
+- Enum construction by a declared URL or string value must work; member order
+  is part of the contract.
+- Constants are immutable strings and must not become mutable dictionaries or
+  generated-at-import values.
+- Imports are side-effect free and must not contact telemetry services,
+  filesystem paths, DNS, or the network.
+- The omitted unreleased sibling and unscored incubating/resource/trace modules
+  must not be silently claimed as implemented runtime requirements.

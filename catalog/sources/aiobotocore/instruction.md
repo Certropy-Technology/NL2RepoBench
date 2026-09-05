@@ -1,4 +1,4 @@
-# Build `aiobotocore`
+# Project Description
 
 Create a complete, installable Python package named `aiobotocore` from an empty
 workspace. It is an asyncio-friendly adaptation of botocore: local service
@@ -15,7 +15,19 @@ merging, paginators, waiters, and a stubber that prevents real HTTP calls.
 Live AWS calls, metadata services, credential-process commands, proxy/TLS
 integration, CRT acceleration, and service-side behavior are out of scope.
 
-## Supports
+# Natural Language Instruction
+
+Create the `aiobotocore` project from an empty `workspace/`. Build an installable implementation, not a loose demonstration script. The public API guide below is the complete source of the task contract; preserve its import paths, signatures, return shapes, ordering, state changes, and exceptions.
+
+Required capabilities:
+- async session and client construction: implement the documented public behavior and preserve its input/output and error contract.
+- botocore service-model access: implement the documented public behavior and preserve its input/output and error contract.
+- paginators and waiters: implement the documented public behavior and preserve its input/output and error contract.
+- stubbed request and streaming-response helpers: implement the documented public behavior and preserve its input/output and error contract.
+
+Do not copy an upstream checkout or tests. Keep behavior deterministic and local, and make the package usable from the installation layout described below. The principal public entry points include: `get_service_model("s3")`, `AioConfig(**kwargs)`, `merge(other)`, `get_paginator("list_objects_v2")`.
+
+# Supports
 
 - Install from a source-only workspace with `pip install .` or the Harbor
   candidate installer; the build must also work without a `.git` directory.
@@ -27,7 +39,29 @@ integration, CRT acceleration, and service-side behavior are out of scope.
 - Runs are offline and deterministic. Never invoke `git`, `curl`, `wget`, an
   AWS endpoint, the metadata service, or a credential subprocess at runtime.
 
-## API Usage Guide
+
+## NoNetwork boundary
+
+Agent, candidate, verifier, Oracle, controls, and normal runtime execution are network-isolated. Do not access GitHub, package registries, Go proxies, DNS, or external services during execution; use only the frozen local build inputs.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+└── src/aiobotocore/
+    ├── __init__.py
+    ├── session.py
+    ├── config.py
+    ├── credentials.py
+    ├── awsrequest.py
+    ├── response.py
+    ├── paginate.py
+    ├── waiter.py
+    └── stub.py
+```
+
+# API Usage Guide
 
 ### Package and session
 
@@ -76,7 +110,7 @@ botocore stub exception, and an active stub must prevent any network request.
 `close()`/`__aenter__`/`__aexit__` semantics. It must detect a short body and
 raise the documented incomplete-read error.
 
-## Implementation Notes
+# Implementation Notes
 
 Keep public re-exports and exception identity consistent with botocore and
 preserve insertion order in observable lists and dictionaries. Model data is
@@ -84,3 +118,45 @@ provided by the installed botocore dependency; do not download models. Async
 methods must be awaitable and must clean up their HTTP session on context exit.
 Use subprocess-safe, JSON-serializable behavior for ordinary values. Typed
 errors are part of the contract; do not replace them with generic `Exception`.
+
+# Examples
+
+## Ordinary session and configuration
+
+```python
+from aiobotocore.config import AioConfig
+from aiobotocore.session import get_session
+
+session = get_session()
+model = session.get_service_model("s3")
+merged = AioConfig(region_name="us-east-1").merge(AioConfig(user_agent_extra="demo"))
+```
+
+## Ordinary response reading
+
+```python
+from aiobotocore.response import AioStreamingBody
+
+# raw_stream is an asynchronous local byte stream supplied by the caller.
+body = AioStreamingBody(raw_stream, content_length=4)
+payload = await body.read()
+```
+
+## Boundary: no addresses or services are fetched
+
+```python
+services = session.get_available_services()
+assert services == session.get_available_services()
+```
+
+## Boundary: incomplete stream
+
+```python
+# Reading fewer bytes than content_length raises the documented incomplete-read error.
+body = AioStreamingBody(short_raw_stream, content_length=10)
+await body.read()
+```
+
+# Error Handling and Boundary Conditions
+
+Reject invalid inputs using the documented exception or error result. Preserve empty-input behavior, ordering, Unicode/encoding behavior, cancellation or timeout semantics, and local filesystem boundaries where the API specifies them. Never turn a failed local operation into a network request, subprocess, or silent success.

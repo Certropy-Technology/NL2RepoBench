@@ -4,21 +4,40 @@
 
 Create an installable npm package named `normalize-url`, version `9.0.1`, from an empty workspace. The package is an ESM utility whose default export synchronously normalizes URL text into a deterministic canonical string. The task is repository generation: implement the observable contract with your own package files rather than copying the pinned upstream source or tests.
 
-## Supports
+# Natural Language Instruction
+
+Build the complete `normalize-url` ESM package from an empty workspace. The
+default export must synchronously turn URL text into the deterministic
+canonical string described below. Implement option interactions, protocol,
+host, path, query, fragment, data URL, and error behavior without copying
+upstream source or tests.
+
+# Supports or Environment Configuration
 
 - Run on Node `24.19.0` with npm `11.17.0` on `linux/amd64`.
 - Use ESM semantics with `package.json` containing `"type": "module"`.
 - The package root must expose exactly the default runtime export through this map:
 
-  ```json
-  {"exports":{"types":"./index.d.ts","default":"./index.js"}}
-  ```
+  `{"exports":{"types":"./index.d.ts","default":"./index.js"}}`
 
 - Include a v3 `package-lock.json` that agrees with `package.json`. This package has no runtime dependencies. A clean verifier runs `npm ci --offline --ignore-scripts --no-audit --no-fund`.
 - The package must work after installation without TypeScript, a loader, a registry, a network service, a clock, or a checkout path at runtime.
-- Do not add lifecycle scripts (`preinstall`, `install`, `postinstall`, `prepare`, `prepublish`, `prepublishOnly`, `publish`, or `postpublish`), workspaces, native addons, custom loaders, registry configuration, or a CLI. Do not include grader, reward, hidden-test, cache, credential, or Oracle files.
+- Do not add lifecycle scripts (`preinstall`, `install`, `postinstall`, `prepare`, `prepublish`, `prepublishOnly`, `publish`, or `postpublish`), workspaces, native addons, custom loaders, registry configuration, or a CLI. Do not include grading, cache, credential, or source-reference files.
 
-## API Usage Guide
+# Project Directory Structure
+
+```text
+workspace/
+├── package.json       # ESM metadata, export map, and version
+├── package-lock.json  # npm lockfile version 3
+├── index.js           # default normalizeUrl export
+└── index.d.ts         # TypeScript declaration for the default export
+```
+
+This package has no runtime dependencies, CLI, lifecycle hook, loader, or
+generated source. Its root export map must point at the listed files.
+
+# API Usage Guide
 
 ### `normalizeUrl`
 
@@ -62,3 +81,37 @@ Supported options and observable behavior:
 ## Implementation Notes
 
 Keep the package root directly importable. Return a string for every supported input. Preserve URL query values and encoded reserved characters as URL text, and avoid network, filesystem, environment, process-global, random, or time-dependent behavior. Invalid URL text may throw the platform `URL` error. The verifier owns the candidate adapter, fixed leaf collection, grading, and network proof.
+
+# Examples
+
+```js
+import normalizeUrl from 'normalize-url';
+normalizeUrl('HTTP://www.example.com/path/?utm_source=x&b=2');
+// 'http://example.com/path?b=2'
+```
+
+```js
+normalizeUrl('example.com', {defaultProtocol: 'https'});
+normalizeUrl('data:text/plain;charset=us-ascii,hello');
+```
+
+```js
+normalizeUrl('https://example.com/a?x=1&y=', {emptyQueryValue: 'always'});
+```
+
+# Error Handling and Boundary Conditions
+
+- Supplying both `forceHttp` and `forceHttps` throws the documented error.
+- Unknown protocols remain unchanged unless listed in `customProtocols`.
+- Hash, authentication, host, path, and query options preserve all unrelated
+  URL components.
+- `transformPath` callbacks and regular-expression option values are outside
+  the JSON subprocess boundary and need not be implemented here.
+- Invalid URL text may raise the platform URL error; no operation may perform
+  DNS, filesystem, clock, or network access.
+
+The implementation should keep option defaults independent of mutable global
+state. Query keys and duplicate values retain the specified order when sorting
+is disabled, and path decoding must not turn encoded reserved separators into
+new path segments. The package remains usable from a freshly installed target
+directory rather than only from its source checkout.

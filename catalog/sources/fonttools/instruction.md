@@ -2,6 +2,65 @@
 
 Create an installable Python project named `fonttools` that provides a pure-Python subset of the fontTools library. The project should expose the documented modules under the `fontTools` package and be usable from an empty workspace after installation with `pip install .`. The implementation must be deterministic and must not require network access, native compilation, optional font compression libraries, or external services at runtime.
 
+# Natural Language Instruction
+
+Create the installable `fonttools` Python project from an empty workspace.
+Implement the documented pure-Python font geometry, text, transform, builder,
+pen, and font-table APIs without optional native integrations.
+
+# Supports or Environment Configuration
+
+- Use CPython 3.12 and the package metadata in `task.toml`; expose import
+  package `fontTools` and the declared console entry point.
+- Keep runtime behavior local and deterministic. Agent, candidate, verifier,
+  Oracle, and controls run with no network access.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+└── fontTools/
+    ├── __init__.py
+    ├── misc/
+    ├── colorLib/geometry.py
+    ├── fontBuilder.py
+    ├── pens/ttGlyphPen.py
+    └── ttLib/
+```
+
+# API Usage Guide
+
+The API Usage Guide below is authoritative for module imports, function and
+class signatures, return shapes, and font boundary behavior.
+
+# Implementation Notes
+
+Implement the bounded public subset in pure Python. Do not invent optional
+compression, GUI, plotting, or native-extension behavior.
+
+# Examples
+
+```python
+from fontTools.misc import arrayTools
+arrayTools.calcBounds([(0, 1), (2, 3)])
+```
+
+```python
+from fontTools.misc.transform import Transform
+Transform().transformPoint((1, 2))
+```
+
+# Error Handling and Boundary Conditions
+
+```python
+arrayTools.normRect((2, 3, 0, 1))
+```
+
+```python
+arrayTools.pointInRect((0, 0), (0, 0, 1, 1))
+```
+
 # Supports
 
 - Support Python 3.12 on a Debian-based Linux environment.

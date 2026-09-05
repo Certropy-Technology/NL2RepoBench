@@ -27,7 +27,28 @@ the full upstream development repository.
   The evaluation image supplies a compiler, but the candidate must declare its
   build backend and not download anything during installation.
 
-## API Usage Guide
+# Natural Language Instruction
+
+Create the installable `regex` package from an empty workspace. Implement the
+root exports, compiled-pattern and match APIs, replacements, iteration, Unicode
+and fuzzy matching, bytes/text separation, flags, and stated errors. Preserve
+the native build boundary when needed, without copying source or tests.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── LICENSE.txt
+├── README.md
+└── regex/
+    ├── __init__.py
+    ├── _main.py
+    ├── _regex_core.py
+    └── py.typed
+```
+
+# API Usage Guide
 
 ### Package exports
 
@@ -116,3 +137,25 @@ The distribution metadata must report version `2026.8.12`, require Python
 `>=3.10`, and use a deterministic source-only build configuration. Runtime
 dependencies are not required beyond the Python standard library; the native
 extension may use only the CPython C API.
+
+# Examples
+
+```python
+import regex
+pattern = regex.compile(r"(?P<word>\p{L}+)")
+pattern.search("café").group("word")
+```
+
+```python
+regex.findall(r"a", "banana", overlapped=True)
+```
+
+```python
+regex.sub(r"cat", "dog", "a cat")
+```
+
+# Error Handling and Boundary Conditions
+
+Invalid syntax and keyword combinations raise `regex.error` or `TypeError`;
+mixed text and bytes operations are rejected. Preserve match spans, unmatched
+groups, replacement expansion, timeout errors, and deterministic match order.

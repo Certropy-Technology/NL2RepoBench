@@ -15,13 +15,20 @@ signatures for byte-oriented APIs. JavaScript-only callbacks, typed-array
 identity, mutable internal state, and browser behavior are outside this task's
 boundary.
 
+## Natural Language Instruction
+
+Create the installable ESM `uuid` package from an empty workspace. Implement
+RFC 9562 UUID constants, parsing, formatting, validation, namespace and time
+generators, and version conversion below. Preserve lowercase strings, typed
+array byte order, validation errors, and explicit deterministic options.
+
 ## Supports
 
 - Run on Node `24.19.0` with npm `11.17.0` on `linux/amd64`.
 - Use ESM package semantics with `"type": "module"`.
 - Make the package root importable as `uuid` through this export shape:
 
-  ```json
+  ~~~json
   {
     "exports": {
       ".": {
@@ -34,7 +41,7 @@ boundary.
       "./package.json": "./package.json"
     }
   }
-  ```
+  ~~~
 
   The Node condition is the scored path. Do not add a CommonJS `require`
   condition for the root API.
@@ -57,9 +64,19 @@ boundary.
   submitted package. The verifier will not run install, prepare, prepack, or
   build scripts. A candidate may submit already-built JavaScript and type
   declarations; any development-only compiler is outside the runtime API.
-- Do not add a CLI, hidden tests, grader, reward writer, Oracle files, npm
+- Do not add a CLI, unpublished tests, grader, reward writer, Oracle files, npm
   cache/tarball bytes, credentials, or private verifier material to the
   generated candidate repository.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── dist/index.js
+└── dist-node/index.js
+```
 
 ## API Usage Guide
 
@@ -315,9 +332,33 @@ the behavior contract.
   host identifier, or a network service. Do not monkey-patch `crypto` in the
   candidate package.
 - The upstream v1/v6/v7 state helpers and callback injection paths are useful
-  source tests but are not part of the JSON transport. A verifier must use
+  source tests but are not part of the JSON transport. An evaluator must use
   explicit options when it needs repeatable bytes and must run stateful probes
   in one deliberately bounded process.
+
+## Examples
+
+```js
+import { NIL, parse, stringify, validate } from "uuid";
+
+assert(validate(NIL));
+assert(stringify(parse(NIL)) === NIL);
+```
+
+```js
+import { v5 } from "uuid";
+
+const value = v5("example", v5.DNS);
+console.log(value, v5.URL);
+```
+
+## Error Handling and Boundary Conditions
+
+Malformed UUID strings and invalid byte lengths throw the documented
+`TypeError` or `RangeError`. `validate` returns `false` for malformed or
+non-string values. Explicit random and time options must be finite, integral,
+and within their documented ranges; no crypto or clock fallback is used when
+all deterministic inputs are supplied.
 
 ## Implementation Notes
 
@@ -331,6 +372,6 @@ the behavior contract.
   exercise stateful or browser-adjacent paths. A future private test adapter
   must select only assertions traceable to this public JSON contract and
   freeze its own leaf denominator before packaging.
-- Do not include hidden tests, private npm closure bytes, Oracle material,
+- Do not include unpublished tests, private npm closure bytes, Oracle material,
   verifier code, reward files, credentials, or generated Harbor assets in the
   candidate repository.

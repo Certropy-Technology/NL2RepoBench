@@ -1,80 +1,123 @@
 # Project Description
 
 Build an installable npm package named `lodash-es`, version `4.18.1`, from an
-empty workspace. The package is an ESM utility library derived from the pinned
-Lodash behavior contract. This task evaluates a deterministic, JSON-safe slice
-of the package rather than browser builds, the FP build, or every internal
-Lodash helper.
+empty workspace. It is an ESM utility library implementing a deterministic,
+JSON-safe slice of Lodash collection, object, string, comparison, and numeric
+helpers. Browser builds, FP modules, and the complete upstream distribution
+are outside scope.
+
+# Natural Language Instruction
+
+Create the `lodash-es` project from an empty `workspace/`. Expose every named
+function listed below from the ESM root and also expose a default object with
+the same functions. Implement the bounded JSON behavior, property-name/path
+and partial-object shorthands, stable ordering, string conversion, and
+non-mutating results described in this specification.
+
+Do not copy private tests or a reference implementation. Do not add CommonJS
+loaders, bundlers, native addons, lifecycle scripts, runtime dependencies,
+CLI behavior, or registry access.
 
 # Supports
 
-- Run on Node.js `24.19.0` with npm `11.17.0` on Linux x86-64.
+- Use Node.js `24.19.0` with npm `11.17.0` on Linux x86-64.
 - `package.json` must declare `name: "lodash-es"`, `version: "4.18.1"`,
-  `type: "module"`, and an ESM entry point at `index.js`.
-- The package must be installable with
-  `npm ci --offline --ignore-scripts --no-audit --no-fund` using a v3
-  `package-lock.json` and no runtime or development dependencies.
-- Runtime execution is offline and must not depend on current time, random
-  state, environment variables, files outside the package, or network services.
-- The root entry point must expose each listed function as a named ESM export.
-  A default export containing the same named functions is also required.
+  `type: "module"`, and root entry `index.js`.
+- Commit an npm v3 `package-lock.json`; declare no runtime or development
+  dependencies. Offline installation must support
+  `npm ci --offline --ignore-scripts --no-audit --no-fund`.
+- Agent, candidate, verifier, Oracle, and controls run with NoNetwork. Runtime
+  behavior must not depend on time, random state, environment variables,
+  external files, or network services.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+└── index.js
+```
+
+`package.json` declares the ESM root and package identity. `index.js` contains
+the named exports and the default object containing the same named functions.
+The lockfile describes the empty dependency closure. No tests, browser build,
+FP build, loader, or private verifier file is part of the agent-owned project.
 
 # API Usage Guide
 
-Arguments and ordinary results in the scored contract are JSON-compatible
-values. The documented `undefined` results are represented by an absent JSON
-`value` field at the verifier boundary. Functions must be deterministic and
-must not mutate an input supplied by the caller; none of the functions below
-are mutating in this task.
+Arguments and ordinary results are JSON-compatible values. A documented
+`undefined` result is represented as an absent value at the caller boundary.
+Functions must be deterministic and must not mutate supplied inputs.
 
-- `chunk(array, size = 1) => any[][]`: split an array into consecutive chunks.
-  Omitting `size` uses `1`; a non-positive size returns an empty array.
-- `compact(array) => any[]`: remove falsey values while preserving order.
-- `concat(value, ...values) => any[]`: concatenate values, flattening one level
-  for array arguments.
-- `difference(array, ...values) => any[]`: return values from the first array
-  that do not occur in the other arrays, preserving first-array order.
-- `drop(array, n = 1) => any[]` and `dropRight(array, n = 1) => any[]`: remove
-  up to `n` items from the corresponding side.
-- `flatten(array) => any[]` and `flattenDeep(array) => any[]`: flatten one
-  level or all nested array levels respectively.
-- `head(array) => any` and `last(array) => any`: return the first or last item;
-  JSON test inputs are non-empty.
-- `map(collection, iteratee) => any[]`: support property-name iteratees such
-  as `"name"` and iteratee pairs such as `["active", true]`.
-- `filter(collection, predicate) => any[]` and
-  `find(collection, predicate) => object|undefined`: support object-match
-  predicates such as `{ active: true }`.
-- `groupBy(collection, iteratee) => object` and
-  `keyBy(collection, iteratee) => object`: support property-name iteratees and
-  string `length` values, using Lodash key coercion.
-- `get(object, path, defaultValue) => any` and `has(object, path) => boolean`:
-  support dotted paths and array paths for JSON objects.
-- `isEqual(left, right) => boolean`: recursively compare JSON arrays and
-  objects without depending on key insertion order.
-- `cloneDeep(value) => any`: deep-copy JSON arrays and objects.
-- `sumBy(collection, iteratee) => number` and
-  `maxBy(collection, iteratee) => object|undefined`: support property-name
-  iteratees.
-- `orderBy(collection, iteratees, orders) => any[]`: support property-name
-  iteratees and `"asc"`/`"desc"` order strings.
-- `uniq(array) => any[]`: remove duplicate JSON-compatible primitive values and
-  preserve first occurrence order.
-- `zip(...arrays) => any[][]`: create rows by index, using `null` for missing
-  JSON values in the scored domain.
-- `camelCase(string) => string`, `kebabCase(string) => string`, and
-  `startCase(string) => string`: normalize word boundaries and case according
-  to Lodash behavior for ordinary ASCII and Unicode-letter input.
-- `toString(value) => string`: use Lodash string coercion for JSON-compatible
-  values; in particular, finite numbers use their ordinary decimal spelling.
-- `toNumber(value) => number`: convert JSON-compatible numeric strings and
-  numbers using Lodash numeric coercion.
+## Array and collection helpers
+
+- `chunk(array, size = 1) => any[][]` splits consecutive chunks; a non-positive
+  size returns `[]`. `compact(array) => any[]` removes falsey values.
+- `concat(value, ...values) => any[]` flattens array arguments one level.
+  `difference(array, ...values) => any[]` removes values in later arrays while
+  preserving first-array order. `drop`, `dropRight`, `flatten`, `flattenDeep`,
+  `head`, `last`, `uniq`, and `zip` have their standard documented one-level,
+  recursive, endpoint, duplicate, and index-row behavior.
+- `map(collection, iteratee) => any[]` supports property-name and pair
+  shorthands such as `"name"` and `["active", true]`. `filter(collection,
+  predicate)` and `find(collection, predicate)` support partial object
+  matching. `groupBy` and `keyBy` support property paths and Lodash key
+  coercion; `keyBy` lets later entries replace earlier entries.
+- `get(object, path, defaultValue)`, `has(object, path)`, `isEqual(left,
+  right)`, and `cloneDeep(value)` support dotted/array JSON paths, own-path
+  checks, recursive key-order-independent comparison, and isolated JSON copies.
+- `sumBy(collection, iteratee)` and `maxBy(collection, iteratee)` support
+  property-name iteratees. `orderBy(collection, iteratees, orders)` supports
+  property-name iteratees and stable `"asc"`/`"desc"` orders.
+
+## String, conversion, and predicates
+
+`camelCase(string)`, `kebabCase(string)`, and `startCase(string)` normalize
+ordinary ASCII and Unicode-letter word boundaries. `toString(value)` uses
+Lodash coercion for JSON-compatible values; finite numbers retain ordinary
+decimal spelling. `toNumber(value)` converts JSON-compatible numbers and
+numeric strings. The default object aliases all named functions exactly.
 
 # Implementation Notes
 
-Only the root named exports and their default-export aliases are scored. The
-package may expose additional files, but it must not require CommonJS loaders,
-bundlers, TypeScript, native addons, lifecycle scripts, or registry access.
-The upstream browser/UMD distributions, FP conversion helpers, CLI, docs, and
-performance harness are outside this bounded contract. Do not copy the private
-tests or reference implementation into the candidate workspace.
+- Keep the ESM root self-contained and deterministic. Only the root named
+  exports and their default aliases are scored; extra files are unnecessary.
+- Preserve input order for collection operations and do not mutate arrays or
+  objects. Use null for missing JSON values in `zip` within this bounded
+  contract.
+- General callbacks, executable values, non-JSON values, symbols, wrapper
+  chains, templates, browser/UMD builds, FP helpers, CLI behavior, and
+  per-method module paths are excluded.
+- Do not depend on CommonJS loaders, TypeScript, native addons, lifecycle
+  scripts, registry settings, network, time, randomness, or outside files.
+
+# Examples
+
+```js
+import _, {chunk, map} from 'lodash-es';
+
+chunk([1, 2, 3], 2); // [[1, 2], [3]]
+map([{name: 'Ada'}], 'name'); // ['Ada']
+_.camelCase('Hello world'); // 'helloWorld'
+```
+
+```js
+import {get, orderBy, cloneDeep} from 'lodash-es';
+
+get({user: {id: 3}}, 'user.id'); // 3
+orderBy([{n: 2}, {n: 1}], ['n'], ['asc']); // [{n: 1}, {n: 2}]
+const copy = cloneDeep({items: [1]});
+```
+
+# Error Handling and Boundary Conditions
+
+- Empty collections return empty arrays or `undefined` as documented. Missing
+  paths return the supplied default for `get` and false for `has`.
+- `zip` uses bounded nulls for missing positions. `orderBy` remains stable for
+  equal keys, and `uniq` retains the first occurrence.
+- Unicode-letter strings must retain deterministic word boundaries; finite
+  numeric conversions must not depend on locale.
+- Unsupported callbacks, symbols, non-JSON values, browser globals, files,
+  services, current time, randomness, environment, and network are outside the
+  contract and must not affect scored results.

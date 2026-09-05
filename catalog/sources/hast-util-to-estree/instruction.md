@@ -154,3 +154,55 @@ object identity, or non-JSON values, so custom `options.handlers` callbacks
 are outside the scored boundary. Implementations should retain the documented
 public extension point when practical, but no hidden assertion requires a
 function to cross the verifier protocol.
+
+## Natural Language Instruction
+
+Create this ESM package from an empty workspace. Implement the JSON-compatible
+HAST and MDX transformation described above, preserving source values, child
+ordering, JSX property semantics, position metadata, and deterministic output.
+Do not use a hard-coded response table or copy the upstream implementation.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── index.js
+├── index.d.ts
+└── lib/
+    ├── index.js
+    ├── state.js
+    └── handlers/
+        ├── comment.js
+        ├── doctype.js
+        ├── element.js
+        ├── expression.js
+        ├── mdx.js
+        ├── root.js
+        └── text.js
+```
+
+The root exports `toEstree` and `defaultHandlers`; private fixtures and
+verifier files are not agent-owned.
+
+## Examples
+
+```js
+import {toEstree} from 'hast-util-to-estree';
+const program = toEstree({type: 'element', tagName: 'p', properties: {}, children: []});
+program.type; // 'Program'
+```
+
+```js
+const program = toEstree({type: 'root', children: []});
+program.body[0].expression.type; // 'JSXFragment'
+```
+
+## Error Handling and Boundary Conditions
+
+- Unknown node types and malformed style values produce the documented errors.
+- Preserve empty roots, doctype omission, comments, text, table whitespace,
+  SVG context, and position data without mutating input nodes.
+- Callback-valued custom handlers and non-JSON prototypes are outside the
+  adapter boundary. All runtime phases use `network_mode=no-network`.
