@@ -1,6 +1,6 @@
 schema_version = "1.0"
 task_id = "java-semver4j"
-version = "1.0.0"
+version = "1.1.0"
 instruction = "instruction.md"
 
 [metadata]
@@ -68,20 +68,20 @@ visibility = "private"
 [tests]
 framework = "junit-platform"
 report_format = "junit-open-test-report-xml-v1"
-expected_total = 8
+expected_total = 9
 expected_total_source = "frozen-collection"
 commands = ["mvn --offline validate", "javac verifier-owned contract"]
 
 [verifier]
 protocol = "custom-json-v1"
 entrypoint = "run.sh"
-contract_sha256 = "sha256:c3adcf8e3a18c74218c00969800e5f0f4469a44a4edc333570fb06303d2e6725"
+contract_sha256 = "sha256:8a92aae99ffa75d7a029691d38c80c55d5d12876e66c114c205cb517bf3f28c3"
 
 [verifier.bundle]
-digest = "sha256:386eeff48d510e97a9a4b6beaca9fe98814b86b48b14e64d1562097662f9a6ae"
+digest = "sha256:d52a1242b4f51e1cb014def0f0d3a2acfffcaf4a2fafdd61195c29c450c6aa0b"
 size_bytes = 20480
 media_type = "application/vnd.nl2repobench.verifier+tar"
-uri = "artifact://private/sha256:386eeff48d510e97a9a4b6beaca9fe98814b86b48b14e64d1562097662f9a6ae"
+uri = "artifact://private/sha256:d52a1242b4f51e1cb014def0f0d3a2acfffcaf4a2fafdd61195c29c450c6aa0b"
 visibility = "private"
 
 [metric]

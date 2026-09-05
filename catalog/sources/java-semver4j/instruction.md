@@ -18,7 +18,9 @@ The public package is `com.vdurmont.semver4j`.
   `boolean isLowerThan(String version)` compare this version with another
   version string.
 - `boolean isEqualTo(String version)` checks semantic equality.
-- `boolean isStable()` reports whether the version has no pre-release suffix.
+- `boolean isStable()` reports whether the version is a stable release: it has
+  no pre-release suffix and its major version is greater than zero. Thus
+  `1.2.3` is stable, while both `1.2.3-alpha` and `0.1.0` are not.
 - `boolean satisfies(String requirement)` evaluates a supported requirement
   expression such as `>=1.0.0`.
 

@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "review_id": "java-spec-review-20260905",
+  "reviewer_role": "independent blind/spec reviewer",
+  "reviewed_at": "2026-09-05T01:44:22Z",
+  "tasks": [
+    {"task_id": "java-commons-codec", "version": "1.0.0", "verdict": "approve"},
+    {"task_id": "java-commons-csv", "version": "1.0.0", "verdict": "approve"},
+    {"task_id": "java-semver4j", "version": "1.1.0", "verdict": "approve"}
+  ],
+  "findings": [
+    {
+      "task_id": "java-semver4j",
+      "status": "resolved",
+      "finding": "The initial stability wording omitted the upstream major-version condition and traceability selected one out-of-scope constructor.",
+      "resolution": "Version 1.1.0 documents major > 0 and pre-release semantics, adds stable-zero to the nine-leaf contract, and removes the untested constructor from selected_symbols."
+    }
+  ],
+  "evidence": [
+    "catalog/sources/java-commons-codec/instruction.md",
+    "catalog/sources/java-commons-csv/instruction.md",
+    "catalog/sources/java-semver4j/instruction.md",
+    "catalog/sources/java-semver4j/evidence/traceability.json",
+    "catalog/sources/java-semver4j/production-evidence.json",
+    "catalog/tasks/java-semver4j/bundle.manifest.json"
+  ],
+  "verdict": "approve"
+}

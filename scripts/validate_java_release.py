@@ -1,0 +1,132 @@
+#!/usr/bin/env python3
+"""Validate the separate Java/Maven pilot release without publishing it."""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import sys
+import tomllib
+from pathlib import Path
+from typing import Any
+
+TASKS = ("java-commons-codec", "java-commons-csv", "java-semver4j")
+
+
+
+def sha256(path: Path) -> str:
+    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def load_json(path: Path) -> dict[str, Any]:
+    value = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(value, dict):
+        raise ValueError(f"JSON object required: {path}")
+    return value
+
+
+def validate(root: Path) -> dict[str, Any]:
+    dataset_path = root / "catalog/datasets/nl2repobench-java-pilot/dataset.toml"
+    dataset = tomllib.loads(dataset_path.read_text(encoding="utf-8"))
+    if dataset.get("dataset_id") != "nl2repobench-java-pilot":
+        raise ValueError("Java dataset ID is invalid")
+    if dataset.get("tasks") != list(TASKS):
+        raise ValueError("Java pilot task list is not canonical")
+    reviews_root = root / "catalog/datasets/nl2repobench-java-pilot/reviews"
+    review_verdicts = []
+    for review_name in ("spec-review.json", "security-review.json"):
+        review = load_json(reviews_root / review_name)
+        if review.get("verdict") != "approve":
+            raise ValueError(f"review is not approved: {review_name}")
+        review_verdicts.append(review_name)
+    model_pilot = load_json(reviews_root / "model-pilot-status.json")
+    if model_pilot.get("status") not in {"blocked", "complete"}:
+        raise ValueError("Java model pilot status is invalid")
+    rows: list[dict[str, Any]] = []
+    for task_id in TASKS:
+        source_root = root / "catalog/sources" / task_id
+        task_root = root / "catalog/tasks" / task_id
+        source = tomllib.loads((source_root / "task.toml").read_text(encoding="utf-8"))
+        if source.get("version") != "1.0.0" and task_id != "java-semver4j":
+            raise ValueError(f"{task_id}: unexpected task version")
+        if task_id == "java-semver4j" and source.get("version") != "1.1.0":
+            raise ValueError("java-semver4j: stability contract version was not advanced")
+        if source.get("metadata", {}).get("language") != "java":
+            raise ValueError(f"{task_id}: language is not java")
+        runtime = source.get("environment", {}).get("runtime", {})
+        if runtime.get("package_manager") != "maven":
+            raise ValueError(f"{task_id}: package manager is not Maven")
+        traceability = json.loads(
+            (source_root / "evidence/traceability.json").read_text(encoding="utf-8")
+        )
+        selected = traceability.get("api_inventory", {}).get("selected_symbols", [])
+        leaves = traceability.get("contract_leaf", {}).get("ids", [])
+        if not isinstance(selected, list) or not isinstance(leaves, list):
+            raise ValueError(f"{task_id}: traceability inventory is malformed")
+        if task_id == "java-semver4j" and len(selected) != 9:
+            raise ValueError("java-semver4j: selected API inventory must match its nine leaves")
+        frozen_total = traceability.get("contract_leaf", {}).get("frozen_total")
+        expected_total = source.get("tests", {}).get("expected_total")
+        if frozen_total != expected_total:
+            raise ValueError(f"{task_id}: traceability denominator mismatch")
+        lifecycle = source.get("lifecycle", {})
+        if lifecycle.get("status") not in {"controls-passed", "reviewed", "piloted"}:
+            raise ValueError(f"{task_id}: invalid pilot lifecycle status")
+        evidence = load_json(source_root / "production-evidence.json")
+        if evidence.get("terminal_kind") != "valid":
+            raise ValueError(f"{task_id}: evidence is not valid")
+        oracle = evidence.get("oracle", {})
+        if oracle.get("valid") is not True or oracle.get("reward") < 0.8:
+            raise ValueError(f"{task_id}: Oracle evidence is insufficient")
+        if set(evidence.get("controls", {})) != {
+            "empty", "stub", "forgery", "install-failure", "hang", "offline"
+        }:
+            raise ValueError(f"{task_id}: controls evidence is incomplete")
+        manifest = task_root / "bundle.manifest.json"
+        if not manifest.is_file():
+            raise ValueError(f"{task_id}: generated bundle is missing")
+        rows.append(
+            {
+                "task_id": task_id,
+                "version": source["version"],
+                "source_sha256": sha256(source_root / "task.toml"),
+                "bundle_manifest_sha256": sha256(manifest),
+                "oracle_grading": oracle["grading"]["path"],
+                "controls": sorted(evidence["controls"]),
+                "lifecycle": lifecycle["status"],
+            }
+        )
+    return {
+        "schema_version": "1.0",
+        "dataset_id": dataset["dataset_id"],
+        "version": dataset["version"],
+        "runtime": "java+maven",
+        "status": "pilot-blocked" if model_pilot.get("status") == "blocked" else "pilot-only",
+        "publication_approval": False,
+        "reviews": review_verdicts,
+        "model_pilot": model_pilot,
+        "tasks": rows,
+    }
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--root", type=Path, default=Path("."))
+    parser.add_argument("--output", type=Path)
+    args = parser.parse_args()
+    try:
+        result = validate(args.root.resolve())
+        payload = json.dumps(result, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
+        if args.output:
+            args.output.parent.mkdir(parents=True, exist_ok=True)
+            args.output.write_text(payload, encoding="utf-8")
+        print(payload, end="")
+        return 0
+    except (OSError, ValueError, tomllib.TOMLDecodeError) as exc:
+        print(f"Java release validation failed: {exc}", file=sys.stderr)
+        return 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

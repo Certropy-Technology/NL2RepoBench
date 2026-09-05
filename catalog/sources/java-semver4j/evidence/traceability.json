@@ -12,10 +12,9 @@
   "api_inventory": {
     "source_files": 5,
     "test_files": 5,
-    "public_symbols": 8,
+    "public_symbols": 10,
     "selected_symbols": [
       "Semver(String)",
-      "Semver(String, SemverType)",
       "getValue",
       "getMajor",
       "getMinor",
@@ -33,9 +32,9 @@
     ]
   },
   "contract_leaf": {
-    "frozen_total": 8,
+    "frozen_total": 9,
     "framework": "trusted synthetic ContractMain",
-    "ids": ["parse", "major", "minor", "greater", "lower", "equal", "stable", "satisfies"],
+    "ids": ["parse", "major", "minor", "greater", "lower", "equal", "stable", "stable-zero", "satisfies"],
     "instruction_sections": ["Supports", "API Usage Guide", "Implementation Notes"]
   },
   "environment_adaptation": {

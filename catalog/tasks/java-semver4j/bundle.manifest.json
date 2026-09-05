@@ -1,5 +1,5 @@
 {
-  "canonical_manifest_digest": "sha256:eb483b45384e8eb142c3b2b4290222d26ed56051294297cd9dedd83305b80cc7",
+  "canonical_manifest_digest": "sha256:8c3173bf8c9cf203ebd4fd8580d58631b6cb97c171e794d743600b42cf77be10",
   "files": [
     {
       "path": "README.md",
@@ -43,8 +43,8 @@
     },
     {
       "path": "instruction.md",
-      "sha256": "0888a99ce0e1f508d0a2e9590d2d88298a764db594c906bdb53628418412f879",
-      "size_bytes": 2065
+      "sha256": "38c0dcea8810b0a85ba95fd7e72f4d6e15ff26818806f69af05d9e1bbe63755e",
+      "size_bytes": 2206
     },
     {
       "path": "solution/oracle-ref.json",
@@ -58,7 +58,7 @@
     },
     {
       "path": "task.toml",
-      "sha256": "6ab321c349da58b42bdf37c710435e2fec258ed4ae46d111898449adda957a2e",
+      "sha256": "d9a419bbcd18dead809b9edc7170d6beea63957e374abc8e667f596ef511edd0",
       "size_bytes": 1139
     },
     {
@@ -73,7 +73,7 @@
     },
     {
       "path": "tests/private-artifact-refs.json",
-      "sha256": "7fdda57d7873ece113fc7acac814499d62155e53ce76b7b6ea9bc84b1b685e79",
+      "sha256": "f7489930d5cbaf925abdbba5ccacc1b06507945924bf9a810a66affb078d9d25",
       "size_bytes": 1446
     },
     {
@@ -333,7 +333,7 @@
     },
     {
       "path": "tests/test.sh",
-      "sha256": "122e6a0af91b6d57550f56483665a5f52875fe19e526e7019aa195af4d08fcbd",
+      "sha256": "1bf7c7fb5b56d2a95dcc9b7ffba4e38db14a468399e602df7b79352866d69b31",
       "size_bytes": 6584
     }
   ],
@@ -344,6 +344,6 @@
   "runtime": "java",
   "schema_version": "1.0",
   "task_id": "java-semver4j",
-  "task_version": "1.0.0",
+  "task_version": "1.1.0",
   "toolchain_lock_digest": "sha256:9ea2918f480bf5a09904f21c3655bded56711fd8618a7e41b0c19bb632d5a37e"
 }

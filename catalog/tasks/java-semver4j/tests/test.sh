@@ -5,7 +5,7 @@ rm -f /tmp/java-report.xml
 PYTHON_ROOT='import sys; sys.path.insert(0, "/usr/local/lib/python3.12/site-packages");'
 grade() {
   python3 -I -c "$PYTHON_ROOT from nl2repobench.verification.cli import main; main()" \
-    --runtime java --expected 8 --metric-contract fixed-test-pass-rate-v1 --output /logs/verifier "$@"
+    --runtime java --expected 9 --metric-contract fixed-test-pass-rate-v1 --output /logs/verifier "$@"
 }
 if ! python3 -I -c "$PYTHON_ROOT from nl2repobench.verification.network_check import main; main()" \
   --output /logs/verifier/network.json; then

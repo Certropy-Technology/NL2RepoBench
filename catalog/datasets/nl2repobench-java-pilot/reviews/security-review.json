@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "review_id": "java-security-review-20260905",
+  "reviewer_role": "independent security/operations reviewer",
+  "reviewed_at": "2026-09-05T01:08:33Z",
+  "tasks": [
+    {"task_id": "java-commons-codec", "version": "1.0.0", "verdict": "approve"},
+    {"task_id": "java-commons-csv", "version": "1.0.0", "verdict": "approve"},
+    {"task_id": "java-semver4j", "version": "1.1.0", "verdict": "approve"}
+  ],
+  "checks": {
+    "no_network": true,
+    "private_cas_scoped": true,
+    "candidate_process_cli": true,
+    "contract_digest_pinned": true,
+    "helper_and_lock_paths_confined": true,
+    "controls_and_evidence_bound": true
+  },
+  "verdict": "approve",
+  "qualification": "Approval is for the controlled Java/Maven pilot scope, not dataset publication approval."
+}
