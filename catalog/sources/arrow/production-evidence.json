@@ -1,172 +1,172 @@
 {
-  "bundle": {
-    "handoff_artifacts": {
-      "canonical_manifest_digest": "sha256:b7bc4b29bebaa3aa3423870db5c8eb85cb10e74e1ab02affd01d60578763483b",
-      "compiled_bundle": ".nl2repo/compiled-final/arrow",
-      "oracle_bundle": {
-        "digest": "sha256:8cf970182760ea0e43bc43b196d718920ea9017fbabc9726557bb06a7eca5382",
-        "path": ".nl2repo/artifacts/private/sha256/8c/8cf970182760ea0e43bc43b196d718920ea9017fbabc9726557bb06a7eca5382",
-        "size_bytes": 839680
-      },
-      "verifier_image": "nl2repo-arrow-verifier:authoring-final@sha256:29a68358add80a09c401cdaeffb57fc1ff6d852686eb1bcf10af4813550f8b6a"
-    },
-    "handoff_compiled_bundle": null
-  },
-  "commands": [
-    {
-      "command": "uv run nl2repo author scan-source ...",
-      "evidence": ".nl2repo/evidence/arrow/inventory/scan-source.stdout",
-      "exit_code": 0
-    },
-    {
-      "command": "uv run nl2repo author scan-tests ...",
-      "evidence": ".nl2repo/evidence/arrow/inventory/scan-tests.stdout",
-      "exit_code": 0
-    },
-    {
-      "command": "python -m pytest --collect-only -q upstream/tests",
-      "evidence": ".nl2repo/evidence/arrow/dependencies/collect.stdout",
-      "exit_code": 0,
-      "result": "1902 collected"
-    },
-    {
-      "command": "python -m pytest -q upstream/tests",
-      "evidence": ".nl2repo/evidence/arrow/dependencies/upstream-tests.stdout",
-      "exit_code": 0,
-      "result": "1902 passed in 26.68s"
-    },
-    {
-      "command": "docker build --platform linux/amd64 -f compiled/arrow/tests/Dockerfile",
-      "evidence": ".nl2repo/evidence/arrow/verification/docker-build.log",
-      "exit_code": 0
-    },
-    {
-      "command": "uv run nl2repo task validate-source catalog/sources/arrow",
-      "evidence": ".nl2repo/evidence/arrow/verification/final-validate-source.stdout",
-      "exit_code": 0
-    },
-    {
-      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
-      "evidence": ".nl2repo/evidence/arrow/verification/final-network-lint.stdout",
-      "exit_code": 0,
-      "result": "arrow findings=0; global warnings are pre-existing"
-    },
-    {
-      "bundle": ".nl2repo/compiled-final/arrow/bundle.manifest.json",
-      "command": "uv run nl2repo harbor compile catalog/sources/arrow --output .nl2repo/compiled-final --allow-private",
-      "evidence": ".nl2repo/evidence/arrow/verification/final-compile.stdout",
-      "exit_code": 0
-    },
-    {
-      "command": "uv run nl2repo harbor prepare-control ... stub",
-      "evidence": ".nl2repo/evidence/arrow/verification/prepare-stub.stdout",
-      "exit_code": 0
-    },
-    {
-      "command": "uv run nl2repo harbor prepare-control ... forgery",
-      "evidence": ".nl2repo/evidence/arrow/verification/prepare-forgery.stdout",
-      "exit_code": 0
-    },
-    {
-      "command": "git diff --check",
-      "evidence": ".nl2repo/evidence/arrow/verification/git-diff-check.stdout",
-      "exit_code": 0
-    }
-  ],
-  "controls": {
-    "status": "pending-integrator-runtime"
-  },
-  "dependency_closure": {
-    "installer": "pip",
-    "lock_artifact": {
-      "digest": "sha256:365003f9407c628ec931a875b05cdc3a590a28e8794ac962142115baa8d0ed40",
-      "media_type": "text/plain; charset=utf-8",
-      "size_bytes": 1389,
-      "uri": "artifact://private/sha256:365003f9407c628ec931a875b05cdc3a590a28e8794ac962142115baa8d0ed40",
-      "visibility": "private"
-    },
-    "packages": [
-      "flit_core==3.12.0",
-      "python-dateutil==2.9.0.post0",
-      "six==1.17.0",
-      "tzdata==2026.3"
-    ],
-    "status": "known"
+  "schema_version": "1.0",
+  "task_id": "arrow",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source": {
+    "upstream_url": "https://github.com/arrow-py/arrow",
+    "revision": "2224255c4acc594d734cef0bbc83360452a67983",
+    "archive_sha256": "sha256:8c08b167afc01268080ba13e5e1cf17223ec2fe12512fd298f03132270f7cda6",
+    "instruction_migration_source_content_sha256": "sha256:51b71dcea0395e90bd0a969095d48067f459bac8c8aaa0cdcda2760a2d85199b",
+    "current_source_content_sha256": "sha256:fd0b796b1433554e0d5709150bfcbf607ad90221c19ac82b37bc45661cf266cc",
+    "license_spdx": "Apache-2.0",
+    "license_sha256": "sha256:b481f87296cb0abdb13fd8cbb94b14c328be880ec9e68547a61b84dacffd067a"
   },
   "environment": {
+    "python": "3.12.14",
     "base_image": "python:3.12.14-slim-bookworm",
     "base_image_digest": "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e",
-    "build_command": "install the hash-locked build and runtime closure during image build; candidate installation uses pip --no-build-isolation --no-deps without network",
+    "harbor_version": "0.21.0",
+    "task_schema": "1.4",
     "network_mode": "no-network",
-    "network_policy": {
-      "mode": "no-network",
-      "offline_dependencies": "preinstalled-image",
-      "reason": "The build and candidate runtime closure is installed during image build from a private hash-locked requirements artifact. Agent and separate verifier runs have no egress; only the trusted Oracle receives a run-scoped authorization for github.com.",
-      "reference_source_fetch": "forbidden"
-    },
-    "os_name": "debian-12-amd64",
-    "python_version": "3.12.14",
-    "status": "known",
-    "system_packages": []
+    "public_network_available": false
   },
-  "frozen_collection": {
-    "handoff_collection": null,
-    "handoff_frozen_tests": null,
-    "handoff_inventory": {
-      "api_inventory": ".nl2repo/evidence/arrow/inventory/api-inventory.json",
-      "implementation_files": 11,
-      "implementation_loc": 8774,
-      "risk_flags": [
-        "dynamic-execution"
-      ],
-      "static_test_definitions": 708,
-      "test_files": 10,
-      "test_inventory": ".nl2repo/evidence/arrow/inventory/test-inventory.json",
-      "upstream_collected_tests": 1902
+  "private_artifacts": {
+    "dependency_lock": {
+      "digest": "sha256:365003f9407c628ec931a875b05cdc3a590a28e8794ac962142115baa8d0ed40",
+      "size_bytes": 1389
     },
-    "tests": {
-      "commands": [
-        "custom-json-v1 verifier entrypoint"
-      ],
-      "expected_total": 48,
-      "expected_total_source": "frozen-collection",
-      "framework": "pytest",
-      "protected_paths": [
-        "/tests/verifier/run.py"
-      ]
+    "verifier_bundle": {
+      "digest": "sha256:6a71958acf3056b86f998d42bed1900ec54122e9769f2452dde43dbc4572c267",
+      "size_bytes": 20480
+    },
+    "oracle_bundle": {
+      "digest": "sha256:8cf970182760ea0e43bc43b196d718920ea9017fbabc9726557bb06a7eca5382",
+      "size_bytes": 839680
     }
   },
-  "integrator_repair": {
-    "input_handoff": ".nl2repo/authoring-live/worktrees/python-author-discover-20260903T025734Z/arrow/.nl2repo/authoring-handoff.json",
-    "kind": "production-evidence-from-authored-handoff",
-    "official_controls_created": false,
-    "official_oracle_created": false,
-    "recorded_at": "2026-09-03T04:43:47.952679+00:00"
-  },
-  "lifecycle": {
-    "owner": "python-author-discover-20260903T025734Z",
-    "reason": "Frozen source, dependency closure, private verifier, and digest-checked Oracle bundle are prepared; production compile and Harbor Oracle/controls remain to be run by the authoring lane and integrator.",
-    "status": "packaged"
+  "compile": {
+    "command": "uv run nl2repo harbor compile catalog/sources/arrow --output catalog/sources/arrow/.nl2repo-revalidation/compile-c --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+    "second_command": "uv run nl2repo harbor compile catalog/sources/arrow --output catalog/sources/arrow/.nl2repo-revalidation/compile-d --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+    "exit_code": 0,
+    "deterministic": true,
+    "bundle_manifest": {
+      "path": "catalog/sources/arrow/evidence/receipts/20260905/current-bundle.manifest.json",
+      "sha256": "sha256:4d792133f3a97488a5d131aaaa7bca24af7fda2c8c2180b46deddead3c564926"
+    },
+    "canonical_manifest_digest": "sha256:6b21d8cc2e5326b90ce64c2f23b693355f4ed5849b4861f50629893dcb99fa34"
   },
   "oracle": {
-    "reason": "No official Harbor Oracle was run in the authoring lane.",
-    "status": "not-run"
+    "command": "uv run --frozen --project harbor-runner harbor run -p catalog/sources/arrow/.nl2repo-revalidation/compile-a/arrow -a oracle --job-name arrow-revalidation-oracle-20260905-1 -o catalog/sources/arrow/.nl2repo-revalidation/runs/oracle-20260905-1 --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "valid": true,
+    "expected": 48,
+    "collected": 48,
+    "passed": 48,
+    "reward": 1.0,
+    "grading": {
+      "path": "catalog/sources/arrow/evidence/receipts/20260905/oracle-grading.json",
+      "sha256": "sha256:b8f50777868363699790e6167aa6037300d509db725f3ee9effb7a77ee1f8b05"
+    },
+    "network": {
+      "path": "catalog/sources/arrow/evidence/receipts/20260905/oracle-network.json",
+      "sha256": "sha256:1c8b77ac9c99f6fa8267100f19fb6f4aed4695072c8679fca7e8a05697a33e9a"
+    },
+    "collection": {
+      "path": "catalog/sources/arrow/evidence/receipts/20260905/oracle-collection.json",
+      "sha256": "sha256:bad365af9b493401a520df5eecc44f0d12abf779b05fd061412c68ad1d601ff9"
+    },
+    "junit": {
+      "path": "catalog/sources/arrow/evidence/receipts/20260905/oracle-junit.xml",
+      "sha256": "sha256:0f1880ae685d238255021784f448983b445b372adc461548373eb90b4179ee45"
+    },
+    "public_network_available": false
   },
-  "residual_risks": [
-    "Static inventory flags dynamic-execution; this is confined to upstream parser/format behavior and is covered by the bounded JSON scenarios.",
-    "The full upstream suite is 1902 leaves, while the separate Harbor contract freezes 48 representative public-behavior leaves.",
-    "This lane did not start an official Harbor Agent Run. Integrator must run the official trusted Oracle and empty/stub/forgery/offline gates against the generated bundle before controls-passed/publication.",
-    "The source Oracle solve fetches github.com only in the trusted Oracle run and verifies the frozen archive digest; model Agent metadata remains no-network with no allowed hosts."
+  "controls": {
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p catalog/sources/arrow/.nl2repo-revalidation/controls/arrow-stub -a oracle --job-name arrow-revalidation-stub-20260905-2 -o catalog/sources/arrow/.nl2repo-revalidation/runs/stub-retry --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "expected": 48,
+      "collected": 48,
+      "passed": 0,
+      "reward": 0.0,
+      "grading": {
+        "path": "catalog/sources/arrow/evidence/receipts/20260905/stub-grading.json",
+        "sha256": "sha256:45b191a67a4d742bc697378aed33d0cec47895f593db92dfc54d0f23ffffc795"
+      },
+      "network": {
+        "path": "catalog/sources/arrow/evidence/receipts/20260905/stub-network.json",
+        "sha256": "sha256:e5aadfa9d3697ff77cdd1a3a10467f3445e1642c456112dc37eca241945e13e2"
+      }
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p catalog/sources/arrow/.nl2repo-revalidation/controls/arrow-forgery -a oracle --job-name arrow-revalidation-forgery-20260905-2 -o catalog/sources/arrow/.nl2repo-revalidation/runs/forgery-retry --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "expected": 48,
+      "collected": 48,
+      "passed": 0,
+      "reward": 0.0,
+      "verifier_owned_reward": true,
+      "candidate_fake_report_ignored": true,
+      "grading": {
+        "path": "catalog/sources/arrow/evidence/receipts/20260905/forgery-grading.json",
+        "sha256": "sha256:45b191a67a4d742bc697378aed33d0cec47895f593db92dfc54d0f23ffffc795"
+      },
+      "network": {
+        "path": "catalog/sources/arrow/evidence/receipts/20260905/forgery-network.json",
+        "sha256": "sha256:9a0b25ec7958a93c309fd9a399f013edf9628b4234399108caac070fd3e05886"
+      }
+    },
+    "call-hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p catalog/sources/arrow/.nl2repo-revalidation/controls/arrow-call-hang -a oracle --job-name arrow-revalidation-call-hang-20260905-1 -o catalog/sources/arrow/.nl2repo-revalidation/runs/call-hang --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "expected": 48,
+      "collected": 48,
+      "passed": 0,
+      "failed": 48,
+      "reward": 0.0,
+      "grading": {
+        "path": "catalog/sources/arrow/evidence/receipts/20260905/call-hang-grading.json",
+        "sha256": "sha256:45b191a67a4d742bc697378aed33d0cec47895f593db92dfc54d0f23ffffc795"
+      },
+      "network": {
+        "path": "catalog/sources/arrow/evidence/receipts/20260905/call-hang-network.json",
+        "sha256": "sha256:1c8b77ac9c99f6fa8267100f19fb6f4aed4695072c8679fca7e8a05697a33e9a"
+      }
+    },
+    "install-hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p catalog/sources/arrow/.nl2repo-revalidation/controls/arrow-install-hang -a oracle --job-name arrow-revalidation-install-hang-20260905-1 -o catalog/sources/arrow/.nl2repo-revalidation/runs/install-hang --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "expected": 48,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "grading": {
+        "path": "catalog/sources/arrow/evidence/receipts/20260905/install-hang-grading.json",
+        "sha256": "sha256:831da25baeb729bbf57ead3d8a000cdf91a5a246def4eb8d32fa1eff37cb866f"
+      },
+      "network": {
+        "path": "catalog/sources/arrow/evidence/receipts/20260905/install-hang-network.json",
+        "sha256": "sha256:7b8ab49e7dadd758f4997031bc4d2d77532e2797ce244d550cae957429ca2e99"
+      }
+    },
+    "offline": {
+      "command": "NoNetwork verifier probe from the current Arrow Oracle run",
+      "exit_code": 0,
+      "completed": true,
+      "public_network_available": false,
+      "network": {
+        "path": "catalog/sources/arrow/evidence/receipts/20260905/oracle-network.json",
+        "sha256": "sha256:1c8b77ac9c99f6fa8267100f19fb6f4aed4695072c8679fca7e8a05697a33e9a"
+      }
+    }
+  },
+  "retries": [
+    {
+      "stage": "controls",
+      "controls": ["stub", "forgery"],
+      "failure_class": "infrastructure",
+      "reason": "Initial runs hit Errno 11 Resource temporarily unavailable during candidate metadata preparation; each control was rerun once sequentially and passed its control contract."
+    }
   ],
-  "schema_version": "1.0",
-  "source_freeze": {
-    "license_spdx": "Apache-2.0",
-    "revision": "2224255c4acc594d734cef0bbc83360452a67983",
-    "source_digest": "sha256:8c08b167afc01268080ba13e5e1cf17223ec2fe12512fd298f03132270f7cda6",
-    "upstream_url": "https://github.com/arrow-py/arrow"
-  },
-  "status": "awaiting-agent-run",
-  "task_id": "arrow",
-  "task_version": "0.1.0",
-  "terminal_kind": "awaiting-agent-run"
+  "residual_risks": [
+    "The fixed production denominator is a focused 48-leaf public API contract rather than the full 1,902-leaf upstream suite.",
+    "Independent blind review, model-agent pilot, and publication remain pending."
+  ]
 }

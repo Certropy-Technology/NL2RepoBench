@@ -4,23 +4,24 @@
   "terminal_kind": "valid",
   "bundle_manifest": {
     "path": "catalog/tasks/annotated-types/bundle.manifest.json",
-    "sha256": "sha256:4529774f0a597d72b1d5430de615ab97e62f01c4053c5749b697ab477c6bbfa8"
+    "file_sha256": "sha256:d0550b360f19c50d1ccce2d8ac11a1c3c359e5f9119a8457e395e5fb9d513ab5",
+    "canonical_manifest_digest": "sha256:6213eef071df8289223ba4278ba9d5c56c4f71c0d6d183fb20147dd8098aa93d"
   },
   "oracle": {
-    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/annotated-types -a oracle --job-name annotated-types-repair-oracle --jobs-dir .nl2repo/runs/annotated-types-repair-oracle --yes",
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/annotated-types-revalidation/compile-a/annotated-types -a oracle --job-name annotated-types-revalidation-oracle-20260905 --jobs-dir .nl2repo/annotated-types-revalidation/runs/oracle --n-concurrent 1 --yes",
     "exit_code": 0,
     "harbor_version": "0.21.0",
     "result": {
-      "path": "catalog/sources/annotated-types/evidence/receipts/oracle-result.json",
-      "sha256": "sha256:f6d44c2eb8ec4acc37b9d40e17dc83d3f4d7d6aeabd201ad43ebd21af3c6e865"
+      "path": "catalog/sources/annotated-types/evidence/receipts/oracle-result-revalidation.json",
+      "sha256": "sha256:23b408cbe8c10a7c3e87f3c9487c426325812976a1188c8576cba7830377d856"
     },
     "grading": {
-      "path": "catalog/sources/annotated-types/evidence/receipts/oracle-grading.json",
+      "path": "catalog/sources/annotated-types/evidence/receipts/oracle-grading-revalidation.json",
       "sha256": "sha256:b25901a970735ad3f54af304bf9d1e8124e8b243d705c8d171a2b444c9667989"
     },
     "network": {
-      "path": "catalog/sources/annotated-types/evidence/receipts/oracle-network.json",
-      "sha256": "sha256:71d198997c9cdca006e244387fbab911ce3968363c2ea84ad524f8c0309fc622"
+      "path": "catalog/sources/annotated-types/evidence/receipts/oracle-network-revalidation.json",
+      "sha256": "sha256:9e8433d7a614e548062e426fc340e0608c4d94d67a28311c1447fc69fe188af6"
     },
     "summary": {
       "valid": true,
@@ -33,19 +34,19 @@
   },
   "controls": {
     "empty": {
-      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/annotated-types -a nop --job-name annotated-types-repair-empty --jobs-dir .nl2repo/runs/annotated-types-repair-empty --yes",
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/annotated-types-revalidation/compile-a/annotated-types -a nop --job-name annotated-types-revalidation-empty-20260905 --jobs-dir .nl2repo/annotated-types-revalidation/runs/empty --n-concurrent 1 --yes",
       "exit_code": 0,
       "result": {
-        "path": "catalog/sources/annotated-types/evidence/receipts/empty-result.json",
-        "sha256": "sha256:f6b390b4738ab605c4ba5497c0c93101c195a5f5dbabb38952e578396d167f6d"
+        "path": "catalog/sources/annotated-types/evidence/receipts/empty-result-revalidation.json",
+        "sha256": "sha256:2b1256ebffb754dca92f256696c2ce4d443ef02660a748bc81c3562564673efc"
       },
       "grading": {
-        "path": "catalog/sources/annotated-types/evidence/receipts/empty-grading.json",
+        "path": "catalog/sources/annotated-types/evidence/receipts/empty-grading-revalidation.json",
         "sha256": "sha256:bb82697a2cba9b6bd69ea689e2e5932c4327145d954aba304c249389411936f7"
       },
       "network": {
-        "path": "catalog/sources/annotated-types/evidence/receipts/empty-network.json",
-        "sha256": "sha256:6f168cb734fee2971856bc203ad185b903a709c96642144543c997152bf31383"
+        "path": "catalog/sources/annotated-types/evidence/receipts/empty-network-revalidation.json",
+        "sha256": "sha256:148f18b83833d9b44f586d64e542ad3e89dc0d9c2b5c3101dfca94a0f68a6d3c"
       },
       "summary": {
         "valid": true,
@@ -53,69 +54,77 @@
         "failure_class": "model",
         "collected": 0,
         "reward": 0.0,
-        "public_network_available": false
+        "public_network_available": false,
+        "note": "Fresh no-op run against the current compiled manifest; the allowed empty-workspace installation exception was observed."
       }
     },
     "stub": {
-      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/annotated-types-stub -a oracle --job-name annotated-types-repair-stub --jobs-dir .nl2repo/runs/annotated-types-repair-stub --yes",
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/annotated-types-revalidation/controls/stub/annotated-types-stub -a oracle --job-name annotated-types-revalidation-stub-retry-20260905 --jobs-dir .nl2repo/annotated-types-revalidation/runs/stub-retry --n-concurrent 1 --yes",
       "exit_code": 0,
       "result": {
-        "path": "catalog/sources/annotated-types/evidence/receipts/stub-result.json",
-        "sha256": "sha256:2fae79413cc84ae6f3cc10ce319c2dddaf94008819bfb477fe19e09f98dc12bc"
+        "path": "catalog/sources/annotated-types/evidence/receipts/stub-result-revalidation.json",
+        "sha256": "sha256:26b7719ada2ac968c8a618d5e0ea3d5d19a59b4e53e7995128674de789914262"
       },
       "grading": {
-        "path": "catalog/sources/annotated-types/evidence/receipts/stub-grading.json",
+        "path": "catalog/sources/annotated-types/evidence/receipts/stub-grading-revalidation.json",
         "sha256": "sha256:599bfe28d2ee8625967e997b51e15067b5730eb0e8458eef14e876cc2de6a853"
       },
       "network": {
-        "path": "catalog/sources/annotated-types/evidence/receipts/stub-network.json",
-        "sha256": "sha256:6c29d4bce41e331e4c38cd79e4a32cacf4838489b45588ba21206cc8ebe9eeec"
+        "path": "catalog/sources/annotated-types/evidence/receipts/stub-network-revalidation.json",
+        "sha256": "sha256:3e87a830a7adeda97cd2efe52b1240b9ba4323004f1945cc173c852f17bf6c8f"
       },
       "summary": {
         "valid": true,
         "collected": 60,
         "passed": 1,
+        "frozen_total": 60,
         "reward": 0.016666666666666666,
         "public_network_available": false
       }
     },
     "forgery": {
-      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/annotated-types-forgery -a oracle --job-name annotated-types-repair-forgery --jobs-dir .nl2repo/runs/annotated-types-repair-forgery --yes",
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/annotated-types-revalidation/controls/forgery/annotated-types-forgery -a oracle --job-name annotated-types-revalidation-forgery-20260905 --jobs-dir .nl2repo/annotated-types-revalidation/runs/forgery --n-concurrent 1 --yes",
       "exit_code": 0,
       "verifier_owned_reward": true,
       "result": {
-        "path": "catalog/sources/annotated-types/evidence/receipts/forgery-result.json",
-        "sha256": "sha256:377b45ce17b49dae97071eb2187ba7510ba9d2ea0462f8ea6072342322321e76"
+        "path": "catalog/sources/annotated-types/evidence/receipts/forgery-result-revalidation.json",
+        "sha256": "sha256:5084157c54647d079cc836c7af292bd79d8d9f537c419c738156619ac29782fd"
       },
       "grading": {
-        "path": "catalog/sources/annotated-types/evidence/receipts/forgery-grading.json",
+        "path": "catalog/sources/annotated-types/evidence/receipts/forgery-grading-revalidation.json",
         "sha256": "sha256:d0e93d8a86725315a8db545efde27523b7c263570b72a45c8561ac0397905665"
       },
       "network": {
-        "path": "catalog/sources/annotated-types/evidence/receipts/forgery-network.json",
-        "sha256": "sha256:47aac80074aa65879e3e3a8413c58df1c5279114de6a1134be87c1e3feee6738"
+        "path": "catalog/sources/annotated-types/evidence/receipts/forgery-network-revalidation.json",
+        "sha256": "sha256:ed792c401f2b054be0a24763a0fa1969b22109fda94cadb70eb9598e9d4b8cab"
       },
       "summary": {
         "valid": true,
         "collected": 60,
         "passed": 2,
+        "frozen_total": 60,
         "reward": 0.03333333333333333,
         "candidate_fake_report_ignored": true,
         "public_network_available": false
       }
     },
     "offline": {
-      "command": "official Harbor verifier network probe from annotated-types repair Oracle run",
+      "command": "Fresh Oracle verifier network probe from annotated-types-revalidation-oracle-20260905",
       "exit_code": 0,
       "completed": true,
       "public_network_available": false,
+      "result": {
+        "path": "catalog/sources/annotated-types/evidence/receipts/offline-result-revalidation.json",
+        "sha256": "sha256:21ec87b89086169c920177be039136b11e8a9e1b494405929351874d26721019"
+      },
       "network": {
-        "path": "catalog/sources/annotated-types/evidence/receipts/oracle-network.json",
-        "sha256": "sha256:71d198997c9cdca006e244387fbab911ce3968363c2ea84ad524f8c0309fc622"
+        "path": "catalog/sources/annotated-types/evidence/receipts/offline-network-revalidation.json",
+        "sha256": "sha256:9e8433d7a614e548062e426fc340e0608c4d94d67a28311c1447fc69fe188af6"
       }
     }
   },
   "residual_risks": [
-    "Repository-wide no-vendor test remains blocked by pre-existing catalog/tasks/orjson/solution/orjson-3.12.0-cp312-cp312-manylinux_2_34_x86_64.whl; annotated-types runtime itself contains no wheelhouse, vendor directory, or wheel file."
+    "The committed catalog/tasks projection must be regenerated and bound to canonical manifest sha256:6213eef071df8289223ba4278ba9d5c56c4f71c0d6d183fb20147dd8098aa93d before this source evidence is accepted by the production catalog gate.",
+    "The first stub attempt failed before collection with infrastructure OSError Errno 11; the bounded retry completed and is the receipt used above."
   ]
 }

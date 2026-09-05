@@ -1,0 +1,25 @@
+argparse revalidation source-freeze attempt (NoNetwork)
+
+Expected source digest: sha256:1e752dbc94dc3113795a86701fba4afc94791a5f7df4ebd03aaf29dba6dda1ad
+Task source validation: passed; the current source digest matched the expected digest.
+
+Offline private CAS inspection:
+- Oracle artifact sha256:f1b6ef33cee9e1dd01dbebfabc7c4218688f3872e9ab1d8a2c3ec2d7f94918a3 is present.
+- Its payload contains fetch-source.mjs, prepare-package.mjs, solve.sh, and source-files.sha256.
+- It does not contain the frozen source archive for revision e9eb9de652dc3f101b7320ceb682c60f407e2af6.
+- No local argparse source archive matching codeload sha256:67b1e74b3890d3781ce4bec8649243514d052125763cec16fa865ac6324786c8 was found in the parent CAS or repository-local .nl2repo files.
+
+Oracle safety finding: solution/fetch-source.mjs performs an HTTPS GET to
+https://codeload.github.com/nodeca/argparse/tar.gz/e9eb9de652dc3f101b7320ceb682c60f407e2af6.
+The requested revalidation contract forbids runtime network access and host
+authorization for Agent, candidate, verifier, Oracle, and controls. The Oracle
+run was therefore intentionally not started.
+
+Compile attempts (both NoNetwork, --allow-private, absolute parent CAS):
+- uv run nl2repo harbor compile catalog/sources/argparse --output .nl2repo/argparse-revalidate-compile-a --toolchain toolchain.node.lock.toml --artifact-root /data/NL2RepoBench-integration-20260827/.nl2repo/artifacts --allow-private : exit 0; manifest sha256:9cca68533e4fe8d2006251ef9fca9b3824a6be24dbc8b625d0e8f2eb59a5093b.
+- uv run nl2repo harbor compile catalog/sources/argparse --output .nl2repo/argparse-revalidate-compile-b --toolchain toolchain.node.lock.toml --artifact-root /data/NL2RepoBench-integration-20260827/.nl2repo/artifacts --allow-private : exit 0; byte-identical to compile-a.
+
+Remediation required: register a local CAS source archive whose bytes match
+the recorded codeload digest (and bind its path/digest in the Oracle bundle),
+then compile a new final manifest and rerun Oracle plus every declared control
+under NoNetwork. Do not reuse the stale valid receipt.

@@ -6,6 +6,18 @@ has already resolved a hostname into `getaddrinfo`-style records. The package
 implements a local Happy Eyeballs connection race and utilities for preparing
 and mutating address-info lists.
 
+# Natural Language Instruction
+
+Create the `aiohappyeyeballs` project from an empty `workspace/`. Build an installable implementation, not a loose demonstration script. The public API guide below is the complete source of the task contract; preserve its import paths, signatures, return shapes, ordering, state changes, and exceptions.
+
+Required capabilities:
+- address-info conversion: implement the documented public behavior and preserve its input/output and error contract.
+- interleave and address-list mutation: implement the documented public behavior and preserve its input/output and error contract.
+- sequential local TCP connection: implement the documented public behavior and preserve its input/output and error contract.
+- delayed Happy Eyeballs connection racing: implement the documented public behavior and preserve its input/output and error contract.
+
+Do not copy an upstream checkout or tests. Keep behavior deterministic and local, and make the package usable from the installation layout described below. The principal public entry points include: `the`.
+
 # Supports
 
 - Support Python 3.10 and newer, including Python 3.12.
@@ -18,6 +30,24 @@ and mutating address-info lists.
 - Normal operation is local asyncio and socket work. It must not resolve DNS,
   access the public network, start a long-lived service, or require files
   outside the installed package.
+
+
+## NoNetwork boundary
+
+Agent, candidate, verifier, Oracle, controls, and normal runtime execution are network-isolated. Do not access GitHub, package registries, Go proxies, DNS, or external services during execution; use only the frozen local build inputs.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+└── src/aiohappyeyeballs/
+    ├── __init__.py
+    ├── impl.py
+    ├── types.py
+    ├── utils.py
+    └── py.typed
+```
 
 # API Usage Guide
 
@@ -101,3 +131,39 @@ Preserve the caller's address-info list except where a documented mutation
 helper is explicitly used. Treat cancellation, `KeyboardInterrupt`, and
 `SystemExit` as control flow rather than ordinary connection errors. Do not
 retrieve an upstream repository or reference implementation at runtime.
+
+# Examples
+
+## Ordinary address conversion
+
+```python
+from aiohappyeyeballs import addr_to_addr_infos
+
+ipv4 = addr_to_addr_infos(("127.0.0.1", 8080))
+ipv6 = addr_to_addr_infos(("::1", 8080, 0, 0))
+```
+
+## Ordinary local connection
+
+```python
+from aiohappyeyeballs import start_connection
+
+sock = await start_connection(ipv4)
+sock.close()
+```
+
+## Boundary: null conversion
+
+```python
+assert addr_to_addr_infos(None) is None
+```
+
+## Boundary: empty connection list
+
+```python
+await start_connection([])  # raises ValueError
+```
+
+# Error Handling and Boundary Conditions
+
+Reject invalid inputs using the documented exception or error result. Preserve empty-input behavior, ordering, Unicode/encoding behavior, cancellation or timeout semantics, and local filesystem boundaries where the API specifies them. Never turn a failed local operation into a network request, subprocess, or silent success.

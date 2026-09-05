@@ -19,9 +19,18 @@
     "network_policy": "no-network"
   },
   "private_artifacts": {
-    "dependency_lock": {"digest": "sha256:6cd136db8707ec7b4e0a85ff51d2d3e3ae7ae35b93c9f57db8b51acf7add9cf2", "size_bytes": 189},
-    "verifier_bundle": {"digest": "sha256:ba1ef6e1359836ec27e3066922c0020e30985b1b8c3ecad305d0490da27188b6", "size_bytes": 20480},
-    "oracle_bundle": {"digest": "sha256:a05d5c48cd83e52e8b27b38c99bf797ebb3016c5f6a0887f4541eb6b5b2c1912", "size_bytes": 378880}
+    "dependency_lock": {
+      "digest": "sha256:6cd136db8707ec7b4e0a85ff51d2d3e3ae7ae35b93c9f57db8b51acf7add9cf2",
+      "size_bytes": 189
+    },
+    "verifier_bundle": {
+      "digest": "sha256:ba1ef6e1359836ec27e3066922c0020e30985b1b8c3ecad305d0490da27188b6",
+      "size_bytes": 20480
+    },
+    "oracle_bundle": {
+      "digest": "sha256:a05d5c48cd83e52e8b27b38c99bf797ebb3016c5f6a0887f4541eb6b5b2c1912",
+      "size_bytes": 378880
+    }
   },
   "baseline": {
     "command": "python -m pip install -e . with pytest==9.1.1, pytest-asyncio==1.4.0, and pytest-cov==7.1.0; python -m pytest -q --junitxml=../baseline.xml",
@@ -31,52 +40,71 @@
     "junit": ".nl2repo/authoring-work/aiohappyeyeballs/baseline.xml"
   },
   "compile": {
-    "command": "uv run nl2repo harbor compile catalog/sources/aiohappyeyeballs --output .nl2repo/compiled/aiohappyeyeballs-production --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+    "command": "uv run nl2repo harbor compile catalog/sources/aiohappyeyeballs --output .nl2repo/revalidate-aiohappyeyeballs-1 --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
     "exit_code": 0,
-    "bundle_manifest": ".nl2repo/compiled/aiohappyeyeballs-production/aiohappyeyeballs/bundle.manifest.json",
-    "bundle_manifest_sha256": "sha256:9e694886e0ef60a9d170cd0c7cc831e1b50b4c9d115e02b8a4ee87138d4f9f8c",
-    "canonical_manifest_digest": "sha256:6d1cdf1c537404ba195b6c9761a526c6bfb375c28d2e6374d885002ccb759eed"
+    "bundle_manifest": "catalog/sources/aiohappyeyeballs/evidence/revalidation-20260905/bundle.manifest.json",
+    "bundle_manifest_sha256": "sha256:2a2d0e2088c8dd93f7ba2da70dae82d07ac5e99044fb6c40cf6b962dacf12e1c",
+    "canonical_manifest_digest": "sha256:e1c3667f3aec7bba4ec9711282ac79ce1eb91ff0942a8c78d0f95358e21abf43"
   },
   "oracle": {
     "harbor_version": "0.21.0",
-    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/aiohappyeyeballs-production/aiohappyeyeballs -a oracle --job-name aiohappyeyeballs-final-oracle-20260828 -o .nl2repo/runs/aiohappyeyeballs/final-20260828/oracle --n-concurrent 1 --yes",
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/revalidate-aiohappyeyeballs-1/aiohappyeyeballs -a oracle --job-name aiohappyeyeballs-revalidate-oracle-20260905 -o .nl2repo/runs/aiohappyeyeballs-revalidate-20260905/oracle --n-concurrent 1 --yes",
     "exit_code": 0,
     "valid": true,
     "expected": 17,
     "collected": 17,
     "passed": 17,
     "reward": 1.0,
-    "grading": {"path": ".nl2repo/runs/aiohappyeyeballs/final-20260828/oracle/aiohappyeyeballs-final-oracle-20260828/aiohappyeyeballs__ZMapESQ/verifier/grading.json", "sha256": "sha256:f1dd6a53d63b97a52072b34be4f5a647999bb733574f583e3d94972a363ab31d"},
-    "network": {"path": ".nl2repo/runs/aiohappyeyeballs/final-20260828/oracle/aiohappyeyeballs-final-oracle-20260828/aiohappyeyeballs__ZMapESQ/verifier/network.json", "sha256": "sha256:013888d465abd5fbaff97d9168406c729d4ccb08ea618401318114f94fa1936b"},
+    "grading": {
+      "path": "catalog/sources/aiohappyeyeballs/evidence/revalidation-20260905/oracle.grading.json",
+      "sha256": "sha256:f1dd6a53d63b97a52072b34be4f5a647999bb733574f583e3d94972a363ab31d"
+    },
+    "network": {
+      "path": "catalog/sources/aiohappyeyeballs/evidence/revalidation-20260905/oracle.network.json",
+      "sha256": "sha256:4176a4e1e621f9acc9e769d78f5640fcaa6de3739fda6c3e0123550b6dbfc4ce"
+    },
     "public_network_available": false
   },
   "controls": {
     "empty": {
-      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled/aiohappyeyeballs-production/aiohappyeyeballs -a nop --job-name aiohappyeyeballs-final-empty-20260828 -o .nl2repo/runs/aiohappyeyeballs/final-20260828/empty --n-concurrent 1 --yes",
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/aiohappyeyeballs-revalidate-20260905/aiohappyeyeballs-empty -a oracle --job-name aiohappyeyeballs-revalidate-empty-20260905 -o .nl2repo/runs/aiohappyeyeballs-revalidate-20260905/empty --n-concurrent 1 --yes",
       "exit_code": 0,
+      "public_network_available": false,
       "valid": true,
       "collected": 0,
       "reward": 0.0,
       "failure_class": "model",
       "failure_reason": "candidate-installation-failed",
-      "public_network_available": false,
-      "grading": {"path": ".nl2repo/runs/aiohappyeyeballs/final-20260828/empty/aiohappyeyeballs-final-empty-20260828/aiohappyeyeballs__bT5J85d/verifier/grading.json", "sha256": "sha256:2d286e6fd41c4a3ab01620295274648cbc95e9b9497b2878dbaf99a3f9e5cdcb"},
-      "network": {"path": ".nl2repo/runs/aiohappyeyeballs/final-20260828/empty/aiohappyeyeballs-final-empty-20260828/aiohappyeyeballs__bT5J85d/verifier/network.json", "sha256": "sha256:0448a982d950c1747892d5c90d8c0cecb4582e12711d6b225821286386869567"}
+      "grading": {
+        "path": "catalog/sources/aiohappyeyeballs/evidence/revalidation-20260905/empty.grading.json",
+        "sha256": "sha256:2d286e6fd41c4a3ab01620295274648cbc95e9b9497b2878dbaf99a3f9e5cdcb"
+      },
+      "network": {
+        "path": "catalog/sources/aiohappyeyeballs/evidence/revalidation-20260905/empty.network.json",
+        "sha256": "sha256:deb81869cabf19c69af0a4a7e085b4e921e6c93243c3b2431ccd0b5c5ae39346"
+      }
     },
     "stub": {
-      "command": "uv run nl2repo harbor prepare-control .nl2repo/compiled/aiohappyeyeballs-production/aiohappyeyeballs stub --output .nl2repo/controls/aiohappyeyeballs-final-20260828 --toolchain toolchain.lock.toml; uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/aiohappyeyeballs-final-20260828/aiohappyeyeballs-stub -a oracle --job-name aiohappyeyeballs-final-stub-20260828 -o .nl2repo/runs/aiohappyeyeballs/final-20260828/stub --n-concurrent 1 --yes",
+      "command": "uv run nl2repo harbor prepare-control .nl2repo/revalidate-aiohappyeyeballs-1/aiohappyeyeballs stub --output .nl2repo/controls/aiohappyeyeballs-revalidate-20260905 --toolchain toolchain.lock.toml; uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/aiohappyeyeballs-revalidate-20260905/aiohappyeyeballs-stub -a oracle --job-name aiohappyeyeballs-revalidate-stub-20260905 -o .nl2repo/runs/aiohappyeyeballs-revalidate-20260905/stub --n-concurrent 1 --yes",
       "exit_code": 0,
+      "public_network_available": false,
       "valid": true,
       "collected": 17,
       "passed": 3,
       "reward": 0.17647058823529413,
-      "public_network_available": false,
-      "grading": {"path": ".nl2repo/runs/aiohappyeyeballs/final-20260828/stub/aiohappyeyeballs-final-stub-20260828/aiohappyeyeballs-stub__tND4c4y/verifier/grading.json", "sha256": "sha256:842e4bedec1bba7bebbd27b8c7470aa65cf7994ccd4034563c6127a148180d59"},
-      "network": {"path": ".nl2repo/runs/aiohappyeyeballs/final-20260828/stub/aiohappyeyeballs-final-stub-20260828/aiohappyeyeballs-stub__tND4c4y/verifier/network.json", "sha256": "sha256:58052cc9e8d3f11a49e804d7679ce1eb5e444911a37e02542b95b1cba4c4f84b"}
+      "grading": {
+        "path": "catalog/sources/aiohappyeyeballs/evidence/revalidation-20260905/stub.grading.json",
+        "sha256": "sha256:842e4bedec1bba7bebbd27b8c7470aa65cf7994ccd4034563c6127a148180d59"
+      },
+      "network": {
+        "path": "catalog/sources/aiohappyeyeballs/evidence/revalidation-20260905/stub.network.json",
+        "sha256": "sha256:1c8b77ac9c99f6fa8267100f19fb6f4aed4695072c8679fca7e8a05697a33e9a"
+      }
     },
     "forgery": {
-      "command": "uv run nl2repo harbor prepare-control .nl2repo/compiled/aiohappyeyeballs-production/aiohappyeyeballs forgery --output .nl2repo/controls/aiohappyeyeballs-final-20260828 --toolchain toolchain.lock.toml; uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/aiohappyeyeballs-final-20260828/aiohappyeyeballs-forgery -a oracle --job-name aiohappyeyeballs-final-forgery-20260828 -o .nl2repo/runs/aiohappyeyeballs/final-20260828/forgery --n-concurrent 1 --yes",
+      "command": "uv run nl2repo harbor prepare-control .nl2repo/revalidate-aiohappyeyeballs-1/aiohappyeyeballs forgery --output .nl2repo/controls/aiohappyeyeballs-revalidate-20260905 --toolchain toolchain.lock.toml; uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/aiohappyeyeballs-revalidate-20260905/aiohappyeyeballs-forgery -a oracle --job-name aiohappyeyeballs-revalidate-forgery-20260905 -o .nl2repo/runs/aiohappyeyeballs-revalidate-20260905/forgery --n-concurrent 1 --yes",
       "exit_code": 0,
+      "public_network_available": false,
       "valid": true,
       "collected": 17,
       "passed": 3,
@@ -84,41 +112,73 @@
       "verifier_owned_reward": true,
       "workspace_forged_reports_present_but_untrusted": true,
       "trusted_grading_matches_stub": true,
-      "public_network_available": false,
-      "grading": {"path": ".nl2repo/runs/aiohappyeyeballs/final-20260828/forgery/aiohappyeyeballs-final-forgery-20260828/aiohappyeyeballs-forgery__43QeEJB/verifier/grading.json", "sha256": "sha256:842e4bedec1bba7bebbd27b8c7470aa65cf7994ccd4034563c6127a148180d59"},
-      "network": {"path": ".nl2repo/runs/aiohappyeyeballs/final-20260828/forgery/aiohappyeyeballs-final-forgery-20260828/aiohappyeyeballs-forgery__43QeEJB/verifier/network.json", "sha256": "sha256:05c0b47bb6257f31edd1a5a963bbc0f9dc9cfef123b5baf4129750608468249b"}
+      "grading": {
+        "path": "catalog/sources/aiohappyeyeballs/evidence/revalidation-20260905/forgery.grading.json",
+        "sha256": "sha256:842e4bedec1bba7bebbd27b8c7470aa65cf7994ccd4034563c6127a148180d59"
+      },
+      "network": {
+        "path": "catalog/sources/aiohappyeyeballs/evidence/revalidation-20260905/forgery.network.json",
+        "sha256": "sha256:d4f8da7f279b5e0db27d9ffc53429201c7887179e188e8e66ba3141da7dfecf3"
+      }
     },
     "offline": {
       "command": "Oracle run above; trusted verifier network probe",
       "exit_code": 0,
-      "completed": true,
       "public_network_available": false,
-      "network": {"path": ".nl2repo/runs/aiohappyeyeballs/final-20260828/oracle/aiohappyeyeballs-final-oracle-20260828/aiohappyeyeballs__ZMapESQ/verifier/network.json", "sha256": "sha256:013888d465abd5fbaff97d9168406c729d4ccb08ea618401318114f94fa1936b"}
+      "completed": true,
+      "grading": {
+        "path": "catalog/sources/aiohappyeyeballs/evidence/revalidation-20260905/oracle.grading.json",
+        "sha256": "sha256:f1dd6a53d63b97a52072b34be4f5a647999bb733574f583e3d94972a363ab31d"
+      },
+      "network": {
+        "path": "catalog/sources/aiohappyeyeballs/evidence/revalidation-20260905/oracle.network.json",
+        "sha256": "sha256:4176a4e1e621f9acc9e769d78f5640fcaa6de3739fda6c3e0123550b6dbfc4ce"
+      }
     },
     "install_hang": {
-      "command": "uv run nl2repo harbor prepare-control .nl2repo/compiled/aiohappyeyeballs-production/aiohappyeyeballs install-hang --output .nl2repo/controls/aiohappyeyeballs-final-20260828 --toolchain toolchain.lock.toml; uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/aiohappyeyeballs-final-20260828/aiohappyeyeballs-install-hang -a oracle --job-name aiohappyeyeballs-final-install-hang-20260828 -o .nl2repo/runs/aiohappyeyeballs/final-20260828/install-hang --n-concurrent 1 --yes",
+      "command": "uv run nl2repo harbor prepare-control .nl2repo/revalidate-aiohappyeyeballs-1/aiohappyeyeballs install-hang --output .nl2repo/controls/aiohappyeyeballs-revalidate-20260905 --toolchain toolchain.lock.toml; uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/aiohappyeyeballs-revalidate-20260905/aiohappyeyeballs-install-hang -a oracle --job-name aiohappyeyeballs-revalidate-install-hang-20260905 -o .nl2repo/runs/aiohappyeyeballs-revalidate-20260905/install-hang --n-concurrent 1 --yes",
       "exit_code": 0,
-      "valid": true,
-      "candidate_install_outcome": "timeout",
-      "reward": 0.0,
       "public_network_available": false,
-      "grading": {"path": ".nl2repo/runs/aiohappyeyeballs/final-20260828/install-hang/aiohappyeyeballs-final-install-hang-20260828/aiohappyeyeballs-install-hang__hoKavQV/verifier/grading.json", "sha256": "sha256:2d286e6fd41c4a3ab01620295274648cbc95e9b9497b2878dbaf99a3f9e5cdcb"},
-      "network": {"path": ".nl2repo/runs/aiohappyeyeballs/final-20260828/install-hang/aiohappyeyeballs-final-install-hang-20260828/aiohappyeyeballs-install-hang__hoKavQV/verifier/network.json", "sha256": "sha256:7a44c248d44c292e26bbeabba7252f1f97610211d72a46159532dc7d0ea26390"}
+      "valid": true,
+      "collected": 0,
+      "reward": 0.0,
+      "candidate_install_outcome": "timeout",
+      "grading": {
+        "path": "catalog/sources/aiohappyeyeballs/evidence/revalidation-20260905/install-hang.grading.json",
+        "sha256": "sha256:2d286e6fd41c4a3ab01620295274648cbc95e9b9497b2878dbaf99a3f9e5cdcb"
+      },
+      "network": {
+        "path": "catalog/sources/aiohappyeyeballs/evidence/revalidation-20260905/install-hang.network.json",
+        "sha256": "sha256:8dce6efdfe663fa2ecc10c9acf9f5f5b3cfef0f2be138c5372e3b2dee785a995"
+      }
     },
     "call_hang": {
-      "command": "uv run nl2repo harbor prepare-control .nl2repo/compiled/aiohappyeyeballs-production/aiohappyeyeballs call-hang --output .nl2repo/controls/aiohappyeyeballs-final-20260828 --toolchain toolchain.lock.toml; uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/aiohappyeyeballs-final-20260828/aiohappyeyeballs-call-hang -a oracle --job-name aiohappyeyeballs-final-call-hang-20260828 -o .nl2repo/runs/aiohappyeyeballs/final-20260828/call-hang --n-concurrent 1 --yes",
+      "command": "uv run nl2repo harbor prepare-control .nl2repo/revalidate-aiohappyeyeballs-1/aiohappyeyeballs call-hang --output .nl2repo/controls/aiohappyeyeballs-revalidate-20260905 --toolchain toolchain.lock.toml; uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls/aiohappyeyeballs-revalidate-20260905/aiohappyeyeballs-call-hang -a oracle --job-name aiohappyeyeballs-revalidate-call-hang-20260905 -o .nl2repo/runs/aiohappyeyeballs-revalidate-20260905/call-hang --n-concurrent 1 --yes",
       "exit_code": 0,
+      "public_network_available": false,
       "valid": true,
       "collected": 17,
       "passed": 2,
       "reward": 0.11764705882352941,
-      "public_network_available": false,
-      "grading": {"path": ".nl2repo/runs/aiohappyeyeballs/final-20260828/call-hang/aiohappyeyeballs-final-call-hang-20260828/aiohappyeyeballs-call-hang__tAN7dX9/verifier/grading.json", "sha256": "sha256:09b71354d821c1fcfb496214f8d74506014096d9385f372f094a717f6aeec39b"},
-      "network": {"path": ".nl2repo/runs/aiohappyeyeballs/final-20260828/call-hang/aiohappyeyeballs-final-call-hang-20260828/aiohappyeyeballs-call-hang__tAN7dX9/verifier/network.json", "sha256": "sha256:05c0b47bb6257f31edd1a5a963bbc0f9dc9cfef123b5baf4129750608468249b"}
+      "grading": {
+        "path": "catalog/sources/aiohappyeyeballs/evidence/revalidation-20260905/call-hang.grading.json",
+        "sha256": "sha256:09b71354d821c1fcfb496214f8d74506014096d9385f372f094a717f6aeec39b"
+      },
+      "network": {
+        "path": "catalog/sources/aiohappyeyeballs/evidence/revalidation-20260905/call-hang.network.json",
+        "sha256": "sha256:10c30e7ca9b5be382a120211ac670423f97c1b994eae9b3b8504213f7c68ffeb"
+      }
     }
   },
   "residual_risks": [
     "The fixed production denominator is a focused 17-leaf public API contract rather than all 66 upstream test leaves.",
     "This authoring lane performed no independent blind review or model-agent pilot."
-  ]
+  ],
+  "revalidation": {
+    "source_content_digest": "sha256:6d79a6352a74630f56361971de123d7911e734bea97c43fb60a6c133f25a153",
+    "instruction_sha256": "sha256:38fab22ddf49c3bc7a547422302a00fac4912e17b6962b2a5f4de08d66f4e385",
+    "run_root": ".nl2repo/runs/aiohappyeyeballs-revalidate-20260905",
+    "all_runtime_network": "no-network",
+    "deterministic_compile_manifest_sha256": "sha256:2a2d0e2088c8dd93f7ba2da70dae82d07ac5e99044fb6c40cf6b962dacf12e1c"
+  }
 }

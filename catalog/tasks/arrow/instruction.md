@@ -1,4 +1,4 @@
-# Build `arrow`
+# Project Description
 
 Create a complete, installable Python project named `arrow` from an empty
 workspace. It is a pure-Python date and time library that provides an aware
@@ -17,7 +17,19 @@ The package must be importable as `arrow` and must expose the public module API
 described below. Normal operations are deterministic and local; they do not
 access a network, service, subprocess, or project files.
 
-## Supports
+# Natural Language Instruction
+
+Create the `arrow` project from an empty `workspace/`. Build an installable implementation, not a loose demonstration script. The public API guide below is the complete source of the task contract; preserve its import paths, signatures, return shapes, ordering, state changes, and exceptions.
+
+Required capabilities:
+- timezone-aware Arrow values: implement the documented public behavior and preserve its input/output and error contract.
+- construction and timezone conversion: implement the documented public behavior and preserve its input/output and error contract.
+- formatting and parsing: implement the documented public behavior and preserve its input/output and error contract.
+- relative shifts, spans, ranges, and locales: implement the documented public behavior and preserve its input/output and error contract.
+
+Do not copy an upstream checkout or tests. Keep behavior deterministic and local, and make the package usable from the installation layout described below. The principal public entry points include: `str(value)`, `repr(value)`, `replace(**kwargs)`, `clone()`.
+
+# Supports
 
 - Support CPython 3.8 and newer Python 3.x versions, with the evaluation image
   using Python 3.12 on Linux amd64.
@@ -33,9 +45,31 @@ access a network, service, subprocess, or project files.
 - Keep timezone behavior aware. A missing timezone means UTC for direct
   constructors and UTC-oriented parsing; explicit timezone strings and tzinfo
   objects must be honored.
-- The project must install and import without hidden tests being present.
+- The project must install and import without evaluation-only files being present.
 
-## API Usage Guide
+
+## NoNetwork boundary
+
+Agent, candidate, verifier, Oracle, controls, and normal runtime execution are network-isolated. Do not access GitHub, package registries, Go proxies, DNS, or external services during execution; use only the frozen local build inputs.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+└── arrow/
+    ├── __init__.py
+    ├── api.py
+    ├── arrow.py
+    ├── factory.py
+    ├── formatter.py
+    ├── parser.py
+    ├── locales.py
+    ├── util.py
+    └── constants.py
+```
+
+# API Usage Guide
 
 ### Root constructors and factory
 
@@ -118,7 +152,7 @@ helpers with ordinary Python return types and validation exceptions. Constants
 such as `DEFAULT_LOCALE` and the public time-frame maps are available from
 `arrow.constants`. Preserve the module re-exports and exception classes.
 
-## Implementation Notes
+# Implementation Notes
 
 - Keep the `Arrow` value immutable from the caller's perspective: operations
   return new values and do not mutate the original datetime.
@@ -133,3 +167,40 @@ such as `DEFAULT_LOCALE` and the public time-frame maps are available from
 - Keep the package's public root small and compatible with the documented
   `__all__`; private helpers may be organized across modules but must not be
   required by the evaluation environment.
+
+# Examples
+
+## Ordinary construction and shifting
+
+```python
+import arrow
+
+value = arrow.get(2024, 1, 2, tzinfo="UTC")
+tomorrow = value.shift(days=1)
+```
+
+## Ordinary formatting and range
+
+```python
+import arrow
+
+label = value.format("YYYY-MM-DD HH:mm:ss ZZ")
+days = list(arrow.Arrow.range("day", value, tomorrow))
+```
+
+## Boundary: invalid locale
+
+```python
+value.humanize(locale="not-a-locale")  # raises ValueError
+```
+
+## Boundary: immutable-style operation
+
+```python
+shifted = value.shift(hours=1)
+assert shifted is not value
+```
+
+# Error Handling and Boundary Conditions
+
+Reject invalid inputs using the documented exception or error result. Preserve empty-input behavior, ordering, Unicode/encoding behavior, cancellation or timeout semantics, and local filesystem boundaries where the API specifies them. Never turn a failed local operation into a network request, subprocess, or silent success.

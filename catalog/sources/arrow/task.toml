@@ -87,6 +87,6 @@ uri = "artifact://private/sha256:8cf970182760ea0e43bc43b196d718920ea9017fbabc972
 visibility = "private"
 
 [lifecycle]
-status = "packaged"
+status = "controls-passed"
 owner = "python-author-discover-20260903T025734Z"
-reason = "Frozen source, dependency closure, private verifier, and digest-checked Oracle bundle are prepared; production compile and Harbor Oracle/controls remain to be run by the authoring lane and integrator."
+reason = "Current instruction-bound manifest was compiled deterministically and passed the NoNetwork Oracle plus stub, forgery, call-hang, install-hang, and offline controls; blind review, model pilot, and publication remain separate stages."

@@ -42,3 +42,19 @@ HTTP status helpers, and promise helpers. The full upstream Vitest/browser/modul
 not used as the fixed denominator. The private test bundle, npm cache closure, Oracle source
 archive, compiled Harbor bundle, and negative-control receipts are task-local evidence; no Agent
 Run was started in this lane.
+
+## Instruction migration revalidation (2026-09-05)
+
+- Current catalog source content digest: `sha256:fd2d7ce17988470b91085ef5df896c250af3b2647d3869144539782f398bcffd`.
+- Two independent NoNetwork Node projections were byte-identical. The fresh canonical manifest
+  digest is `sha256:f46af14d968a0cd972a96a1dabbc7a139fb02f0a3ec150f0a9f0061ec319a021`; the
+  `bundle.manifest.json` bytes are SHA-256
+  `sha256:41919f056d9a258c2eb75194281e1eefe30e3d47d10932c8a3e15667bfb1b4e9`.
+- Harbor `0.21.0` Oracle run `axios-revalidation-oracle-20260905` collected and passed `16/16`
+  leaves with reward `1.0`; network probes reported `public_network_available=false`.
+- Fresh independently prepared `stub` and `forgery` controls each collected `16/16` leaves,
+  passed `0`, and scored `0.0`. Forgery wrote candidate `reward.json` and `report.json`, while
+  verifier-owned grading remained `0.0`.
+- Task-local receipt summaries are in `evidence/revalidation-*.json`; complete ignored Harbor
+  run trees remain under the worker `.nl2repo/axios-revalidation-runs/` directory for parent
+  artifact inspection. The parent must regenerate `catalog/tasks/axios` from the fresh manifest.
