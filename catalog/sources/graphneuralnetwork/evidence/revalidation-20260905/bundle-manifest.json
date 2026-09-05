@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "task_id": "graphneuralnetwork",
+  "catalog_source_digest": "sha256:322b68a3099bee8b2993b36afd24d86f36816e2d167adb9c1f6ad267a1b6f39a",
+  "canonical_manifest_digest": "sha256:62820c7856320eb3b11f6ba5d69295b6754831e8e4a777e515c759a90c8d6007",
+  "raw_bundle_manifest_sha256": "sha256:75146ec5b8b211b0432e37341361d7bb261beeec4f446171d5cc9b9301d21342",
+  "file_count": 58,
+  "deterministic_second_compile": true,
+  "toolchain": "toolchain.lock.toml",
+  "harbor": "0.21.0",
+  "replacement_bundles": {
+    "oracle": "sha256:4a58d62fea09dcbad6c7727d754097f661587531406ded0823b32fa7f26764af",
+    "verifier": "sha256:2e51141fb80d0865f4d9f84ed3720f9bbbab2e8b64268731e63480f5a203e28f",
+    "dependency_lock": "sha256:a30e649e38343eebfe8322f4c75c14e36752e5d3a48bae529988273f0cfa4b1c"
+  }
+}

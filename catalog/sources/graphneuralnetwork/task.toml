@@ -3,7 +3,7 @@ task_id = "graphneuralnetwork"
 version = "0.2.0"
 instruction = "instruction.md"
 
-oracle_bundle = { digest = "sha256:e0ca03295ab9bdb4d9dab1791b9aeddb9efce0c79c3d9a476c6830637b84e66e", size_bytes = 34099200, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:e0ca03295ab9bdb4d9dab1791b9aeddb9efce0c79c3d9a476c6830637b84e66e", visibility = "private" }
+oracle_bundle = { digest = "sha256:4a58d62fea09dcbad6c7727d754097f661587531406ded0823b32fa7f26764af", size_bytes = 34099200, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:4a58d62fea09dcbad6c7727d754097f661587531406ded0823b32fa7f26764af", visibility = "private" }
 
 [metadata]
 difficulty = "easy"
@@ -80,7 +80,7 @@ workspace_artifact = "/workspace"
 
 [verifier]
 protocol = "custom-json-v1"
-bundle = { digest = "sha256:993115d21018f68eaac97de122a3fe176ab3068b0842b065787109d986615f9b", size_bytes = 30720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:993115d21018f68eaac97de122a3fe176ab3068b0842b065787109d986615f9b", visibility = "private" }
+bundle = { digest = "sha256:2e51141fb80d0865f4d9f84ed3720f9bbbab2e8b64268731e63480f5a203e28f", size_bytes = 30720, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:2e51141fb80d0865f4d9f84ed3720f9bbbab2e8b64268731e63480f5a203e28f", visibility = "private" }
 entrypoint = "run.py"
 environment = {}
 

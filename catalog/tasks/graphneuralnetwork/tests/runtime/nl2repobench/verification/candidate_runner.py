@@ -15,12 +15,21 @@ import os
 import resource
 import runpy
 import sys
+from collections.abc import Iterator
 from pathlib import Path
 from typing import Any, NoReturn
 
 MAX_REQUEST_BYTES = 1024 * 1024
 MAX_OUTPUT_BYTES = 1024 * 1024
 RESULT_PREFIX = "NL2REPO_CANDIDATE_RESULT="
+
+
+def _json_default(value: object) -> object:
+    """Make common lazy results and representation objects observable safely."""
+
+    if isinstance(value, Iterator):
+        return list(value)
+    return repr(value)
 
 
 def _apply_limits() -> None:
@@ -36,7 +45,7 @@ def _candidate_site(value: str) -> Path:
     path = Path(value).resolve()
     if path != Path("/tmp/candidate-site") or not path.is_dir():
         raise ValueError("candidate site is unavailable")
-    sys.path.append(str(path))
+    sys.path.insert(0, str(path))
     dependency_root = os.environ.get("NL2REPO_CANDIDATE_DEPENDENCIES")
     if dependency_root:
         dependency_path = Path(dependency_root).resolve()
@@ -56,12 +65,38 @@ def _read_request() -> dict[str, Any]:
     return payload
 
 
+def _materialize(value: Any) -> Any:
+    """Resolve an explicit constructor tag inside a candidate-side argument."""
+
+    if isinstance(value, list):
+        return [_materialize(item) for item in value]
+    if not isinstance(value, dict):
+        return value
+    if set(value) != {"__nl2repo_construct__"}:
+        return {key: _materialize(item) for key, item in value.items()}
+    spec = value["__nl2repo_construct__"]
+    if not isinstance(spec, dict) or set(spec) != {"args", "attribute", "kwargs", "module"}:
+        raise ValueError("invalid nested constructor")
+    module_name = spec["module"]
+    attribute = spec["attribute"]
+    if not isinstance(module_name, str) or not isinstance(attribute, str):
+        raise ValueError("nested constructor target must be strings")
+    target: Any = importlib.import_module(module_name)
+    for part in attribute.split("."):
+        target = getattr(target, part)
+    return target(
+        *[_materialize(item) for item in spec["args"]],
+        **{key: _materialize(item) for key, item in spec["kwargs"].items()},
+    )
+
+
 def _emit(payload: dict[str, Any], exit_code: int = 0) -> NoReturn:
     encoded = json.dumps(
         payload,
         ensure_ascii=False,
         separators=(",", ":"),
         sort_keys=True,
+        default=_json_default,
     ).encode("utf-8")
     os.write(1, RESULT_PREFIX.encode() + encoded + b"\n")
     os._exit(exit_code)
@@ -69,10 +104,20 @@ def _emit(payload: dict[str, Any], exit_code: int = 0) -> NoReturn:
 
 def _call() -> NoReturn:
     request = _read_request()
-    if set(request) != {"args", "attribute", "kwargs", "module", "operation"}:
-        raise ValueError("invalid call request fields")
-    if request["operation"] not in {"call", "get"}:
+    operation = request.get("operation")
+    ordinary_fields = {"args", "attribute", "kwargs", "module", "operation"}
+    method_fields = ordinary_fields | {
+        "constructor_args",
+        "constructor_kwargs",
+        "invoke",
+        "member",
+    }
+    if operation not in {"call", "get", "call_method"}:
         raise ValueError("invalid call operation")
+    request_fields = frozenset(request)
+    expected_fields = method_fields if operation == "call_method" else ordinary_fields
+    if request_fields != frozenset(expected_fields):
+        raise ValueError("invalid call request fields")
     module_name = request["module"]
     attribute = request["attribute"]
     args = request["args"]
@@ -85,9 +130,51 @@ def _call() -> NoReturn:
         target: Any = importlib.import_module(module_name)
         for part in attribute.split("."):
             target = getattr(target, part)
-        value = target(*args, **kwargs) if request["operation"] == "call" else target
+        if operation == "call_method":
+            constructor_args = request["constructor_args"]
+            constructor_kwargs = request["constructor_kwargs"]
+            member = request["member"]
+            invoke = request["invoke"]
+            if (
+                not isinstance(constructor_args, list)
+                or not isinstance(constructor_kwargs, dict)
+                or not isinstance(member, str)
+                or not isinstance(invoke, bool)
+            ):
+                raise ValueError("method call fields have invalid shapes")
+            instance = target(*constructor_args, **constructor_kwargs)
+            observed = getattr(instance, member)
+            value = (
+                observed(
+                    *[_materialize(item) for item in args],
+                    **{key: _materialize(item) for key, item in kwargs.items()},
+                )
+                if invoke
+                else observed
+            )
+        else:
+            value = target(*args, **kwargs) if operation == "call" else target
         payload = {"ok": True, "value": value}
     except BaseException as exc:  # candidate exceptions are test observations
+        payload = {
+            "exception_message": str(exc),
+            "exception_type": f"{type(exc).__module__}.{type(exc).__qualname__}",
+            "ok": False,
+        }
+    _emit(payload)
+
+
+def _script() -> NoReturn:
+    """Run a trusted JSON scenario inside the isolated candidate process."""
+
+    request = _read_request()
+    if set(request) != {"source"} or not isinstance(request["source"], str):
+        raise ValueError("invalid script request")
+    namespace: dict[str, Any] = {"__name__": "__main__"}
+    try:
+        exec(compile(request["source"], "<candidate-scenario>", "exec"), namespace)
+        payload = {"ok": True, "value": namespace["result"]}
+    except BaseException as exc:  # scenario failures are verifier observations
         payload = {
             "exception_message": str(exc),
             "exception_type": f"{type(exc).__module__}.{type(exc).__qualname__}",
@@ -142,6 +229,7 @@ def main() -> None:
     parser.add_argument("--candidate-site", required=True)
     subcommands = parser.add_subparsers(dest="operation", required=True)
     subcommands.add_parser("call")
+    subcommands.add_parser("script")
     metadata = subcommands.add_parser("metadata-requires")
     metadata.add_argument("distribution")
     module = subcommands.add_parser("module")
@@ -156,6 +244,8 @@ def main() -> None:
     site = _candidate_site(args.candidate_site)
     if args.operation == "call":
         _call()
+    if args.operation == "script":
+        _script()
     if args.operation == "metadata-requires":
         _metadata_requires(site, args.distribution)
     if args.operation == "module":
