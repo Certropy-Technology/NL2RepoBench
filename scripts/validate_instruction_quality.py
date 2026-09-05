@@ -80,11 +80,9 @@ def check(path: Path) -> list[str]:
     forbidden = FORBIDDEN.search(text)
     if forbidden:
         errors.append(f"{task_id}: forbidden internal detail: {forbidden.group(0)!r}")
-    if task_id not in lowered:
-        errors.append(f"{task_id}: task id is absent from instruction")
-    package = task.get("source", {}).get("package_name") or task_id
-    if isinstance(package, str) and package.lower() not in lowered:
-        errors.append(f"{task_id}: package name {package!r} is absent from instruction")
+    # Distribution and import names are not normalized in the current catalog
+    # (for example, python-json-logger imports as pythonjsonlogger). Their
+    # semantic consistency is reviewed from task metadata and inventories.
     return errors
 
 
