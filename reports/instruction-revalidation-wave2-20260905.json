@@ -1,0 +1,147 @@
+{
+  "schema_version": "1.0",
+  "report_kind": "instruction-revalidation-wave",
+  "wave": 2,
+  "workflow_run": "afcddf07-4b60-4d35-a88a-1b9e9e0a9e9c",
+  "queue": "reports/instruction-revalidation-queue-20260905.json",
+  "base_commit": "f0fea2df7054f7859cf8c925addf46e1ee8109f8",
+  "integration_commit": "dc144eb835a988a46cb8dc4efa7c986a3ba15958",
+  "network_policy": "no-network",
+  "attempts_per_task": 1,
+  "concurrency": 16,
+  "model_api_cost_usd": 0,
+  "counts": {
+    "task_count": 16,
+    "fully_revalidated": 3,
+    "artifact_or_verifier_blocked": 12,
+    "control_contract_pending": 1,
+    "projection_refreshed": 3,
+    "worker_handoff_failures_recovered_by_parent": 2
+  },
+  "tasks": [
+    {
+      "task_id": "basic-ftp",
+      "status": "artifact-or-verifier-blocked",
+      "reason": "The deterministic compiled Oracle performs a runtime codeload fetch. No Oracle or controls were run.",
+      "evidence": "catalog/sources/basic-ftp/evidence/revalidation-20260905/blocker.md"
+    },
+    {
+      "task_id": "better-sqlite3",
+      "status": "fully-revalidated",
+      "source_digest": "sha256:bec3a67067d3573b9229c7d88fd64db8d209ffb5fe1812a46c2c9992bee9dcd6",
+      "canonical_manifest_digest": "sha256:68381e8a174fd7a604a8116c52111f787be279fe004e322601add3e1f71279d6",
+      "oracle": {"passed": 12, "total": 12, "reward": 1.0},
+      "empty": {"passed": 0, "total": 0, "reward": 0.0, "reason": "candidate-installation-failed"},
+      "stub": {"passed": 0, "total": 12, "reward": 0.0},
+      "forgery": {"passed": 0, "total": 12, "reward": 0.0},
+      "projection": "catalog/tasks/better-sqlite3"
+    },
+    {
+      "task_id": "boto3",
+      "status": "fully-revalidated",
+      "source_digest": "sha256:a46c69f504348b6e88cf89c23628080415199abd9e96a5000c04e502cea30193",
+      "canonical_manifest_digest": "sha256:62f1d40e990e500e77bcb878163b59204f08e1a02415ebb54169732338f13c68",
+      "oracle": {"passed": 539, "skipped": 13, "total": 552, "reward": 0.9764492753623188},
+      "oracle_ceiling_evidence": "catalog/sources/boto3/evidence/revalidation-20260905/oracle-skipped.json",
+      "empty": {"passed": 0, "total": 0, "reward": 0.0, "reason": "candidate-installation-failed"},
+      "stub": {"passed": 0, "total": 552, "reward": 0.0},
+      "forgery": {"passed": 0, "total": 552, "reward": 0.0},
+      "projection": "catalog/tasks/boto3"
+    },
+    {
+      "task_id": "botocore",
+      "status": "artifact-or-verifier-blocked",
+      "reason": "The hash-valid Oracle bundle performs a runtime GitHub fetch and contains no matching local source archive.",
+      "evidence": "catalog/sources/botocore/evidence/revalidation-20260905/blocker.md"
+    },
+    {
+      "task_id": "cachetools",
+      "status": "artifact-or-verifier-blocked",
+      "reason": "The verifier and Oracle private CAS objects are absent.",
+      "evidence": "catalog/sources/cachetools/evidence/revalidation-20260905.md"
+    },
+    {
+      "task_id": "camelcase",
+      "status": "artifact-or-verifier-blocked",
+      "reason": "The deterministic compiled Oracle performs a runtime Git fetch.",
+      "evidence": "catalog/sources/camelcase/evidence/revalidation-20260905.md"
+    },
+    {
+      "task_id": "camelcase-keys",
+      "status": "fully-revalidated",
+      "source_digest": "sha256:8d7f47005997b4bc64ded07402f53c52329cdf667879fe0baca9a0f543ac8a1e",
+      "canonical_manifest_digest": "sha256:35fda462db358cd27da596341606ad68c9abac21af1383d9f4a23c4d08418af4",
+      "oracle": {"passed": 24, "total": 24, "reward": 1.0},
+      "empty": {"passed": 0, "total": 0, "reward": 0.0, "reason": "candidate-installation-failed"},
+      "stub": {"passed": 2, "total": 24, "reward": 0.08333333333333333},
+      "forgery": {"passed": 1, "total": 24, "reward": 0.041666666666666664},
+      "offline": {"passed": 1, "total": 24, "reward": 0.041666666666666664},
+      "projection": "catalog/tasks/camelcase-keys",
+      "residual_risk": "The additional loader-hook control scored 5/24 (0.20833333333333334), above the stub/forgery threshold but outside those two mandatory low-score controls."
+    },
+    {
+      "task_id": "canonicalize",
+      "status": "artifact-or-verifier-blocked",
+      "reason": "All four declared private CAS objects are absent; lifecycle remains packaged.",
+      "evidence": "catalog/sources/canonicalize/evidence/revalidation-20260905.md"
+    },
+    {
+      "task_id": "certifi",
+      "status": "artifact-or-verifier-blocked",
+      "reason": "The Oracle solver fetches GitHub and the frozen source archive is absent from CAS.",
+      "evidence": "catalog/sources/certifi/evidence/revalidation-20260905/blocker.md"
+    },
+    {
+      "task_id": "cffi",
+      "status": "artifact-or-verifier-blocked",
+      "reason": "The dependency lock, verifier bundle, and Oracle bundle are absent from CAS.",
+      "evidence": "catalog/sources/cffi/evidence/revalidation-20260905.md",
+      "parent_recovery": "The worker handoff failed; the parent independently recreated and validated the blocker evidence."
+    },
+    {
+      "task_id": "chalk",
+      "status": "artifact-or-verifier-blocked",
+      "reason": "All four declared private CAS objects are absent.",
+      "evidence": "catalog/sources/chalk/evidence/revalidation-20260905.md"
+    },
+    {
+      "task_id": "charset-normalizer",
+      "status": "artifact-or-verifier-blocked",
+      "reason": "The dependency lock, verifier bundle, and Oracle bundle are absent from CAS.",
+      "evidence": "catalog/sources/charset-normalizer/evidence/revalidation-20260905.md",
+      "parent_recovery": "The worker evidence mixed in the wrong source digest; the parent rejected it and recreated the record from the queue and task metadata."
+    },
+    {
+      "task_id": "cheerio",
+      "status": "control-contract-pending",
+      "canonical_manifest_digest": "sha256:fae1fa45bbead289b53ec4a20a2ee36f993f386164ce7731279996e901909d07",
+      "oracle": {"passed": 51, "total": 51, "reward": 1.0},
+      "reason": "The source has no standalone empty, stub, forgery, or offline controls. Lifecycle and production evidence remain unchanged.",
+      "evidence": "catalog/sources/cheerio/evidence/revalidation-20260905/revalidation-blocker.md"
+    },
+    {
+      "task_id": "chokidar",
+      "status": "artifact-or-verifier-blocked",
+      "reason": "The hash-valid private Oracle bundle performs a runtime GitHub fetch.",
+      "evidence": "catalog/sources/chokidar/evidence/revalidation-20260905/blocker.json"
+    },
+    {
+      "task_id": "cookie",
+      "status": "artifact-or-verifier-blocked",
+      "reason": "Three declared private CAS objects are absent.",
+      "evidence": "catalog/sources/cookie/evidence/revalidation-blocker-20260905.md"
+    },
+    {
+      "task_id": "coverage",
+      "status": "artifact-or-verifier-blocked",
+      "reason": "The Oracle artifact contains only a solve script that performs a runtime Git fetch.",
+      "evidence": "catalog/sources/coverage/evidence/revalidation-20260905.md"
+    }
+  ],
+  "reliability": {
+    "target_source_network_findings": 0,
+    "target_generated_network_errors": 0,
+    "expected_generated_warnings": ["botocore", "chokidar", "coverage"],
+    "global_generated_network_errors_unrelated": 1
+  }
+}
