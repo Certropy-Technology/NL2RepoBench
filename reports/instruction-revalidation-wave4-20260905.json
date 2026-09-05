@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0",
+  "report_kind": "instruction-revalidation-wave",
+  "wave": 4,
+  "workflow_run": "0c2ecff8-ed77-4472-a866-4bda81df1a8b",
+  "queue": "reports/instruction-revalidation-queue-20260905.json",
+  "base_commit": "4fd8808a14904a5042dac6ddc8570f85710e4bba",
+  "integration_commit": "1c56f8ffaa0a99c58db4252a9ba483faf95a971e",
+  "network_policy": "no-network",
+  "attempts_per_task": 1,
+  "concurrency": 16,
+  "model_api_cost_usd": 0,
+  "counts": {
+    "task_count": 16,
+    "fully_revalidated": 0,
+    "artifact_or_verifier_blocked": 16,
+    "missing_cas": 5,
+    "network_fetching_oracle": 11,
+    "projection_refreshed": 0
+  },
+  "tasks": [
+    {"task_id": "emoji", "status": "artifact-or-verifier-blocked", "reason": "Four required CAS objects are absent.", "evidence": "catalog/sources/emoji/evidence/revalidation-20260905/blocker.md"},
+    {"task_id": "es-to-primitive", "status": "artifact-or-verifier-blocked", "reason": "Oracle performs runtime GitHub fetch.", "evidence": "catalog/sources/es-to-primitive/evidence/revalidation-20260905/blocker.md"},
+    {"task_id": "eslint", "status": "artifact-or-verifier-blocked", "reason": "Oracle performs runtime codeload HTTPS fetch.", "evidence": "catalog/sources/eslint/evidence/revalidation-20260905/blocker.md"},
+    {"task_id": "espree", "status": "artifact-or-verifier-blocked", "reason": "Oracle performs runtime GitHub fetch.", "evidence": "catalog/sources/espree/evidence/revalidation-20260905/blocker.md"},
+    {"task_id": "exceptiongroup", "status": "artifact-or-verifier-blocked", "reason": "Oracle performs runtime GitHub clone.", "evidence": "catalog/sources/exceptiongroup/evidence/revalidation-20260905/blocker.md"},
+    {"task_id": "factory-boy", "status": "artifact-or-verifier-blocked", "reason": "Oracle performs runtime GitHub clone/fetch; lifecycle remains packaged.", "evidence": "catalog/sources/factory-boy/evidence/revalidation-20260905/blocker.md"},
+    {"task_id": "fast-deep-equal", "status": "artifact-or-verifier-blocked", "reason": "Three required CAS objects are absent.", "evidence": "catalog/sources/fast-deep-equal/evidence/revalidation-20260905/cas-remediation.md"},
+    {"task_id": "fast-glob", "status": "artifact-or-verifier-blocked", "reason": "Four required CAS objects are absent.", "evidence": "catalog/sources/fast-glob/evidence/revalidation-20260905/revalidation-blocker.md"},
+    {"task_id": "fast-string-truncated-width", "status": "artifact-or-verifier-blocked", "reason": "Oracle performs runtime GitHub fetch.", "evidence": "catalog/sources/fast-string-truncated-width/evidence/revalidation-20260905/blocker.md"},
+    {"task_id": "fast-string-width", "status": "artifact-or-verifier-blocked", "reason": "Oracle performs runtime GitHub fetch.", "evidence": "catalog/sources/fast-string-width/evidence/revalidation-20260905/blocker.md"},
+    {"task_id": "fastapi", "status": "artifact-or-verifier-blocked", "reason": "Three required CAS objects are absent.", "evidence": "catalog/sources/fastapi/evidence/revalidation-20260905.md"},
+    {"task_id": "fastjsonschema", "status": "artifact-or-verifier-blocked", "reason": "Oracle performs runtime GitHub fetch.", "evidence": "catalog/sources/fastjsonschema/evidence/revalidation-20260905/revalidation-blocker.md"},
+    {"task_id": "figures", "status": "artifact-or-verifier-blocked", "reason": "Oracle performs runtime GitHub fetch.", "evidence": "catalog/sources/figures/evidence/revalidation-20260905/blocker.md"},
+    {"task_id": "filelock", "status": "artifact-or-verifier-blocked", "reason": "Three required CAS objects are absent.", "evidence": "catalog/sources/filelock/evidence/revalidation-20260905/cas-blocker.md"},
+    {"task_id": "flatted", "status": "artifact-or-verifier-blocked", "reason": "Oracle performs runtime GitHub clone/fetch.", "evidence": "catalog/sources/flatted/evidence/revalidation-20260905/blocker.md"},
+    {"task_id": "fonttools", "status": "artifact-or-verifier-blocked", "reason": "Oracle performs runtime GitHub fetch.", "evidence": "catalog/sources/fonttools/evidence/revalidation-20260905/blocker.md"}
+  ],
+  "reliability": {
+    "source_validation_passed": 16,
+    "instruction_quality_passed": true,
+    "changed_json_parsed": 55,
+    "target_source_network_errors": 0,
+    "target_generated_network_errors": 0,
+    "expected_generated_warnings": 8,
+    "global_generated_network_errors_unrelated": 1,
+    "lifecycle_changes": 0,
+    "production_evidence_changes": 0
+  }
+}
