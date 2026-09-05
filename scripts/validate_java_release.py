@@ -48,10 +48,14 @@ def validate(root: Path) -> dict[str, Any]:
         source_root = root / "catalog/sources" / task_id
         task_root = root / "catalog/tasks" / task_id
         source = tomllib.loads((source_root / "task.toml").read_text(encoding="utf-8"))
-        if source.get("version") != "1.0.0" and task_id != "java-semver4j":
+        expected_versions = {
+            "java-commons-codec": "1.1.0",
+            "java-commons-csv": "1.2.0",
+            "java-semver4j": "1.3.0",
+        }
+        expected_version = expected_versions[task_id]
+        if source.get("version") != expected_version:
             raise ValueError(f"{task_id}: unexpected task version")
-        if task_id == "java-semver4j" and source.get("version") != "1.1.0":
-            raise ValueError("java-semver4j: stability contract version was not advanced")
         if source.get("metadata", {}).get("language") != "java":
             raise ValueError(f"{task_id}: language is not java")
         runtime = source.get("environment", {}).get("runtime", {})

@@ -1,5 +1,5 @@
 {
-  "canonical_manifest_digest": "sha256:e11d7e0db466ef4bcfec6a2005337d140cd241e02af07a9dca72fbe1cefd798f",
+  "canonical_manifest_digest": "sha256:324d40e9473db4678ec8520282580d907221ec23d467cd1ba2dfb1c9694f793f",
   "files": [
     {
       "path": "README.md",
@@ -43,8 +43,8 @@
     },
     {
       "path": "instruction.md",
-      "sha256": "774503e84f7124be737b72c167b843d04e7178d995296f88d7068b2f1fb32b00",
-      "size_bytes": 1621
+      "sha256": "55b1ddd6272f2712df4bc4d33dcf860f0c8b6144f5672117657008e1e6e575f2",
+      "size_bytes": 3612
     },
     {
       "path": "solution/oracle-ref.json",
@@ -58,7 +58,7 @@
     },
     {
       "path": "task.toml",
-      "sha256": "9f5a9e69a7d71329374b15bc12de5161194d5ac04732d4b7ca5f1f8e53bfb50d",
+      "sha256": "e0c25f3e4cbf39c27cfef72414c0f2fa45954b8e45ff74b1da7f35319f71b870",
       "size_bytes": 1089
     },
     {
@@ -344,6 +344,6 @@
   "runtime": "java",
   "schema_version": "1.0",
   "task_id": "java-commons-codec",
-  "task_version": "1.0.0",
+  "task_version": "1.1.0",
   "toolchain_lock_digest": "sha256:9ea2918f480bf5a09904f21c3655bded56711fd8618a7e41b0c19bb632d5a37e"
 }

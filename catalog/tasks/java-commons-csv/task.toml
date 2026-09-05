@@ -5,7 +5,7 @@ artifacts = [
 
 [task]
 name = "nl2repobench/java-commons-csv"
-version = "1.0.0"
+version = "1.2.0"
 description = "Recreate Apache Commons CSV parsing, field access, and default formatting behavior."
 authors = [
     { name = "NL2RepoBench" },
@@ -35,7 +35,7 @@ package_manager = "maven"
 package_manager_version = "3.9.11"
 metric_contract = "fixed-test-pass-rate-v1"
 expected_test_count = 4
-canonical_manifest_digest = "sha256:7c1d8412351335fc115f0f2e24f519e4e7c911920c387fb5e19e9dc7d4c86a7e"
+canonical_manifest_digest = "sha256:7e0cf141faa7861e8544c0f1c4110202c0d026f615aa48fae3931ec6ecf525d3"
 toolchain_lock_digest = "sha256:9ea2918f480bf5a09904f21c3655bded56711fd8618a7e41b0c19bb632d5a37e"
 
 [agent]

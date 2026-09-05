@@ -1,7 +1,7 @@
 {
   "bundle": {
     "path": "catalog/tasks/java-semver4j/bundle.manifest.json",
-    "sha256": "sha256:2575ae752590c5b56478a726c810f59dcb481bd32e0a4cdb559fd216123a4ee2"
+    "sha256": "sha256:d4d1ce8932de67382bc73a63c2bdfdbdb68adaf43a61a649e81bcf7d3e96a966"
   },
   "controls": {
     "empty": {
@@ -10,12 +10,12 @@
       "exit_code": 0,
       "failure_reason": "candidate-installation-failed",
       "grading": {
-        "path": ".nl2repo/runs/java-pilot-final/controls-v21/java-semver4j/empty/2026-09-05__09-21-18/java-semver4j-empty__EhWuaFQ/verifier/grading.json",
+        "path": ".nl2repo/runs/java-pilot-final/controls-v23/java-semver4j/empty/2026-09-05__10-46-22/java-semver4j-empty__g9Zdw84/verifier/grading.json",
         "sha256": "sha256:c911b3187f669552710685e72edcb8552da6c30a793d580b012f482577c3d0c0"
       },
       "network": {
-        "path": ".nl2repo/runs/java-pilot-final/controls-v21/java-semver4j/empty/2026-09-05__09-21-18/java-semver4j-empty__EhWuaFQ/verifier/network.json",
-        "sha256": "sha256:f2c3289fdf3ff302529bf114495185f1abfe581e7ce5a98a326cebf837c8f1f8"
+        "path": ".nl2repo/runs/java-pilot-final/controls-v23/java-semver4j/empty/2026-09-05__10-46-22/java-semver4j-empty__g9Zdw84/verifier/network.json",
+        "sha256": "sha256:b2ef7d69d1536cc98471eafc8818121f3c07a9bdb8c4f8fe58035dcf45211d5a"
       },
       "reward": 0.0,
       "valid": true
@@ -25,12 +25,12 @@
       "counts_collected": 9,
       "exit_code": 0,
       "grading": {
-        "path": ".nl2repo/runs/java-pilot-final/controls-v21/java-semver4j/forgery/2026-09-05__09-24-06/java-semver4j-forgery__95scJk5/verifier/grading.json",
+        "path": ".nl2repo/runs/java-pilot-final/controls-v23/java-semver4j/forgery/2026-09-05__10-50-53/java-semver4j-forgery__4Cw8ZZz/verifier/grading.json",
         "sha256": "sha256:67ac715fc35415af79e545cde4ead0a86df6b782d64b69ff03439ba5918da5f1"
       },
       "network": {
-        "path": ".nl2repo/runs/java-pilot-final/controls-v21/java-semver4j/forgery/2026-09-05__09-24-06/java-semver4j-forgery__95scJk5/verifier/network.json",
-        "sha256": "sha256:cb89c33bce39e3d2fe59bebdfb405c43cd493a78de28187740aaf491c7eeb8d4"
+        "path": ".nl2repo/runs/java-pilot-final/controls-v23/java-semver4j/forgery/2026-09-05__10-50-53/java-semver4j-forgery__4Cw8ZZz/verifier/network.json",
+        "sha256": "sha256:4176a4e1e621f9acc9e769d78f5640fcaa6de3739fda6c3e0123550b6dbfc4ce"
       },
       "reward": 0.1111111111111111,
       "valid": true,
@@ -42,12 +42,12 @@
       "exit_code": 0,
       "failure_reason": "candidate-timeout",
       "grading": {
-        "path": ".nl2repo/runs/java-pilot-final/controls-v21/java-semver4j/hang/2026-09-05__09-27-12/java-semver4j-hang__NG5w6kR/verifier/grading.json",
+        "path": ".nl2repo/runs/java-pilot-final/controls-v23/java-semver4j/hang/2026-09-05__10-53-37/java-semver4j-hang__aAbBBVS/verifier/grading.json",
         "sha256": "sha256:a0b06374e3b8a68cd8a7c0241c6f786d98b167250807608ae641d635b1572f6d"
       },
       "network": {
-        "path": ".nl2repo/runs/java-pilot-final/controls-v21/java-semver4j/hang/2026-09-05__09-27-12/java-semver4j-hang__NG5w6kR/verifier/network.json",
-        "sha256": "sha256:17eec17ed1bbedd1edb106534c3e2d986ce2ef5814acc33aa6ab51978b57d35e"
+        "path": ".nl2repo/runs/java-pilot-final/controls-v23/java-semver4j/hang/2026-09-05__10-53-37/java-semver4j-hang__aAbBBVS/verifier/network.json",
+        "sha256": "sha256:c9c2399b6245685c5101c74e3719f6fd59b3b05dc9d2995eee9ec9dcef2b20fd"
       },
       "reward": 0.0,
       "valid": true
@@ -58,12 +58,12 @@
       "exit_code": 0,
       "failure_reason": "candidate-installation-failed",
       "grading": {
-        "path": ".nl2repo/runs/java-pilot-final/controls-v21/java-semver4j/install-failure/2026-09-05__09-26-01/java-semver4j-install-failure__SQ665XT/verifier/grading.json",
+        "path": ".nl2repo/runs/java-pilot-final/controls-v23/java-semver4j/install-failure/2026-09-05__10-52-18/java-semver4j-install-failure__JWxrQZk/verifier/grading.json",
         "sha256": "sha256:c911b3187f669552710685e72edcb8552da6c30a793d580b012f482577c3d0c0"
       },
       "network": {
-        "path": ".nl2repo/runs/java-pilot-final/controls-v21/java-semver4j/install-failure/2026-09-05__09-26-01/java-semver4j-install-failure__SQ665XT/verifier/network.json",
-        "sha256": "sha256:cb89c33bce39e3d2fe59bebdfb405c43cd493a78de28187740aaf491c7eeb8d4"
+        "path": ".nl2repo/runs/java-pilot-final/controls-v23/java-semver4j/install-failure/2026-09-05__10-52-18/java-semver4j-install-failure__JWxrQZk/verifier/network.json",
+        "sha256": "sha256:c9c2399b6245685c5101c74e3719f6fd59b3b05dc9d2995eee9ec9dcef2b20fd"
       },
       "reward": 0.0,
       "valid": true
@@ -75,12 +75,12 @@
       "exit_code": 0,
       "failure_reason": "candidate-installation-failed",
       "grading": {
-        "path": ".nl2repo/runs/java-pilot-final/controls-v21/java-semver4j/offline/2026-09-05__09-35-22/java-semver4j-offline__oAMQdiX/verifier/grading.json",
+        "path": ".nl2repo/runs/java-pilot-final/controls-v23/java-semver4j/offline/2026-09-05__11-00-02/java-semver4j-offline__vRmRfG6/verifier/grading.json",
         "sha256": "sha256:c911b3187f669552710685e72edcb8552da6c30a793d580b012f482577c3d0c0"
       },
       "network": {
-        "path": ".nl2repo/runs/java-pilot-final/controls-v21/java-semver4j/offline/2026-09-05__09-35-22/java-semver4j-offline__oAMQdiX/verifier/network.json",
-        "sha256": "sha256:cb89c33bce39e3d2fe59bebdfb405c43cd493a78de28187740aaf491c7eeb8d4"
+        "path": ".nl2repo/runs/java-pilot-final/controls-v23/java-semver4j/offline/2026-09-05__11-00-02/java-semver4j-offline__vRmRfG6/verifier/network.json",
+        "sha256": "sha256:65e13ece543839c733761d30dacae0c8f8326d78fac5f8d98f6f3d836b601227"
       },
       "reward": 0.0,
       "valid": true
@@ -90,12 +90,12 @@
       "counts_collected": 9,
       "exit_code": 0,
       "grading": {
-        "path": ".nl2repo/runs/java-pilot-final/controls-v21/java-semver4j/stub/2026-09-05__09-22-41/java-semver4j-stub__GuVCLUQ/verifier/grading.json",
+        "path": ".nl2repo/runs/java-pilot-final/controls-v23/java-semver4j/stub/2026-09-05__10-48-06/java-semver4j-stub__oF5LdzG/verifier/grading.json",
         "sha256": "sha256:67ac715fc35415af79e545cde4ead0a86df6b782d64b69ff03439ba5918da5f1"
       },
       "network": {
-        "path": ".nl2repo/runs/java-pilot-final/controls-v21/java-semver4j/stub/2026-09-05__09-22-41/java-semver4j-stub__GuVCLUQ/verifier/network.json",
-        "sha256": "sha256:2af5ddb78153af32c8bd128945081e3d41c516c81e457f9889c55812a22ea7fe"
+        "path": ".nl2repo/runs/java-pilot-final/controls-v23/java-semver4j/stub/2026-09-05__10-48-06/java-semver4j-stub__oF5LdzG/verifier/network.json",
+        "sha256": "sha256:008d4f7b7d9a22bf499f9e08e6539d67c7d643de1801f0f4376721e22260010a"
       },
       "reward": 0.1111111111111111,
       "valid": true
@@ -106,13 +106,13 @@
     "command": "bash scripts/run_java_oracle.sh",
     "exit_code": 0,
     "grading": {
-      "path": ".nl2repo/runs/java-pilot-final/oracle-v21-semver/java-semver4j-v21/harbor/2026-09-05__09-21-01/java-semver4j-oracle__aaskMCd/verifier/grading.json",
+      "path": ".nl2repo/runs/java-pilot-final/oracle-v23-semver-csv/java-semver4j-v23/harbor/2026-09-05__10-46-03/java-semver4j-oracle__yYWuXp6/verifier/grading.json",
       "sha256": "sha256:c7f3053fc5fe6625c0f6d570196749ab81bfd1d2edf6817766fad6637e7f6b1a"
     },
     "harbor_version": "0.21.0",
     "network": {
-      "path": ".nl2repo/runs/java-pilot-final/oracle-v21-semver/java-semver4j-v21/harbor/2026-09-05__09-21-01/java-semver4j-oracle__aaskMCd/verifier/network.json",
-      "sha256": "sha256:25b2bcd8c27d72412e3e0d0091833ebf9affd7d17e2ca8fdcbd924beb3449a3c"
+      "path": ".nl2repo/runs/java-pilot-final/oracle-v23-semver-csv/java-semver4j-v23/harbor/2026-09-05__10-46-03/java-semver4j-oracle__yYWuXp6/verifier/network.json",
+      "sha256": "sha256:d2d7dc05301d614571dd53d0dcf65899a96ebce70f311503986a617e82f09859"
     },
     "reward": 1.0,
     "valid": true

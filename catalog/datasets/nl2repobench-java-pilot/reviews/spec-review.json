@@ -4,16 +4,22 @@
   "reviewer_role": "independent blind/spec reviewer",
   "reviewed_at": "2026-09-05T01:44:22Z",
   "tasks": [
-    {"task_id": "java-commons-codec", "version": "1.0.0", "verdict": "approve"},
-    {"task_id": "java-commons-csv", "version": "1.0.0", "verdict": "approve"},
-    {"task_id": "java-semver4j", "version": "1.1.0", "verdict": "approve"}
+    {"task_id": "java-commons-codec", "version": "1.1.0", "verdict": "approve"},
+    {"task_id": "java-commons-csv", "version": "1.2.0", "verdict": "approve"},
+    {"task_id": "java-semver4j", "version": "1.3.0", "verdict": "approve"}
   ],
   "findings": [
     {
       "task_id": "java-semver4j",
       "status": "resolved",
       "finding": "The initial stability wording omitted the upstream major-version condition and traceability selected one out-of-scope constructor.",
-      "resolution": "Version 1.1.0 documents major > 0 and pre-release semantics, adds stable-zero to the nine-leaf contract, and removes the untested constructor from selected_symbols."
+      "resolution": "Version 1.3.0 documents major > 0 and pre-release semantics, adds stable-zero to the nine-leaf contract, removes the untested constructor from selected_symbols, and adopts the start.md-style task prompt structure."
+    },
+    {
+      "task_id": "java-commons-csv",
+      "status": "resolved",
+      "finding": "The instruction examples used getRecords() and try-with-resources without documenting those public contracts.",
+      "resolution": "Version 1.2.0 documents getRecords(), AutoCloseable/close(), and source-order behavior."
     }
   ],
   "evidence": [

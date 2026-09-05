@@ -1,5 +1,5 @@
 {
-  "canonical_manifest_digest": "sha256:8c3173bf8c9cf203ebd4fd8580d58631b6cb97c171e794d743600b42cf77be10",
+  "canonical_manifest_digest": "sha256:58fe1ad33aef07b086a7645aacf7e5a53898a9b842f316cf42fd40f520963b82",
   "files": [
     {
       "path": "README.md",
@@ -43,8 +43,8 @@
     },
     {
       "path": "instruction.md",
-      "sha256": "38c0dcea8810b0a85ba95fd7e72f4d6e15ff26818806f69af05d9e1bbe63755e",
-      "size_bytes": 2206
+      "sha256": "2182bcaea1ae45746d34297a2a4ee0868fdf9fc5fe8c29832e242fb91e8e2630",
+      "size_bytes": 4495
     },
     {
       "path": "solution/oracle-ref.json",
@@ -58,7 +58,7 @@
     },
     {
       "path": "task.toml",
-      "sha256": "d9a419bbcd18dead809b9edc7170d6beea63957e374abc8e667f596ef511edd0",
+      "sha256": "810c7a6151ed9e302a40280e8c405bb77563164da10590e7b49304570303dd54",
       "size_bytes": 1139
     },
     {
@@ -344,6 +344,6 @@
   "runtime": "java",
   "schema_version": "1.0",
   "task_id": "java-semver4j",
-  "task_version": "1.1.0",
+  "task_version": "1.3.0",
   "toolchain_lock_digest": "sha256:9ea2918f480bf5a09904f21c3655bded56711fd8618a7e41b0c19bb632d5a37e"
 }
