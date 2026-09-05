@@ -1,9 +1,9 @@
-## Project Introduction and Goals
+## Project Description
 
 **Cerberus** is a lightweight and extensible Python data validation library specifically designed to validate Python dictionary data structures. The project aims to provide a simple, efficient, and extensible data validation solution with the following capabilities: 1. **Lightweight Validation**: Implement dependency-free core data validation functions, including type checking, pattern validation, and other basic features. 2. **Extensibility**: Designed with a non-blocking and easily extensible architecture, allowing developers to add custom validation rules and type definitions. 3. **Compatibility**: Support all Python 3.7+ versions, including CPython and PyPy implementations. 4. **Production-Quality**: Ensure code quality and stability through a comprehensive test suite, supporting semantic versioning. 5. **Simplified Development**: Provide a concise API interface to make data validation simple and user-friendly
 
 
-## Natural Language Instructions (Prompt)
+## Natural Language Instruction
 
 Create a Python project named Cerberus that implements a lightweight and extensible data validation library. The project should include the following features:
 
@@ -100,9 +100,7 @@ wheel                         0.36.2
 zipp                          3.15.0
 ```
 
-## Project Architecture
-
-### Project Directory Structure
+## Project Directory Structure
 
 ```Plain
 workspace/
@@ -1270,7 +1268,7 @@ if not validator.validate(document):
 7. **Extensibility**: Custom validation rules can be added by subclassing the Validator class
 
 
-## Detailed Implementation Nodes
+## Implementation Notes
 
 ### Node 1: Basic Type Validation
 
@@ -2381,3 +2379,31 @@ assert len(validator._valid_schemas) == 0
 ```
 
 These functional nodes cover all core features of the Cerberus project, including basic validation, normalization, error handling, and custom extensions. Each node provides detailed input/output examples and test interfaces, demonstrating practical usage scenarios and validation results.
+
+## Examples
+
+```python
+from cerberus import Validator
+
+schema = {'name': {'type': 'string', 'required': True}, 'age': {'type': 'integer', 'min': 0}}
+validator = Validator(schema)
+assert validator.validate({'name': 'Ada', 'age': 36}) is True
+```
+
+```python
+document = validator.validated({'name': 'Ada', 'age': '36'})
+# Normalization rules determine whether the returned copy contains a coerced value.
+```
+
+## Error Handling and Boundary Conditions
+
+- `validate` returns a boolean and exposes structured errors through the
+  configured error handler; it does not silently treat a malformed schema as
+  a valid document. Schema definition failures raise `SchemaError`.
+- Required, nullable, readonly, dependency, exclusion, logical, and nested
+  rules retain their declared ordering and complete document paths. Unknown
+  rules and invalid rule definitions must fail through the documented schema
+  validation path rather than being ignored.
+- Normalization must not mutate caller-owned input unexpectedly. Validator
+  instances retain their documented state and are not thread-safe. Every
+  agent, candidate, verifier, Oracle, and control phase is NoNetwork.

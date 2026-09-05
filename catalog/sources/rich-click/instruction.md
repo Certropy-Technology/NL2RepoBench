@@ -1,4 +1,4 @@
-# Introduction and Goals of the Rich-Click Project
+# Project Description
 
 Rich-Click is a Python library **aimed at beautifying Click command-line interfaces**. It can use the Rich library to beautifully render the help output of Click command-line tools, providing a more appealing command-line interface experience. While maintaining compatibility with the original Click API, this tool offers rich style customization, grouping management, and theme configuration features. Its core functions include: **Rich style rendering** (automatically beautifying Click help output and error messages), **option and command grouping** (supporting custom panel grouping and sorting), and intelligent parsing support for Markdown and Rich markup languages. In short, Rich-Click is committed to providing a seamless Click upgrade solution, enabling developers to easily create command-line applications with excellent visual effects (for example, simply using `import rich_click as click` can achieve the beautification effect).
 

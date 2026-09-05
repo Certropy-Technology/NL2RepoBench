@@ -46,6 +46,16 @@ const nock = require('nock');
 
 ## Package root
 
+The package also has a TypeScript-friendly default import spelling for callers
+whose compiler enables CommonJS interop: `import nock from 'nock'`. The runtime
+entry remains the callable CommonJS export shown below.
+
+```js
+import http from 'node:http';
+const nock = require('nock');
+void http;
+```
+
 ```js
 const nock = require('nock')
 const scope = nock(basePath, options?)

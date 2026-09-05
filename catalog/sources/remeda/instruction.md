@@ -8,6 +8,18 @@ TypeScript. This task evaluates a deterministic JSON-safe slice of its public
 runtime API. The package must expose the named exports described below from its
 package root.
 
+## Natural Language Instruction
+
+Create the `remeda` package from an empty `workspace/`. Implement the selected
+functional utilities and their data-first/data-last overloads exactly as
+specified below. Preserve callback argument order, fresh result containers,
+stable ordering, JavaScript equality rules, and JSON-compatible result shapes.
+
+The required capability groups are array transformations, numeric and object
+operations, predicates and string normalization, and pipeline composition.
+Keep the root named exports and ESM packaging usable without a CLI, build-time
+network, runtime filesystem, clock, randomness, or external service.
+
 ## Supports
 
 - Node.js `24.19.0`, npm `11.17.0`, Linux amd64, and ESM package semantics.
@@ -22,7 +34,26 @@ package root.
 - This is a repository-generation task: implement the package from this
   specification rather than copying a reference repository or hidden tests.
 
+## Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── dist/
+│   └── index.js
+├── index.d.ts
+└── README.md
+```
+
+The package root must resolve to `dist/index.js` and expose the named API
+listed in the inventory. Do not add evaluator adapters, private test files, or
+generated runtime artifacts to the project.
+
 ## API Usage Guide
+
+The public import path is `import {map, pipe, range} from "remeda"` and all
+signatures below return ordinary JavaScript values or a data-last function.
 
 All listed functions support Remeda's data-first form and, where shown, a
 data-last form. Data-first calls place the data first. Data-last calls return a
@@ -105,3 +136,38 @@ Array-returning operations must return fresh arrays. Object operations must not
 mutate their inputs. Property keys are ordinary JSON strings in the scored
 contract. Unsupported values such as functions, symbols, maps, sets, dates,
 and typed arrays are outside this task's JSON adapter boundary.
+
+## Examples
+
+```js
+import {map, pipe, take} from "remeda";
+
+map([1, 2, 3], (value, index) => value + index); // [1, 3, 5]
+pipe([1, 2, 3], take(2), values => values.length); // 2
+```
+
+```js
+import {groupBy, range} from "remeda";
+
+groupBy(range(0, 5), value => value % 2 ? "odd" : "even");
+```
+
+```js
+import {mergeDeep, truncate} from "remeda";
+
+mergeDeep({config: {a: 1}}, {config: {b: 2}});
+truncate("long value", 6, {omission: "~"});
+```
+
+## Error Handling and Boundary Conditions
+
+- Data-last calls must return a function without consuming or mutating the
+  eventual data argument. Array and object results are fresh containers.
+- `chunk` rejects non-positive sizes with `RangeError`; `range` rejects a zero
+  step and remains end-exclusive in both ascending and descending cases.
+- `mean([])` returns `undefined`, `sum([])` returns `0`, and `take`/`drop` with
+  negative counts follow the explicitly documented copy behavior.
+- Property operations preserve JSON key order and do not mutate source objects.
+  Unsupported functions, symbols, dates, maps, sets, and typed arrays are
+  outside the JSON-safe contract.
+- Agent, candidate, verifier, Oracle, and controls runs are NoNetwork.

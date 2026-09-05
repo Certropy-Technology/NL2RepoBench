@@ -13,6 +13,30 @@ decoded properties expose human text and corresponding `raw_` properties expose
 encoded text. All transformations return URL objects and do not mutate the
 receiver.
 
+## Natural Language Instruction
+
+Create the installable `yarl` package from an empty workspace. Implement the
+immutable `URL` value object and its public query, path, authority, joining,
+cache, copying, and optional Pydantic behavior described below. Preserve both
+decoded human-facing properties and encoded `raw_` properties, including their
+exact return types, ordering, identity behavior for documented no-ops, and
+exception contracts.
+
+The required capability groups are:
+
+1. Canonical construction of absolute and relative URLs, including Unicode
+   host IDNA conversion and UTF-8 percent encoding.
+2. Read-only authority, path, query, fragment, comparison, and data-model
+   properties with deterministic duplicate-key ordering.
+3. Immutable component, query, path, name, suffix, RFC 3986 join, and display
+   transformations.
+4. Cache configuration/inspection and copy, pickle, and Pydantic integration
+   boundaries where the declared local dependencies are available.
+
+Every transformation returns a new value unless this instruction explicitly
+documents a no-op identity result. The package must not perform DNS, network,
+filesystem, subprocess, clock, locale, or random operations.
+
 ## Supports
 
 - Python 3.10 or newer; the verifier uses CPython 3.12.
@@ -26,6 +50,28 @@ receiver.
   relative URLs of the form `[/path][?query][#fragment]`.
 - Deterministic local behavior. Parsing and transformation require no network,
   DNS, filesystem, subprocess, random, locale, or wall-clock access.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── yarl/
+│   ├── __init__.py
+│   ├── _url.py
+│   ├── _query.py
+│   ├── _parse.py
+│   ├── _quoting.py
+│   └── _quoters.py
+└── README.md
+```
+
+The distribution and import package are both `yarl`; `yarl/__init__.py` must
+re-export the ordered public names listed below. The implementation may use a
+different internal split, but all modules required for URL parsing, quoting,
+query handling, cache controls, and optional type integration must be inside
+the package and installed from `pyproject.toml`. No compiled extension is
+required for the documented `YARL_NO_EXTENSIONS=1` mode.
 
 ## API Usage Guide
 
@@ -296,3 +342,46 @@ It must not import a separately installed copy of `yarl`, retrieve upstream
 source, or contact a network service. Hidden evaluation invokes candidate code
 only in bounded unprivileged subprocesses; the trusted verifier owns expected
 values, collection records, grading, and reward output.
+
+## Examples
+
+```python
+from yarl import URL
+
+base = URL("https://example.com/api")
+result = base / "items" / "42"
+```
+
+```python
+from yarl import URL
+
+url = URL.build(scheme="https", host="example.com", path="/search",
+                query=[("q", "two words"), ("q", "second")])
+assert url.query_string == "q=two+words&q=second"
+```
+
+```python
+from yarl import URL
+
+original = URL("/a?x=1#frag")
+updated = original.with_path("/b", keep_query=True)
+assert str(original) == "/a?x=1#frag"
+assert str(updated) == "/b?x=1"
+```
+
+## Error Handling and Boundary Conditions
+
+- Invalid ports, malformed IPv6 authorities, forbidden unbracketed colons,
+  invalid query values, and incompatible `URL.build` arguments raise the
+  documented `ValueError` or `TypeError` without mutating an existing URL.
+- URL equality and hashing use canonical components. Ordering an URL against
+  an unrelated type raises `TypeError`; unrelated equality is false.
+- Duplicate query pairs retain insertion order. `with_query` replaces all
+  pairs, `extend_query` appends, `update_query` replaces named keys, and
+  `without_query_params` removes every matching pair.
+- Path/name/suffix changes clear query and fragment by default and retain them
+  only with the explicit `keep_` flags. A suffix must be empty or begin with
+  `.` and a path segment must not begin with `/`.
+- Empty relative URLs, default ports, percent-encoded text, Unicode hosts,
+  copy/pickle round trips, and documented no-op transforms remain stable over
+  repeated calls. Runtime and all evaluation phases are NoNetwork.

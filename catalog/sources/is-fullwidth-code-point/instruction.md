@@ -4,6 +4,18 @@ Build an installable ESM npm package named `is-fullwidth-code-point`, version
 `5.1.0`, from an empty workspace. It determines whether a supplied Unicode code
 point is rendered as fullwidth or wide in East Asian width classification.
 
+# Natural Language Instruction
+
+Create the `is-fullwidth-code-point` ESM package from an empty `workspace/`.
+Implement the default Unicode width predicate, package metadata, and matching
+TypeScript declaration. The predicate must classify code points by East Asian
+Width category, distinguish fullwidth/wide characters from narrow and ambiguous
+characters, and return a stable boolean for every JSON-compatible input.
+
+The implementation is synchronous and stateless. Preserve the package root
+default export and do not add a CLI, filesystem access, locale-dependent
+behavior, random state, or runtime network lookup.
+
 # Supports
 
 - Node.js `24.19.0`, npm `11.17.0`, Linux amd64, and ESM package semantics.
@@ -22,6 +34,22 @@ point is rendered as fullwidth or wide in East Asian width classification.
 - Runtime behavior is synchronous, deterministic, stateless, and offline. Do
   not read files, use the clock or randomness, spawn processes, access a TTY,
   or access the network.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── index.js
+└── index.d.ts
+```
+
+The package root is the ESM entry point. `index.js` provides the default
+`isFullwidthCodePoint` export and `index.d.ts` declares its numeric signature.
+The lockfile must agree with package metadata and the declared offline
+dependency closure. No tests, verifier files, cache, or generated evaluator
+assets are part of the requested workspace.
 
 # API Usage Guide
 
@@ -68,3 +96,31 @@ boolean return type and avoid exposing dependency internals or an additional
 CLI. The evaluator invokes the root export through an isolated JSON child
 process; private tests and the Oracle implementation are not part of the
 package to implement.
+
+# Examples
+
+```js
+import isFullwidthCodePoint from 'is-fullwidth-code-point';
+
+isFullwidthCodePoint('界'.codePointAt(0)); // true
+isFullwidthCodePoint('A'.codePointAt(0)); // false
+```
+
+```js
+isFullwidthCodePoint(0x1F600); // true for a wide emoji code point
+isFullwidthCodePoint(0xFF66); // false for a halfwidth form
+```
+
+```js
+isFullwidthCodePoint(null); // false, outside the numeric domain
+isFullwidthCodePoint(65.5); // false, non-integer
+```
+
+# Error Handling and Boundary Conditions
+
+The function returns `false`, rather than throwing, for non-number values,
+non-integers, negative values, values above `0x10FFFF`, unassigned values, and
+values whose East Asian Width is not Fullwidth or Wide. It must also return
+`false` for `NaN` and infinities. Ordinary ASCII, ambiguous punctuation, and
+halfwidth forms are not wide. Repeated calls with the same integer return the
+same primitive boolean and do not mutate input or global state.

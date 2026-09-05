@@ -1,8 +1,8 @@
-# Introduction and Goals of the Box Project
+# Project Description
 
 Box is a Python library designed for efficient operation and enhancement of Python dictionaries. It enables high - efficiency access, conversion, and formatting of Python dictionaries, supporting various data formats and complex nested structures. This tool excels in scenarios such as Python development, configuration management, API development, and data processing, achieving "efficient dictionary operations and beautification". Its core functions include: dictionary structure enhancement (automatically converting nested dictionaries and lists, supporting dot - notation access), data format conversion (supporting reading and writing of multiple formats like JSON, YAML, TOML, MessagePack), configuration management tools (integration with environment variables, default value handling, namespace management), and an extensible type conversion mechanism (supporting custom conversion rules and validation). In short, Box aims to provide a professional, flexible, and user - friendly Python dictionary enhancement system to improve the readability and maintainability of Python code, and to offer solid foundational capabilities for Python development and data processing automation (for example, enabling intuitive data access through dot - notation access, performing data format conversion through to_json() and from_yaml(), and integrating environment variables and managing configurations through ConfigBox).
 
-## Natural Language Instructions (Prompt)
+## Natural Language Instruction
 
 Please create a Python project named box to implement a comprehensive Python dictionary enhancement tool library. This project should include the following functions:
 
@@ -1478,6 +1478,43 @@ def integrate_with_database():
     }
 
 # Use integration examples
+
+## Implementation Notes
+
+Keep the public imports, recursive conversion rules, and serialization options
+consistent across `box`, `box_list`, `config_box`, `converters`, and
+`from_file`. Core operations should preserve ordinary mapping/list behavior,
+while attribute access and configuration defaults remain explicit options.
+Optional format libraries may be absent; core dictionary operations must still
+install and operate locally without network access.
+
+## Examples
+
+```python
+from box import Box, ConfigBox
+
+config = ConfigBox({"server": {"port": "8080"}}, box_dots=True)
+assert config.server.port == "8080"
+value = Box({"user": {"name": "admin"}}).user.name
+```
+
+```python
+from box import box_from_string
+
+loaded = box_from_string('{"enabled": true}', file_type="json")
+assert loaded.enabled is True
+```
+
+## Error Handling and Boundary Conditions
+
+- Missing attribute-style keys raise the package's documented key exception;
+  safe access and defaults must not mutate the source mapping.
+- Recursive conversion preserves nested dictionaries and lists, including
+  values that are already Box instances. Frozen or protected configurations
+  reject prohibited writes with the documented exception.
+- Unsupported or malformed serialization input raises a clear format/value
+  error. File operations are local and must respect caller permissions.
+- Agent, candidate, verifier, Oracle, and controls execution is NoNetwork.
 print("=== Standard Library Integration ===")
 integrated_box = integrate_with_standard_library()
 print(f"Integration result: {integrated_box}")

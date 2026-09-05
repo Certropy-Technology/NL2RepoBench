@@ -122,6 +122,16 @@ do not require a particular wall-clock duration.
 returns a logger, `has(id)` reports membership, and `close(id)` closes one or
 all managed loggers. `winston.loggers` is the default Container.
 
+The CommonJS import path is `const winston = require('winston')`; ESM
+consumers may use the interoperable default import shown here:
+
+```js
+import winston from 'winston';
+const logger = winston.createLogger({transports: []});
+```
+
+The root entry `lib/winston.js` must expose the same object for both forms.
+
 ## Examples
 
 ```js

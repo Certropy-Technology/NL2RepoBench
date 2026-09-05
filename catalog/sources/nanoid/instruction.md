@@ -43,7 +43,9 @@ generated Harbor files are not agent-owned project files.
 
 # API Usage Guide
 
-The package root must export these named values:
+The package root import path is `nanoid`; consumers use named ESM imports such
+as `import {nanoid, customAlphabet} from 'nanoid'`. The package root must export
+these named values:
 
 ### `nanoid(size = 21)`
 

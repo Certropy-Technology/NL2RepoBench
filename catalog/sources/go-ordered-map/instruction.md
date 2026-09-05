@@ -18,9 +18,32 @@ and expose the public types and methods below.
   network access, or external services are needed.
 - Build and test with `GOWORK=off`, `GOPROXY=off`, `GOSUMDB=off`,
   `GOTOOLCHAIN=local`, `GOOS=linux`, `GOARCH=amd64`, and `CGO_ENABLED=0`.
-- The package is not required to make an uninitialized zero `OrderedMap` safe for
-  `Set`; callers should use `New` before mutation. JSON unmarshalling into an
-  `OrderedMap` pointer must initialize it as needed.
+- The package is not required to make an uninitialized zero `OrderedMap` safe
+  for `Set`; callers should use `New` before mutation. JSON unmarshalling into
+  an `OrderedMap` pointer must initialize it as needed.
+
+## Natural Language Instruction
+
+Create the Go module from an empty `workspace/` using module path
+`github.com/iancoleman/orderedmap`. Implement an ordered, JSON-compatible map
+with stable insertion, replacement, deletion, sorting, nested decoding, and
+HTML-escaping behavior. Keep the public Go types and method signatures exact,
+use only the standard library, and make all operations deterministic under the
+declared offline build flags.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── go.mod
+├── go.sum
+└── orderedmap.go
+```
+
+The package declared by `orderedmap.go` is imported from the module root. Do
+not add a command, generated code, cgo dependency, network fetch, or package
+outside the public module. `go.sum` may be empty because there are no external
+modules.
 
 ## API Usage Guide
 
@@ -117,4 +140,37 @@ or write files or use the network. Do not expose private tests, expected values,
 or a source checkout to the implementation. The evaluator invokes the public API
 through a separate, typed JSON subprocess bridge; the bridge must remain a
 thin adapter and must not require any non-standard dependency.
+
+## Examples
+
+```go
+package main
+
+import orderedmap "github.com/iancoleman/orderedmap"
+
+func main() {
+    m := orderedmap.New()
+    m.Set("first", 1)
+    m.Set("second", 2)
+}
+```
+
+```go
+var m orderedmap.OrderedMap
+_ = json.Unmarshal([]byte(`{"a":1,"b":{"c":2}}`), &m)
+```
+
+```go
+keys := m.Keys()
+sort.Strings(keys)
+```
+
+## Error Handling and Boundary Conditions
+
+Replacing an existing key preserves its position; deleting an absent key is a
+no-op. Invalid JSON and values that cannot be marshalled return errors. Empty
+objects and arrays remain present, duplicate JSON keys use the final value and
+final occurrence position, and nested objects retain ordered-map behavior.
+Marshal output must honor the per-map HTML escaping setting without mutating
+the stored values.
 

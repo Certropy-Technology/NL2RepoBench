@@ -53,6 +53,13 @@ loader, lifecycle hook, generated download, or verifier-owned file.
 
 ## CommonJS root export `validate(name)`
 
+The root export can also be consumed as an ES module default import:
+
+```js
+import validate from 'validate-npm-package-name';
+validate('demo-package');
+```
+
 **Import path:** the package root.
 
 **Signature:**

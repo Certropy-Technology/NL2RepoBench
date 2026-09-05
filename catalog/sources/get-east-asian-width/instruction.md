@@ -11,6 +11,15 @@ This is a repository-generation task. Implement the documented behavior with
 your own source files; do not retrieve a reference implementation or hidden
 tests.
 
+## Natural Language Instruction
+
+Create the package from an empty `workspace/`. Implement both named root
+exports, the Unicode width table, safe-integer validation, and the option that
+selects whether ambiguous characters count as wide. Keep the result a pure
+number or category string: no CLI, generated Unicode download, filesystem
+state, current locale, clock, randomness, or network fallback is part of the
+package.
+
 ## Supports
 
 - Node `24.19.0`, npm `11.17.0`, Linux amd64 with glibc, and ESM semantics.
@@ -24,11 +33,28 @@ tests.
   addons, lifecycle hooks, custom loaders, runtime downloads, or network
   access.
 
+## Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── index.js
+└── index.d.ts
+```
+
+The root ESM entry point must export `eastAsianWidth` and
+`eastAsianWidthType`; the declaration file describes their signatures and the
+`WidthType` union. No build-time Unicode fetcher or test-only entrypoint is
+required.
+
 ## API Usage Guide
 
 ### `eastAsianWidth(codePoint, options?)`
 
-Import the named function from `get-east-asian-width`. Its signature is
+Import path: `import * as eastAsianWidthApi from 'get-east-asian-width'`.
+The named export is `eastAsianWidthApi.eastAsianWidth`.
+Its signature is
 `eastAsianWidth(codePoint: number, options?: {ambiguousAsWide?: boolean}): 1 | 2`.
 `codePoint` must be a JavaScript safe integer. Non-integers, strings, and
 other values throw `TypeError`. A safe integer outside the Unicode data table
@@ -49,7 +75,9 @@ eastAsianWidth('⛣'.codePointAt(0), {ambiguousAsWide: true}); // 2
 
 ### `eastAsianWidthType(codePoint)`
 
-Import `eastAsianWidthType` from `get-east-asian-width`. Its signature is
+Import path: `import * as eastAsianWidthApi from 'get-east-asian-width'`.
+The named export is `eastAsianWidthApi.eastAsianWidthType`.
+Its signature is
 `eastAsianWidthType(codePoint: number): WidthType`, where `WidthType` is the
 union `'fullwidth' | 'halfwidth' | 'wide' | 'narrow' | 'neutral' | 'ambiguous'`.
 It applies the same safe-integer validation and returns the Unicode category
@@ -69,3 +97,29 @@ subprocess boundary passes JSON-compatible numbers and booleans only. The
 contract does not require a CLI, filesystem API, Unicode-data build script,
 network fetching, or private helper exports. Preserve supplementary Unicode
 code points, exact category strings, and informative `TypeError` behavior.
+
+## Examples
+
+```js
+import {eastAsianWidth, eastAsianWidthType} from 'get-east-asian-width';
+
+const width = eastAsianWidth('界'.codePointAt(0)); // 2
+const kind = eastAsianWidthType('A'.codePointAt(0)); // 'narrow'
+```
+
+```js
+import {eastAsianWidth} from 'get-east-asian-width';
+
+eastAsianWidth(0x00b7, {ambiguousAsWide: false}); // 1
+eastAsianWidth(0x00b7, {ambiguousAsWide: true}); // 2
+```
+
+## Error Handling and Boundary Conditions
+
+- Inputs must be safe integer numbers. A string, fractional number, `NaN`,
+  infinity, `bigint`, or symbol is outside the contract and must raise the
+  documented `TypeError` rather than being coerced.
+- Code points absent from the frozen local table return `neutral` from
+  `eastAsianWidthType` and width `1` from `eastAsianWidth`.
+- Repeated calls with the same number and options return the same primitive
+  result and do not mutate the options object.

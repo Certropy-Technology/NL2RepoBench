@@ -10,6 +10,15 @@ caching, notebook handling, plugin ecosystems, every Ruff rule, or byte-for-
 byte diagnostic rendering. Implement the documented command behavior and keep
 all code and packaging metadata in the submitted workspace.
 
+## Natural Language Instruction
+
+Create the installable `ruff` package from an empty `workspace/`. Implement the
+documented `ruff` console command for deterministic local linting, formatting,
+rule documentation, JSON diagnostics, stdin handling, safe single-import
+fixes, and TOML configuration. Preserve exit statuses, filenames, locations,
+configuration precedence, and the distinction between check, format, and rule
+subcommands. The assessed subset does not require Rust or a complete linter.
+
 # Supports
 
 - Python 3.12 on Debian, installed as the distribution `ruff==0.16.4`.
@@ -21,6 +30,26 @@ all code and packaging metadata in the submitted workspace.
   rules, dependencies, or configuration at runtime.
 - UTF-8 Python source files and TOML configuration files. The test inputs are
   small regular files in temporary directories.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── ruff/
+│   ├── __init__.py
+│   ├── __main__.py
+│   ├── cli.py
+│   ├── check.py
+│   ├── format.py
+│   └── rules.py
+└── README.md
+```
+
+`pyproject.toml` must declare distribution version `0.16.4` and the `ruff`
+console script. The module layout may be split differently when the console
+entry point and documented package import remain available. Do not add a
+network client, native compiler, language server, or generated rule database.
 
 # API Usage Guide
 
@@ -35,6 +64,17 @@ ruff --version
 
 exits with status `0` and writes `ruff 0.16.4` followed by a newline. Running
 `ruff help check` exits successfully and documents the `check` command.
+
+For command-oriented implementations, use these equivalent dispatch contracts:
+
+```text
+ruff_check(files: list[str], options: dict | None = None) -> exit status
+ruff_format(files: list[str], mode: str | None = None) -> exit status
+ruff_rule(code: str) -> exit status
+```
+
+These describe the three observable command families; the required public
+entry point remains the `ruff` console script rather than a Python API.
 
 ## `ruff check`
 
@@ -119,7 +159,7 @@ ruff rule F401
 exits `0` and writes documentation identifying `F401` as the unused-import
 rule. Unknown rule names are an exit-status-`2` error.
 
-# Implementation Notes
+## Implementation Notes
 
 - Design the project as a normal Python distribution with reproducible
   packaging metadata and a console entry point. The verifier installs it using
@@ -130,3 +170,30 @@ rule. Unknown rule names are an exit-status-`2` error.
   observable behavior. Do not hard-code the verifier's temporary file names.
 - The evaluated inputs are deterministic and local. No behavior depends on
   wall-clock time, locale, a cache, a repository checkout, or network access.
+
+## Examples
+
+```text
+ruff check --output-format json sample.py
+```
+
+```text
+printf 'import os\n' | ruff check - --stdin-filename sample.py
+```
+
+```text
+ruff format --check sample.py
+ruff rule F401
+```
+
+## Error Handling and Boundary Conditions
+
+- Missing paths, nonexistent `--config` files, unknown subcommands, unknown
+  rules, and invalid option values return status `2` with a useful diagnostic.
+- `ruff check` returns `0` for no diagnostics and `1` when diagnostics exist;
+  JSON output remains a valid array and uses one-based row/column locations.
+  `--no-fix` wins over `--fix`, and stdin is never rewritten.
+- Formatting is deterministic for the same bytes and configuration. Empty
+  files, files without a final newline, Unicode identifiers, and `# noqa`
+  suppression follow the rules above. Agent, candidate, verifier, Oracle, and
+  controls run with NoNetwork.

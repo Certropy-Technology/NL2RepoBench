@@ -13,6 +13,14 @@ middleware, coercion, help generation, and helper functions.
 This is a repository-generation task. Implement the behavior described here
 without retrieving a reference implementation or hidden tests.
 
+## Natural Language Instruction
+
+Create the package from an empty `workspace/`. Implement the callable ESM
+factory, deterministic argument parsing, typed option declarations, validation,
+commands, middleware, coercion, help output, and helper exports described in
+the API guide. Preserve fluent chaining, positional order, alias/default
+semantics, synchronous/asynchronous parity, and the documented error boundary.
+
 ## Supports
 
 - Node `24.19.0`, npm `11.17.0`, `linux/amd64`, and ESM semantics.
@@ -37,6 +45,23 @@ without retrieving a reference implementation or hidden tests.
 - Do not use workspaces, native addons, custom loaders, network access,
   runtime downloads, arbitrary shell commands, or lifecycle hooks such as
   `preinstall`, `install`, `postinstall`, `prepare`, or `prepack`.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── index.mjs
+├── yargs.mjs
+└── helpers/
+    └── helpers.mjs
+```
+
+The package root and `./yargs` subpath resolve to `index.mjs`; `./helpers`
+resolves to `helpers/helpers.mjs`. The export map and package metadata must
+agree with this tree. Keep browser shims, test files, evaluator adapters, and
+runtime-generated configuration outside the generated project.
 
 ## API Usage Guide
 

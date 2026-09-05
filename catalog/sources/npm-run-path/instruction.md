@@ -49,6 +49,14 @@ offline scripts-disabled npm command in Supports.
 
 # API Usage Guide
 
+The package root is an ESM module. A namespace import is also valid and makes
+the two public functions explicit:
+
+```js
+import * as npmRunPathApi from 'npm-run-path';
+npmRunPathApi.npmRunPath({path: '/bin', preferLocal: false});
+```
+
 ### `npmRunPath(options?)`
 
 **Import path:** named export from the package root.

@@ -6,6 +6,12 @@ Build an installable npm package named `detect-indent` that identifies the
 indentation style most strongly supported by a source string. The package is a
 small ESM library with a single default export and no runtime dependencies.
 
+## Natural Language Instruction
+
+Create `detect-indent` from an empty workspace. Implement the default ESM
+export that detects the strongest indentation transition while preserving the
+exact result shape, tie-breaking, and type error described below.
+
 ## Supports
 
 - Node.js 24 on Linux x86-64 with npm 11.
@@ -18,6 +24,20 @@ small ESM library with a single default export and no runtime dependencies.
 - The package must be usable immediately after installation. Do not require a
   lifecycle hook, transpiler, generated directory, native addon, or network
   access.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── index.js
+└── index.d.ts
+```
+
+`index.js` is the package root and `index.d.ts` describes the default export.
+There are no runtime dependencies, lifecycle scripts, or generated entry
+points.
 
 ## API Usage Guide
 
@@ -57,26 +77,6 @@ the message `Expected a string`.
 - Preserve the package root's default export and declaration shape. Do not
   expose test fixtures or test-only exports as part of the public API.
 
-## Natural Language Instruction
-
-Create `detect-indent` from an empty workspace. Implement the default ESM
-export that detects the strongest indentation transition while preserving the
-exact result shape, tie-breaking, and type error described above.
-
-## Project Directory Structure
-
-```text
-workspace/
-├── package.json
-├── package-lock.json
-├── index.js
-└── index.d.ts
-```
-
-`index.js` is the package root and `index.d.ts` describes the default export.
-There are no runtime dependencies, lifecycle scripts, or generated entry
-points.
-
 ## Examples
 
 ```js
@@ -113,3 +113,18 @@ second runtime API. Do not add a command-line interface, package lifecycle
 hook, generated build directory, or runtime dependency. Evaluation invokes the
 same default function repeatedly with independent strings, so calls must not
 share mutable state or depend on call order.
+
+The returned `indent` must correspond exactly to the detected unit: for a
+space result of amount four it is four literal spaces, and for a tab result it
+is one literal tab. Do not normalize tabs into spaces or trim meaningful
+leading characters from the source while calculating evidence. A line that
+contains indentation followed by content contributes its prefix; a blank line
+does not change the neighboring non-empty transition. Keep the result keys
+`amount`, `type`, and `indent` present in that order when serialized, with
+`type` represented as JavaScript `undefined` for an unindented document.
+
+The package is intentionally a single pure function. It must not read a file,
+inspect the current working directory, use a formatter configuration, or
+retain observations between calls. The ESM default export and declaration
+must continue to work when imported from an installed package rather than
+from the repository root.

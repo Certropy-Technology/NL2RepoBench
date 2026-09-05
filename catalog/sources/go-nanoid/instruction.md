@@ -8,6 +8,15 @@ caller-selected alphabet or from the package's URL-safe default alphabet. The
 evaluator checks the observable root-package API through a typed subprocess
 bridge; it does not require a command-line program.
 
+## Natural Language Instruction
+
+Create the module from an empty `workspace/` directory. Implement the exported
+alphabet presets and the four generation functions in the API guide. Preserve
+Unicode code-point counts, secure random generation, validation errors, and the
+distinction between configurable exported variables and the fixed default
+alphabet used by `New`. The package is a library, so no CLI, service, or
+filesystem integration is required.
+
 ## Supports
 
 - Linux/amd64 with Go `1.26.5`.
@@ -18,9 +27,27 @@ bridge; it does not require a command-line program.
 - No third-party dependencies are needed by the package. Do not use cgo,
   plugins, external services, network access, or a Go workspace.
 
+## Project Directory Structure
+
+```text
+workspace/
+├── go.mod
+├── go.sum
+├── vendor/
+│   └── modules.txt
+└── gonanoid.go
+```
+
+Import path: `github.com/matoous/go-nanoid/v2`. A caller imports it with
+`import "github.com/matoous/go-nanoid/v2"`. The module root uses the
+package name `gonanoid`. Keep the generated project limited to the
+public module and its declared build metadata; do not add a command, service,
+source checkout, or evaluator files.
+
 ## API Usage Guide
 
 Implement package `gonanoid` at the module root with these public declarations:
+Import example: `import gonanoid "github.com/matoous/go-nanoid/v2"`.
 
 ```go
 var AlphaNum = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
@@ -73,3 +100,45 @@ sampling may be used to avoid bias when an alphabet is not a power-of-two
 length. Errors need only be non-nil and non-empty; callers must not depend on
 their exact wording. Do not expose a deterministic seed or replace the secure
 random source with a predictable generator.
+
+## Examples
+
+```go
+package main
+
+import (
+    "fmt"
+    gonanoid "github.com/matoous/go-nanoid/v2"
+)
+
+func main() {
+    id, err := gonanoid.Generate(gonanoid.Numeric, 8)
+    if err != nil {
+        panic(err)
+    }
+    fmt.Println(id)
+}
+```
+
+```go
+id, err := gonanoid.Generate("猫犬", 2)
+// id contains two runes and only characters from the supplied alphabet.
+_ = id
+_ = err
+```
+
+```go
+empty, err := gonanoid.New(0)
+// empty == "" and err == nil; a negative length returns an error.
+_ = empty
+_ = err
+```
+
+## Error Handling and Boundary Conditions
+
+Reject an empty alphabet, an alphabet whose UTF-8 encoding exceeds 255 bytes,
+and a non-positive custom generation size with a non-nil error and an empty
+result. `New(0)` is the one valid zero-length case. A call to `Must` or
+`MustGenerate` panics only when its corresponding fallible function would
+return an error. Repeated successful calls must not return a fixed seeded
+sequence, and output must remain within the selected alphabet.

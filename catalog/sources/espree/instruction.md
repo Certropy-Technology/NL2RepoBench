@@ -86,6 +86,27 @@ Import the package with `import * as espree from "espree"`. The root exports
 `Syntax`, `VisitorKeys`, `latestEcmaVersion`, and
 `supportedEcmaVersions`.
 
+The public module example is `import espree`, referring to the package root
+namespace shown by the ESM examples below.
+
+The public module path is the package root and the runtime entry is
+`espree.js`:
+
+```js
+import {parse, tokenize, latestEcmaVersion} from 'espree'
+const tree = parse('let answer = 42;', {ecmaVersion: 2022})
+const tokens = tokenize('answer + 1', {ecmaVersion: 2022})
+```
+
+The public module path is the package root and the runtime entry is
+`espree.js`:
+
+```js
+import {parse, tokenize, latestEcmaVersion} from 'espree'
+const tree = parse('let answer = 42;', {ecmaVersion: 2022})
+const tokens = tokenize('answer + 1', {ecmaVersion: 2022})
+```
+
 `parse(code, options?)` accepts source text (coercing non-string values using
 the package's documented behavior) and returns a `Program` ESTree node. The
 default `sourceType` is `script` and the default ECMAScript version is 5.

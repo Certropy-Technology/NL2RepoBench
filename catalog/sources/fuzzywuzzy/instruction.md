@@ -1,9 +1,9 @@
-## Introduction and Objectives of the fuzzywuzzy Project
+## Project Description
 
 FuzzyWuzzy is a Python library **for fuzzy string matching** that can compare the similarity between two strings (supporting various matching algorithms and score calculation methods). This tool performs excellently in scenarios such as text deduplication, information extraction, and data cleaning, enabling "efficient and flexible string similarity calculation". Its core functions include: multiple string similarity algorithms (such as Levenshtein distance, partial matching, token sorting, etc.), **scored similarity output** (supporting percentage scores and multiple comparison modes), as well as batch processing and intelligent screening of the best matching items. In short, FuzzyWuzzy aims to provide a robust string fuzzy matching system for text data processing and similarity analysis (for example, calculating string similarity scores through the fuzz module and finding the best matching item in a candidate set through the process module).
 
 
-## Natural Language Instruction (Prompt)
+## Natural Language Instruction
 
 Please create a Python project named FuzzyWuzzy to implement a fuzzy string matching library. The project should include the following functions:
 
@@ -48,9 +48,7 @@ typing_extensions  4.14.1
 wheel              0.40.0
 ```
 
-## Architecture of the fuzzywuzzy Project
-
-### Project Directory Structure
+## Project Directory Structure
 
 ```Plain
 workspace/
@@ -717,7 +715,7 @@ The system provides a comprehensive error handling mechanism:
 
 
 
-## Detailed Implementation Nodes of Functions
+## Implementation Notes
 
 ### Node 1: Basic Similarity Calculation (Basic Similarity Calculation)
 
@@ -1180,9 +1178,37 @@ def benchmark_performance():
         process.extract("cirque du soleil", choices, limit=3)
     extract_time = time.time() - start_time
     
-    print(f"Performance benchmark test results:")
-    print(f"ratio algorithm 1000 times: {ratio_time:.4f} seconds")
-    print(f"WRatio algorithm 1000 times: {wratio_time:.4f} seconds")
-    print(f"process.extract 100 times: {extract_time:.4f} seconds")
+print(f"Performance benchmark test results:")
+print(f"ratio algorithm 1000 times: {ratio_time:.4f} seconds")
+print(f"WRatio algorithm 1000 times: {wratio_time:.4f} seconds")
+print(f"process.extract 100 times: {extract_time:.4f} seconds")
 
 ```
+
+## Examples
+
+```python
+from fuzzywuzzy import fuzz, process
+
+fuzz.ratio('new york', 'new york city')
+process.extractOne('new york mets', ['new york mets', 'boston red sox'])
+```
+
+```python
+from fuzzywuzzy import utils
+
+utils.full_process('  Café-au-lait  ', force_ascii=False)
+```
+
+## Error Handling and Boundary Conditions
+
+- Similarity functions return integer scores in the documented range and
+  preserve the specified preprocessing defaults. Empty strings, `None`,
+  Unicode text, and non-string choices follow the documented utility and
+  processor behavior rather than being silently converted by the caller.
+- `extract`, `extractOne`, `extractBests`, and `extractWithoutOrder` preserve
+  candidate order for equal scores, apply `score_cutoff` and `limit`, and
+  return the documented tuple shape. Custom processors and scorers are called
+  only through their declared callable interfaces.
+- The package is deterministic for identical inputs and options. It must not
+  require a registry, network, current time, or native accelerator at runtime.

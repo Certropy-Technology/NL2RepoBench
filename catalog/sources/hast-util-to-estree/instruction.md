@@ -34,6 +34,7 @@ lock their complete transitive closure.
 ### `toEstree`
 
 ```js
+// import hastUtilToEstree
 import {toEstree} from 'hast-util-to-estree'
 
 toEstree(tree, options?)

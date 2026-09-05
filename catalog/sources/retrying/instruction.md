@@ -1,4 +1,4 @@
-## Retrying Project Introduction and Goals
+## Project Description
 
 Retrying is a Python library **for general retry mechanisms** that can add retry behavior to any function (supporting decorator syntax and functional calls). This tool performs excellently in scenarios such as distributed systems, network requests, and database operations, enabling "the most flexible retry strategies and optimal error handling mechanisms." Its core functions include: a general decorator API (easily add retry logic via the `@retry` decorator), configurable stop conditions (such as limiting the number of attempts or the maximum delay time), customizable waiting strategies (such as exponential backoff, random waiting, fixed intervals, etc.), and intelligent retry judgment for specific exceptions and return results. In short, Retrying aims to provide a robust retry mechanism system for handling various unstable operations (for example, set the maximum number of attempts via `stop_max_attempt_number` and implement the exponential backoff strategy via `wait_exponential_multiplier`).
 
@@ -20,7 +20,7 @@ Please create a Python project named Retrying to implement a general retry libra
 6. Core file requirements: The project must include a complete setup.py file, which not only configures the project as an installable package (supporting pip install) but also declares the complete list of dependencies (including core libraries such as six>=1.7.0). The setup.py file can verify whether all functional modules work properly. At the same time, it is necessary to provide retrying.py as a unified API entry, importing core functions and classes such as retry, Retrying, and RetryError from the retry decorator and the Retrying class, and providing version information, allowing users to access all major functions through a simple "from retrying import retry, Retrying, RetryError" statement. In retrying.py, there needs to be a call() method to execute the retry logic using various strategies.
 
 
-## Historical Behavior Contract
+### Historical Behavior Contract
 
 Implement the historical single-module `retrying` API described below. Time and wait values are integer milliseconds unless explicitly noted. The package is synchronous; do not substitute a modern async retry API.
 
@@ -35,7 +35,7 @@ Implement the historical single-module `retrying` API described below. Time and 
 
 The hidden checks use the frozen historical test suite, including its real elapsed-time assertion for five 50 ms waits.
 
-## Environment Configuration
+### Environment Configuration
 
 ### Python Version
 
@@ -53,6 +53,16 @@ setuptools        75.8.0
 six               1.17.0
 wheel             0.45.1
 ```
+
+## Supports
+
+- Support Python 3.12.14 on the declared runtime and install from the
+  repository root with the frozen build dependency set.
+- The package name is `retrying`, the import entry is the root `retrying.py`,
+  and runtime behavior is synchronous and local. Time and wait values are
+  integer milliseconds unless the API explicitly says otherwise.
+- Agent, candidate, verifier, Oracle, and controls run without network access;
+  no database, HTTP service, DNS lookup, or runtime source fetch is required.
 
 ## Retrying Project Architecture
 
@@ -838,3 +848,49 @@ retrying = Retrying(
     after_attempts=lambda x: print(f"Completed {x}")
 )
 ```
+
+## Implementation Notes
+
+Keep the public implementation in the root `retrying.py` module and preserve
+the synchronous call loop, original traceback behavior, millisecond-to-second
+sleep conversion, callback order, and metadata-preserving decorator wrapper.
+Use injected or patched clocks and random functions only through the ordinary
+Python interfaces; do not introduce global background threads or async state.
+
+## Examples
+
+```python
+from retrying import retry
+
+@retry(stop_max_attempt_number=3, wait_fixed=50)
+def read_once():
+    return "ready"
+```
+
+```python
+from retrying import Retrying
+
+controller = Retrying(stop_max_attempt_number=2, wait_fixed=10)
+value = controller.call(lambda: 42)
+```
+
+```python
+from retrying import retry
+
+@retry(retry_on_result=lambda value: value is None)
+def eventually_has_value():
+    return "done"
+```
+
+## Error Handling and Boundary Conditions
+
+- Non-retryable exceptions are re-raised immediately with their original
+  traceback. A retry exhaustion exception is wrapped only when
+  `wrap_exception=True`.
+- A rejected result produces `RetryError` whose `last_attempt` is the exact
+  `Attempt` object; an accepted result is returned unchanged.
+- Stop and wait strategies are deterministic for the same inputs, and their
+  combination rules are `any` for stop strategies and `max` for wait
+  strategies.
+- Do not perform network or filesystem I/O as part of retry evaluation, and do
+  not silently replace real sleeps with a busy loop or a fabricated delay.

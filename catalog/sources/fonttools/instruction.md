@@ -17,57 +17,30 @@ pen, and font-table APIs without optional native integrations.
 
 # Project Directory Structure
 
+- Support Python 3.12 on a Debian-based Linux environment.
+- Use package name `fonttools` and import package `fontTools`.
+- Provide setuptools-compatible build metadata with version `4.63.1.dev0`,
+  Python requirement `>=3.10`, and the declared `fonttools` console entry
+  point.
+- Keep the core implementation pure Python; optional compression, SciPy, lxml,
+  GUI, plotting, and native integrations are outside this task.
+
 ```text
 workspace/
 ├── pyproject.toml
 └── fontTools/
     ├── __init__.py
     ├── misc/
+    │   ├── __init__.py
+    │   ├── arrayTools.py
+    │   ├── fixedTools.py
+    │   ├── textTools.py
+    │   └── transform.py
     ├── colorLib/geometry.py
     ├── fontBuilder.py
     ├── pens/ttGlyphPen.py
-    └── ttLib/
+    └── ttLib/__init__.py
 ```
-
-# API Usage Guide
-
-The API Usage Guide below is authoritative for module imports, function and
-class signatures, return shapes, and font boundary behavior.
-
-# Implementation Notes
-
-Implement the bounded public subset in pure Python. Do not invent optional
-compression, GUI, plotting, or native-extension behavior.
-
-# Examples
-
-```python
-from fontTools.misc import arrayTools
-arrayTools.calcBounds([(0, 1), (2, 3)])
-```
-
-```python
-from fontTools.misc.transform import Transform
-Transform().transformPoint((1, 2))
-```
-
-# Error Handling and Boundary Conditions
-
-```python
-arrayTools.normRect((2, 3, 0, 1))
-```
-
-```python
-arrayTools.pointInRect((0, 0), (0, 0, 1, 1))
-```
-
-# Supports
-
-- Support Python 3.12 on a Debian-based Linux environment.
-- Use the package name `fonttools` and expose the import package `fontTools`.
-- Provide a setuptools-compatible `setup.py` or equivalent build configuration, with version `4.63.1.dev0`, Python requirement `>=3.10`, and the `fonttools` console entry point.
-- Implement these modules and public symbols: `fontTools.misc.arrayTools`, `fontTools.misc.fixedTools`, `fontTools.misc.textTools`, `fontTools.misc.transform`, `fontTools.colorLib.geometry`, `fontTools.fontBuilder`, `fontTools.pens.ttGlyphPen`, and `fontTools.ttLib`.
-- Keep the core implementation pure Python. Optional extras such as Cython acceleration, WOFF compression, SciPy, lxml, and GUI or plotting integrations are outside this task.
 
 # API Usage Guide
 
@@ -104,3 +77,51 @@ Provide `FontBuilder` from `fontTools.fontBuilder`, `TTGlyphPen` from `fontTools
 - Do not copy private tests or depend on the upstream checkout at runtime. The evaluator runs with no network and installs only build dependencies baked into the image.
 - Include enough package metadata for editable or regular installation and ensure imports work from an installed target rather than only from the repository root.
 - The evaluator focuses on deterministic behavior in the API groups above. Optional native acceleration and external integrations are intentionally excluded from the required contract.
+
+The public module paths are case-sensitive: geometry utilities are imported from
+`fontTools.colorLib.geometry`, affine values from
+`fontTools.misc.transform`, and font construction from
+`fontTools.fontBuilder`. `fontTools/__init__.py` must expose the declared
+version without importing optional native modules. Functions that return tuples
+must retain their documented tuple order, and methods that mutate an object
+must be distinguished from methods that return a new object.
+
+# Examples
+
+```python
+from fontTools.misc.fixedTools import floatToFixed, fixedToFloat
+
+raw = floatToFixed(1.5, 16)
+assert fixedToFloat(raw, 16) == 1.5
+```
+
+```python
+from fontTools.colorLib.geometry import Circle
+
+circle = Circle((0, 0), 5)
+assert circle.concentric(Circle((0, 0), 2))
+circle.move(1, 2)
+```
+
+```python
+from fontTools.fontBuilder import FontBuilder
+from fontTools.pens.ttGlyphPen import TTGlyphPen
+
+pen = TTGlyphPen(None)
+pen.moveTo((0, 0)); pen.lineTo((10, 0)); pen.closePath()
+glyph = pen.glyph()
+assert glyph is not None
+```
+
+Boundary behavior must remain local and reproducible: malformed fixed-point
+strings raise the documented parsing error, invalid rectangles preserve the
+specified normalization behavior, and a minimal font can be written to and
+read from an in-memory binary stream without network access. Agent, candidate,
+verifier, Oracle, controls, and runtime are all NoNetwork.
+
+# Error Handling and Boundary Conditions
+
+Malformed fixed-point strings raise the documented parsing exception. Invalid
+rectangles follow each function's stated normalization rule, and the minimal
+font round trip must work with an in-memory binary stream. Optional native
+extensions are not required and must not be imported as a side effect.

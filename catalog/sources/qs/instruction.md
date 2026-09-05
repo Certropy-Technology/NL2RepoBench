@@ -13,6 +13,16 @@ subprocess boundary.
 The implementation must be created from an empty workspace. Do not copy the
 upstream source or tests into the generated repository.
 
+## Natural Language Instruction
+
+Create the installable CommonJS `qs` package from an empty workspace. Implement
+the root `parse` and `stringify` functions plus the `formats` constants for the
+JSON-compatible API below. Preserve nested bracket and dot notation, duplicate
+and array policies, charset and delimiter options, deterministic JavaScript
+key order, percent encoding, null handling, and documented limit errors. Keep
+the implementation local and synchronous; do not broaden the contract with
+callbacks, browser bundles, or registry access.
+
 ## Supports
 
 - Run on Node `24.19.0` with npm `11.17.0` on `linux/amd64`.
@@ -50,7 +60,30 @@ upstream source or tests into the generated repository.
   JavaScript own-key enumeration is significant; the contract does not promise
   canonical key sorting.
 
+## Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+└── lib/
+    ├── index.js
+    ├── parse.js
+    ├── stringify.js
+    └── utils.js
+```
+
+The CommonJS root entry is `lib/index.js`; it re-exports `parse`, `stringify`,
+and `formats`. The remaining modules are implementation modules corresponding
+to those public operations. Keep package metadata and the lockfile consistent;
+browser bundles, audit hooks, and evaluator assets are outside the workspace.
+
 ## API Usage Guide
+
+```js
+import qs from 'qs';
+qs.parse('a=b');
+```
 
 ### `parse`
 
@@ -244,3 +277,32 @@ that message as well.
 - Do not include hidden tests, private cache/tarball bytes, verifier code,
   reward files, Oracle material, credentials, or generated Harbor assets in the
   candidate repository.
+
+## Examples
+
+```js
+const qs = require('qs');
+qs.parse('user[name]=Ada&user[role]=admin');
+```
+
+```js
+const qs = require('qs');
+qs.stringify({user: {name: 'Ada'}, tags: ['one', 'two']});
+```
+
+```js
+const qs = require('qs');
+qs.parse('a.b=c', {allowDots: true});
+qs.stringify({a: {b: 'c'}}, {allowDots: true});
+```
+
+## Error Handling and Boundary Conditions
+
+- Invalid JSON-compatible option types raise `TypeError`; depth and configured
+  parameter/array limit failures raise `RangeError` where specified.
+- Malformed percent escapes remain data rather than causing an incidental
+  decoder crash. Prototype-like keys must not mutate global prototypes.
+- Empty input, repeated keys, sparse indexes, null values, charset sentinels,
+  and RFC1738 spaces follow the exact options table above.
+- Inputs outside the JSON contract, such as cycles, functions, symbols, and
+  non-finite numbers, need not be supported and must not be used as fallbacks.

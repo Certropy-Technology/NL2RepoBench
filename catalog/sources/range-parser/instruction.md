@@ -32,7 +32,10 @@ callable export.
 
 # API Usage Guide
 
-Import the CommonJS export with `const parseRange = require('range-parser')`.
+**Import path:** the package root `range-parser`, loaded with
+`const parseRange = require('range-parser')`.
+
+**Signature:** `parseRange(size: number, str: string, options?: {combine?: unknown}): Array<{start: number, end: number}> | -1 | -2`.
 
 `parseRange(size, str, options)`
 
@@ -42,6 +45,27 @@ Import the CommonJS export with `const parseRange = require('range-parser')`.
 - Return an array of objects shaped `{start: number, end: number}`. The returned array also has a `type` property containing the text before the first `=`. A malformed header returns `-2`; a syntactically valid header with no satisfiable interval returns `-1`.
 - Throw `TypeError` with message `argument str must be a string` when `str` is not a string.
 - End positions larger than `size - 1` are capped. A suffix larger than the representation covers the whole representation. Invalid comma-separated members are ignored when another valid satisfiable member remains.
+
+The parser must preserve the numeric `start` and `end` values as inclusive
+positions. For `start-end`, both endpoints are present and the end is capped;
+for `start-`, the end is the final representation position. For `-N`, the
+range starts at `size - N` when that is non-negative and otherwise starts at
+zero. A zero-size representation has no satisfiable positions and therefore
+returns `-1` for otherwise well-formed range members.
+
+The unit is the text before the first equals sign and may be a custom token;
+the parser does not restrict it to `bytes`. Whitespace around the unit,
+equals sign, commas, hyphens, and decimal positions follows the documented
+header grammar. Decimal positions must be finite non-negative integers. An
+empty member or a member with missing required digits is invalid, while a
+valid member after an invalid member can still produce an ordinary result.
+
+When `combine` is truthy, merge intervals that overlap or touch at adjacent
+positions. The merged interval uses the lowest start and highest end from its
+group, and the output order is the order of the first interval in each group.
+When `combine` is absent or falsy, retain every satisfiable interval in input
+order, including overlapping intervals. The custom `type` property remains
+the exact unit text on every ordinary result array.
 
 Example:
 
@@ -76,3 +100,24 @@ parseRange(100, "items=5-9");
 Return `-2` for malformed headers and `-1` for valid headers with no
 satisfiable interval. Cap ends at `size - 1`, preserve input order, and throw
 `TypeError("argument str must be a string")` for a non-string header.
+
+The public call is synchronous and has no side effects: it does not read files,
+write files, mutate global state, access the network, or start a subprocess.
+Its only observable state is the returned array and its `type` property. The
+array objects contain own numeric `start` and `end` fields; sentinel returns
+are the numeric values `-1` and `-2`, not strings or thrown errors. Values are
+safe to serialize as ordinary JSON for the bounded adapter.
+
+The module example is `import range_parser` only as a language-level alias in
+documentation; the actual Node entry is CommonJS and must be loaded with
+`require("range-parser")`. Do not expose an ESM-only replacement or change the
+callable default shape. The parser has no asynchronous API and returns before
+the caller's next statement.
+
+Callers may reuse the returned value or serialize it immediately; no hidden
+iterator, promise, stream, or callback contract exists. The parser should not
+coerce a non-string header into text, and it should not coerce a non-numeric
+size into a valid representation length. Keep negative and fractional bounds
+outside the documented numeric domain deterministic rather than relying on
+locale rules. Preserve the ordinary result's `Array.isArray` behavior and its
+stable own-property ordering when inspected by a JSON bridge.

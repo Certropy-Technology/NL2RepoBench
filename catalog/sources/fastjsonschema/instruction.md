@@ -38,6 +38,122 @@ return values, defaults, generated source, and exception classes.
 Keep validation deterministic and treat schemas as data. Generated code must
 not execute schema-provided strings as Python.
 
+## Detailed Implementation Nodes
+
+The implementation is organized around the package root and the three public
+operations. `validate` may delegate to a compiled validator, but it must return
+the input value (or the value after documented defaults) rather than a private
+wrapper. `compile` returns a reusable callable whose later calls do not mutate
+the schema. `compile_to_code` returns ordinary Python source as text; generated
+source must carry enough local data to validate the supplied schema without
+reading files or resolving a URL at runtime.
+
+Schema keywords are evaluated against JSON-compatible objects, arrays, strings,
+numbers, booleans, and null. Preserve JSON Schema type distinctions, including
+that booleans are not integers for validation purposes. Object properties,
+required keys, array items, numeric bounds, string patterns, enum/const values,
+combinators, `$ref`, defaults, and supported formats must use deterministic
+exception paths and messages. A caller-provided format/handler mapping is read
+only; named callback recipes are reconstructed inside the child boundary.
+
+## Examples
+
+```python
+import fastjsonschema
+
+schema = {'type': 'object', 'properties': {'id': {'type': 'integer'}},
+          'required': ['id']}
+check = fastjsonschema.compile(schema)
+check({'id': 7})  # {'id': 7}
+```
+
+```python
+import fastjsonschema
+
+source = fastjsonschema.compile_to_code({'type': 'array',
+                                         'items': {'type': 'string'}})
+assert isinstance(source, str)
+```
+
+```python
+from fastjsonschema import JsonSchemaValueException, validate
+
+try:
+    validate({'type': 'integer'}, 'seven')
+except JsonSchemaValueException:
+    pass
+```
+
+## Error Handling and Boundary Conditions
+
+- Invalid schemas raise `JsonSchemaDefinitionException`; invalid data raises
+  `JsonSchemaValueException` or `JsonSchemaValuesException` according to the
+  configured detail and aggregation behavior.
+- `compile_to_code` must never execute schema-provided strings as Python. URI
+  references are resolved only through the supplied local/allowlisted handler;
+  missing or forbidden references fail closed.
+- Empty objects and arrays, explicit false schemas, defaults, duplicate object
+  keys, nested references, and unsupported non-JSON values follow the stated
+  JSON-safe contract without relying on process-global mutable state.
+
+## Detailed Implementation Nodes
+
+The implementation is organized around the package root and the three public
+operations. `validate` may delegate to a compiled validator, but it must return
+the input value (or the value after documented defaults) rather than a private
+wrapper. `compile` returns a reusable callable whose later calls do not mutate
+the schema. `compile_to_code` returns ordinary Python source as text; generated
+source must carry enough local data to validate the supplied schema without
+reading files or resolving a URL at runtime.
+
+Schema keywords are evaluated against JSON-compatible objects, arrays, strings,
+numbers, booleans, and null. Preserve JSON Schema type distinctions, including
+that booleans are not integers for validation purposes. Object properties,
+required keys, array items, numeric bounds, string patterns, enum/const values,
+combinators, `$ref`, defaults, and supported formats must use deterministic
+exception paths and messages. A caller-provided format/handler mapping is read
+only; named callback recipes are reconstructed inside the child boundary.
+
+## Examples
+
+```python
+import fastjsonschema
+
+schema = {'type': 'object', 'properties': {'id': {'type': 'integer'}},
+          'required': ['id']}
+check = fastjsonschema.compile(schema)
+check({'id': 7})  # {'id': 7}
+```
+
+```python
+import fastjsonschema
+
+source = fastjsonschema.compile_to_code({'type': 'array',
+                                         'items': {'type': 'string'}})
+assert isinstance(source, str)
+```
+
+```python
+from fastjsonschema import JsonSchemaValueException, validate
+
+try:
+    validate({'type': 'integer'}, 'seven')
+except JsonSchemaValueException:
+    pass
+```
+
+## Error Handling and Boundary Conditions
+
+- Invalid schemas raise `JsonSchemaDefinitionException`; invalid data raises
+  `JsonSchemaValueException` or `JsonSchemaValuesException` according to the
+  configured detail and aggregation behavior.
+- `compile_to_code` must never execute schema-provided strings as Python. URI
+  references are resolved only through the supplied local/allowlisted handler;
+  missing or forbidden references fail closed.
+- Empty objects and arrays, explicit false schemas, defaults, duplicate object
+  keys, nested references, and unsupported non-JSON values follow the stated
+  JSON-safe contract without relying on process-global mutable state.
+
 ## Examples
 
 ```python

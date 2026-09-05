@@ -5,16 +5,43 @@ workspace. The package models ASN.1 values and metadata and provides determinist
 BER, DER, and native codecs. Implement the documented public behavior as a real
 package, not as a single script or a collection of test-specific constants.
 
-# Supports
+## Supports
 
 - Support CPython 3.8 and newer, including Python 3.12.
-- Provide an installable `pyproject.toml` using the standard setuptools build backend.
-- The package has no third-party runtime dependencies.
-- Preserve the package import layout `pyasn1`, `pyasn1.type`, and
-  `pyasn1.codec.{ber,cer,der,native}`.
-- Do not contact a network, launch external processes, or require external services
-  during import or ordinary API use.
-- Keep public module names and documented re-exports available to callers.
+- Provide an installable `pyproject.toml` using the standard setuptools build
+  backend and no third-party runtime dependencies.
+- Preserve the `pyasn1`, `pyasn1.type`, and `pyasn1.codec` import hierarchy.
+- Do not contact a network, launch external processes, or require external
+  services during import or ordinary API use.
+
+## Natural Language Instruction
+
+Create the installable `pyasn1` project from an empty `workspace/`. Implement
+the typed ASN.1 value hierarchy, tag and constraint metadata, constructed
+values, and BER/DER/native codec boundaries described below. Preserve object
+types and metadata across cloning, retain deterministic component order, and
+expose the complete `pyasn1.type` and `pyasn1.codec` module paths without
+network or process dependencies.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── pyasn1/
+│   ├── __init__.py
+│   ├── type/{base.py,tag.py,namedval.py,constraint.py,univ.py}
+│   ├── type/{char.py,useful.py,namedtype.py}
+│   └── codec/
+│       ├── ber/{encoder.py,decoder.py}
+│       ├── cer/{encoder.py,decoder.py}
+│       ├── der/{encoder.py,decoder.py}
+│       └── native/{encoder.py,decoder.py}
+└── README.md
+```
+
+The listed paths are the public module families; a solution may split internal
+helpers while keeping these imports and root package metadata intact.
 
 # API Usage Guide
 
@@ -108,5 +135,38 @@ from `pyasn1.type.useful`.
 - Keep BER/DER tag, length, constructed-value, and trailing-substrate behavior
   consistent across the type and codec modules.
 - Implement public behavior with normal Python data structures and no network or
-  process-global mutable state. Hidden verification invokes the candidate only
-  through a separate child process and checks the behavior described here.
+process-global mutable state. Hidden verification invokes the candidate only
+through a separate child process and checks the behavior described here.
+
+## Examples
+
+```python
+from pyasn1.type import univ
+
+value = univ.Integer(7)
+assert int(value) == 7
+assert value.clone(8).prettyPrint() == '8'
+```
+
+```python
+from pyasn1.codec.der.encoder import encode
+from pyasn1.type import univ
+
+encoded = encode(univ.Integer(7))
+```
+
+```python
+from pyasn1.type import namedtype, univ
+
+schema = univ.Sequence(componentType=namedtype.NamedTypes())
+assert len(schema) == 0
+```
+
+## Error Handling and Boundary Conditions
+
+Constraint violations raise `ValueConstraintError`; malformed or truncated
+BER/DER input raises a codec-specific pyasn1 error. A BER decoder returns the
+undecoded trailing substrate, while native and DER operations preserve their
+documented return shapes. Scalar values must not silently change type, and
+constructed values must distinguish absent, optional, and defaulted
+components.

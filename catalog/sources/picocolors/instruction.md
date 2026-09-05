@@ -27,7 +27,40 @@ your own package files; do not fetch or copy a reference repository or its tests
   loaders, registry configuration, or lifecycle scripts. Runtime behavior must
   be deterministic and offline.
 
+## Natural Language Instruction
+
+Create the CommonJS `picocolors` package from an empty workspace. Implement the
+root formatter object, its color-support detection, the enabled and disabled
+formatter factories, browser entry, package metadata, declaration files, and
+all modifier, foreground, and background names listed below. Preserve normal
+JavaScript string coercion, ANSI nesting behavior, enumerable exports, and
+deterministic output.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── picocolors.js
+├── picocolors.browser.js
+├── picocolors.d.ts
+└── types.d.ts
+```
+
+`package.json` must make `picocolors.js` the CommonJS root and select the
+browser file through its browser mapping. The declaration files describe the
+same formatter names. Do not add a CLI, runtime loader, native extension,
+test bundle, or network-based feature.
+
 ## API Usage Guide
+
+The CommonJS entry is loaded with `require("picocolors")`. TypeScript callers
+may use the equivalent declaration import:
+
+```typescript
+import picocolors = require("picocolors");
+```
 
 ### Package root
 
@@ -98,6 +131,38 @@ The default `isColorSupported` is computed at module load. A non-empty
 platform is Windows, stdout is a non-dumb TTY, or `CI` is set. `NO_COLOR` and
 `--no-color` take precedence over the positive signals. A deterministic
 consumer should prefer `createColors(true)` or `createColors(false)`.
+
+## Examples
+
+```js
+const pc = require('picocolors')
+pc.red('error')
+pc.bold(pc.yellow('warning'))
+```
+
+```js
+const plain = require('picocolors').createColors(false)
+plain.green({value: 3}) // '[object Object]'
+```
+
+```js
+const browser = require('./picocolors.browser.js')
+browser.isColorSupported // false
+browser.blue('text') // 'text'
+```
+
+## Error Handling and Boundary Conditions
+
+- Every formatter returns a primitive string using `String(value)`. Missing
+  arguments become `"undefined"`; `null`, arrays, booleans, numbers, and plain
+  objects follow JavaScript coercion without mutation.
+- Disabled formatters return text without ANSI escapes. Enabled formatters
+  wrap even empty text and reopen the outer style after nested reset sequences.
+- `NO_COLOR` and `--no-color` override all positive support signals. The
+  support decision is made at module load and must not use a clock, random
+  source, filesystem, subprocess, or network.
+- Browser output is always plain and must expose the same formatter names.
+  Unknown properties are not required to become formatters.
 
 ## Implementation Notes
 

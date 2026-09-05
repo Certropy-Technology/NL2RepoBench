@@ -10,6 +10,16 @@ serializable root-package API through a typed subprocess bridge. The internal
 aliasing, and concurrent use of a single parser, scanner, arena, object, or
 value are outside this task.
 
+## Natural Language Instruction
+
+Create an installable Go module from an empty `workspace/` using the module
+path and package name documented below. Implement the public `fastjson` parser,
+value accessors, object and array mutation helpers, scanner, and arena APIs.
+Preserve Go signatures, nil behavior, error values, numeric and string
+decoding, insertion order where documented, and deterministic JSON output.
+The package is evaluated in a local child process and must not require a live
+service, filesystem fixture, or network access.
+
 ## Supports
 
 - Linux/amd64 with Go `1.26.5` and `CGO_ENABLED=0`.
@@ -22,7 +32,38 @@ value are outside this task.
 - Deterministic in-memory behavior only. Do not use cgo, plugins, generated
   code, files, clocks, randomness, network services, or subprocesses.
 
+## Project Directory Structure
+
+```text
+workspace/
+├── go.mod
+├── go.sum
+├── vendor/
+│   └── modules.txt
+├── parser.go
+├── scanner.go
+├── arena.go
+├── value.go
+└── fastfloat/
+    └── fastfloat.go
+```
+
+The root files implement package `fastjson`; the optional internal
+`fastfloat` directory is not a required import path for callers. Keep package
+tests and verifier bridges out of the generated submission.
+
 ## API Usage Guide
+
+Import path: `github.com/valyala/fastjson`. The following signatures are
+available from the root `fastjson` package; no subpackage import is needed for
+the scored contract.
+
+```go
+import "github.com/valyala/fastjson"
+
+var p fastjson.Parser
+value, err := p.Parse(`{"ok":true}`)
+```
 
 Implement package `fastjson` and preserve the following public contracts.
 
@@ -216,3 +257,38 @@ gap filling, parser/scanner lifetime rules, and arena cache reset behavior.
 The evaluator starts from an empty workspace, so include all source, module
 metadata, and the empty offline vendor closure. Do not hard-code bridge
 examples or expose hidden fixtures.
+
+## Examples
+
+```go
+var parser fastjson.Parser
+value, err := parser.Parse(`{"items":[1,true,null]}`)
+if err != nil {
+    panic(err)
+}
+_ = value.GetArray()
+```
+
+```go
+var arena fastjson.Arena
+value := arena.NewObject().Set("ok", arena.NewTrue())
+encoded := value.MarshalTo(nil)
+```
+
+```go
+var scanner fastjson.Scanner
+scanner.Init(`1 {"ok":true}`)
+for scanner.Next() {
+    _ = scanner.Value()
+}
+```
+
+## Error Handling and Boundary Conditions
+
+Malformed JSON returns the package's documented parse error rather than a
+panic. Nil pointers and unavailable object or array paths return the documented
+zero or false result. Parser, scanner, arena, object, and value instances are
+not safe for concurrent use unless the caller provides synchronization. Reset
+an arena only after its values are no longer used; scanner values are valid
+only until the next scan. Inputs beyond the documented bridge bounds are
+rejected before they can allocate unbounded state.

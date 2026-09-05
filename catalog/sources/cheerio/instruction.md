@@ -12,6 +12,15 @@ inspect or mutate the in-memory document, and serialize values back to strings
 or JSON. The package must not contact a network, inspect unrelated files, or
 depend on browser globals.
 
+## Natural Language Instruction
+
+Create the installable `cheerio` package from an empty workspace. Implement a
+local HTML/XML loader and its callable selection API, including selectors,
+traversal, text and markup access, attributes, properties, classes, CSS, forms,
+DOM mutation, extraction, and root utilities. Preserve document order,
+serialization, HTML versus XML mode, and JSON-safe return shapes. The package
+must remain usable with no URL fetches, browser globals, or runtime services.
+
 ## Supports
 
 - Run on Node.js `24.19.0` with npm `11.17.0` on `linux/amd64`.
@@ -315,6 +324,28 @@ isHtml(value)    // true when the string has an HTML tag-like shape
 `cssCase("WebkitLineClamp")` is `"-webkit-line-clamp"`.
 `isHtml("<div>x</div>")` is true while `isHtml("div.item")` is false.
 
+## Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── index.js
+├── slim.js
+├── utils.js
+└── lib/
+    ├── load.js
+    ├── cheerio.js
+    ├── parse.js
+    ├── serialize.js
+    └── selectors.js
+```
+
+The root package and `cheerio/slim` export named `load`; `cheerio/utils` exports
+the three utility functions documented above. This is a minimum public layout,
+not a requirement to reproduce parser internals. Keep declarations and the v3
+lockfile consistent with these entry points and do not add lifecycle builds.
+
 ## Implementation Notes
 
 - Preserve deterministic document/selection order; do not sort selector or
@@ -327,5 +358,37 @@ isHtml(value)    // true when the string has an HTML tag-like shape
   parser algorithm, build tooling, source maps, or upstream tests. Observable
   behavior and package import/install shape are the contract.
 - File input, URL input, buffers, streams, callbacks, custom pseudo functions,
-  custom adapters, and shared DOM identity cannot cross the scorer boundary and
-  are deliberately excluded rather than silently approximated.
+custom adapters, and shared DOM identity cannot cross the scorer boundary and
+are deliberately excluded rather than silently approximated.
+
+## Examples
+
+```js
+import {load} from 'cheerio';
+const $ = load('<ul><li class="a">One</li><li>Two</li></ul>');
+assert.equal($('li').length, 2);
+assert.equal($('li').first().text(), 'One');
+```
+
+```js
+const $ = load('<form><input name="q" value="hello"></form>');
+$('input').attr('value');
+// 'hello'
+```
+
+```js
+const $ = load('<p>A</p>', {}, false);
+$('p').text('A < B');
+// The replacement is serialized as escaped text, not parsed markup.
+```
+
+## Error Handling and Boundary Conditions
+
+Null or undefined markup is invalid and raises an ordinary error. Invalid CSS
+selectors also raise an error instead of silently returning an empty selection.
+An empty selection has length zero, `html()` returns `null`, and missing
+attributes return `undefined`. HTML mode may insert document wrappers and
+`tbody`; XML mode preserves case and uses self-closing syntax. Results preserve
+document order and de-duplicate nodes reached through multiple traversal paths.
+URL, buffer, stream, callback, browser, and network behavior is outside the
+JSON boundary and must not be approximated with external access.

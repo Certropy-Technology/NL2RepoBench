@@ -7,6 +7,20 @@ package name `glob`. It compiles a compact glob pattern once and matches whole
 strings against the compiled pattern. The implementation must be deterministic,
 self-contained, and usable through a newline-delimited JSON bridge.
 
+## Natural Language Instruction
+
+Create the `github.com/gobwas/glob` module from an empty `workspace/`. Implement
+the compiled root glob API, including syntax diagnostics, whole-string matching,
+separator-aware wildcards, character classes, brace alternatives, escaping,
+Unicode runes, and metadata access. Keep compilation deterministic and preserve
+the distinction between compile-time separator state and the slice exposed by
+`Pattern.Separators()`.
+
+The scored project is a library, not a command-line application. The public
+`syntax` package and `cmd/globtest` are outside this bounded task even though
+the upstream repository contains them. Do not weaken malformed-pattern errors
+or replace glob matching with substring matching.
+
 ## Supports
 
 - Linux/amd64 with Go 1.26.5 and `CGO_ENABLED=0`.
@@ -17,9 +31,31 @@ self-contained, and usable through a newline-delimited JSON bridge.
 - No cgo, plugins, `unsafe`, generated code, workspaces, external `replace`
   directives, network access, or external services.
 
+## Project Directory Structure
+
+```text
+workspace/
+├── go.mod
+├── go.sum
+├── vendor/
+│   └── modules.txt
+├── glob.go
+├── syntax.go
+└── pattern.go
+```
+
+The module path in `go.mod` is `github.com/gobwas/glob`, and the root package
+is imported as `github.com/gobwas/glob`. The minimum tree above may be split
+into additional root `.go` files when each file supports the documented root
+API. Do not add a server, generated dependency cache, or runtime download.
+
 ## API Usage Guide
 
 All symbols below are in the root package `glob`.
+
+**Import path:** `import glob "github.com/gobwas/glob"`.
+In the API pseudocode below, the package identifier is introduced as `import glob`;
+the quoted path above is the actual Go source form.
 
 ```go
 type SyntaxError struct {
@@ -75,3 +111,41 @@ calls the API through a separate typed subprocess bridge and scores one
 verifier-owned fixed leaf covering the public behavior above. Windows-specific
 behavior, the debug tree, benchmarks, fuzzing infrastructure, and the example
 CLI are outside this Linux contract.
+
+## Examples
+
+```go
+package main
+
+import "github.com/gobwas/glob"
+
+func main() {
+    p := glob.MustCompile("src/**/test?.go", '/')
+    _ = p.Match("src/pkg/test1.go")
+}
+```
+
+```go
+p, err := glob.Compile("{cat,dog}.txt")
+if err == nil && p.Match("dog.txt") {
+    _ = p.String()
+}
+```
+
+```go
+escaped := glob.QuoteMeta("a*b?")
+// escaped is `a\\*b\\?` and matches those punctuation characters literally.
+```
+
+## Error Handling and Boundary Conditions
+
+- `Compile` returns an error for incomplete escapes, unterminated classes, and
+  malformed brace expressions; callers must be able to inspect `*SyntaxError`
+  and its byte `Offset` and `Reason`.
+- Matching is against the complete string. Empty strings, empty alternatives,
+  empty wildcard matches, Unicode input, and a separator rune appearing as a
+  literal must follow the API rules above.
+- `MustCompile` may panic only for an invalid pattern. Successful compiled
+  patterns can be reused concurrently without mutation of their matching
+  semantics. All agent, candidate, verifier, Oracle, and control execution is
+  NoNetwork.

@@ -101,3 +101,23 @@ root entry and declaration file. The lockfile must describe the same package
 name and version, and installation must work offline with scripts disabled.
 Options with omitted fields use the documented defaults. Results are ordinary
 primitive strings and must not retain mutable references to array input.
+
+The package root remains the only runtime entry point. The declaration file
+must describe the default function and the options object without requiring a
+TypeScript build at runtime. Separator handling is deterministic for ASCII and
+Unicode input, and array input is read without mutation.
+
+The implementation must preserve the distinction between an omitted option and
+an explicit `false` option. It must not mutate an input array while trimming or
+joining elements. Locale conversion is applied only when requested, and all
+other case conversion uses JavaScript's ordinary Unicode string behavior.
+
+Malformed option values should follow the package's normal JavaScript error
+behavior and must not be silently converted to another option type. A caller
+can invoke the default export repeatedly with different option objects; one
+call's locale, capitalization, or array handling must not alter later calls.
+
+The output remains a primitive string even when the input is an array. Preserve
+leading semantic prefix characters, punctuation, emoji, and non-Latin letters
+unless the documented separator or case-conversion rule explicitly changes
+them.

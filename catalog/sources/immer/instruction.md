@@ -11,6 +11,15 @@ network service, a filesystem checkout, a clock, a loader, or a browser.
 This is a repository-generation task. Implement the observable contract with
 your own package files; do not copy the pinned upstream source or tests.
 
+## Natural Language Instruction
+
+Create the zero-runtime-dependency ESM `immer` package from an empty workspace.
+Implement copy-on-write drafts for JSON objects and arrays, the root exports,
+patch generation/application, draft lifecycle inspection, freezing controls,
+and the deterministic adapter-facing behavior described below. Preserve base
+state immutability, no-op identity, mutation ordering, replacement semantics,
+and errors for invalid draft use. Do not add a CLI or external service.
+
 ## Supports
 
 - Run on Node `24.19.0` with npm `11.17.0` on `linux/amd64`.
@@ -29,6 +38,21 @@ your own package files; do not copy the pinned upstream source or tests.
   the candidate. JavaScript callbacks are represented by a verifier-owned
   declarative action list; your public functions must still have the normal
   Immer callback signatures.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── index.js
+└── index.d.ts
+```
+
+`index.js` is the ESM root export and `index.d.ts` describes the public
+functions and symbols. The package has no runtime dependency in this task
+slice. Keep the package installable directly from the workspace root without a
+postinstall build or generated runtime directory.
 
 ## API Usage Guide
 
@@ -138,3 +162,46 @@ inverse patches, patch application, draft lifecycle, `current`/`original`,
 draftability, and the no-runtime-dependency/offline package contract. Every
 scored assertion is derived from this public contract and is recorded in
 task-local traceability evidence.
+
+## Implementation Notes
+
+Use copy-on-write proxies or an equivalent observable design, but expose only
+the documented public values. Preserve object key and array order, recursively
+freeze finalized draftable values when auto-freeze is enabled, and emit patch
+paths in deterministic traversal order. Global settings such as auto-freeze
+and patch enablement must not corrupt already-created drafts or unrelated
+instances. JSON action adaptation is a transport boundary, not an additional
+public API.
+
+## Examples
+
+```js
+import {produce} from 'immer';
+const next = produce({count: 1}, draft => { draft.count += 1; });
+```
+
+```js
+import {produceWithPatches, enablePatches} from 'immer';
+enablePatches();
+const [next, patches, inverse] = produceWithPatches({items: []}, draft => {
+  draft.items.push('new');
+});
+```
+
+```js
+import {createDraft, finishDraft} from 'immer';
+const draft = createDraft({ready: false});
+draft.ready = true;
+finishDraft(draft);
+```
+
+## Error Handling and Boundary Conditions
+
+- A recipe must not both mutate its draft and return a replacement value.
+- Finalized drafts cannot be reused; `applyPatches` must clone rather than
+  mutate its base input.
+- `nothing` produces `undefined`, while ordinary `null` remains `null`.
+- The scored state domain is JSON-compatible plain objects and arrays; Map,
+  Set, functions, native objects, and callback serialization are outside it.
+- No operation may consult the network, current time, ambient environment, or
+  filesystem paths.

@@ -6,6 +6,14 @@ such as `1337000000` to `15d 11h 23m 20s`. The package must be an ESM module
 with a single default function export and deterministic behavior. Do not add a
 CLI, service, native addon, network access, or lifecycle hook.
 
+## Natural Language Instruction
+
+Create the package from an empty `workspace/`. Implement the default duration
+formatter, the complete option interaction contract, deterministic decimal
+formatting, and the package metadata below. Keep number calls JSON-safe and
+support the documented BigInt signature without replacing numeric arithmetic
+with lossy string parsing.
+
 # Supports
 
 - Node.js 24.19.0 on Linux x64 with npm 11.17.0.
@@ -19,6 +27,20 @@ CLI, service, native addon, network access, or lifecycle hook.
 - JSON-serializable scored calls. The upstream API also accepts `bigint`, but
   BigInt values are outside this task's JSON subprocess boundary; do not
   replace the number behavior with a string-based approximation.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── index.js
+└── index.d.ts
+```
+
+`index.js` is the ESM package-root default export and `index.d.ts` declares the
+`Options` shape. The lockfile records the `parse-ms@4.0.0` runtime closure;
+there is no CLI, service, lifecycle hook, or generated runtime file.
 
 # API Usage Guide
 
@@ -81,3 +103,28 @@ step. Preserve negative values, BigInt-capable arithmetic in the implementation
 where practical, unit ordering, decimal precision, colon padding, verbose
 pluralization, and the interactions where `compact` or `colonNotation`
 override other options. Do not expose private helpers or test-only exports.
+
+## Examples
+
+```js
+import prettyMilliseconds from 'pretty-ms';
+
+prettyMilliseconds(1337000000); // '15d 11h 23m 20s'
+prettyMilliseconds(-1337); // '-1.3s'
+```
+
+```js
+import prettyMilliseconds from 'pretty-ms';
+
+prettyMilliseconds(3661000, {compact: true}); // '1h'
+prettyMilliseconds(95500, {colonNotation: true}); // '1:35.5'
+```
+
+## Error Handling and Boundary Conditions
+
+- Zero is represented as `0ms`, or `0 milliseconds` in verbose mode. Negative
+  finite values preserve their sign while formatting the absolute duration.
+- `unitCount` never removes the only displayed unit. `colonNotation` takes
+  precedence over compact, verbose, and separate-millisecond options.
+- Non-finite numbers raise `TypeError` with the specified message. Unknown
+  option properties are ignored, and the supplied options object is unchanged.

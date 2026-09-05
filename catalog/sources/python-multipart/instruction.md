@@ -5,6 +5,36 @@ empty workspace. The distribution provides the `python_multipart` package and
 the compatibility package name `multipart`. It is a streaming parser for URL
 encoded, multipart/form-data, and octet-stream request bodies.
 
+## Natural Language Instruction
+
+Create the installable `python-multipart` project from an empty `workspace/`.
+Implement the canonical `python_multipart` package and its `multipart`
+compatibility import. The project must provide four capability groups: header
+and value parsing, stateful field/file lifecycle objects, incremental parsers
+for each supported content type, and streaming base64/quoted-printable
+decoders. Preserve callback order, split-write behavior, metadata, limits,
+exception inheritance, and deterministic byte-oriented results.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── README.md
+├── python_multipart/
+│   ├── __init__.py
+│   ├── multipart.py
+│   ├── decoders.py
+│   └── exceptions.py
+└── multipart/
+    └── __init__.py
+```
+
+`python_multipart/__init__.py` is the canonical root export and
+`multipart/__init__.py` supplies compatibility re-exports. The build metadata
+must install both packages. Do not add test, verifier, fixture, cache, or
+network-client files to the generated project.
+
 ## Project Description
 
 Implement the public behavior of the frozen `python-multipart` API. The parser
@@ -131,3 +161,44 @@ reported as `DecodeError`.
   database, native extension, external service, or environment-specific path.
 - The hidden verifier calls the public API through an isolated child process;
   do not rely on trusted verifier imports or files.
+
+## Examples
+
+```python
+from python_multipart.multipart import parse_options_header
+
+media_type, options = parse_options_header(
+    'multipart/form-data; boundary="abc"'
+)
+```
+
+```python
+from python_multipart.multipart import QuerystringParser
+
+fields = []
+parser = QuerystringParser({"on_field": fields.append})
+parser.write(b"name=one&name=two")
+parser.finalize()
+```
+
+```python
+from io import BytesIO
+from python_multipart.decoders import Base64Decoder
+
+decoded = BytesIO()
+decoder = Base64Decoder(decoded)
+decoder.write(b"aGk=")
+decoder.finalize()
+```
+
+## Error Handling and Boundary Conditions
+
+- Parser writes may split at any byte boundary; callbacks remain in input order
+  and `write()` reports the number of accepted input bytes.
+- Invalid content types, missing multipart boundaries, malformed headers,
+  malformed encodings, and exceeded `max_size` limits raise the documented
+  parser or decoder exception instead of being silently accepted.
+- `Field` and `File` lifecycle methods are deterministic and idempotent where
+  documented; closing a temporary upload releases its file resource.
+- Empty query fields, bare names, quoted header parameters, and a trailing
+  partial decoder sequence follow the strictness and error contracts above.

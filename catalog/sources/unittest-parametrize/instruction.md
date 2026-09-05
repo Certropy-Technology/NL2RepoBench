@@ -2,6 +2,24 @@
 
 unittest-parametrize is a library for parameterizing Python unit tests. It can achieve a functionality similar to pytest.mark.parametrize in unittest TestCase, providing an elegant solution for test parameterization. While maintaining compatibility with the unittest framework, this tool realizes "the simplest API and the most powerful functions". Its core functions include: parameterizing test methods (automatically generating multiple independent test methods, supporting custom test IDs and naming), supporting both synchronous and asynchronous tests (supporting parameterization of both ordinary test methods and async test methods), and flexible parameter configuration (supporting various configuration methods such as string parameter names, tuple parameter names, param objects, and custom IDs). In short, unittest-parametrize aims to provide a robust unittest test parameterization system to simplify the writing of repetitive test code and improve test coverage (for example, expanding a single test method into multiple independent tests through the @parametrize decorator, and implementing parameterization support through the ParametrizedTestCase base class).
 
+## Project Description
+
+Build an installable Python package named `unittest-parametrize` that expands
+decorated `unittest.TestCase` methods into independently discoverable tests.
+The public scope includes synchronous and asynchronous methods, parameter
+values and IDs, validation errors, and compatibility with ordinary unittest
+collection. It does not require a network service or a framework-specific
+test runner.
+
+## Natural Language Instruction
+
+Create the package from an empty `workspace/`. Implement the
+`parametrize` decorator, `ParametrizedTestCase`, `param`, `make_id`, and
+`parametrized` APIs with the exact naming, validation, ID, async, and decorator
+ordering behavior described below. Keep generated methods independent,
+deterministic, discoverable by unittest, and compatible with normal methods in
+the same class.
+
 ## Natural Language Instructions (Prompt)
 
 Please create a Python project named unittest-parametrize to implement a unittest test parameterization library. The project should include the following functions:
@@ -43,6 +61,24 @@ tomli             2.2.1
 typing_extensions 4.14.1
 wheel             0.45.1
 ```
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── src/
+│   └── unittest_parametrize/
+│       ├── __init__.py
+│       └── py.typed
+├── README.rst
+└── LICENSE
+```
+
+The distribution is named `unittest-parametrize`; the import package is
+`unittest_parametrize`. The root module re-exports the documented decorator,
+base class, and parameter objects. Installation must work from the workspace
+root without runtime network access.
 
 ## Project Architecture of unittest-parametrize
 

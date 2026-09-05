@@ -32,6 +32,33 @@ does not need to retrieve license text.
   ordinary character, not a separator.
 - Do not extract members as part of normal navigation or reads.
 
+## Natural Language Instruction
+
+Create the installable `zipp` project from an empty `workspace/`. Implement a
+pathlib-like API over ZIP members without extracting them. Preserve archive
+order, implicit directories, ZIP-specific POSIX path rules, read/write stream
+semantics, glob behavior, symlink metadata, pickle behavior, and the
+`CompleteDirs`/`FastLookup` compatibility classes described below. All normal
+operations must remain local, deterministic, and dependency-free.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── LICENSE
+├── zipp/
+│   ├── __init__.py
+│   ├── glob.py
+│   ├── _functools.py
+│   └── compat/{__init__.py,overlay.py}
+└── README.md
+```
+
+The root package exports `Path`, `CompleteDirs`, and `FastLookup` as described
+by the API guide. `zipp.glob` and `zipp.compat.overlay` must remain importable;
+the target project does not need test-only files.
+
 ## API Usage Guide
 
 ### `zipp.Path`
@@ -179,3 +206,36 @@ must not use stale cached lookup data.
   only bounded JSON results.
 - Do not retrieve the upstream repository, its tests, or another installed
   `zipp` implementation at build or runtime.
+
+## Examples
+
+```python
+from io import BytesIO
+from zipfile import ZipFile
+from zipp import Path
+
+archive = ZipFile(BytesIO(), 'w')
+archive.writestr('pkg/data.txt', 'value')
+root = Path(archive)
+assert (root / 'pkg' / 'data.txt').read_text() == 'value'
+```
+
+```python
+children = list((root / 'pkg').iterdir())
+matches = list(root.glob('pkg/*.txt'))
+```
+
+```python
+from zipp import CompleteDirs
+
+complete = CompleteDirs.make(archive)
+assert complete.resolve_dir('pkg') == 'pkg/'
+```
+
+## Error Handling and Boundary Conditions
+
+Reading a directory raises `IsADirectoryError`, reading a missing member raises
+`FileNotFoundError`, and text-only arguments on binary opens raise
+`ValueError`. Empty or malformed glob patterns raise `ValueError`. Backslashes
+are ordinary ZIP member characters, leading-slash names are not root children,
+and paths backed by a writable archive must observe members added later.

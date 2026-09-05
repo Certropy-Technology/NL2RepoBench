@@ -8,6 +8,16 @@ The package root exports a callable `fetch` function and the `Headers`,
 `Request`, and `Response` constructors. Implement this behavior with your own
 source files; do not retrieve a reference repository or hidden tests.
 
+## Natural Language Instruction
+
+Create `cross-fetch` from an empty workspace as a CommonJS WHATWG Fetch
+ponyfill. Implement the callable root export, constructor identity, request and
+response body handling, header normalization, and local HTTP interception
+behavior described below. Keep all operations asynchronous where the Fetch
+contract requires Promises, but keep construction and header mutation
+deterministic. The package must remain usable after a clean offline install;
+do not replace its export shape with Node's global `fetch`.
+
 ## Supports
 
 - Node `24.19.0`, npm `11.17.0`, Linux amd64 with glibc, and CommonJS package
@@ -33,6 +43,24 @@ source files; do not retrieve a reference repository or hidden tests.
   loopback HTTP server are covered. Public HTTP, browser globals, React Native,
   service workers, proxy agents, streaming uploads, redirects, and TLS are not
   covered.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── index.d.ts
+└── dist/
+    ├── node-ponyfill.js
+    └── node-polyfill.js
+```
+
+`package.json` resolves the CommonJS root to `dist/node-ponyfill.js`. The
+declaration file documents the constructors and Promise-returning functions;
+the `dist/` modules contain the package-owned runtime entry and its Node
+implementation. Do not add a server, browser bundle, registry configuration,
+or runtime-generated files.
 
 ## API Usage Guide
 
@@ -91,3 +119,34 @@ address or response.
 - Make the package reproducible from a clean checkout under the offline npm
   commands. The verifier runs candidate code in an unprivileged child process
   and does not import it into its trusted process.
+
+## Examples
+
+```js
+const fetch = require('cross-fetch');
+const response = new fetch.Response('ok', {status: 200});
+response.text().then(text => console.log(text));
+```
+
+```js
+const headers = new fetch.Headers({'X-Mode': 'demo'});
+headers.append('x-mode', 'local');
+headers.get('X-MODE'); // 'demo, local'
+```
+
+```js
+const request = new fetch.Request('http://127.0.0.1:3000/data', {
+  method: 'POST', body: 'payload'
+});
+request.method; // 'POST'
+```
+
+## Error Handling and Boundary Conditions
+
+Invalid absolute URLs reject `fetch()` with an Error and do not perform DNS or
+external I/O. Header names compare case-insensitively and iteration is stable.
+`Response.ok` is true only for status 200 through 299; cloning gives an
+independent readable body, while consuming the same body twice follows the
+documented Fetch error behavior. The scored HTTP exchange is local only. Agent,
+candidate, verifier, Oracle, controls, and runtime must use `network=none` and
+must not contact GitHub, npm, DNS, or any external service.

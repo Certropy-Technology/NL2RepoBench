@@ -15,6 +15,14 @@ WSGI stream and environment helpers, routing, and the sans-IO request/response
 objects. The implementation is a library, not a running web service. Do not
 add a network client, database, browser, or external service integration.
 
+## Natural Language Instruction
+
+Create the `werkzeug` project from an empty workspace. Implement deterministic
+multi-value data structures, HTTP header/cookie and URL helpers, safe path and
+password functions, WSGI stream/environment utilities, sans-IO request and
+response objects, wrappers, a local test client, and routing. Preserve public
+import paths, ordering, protocol behavior, and documented exception classes.
+
 ## Supports
 
 - Support CPython 3.10 and newer 3.x versions in ordinary use.
@@ -26,6 +34,29 @@ add a network client, database, browser, or external service integration.
   fixed WSGI environments, fixed dates, and a local WSGI application.
 - Do not expose or depend on hidden tests, the reference source, or a generated
   reward file.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+└── src/
+    └── werkzeug/
+        ├── __init__.py
+        ├── datastructures/
+        ├── http.py
+        ├── urls.py
+        ├── security.py
+        ├── wsgi.py
+        ├── routing/
+        ├── sansio/
+        ├── wrappers/
+        └── test.py
+```
+
+The source layout may be equivalent, but each module named in the API guide
+must be importable after installation. Do not add a live server, network
+client, browser integration, or external service.
 
 ## API Usage Guide
 
@@ -155,3 +186,34 @@ endpoints or incompatible methods.
   behavior between requests while `use_cookies=True`.
 - Implement the documented public surface across modules, including exports and
   exception classes. Avoid hard-coding only the examples above.
+
+## Examples
+
+```python
+from werkzeug.datastructures import MultiDict, Headers
+
+values = MultiDict([('tag', 'one'), ('tag', 'two')])
+assert values.getlist('tag') == ['one', 'two']
+headers = Headers([('X-Test', 'yes')])
+assert headers['x-test'] == 'yes'
+```
+
+```python
+from werkzeug.routing import Map, Rule
+
+routes = Map([Rule('/users/<int:id>', endpoint='user')])
+adapter = routes.bind('example.test')
+assert adapter.match('/users/7') == ('user', {'id': 7})
+```
+
+## Error Handling and Boundary Conditions
+
+- Multi-value collections preserve insertion order and reject mutation through
+  immutable variants; conversion failures return the requested default.
+- Header, cookie, URL, and routing parsers reject malformed values with their
+  documented exception or `None` result rather than inventing data.
+- `safe_join` returns `None` for traversal, absolute, or alternate-separator
+  escapes. Password verification is deterministic in truth value but must not
+  expose a stored secret.
+- WSGI streams enforce their byte limit and request/response wrappers close
+  local streams. Runtime execution is NoNetwork and has no live server.

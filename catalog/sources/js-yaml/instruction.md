@@ -10,6 +10,16 @@ deterministic YAML text.
 This is a repository-generation task. Reproduce the documented behavior with
 your own package files. Do not copy the pinned upstream source or its tests.
 
+## Natural Language Instruction
+
+Create the `js-yaml` ESM package from an empty `workspace/`. Implement the
+JSON-compatible YAML loader, multi-document loader, deterministic dumper, and
+documented error behavior. Support the YAML 1.2 core scalar and collection
+features named below while preserving insertion order, array order, quoted
+text, comments, aliases, block scalar semantics, and option defaults. Keep the
+implementation self-contained and deterministic; do not add network access,
+runtime downloads, or unscored JavaScript-only object protocols.
+
 ## Supports
 
 - Node.js `24.19.0` and npm `11.17.0` on `linux/amd64` with glibc.
@@ -32,7 +42,31 @@ your own package files. Do not copy the pinned upstream source or its tests.
   JavaScript-only values are outside this task. The package may still expose
   extra APIs, but the contract below is the only scored surface.
 
+## Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── index.js
+├── lib/
+│   ├── loader.js
+│   ├── dumper.js
+│   ├── parser.js
+│   └── exception.js
+└── README.md
+```
+
+The root ESM entry must export `load`, `loadAll`, and `dump`, plus any
+compatibility exports explicitly listed in the API guide. The package metadata
+must agree with version `5.4.0`, the ESM format, and the zero-runtime-
+dependency offline lockfile. Internal module names may differ only when the
+root import paths and public behavior remain unchanged.
+
 ## API Usage Guide
+
+**Import path:** named exports from the package root, for example
+`import {load, loadAll, dump} from 'js-yaml'`.
 
 ### `load`
 
@@ -151,3 +185,29 @@ private tests, adapter, reward files, source checkout, or any network access.
 The scored contract is this bounded deterministic JSON slice, not complete
 parity with every upstream schema, tag, AST event, CLI behavior, or development
 tool.
+
+## Examples
+
+```js
+import {load, loadAll} from 'js-yaml'
+
+const config = load('name: Ada\nroles:\n  - admin\n')
+const documents = loadAll('---\nfirst: 1\n---\nsecond: 2\n')
+```
+
+```js
+import {dump} from 'js-yaml'
+
+const text = dump({service: {enabled: true, ports: [8080, 8081]}}, {sortKeys: true})
+```
+
+## Error Handling and Boundary Conditions
+
+`load` must reject empty input, malformed indentation or flow collections,
+duplicate keys, unsupported tags, and invalid scalar forms with the public
+`YAMLException` behavior, including useful location context when available.
+`loadAll` returns one value per document and preserves document order. `dump`
+must reject non-JSON values and invalid option types, preserve object and array
+order unless `sortKeys` is requested, and produce byte-for-byte deterministic
+output for identical JSON input and options. Cyclic aliases, callbacks, custom
+schemas, and non-JSON JavaScript values are outside the scored boundary.

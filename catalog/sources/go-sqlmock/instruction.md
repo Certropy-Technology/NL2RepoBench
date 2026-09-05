@@ -168,3 +168,74 @@ them. Do not expose pointers, channels, callbacks, filesystem handles, live
 connections, or aliased byte storage across the bridge. Do not write to
 `/logs` or to verifier-owned files. The zero-argument and malformed-request
 paths must return structured errors rather than panic or hang.
+
+## Natural Language Instruction
+
+Create the Go module from an empty workspace and implement the deterministic
+`sqlmock` database-driver contract above. A caller must be able to create a
+standard-library `database/sql` database, declare SQL and transaction
+expectations, perform operations, inspect rows and results, and receive stable
+expectation errors. Preserve typed public APIs and builder chaining while
+keeping the JSON bridge bounded and independent of a real database.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── go.mod
+├── go.sum
+├── sqlmock.go
+├── driver.go
+├── expectation.go
+├── rows.go
+├── result.go
+├── options.go
+└── matcher.go
+```
+
+The module path is `github.com/DATA-DOG/go-sqlmock`, and the package at the
+module root is imported as `sqlmock`. This is a minimal suggested layout;
+additional Go files are valid when they implement a documented public API.
+Do not add bridge, verifier, or test-only files to the generated module.
+
+```go
+import sqlmock "github.com/DATA-DOG/go-sqlmock"
+```
+
+## Examples
+
+```go
+db, mock, err := sqlmock.New()
+if err != nil { panic(err) }
+mock.ExpectQuery(`SELECT name FROM users`).
+    WillReturnRows(sqlmock.NewRows([]string{"name"}).AddRow("Ada"))
+rows, err := db.Query("SELECT name FROM users")
+```
+
+```go
+mock.ExpectExec("UPDATE users SET active = ?").
+    WithArgs(true).
+    WillReturnResult(sqlmock.NewResult(0, 1))
+_, err = db.Exec("UPDATE users SET active = ?", true)
+err = mock.ExpectationsWereMet()
+```
+
+```go
+rows := sqlmock.NewRows([]string{"id", "name"}).
+    AddRow(int64(1), "Ada").AddRow(int64(2), "Lin")
+rows.RowError(1, errors.New("row unavailable"))
+```
+
+## Error Handling and Boundary Conditions
+
+- A non-empty DSN cannot be registered twice. Closing a database releases its
+  driver registration and later calls must not reuse its mutable state.
+- SQL matching applies configured whitespace normalization and regexp or
+  equality semantics. Argument order and count remain significant unless
+  `AnyArg` is used.
+- Rows reject an incorrect value count, preserve column and row order, and
+  surface row or close errors at the documented operation. Result methods
+  return configured values or the configured error.
+- Unmet expectations produce a non-empty diagnostic. Ordered matching is the
+  default; unordered matching may choose any eligible expectation but must not
+  depend on goroutine scheduling for bridge calls.

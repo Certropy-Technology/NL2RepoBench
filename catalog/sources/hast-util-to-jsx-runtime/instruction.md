@@ -6,7 +6,14 @@ created by an automatic JSX runtime. Reproduce the documented public behavior
 with an independent implementation; do not copy the pinned upstream source or
 tests.
 
-# Supports
+## Natural Language Instruction
+
+Create the package from an empty workspace. Implement HAST/MDX-HAST conversion
+to an automatic JSX runtime with deterministic properties, child selection, key
+generation, development metadata, and actionable errors. Keep the normal
+public API and do not evaluate arbitrary code.
+
+## Supports
 
 - Node.js `24.19.0` and npm `11.17.0` on Linux amd64 with glibc.
 - ESM package semantics with `"type": "module"`, a root `exports` entry, and
@@ -18,9 +25,33 @@ tests.
 - No lifecycle scripts, workspaces, native addons, custom loaders, or runtime
   network access.
 
+## Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── index.js
+├── index.d.ts
+└── lib/
+    ├── index.js
+    ├── state.js
+    ├── hast.js
+    ├── mdx.js
+    └── property-information.js
+```
+
+The root ESM entry exports `toJsxRuntime`; metadata and lockfile must agree.
+No CLI, verifier, or adapter files belong in this tree.
+
 # API Usage Guide
 
 Export a named function from the package root:
+
+**Import path:** `import * as jsxRuntime from 'hast-util-to-jsx-runtime'`.
+Named callers may also write `import {toJsxRuntime} from 'hast-util-to-jsx-runtime'`.
+The public function is exposed as `import toJsxRuntime` from the package root.
+Named callers may also write `import {toJsxRuntime} from 'hast-util-to-jsx-runtime'`.
 
 ```js
 import {toJsxRuntime} from 'hast-util-to-jsx-runtime'
@@ -95,32 +126,6 @@ contract and must be ordinary typed errors with actionable messages.
 
 The verifier's JSONL adapter supplies only plain JSON values and serializes the
 runtime callback results. It is not an additional public API requirement.
-
-# Natural Language Instruction
-
-Create the package from an empty workspace. Implement HAST/MDX-HAST conversion
-to an automatic JSX runtime with deterministic properties, child selection, key
-generation, development metadata, and actionable errors. Keep the normal
-public API and do not evaluate arbitrary code.
-
-# Project Directory Structure
-
-```text
-workspace/
-├── package.json
-├── package-lock.json
-├── index.js
-├── index.d.ts
-└── lib/
-    ├── index.js
-    ├── state.js
-    ├── hast.js
-    ├── mdx.js
-    └── property-information.js
-```
-
-The root ESM entry exports `toJsxRuntime`; metadata and lockfile must agree.
-No CLI, verifier, or adapter files belong in this tree.
 
 # Examples
 

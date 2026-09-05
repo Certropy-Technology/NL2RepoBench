@@ -12,6 +12,14 @@ randomness, such as key generation and encryption padding, must use the
 standard-library randomness source expected by the API.  Do not contact the
 network or depend on external services.
 
+## Natural Language Instruction
+
+Create the installable `rsa` project from an empty workspace. Implement the
+public key objects, integer primitives, PKCS#1 operations, serialization
+helpers, prime/random utilities, and console entry points specified below.
+Preserve deterministic behavior for fixed key material or supplied random
+sources while retaining secure randomness where the API requires it.
+
 # Supports
 
 - Use a PEP 517 project with `pyproject.toml` and Poetry Core (or an equivalent
@@ -26,6 +34,41 @@ network or depend on external services.
   `rsa.core`, `rsa.key`, `rsa.parallel`, `rsa.pem`, `rsa.pkcs1`,
   `rsa.pkcs1_v2`, `rsa.prime`, `rsa.randnum`, `rsa.transform`, and
   `rsa.util`.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+└── rsa/
+    ├── __init__.py
+    ├── asn1.py
+    ├── cli.py
+    ├── common.py
+    ├── core.py
+    ├── key.py
+    ├── parallel.py
+    ├── pem.py
+    ├── pkcs1.py
+    ├── pkcs1_v2.py
+    ├── prime.py
+    ├── randnum.py
+    ├── transform.py
+    └── util.py
+```
+
+The six `pyrsa-*` commands dispatch to the corresponding `rsa.cli` operations.
+The package must import from the installed project root.
+
+The root package is directly importable:
+
+```python
+import rsa
+
+public_key, private_key = rsa.newkeys(512)
+signature = rsa.sign(b"message", private_key, "SHA-256")
+assert rsa.verify(b"message", signature, public_key) == "SHA-256"
+```
 
 # API Usage Guide
 
@@ -172,3 +215,22 @@ binary file data, and report usage errors with the established exit behavior.
   depend on hidden tests, a pre-existing checkout, or network access.
 - Do not copy an upstream implementation or test suite into the workspace;
   implement the documented behavior as a fresh project.
+
+## Examples
+
+```python
+from rsa.transform import bytes2int, int2bytes
+
+assert int2bytes(bytes2int(b"abc")) == b"abc"
+```
+
+```bash
+pyrsa-keygen --out private.pem --pubout public.pem 512
+```
+
+## Error Handling and Boundary Conditions
+
+Reject negative sizes, messages that do not fit the modulus, malformed PEM or
+DER, invalid padding, unknown hash names, and non-coprime inverse requests
+with the documented exception classes. CLI and file operations use binary
+data and standard streams without external services.

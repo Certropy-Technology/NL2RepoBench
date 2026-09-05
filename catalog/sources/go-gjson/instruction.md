@@ -8,6 +8,16 @@ library's deterministic string-input query, result conversion, validation, and
 path escaping behavior. Runtime registration of custom modifiers, byte-slice
 zero-copy behavior, iterator APIs, and benchmark code are outside this task.
 
+## Natural Language Instruction
+
+Create the `github.com/tidwall/gjson` Go module from an empty `workspace/`.
+Implement the bounded JSON parsing and path-query surface, the public `Result`
+type and conversion methods, the public JSON type constants, and the escaping
+helpers described below. Preserve raw JSON spelling where specified, distinguish
+absent results from JSON null, and keep array/object ordering deterministic.
+The implementation must remain pure Go and must not add runtime network,
+filesystem, cgo, plugin, or service behavior.
+
 ## Supports
 
 - Linux/amd64 with Go `1.26.5`.
@@ -17,13 +27,38 @@ zero-copy behavior, iterator APIs, and benchmark code are outside this task.
 - Pure Go with `CGO_ENABLED=0`; do not use cgo, plugins, generated code, or
   network services. The repository must build and run with
   `GOOS=linux GOARCH=amd64 GOWORK=off GOPROXY=off GOSUMDB=off
-  GOTOOLCHAIN=local`.
+GOTOOLCHAIN=local`.
 - The two declared Go module dependencies must be available from the module
   closure and the package must build with `-mod=vendor` while offline.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── go.mod
+├── go.sum
+├── vendor/
+│   └── modules.txt
+├── gjson.go
+├── json.go
+├── parser.go
+└── result.go
+```
+
+The module root is imported as `github.com/tidwall/gjson` and its package name
+is `gjson`. The source tree must contain the public `Result` and `Type`
+definitions together with the parser/query implementation; any offline vendor
+files must agree with `go.mod` and must not use an external `replace` path.
 
 ## API Usage Guide
 
 Implement package `gjson` and preserve these public contracts.
+
+**Import path:** `github.com/tidwall/gjson`.
+
+Go callers import the module with `import "github.com/tidwall/gjson"` and use
+the package name `gjson`; this is the only scored package import path.
+The short form `import gjson` below denotes that same package binding.
 
 ### JSON parsing and querying
 
@@ -108,3 +143,38 @@ module metadata, and the offline vendor closure needed to build it. Preserve
 JSON string escapes, Unicode, large integer spellings, duplicate object-key
 lookup behavior, and array/object ordering. Do not expose hidden fixtures or
 hard-code evaluator examples in the public bridge.
+
+## Examples
+
+```go
+package main
+
+import "github.com/tidwall/gjson"
+
+func main() {
+	result := gjson.Get(`{"user":{"name":"Ada"}}`, "user.name")
+	_ = result.String()
+}
+```
+
+```go
+value := gjson.Parse(`{"items":[1,2,3]}`).Get("items.1")
+if value.Exists() && value.Int() == 2 {
+	// Use the typed result without changing the source JSON.
+}
+```
+
+```go
+paths := gjson.GetMany(`{"a":1,"b":2}`, "b", "missing", "a")
+// Results retain the requested path order, including the absent result.
+```
+
+## Error Handling and Boundary Conditions
+
+`Valid` checks the complete JSON input. `Parse` and `Get` must not panic on
+malformed JSON, but callers must not infer validity from an absent result.
+Absent and null values remain distinct through `Exists` and `Type`. The typed
+bridge rejects paths over 256 bytes, more than 16 components, or more than 32
+`GetMany` paths before invoking the package. JSON strings, Unicode escapes,
+large integer spellings, duplicate keys, and object/array order must follow the
+documented result contract without global mutable state.

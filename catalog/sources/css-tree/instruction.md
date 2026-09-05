@@ -68,6 +68,9 @@ The root module must export `parse`, `generate`, `tokenize`, `walk`, `find`,
 `children`. `fromPlainObject(object)` may be used where needed to reconstruct
 an AST, and `clone(node)` returns an independent copy.
 
+The public module example is `import csstree`, referring to the package root
+namespace shown by the ESM examples below.
+
 ### Parsing and generation
 
 **Import path:** `parse` and `generate` from the package root.

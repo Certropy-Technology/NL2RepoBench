@@ -55,6 +55,10 @@ const ToPrimitive = require('es-to-primitive');
 ToPrimitive({valueOf: () => 4, toString: () => 'x'}, 'number');
 ```
 
+The public root import path is `require('es-to-primitive')`; variant modules
+are imported from `require('es-to-primitive/es5')`, `require('es-to-primitive/es6')`,
+and `require('es-to-primitive/es2015')`.
+
 ```js
 const ES2015 = require('es-to-primitive/es2015');
 ES2015('value', 'default');

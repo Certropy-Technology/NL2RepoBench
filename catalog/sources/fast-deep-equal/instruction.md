@@ -33,6 +33,20 @@ workspace/
 The API Usage Guide below is authoritative for the root callable export, input
 domains, equality rules, and return type.
 
+Import path and ordinary use:
+
+```js
+const equal = require('fast-deep-equal');
+const same = equal({a: 1}, {a: 1});
+```
+
+ES module consumers may use the CommonJS default interop form:
+
+```js
+import equal from 'fast-deep-equal';
+equal({a: 1}, {a: 1});
+```
+
 # Implementation Notes
 
 Keep comparisons deterministic and side-effect free for the documented JSON
@@ -88,7 +102,8 @@ equal(null, null);
 
 ## `equal(left, right) => boolean`
 
-Import path: the callable package root, with the same function available as
+Import path: the callable CommonJS package root loaded with
+`const equal = require('fast-deep-equal')`, with the same function available as
 its `.equal` property.
 
 `left` and `right` are independently decoded JSON values. The adapter accepts

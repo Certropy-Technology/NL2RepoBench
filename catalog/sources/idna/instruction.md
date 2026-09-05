@@ -28,6 +28,35 @@ the host's installed `idna` distribution.
 - A console script named `idna` pointing to `idna.cli:main`.
 - `python -m idna` must behave the same way as the console entry point.
 
+## Natural Language Instruction
+
+Create the `idna` distribution from an empty workspace. Implement IDNA 2008
+encoding and decoding, UTS #46 remapping, validation helpers and error
+metadata, compatibility functions, codec registration, and the CLI described
+below. Preserve Unicode table behavior, exact bytes/text return shapes,
+warning behavior, and deterministic boundary errors.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── idna/__init__.py
+├── idna/core.py
+├── idna/codec.py
+├── idna/compat.py
+├── idna/cli.py
+├── idna/intranges.py
+├── idna/idnadata.py
+├── idna/uts46data.py
+├── idna/__main__.py
+└── idna/py.typed
+```
+
+The package root exports the documented conversion functions and exceptions;
+the codec, compatibility module, and CLI use those same implementations.
+Unicode data must be local package data and must not be downloaded at runtime.
+
 ## API Usage Guide
 
 ### Root exports
@@ -122,3 +151,34 @@ different installed copy of `idna`. Include compatibility shims and codec
 classes even though the primary API is the root module. The verifier checks
 observable behavior through an unprivileged subprocess; it does not import
 candidate modules into the trusted verifier process.
+
+## Examples
+
+```python
+import idna
+
+idna.encode("例え.テスト")
+idna.decode(b"xn--r8jz45g.xn--zckzah")
+```
+
+```python
+idna.uts46_remap("EXAMPLE.COM", std3_rules=True)
+```
+
+```bash
+python -m idna --encode "例え.テスト"
+python -m idna --decode "xn--r8jz45g.xn--zckzah"
+```
+
+## Error Handling and Boundary Conditions
+
+- Preserve a single trailing dot, reject empty interior labels, and enforce
+  63-octet label and 253/254-octet domain limits.
+- Non-NFC input, bad hyphens, leading combining marks, disallowed codepoints,
+  invalid context rules, Bidi violations, invalid UTF-8, and non-canonical
+  A-labels raise the documented `IDNAError` subclass with stable metadata.
+- `strict`, `uts46`, `std3_rules`, and `transitional` are independent options;
+  transitional mode emits its documented deprecation warning.
+- CLI conversion errors go to stderr while later domains continue. A failed
+  conversion makes the process exit with status 1, but successful lines remain
+  one result per line on stdout. All runtime operations are offline.

@@ -1,4 +1,4 @@
-# Introduction and Goals of the Funcy Project
+# Project Description
 
 Funcy is a utility library for functional programming in Python, providing Python developers with rich functional programming abstractions and practical tools. It supports various scenarios such as collection operations, function composition, flow control, and debugging tools. This tool performs excellently in scenarios like Python development, data processing, API development, and configuration management, enabling an "elegant functional programming experience". Its core functions include: enhanced collection operations (supporting unified operations on various data structures such as dictionaries, lists, sets, and tuples), function composition tools (supporting advanced function operations like function currying, partial functions, and function composition), flow control abstractions (supporting control flow patterns like retry, rate limiting, and error handling), and powerful debugging and development tools (supporting logging, performance monitoring, and debugging assistance). In short, Funcy aims to provide a professional, flexible, and easy-to-use Python functional programming toolkit to improve the readability and maintainability of Python code and provide powerful functional programming capabilities for Python development and data processing (e.g., using `walk` for collection conversion, `compose` for function composition, and `retry` for error retry mechanisms).
 
@@ -39,7 +39,7 @@ pytest    7.4.3
 whatever  0.7
 ```
 
-## Funcy Project Architecture
+## Project Architecture
 
 ### Project Directory Structure
 
@@ -384,6 +384,19 @@ def limit_error_rate(fails, timeout, exception=ErrorRateExceeded):
 
 **Return Value**:
 - Returns the result of the function call if it succeeds, otherwise raises the custom exception.
+
+## Implementation Notes
+
+Keep root re-exports and module-specific imports consistent with the directory
+tree. Collection helpers must preserve the documented result type and ordering
+where the input type has an ordering; lazy sequence helpers must not consume
+more input than required. Higher-order functions must preserve callable
+arguments and propagate exceptions unless a flow helper explicitly suppresses
+or retries them. Cache and memoization helpers must define whether state is
+per-function or per-instance, and debugging decorators must not change the
+wrapped function's return value. All behavior is local and deterministic under
+the declared Python runtime; no network, subprocess, current-time, or random
+state is required by the scored APIs.
 
 ## Detailed Configuration Class Explanation
 

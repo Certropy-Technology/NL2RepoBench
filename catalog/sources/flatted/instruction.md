@@ -6,6 +6,15 @@ circular references and repeated object identity. Its wire format is a JSON
 array whose first element represents the root value and whose later elements
 hold referenced strings, arrays, and objects.
 
+# Natural Language Instruction
+
+Build `flatted` from an empty workspace. Implement the dual ESM/CommonJS root
+exports, TypeScript declaration entry, table-based graph encoding, graph
+reconstruction, replacer/reviver behavior, and helper round trips described
+below. Preserve JavaScript property order, object identity, circular links,
+native JSON error behavior, and input immutability. Do not substitute ordinary
+`JSON.stringify` because it cannot represent the required graph semantics.
+
 # Supports
 
 - Node.js 24.19.0 and npm 11.17.0 on Linux amd64 with glibc.
@@ -17,6 +26,23 @@ hold referenced strings, arrays, and objects.
   `types` condition.
 - No runtime dependencies, lifecycle scripts, workspaces, native addons,
   custom loaders, registry configuration, or runtime network access.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── esm/index.js
+├── cjs/index.js
+└── types/index.d.ts
+```
+
+The package root must expose the same four public operations from both module
+systems. `package.json` maps ESM and CommonJS consumers to the corresponding
+entries and exposes `types/index.d.ts`. Keep implementation files local to this
+tree; no generated cache, verifier code, fixture, or runtime download belongs
+in the candidate workspace.
 - JSON-compatible primitive values, plain objects, arrays, repeated object
   references, and circular object graphs. Functions, symbols, sockets, and
   class-specific internal state are outside the serialization contract, just
@@ -148,3 +174,36 @@ adapter. The adapter constructs circular fixtures inside that child and returns
 only graph observations; the trusted verifier never imports candidate code.
 Private tests, the Oracle implementation, and verifier internals are not part
 of the package to implement.
+
+# Examples
+
+```js
+import {stringify, parse} from 'flatted';
+const node = {name: 'root'};
+node.self = node;
+const restored = parse(stringify(node));
+restored.self === restored; // true
+```
+
+```js
+import {toJSON, fromJSON} from 'flatted';
+const table = toJSON({items: ['a', 'a']});
+const value = fromJSON(table);
+value.items[0] === value.items[1]; // true for the shared table entry
+```
+
+```js
+const flatted = require('flatted');
+flatted.stringify({ok: true});
+```
+
+# Error Handling and Boundary Conditions
+
+Malformed wire text must fail with a native parsing error and must never be
+evaluated as JavaScript. Repeated references must resolve to the same object,
+while primitive roots remain primitive after a round trip. Replacer and
+reviver callbacks follow the documented `JSON.stringify`/`JSON.parse` order;
+returning `undefined` from a replacer or reviver has its documented omission or
+deletion effect. Do not mutate input graphs or tables. Agent, candidate,
+verifier, Oracle, controls, and runtime use NoNetwork and cannot fetch package
+metadata or source code during execution.

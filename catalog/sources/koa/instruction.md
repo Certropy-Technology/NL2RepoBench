@@ -13,6 +13,31 @@ your own implementation. Do not copy the pinned upstream repository or its
 tests. The evaluator runs deterministic in-process HTTP requests only; no
 external service, browser, database, clock, or random value is required.
 
+## Natural Language Instruction
+
+Create `koa` from an empty workspace as a CommonJS package. Implement the
+application class, ordered asynchronous middleware composition, request and
+response context wrappers, HTTP response behavior, and root HTTP-error
+exports described below. The implementation must be usable through
+`require('koa')` without a build step.
+
+The required capability groups are:
+
+1. Application construction, configuration defaults, introspection, and
+   middleware registration.
+2. Promise-based middleware ordering, error propagation, double-`next()`
+   protection, and native server callback creation.
+3. Context, request, proxy, query, hostname, IP, subdomain, and state
+   behavior for deterministic local HTTP requests.
+4. Response headers, body serialization, status coupling, redirects,
+   attachments, caching metadata, and HTTP errors.
+5. Offline CommonJS packaging with the documented dependency closure and
+   package root entry point.
+
+Do not add an unrelated CLI, persistent server, browser integration, database,
+or external network behavior. Preserve native Node HTTP semantics where the
+API guide refers to them.
+
 ## Supports
 
 - Node `24.19.0`, npm `11.17.0`, Linux amd64/glibc.
@@ -30,12 +55,39 @@ external service, browser, database, clock, or random value is required.
   needed by `require('koa')`. A build-only ESM wrapper is optional and is not
   part of the scored contract.
 
+## Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── lib/
+│   ├── application.js
+│   ├── context.js
+│   ├── request.js
+│   ├── response.js
+│   └── http-errors.js
+└── README.md
+```
+
+`package.json` must set `main` to `lib/application.js` and list the frozen
+runtime dependencies. The CommonJS root export is the Koa application class;
+its HTTP error helpers are properties of that export. The module split above
+is a concrete minimum: request and response wrappers must remain separately
+testable, while context and application coordinate their state. Do not place
+tests, verifier code, generated bundles, or network configuration in the
+published workspace.
+
 ## API Usage Guide
 
 ### Application class
 
 `const Koa = require('koa')` returns the application class. It extends
 `EventEmitter` and supports:
+
+The public import path is `require('koa')`. For type-oriented documentation,
+the equivalent notation is `import Koa from 'koa'`; the runtime package must
+remain CommonJS and must not require an ESM loader.
 
 ```js
 const app = new Koa({
@@ -129,4 +181,53 @@ remain usable without requiring consumers to import `http-errors` directly.
   detection, status/body coupling, and async context semantics.
 - A clean checkout must install and package offline with the commands used by
   the verifier. Do not rely on a globally installed copy of Koa.
+
+## Examples
+
+```js
+const Koa = require('koa');
+const app = new Koa({env: 'test'});
+app.use(async ctx => { ctx.body = 'ok'; });
+const server = app.listen(0);
+```
+
+```js
+const Koa = require('koa');
+const app = new Koa();
+app.use(async (ctx, next) => {
+  ctx.state.started = true;
+  await next();
+  ctx.set('X-Order', 'outer');
+});
+app.use(async ctx => { ctx.body = {ready: ctx.state.started}; });
+const handler = app.callback();
+```
+
+```js
+const Koa = require('koa');
+const app = new Koa({proxy: true});
+app.use(async ctx => {
+  ctx.status = 201;
+  ctx.type = 'json';
+  ctx.body = {host: ctx.hostname, secure: ctx.secure};
+});
+```
+
+## Error Handling and Boundary Conditions
+
+- `app.use` rejects non-functions with `TypeError`, and middleware that calls
+  `next()` more than once must reject deterministically.
+- Middleware runs before downstream code in registration order and resumes in
+  reverse order. A rejected middleware promise reaches the application error
+  handler and emits the `error` event once.
+- Requests with no body default to 404. Null bodies and empty status codes
+  suppress content; strings, buffers, streams, and plain objects use their
+  documented response handling and headers.
+- Proxy-derived protocol, host, and IP values are used only when `proxy` is
+  enabled. Forwarded IP limits and subdomain ordering remain deterministic.
+- Redirect and HTTP-error responses must remove unsafe prior headers and
+  expose error text only when the error is marked exposable.
+- Agent, candidate, verifier, Oracle, and controls run with NoNetwork. The
+  package cannot resolve dependencies or contact services during installation
+  or request handling.
 

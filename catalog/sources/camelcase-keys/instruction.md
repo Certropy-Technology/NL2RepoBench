@@ -6,6 +6,15 @@ Create an installable npm package named `camelcase-keys`, version `10.0.2`, from
 an empty workspace. The package converts object keys to camel case and supports
 recursive conversion for JSON-shaped objects and arrays.
 
+## Natural Language Instruction
+
+Build the package from an empty workspace as a deterministic ESM library. The
+default root export converts object keys without mutating caller-owned values.
+Implement shallow and deep object/array traversal, option handling,
+special-key preservation, package metadata, and the TypeScript declaration
+surface described below. Keep the implementation synchronous and usable after
+an offline install; there is no CLI or service to implement.
+
 # Supports
 
 - Node `24.19.0`, npm `11.17.0`, `linux/amd64`, and glibc.
@@ -21,6 +30,21 @@ recursive conversion for JSON-shaped objects and arrays.
 - Do not use workspaces, native addons, custom loaders, runtime network access,
   lifecycle hooks, or a build step. Do not include hidden tests, verifier code,
   Oracle material, or npm cache bytes in the candidate package.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── index.js
+└── index.d.ts
+```
+
+The package root is the ESM entry point. `index.js` exports the default
+`camelcaseKeys` function and `index.d.ts` declares its options and generic
+return types. The lockfile must describe the exact runtime closure; no test,
+generated cache, or lifecycle script is part of the target project.
 
 # API Usage Guide
 
@@ -68,6 +92,12 @@ when deep conversion is enabled. Supported JSON inputs and well-formed options
 do not intentionally throw; malformed option values may produce ordinary
 JavaScript `TypeError` failures.
 
+The public import path is `import camelcaseKeys from 'camelcase-keys'`. Object
+property order remains the source enumeration order, including numeric-like
+keys under JavaScript rules. Key conversion is locale-independent and
+deterministic; values retain their original shapes unless deep conversion is
+enabled.
+
 # Implementation Notes
 
 The scored boundary sends bounded JSON-compatible values and options through a
@@ -79,3 +109,35 @@ conversion, and keep repeated calls deterministic. Filesystem descriptors,
 callbacks, custom prototypes, symbols, built-in instances, and cyclic graphs
 are outside the scored JSON boundary even though the public function should not
 corrupt them.
+
+## Examples
+
+```js
+import camelcaseKeys from 'camelcase-keys';
+camelcaseKeys({'foo-bar': 1, 'nested-value': {'kept-key': 2}});
+// {fooBar: 1, nestedValue: {kept-key: 2}}
+```
+
+```js
+const input = {'foo-bar': [{'array-key': true}]};
+camelcaseKeys(input, {deep: true});
+// {fooBar: [{arrayKey: true}]}; input remains unchanged
+```
+
+```js
+camelcaseKeys({'api-response': 1, 'raw-value': 2}, {
+  exclude: ['api-response'], pascalCase: true,
+});
+// {'api-response': 1, RawValue: 2}
+```
+
+## Error Handling and Boundary Conditions
+
+Primitive inputs are returned unchanged and empty arrays produce new empty
+arrays. `deep: false` leaves nested object keys unchanged but still converts
+objects directly contained in a top-level array as specified. `exclude` matches
+original key names without preventing processing of an excluded value, while
+`stopPaths` uses original dot-path components and omits array indexes. Circular
+references remain circular when deep conversion is enabled. Invalid option
+shapes may raise `TypeError`; well-formed JSON inputs are deterministic and
+need no clock, locale, filesystem, or network state.

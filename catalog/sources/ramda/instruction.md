@@ -22,6 +22,15 @@ callbacks, placeholders, transducers, and non-JSON values are not required.
 - The root module must expose the named functions below through
   `require('ramda')`.
 
+The package is imported from its CommonJS root with:
+
+```js
+const R = require('ramda');
+```
+
+The module may also be inspected with `import ramda from 'ramda'` in tooling;
+the scored runtime remains the CommonJS `require` entry.
+
 Calls are made through a JSON request/response boundary. Arguments and results
 are JSON values: null, booleans, finite numbers, strings, arrays, and plain
 objects. Functions, callbacks, symbols, BigInts, regular expressions, dates,

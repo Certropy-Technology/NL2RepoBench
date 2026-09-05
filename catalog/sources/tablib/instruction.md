@@ -1,3 +1,12 @@
+## Project Description
+
+Build the installable Tablib package as a deterministic, format-independent
+library for creating, importing, exporting, and manipulating tabular data.
+Implement the Dataset and Databook abstractions, format registry, conversion
+adapters, and DBF helper surface described in this instruction. Optional
+integrations remain local and must fail clearly when their format dependency is
+not available.
+
 ## Introduction and Goals of the Tablib Project
 
 Tablib is a **format-independent library for handling tabular datasets** written in Python. It aims to provide developers with a unified and concise interface for creating, importing, exporting, and manipulating tabular data without worrying about the underlying data formats. Tablib supports reading and writing in multiple mainstream data formats, including Excel, JSON, YAML, Pandas DataFrame, HTML, Jira, LaTeX, TSV, ODS, CSV, DBF, and SQL. Its core functions include:
@@ -1699,7 +1708,7 @@ from tablib._vendor.dbfpy import utils
 
 # String processing test
 # Test string processing with NUL characters
-text_with_nul = b"abc xyz"
+text_with_nul = b"abc\x00xyz"
 result_with_nul = utils.unzfill(text_with_nul)  # test_unzfill_with_nul
 assert result_with_nul == b"abc"
 

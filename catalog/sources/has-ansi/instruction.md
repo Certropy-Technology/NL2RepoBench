@@ -101,3 +101,21 @@ hasAnsi('plain text'); // false
   forms follow the declared ANSI grammar.
 - A lone escape or an incomplete sequence is not accepted. Non-string values
   are outside the scored input domain. All execution uses `network_mode=no-network`.
+
+## Additional Examples
+
+```js
+import hasAnsi from 'has-ansi';
+hasAnsi('prefix\u001B[2Ksuffix'); // true
+hasAnsi('literal \\u001B[31m'); // false
+```
+
+The predicate scans the complete string, including line breaks, and returns as
+soon as a complete accepted sequence is found. It must not strip, normalize,
+or otherwise modify ordinary text. C1 control forms and OSC forms are handled
+according to the accepted ANSI grammar, while an escape followed only by an
+ordinary character remains false.
+
+Keep the implementation synchronous and side-effect free.
+
+The package must preserve its documented default export shape.

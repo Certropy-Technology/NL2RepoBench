@@ -85,6 +85,14 @@ widestLine('古\n\u001B[1m@\u001B[22m'); // 2
 widestLine('😀\né'); // 2
 ```
 
+# Implementation Notes
+
+Keep the package surface to the one default synchronous export. Preserve ESM
+root exports and the declaration signature. Do not bundle a replacement for
+`string-width`; use the declared dependency and keep runtime installation
+offline-compatible. Do not expose tests, verifier code, or the Oracle solution
+in the generated package.
+
 # Examples
 
 ```js
@@ -102,10 +110,11 @@ The input must be a string; other values raise `TypeError`. Empty lines,
 trailing newlines, wide characters, emoji, ANSI sequences, and controls use
 the dependency's documented width semantics.
 
-# Implementation Notes
+The function must return `0` for an empty string and for a string made only of
+line separators. A trailing line separator therefore creates an empty final
+line. ANSI escape sequences contribute no terminal columns; combining marks
+contribute zero additional columns, while full-width characters and emoji use
+the installed `string-width` semantics. Split only on `\n`; preserve the
+dependency's treatment of `\r` and other control characters.
 
-Keep the package surface to the one default synchronous export. Preserve ESM
-root exports and the declaration signature. Do not bundle a replacement for
-`string-width`; use the declared dependency and keep runtime installation
-offline-compatible. Do not expose tests, verifier code, or the Oracle solution
-in the generated package.
+The result is an integer and the input is never modified or retained.

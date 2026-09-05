@@ -8,6 +8,14 @@ legacy eggs, and zip archives. It must work without a preinstalled copy of
 
 ## Project Description
 
+## Natural Language Instruction
+
+Create the `importlib_metadata` project from an empty workspace. Implement
+distribution lookup, filesystem and zip discovery, metadata parsing, entry
+points, requirements, recorded files, package-to-distribution mapping, and
+the public provider protocols. Preserve supplied-path order, metadata order,
+normalized names, immutable entry-point behavior, and documented exceptions.
+
 Implement the backport of Python's distribution-metadata API represented by
 the frozen `importlib-metadata` revision. The library discovers `.dist-info`
 and `.egg-info` metadata on caller-supplied search paths, parses package
@@ -39,6 +47,26 @@ The distribution name is `importlib_metadata`, the import package is
   UTF-8. Missing, unreadable, or malformed optional metadata files should
   follow the contracts below rather than escaping discovery with unrelated
   filesystem errors.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── src/
+│   └── importlib_metadata/
+│       ├── __init__.py
+│       ├── _adapters.py
+│       ├── _collections.py
+│       ├── _meta.py
+│       └── py.typed
+└── README.md
+```
+
+The exact private module names may differ, but the installed package must
+provide the documented root exports and provider classes. Local directories
+and zip archives are inputs; no metadata service or network lookup is part of
+the project.
 
 ## API Usage Guide
 
@@ -205,3 +233,32 @@ the public protocol required from custom providers: `joinpath`, `/`, `parent`,
   unprivileged child process. Trusted collection, JUnit, network, and reward
   reports are verifier-owned; candidate code must not write `/tests`, `/logs`,
   or trusted report paths.
+
+## Examples
+
+```python
+from importlib_metadata import distribution, version
+
+dist = distribution("demo")
+assert dist.name == "demo"
+assert version("demo") == dist.version
+```
+
+```python
+from importlib_metadata import EntryPoints, EntryPoint
+
+points = EntryPoints((EntryPoint("run", "demo:main", "console"),))
+assert points.select(group="console")["run"].module == "demo"
+```
+
+## Error Handling and Boundary Conditions
+
+- Missing distributions raise `PackageNotFoundError` with the requested name;
+  empty names raise `ValueError`.
+- Name matching normalizes periods, underscores, and dashes but never accepts
+  a longer name merely because it has the query as a prefix.
+- Missing optional `RECORD`, `SOURCES.txt`, requirement, or origin files
+  return `None` or an empty result as specified; malformed metadata raises the
+  documented metadata exception.
+- Directory and zip discovery preserve deterministic path and entry order,
+  and cache invalidation observes newly created metadata.

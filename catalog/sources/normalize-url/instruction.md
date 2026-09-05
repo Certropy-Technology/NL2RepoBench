@@ -115,3 +115,9 @@ state. Query keys and duplicate values retain the specified order when sorting
 is disabled, and path decoding must not turn encoded reserved separators into
 new path segments. The package remains usable from a freshly installed target
 directory rather than only from its source checkout.
+
+The default export must be available immediately after the offline install from
+the package root. All option interactions remain local to one call; no option
+may modify defaults observed by a later call. Preserve the distinction between
+an absent query value and an explicitly empty value, including when duplicate
+keys are sorted.

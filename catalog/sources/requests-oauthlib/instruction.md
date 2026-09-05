@@ -88,3 +88,41 @@ Non-HTTPS OAuth 2 requests raise the insecure-transport error. Missing tokens,
 verifiers, or denied token responses preserve `TokenMissing`, `VerifierMissing`,
 and `TokenRequestDenied`. Invalid PKCE or compliance names raise `ValueError`.
 No function may contact a provider implicitly.
+
+## Detailed Implementation Nodes
+
+Keep OAuth request preparation separate from transport execution. OAuth 1 must
+preserve the prepared request method, URL, headers, and body while adding the
+signature in the selected signature location. OAuth 2 must validate transport
+security before applying a token and leave the request unchanged when
+`withhold_token=True`. Token dictionaries are ordinary mappings at the public
+boundary; sessions expose updates through their documented properties without
+leaking private client objects into JSON responses.
+
+Compliance helpers register transformations on the supplied session and return
+that same object. Their transformations operate on local request or response
+values and preserve unrelated parameters. Missing optional token fields, empty
+scopes, repeated authorization calls, and provider response fields follow the
+API contract rather than being silently discarded.
+
+## Additional Examples and Boundaries
+
+```python
+from requests_oauthlib import OAuth1Session
+
+session = OAuth1Session('client', client_secret='secret')
+prepared = session.prepare_request(request)
+```
+
+```python
+from requests_oauthlib import OAuth2Session
+
+session = OAuth2Session(client_id='client', token={'access_token': 'token'})
+session.request('GET', 'https://example.test/resource', withhold_token=True)
+```
+
+The examples use caller-supplied local request objects or patched transport
+implementations. No authorization endpoint, browser, callback listener, DNS
+lookup, proxy, TLS service, or protected resource is contacted implicitly.
+Typed oauthlib errors remain observable for insecure transport, missing token,
+denied token, verifier, and invalid compliance-hook cases.

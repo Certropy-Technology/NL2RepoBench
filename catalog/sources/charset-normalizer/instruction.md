@@ -95,3 +95,27 @@ assert detect(b'hello')['encoding'] in {'ascii', 'utf-8'}
 Text strings passed where bytes are required raise `TypeError`. Empty input
 returns the documented empty UTF-8 match; missing paths and invalid CLI paths
 fail locally with the documented non-zero status.
+
+The detector must preserve the distinction between an encoding label and the
+decoded payload. A codec restriction that names no usable codec returns the
+documented empty match collection or fallback result rather than consulting a
+package host. File-like inputs are read from their current position, while
+path inputs are opened only for the duration of the local operation. Repeated
+calls on the same bytes produce the same candidate order and metadata.
+
+```python
+from io import BytesIO
+from charset_normalizer import from_fp, is_binary
+
+matches = from_fp(BytesIO(b'plain ascii'))
+assert matches.best() is not None
+assert is_binary(b'plain ascii') is False
+```
+
+```python
+from charset_normalizer.utils import identify_sig_or_bom, iana_name
+
+codec, mark = identify_sig_or_bom(b'\xef\xbb\xbfhello')
+assert codec in {'utf_8', 'utf-8'} and mark == b'\xef\xbb\xbf'
+assert iana_name('latin1') == 'latin-1'
+```

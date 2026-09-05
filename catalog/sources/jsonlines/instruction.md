@@ -21,6 +21,32 @@ asynchronous I/O, or optional third-party JSON engines.
   installed with `pip --no-deps --no-build-isolation` from the repository root.
 - No runtime network, subprocess, external-service, or platform-tool behavior.
 
+## Natural Language Instruction
+
+Create the installable `jsonlines` package from an empty workspace. Implement
+incremental Reader and Writer wrappers, the file convenience function, JSON
+conversion, custom serializer behavior, physical-line numbering, and the
+documented exception contract. Preserve stream ownership boundaries: wrappers
+created around caller streams must not close those streams, while wrappers
+created by `open` own their internally opened file.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── jsonlines/__init__.py
+├── jsonlines/py.typed
+├── jsonlines/reader.py
+├── jsonlines/writer.py
+└── jsonlines/cli.py
+```
+
+The package root exports only the names specified by `__all__`. Optional CLI
+or helper modules must not alter that public list. The implementation is local
+and synchronous; no network, subprocess, database, or optional JSON engine is
+needed.
+
 The top-level package must export exactly these public names through
 `jsonlines.__all__`, in this order:
 

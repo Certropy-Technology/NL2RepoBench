@@ -59,6 +59,12 @@ marker files are not package-owned resources.
 
 ## API Usage Guide
 
+The public import path is the package root. Use named ESM imports such as
+`import { normalizePath, mergeConfig } from 'vite'`; each function below is a
+named export from `dist/node/index.js` and is available through the package
+export map. The functions accept JSON-safe values except where a documented
+filesystem path or environment-file read is required.
+
 ### `defineConfig(config)`
 
 Return `config` unchanged. For JSON-safe object input, the returned value has
@@ -177,6 +183,16 @@ If no workspace marker is found, return `root`. When `root` is omitted, derive
 it by walking upward to the nearest `package.json`, falling back to `current` if
 none exists. Ignore unreadable and malformed JSON workspace marker files.
 
+## Implementation Notes
+
+- Keep all behavior deterministic and local to the process and filesystem.
+- Do not execute config callbacks, start servers, bind ports, spawn package
+  managers, or access the network.
+- Preserve stable ordering in alias merges, plugin groups, prefix arrays, and
+  root input arrays.
+- Errors should be regular JavaScript `Error` or `TypeError` instances with a
+  message that identifies the invalid condition.
+
 ## Examples
 
 ```js
@@ -194,13 +210,3 @@ objects, preserving merge and ordering rules.
 Missing environment files produce the documented empty result. Invalid alias,
 config, or plugin shapes raise a regular JavaScript error. Workspace discovery
 is bounded by the supplied root and never accesses a network.
-
-## Implementation Notes
-
-- Keep all behavior deterministic and local to the process and filesystem.
-- Do not execute config callbacks, start servers, bind ports, spawn package
-  managers, or access the network.
-- Preserve stable ordering in alias merges, plugin groups, prefix arrays, and
-  root input arrays.
-- Errors should be regular JavaScript `Error` or `TypeError` instances with a
-  message that identifies the invalid condition.

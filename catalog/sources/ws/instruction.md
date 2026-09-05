@@ -54,6 +54,12 @@ workspace/
 
 The root supports the documented CommonJS and ESM exports.
 
+The public CommonJS import path is `require('ws')`, and the public ESM import
+path is `import WebSocket, {WebSocketServer} from 'ws'`. The package root is
+the required runtime entry for these APIs; `wrapper.mjs` supplies the ESM
+compatibility surface and `browser.js` is the documented unsupported-browser
+stub.
+
 ## Package exports
 
 `require('ws')` returns the `WebSocket` class. It also exposes

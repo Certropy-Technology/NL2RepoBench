@@ -6,6 +6,16 @@ workspace and keep the runtime dependency-free. The package must support Python
 3.12 on Linux and must not require network access, a service, or a command-line
 interface at runtime.
 
+# Natural Language Instruction
+
+Create the installable `isodate` package from an empty workspace. Implement the
+public root exports and the documented `isodate.*` modules for ISO 8601 dates,
+times, datetimes, durations, timezone values, and format strings. Preserve
+standard-library value semantics while keeping calendar arithmetic,
+truncation, defaults, exceptions, and singleton timezone identity observable.
+The package must be dependency-free at runtime and deterministic under the
+declared Python environment.
+
 # Supports
 
 - Use a normal PEP 517 project layout with the import package `isodate`.
@@ -20,6 +30,29 @@ interface at runtime.
   equality, hashing, arithmetic, `repr`, pickle, and deepcopy behavior.
 - The evaluation image already contains build dependencies. Do not install
   packages or access the network from the evaluation workspace.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+└── isodate/
+    ├── __init__.py
+    ├── duration.py
+    ├── isodates.py
+    ├── isodatetime.py
+    ├── isoduration.py
+    ├── isoerror.py
+    ├── isostrf.py
+    ├── isotime.py
+    ├── isotzinfo.py
+    └── tzinfo.py
+```
+
+`isodate/__init__.py` is the public re-export entry. The module names in the
+tree must remain importable individually, while `pyproject.toml` must install
+the package from the workspace root. No CLI, service, generated source, or
+third-party runtime dependency is required.
 
 # API Usage Guide
 
@@ -124,11 +157,42 @@ D_ALT_BAS_ORD=P%Y%jT%H%M%S     D_ALT_EXT_ORD=P%Y-%jT%H:%M:%S
 
 # Implementation Notes
 
-- Keep the documented `isodate.*` module names, signatures, re-exports, and
-  return types. The implementation may use only the Python standard library.
-- Timezone and duration values must remain pickleable and deepcopyable.
-- Do not copy hidden tests or rely on the reference source being reachable at
-  runtime.
-- The verifier observes candidate behavior through an unprivileged child
-  process. Trusted collection, JUnit, reward, and network receipts remain
-  separate from candidate code.
+Keep the documented `isodate.*` modules, signatures, re-exports, and return
+types. Use only the Python standard library, preserve pickle/deepcopy behavior,
+and keep timezone and duration values deterministic. Do not copy hidden tests or
+depend on a reference checkout at runtime.
+
+# Examples
+
+```python
+from datetime import date
+from isodate import parse_date, date_isoformat
+
+value = parse_date('2012-060')
+assert value == date(2012, 2, 29)
+assert date_isoformat(value) == '2012-02-29'
+```
+
+```python
+from datetime import date
+from isodate import Duration
+
+assert Duration(months=1) + date(2020, 1, 31) == date(2020, 2, 29)
+```
+
+```python
+from isodate import parse_tzinfo, UTC
+
+assert parse_tzinfo('Z') is UTC
+```
+
+# Error Handling and Boundary Conditions
+
+Malformed date, time, datetime, duration, or timezone text must raise the
+documented `ISO8601Error` rather than silently changing separators or case.
+Fractional seconds are truncated to six microsecond digits. Calendar durations
+require exactly one endpoint for `totimedelta`; providing neither or both is a
+`ValueError`. Month arithmetic clips invalid month days, timezone offsets
+remain deterministic `timedelta` values, and singleton/repr/pickle behavior
+must remain stable. Agent, candidate, verifier, Oracle, controls, and runtime
+must not access GitHub, package indexes, DNS, or any external service.

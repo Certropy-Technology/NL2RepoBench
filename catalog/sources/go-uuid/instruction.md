@@ -9,6 +9,14 @@ UUID generation, time-based generation, node discovery, SQL integration, JSON
 marshalling, and mutable package configuration are outside the requested
 contract.
 
+## Natural Language Instruction
+
+Build the module from an empty `workspace/`. Implement the serializable
+`UUID` value, strict `Parse` spellings, and lowercase canonical `String` output
+described in the API guide. Keep the package deterministic and self-contained;
+do not broaden the task into random generation, database integration, or a
+network service.
+
 ## Supports
 
 - Linux/amd64 with Go 1.26.5.
@@ -20,6 +28,20 @@ contract.
   and `GOTOOLCHAIN=local`.
 - One pure-Go module. Do not require cgo, plugins, unsafe code, generated
   sources, network access, or external services.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── go.mod
+├── go.sum
+└── uuid.go
+```
+
+The module path is `github.com/google/uuid`, and the root package name is
+`uuid`. The root source file must expose the documented `UUID` type and
+methods. No CLI, generated test package, service, or external module is
+needed.
 
 ## API Usage Guide
 
@@ -77,3 +99,43 @@ bytes into the returned `UUID`; it must not retain input storage or mutate
 global state. Any additional exported API is optional, but the required API
 above must remain available at the stated import path and must compile with
 the offline commands in this specification.
+
+## Examples
+
+```go
+package main
+
+import (
+    "fmt"
+    "github.com/google/uuid"
+)
+
+func main() {
+    id, err := uuid.Parse("550e8400-e29b-41d4-a716-446655440000")
+    if err != nil {
+        panic(err)
+    }
+    fmt.Println(id.String())
+}
+```
+
+```go
+zero := uuid.UUID{}
+// zero.String() is the lowercase all-zero canonical UUID.
+_ = zero
+```
+
+```go
+id, err := uuid.Parse("550e8400e29b41d4a716446655440000")
+// Compact and canonical spellings produce the same UUID bytes.
+_ = id
+_ = err
+```
+
+## Error Handling and Boundary Conditions
+
+Parsing must fail without panicking for invalid lengths, malformed hyphen
+positions, non-hexadecimal characters, invalid URN prefixes, unmatched braces,
+and leading or trailing whitespace. Do not trim or normalize unsupported input.
+`String` must remain total for the zero value and always return exactly 36
+lowercase hexadecimal characters with four hyphens.

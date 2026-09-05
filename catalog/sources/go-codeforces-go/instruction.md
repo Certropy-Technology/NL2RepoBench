@@ -12,6 +12,15 @@ The evaluator uses Linux/amd64, where a `uint` word has 64 bits. It invokes the
 package through a newline-delimited JSON bridge. The bridge only supplies
 non-negative indexes and half-open ranges wholly inside the allocated bitset.
 
+## Natural Language Instruction
+
+Create the offline Go module from an empty workspace and implement the mutable
+`copypasta.Bitset` type with the complete point, search, range, shift,
+arithmetic, and relation API below. Preserve 64-bit word behavior on the target
+platform, inclusive search semantics, capacity sentinels, and deterministic
+JSON bridge responses. The public module and package import paths are part of
+the contract; do not add unrelated packages or services.
+
 ## Supports
 
 - Go `1.26.5`, Linux/amd64, `CGO_ENABLED=0`.
@@ -22,9 +31,28 @@ non-negative indexes and half-open ranges wholly inside the allocated bitset.
 - Standard library imports only. Do not add a workspace, `replace` directive,
   plugins, cgo, external commands, or background work.
 
+## Project Directory Structure
+
+```text
+workspace/
+├── go.mod
+├── go.sum
+├── vendor/
+│   └── modules.txt
+└── copypasta/
+    └── bitset.go
+```
+
+The module path is `github.com/EndlessCheng/codeforces-go`; consumers import
+`github.com/EndlessCheng/codeforces-go/copypasta`. The source tree contains no
+verifier, bridge, generated artifact, or network-dependent package. The bridge
+used for evaluation is external to this public module.
+
 ## API Usage Guide
 
-Put the implementation in package `copypasta` at `copypasta/`. Define:
+Import the type with
+`import "github.com/EndlessCheng/codeforces-go/copypasta"`. Put the
+implementation in package `copypasta` at `copypasta/`. Define:
 
 ```go
 func NewBitset(n int) Bitset
@@ -108,16 +136,51 @@ For example, after `b := NewBitset(64)`, `b.Set(1)`, `b.SetRange(4, 7)`, and
 
 ## Implementation Notes
 
-The bridge sends one JSON request per line and expects exactly one JSON response
-per request. It has operation names `summary`, `ranges`, `search`, `shift`,
-`arithmetic`, `relation`, and `has`. Each operation starts from positions supplied by
-the request and returns JSON values derived from the public methods above. The
-bridge rejects malformed JSON, more than 16 storage words, indexes outside the
-allocated capacity, malformed ranges, and unknown operations before invoking
-the package. It must not emit diagnostics to stdout or panic on bad bridge
-input.
+The module uses the standard-library-only offline build contract and the bridge
+must remain outside the candidate package. The bridge sends one JSON request
+per line and expects exactly one JSON response per request. It has operation
+names `summary`, `ranges`, `search`, `shift`, `arithmetic`, `relation`, and
+`has`; each operation starts from positions supplied by the request and returns
+JSON values derived from the public methods above. The bridge rejects malformed
+JSON, more than 16 storage words, indexes outside the allocated capacity,
+malformed ranges, and unknown operations before invoking the package. It must
+not emit diagnostics to stdout or panic on bad bridge input.
 
 Preserve deterministic results and do not mutate the argument bitset in
 `Equals` or `HasSubset`. The evaluator checks ordinary single-word and
 cross-word cases, empty values, inclusive searches at word boundaries, carries
 and borrows, equal-length relations, and bounded invalid bridge requests.
+
+## Examples
+
+```go
+import "github.com/EndlessCheng/codeforces-go/copypasta"
+
+b := copypasta.NewBitset(128)
+b.Set(3)
+b.SetRange(8, 11)
+positions := b.AllIndex1()
+```
+
+```go
+b := copypasta.NewBitset(64)
+b.Set(63)
+b.Lsh(1)
+// The shift fills vacated positions with zero.
+```
+
+```go
+b := copypasta.NewBitset(16)
+b.SetRange(2, 6)
+count := b.OnesCountRange(2, 6) // 4
+```
+
+## Error Handling and Boundary Conditions
+
+The public methods receive indexes and ranges bounded by the bitset capacity.
+Range operations are half-open and are no-ops when the start is not less than
+the end. Searches use the capacity sentinel when no bit matches; `LastIndex1`
+uses `-1` for an empty bitset. Shifts at or beyond capacity clear storage.
+Relation methods do not mutate either operand. Malformed bridge input, unknown
+operation names, or out-of-range positions are rejected by the bridge before
+package calls and must produce no diagnostic on stdout.

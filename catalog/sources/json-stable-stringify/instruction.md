@@ -15,7 +15,7 @@ recursive serialization, replacers, custom comparators, spacing, empty-collapse,
 number semantics and the documented TypeError contracts. Keep the package
 self-contained and offline.
 
-# Supports or Environment Configuration
+# Supports
 
 - Node.js 24.19.0 on Linux amd64 with CommonJS `index.js` as the package entry.
 - Use `package.json` and a v3 `package-lock.json`; installation uses
@@ -82,3 +82,39 @@ stringify(value, { cycles: true })
 
 The implementation must not read external files, contact a network, or depend
 on the current clock or random state.
+
+The serializer must distinguish an active recursive path from an object that
+is merely shared by two independent branches. If the same child object is
+referenced by `left` and `right` after `left` has been serialized, both
+properties are serialized normally; only a reference encountered while that
+object is still being serialized is a cycle. Comparator calls receive the
+key/value records for one object and must not alter the source object.
+
+The replacer is called for the root and then for each traversed property with
+the containing object as `this`. A replacer result of `undefined` omits an
+object property and becomes `null` in an array, matching native JSON behavior.
+If a value has a callable `toJSON`, invoke it before ordinary serialization
+and then apply the replacer to the resulting value. BigInt values remain an
+unsupported JSON value and must raise the documented native-compatible error.
+
+Object enumeration is limited to enumerable string keys. Prototype-inherited
+properties are not added to the output, while an own `toJSON` method may
+participate through the normal JSON conversion hook. Numeric formatting,
+negative zero, escaping, and non-finite number handling follow the runtime's
+JSON representation rather than a locale or custom formatter.
+
+Pretty output uses the requested `space` indentation and keeps arrays in input
+order. Empty arrays and objects are rendered compactly when `collapseEmpty`
+is enabled, but their surrounding parent indentation remains deterministic.
+The default comparator sorts keys lexicographically at every object depth;
+custom comparators are applied independently at each depth and stable ties
+retain the original enumerable-key order.
+
+When `space` is a number, indentation is capped and derived from that many
+spaces; when it is a string, the string is used as the indentation unit.
+Unsupported option types must be rejected before producing partial output.
+The returned text is a primitive string and serialization must not mutate
+enumerable keys, arrays, comparator state, or replacer-owned objects. A
+comparator may inspect the current object through its documented getter, but
+the getter must not expose inherited keys as enumerable own properties. Empty
+objects and arrays remain valid JSON values even when they are collapsed.

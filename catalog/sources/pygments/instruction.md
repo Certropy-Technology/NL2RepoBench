@@ -22,6 +22,42 @@ command-line program.
   without network access. Do not retrieve the reference repository or install
   packages at runtime.
 
+## Natural Language Instruction
+
+Create the `Pygments` Python project from an empty `workspace/`. Implement a
+usable pure-Python lexer and formatter library, not a table of answers for a
+few snippets. At minimum, provide the token model, lexer lookup registry,
+representative language lexers, formatter lookup, style lookup, utility
+helpers, and the `pygmentize` command described in this document. Preserve
+source text order, deterministic output, documented exceptions, and both root
+and submodule import paths.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── LICENSE
+├── pygments/
+│   ├── __init__.py
+│   ├── __main__.py
+│   ├── token.py
+│   ├── lexer.py
+│   ├── lexers/__init__.py
+│   ├── lexers/python.py
+│   ├── formatters/__init__.py
+│   ├── formatters/html.py
+│   ├── styles/__init__.py
+│   ├── filters/__init__.py
+│   └── util.py
+└── README.md
+```
+
+The package root must expose `lex`, `format`, `highlight`, and `Token`. The
+`pygmentize` console entry point may call `pygments.cmdline:main` or an
+equivalent module, but it must read stdin/files locally and write only the
+requested output stream.
+
 ## API Usage Guide
 
 ### Root functions
@@ -80,3 +116,34 @@ Preserve token order and exact source text. Lookup tables may be lazy-loaded,
 but selected lexers and formatters must be fully functional. Implement
 reusable token, regex-state, lookup, formatter, style, filter, and CLI
 abstractions rather than hard-coding only the examples above.
+
+## Examples
+
+```python
+from pygments import highlight
+from pygments.lexers import PythonLexer
+from pygments.formatters import HtmlFormatter
+
+html = highlight('answer = 42\n', PythonLexer(), HtmlFormatter())
+```
+
+```python
+from pygments.token import Token
+
+token = Token.Name.Function
+assert repr(token) == 'Token.Name.Function'
+assert Token.Name in token
+```
+
+```console
+$ printf 'x = 1\n' | pygmentize -l python -f terminal
+```
+
+## Error Handling and Boundary Conditions
+
+Unknown lexer, formatter, style, filename, or MIME lookups raise
+`ClassNotFound` or the documented lookup exception rather than returning a
+random fallback. Bytes input follows the declared encoding behavior. An
+outfile receives the rendered value and the high-level function returns the
+documented result. CLI invalid options exit nonzero and help exits
+successfully.
