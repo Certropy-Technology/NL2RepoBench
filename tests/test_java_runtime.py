@@ -51,6 +51,17 @@ def test_locked_java_toolchain_uses_digest_refs_for_docker_inputs() -> None:
     assert toolchain.agent_runtime_build_ref == toolchain.agent_runtime_image
 
 
+def test_java_agent_tools_are_available_when_runtime_overrides_path(tmp_path: Path) -> None:
+    compiler = JavaHarborCompiler(ROOT / "toolchain.java.lock.toml")
+
+    compiler._write_environment(tmp_path)  # noqa: SLF001
+
+    dockerfile = (tmp_path / "environment/Dockerfile").read_text(encoding="utf-8")
+    assert "ln -sf /opt/java/openjdk/bin/java /usr/local/bin/java" in dockerfile
+    assert "ln -sf /opt/java/openjdk/bin/javac /usr/local/bin/javac" in dockerfile
+    assert "ln -sf /opt/maven/bin/mvn /usr/local/bin/mvn" in dockerfile
+
+
 @pytest.mark.parametrize(
     ("field", "value", "message"),
     [

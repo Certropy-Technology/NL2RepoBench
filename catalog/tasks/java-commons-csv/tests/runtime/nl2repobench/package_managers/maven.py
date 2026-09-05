@@ -315,8 +315,21 @@ def validate_candidate_pom(data: bytes | None) -> dict[str, Any] | None:
         root = ElementTree.fromstring(data)
     except Exception as exc:
         raise _fail(f"cannot parse candidate POM: {exc}") from exc
-    if root.tag.rsplit("}", 1)[-1] != "project" or root.attrib:
-        raise _fail("candidate POM root must be an attribute-free project")
+    if root.tag.rsplit("}", 1)[-1] != "project":
+        raise _fail("candidate POM root must be a project")
+    schema_location = root.attrib.get(
+        "{http://www.w3.org/2001/XMLSchema-instance}schemaLocation"
+    )
+    allowed_schema_locations = {
+        "http://maven.apache.org/POM/4.0.0 "
+        "http://maven.apache.org/xsd/maven-4.0.0.xsd",
+        "http://maven.apache.org/POM/4.0.0 "
+        "https://maven.apache.org/xsd/maven-4.0.0.xsd",
+    }
+    if set(root.attrib) - {
+        "{http://www.w3.org/2001/XMLSchema-instance}schemaLocation"
+    } or (schema_location is not None and schema_location not in allowed_schema_locations):
+        raise _fail("candidate POM root contains unsupported attributes")
     children = _child_map(root)
     forbidden = {
         "parent",
@@ -331,7 +344,16 @@ def validate_candidate_pom(data: bytes | None) -> dict[str, Any] | None:
     }
     if forbidden.intersection(children):
         raise _fail("candidate POM contains forbidden build or dependency configuration")
-    allowed = {"modelVersion", "groupId", "artifactId", "version", "packaging", "properties"}
+    allowed = {
+        "modelVersion",
+        "groupId",
+        "artifactId",
+        "version",
+        "packaging",
+        "name",
+        "description",
+        "properties",
+    }
     if set(children) - allowed:
         raise _fail("candidate POM contains unsupported metadata")
     values = {name: (node.text or "").strip() for name, node in children.items()}
@@ -348,17 +370,31 @@ def validate_candidate_pom(data: bytes | None) -> dict[str, Any] | None:
     properties = children.get("properties")
     if properties is not None:
         property_children = list(properties)
-        if (
-            len(property_children) != 1
-            or property_children[0].tag.rsplit("}", 1)[-1] != "maven.compiler.release"
-        ):
+        property_names = {
+            child.tag.rsplit("}", 1)[-1] for child in property_children
+        }
+        if property_names - {
+            "maven.compiler.release",
+            "maven.compiler.source",
+            "maven.compiler.target",
+            "project.build.sourceEncoding",
+        }:
             raise _fail("candidate POM properties are unsupported")
-        try:
-            release = int((property_children[0].text or "").strip())
-        except ValueError as exc:
-            raise _fail("candidate compiler release is invalid") from exc
-        if release not in {8, 11, 17, 21}:
-            raise _fail("candidate compiler release is unsupported")
+        for child in property_children:
+            name = child.tag.rsplit("}", 1)[-1]
+            if name in {
+                "maven.compiler.release",
+                "maven.compiler.source",
+                "maven.compiler.target",
+            }:
+                try:
+                    release = int((child.text or "").strip())
+                except ValueError as exc:
+                    raise _fail("candidate compiler release is invalid") from exc
+                if release not in {8, 11, 17, 21}:
+                    raise _fail("candidate compiler release is unsupported")
+            elif (child.text or "").strip() != "UTF-8":
+                raise _fail("candidate source encoding is unsupported")
     return {
         "group_id": values.get("groupId"),
         "artifact_id": artifact_id,

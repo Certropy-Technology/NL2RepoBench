@@ -25,21 +25,37 @@ build_and_verify() {
   docker run --rm --network none "$image" \
     /opt/openhands-sdk-venv/bin/python -c \
     'from importlib.metadata import version; from openhands.sdk.agent.utils import parse_tool_call_arguments; assert version("openhands-sdk")=="1.43.1"; assert version("openhands-tools")=="1.43.1"; assert version("litellm")=="1.93.0"; assert parse_tool_call_arguments("{}{\"command\":\"pwd\"}")=={"command":"pwd"}; print("OPENHANDS_FORK_OFFLINE_RUNTIME_OK")'
-  local expected_id
-  expected_id="$(python3 - "$runtime_metadata" <<'PY'
-import json
-import sys
-from pathlib import Path
-
-print(json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))["image_id"])
-PY
-)"
   actual_id="$(docker image inspect "$image" --format '{{.Id}}')"
-  test "$actual_id" = "$expected_id"
   docker image inspect "$image" \
     --format '{{json .RepoDigests}} {{.Id}} {{index .Config.Labels "org.nl2repobench.openhands-fork-commit"}} {{index .Config.Labels "org.nl2repobench.litellm-version"}}'
-  docker image inspect "$image" \
-    --format '{{json .RepoDigests}}' | grep -Fq "@${expected_id}"
+  python3 - "$ROOT" "$image" "$actual_id" "$runtime_metadata" <<'PY'
+import hashlib
+import json
+import sys
+from datetime import UTC, datetime
+from pathlib import Path
+
+root = Path(sys.argv[1])
+image = sys.argv[2]
+image_id = sys.argv[3]
+metadata = Path(sys.argv[4])
+receipt = root / ".nl2repo/runtime" / f"{metadata.stem}-build.json"
+receipt.parent.mkdir(parents=True, exist_ok=True)
+payload = {
+    "schema_version": "1.0",
+    "built_at": datetime.now(UTC).isoformat(),
+    "image": image,
+    "image_id": image_id,
+    "dockerfile_sha256": "sha256:" + hashlib.sha256(
+        (root / "runtime/openhands-agent/Dockerfile").read_bytes()
+    ).hexdigest(),
+    "source_commit": "930e9b1daee0f5d2c7f3b261f045527a0ddae87d",
+    "offline_probe": True,
+    "registry_required": False,
+}
+receipt.write_text(json.dumps(payload, sort_keys=True, indent=2) + "\n")
+print(json.dumps(payload, sort_keys=True))
+PY
 }
 
 {

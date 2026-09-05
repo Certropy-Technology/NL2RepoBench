@@ -91,9 +91,9 @@ boolean satisfies(String requirement)
 
 All operations are deterministic. In the strict constructor contract,
 `getValue()` returns the trimmed version text used for parsing; it does not add
-missing components or remove build metadata. The requirement contract accepts
-the NPM-style operators `=`, `>`, `>=`, `<`, `<=`, `~`, and `^`, exact versions,
-whitespace-separated ranges, and `||` alternatives. Invalid or unsupported
+missing components or remove build metadata. The selected requirement contract
+accepts a single greater-than-or-equal expression in the form
+`>=<strict-semantic-version>`, for example `>=1.0.0`. Invalid or unsupported
 requirement text follows the library's `SemverException` behavior. Other
 methods that accept a version string use the same strict parsing rules as the
 constructor.

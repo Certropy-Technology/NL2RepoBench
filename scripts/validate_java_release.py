@@ -41,8 +41,34 @@ def validate(root: Path) -> dict[str, Any]:
             raise ValueError(f"review is not approved: {review_name}")
         review_verdicts.append(review_name)
     model_pilot = load_json(reviews_root / "model-pilot-status.json")
-    if model_pilot.get("status") not in {"blocked", "complete"}:
+    if model_pilot.get("status") not in {
+        "blocked",
+        "partial",
+        "complete-with-model-failure",
+        "complete",
+    }:
         raise ValueError("Java model pilot status is invalid")
+    model_evidence_root = (
+        root / "catalog/datasets/nl2repobench-java-pilot/model-pilot-evidence"
+    )
+    for model_name in ("sol-java-semver4j", "opus-java-semver4j"):
+        receipt = load_json(model_evidence_root / model_name / "receipt.json")
+        if receipt.get("task_id") != "java-semver4j":
+            raise ValueError(f"model evidence task mismatch: {model_name}")
+        if receipt.get("public_network_available") is not False:
+            raise ValueError(f"model evidence is not offline: {model_name}")
+        if not isinstance(receipt.get("workspace_tree_sha256"), str):
+            raise ValueError(f"model workspace hash is missing: {model_name}")
+    runtime_evidence = load_json(
+        root
+        / "catalog/datasets/nl2repobench-java-pilot/runtime-build-evidence.json"
+    )
+    if runtime_evidence.get("registry_required") is not False:
+        raise ValueError("Java runtime build must not require an image registry")
+    for name in ("java_runtime", "openhands_runtime"):
+        runtime = runtime_evidence.get(name, {})
+        if not isinstance(runtime, dict) or not runtime.get("offline_probe"):
+            raise ValueError(f"{name}: Dockerfile build evidence is incomplete")
     rows: list[dict[str, Any]] = []
     for task_id in TASKS:
         source_root = root / "catalog/sources" / task_id
@@ -106,10 +132,11 @@ def validate(root: Path) -> dict[str, Any]:
         "dataset_id": dataset["dataset_id"],
         "version": dataset["version"],
         "runtime": "java+maven",
-        "status": "pilot-blocked" if model_pilot.get("status") == "blocked" else "pilot-only",
+        "status": "piloted" if model_pilot.get("status") == "complete" else "pilot-blocked",
         "publication_approval": False,
         "reviews": review_verdicts,
         "model_pilot": model_pilot,
+        "runtime_build_evidence": "runtime-build-evidence.json",
         "tasks": rows,
     }
 

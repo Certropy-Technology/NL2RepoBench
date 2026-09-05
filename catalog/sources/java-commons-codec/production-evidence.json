@@ -1,7 +1,7 @@
 {
   "bundle": {
     "path": "catalog/tasks/java-commons-codec/bundle.manifest.json",
-    "sha256": "sha256:88da1ae7a5498057712dd75a4eb107f767761f8a8182d224c5ee9b65b29f6077"
+    "sha256": "sha256:251632c83178ada939483858417ec4c985c62fcab54ddc36dd366a304bc9022c"
   },
   "controls": {
     "empty": {
@@ -10,12 +10,12 @@
       "exit_code": 0,
       "failure_reason": "candidate-installation-failed",
       "grading": {
-        "path": ".nl2repo/runs/java-pilot-final/controls-v22/java-commons-codec/empty/2026-09-05__10-13-30/java-commons-codec-empty__zNFwfyh/verifier/grading.json",
+        "path": ".nl2repo/runs/java-pilot-final/controls-final-v2/java-commons-codec/empty/2026-09-05__14-56-59/java-commons-codec-empty__hfB9hFH/verifier/grading.json",
         "sha256": "sha256:69b96276bafdba4bc418af89ccfd0ac9902e7f7def186242e24e9df785a2304c"
       },
       "network": {
-        "path": ".nl2repo/runs/java-pilot-final/controls-v22/java-commons-codec/empty/2026-09-05__10-13-30/java-commons-codec-empty__zNFwfyh/verifier/network.json",
-        "sha256": "sha256:9e8433d7a614e548062e426fc340e0608c4d94d67a28311c1447fc69fe188af6"
+        "path": ".nl2repo/runs/java-pilot-final/controls-final-v2/java-commons-codec/empty/2026-09-05__14-56-59/java-commons-codec-empty__hfB9hFH/verifier/network.json",
+        "sha256": "sha256:1c8b77ac9c99f6fa8267100f19fb6f4aed4695072c8679fca7e8a05697a33e9a"
       },
       "reward": 0.0,
       "valid": true
@@ -25,12 +25,12 @@
       "counts_collected": 4,
       "exit_code": 0,
       "grading": {
-        "path": ".nl2repo/runs/java-pilot-final/controls-v22/java-commons-codec/forgery/2026-09-05__10-16-36/java-commons-codec-forgery__GH5MS9m/verifier/grading.json",
+        "path": ".nl2repo/runs/java-pilot-final/controls-final-v2/java-commons-codec/forgery/2026-09-05__15-03-21/java-commons-codec-forgery__vhxdggJ/verifier/grading.json",
         "sha256": "sha256:1caf72cefc92e2eecd8f83fbbc77cd66f60379451523f3a351d988083f1add98"
       },
       "network": {
-        "path": ".nl2repo/runs/java-pilot-final/controls-v22/java-commons-codec/forgery/2026-09-05__10-16-36/java-commons-codec-forgery__GH5MS9m/verifier/network.json",
-        "sha256": "sha256:29b08413b96d864480de5b121756ed62dae314ee47c23571dc928bad811caa30"
+        "path": ".nl2repo/runs/java-pilot-final/controls-final-v2/java-commons-codec/forgery/2026-09-05__15-03-21/java-commons-codec-forgery__vhxdggJ/verifier/network.json",
+        "sha256": "sha256:0cf2e4f5c964b30ba498f871680e8d064618866a080604038b128a1291e19aaf"
       },
       "reward": 0.0,
       "valid": true,
@@ -42,12 +42,12 @@
       "exit_code": 0,
       "failure_reason": "candidate-timeout",
       "grading": {
-        "path": ".nl2repo/runs/java-pilot-final/controls-v22/java-commons-codec/hang/2026-09-05__10-19-21/java-commons-codec-hang__VP8Z9yR/verifier/grading.json",
+        "path": ".nl2repo/runs/java-pilot-final/controls-final-v2/java-commons-codec/hang/2026-09-05__15-06-03/java-commons-codec-hang__pwHyXaL/verifier/grading.json",
         "sha256": "sha256:99c01b70f4e043cbc4e6835511d2ad48f2a3051ee26af4ac82d4b3d3df254828"
       },
       "network": {
-        "path": ".nl2repo/runs/java-pilot-final/controls-v22/java-commons-codec/hang/2026-09-05__10-19-21/java-commons-codec-hang__VP8Z9yR/verifier/network.json",
-        "sha256": "sha256:9e8433d7a614e548062e426fc340e0608c4d94d67a28311c1447fc69fe188af6"
+        "path": ".nl2repo/runs/java-pilot-final/controls-final-v2/java-commons-codec/hang/2026-09-05__15-06-03/java-commons-codec-hang__pwHyXaL/verifier/network.json",
+        "sha256": "sha256:0aae6d51439b7a2c43a306adb1bb049c4c322269aed84b851dcd57d23e2640b5"
       },
       "reward": 0.0,
       "valid": true
@@ -58,12 +58,12 @@
       "exit_code": 0,
       "failure_reason": "candidate-installation-failed",
       "grading": {
-        "path": ".nl2repo/runs/java-pilot-final/controls-v22/java-commons-codec/install-failure/2026-09-05__10-18-06/java-commons-codec-install-failu__xpDReyD/verifier/grading.json",
+        "path": ".nl2repo/runs/java-pilot-final/controls-final-v2/java-commons-codec/install-failure/2026-09-05__15-04-52/java-commons-codec-install-failu__Mjv8UuK/verifier/grading.json",
         "sha256": "sha256:69b96276bafdba4bc418af89ccfd0ac9902e7f7def186242e24e9df785a2304c"
       },
       "network": {
-        "path": ".nl2repo/runs/java-pilot-final/controls-v22/java-commons-codec/install-failure/2026-09-05__10-18-06/java-commons-codec-install-failu__xpDReyD/verifier/network.json",
-        "sha256": "sha256:9e8433d7a614e548062e426fc340e0608c4d94d67a28311c1447fc69fe188af6"
+        "path": ".nl2repo/runs/java-pilot-final/controls-final-v2/java-commons-codec/install-failure/2026-09-05__15-04-52/java-commons-codec-install-failu__Mjv8UuK/verifier/network.json",
+        "sha256": "sha256:0aae6d51439b7a2c43a306adb1bb049c4c322269aed84b851dcd57d23e2640b5"
       },
       "reward": 0.0,
       "valid": true
@@ -75,12 +75,12 @@
       "exit_code": 0,
       "failure_reason": "candidate-installation-failed",
       "grading": {
-        "path": ".nl2repo/runs/java-pilot-final/controls-v22/java-commons-codec/offline/2026-09-05__10-27-42/java-commons-codec-offline__u6PQ7Uc/verifier/grading.json",
+        "path": ".nl2repo/runs/java-pilot-final/controls-final-v2/java-commons-codec/offline/2026-09-05__15-14-35/java-commons-codec-offline__KLMSLJU/verifier/grading.json",
         "sha256": "sha256:69b96276bafdba4bc418af89ccfd0ac9902e7f7def186242e24e9df785a2304c"
       },
       "network": {
-        "path": ".nl2repo/runs/java-pilot-final/controls-v22/java-commons-codec/offline/2026-09-05__10-27-42/java-commons-codec-offline__u6PQ7Uc/verifier/network.json",
-        "sha256": "sha256:29203e4c5ee4a217088ab727b60898d0d6b67c31117fb8c645111d5026cf24ab"
+        "path": ".nl2repo/runs/java-pilot-final/controls-final-v2/java-commons-codec/offline/2026-09-05__15-14-35/java-commons-codec-offline__KLMSLJU/verifier/network.json",
+        "sha256": "sha256:cf8816167ad8bbc8e4da68da6f8bca80bf0582aeca378ac209290c35989e5d09"
       },
       "reward": 0.0,
       "valid": true
@@ -90,12 +90,12 @@
       "counts_collected": 4,
       "exit_code": 0,
       "grading": {
-        "path": ".nl2repo/runs/java-pilot-final/controls-v22/java-commons-codec/stub/2026-09-05__10-14-54/java-commons-codec-stub__jskjjAn/verifier/grading.json",
+        "path": ".nl2repo/runs/java-pilot-final/controls-final-v2/java-commons-codec/stub/2026-09-05__14-58-20/java-commons-codec-stub__hDxiv84/verifier/grading.json",
         "sha256": "sha256:1caf72cefc92e2eecd8f83fbbc77cd66f60379451523f3a351d988083f1add98"
       },
       "network": {
-        "path": ".nl2repo/runs/java-pilot-final/controls-v22/java-commons-codec/stub/2026-09-05__10-14-54/java-commons-codec-stub__jskjjAn/verifier/network.json",
-        "sha256": "sha256:66e12748165cc76a8487c2c41fcdca2340eb5bac5c7f8d4561f3c1caee928fa4"
+        "path": ".nl2repo/runs/java-pilot-final/controls-final-v2/java-commons-codec/stub/2026-09-05__14-58-20/java-commons-codec-stub__hDxiv84/verifier/network.json",
+        "sha256": "sha256:d336f6194c7bc3c669ecfbca0b51956f0b5f14225d6fe4b8274e1a85061e8ff1"
       },
       "reward": 0.0,
       "valid": true
@@ -106,13 +106,13 @@
     "command": "bash scripts/run_java_oracle.sh",
     "exit_code": 0,
     "grading": {
-      "path": ".nl2repo/runs/java-pilot-final/oracle-v22-final/java-commons-codec-v22-final/harbor/2026-09-05__10-14-27/java-commons-codec-oracle__PzX69zs/verifier/grading.json",
+      "path": ".nl2repo/runs/java-pilot-final/oracle-final-v2/java-commons-codec-final-v2/harbor/2026-09-05__14-57-42/java-commons-codec-oracle__uknxgYq/verifier/grading.json",
       "sha256": "sha256:6931f4c8515277dba36d678f04b16f0c864aa32b7fdd4f94ea459a8733cebbd4"
     },
     "harbor_version": "0.21.0",
     "network": {
-      "path": ".nl2repo/runs/java-pilot-final/oracle-v22-final/java-commons-codec-v22-final/harbor/2026-09-05__10-14-27/java-commons-codec-oracle__PzX69zs/verifier/network.json",
-      "sha256": "sha256:f97feb3892555bbfcbfdbfa2562f63b316c9a54571a571533f7904fc45cbcf9d"
+      "path": ".nl2repo/runs/java-pilot-final/oracle-final-v2/java-commons-codec-final-v2/harbor/2026-09-05__14-57-42/java-commons-codec-oracle__uknxgYq/verifier/network.json",
+      "sha256": "sha256:5d58f502317432ddd2114b07602bc489709173989e42c0b7702f5469c70ad77c"
     },
     "reward": 1.0,
     "valid": true

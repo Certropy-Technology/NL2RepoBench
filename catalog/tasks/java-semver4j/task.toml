@@ -35,8 +35,8 @@ package_manager = "maven"
 package_manager_version = "3.9.11"
 metric_contract = "fixed-test-pass-rate-v1"
 expected_test_count = 9
-canonical_manifest_digest = "sha256:58fe1ad33aef07b086a7645aacf7e5a53898a9b842f316cf42fd40f520963b82"
-toolchain_lock_digest = "sha256:9ea2918f480bf5a09904f21c3655bded56711fd8618a7e41b0c19bb632d5a37e"
+canonical_manifest_digest = "sha256:de9d80c2d8a8aa9bc94f21ee38639271c1a3bad60af1980916fc302dfe19c315"
+toolchain_lock_digest = "sha256:22760c00c5c72822c811e2413d3cf7dceefb44aa9c5cb2197e1c897c255eaa08"
 
 [agent]
 timeout_sec = 1200.0

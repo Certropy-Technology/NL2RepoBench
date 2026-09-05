@@ -175,6 +175,48 @@ def test_candidate_pom_is_metadata_only_and_cannot_define_build_behavior() -> No
         validate_candidate_pom(b'<!DOCTYPE project [<!ENTITY x "x">]><project>&x;</project>')
 
 
+def test_candidate_pom_accepts_standard_schema_location() -> None:
+    pom = (
+        b'<project xmlns="http://maven.apache.org/POM/4.0.0" '
+        b'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" '
+        b'xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 '
+        b'https://maven.apache.org/xsd/maven-4.0.0.xsd">'
+        b"<artifactId>candidate</artifactId></project>"
+    )
+
+    assert validate_candidate_pom(pom)["artifact_id"] == "candidate"
+
+
+def test_candidate_pom_accepts_standard_source_encoding_property() -> None:
+    pom = b"""<project>
+      <artifactId>candidate</artifactId>
+      <properties>
+        <maven.compiler.release>21</maven.compiler.release>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+      </properties>
+    </project>"""
+
+    assert validate_candidate_pom(pom)["release"] == 21
+
+
+def test_candidate_pom_accepts_standard_project_metadata() -> None:
+    pom = b'''<project xmlns="http://maven.apache.org/POM/4.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+      <modelVersion>4.0.0</modelVersion>
+      <groupId>example</groupId><artifactId>candidate</artifactId><version>1.0.0</version>
+      <name>candidate</name><description>candidate project</description>
+      <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <maven.compiler.release>21</maven.compiler.release>
+      </properties>
+    </project>'''
+
+    assert validate_candidate_pom(pom)["release"] == 21
+
+
 def test_maven_command_is_always_offline_and_verifier_owned() -> None:
     assert MavenPackageManager().install_command(store_dir="/opt/maven/repository") == (
         "/opt/maven/bin/mvn",

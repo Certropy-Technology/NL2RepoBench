@@ -417,6 +417,9 @@ ENV JAVA_HOME=/opt/java/openjdk \\
     PATH=/opt/java/openjdk/bin:/opt/maven/bin:$PATH
 RUN test \"$(java -version 2>&1 | awk -F'\\\"' '/version/{{print $2}}')\" = \"21.0.12\" \\
   && test \"$(mvn -version 2>&1 | awk '/^Apache Maven/{{print $3}}')\" = \"{self.toolchain.maven_version}\"
+RUN ln -sf /opt/java/openjdk/bin/java /usr/local/bin/java \
+  && ln -sf /opt/java/openjdk/bin/javac /usr/local/bin/javac \
+  && ln -sf /opt/maven/bin/mvn /usr/local/bin/mvn
 WORKDIR /workspace
 """.encode(),
         )

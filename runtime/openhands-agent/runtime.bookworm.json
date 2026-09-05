@@ -4,14 +4,15 @@
   "fork_commit": "930e9b1daee0f5d2c7f3b261f045527a0ddae87d",
   "image": "nl2repobench/openhands-sdk-fork:930e9b1da-bookworm",
   "image_tag": "nl2repobench/openhands-sdk-fork:930e9b1da-bookworm",
-  "image_id": "sha256:3b9288ec42f69da761f0aedb9a72c6888376e9395f9122192aca67e81d913c79",
-  "image_digest": "sha256:3b9288ec42f69da761f0aedb9a72c6888376e9395f9122192aca67e81d913c79",
+  "image_id": "sha256:0d50b2d1f8e6af780d3be86d1d8619310f8f95db5e4079bbf2038e0b895cf2f4",
+  "image_digest": "sha256:0d50b2d1f8e6af780d3be86d1d8619310f8f95db5e4079bbf2038e0b895cf2f4",
   "litellm_version": "1.93.0",
   "openhands_sdk_version": "1.43.1",
   "openhands_tools_version": "1.43.1",
   "provider_transport": {
-    "protocol": "OpenAI-compatible streaming chat completions",
-    "stream_required": true
+    "protocol": "provider-selected OpenAI/Anthropic transport",
+    "stream_supported": true,
+    "stream_required_for": ["claude-fable-5"]
   },
   "schema_version": 2,
   "variant": "bookworm"

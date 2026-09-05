@@ -20,8 +20,8 @@ submodules = []
 [environment]
 status = "known"
 os_name = "debian-bookworm"
-base_image = "nl2repobench/java-runtime@sha256:d5e429fd4c57040b5fe23cc92196828dc9f1e3b13ac47539183431b223ea84f3"
-base_image_digest = "sha256:d5e429fd4c57040b5fe23cc92196828dc9f1e3b13ac47539183431b223ea84f3"
+base_image = "nl2repobench/java-runtime@sha256:9f4180fc607186b2cdc958049cd1f230d3cbf5a887eeb5106253a4287260e3ef"
+base_image_digest = "sha256:9f4180fc607186b2cdc958049cd1f230d3cbf5a887eeb5106253a4287260e3ef"
 network_mode = "no-network"
 
 [environment.runtime]
@@ -59,10 +59,10 @@ uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4
 visibility = "private"
 
 [dependencies.inventory]
-digest = "sha256:bbf11f0816b1f01a39557cd5c86d7578bdbb697546ae9d40f691d04ca7b2c37b"
+digest = "sha256:106bc97bec095ff11a0b2a1456972e3550e9b1a40befbcaedb59c26cbcc22571"
 size_bytes = 978
 media_type = "application/vnd.nl2repobench.inventory+json"
-uri = "artifact://private/sha256:bbf11f0816b1f01a39557cd5c86d7578bdbb697546ae9d40f691d04ca7b2c37b"
+uri = "artifact://private/sha256:106bc97bec095ff11a0b2a1456972e3550e9b1a40befbcaedb59c26cbcc22571"
 visibility = "private"
 
 [tests]
@@ -107,9 +107,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "controls-passed"
+status = "piloted"
 owner = "java-maven-authoring-20260902"
-reason = "Immutable source freeze, offline Maven closure, separate verifier, Oracle, empty/stub/forgery/install-failure/hang/offline controls, and no-network replay passed. Java pilot gate still requires the final catalog gate."
+reason = "Immutable source freeze, offline Maven closure, separate verifier, Oracle, six controls, no-network replay, independent spec/security review, and bounded Sol/Opus model pilot evidence passed; release remains pilot-only pending publication approval."
 
 [oracle_bundle]
 digest = "sha256:e51d154e1d3196c73d5eff0cf659de60cb085f7353a71e87a80cbb5ffa5f0971"

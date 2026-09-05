@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0",
+  "built_at": "2026-09-05T05:54:10Z",
+  "registry_required": false,
+  "java_runtime": {
+    "dockerfile": "runtime/java-maven/Dockerfile",
+    "dockerfile_sha256": "sha256:6195e3371e33d946d59db53cb3372a8c67136dcc46af7def376a2ed2678f0133",
+    "image": "nl2repobench/java-runtime@sha256:9f4180fc607186b2cdc958049cd1f230d3cbf5a887eeb5106253a4287260e3ef",
+    "image_id": "sha256:9f4180fc607186b2cdc958049cd1f230d3cbf5a887eeb5106253a4287260e3ef",
+    "jdk_base": "docker.io/library/eclipse-temurin@sha256:a16bfc04b28f66c1d27218ffeefc8ae6a2621de423e01597156ba813ca5fa668",
+    "maven_base": "docker.io/library/maven@sha256:463a1849665463254b2dd56e3a5b316f1596bc93d0571065c06ea05bb48ab8f4",
+    "offline_probe": {"jdk": "21.0.12", "maven": "3.9.11", "passed": true}
+  },
+  "openhands_runtime": {
+    "dockerfile": "runtime/openhands-agent/Dockerfile",
+    "dockerfile_sha256": "sha256:845c9f07faa559e7ba273d0ac95ccd5ae4a4a0d446c2f92f8fb22a757a5049eb",
+    "source_commit": "930e9b1daee0f5d2c7f3b261f045527a0ddae87d",
+    "image": "nl2repobench/openhands-sdk-fork@sha256:8408211c7903b40a1a32a76b33c1a371f14de70ad772eef35427aa62fd1f5a55",
+    "image_id": "sha256:8408211c7903b40a1a32a76b33c1a371f14de70ad772eef35427aa62fd1f5a55",
+    "offline_probe": {
+      "openhands_sdk": "1.43.1",
+      "openhands_tools": "1.43.1",
+      "litellm": "1.93.0",
+      "passed": true
+    }
+  },
+  "bookworm_runtime": {
+    "image_id": "sha256:0d50b2d1f8e6af780d3be86d1d8619310f8f95db5e4079bbf2038e0b895cf2f4",
+    "offline_probe": true
+  }
+}

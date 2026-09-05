@@ -1,5 +1,5 @@
 {
-  "canonical_manifest_digest": "sha256:58fe1ad33aef07b086a7645aacf7e5a53898a9b842f316cf42fd40f520963b82",
+  "canonical_manifest_digest": "sha256:de9d80c2d8a8aa9bc94f21ee38639271c1a3bad60af1980916fc302dfe19c315",
   "files": [
     {
       "path": "README.md",
@@ -38,13 +38,13 @@
     },
     {
       "path": "environment/Dockerfile",
-      "sha256": "feae545705674106ca2e56c1ada57b25b04285a2d52a9fb14b5bd21de2badd3c",
-      "size_bytes": 1008
+      "sha256": "42ec92a4e43b48244d87f96eccef5c69a79f1d55d4c0a810f3051dba6cc977ba",
+      "size_bytes": 1177
     },
     {
       "path": "instruction.md",
-      "sha256": "2182bcaea1ae45746d34297a2a4ee0868fdf9fc5fe8c29832e242fb91e8e2630",
-      "size_bytes": 4495
+      "sha256": "18414a3102a8a81daa52aee00fff30bacd96e92ce4b305e3ca63ce445b5fbf0d",
+      "size_bytes": 4479
     },
     {
       "path": "solution/oracle-ref.json",
@@ -58,7 +58,7 @@
     },
     {
       "path": "task.toml",
-      "sha256": "810c7a6151ed9e302a40280e8c405bb77563164da10590e7b49304570303dd54",
+      "sha256": "f6a29cc10f575a8db99e9a08c2a10fc634f782762fb192942a782a7ee3a75143",
       "size_bytes": 1139
     },
     {
@@ -73,7 +73,7 @@
     },
     {
       "path": "tests/private-artifact-refs.json",
-      "sha256": "f7489930d5cbaf925abdbba5ccacc1b06507945924bf9a810a66affb078d9d25",
+      "sha256": "467163f1a163781f66b3e719b51af57f8d94181845114700dcb9a5c83a32e9b2",
       "size_bytes": 1446
     },
     {
@@ -133,8 +133,8 @@
     },
     {
       "path": "tests/runtime/nl2repobench/package_managers/maven.py",
-      "sha256": "1e347b6d595fe70d4278147ff055e2fb1efd50491d32052b2300ee8f4bc7ba02",
-      "size_bytes": 22815
+      "sha256": "de0294d1f6bca505c4e6342c6a23ba402b7405aec1235b8a6fb70d4a7ecb47b6",
+      "size_bytes": 24061
     },
     {
       "path": "tests/runtime/nl2repobench/verification/__init__.py",
@@ -345,5 +345,5 @@
   "schema_version": "1.0",
   "task_id": "java-semver4j",
   "task_version": "1.3.0",
-  "toolchain_lock_digest": "sha256:9ea2918f480bf5a09904f21c3655bded56711fd8618a7e41b0c19bb632d5a37e"
+  "toolchain_lock_digest": "sha256:22760c00c5c72822c811e2413d3cf7dceefb44aa9c5cb2197e1c897c255eaa08"
 }

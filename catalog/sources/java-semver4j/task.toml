@@ -20,8 +20,8 @@ submodules = []
 [environment]
 status = "known"
 os_name = "debian-bookworm"
-base_image = "nl2repobench/java-runtime@sha256:d5e429fd4c57040b5fe23cc92196828dc9f1e3b13ac47539183431b223ea84f3"
-base_image_digest = "sha256:d5e429fd4c57040b5fe23cc92196828dc9f1e3b13ac47539183431b223ea84f3"
+base_image = "nl2repobench/java-runtime@sha256:9f4180fc607186b2cdc958049cd1f230d3cbf5a887eeb5106253a4287260e3ef"
+base_image_digest = "sha256:9f4180fc607186b2cdc958049cd1f230d3cbf5a887eeb5106253a4287260e3ef"
 network_mode = "no-network"
 
 [environment.runtime]
@@ -59,10 +59,10 @@ uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4
 visibility = "private"
 
 [dependencies.inventory]
-digest = "sha256:bbf11f0816b1f01a39557cd5c86d7578bdbb697546ae9d40f691d04ca7b2c37b"
+digest = "sha256:106bc97bec095ff11a0b2a1456972e3550e9b1a40befbcaedb59c26cbcc22571"
 size_bytes = 978
 media_type = "application/vnd.nl2repobench.inventory+json"
-uri = "artifact://private/sha256:bbf11f0816b1f01a39557cd5c86d7578bdbb697546ae9d40f691d04ca7b2c37b"
+uri = "artifact://private/sha256:106bc97bec095ff11a0b2a1456972e3550e9b1a40befbcaedb59c26cbcc22571"
 visibility = "private"
 
 [tests]
@@ -78,10 +78,10 @@ entrypoint = "run.sh"
 contract_sha256 = "sha256:8a92aae99ffa75d7a029691d38c80c55d5d12876e66c114c205cb517bf3f28c3"
 
 [verifier.bundle]
-digest = "sha256:d52a1242b4f51e1cb014def0f0d3a2acfffcaf4a2fafdd61195c29c450c6aa0b"
+digest = "sha256:5984b37d3a10ee00ad42590c758658ffdd1941b38f8ae900d4e2057e8c18eed7"
 size_bytes = 20480
 media_type = "application/vnd.nl2repobench.verifier+tar"
-uri = "artifact://private/sha256:d52a1242b4f51e1cb014def0f0d3a2acfffcaf4a2fafdd61195c29c450c6aa0b"
+uri = "artifact://private/sha256:5984b37d3a10ee00ad42590c758658ffdd1941b38f8ae900d4e2057e8c18eed7"
 visibility = "private"
 
 [metric]
@@ -107,9 +107,9 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [lifecycle]
-status = "controls-passed"
+status = "piloted"
 owner = "java-maven-authoring-20260902"
-reason = "Immutable source freeze, offline Maven closure, separate verifier, Oracle, empty/stub/forgery/install-failure/hang/offline controls, and no-network replay passed. Java pilot gate still requires additional real tasks."
+reason = "Immutable source freeze, offline Maven closure, separate verifier, Oracle, six controls, no-network replay, independent spec/security review, and bounded Sol/Opus model pilot evidence passed; release remains pilot-only pending publication approval."
 
 [oracle_bundle]
 digest = "sha256:79973f518a40b550e53dd901f51d04690d1f9aa437b17f9f2fc94b5ac596f2a0"

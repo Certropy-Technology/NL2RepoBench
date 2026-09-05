@@ -9,7 +9,7 @@
     "java-semver4j"
   ],
   "controls": true,
-  "evidence_generation": "v23-start-md-instruction-format-contract-clarification",
+  "evidence_generation": "current-final-dockerfile-build-and-pom-boundary",
   "oracle": {
     "all_valid": true,
     "minimum_reward": 1.0,
@@ -31,8 +31,9 @@
   },
   "runtime_evidence": {
     "java_helper_digest": "sha256:da077d780eb22f7860ce571a80fc6ff1877534a6cf73d4b7964dd2374092ae8e",
-    "oracle_receipts": ".nl2repo/runs/java-pilot-final/oracle-v22-final plus oracle-v23-semver-csv",
-    "control_receipts": ".nl2repo/runs/java-pilot-final/controls-v22 plus controls-v23-semver-csv",
+    "oracle_receipts": ".nl2repo/runs/java-pilot-final/oracle-final-v2",
+    "control_receipts": ".nl2repo/runs/java-pilot-final/controls-final-v2",
+    "dockerfile_build_receipts": "catalog/datasets/nl2repobench-java-pilot/runtime-build-evidence.json",
     "shared_subprocess_supervisor": true,
     "shared_candidate_process_cli": true,
     "contract_main_runuser_removed": true,
