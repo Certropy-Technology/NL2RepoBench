@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pytest",
+  "source_revision": "51e9a9f148cd2509a31e3fa0d2b1b3204c2b0dd7",
+  "upstream_test_tree": "testing/",
+  "upstream_test_files": 109,
+  "scored_contract": {
+    "framework": "custom-json-v1",
+    "frozen_total": 28,
+    "groups": {
+      "metadata": 3,
+      "approx": 4,
+      "assertion_and_warning_helpers": 3,
+      "markers_and_parameters": 3,
+      "fixtures": 2,
+      "outcomes": 3,
+      "runner": 4,
+      "patching_and_state": 3,
+      "console": 1,
+      "enums": 1,
+      "stash": 1
+    }
+  },
+  "collection_method": "Verifier emits one unique leaf per deterministic child-process scenario."
+}

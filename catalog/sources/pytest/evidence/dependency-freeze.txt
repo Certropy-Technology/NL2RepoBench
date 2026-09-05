@@ -1,0 +1,7 @@
+runtime: CPython 3.12.11
+build_backend: setuptools.build_meta
+candidate_dependencies: iniconfig==2.3.0, packaging==26.3, pluggy==1.6.0, pygments==2.21.0
+build_dependencies: setuptools==84.0.0, setuptools-scm==10.2.1, vcs-versioning==2.3.4
+lock_sha256: 03fc645eab09ac49257d10e7a7a2f3850bfa8b4b478787c9264520592ac15634
+lock_size_bytes: 1796
+network_policy: no-network for agent, candidate, verifier, Oracle, and controls

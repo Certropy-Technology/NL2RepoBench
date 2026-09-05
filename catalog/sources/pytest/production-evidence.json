@@ -1,0 +1,51 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pytest",
+  "task_version": "1.0.0",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/pytest-dev/pytest",
+    "revision": "51e9a9f148cd2509a31e3fa0d2b1b3204c2b0dd7",
+    "git_tree": "7e6a2cca4c3d790892bfc315061df219cd464965",
+    "source_digest": "sha256:74c9fa75d3899c423d551d5cc673e470680a6b34e1a45cec99125c67e458c7da",
+    "license_spdx": "MIT",
+    "license_path": "LICENSE",
+    "license_digest": "sha256:ca836a5f9ecca3b2f350230faa20a48fb8b145653b5568d784862df864706b9b"
+  },
+  "environment": {
+    "runtime": "CPython 3.12.11",
+    "base_image": "python:3.12.11-slim-bookworm",
+    "base_image_digest": "sha256:782412e85d0f0984994c290652577d4018aff08145c85b262bb63dc0c7522254",
+    "network_policy": "no-network",
+    "agent_allowed_hosts": [],
+    "verifier_network_mode": "no-network"
+  },
+  "private_artifacts": {
+    "dependency_lock": {"digest":"sha256:03fc645eab09ac49257d10e7a7a2f3850bfa8b4b478787c9264520592ac15634","size_bytes":1796,"path":"handoff://wave10/pytest/dependency/requirements.lock.txt","visibility":"private"},
+    "verifier_bundle": {"digest":"sha256:37fc4bb526c5af787347a50faac2ca0b21ea10dd5162cd9f6f5210c873941c4d","size_bytes":10240,"path":"handoff://wave10/pytest/verifier-bundle.tar","visibility":"private"},
+    "oracle_bundle": {"digest":"sha256:0071e79004e368bb46262e29692a83b221f7cc24be43db59a31ee48fce5c9e03","size_bytes":7895040,"path":"handoff://wave10/pytest/oracle-bundle.tar","visibility":"private"}
+  },
+  "tests": {"framework":"pytest","expected_total":28,"expected_total_source":"frozen-collection","separate_verifier":true,"candidate_uid":10001},
+  "commands": [
+    {"command":"git clone --filter=blob:none https://github.com/pytest-dev/pytest; git checkout --detach 51e9a9f148cd2509a31e3fa0d2b1b3204c2b0dd7","exit_code":0,"log":"catalog/sources/pytest/evidence/source-freeze.txt"},
+    {"command":"git archive --format=tar HEAD | sha256sum; sha256sum LICENSE","exit_code":0,"log":"catalog/sources/pytest/evidence/source-freeze.txt"},
+    {"command":"uv pip compile requirements.in --generate-hashes --no-emit-index-url --no-emit-find-links","exit_code":0,"log":"catalog/sources/pytest/evidence/dependency-freeze.txt"},
+    {"command":"CPython 3.12.11 no-build-isolation candidate install and import probe","exit_code":0,"log":"catalog/sources/pytest/evidence/contract-probe.txt"},
+    {"command":"initial CPython 3.14 host build probe","exit_code":1,"failure_class":"environment","log":"handoff://wave10/pytest/logs/source-install.log"}
+  ],
+  "bundle": {"status":"bound-final","path":".nl2repo/pytest-final/pytest/bundle.manifest.json","sha256":"sha256:e9342859f5b08a82d5bdfb4bd58c45fd56096ff9d9559fd0b5794dae809577ae"},
+  "oracle": {"valid":true,"collected":28,"passed":28,"reward":1.0,"grading":{"path":".nl2repo/pytest-final-runs/oracle/pytest-final-oracle-20260905/pytest__vBZqCyr/verifier/grading.json","sha256":"sha256:33924f8cb311425b1aaa6ee244441a02fb906c086632db4e130570ce646d600d"},"network":{"path":".nl2repo/pytest-final-runs/oracle/pytest-final-oracle-20260905/pytest__vBZqCyr/verifier/network.json","sha256":"sha256:6e578aca31c6168dd5fa777ffa90775ca4378d37b5779e7e8d9c905bfda6f23d"},"public_network_available":false},
+  "controls": {
+    "empty":{"valid":true,"collected":0,"passed":0,"reward":0.0,"failure_reason":"candidate-installation-failed","grading":{"path":".nl2repo/pytest-final-runs/empty/pytest-final-empty-20260905/pytest-empty__fL5FmVX/verifier/grading.json","sha256":"sha256:be0fafcd206e3c872ead6011bd828bea1ee82ca6a36504a2482e540c85e396b4"},"network":{"path":".nl2repo/pytest-final-runs/empty/pytest-final-empty-20260905/pytest-empty__fL5FmVX/verifier/network.json","sha256":"sha256:ddee81d173ac148e60f2488fb19c0fac5dc9bc1eb7817fdf358dfcadf204841d"}},
+    "stub":{"valid":true,"collected":28,"passed":3,"reward":0.10714285714285714,"grading":{"path":".nl2repo/pytest-final-runs/stub/pytest-final-stub-20260905/pytest-stub__cpbGHga/verifier/grading.json","sha256":"sha256:c6cfef9ac536775ed369bdeddc671ab76cfb0085797312b0f6ccea2b398f5dc1"},"network":{"path":".nl2repo/pytest-final-runs/stub/pytest-final-stub-20260905/pytest-stub__cpbGHga/verifier/network.json","sha256":"sha256:6e578aca31c6168dd5fa777ffa90775ca4378d37b5779e7e8d9c905bfda6f23d"}},
+    "forgery":{"valid":true,"collected":28,"passed":5,"reward":0.17857142857142858,"verifier_owned_reward":true,"workspace_forged_reward":1.0,"grading":{"path":".nl2repo/pytest-final-runs/forgery/pytest-final-forgery-20260905/pytest-forgery__vfBiF2s/verifier/grading.json","sha256":"sha256:bab1d0d673e8007d2f6c98a4a81d37ddaf26ba6716c36e7994e30f5659adb79f"},"network":{"path":".nl2repo/pytest-final-runs/forgery/pytest-final-forgery-20260905/pytest-forgery__vfBiF2s/verifier/network.json","sha256":"sha256:35daa89bbd3269e72ab6ccde1ffe310a08d187f9cebb215a425ddda0050e4233"}},
+    "offline":{"completed":true,"public_network_available":false}
+  },
+  "residual_risks": [
+    "pytest is a self-hosting test framework with a large upstream testing tree; this task scores only the bounded local contract documented in instruction.md.",
+    "Blind review and model pilot remain separate publication gates.",
+    "The verifier intentionally observes candidate behavior through child-process JSON and does not test external plugins, sockets, coverage, or parallel workers."
+  ]
+}

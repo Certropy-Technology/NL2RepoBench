@@ -1,0 +1,8 @@
+command: git clone --filter=blob:none https://github.com/pytest-dev/pytest repo
+command: git checkout --detach 51e9a9f148cd2509a31e3fa0d2b1b3204c2b0dd7
+exit_code: 0
+revision: 51e9a9f148cd2509a31e3fa0d2b1b3204c2b0dd7
+tree: 7e6a2cca4c3d790892bfc315061df219cd464965
+source_archive_sha256: 74c9fa75d3899c423d551d5cc673e470680a6b34e1a45cec99125c67e458c7da
+license_path: LICENSE
+license_sha256: ca836a5f9ecca3b2f350230faa20a48fb8b145653b5568d784862df864706b9b

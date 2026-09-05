@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pytest",
+  "contract": "custom-json-v1",
+  "mapping": {
+    "metadata": "instruction.md: Supports; API Usage Guide: Package metadata and exit codes",
+    "approx": "instruction.md: API Usage Guide: Approximate comparisons",
+    "assertions": "instruction.md: API Usage Guide: Assertion and warning helpers",
+    "markers": "instruction.md: API Usage Guide: Fixtures, markers, and parameters",
+    "outcomes": "instruction.md: API Usage Guide: Outcomes and patching",
+    "runner": "instruction.md: API Usage Guide: Local runner",
+    "console": "instruction.md: API Usage Guide: Local runner"
+  },
+  "unscored_upstream_behavior": [
+    "native debugger integration", "third-party plugin ecosystem", "networked services",
+    "parallel workers", "coverage integration", "platform-specific terminal behavior"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pytest",
+  "source_revision": "51e9a9f148cd2509a31e3fa0d2b1b3204c2b0dd7",
+  "public_surface": [
+    "pytest.__version__", "pytest.__all__", "pytest.ExitCode", "pytest.approx",
+    "pytest.raises", "pytest.warns", "pytest.deprecated_call", "pytest.fail",
+    "pytest.skip", "pytest.xfail", "pytest.importorskip", "pytest.fixture",
+    "pytest.mark", "pytest.param", "pytest.MonkeyPatch", "pytest.main",
+    "pytest.console entry point"
+  ],
+  "boundary_notes": [
+    "Candidate code is imported only in a UID-isolated child process.",
+    "Tests observe JSON-compatible values, exception descriptors, and bounded local runner output.",
+    "Sockets, external plugins, subprocess services, and nondeterministic timing are outside the contract."
+  ]
+}

@@ -1,0 +1,87 @@
+schema_version = "1.0"
+task_id = "pytest"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "python-test-framework"
+tags = ["python", "testing", "fixtures", "markers", "assertions", "cli", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/pytest-dev/pytest"
+revision = "51e9a9f148cd2509a31e3fa0d2b1b3204c2b0dd7"
+license_spdx = "MIT"
+source_digest = "sha256:74c9fa75d3899c423d551d5cc673e470680a6b34e1a45cec99125c67e458c7da"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.11"
+os_name = "debian-12-amd64"
+base_image = "python:3.12.11-slim-bookworm"
+base_image_digest = "sha256:782412e85d0f0984994c290652577d4018aff08145c85b262bb63dc0c7522254"
+system_packages = []
+network_mode = "no-network"
+build_command = "install the hash-locked setuptools build closure during image build; install the candidate from the frozen workspace without network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "Agent, candidate, verifier, Oracle, and controls are network-isolated. The trusted Oracle restores the exact source archive from a private digest-checked payload, and build dependencies are installed from a private hash lock during image construction."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = ["iniconfig==2.3.0", "packaging==26.3", "pluggy==1.6.0", "pygments==2.21.0", "setuptools==84.0.0", "setuptools-scm==10.2.1", "vcs-versioning==2.3.4"]
+lock_artifact = { digest = "sha256:03fc645eab09ac49257d10e7a7a2f3850bfa8b4b478787c9264520592ac15634", size_bytes = 1796, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:03fc645eab09ac49257d10e7a7a2f3850bfa8b4b478787c9264520592ac15634", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 28
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+bundle = { digest = "sha256:37fc4bb526c5af787347a50faac2ca0b21ea10dd5162cd9f6f5210c873941c4d", size_bytes = 10240, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:37fc4bb526c5af787347a50faac2ca0b21ea10dd5162cd9f6f5210c873941c4d", visibility = "private" }
+environment = {}
+
+[harbor]
+description = "Build the pinned pytest testing framework from an empty workspace and reproduce a bounded deterministic public contract for assertions, approximate comparisons, fixtures, markers, outcomes, monkeypatching, CLI execution, and test collection through a separate subprocess verifier."
+keywords = ["python", "testing", "fixtures", "markers", "assertions", "cli", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 900.0
+candidate_install_timeout_sec = 180.0
+candidate_total_timeout_sec = 600.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:0071e79004e368bb46262e29692a83b221f7cc24be43db59a31ee48fce5c9e03"
+size_bytes = 7895040
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:0071e79004e368bb46262e29692a83b221f7cc24be43db59a31ee48fce5c9e03"
+visibility = "private"
+
+[lifecycle]
+status = "controls-passed"
+owner = "python-author-wave10-20260905-pytest"
+reason = "The final NoNetwork task uses a corrected source payload, pinned offline version metadata, and candidate-first child boundary. Oracle passes 28/28; installable stub and forgery controls collect all 28 leaves and remain below the 0.20 reward ceiling."
