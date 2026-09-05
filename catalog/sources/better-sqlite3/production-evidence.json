@@ -2,15 +2,77 @@
   "schema_version": "1.0",
   "task_id": "better-sqlite3",
   "status": "controls-passed",
-  "source": {"revision":"f8e2d541208281368129929a96f70f937c0735ef","digest":"sha256:b831518db05ed246880131c6faca8dd775bb7f713dc29a76e51f53ba8c5602ab","license":"MIT"},
-  "toolchain": {"harbor":"0.21.0","task_schema":"1.4","node":"24.19.0","npm":"11.17.0","base_image":"docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"},
-  "compile": {"exit_code":0,"command":"uv run nl2repo harbor compile catalog/sources/better-sqlite3 --output .nl2repo/compiled/better-sqlite3 --artifact-root .nl2repo/artifacts --toolchain toolchain.node.lock.toml --allow-private","bundle":".nl2repo/compiled/better-sqlite3/better-sqlite3"},
-  "oracle": {"valid":true,"collected":12,"passed":12,"failed":0,"reward":1.0,"network":false,"receipt":".nl2repo/runs/better-sqlite3/oracle/2026-08-26__23-04-25/better-sqlite3__LHKXPaX/verifier/grading.json"},
-  "controls": {
-    "empty": {"valid":true,"collected":0,"reward":0.0,"network":false,"receipt":".nl2repo/runs/better-sqlite3/empty/2026-08-26__23-10-37/better-sqlite3__V89hHJX/verifier/grading.json"},
-    "stub": {"valid":true,"collected":12,"passed":0,"reward":0.0,"network":false,"receipt":".nl2repo/runs/better-sqlite3/stub/2026-08-26__23-08-00/better-sqlite3-stub__zdYo55R/verifier/grading.json"},
-    "forgery": {"valid":true,"collected":12,"passed":0,"reward":0.0,"network":false,"trusted_reward_unaffected":true,"receipt":".nl2repo/runs/better-sqlite3/forgery/2026-08-26__23-09-05/better-sqlite3-forgery__uU8MzHk/verifier/grading.json"}
+  "catalog_source_digest": "sha256:bec3a67067d3573b9229c7d88fd64db8d209ffb5fe1812a46c2c9992bee9dcd6",
+  "source": {
+    "revision": "f8e2d541208281368129929a96f70f937c0735ef",
+    "digest": "sha256:b831518db05ed246880131c6faca8dd775bb7f713dc29a76e51f53ba8c5602ab",
+    "license": "MIT"
   },
-  "residual_risks": ["The task evaluates a documented Node 24 node:sqlite adaptation rather than the upstream native addon; native-only upstream behaviors are explicitly excluded from the public contract.", "No model Agent Run was started in this lane."],
+  "toolchain": {
+    "harbor": "0.21.0",
+    "task_schema": "1.4",
+    "node": "24.19.0",
+    "npm": "11.17.0",
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+  },
+  "compile": {
+    "exit_code": 0,
+    "deterministic": true,
+    "command": "uv run nl2repo harbor compile catalog/sources/better-sqlite3 --toolchain toolchain.node.lock.toml --allow-private",
+    "bundle_manifest": "catalog/sources/better-sqlite3/evidence/revalidation-20260905/bundle-manifest.json",
+    "bundle_manifest_sha256": "sha256:12c19a34f6e75c45936384ccb1d5ea6053a24f7a4dd6e918880ac8cf73750ad8"
+  },
+  "oracle": {
+    "valid": true,
+    "collected": 12,
+    "passed": 12,
+    "failed": 0,
+    "reward": 1.0,
+    "network": false,
+    "receipt": "catalog/sources/better-sqlite3/evidence/revalidation-20260905/oracle.json",
+    "receipt_sha256": "sha256:8ba1d7777b4fd4a53c570aa91d099f5119c7ca6c5ec44157773e9425190f2b26"
+  },
+  "controls": {
+    "empty": {
+      "valid": true,
+      "collected": 0,
+      "expected_total": 12,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "network": false,
+      "receipt": "catalog/sources/better-sqlite3/evidence/revalidation-20260905/empty.json",
+      "receipt_sha256": "sha256:25eb41cb66f751fad38e5561bd21ab120713546af330c8cd920dfe80d0e10c6f"
+    },
+    "stub": {
+      "valid": true,
+      "collected": 12,
+      "passed": 0,
+      "reward": 0.0,
+      "network": false,
+      "receipt": "catalog/sources/better-sqlite3/evidence/revalidation-20260905/stub.json",
+      "receipt_sha256": "sha256:dab115a4d03881bf3c9d5814a3e2730a166e9304207e60e1345cb412169b0968"
+    },
+    "forgery": {
+      "valid": true,
+      "collected": 12,
+      "passed": 0,
+      "reward": 0.0,
+      "network": false,
+      "trusted_reward_unaffected": true,
+      "receipt": "catalog/sources/better-sqlite3/evidence/revalidation-20260905/forgery.json",
+      "receipt_sha256": "sha256:df69a75521a22b5802066a85a971aaeb095a42f2e44819797d8056a65c6fcefd"
+    }
+  },
+  "offline": {
+    "completed": true,
+    "public_network_available": false,
+    "receipt": "catalog/sources/better-sqlite3/evidence/revalidation-20260905/offline.json",
+    "receipt_sha256": "sha256:943b83ac86f9488b2e5c45fd09c1e94055414112dab4071fa1c229598d05a14c"
+  },
+  "residual_risks": [
+    "The task evaluates the documented Node 24 node:sqlite adaptation rather than the upstream native addon; native-only upstream behaviors remain explicitly excluded from the public contract.",
+    "No model Agent Run was started in this lane."
+  ],
   "blocker": null
 }

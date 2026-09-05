@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "task_id": "chokidar",
+  "artifact_digest": "sha256:4ed32f24d217f916e5da1d07f62c8e381cca36f1545b68778a8683a006fdef94",
+  "artifact_size_bytes": 81920,
+  "artifact_sha256_verified": true,
+  "solve_script_sha256": "sha256:cdc29f186ede7f33f2b5dc4e3ba555b23528441d4d34fda38d1aaf1595853639",
+  "source_revision": "0bc7bed37d6b018e5b11afcce329bbf797d6441f",
+  "source_digest": "sha256:db938843dec95dbe7faf8d926240f97429432002a760f9d68dfec049c367c0af",
+  "network_fetch_detected": true,
+  "network_fetch": "git -C \"$source_dir\" fetch --depth 1 origin \"$revision\" from https://github.com/paulmillr/chokidar",
+  "runtime_execution": "not run",
+  "reason": "The current Oracle payload requires a GitHub fetch at runtime, which violates the task no-network contract."
+}

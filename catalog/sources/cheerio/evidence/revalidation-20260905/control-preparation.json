@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "task_id": "cheerio",
+  "status": "blocked",
+  "control_contract": "Node standalone task-local controls",
+  "attempts": [
+    {"kind": "empty", "exit_code": 1, "failure": "control script is missing: controls/empty.sh"},
+    {"kind": "stub", "exit_code": 1, "failure": "control script is missing: controls/stub.sh"},
+    {"kind": "forgery", "exit_code": 1, "failure": "control script is missing: controls/forgery.sh"},
+    {"kind": "offline", "exit_code": 1, "failure": "control script is missing: controls/offline.sh"}
+  ],
+  "lifecycle_changed": false,
+  "next_step": "Add standalone controls to the source, compile a new bundle, and rerun the complete matrix."
+}

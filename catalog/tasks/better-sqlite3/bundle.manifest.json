@@ -1,10 +1,15 @@
 {
-  "canonical_manifest_digest": "sha256:9f1e0a7065a1b9f0b7feb500817f3b486d6818345ebbc091fa8890eba8a0162c",
+  "canonical_manifest_digest": "sha256:68381e8a174fd7a604a8116c52111f787be279fe004e322601add3e1f71279d6",
   "files": [
     {
       "path": "README.md",
       "sha256": "12770c0d9cebd7d665fb06e6255ed1a0de21d3aa5a2a89a77344bcb7d4a5f480",
       "size_bytes": 326
+    },
+    {
+      "path": "controls/empty.sh",
+      "sha256": "208b699e8e13b68f832a6f64e95de7146a84b8f60c8059a2ce8d86b9ff16d2a2",
+      "size_bytes": 120
     },
     {
       "path": "controls/forgery.sh",
@@ -33,8 +38,8 @@
     },
     {
       "path": "instruction.md",
-      "sha256": "15df1e6407d95ea008be158b63a5b8da3bd6e03fa7868ebdfacec6b29f553abb",
-      "size_bytes": 5088
+      "sha256": "127e5b3415e8f9a625b3355501977d601907c6d2bc58d200bfe72f8acf11d5b7",
+      "size_bytes": 5969
     },
     {
       "path": "solution/index.js",
@@ -58,7 +63,7 @@
     },
     {
       "path": "task.toml",
-      "sha256": "bbb0ff780aed9a4f4e2bba3958f1d576ac3129049d66387d49ddf082fa14e632",
+      "sha256": "3fb9fc2e211d8ea025e93e89775e6ee5b41dcc8a21c904364e6d56753c378219",
       "size_bytes": 1260
     },
     {
@@ -118,8 +123,8 @@
     },
     {
       "path": "tests/python-runtime/nl2repobench/domain/models_v2.py",
-      "sha256": "24891e7fb2168e10cc07ba6d6f646ac20af22ae265452af60380568e00f3bc8d",
-      "size_bytes": 15136
+      "sha256": "2e56ba41f7b5507781b4776f9bc02fb24b59f616b82708054fb404957e37bba1",
+      "size_bytes": 15225
     },
     {
       "path": "tests/python-runtime/nl2repobench/domain/network_policy.py",
@@ -158,13 +163,13 @@
     },
     {
       "path": "tests/python-runtime/nl2repobench/verification/candidate_install.py",
-      "sha256": "a49314a0ad250d9fd5efcda2d15f9d62d9b882c9b2d9bbf813315c14c73ce76a",
-      "size_bytes": 6556
+      "sha256": "4f714f3af9bc9f633bf41bf76f821e087141b53fcf5920cf2e3a9e60a0249d06",
+      "size_bytes": 7451
     },
     {
       "path": "tests/python-runtime/nl2repobench/verification/candidate_runner.py",
-      "sha256": "3b57b77d2097535362432f4b60353e2f58b181d5e34adde55ff0f3949492b55e",
-      "size_bytes": 9672
+      "sha256": "46503bbbba1fc6812358606e3b94278d02473c3caf53511da04b0dd9479a95ca",
+      "size_bytes": 9675
     },
     {
       "path": "tests/python-runtime/nl2repobench/verification/cli.py",

@@ -1,55 +1,82 @@
 {
   "schema_version": "1.0",
   "task_id": "boto3",
-  "source_revision": "722e01b074c67db38ad226ac1a2dab5c36c1577c",
-  "source_archive_sha256": "sha256:2b56d8a2d4193499e3c3ed6685622e5c75af11c0cfa1e6173d59f10090be3208",
-  "license_spdx": "Apache-2.0",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "source": {
+    "revision": "722e01b074c67db38ad226ac1a2dab5c36c1577c",
+    "upstream_archive_sha256": "sha256:2b56d8a2d4193499e3c3ed6685622e5c75af11c0cfa1e6173d59f10090be3208",
+    "catalog_source_digest": "sha256:a46c69f504348b6e88cf89c23628080415199abd9e96a5000c04e502cea30193",
+    "license_spdx": "Apache-2.0"
+  },
   "environment": {
-    "python": "3.12.14 image / 3.12.11 authoring host",
-    "base_image": "python:3.12-slim@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
-    "network_mode": "no-network"
+    "python": "3.12.14",
+    "harbor_version": "0.21.0",
+    "base_image_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "network_mode": "no-network",
+    "public_network_available": false
   },
-  "dependency_lock": {
-    "sha256": "sha256:b60bc17b2558fc212aaa469f7d26d9cdb8f72803a6acc9b96326fd6d028187c8",
-    "size_bytes": 3580,
-    "packages": [
-      "botocore==1.43.78",
-      "jmespath==1.0.1",
-      "s3transfer==0.19.0",
-      "pytest==8.4.2",
-      "setuptools==80.10.2",
-      "wheel==0.45.1"
-    ]
+  "frozen_collection": {"framework": "pytest", "expected_total": 552, "skipped": 13},
+  "bundle": {
+    "evidence": "catalog/sources/boto3/evidence/revalidation-20260905/bundle-manifest.json",
+    "evidence_sha256": "sha256:aaf807cfa5635b964ea6998172952224284b1a0e57bfc28c7390f1e0de6639a2",
+    "canonical_manifest_digest": "sha256:62f1d40e990e500e77bcb878163b59204f08e1a02415ebb54169732338f13c68",
+    "bundle_manifest_file_sha256": "sha256:7d891198c0095322d1cff3a6d92b3e13cfd0cc7508f85068071bbd396fbe1d08"
   },
-  "tests": {
-    "framework": "pytest",
-    "scope": "upstream tests/unit",
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run on the fresh compiled boto3 Oracle bundle, one attempt, no host authorization",
+    "exit_code": 0,
+    "valid": true,
     "collected": 552,
     "passed": 539,
     "skipped": 13,
-    "failed": 0,
-    "frozen_total": 552
-  },
-  "oracle": {
-    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/python-author-next-20260826-r1/boto3/compiled/boto3 -a oracle",
-    "exit_code": 0,
     "reward": 0.9764492753623188,
-    "test_pass_rate": 0.9764492753623188,
-    "valid": true,
-    "evidence_dir": ".nl2repo/authoring-work/python-author-next-20260826-r1/boto3/provenance/harbor-results/oracle-final"
+    "grading": "catalog/sources/boto3/evidence/revalidation-20260905/oracle-grading.json",
+    "grading_sha256": "sha256:510edc5a7ec09f1e34a67e788ae91e8f5d782ba4824ba3aa135673f8edeb5d20",
+    "network": "catalog/sources/boto3/evidence/revalidation-20260905/oracle-network.json",
+    "network_sha256": "sha256:eabb13dadba6a2701d824c4f22a44f7f473b9aa67bd5949767c475d78d638698",
+    "skipped_set": "catalog/sources/boto3/evidence/revalidation-20260905/oracle-skipped.json",
+    "skipped_set_sha256": "sha256:a7791344d5a8c6f491a335eeae6aae15418229efd52b20f707afc5b1da71abb7"
   },
   "controls": {
-    "empty": {"reward": 0.0, "test_pass_rate": 0.0, "evidence_dir": ".nl2repo/authoring-work/python-author-next-20260826-r1/boto3/provenance/harbor-results/empty"},
-    "stub": {"reward": 0.0, "test_pass_rate": 0.0, "evidence_dir": ".nl2repo/authoring-work/python-author-next-20260826-r1/boto3/provenance/harbor-results/stub"},
-    "forgery": {"reward": 0.0, "test_pass_rate": 0.0, "evidence_dir": ".nl2repo/authoring-work/python-author-next-20260826-r1/boto3/provenance/harbor-results/forgery"},
-    "offline_network_probes": {"oracle": false, "empty": false, "stub": false, "forgery": false}
+    "empty": {
+      "valid": true, "collected": 0, "passed": 0, "reward": 0.0,
+      "failure_class": "model", "failure_reason": "candidate-installation-failed",
+      "grading": "catalog/sources/boto3/evidence/revalidation-20260905/empty-grading.json",
+      "grading_sha256": "sha256:056bc9dd336d89b207d09c4703f36b35fc12b347627934cf6fb48d5235b52b01",
+      "network": "catalog/sources/boto3/evidence/revalidation-20260905/empty-network.json",
+      "network_sha256": "sha256:0ec605bcedde4fd4b5ed357d341d92b84e344a5e2a48ad3c51c051842f9f5518"
+    },
+    "stub": {
+      "valid": true, "collected": 552, "passed": 0, "reward": 0.0,
+      "grading": "catalog/sources/boto3/evidence/revalidation-20260905/stub-grading.json",
+      "grading_sha256": "sha256:22998ffeb44b615ddd2ac2c1baf2f5bb40bd78ff92d954ebc938068289788733",
+      "network": "catalog/sources/boto3/evidence/revalidation-20260905/stub-network.json",
+      "network_sha256": "sha256:bb7b044af9659985cde4502148aefa13398aabf7f331a7a9ebdca2be69eb1698"
+    },
+    "forgery": {
+      "valid": true, "collected": 552, "passed": 0, "reward": 0.0,
+      "verifier_owned_reward": true, "candidate_forged_reward_ignored": true,
+      "grading": "catalog/sources/boto3/evidence/revalidation-20260905/forgery-grading.json",
+      "grading_sha256": "sha256:eb71c7f943594c6e1a943db1d664df392cb870135c5361675c408156d1d41571",
+      "network": "catalog/sources/boto3/evidence/revalidation-20260905/forgery-network.json",
+      "network_sha256": "sha256:0b835bf4e0ff1452e916980805061b3656675c33b2c93f0d378b4e79ac393d7b"
+    },
+    "offline": {
+      "completed": true,
+      "public_network_available": false,
+      "network": "catalog/sources/boto3/evidence/revalidation-20260905/oracle-network.json"
+    }
   },
-  "gates": {
-    "validate_source_exit_code": 0,
-    "lint_network_exit_code": 0,
-    "lint_network_error_count": 0,
-    "production_compile_exit_code": 0,
-    "syntax_and_shell_exit_code": 0
+  "receipt_hashes": {
+    "oracle_grading_summary": "sha256:510edc5a7ec09f1e34a67e788ae91e8f5d782ba4824ba3aa135673f8edeb5d20",
+    "oracle_network_summary": "sha256:eabb13dadba6a2701d824c4f22a44f7f473b9aa67bd5949767c475d78d638698",
+    "empty_grading_summary": "sha256:056bc9dd336d89b207d09c4703f36b35fc12b347627934cf6fb48d5235b52b01",
+    "stub_grading_summary": "sha256:22998ffeb44b615ddd2ac2c1baf2f5bb40bd78ff92d954ebc938068289788733",
+    "forgery_grading_summary": "sha256:eb71c7f943594c6e1a943db1d664df392cb870135c5361675c408156d1d41571"
   },
-  "status": "awaiting-agent-run"
+  "residual_risks": [
+    "The 13 optional CRT leaves are skipped because awscrt is not required by the frozen contract.",
+    "Review, pilot, and publication remain separate integrator gates."
+  ]
 }

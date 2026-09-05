@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "task_id": "better-sqlite3",
+  "catalog_source_digest": "sha256:bec3a67067d3573b9229c7d88fd64db8d209ffb5fe1812a46c2c9992bee9dcd6",
+  "canonical_manifest_digest": "sha256:68381e8a174fd7a604a8116c52111f787be279fe004e322601add3e1f71279d6",
+  "raw_bundle_manifest_sha256": "sha256:1bb18520089b45bffad19bc2ae571e60439e3a1f876322812cb7ac3abb6297c3",
+  "file_count": 73,
+  "controls": ["empty.sh", "stub.sh", "forgery.sh"],
+  "deterministic_second_compile": true,
+  "toolchain": "toolchain.node.lock.toml",
+  "harbor": "0.21.0"
+}

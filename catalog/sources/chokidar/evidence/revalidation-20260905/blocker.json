@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0",
+  "task_id": "chokidar",
+  "revalidation_date": "2026-09-05",
+  "terminal_kind": "revalidation-blocked",
+  "source_digest": "sha256:017c721092e959cb4ef31188c90520a103b8a34eca1c931f238b78927d305e77",
+  "prior_lifecycle": "controls-passed",
+  "lifecycle_changed": false,
+  "historical_production_evidence_changed": false,
+  "failure_class": "verifier",
+  "blocker": "The hash-verified private Oracle bundle's solve.sh performs a runtime git fetch from GitHub before copying its reference build. No-network execution forbids that fetch, so the Oracle and all dependent revalidation controls were not run.",
+  "compile": {
+    "attempts": 2,
+    "byte_identical": true,
+    "canonical_manifest_digest": "sha256:498b93ad18ae5790715a7cc95ce8944482b128b2a9325999cb2c21d521a0e559",
+    "bundle_manifest_sha256": "sha256:c98240a69d176aa7878bf04a3233b05f7bd831c79a573a525f1123ed3c6a98a4",
+    "bundle_file_count": 103,
+    "summaries": [
+      "revalidation-20260905/compile-a-summary.json",
+      "revalidation-20260905/compile-b-summary.json"
+    ]
+  },
+  "oracle_bundle_summary": "revalidation-20260905/oracle-bundle-summary.json",
+  "gates": {
+    "source_validation": "passed",
+    "compile": "passed",
+    "oracle_no_network": "blocked-before-run",
+    "empty": "not-run",
+    "stub": "not-run",
+    "forgery": "not-run",
+    "offline": "not-run"
+  },
+  "next_step": "Replace the Oracle bundle with a local, revision- and source-digest-verified payload whose solve.sh performs no runtime source fetch, then recompile and run the complete Oracle/control matrix."
+}

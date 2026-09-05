@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "task_id": "boto3",
+  "run": "boto3-revalidation-oracle-20260905/boto3__gQkkrDi",
+  "raw_junit_sha256": "sha256:ff67b60b9cff423baa08c569163635f197d84c6d41ae2ed7f83ec112ab2047c0",
+  "count": 13,
+  "test_ids": [
+    "tests/unit/test_changelog.py::test_next_release_json_is_well_formed[NOTSET]",
+    "tests/unit/test_crt.py::TestCRTTransferManager::test_create_crt_transfer_manager_with_lock_in_use",
+    "tests/unit/test_crt.py::TestCRTTransferManager::test_create_crt_transfer_manager",
+    "tests/unit/test_crt.py::TestCRTTransferManager::test_crt_singleton_is_returned_every_call",
+    "tests/unit/test_crt.py::TestCRTTransferManager::test_create_crt_transfer_manager_w_client_in_wrong_region",
+    "tests/unit/test_crt.py::TestCRTTransferManager::test_compare_identities[boto3_tuple0-crt_tuple0-True]",
+    "tests/unit/test_crt.py::TestCRTTransferManager::test_compare_identities[boto3_tuple1-crt_tuple1-False]",
+    "tests/unit/test_crt.py::TestCRTTransferManager::test_compare_identities[boto3_tuple2-crt_tuple2-False]",
+    "tests/unit/test_crt.py::TestCRTTransferManager::test_compare_identities[boto3_tuple3-crt_tuple3-False]",
+    "tests/unit/test_crt.py::TestCRTTransferManager::test_compare_idenities_no_credentials",
+    "tests/unit/test_crt.py::TestCRTTransferManager::test_get_crt_s3_client",
+    "tests/unit/test_crt.py::TestCRTTransferManager::test_get_crt_s3_client_w_wrong_region",
+    "tests/unit/test_crt.py::TestCRTTransferManager::test_config_without_crt_support_emits_warning"
+  ]
+}

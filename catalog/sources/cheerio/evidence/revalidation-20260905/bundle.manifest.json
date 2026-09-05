@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "task_id": "cheerio",
+  "source_catalog_digest": "sha256:bf12074602aa7c8a0d3883fc7607d7ebf6fe3e192702889d43c5fb3d702c899a",
+  "canonical_manifest_digest": "sha256:fae1fa45bbead289b53ec4a20a2ee36f993f386164ce7731279996e901909d07",
+  "bundle_manifest_sha256": "sha256:b20b667d3308e770f937ce1ff14ddab50bb15faeeb440f02a2b616d3bda34a32",
+  "file_count": 476,
+  "compile_a": "independent production compile A",
+  "compile_b": "independent production compile B",
+  "byte_identical": true,
+  "allow_incomplete": false,
+  "toolchain": "toolchain.node.lock.toml",
+  "artifact_root": "parent integration CAS"
+}

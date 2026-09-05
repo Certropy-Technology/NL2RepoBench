@@ -2,20 +2,133 @@
   "schema_version": "1.0",
   "task_id": "camelcase-keys",
   "terminal_kind": "valid",
-  "status_boundary": "awaiting-agent-run",
+  "status_boundary": "revalidated-20260905",
+  "revalidation": {
+    "date": "2026-09-05",
+    "source_catalog_digest": "sha256:8d7f47005997b4bc64ded07402f53c52329cdf667879fe0baca9a0f543ac8a1e",
+    "source_archive_digest": "sha256:4611a77b477cc333b75cf4f934ba6b9dae2f603a3ceabe6b89749f5c3d36c81c",
+    "compile": {
+      "toolchain": "toolchain.node.lock.toml",
+      "artifact_root": ".nl2repo/artifacts",
+      "canonical_manifest_digest": "sha256:35fda462db358cd27da596341606ad68c9abac21af1383d9f4a23c4d08418af4",
+      "manifest_sha256": "sha256:911485a0c7459ba0e19d3c5a4245d664136ba2b793c7e288a4c06a3f348ab0f2",
+      "manifest_size_bytes": 78876,
+      "repeat_byte_identical": true,
+      "first_manifest": "catalog/sources/camelcase-keys/evidence/revalidation-20260905/compile-a-bundle.manifest.json",
+      "repeat_manifest": "catalog/sources/camelcase-keys/evidence/revalidation-20260905/compile-b-bundle.manifest.json"
+    },
+    "oracle": {
+      "harbor_version": "0.21.0",
+      "exit_code": 0,
+      "grading": {
+        "path": "catalog/sources/camelcase-keys/evidence/revalidation-20260905/oracle-grading.json",
+        "sha256": "sha256:964df66aaa47ba98d3afd3fac8d13e21b9776b0df5af04c05a6bc513845faaca",
+        "valid": true,
+        "reward": 1.0,
+        "passed": 24,
+        "collected": 24,
+        "expected_total": 24
+      },
+      "network": {
+        "path": "catalog/sources/camelcase-keys/evidence/revalidation-20260905/oracle-network.json",
+        "sha256": "sha256:0aae6d51439b7a2c43a306adb1bb049c4c322269aed84b851dcd57d23e2640b5",
+        "public_network_available": false
+      }
+    },
+    "controls": {
+      "empty": {
+        "exit_code": 0,
+        "grading_path": "catalog/sources/camelcase-keys/evidence/revalidation-20260905/empty-grading.json",
+        "grading_sha256": "sha256:857fc7d0ca5d79f20c569b663734dd31e8f8f994491149d216d10baec3f54d2b",
+        "network_path": "catalog/sources/camelcase-keys/evidence/revalidation-20260905/empty-network.json",
+        "network_sha256": "sha256:ed41e3b66e3591f958439ab23806b0d8b4096df91ec742d6ab5047fcc2d708ec",
+        "valid": true,
+        "reward": 0.0,
+        "collected": 0,
+        "failure_class": "model",
+        "failure_reason": "candidate-installation-failed",
+        "public_network_available": false
+      },
+      "stub": {
+        "exit_code": 0,
+        "grading_path": "catalog/sources/camelcase-keys/evidence/revalidation-20260905/stub-grading.json",
+        "grading_sha256": "sha256:e53eadafba9925f966c2364e536ffe61e9245f46139f7e5c66e971260c28c475",
+        "network_path": "catalog/sources/camelcase-keys/evidence/revalidation-20260905/stub-network.json",
+        "network_sha256": "sha256:19fcac6f7015a46a817079b4bbd65faaa7ed8e5a73fadab90caaa718f9cdb678",
+        "valid": true,
+        "reward": 0.08333333333333333,
+        "passed": 2,
+        "collected": 24,
+        "public_network_available": false
+      },
+      "forgery": {
+        "exit_code": 0,
+        "grading_path": "catalog/sources/camelcase-keys/evidence/revalidation-20260905/forgery-grading.json",
+        "grading_sha256": "sha256:404db689ae58781657c8ced032fa9d555df094f3908c7de4bfa76c4b01f20969",
+        "network_path": "catalog/sources/camelcase-keys/evidence/revalidation-20260905/forgery-network.json",
+        "network_sha256": "sha256:40a32268f01cafcf94d36804101a1753938a02523a73f07415850ac1a72b94af",
+        "valid": true,
+        "reward": 0.041666666666666664,
+        "passed": 1,
+        "collected": 24,
+        "verifier_owned_reward": true,
+        "public_network_available": false
+      },
+      "offline": {
+        "exit_code": 0,
+        "grading_path": "catalog/sources/camelcase-keys/evidence/revalidation-20260905/offline-grading.json",
+        "grading_sha256": "sha256:404db689ae58781657c8ced032fa9d555df094f3908c7de4bfa76c4b01f20969",
+        "network_path": "catalog/sources/camelcase-keys/evidence/revalidation-20260905/offline-network.json",
+        "network_sha256": "sha256:0aae6d51439b7a2c43a306adb1bb049c4c322269aed84b851dcd57d23e2640b5",
+        "valid": true,
+        "reward": 0.041666666666666664,
+        "passed": 1,
+        "collected": 24,
+        "completed": true,
+        "public_network_available": false
+      }
+    },
+    "additional_controls": {
+      "install-script": {
+        "grading_path": "catalog/sources/camelcase-keys/evidence/revalidation-20260905/install-script-grading.json",
+        "grading_sha256": "sha256:857fc7d0ca5d79f20c569b663734dd31e8f8f994491149d216d10baec3f54d2b",
+        "network_path": "catalog/sources/camelcase-keys/evidence/revalidation-20260905/install-script-network.json",
+        "network_sha256": "sha256:0aae6d51439b7a2c43a306adb1bb049c4c322269aed84b851dcd57d23e2640b5",
+        "reward": 0.0,
+        "collected": 0
+      },
+      "loader-hook": {
+        "grading_path": "catalog/sources/camelcase-keys/evidence/revalidation-20260905/loader-hook-grading.json",
+        "grading_sha256": "sha256:29021472e103299cf57c09569489dc71b51f2bc0641c5295e61f1fed5a4e3195",
+        "network_path": "catalog/sources/camelcase-keys/evidence/revalidation-20260905/loader-hook-network.json",
+        "network_sha256": "sha256:19fcac6f7015a46a817079b4bbd65faaa7ed8e5a73fadab90caaa718f9cdb678",
+        "reward": 0.20833333333333334,
+        "collected": 24
+      },
+      "hang": {
+        "grading_path": "catalog/sources/camelcase-keys/evidence/revalidation-20260905/hang-grading.json",
+        "grading_sha256": "sha256:da7a16f0510b00800c9f64653bdbf071d554d9c30ff969f69f7987c5c22d09a5",
+        "network_path": "catalog/sources/camelcase-keys/evidence/revalidation-20260905/hang-network.json",
+        "network_sha256": "sha256:19fcac6f7015a46a817079b4bbd65faaa7ed8e5a73fadab90caaa718f9cdb678",
+        "reward": 0.0,
+        "collected": 0,
+        "failure_reason": "candidate-call-failed"
+      }
+    }
+  },
   "source": {
     "upstream_url": "https://github.com/sindresorhus/camelcase-keys",
     "revision": "3f304acdc5177aa119f383b3b09557bd70d7916c",
     "archive_sha256": "sha256:4611a77b477cc333b75cf4f934ba6b9dae2f603a3ceabe6b89749f5c3d36c81c",
-    "archive_path": ".nl2repo/authoring-work/node/camelcase-keys/source.tar",
+    "archive_path": null,
     "license": "MIT",
     "license_sha256": "sha256:5c932d88256b4ab958f64a856fa48e8bd1f55bc1d96b8149c65689e0c61789d3",
     "package_json_sha256": "sha256:ebc172e9554788f9699c6e3228e56fedbba014f248362e2a063026203e3dfcc2",
     "upstream_test_declarations": 22
   },
   "bundle": {
-    "path": ".nl2repo/authoring-work/node/camelcase-keys/compiled-final/camelcase-keys/bundle.manifest.json",
-    "sha256": "sha256:dfb00e6195d8bf699ad50c1129cbcd027b91a2ae85144358edd78cf1dc939139",
+    "path": "catalog/sources/camelcase-keys/evidence/revalidation-20260905/compile-a-bundle.manifest.json",
+    "sha256": "sha256:911485a0c7459ba0e19d3c5a4245d664136ba2b793c7e288a4c06a3f348ab0f2",
     "size_bytes": 78876,
     "mode": "production"
   },
@@ -41,29 +154,29 @@
     {
       "command": "uv run nl2repo task validate-source catalog/sources/camelcase-keys",
       "exit_code": 0,
-      "log": ".nl2repo/authoring-work/node/camelcase-keys/logs/validate-source-final.log"
+      "log": "catalog/sources/camelcase-keys/evidence/revalidation-20260905/validation-summary.md"
     },
     {
       "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
       "exit_code": 0,
-      "log": ".nl2repo/authoring-work/node/camelcase-keys/logs/lint-network-final.log",
+      "log": "catalog/sources/camelcase-keys/evidence/revalidation-20260905/validation-summary.md",
       "note": "Repository-wide lint reported zero errors; existing unrelated sources account for warnings."
     },
     {
-      "command": "uv run nl2repo harbor compile catalog/sources/camelcase-keys --output .nl2repo/authoring-work/node/camelcase-keys/compiled-final --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "command": "uv run nl2repo harbor compile catalog/sources/camelcase-keys --output .nl2repo/camelcase-keys-revalidate-compile-a --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
       "exit_code": 0,
-      "log": ".nl2repo/authoring-work/node/camelcase-keys/logs/compile-final.log"
+      "log": "catalog/sources/camelcase-keys/evidence/revalidation-20260905/compile-a-bundle.manifest.json"
     },
     {
-      "command": "uv run nl2repo harbor compile catalog/sources/camelcase-keys --output .nl2repo/authoring-work/node/camelcase-keys/compiled-repeat --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "command": "uv run nl2repo harbor compile catalog/sources/camelcase-keys --output .nl2repo/camelcase-keys-revalidate-compile-b --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
       "exit_code": 0,
-      "log": ".nl2repo/authoring-work/node/camelcase-keys/logs/compile-repeat.log",
+      "log": "catalog/sources/camelcase-keys/evidence/revalidation-20260905/compile-b-bundle.manifest.json",
       "note": "The repeat bundle manifest was byte-identical to the final compile."
     },
     {
       "command": "node --check src/nl2repobench/verification/node/candidate_runner.mjs; bash -n catalog/sources/camelcase-keys/harbor/controls/*.sh",
       "exit_code": 0,
-      "log": ".nl2repo/authoring-work/node/camelcase-keys/logs/candidate-runner-syntax.log"
+      "log": "catalog/sources/camelcase-keys/evidence/revalidation-20260905/validation-summary.md"
     }
   ],
   "artifacts": {
@@ -89,11 +202,11 @@
     }
   },
   "oracle": {
-    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/node/camelcase-keys/compiled-final/camelcase-keys -a oracle --job-name camelcase-keys-oracle-final -o .nl2repo/authoring-work/node/camelcase-keys/runs/final/oracle --n-concurrent 1 --yes",
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/camelcase-keys-revalidate-compile-a/camelcase-keys -a oracle --job-name camelcase-keys-revalidate-oracle-20260905 -o .nl2repo/camelcase-keys-revalidate-runs/oracle --n-concurrent 1 --yes",
     "exit_code": 0,
     "harbor_version": "0.21.0",
     "grading": {
-      "path": ".nl2repo/authoring-work/node/camelcase-keys/runs/final/oracle/camelcase-keys-oracle-final/camelcase-keys__QeVt8ED/verifier/grading.json",
+      "path": "catalog/sources/camelcase-keys/evidence/revalidation-20260905/oracle-grading.json",
       "sha256": "sha256:964df66aaa47ba98d3afd3fac8d13e21b9776b0df5af04c05a6bc513845faaca",
       "valid": true,
       "reward": 1.0,
@@ -102,8 +215,8 @@
       "expected_total": 24
     },
     "network": {
-      "path": ".nl2repo/authoring-work/node/camelcase-keys/runs/final/oracle/camelcase-keys-oracle-final/camelcase-keys__QeVt8ED/verifier/network.json",
-      "sha256": "sha256:59ddd02f71fb1b9501074827aa4a331b4051d4febe108d4ddecb02a3dc097e4f",
+      "path": "catalog/sources/camelcase-keys/evidence/revalidation-20260905/oracle-network.json",
+      "sha256": "sha256:0aae6d51439b7a2c43a306adb1bb049c4c322269aed84b851dcd57d23e2640b5",
       "public_network_available": false
     }
   },
@@ -115,10 +228,10 @@
       "collected": 0,
       "failure_class": "model",
       "failure_reason": "candidate-installation-failed",
-      "grading_path": ".nl2repo/authoring-work/node/camelcase-keys/runs/final/controls/empty/camelcase-keys-empty-final/camelcase-keys-empty__RKHEEZN/verifier/grading.json",
+      "grading_path": "catalog/sources/camelcase-keys/evidence/revalidation-20260905/empty-grading.json",
       "grading_sha256": "sha256:857fc7d0ca5d79f20c569b663734dd31e8f8f994491149d216d10baec3f54d2b",
-      "network_path": ".nl2repo/authoring-work/node/camelcase-keys/runs/final/controls/empty/camelcase-keys-empty-final/camelcase-keys-empty__RKHEEZN/verifier/network.json",
-      "network_sha256": "sha256:37ee9a3584ce077418012b344bffe66e553fd97500b15ef82df80233ecad4809",
+      "network_path": "catalog/sources/camelcase-keys/evidence/revalidation-20260905/empty-network.json",
+      "network_sha256": "sha256:ed41e3b66e3591f958439ab23806b0d8b4096df91ec742d6ab5047fcc2d708ec",
       "public_network_available": false
     },
     "stub": {
@@ -127,10 +240,10 @@
       "reward": 0.08333333333333333,
       "passed": 2,
       "collected": 24,
-      "grading_path": ".nl2repo/authoring-work/node/camelcase-keys/runs/final/controls/stub/camelcase-keys-stub-final/camelcase-keys-stub__PntSiLm/verifier/grading.json",
+      "grading_path": "catalog/sources/camelcase-keys/evidence/revalidation-20260905/stub-grading.json",
       "grading_sha256": "sha256:e53eadafba9925f966c2364e536ffe61e9245f46139f7e5c66e971260c28c475",
-      "network_path": ".nl2repo/authoring-work/node/camelcase-keys/runs/final/controls/stub/camelcase-keys-stub-final/camelcase-keys-stub__PntSiLm/verifier/network.json",
-      "network_sha256": "sha256:37ee9a3584ce077418012b344bffe66e553fd97500b15ef82df80233ecad4809",
+      "network_path": "catalog/sources/camelcase-keys/evidence/revalidation-20260905/stub-network.json",
+      "network_sha256": "sha256:19fcac6f7015a46a817079b4bbd65faaa7ed8e5a73fadab90caaa718f9cdb678",
       "public_network_available": false
     },
     "forgery": {
@@ -140,10 +253,10 @@
       "passed": 1,
       "collected": 24,
       "verifier_owned_reward": true,
-      "grading_path": ".nl2repo/authoring-work/node/camelcase-keys/runs/final/controls/forgery/camelcase-keys-forgery-final/camelcase-keys-forgery__Y73cBVh/verifier/grading.json",
+      "grading_path": "catalog/sources/camelcase-keys/evidence/revalidation-20260905/forgery-grading.json",
       "grading_sha256": "sha256:404db689ae58781657c8ced032fa9d555df094f3908c7de4bfa76c4b01f20969",
-      "network_path": ".nl2repo/authoring-work/node/camelcase-keys/runs/final/controls/forgery/camelcase-keys-forgery-final/camelcase-keys-forgery__Y73cBVh/verifier/network.json",
-      "network_sha256": "sha256:37ee9a3584ce077418012b344bffe66e553fd97500b15ef82df80233ecad4809",
+      "network_path": "catalog/sources/camelcase-keys/evidence/revalidation-20260905/forgery-network.json",
+      "network_sha256": "sha256:40a32268f01cafcf94d36804101a1753938a02523a73f07415850ac1a72b94af",
       "public_network_available": false
     },
     "install-script": {
@@ -153,10 +266,10 @@
       "collected": 0,
       "failure_class": "model",
       "failure_reason": "candidate-installation-failed",
-      "grading_path": ".nl2repo/authoring-work/node/camelcase-keys/runs/final/controls/install-script/camelcase-keys-install-script-final/camelcase-keys-install-script__XSJTiFh/verifier/grading.json",
+      "grading_path": "catalog/sources/camelcase-keys/evidence/revalidation-20260905/install-script-grading.json",
       "grading_sha256": "sha256:857fc7d0ca5d79f20c569b663734dd31e8f8f994491149d216d10baec3f54d2b",
-      "network_path": ".nl2repo/authoring-work/node/camelcase-keys/runs/final/controls/install-script/camelcase-keys-install-script-final/camelcase-keys-install-script__XSJTiFh/verifier/network.json",
-      "network_sha256": "sha256:5a11402ab736c09005e19aac9808128d80310f0bcd5368624f4537a44ed98d47",
+      "network_path": "catalog/sources/camelcase-keys/evidence/revalidation-20260905/install-script-network.json",
+      "network_sha256": "sha256:0aae6d51439b7a2c43a306adb1bb049c4c322269aed84b851dcd57d23e2640b5",
       "public_network_available": false
     },
     "loader-hook": {
@@ -165,10 +278,10 @@
       "reward": 0.20833333333333334,
       "passed": 5,
       "collected": 24,
-      "grading_path": ".nl2repo/authoring-work/node/camelcase-keys/runs/final/controls/loader-hook/camelcase-keys-loader-hook-final/camelcase-keys-loader-hook__exCprGL/verifier/grading.json",
+      "grading_path": "catalog/sources/camelcase-keys/evidence/revalidation-20260905/loader-hook-grading.json",
       "grading_sha256": "sha256:29021472e103299cf57c09569489dc71b51f2bc0641c5295e61f1fed5a4e3195",
-      "network_path": ".nl2repo/authoring-work/node/camelcase-keys/runs/final/controls/loader-hook/camelcase-keys-loader-hook-final/camelcase-keys-loader-hook__exCprGL/verifier/network.json",
-      "network_sha256": "sha256:37ee9a3584ce077418012b344bffe66e553fd97500b15ef82df80233ecad4809",
+      "network_path": "catalog/sources/camelcase-keys/evidence/revalidation-20260905/loader-hook-network.json",
+      "network_sha256": "sha256:19fcac6f7015a46a817079b4bbd65faaa7ed8e5a73fadab90caaa718f9cdb678",
       "public_network_available": false
     },
     "hang": {
@@ -178,10 +291,10 @@
       "collected": 0,
       "failure_class": "model",
       "failure_reason": "candidate-call-failed",
-      "grading_path": ".nl2repo/authoring-work/node/camelcase-keys/runs/final/controls/hang/camelcase-keys-hang-final/camelcase-keys-hang__UsKYuPN/verifier/grading.json",
+      "grading_path": "catalog/sources/camelcase-keys/evidence/revalidation-20260905/hang-grading.json",
       "grading_sha256": "sha256:da7a16f0510b00800c9f64653bdbf071d554d9c30ff969f69f7987c5c22d09a5",
-      "network_path": ".nl2repo/authoring-work/node/camelcase-keys/runs/final/controls/hang/camelcase-keys-hang-final/camelcase-keys-hang__UsKYuPN/verifier/network.json",
-      "network_sha256": "sha256:f9169068e446977387e632eb7d33c622464eade9f8d230476d73c15adf12632b",
+      "network_path": "catalog/sources/camelcase-keys/evidence/revalidation-20260905/hang-network.json",
+      "network_sha256": "sha256:19fcac6f7015a46a817079b4bbd65faaa7ed8e5a73fadab90caaa718f9cdb678",
       "public_network_available": false
     },
     "offline": {
@@ -190,10 +303,10 @@
       "reward": 0.041666666666666664,
       "passed": 1,
       "collected": 24,
-      "grading_path": ".nl2repo/authoring-work/node/camelcase-keys/runs/final/controls/offline/camelcase-keys-offline-final/camelcase-keys-offline__H2R2ryk/verifier/grading.json",
+      "grading_path": "catalog/sources/camelcase-keys/evidence/revalidation-20260905/offline-grading.json",
       "grading_sha256": "sha256:404db689ae58781657c8ced032fa9d555df094f3908c7de4bfa76c4b01f20969",
-      "network_path": ".nl2repo/authoring-work/node/camelcase-keys/runs/final/controls/offline/camelcase-keys-offline-final/camelcase-keys-offline__H2R2ryk/verifier/network.json",
-      "network_sha256": "sha256:f9169068e446977387e632eb7d33c622464eade9f8d230476d73c15adf12632b",
+      "network_path": "catalog/sources/camelcase-keys/evidence/revalidation-20260905/offline-network.json",
+      "network_sha256": "sha256:0aae6d51439b7a2c43a306adb1bb049c4c322269aed84b851dcd57d23e2640b5",
       "public_network_available": false
     }
   },
