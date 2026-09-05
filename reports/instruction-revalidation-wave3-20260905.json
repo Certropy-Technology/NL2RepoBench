@@ -1,0 +1,81 @@
+{
+  "schema_version": "1.0",
+  "report_kind": "instruction-revalidation-wave",
+  "wave": 3,
+  "workflow_run": "9f4bbf79-e5d7-4819-827d-720cdd520f02",
+  "queue": "reports/instruction-revalidation-queue-20260905.json",
+  "base_commit": "d82a779281e6d2fab99a434b2ccd96ca5e571c7d",
+  "integration_commit": "174cca0ae0108c8530f556a907925872ca4aeb6a",
+  "network_policy": "no-network",
+  "attempts_per_task": 1,
+  "concurrency": 16,
+  "model_api_cost_usd": 0,
+  "counts": {
+    "task_count": 16,
+    "fully_revalidated": 3,
+    "artifact_or_verifier_blocked": 13,
+    "projection_refreshed": 3,
+    "bounded_infrastructure_retries": 1
+  },
+  "tasks": [
+    {"task_id": "cross-fetch", "status": "artifact-or-verifier-blocked", "reason": "Oracle payload performs runtime GitHub clone/fetch.", "evidence": "catalog/sources/cross-fetch/evidence/revalidation-20260905/blocker.md"},
+    {"task_id": "crypto-random-string", "status": "artifact-or-verifier-blocked", "reason": "Oracle payload performs runtime GitHub fetch.", "evidence": "catalog/sources/crypto-random-string/evidence/revalidation-20260905/blocker.md"},
+    {"task_id": "css-tree", "status": "artifact-or-verifier-blocked", "reason": "Oracle payload performs runtime codeload HTTPS fetch.", "evidence": "catalog/sources/css-tree/evidence/revalidation-20260905/blocker.md"},
+    {
+      "task_id": "dacite",
+      "status": "fully-revalidated",
+      "source_digest": "sha256:32826939c2c4f2b429537747a815c1cc36c908df7a13d65e8ed5e99a6084e484",
+      "canonical_manifest_digest": "sha256:59ea7ee45367ea3aad7cc7850929a7a8445ea749cc2e3124376310c2ff725c02",
+      "oracle": {"passed": 45, "total": 45, "reward": 1.0},
+      "empty": {"passed": 0, "total": 0, "reward": 0.0, "reason": "candidate-installation-failed"},
+      "stub": {"passed": 3, "total": 45, "reward": 0.06666666666666667},
+      "forgery": {"passed": 2, "total": 45, "reward": 0.044444444444444446},
+      "call_hang": {"passed": 1, "total": 45, "reward": 0.022222222222222223},
+      "offline": {"passed": 45, "total": 45, "reward": 1.0},
+      "infrastructure_retry": {
+        "first_attempt": {"passed": 39, "total": 45, "reward": 0.8666666666666667, "failure": "six RuntimeError: Killed leaves"},
+        "evidence": "catalog/sources/dacite/evidence/revalidation-20260905/oracle-infrastructure-attempt.json"
+      },
+      "projection": "catalog/tasks/dacite"
+    },
+    {"task_id": "dataclasses-json", "status": "artifact-or-verifier-blocked", "reason": "Oracle payload performs runtime GitHub fetch.", "evidence": "catalog/sources/dataclasses-json/evidence/revalidation-20260905/blocker.md"},
+    {"task_id": "date-fns", "status": "artifact-or-verifier-blocked", "reason": "Oracle payload has no local source archive and performs runtime Git fetch.", "evidence": "catalog/sources/date-fns/evidence/revalidation-20260905/blocker.md"},
+    {"task_id": "decamelize", "status": "artifact-or-verifier-blocked", "reason": "Oracle payload performs runtime codeload fetch; all not-run receipts are explicitly marked not-run.", "evidence": "catalog/sources/decamelize/evidence/revalidation-20260905/blocker.md"},
+    {"task_id": "deepmerge", "status": "artifact-or-verifier-blocked", "reason": "Required npm dependency CAS artifact is absent.", "evidence": "catalog/sources/deepmerge/evidence/revalidation-20260905/blocker.md"},
+    {"task_id": "detect-indent", "status": "artifact-or-verifier-blocked", "reason": "Oracle payload performs runtime GitHub fetch.", "evidence": "catalog/sources/detect-indent/evidence/revalidation-20260905/blocker.md"},
+    {
+      "task_id": "distro",
+      "status": "fully-revalidated",
+      "source_digest": "sha256:24b260692b3b5a3bf700df0a189bb1217ce896ae225bb535905dd3eef73546ec",
+      "canonical_manifest_digest": "sha256:dab9e308ebb402c8c10324b5e66b375a6c665a694689ea86f30c9a2c2e6ab436",
+      "oracle": {"passed": 15, "total": 15, "reward": 1.0},
+      "empty": {"passed": 0, "total": 0, "reward": 0.0, "reason": "candidate-installation-failed", "parent_rerun": true},
+      "stub": {"passed": 0, "total": 15, "reward": 0.0},
+      "forgery": {"passed": 0, "total": 15, "reward": 0.0},
+      "call_hang": {"passed": 0, "total": 15, "reward": 0.0},
+      "projection": "catalog/tasks/distro"
+    },
+    {
+      "task_id": "dnspython",
+      "status": "fully-revalidated",
+      "source_digest": "sha256:8f5e8eaf9a8199bed19a031ac05062fe8aeae3aa499546f49406e2779165c2bd",
+      "canonical_manifest_digest": "sha256:566277b31374f5995354e318d888b7e6f565a9145c7ae423a411e1d54e27a043",
+      "oracle": {"passed": 20, "total": 20, "reward": 1.0},
+      "empty": {"passed": 0, "total": 0, "reward": 0.0, "reason": "candidate-installation-failed"},
+      "stub": {"passed": 0, "total": 20, "reward": 0.0},
+      "forgery": {"passed": 0, "total": 20, "reward": 0.0},
+      "projection": "catalog/tasks/dnspython"
+    },
+    {"task_id": "docstring-parser", "status": "artifact-or-verifier-blocked", "reason": "All four required CAS artifacts are absent; lifecycle remains oracle-passed.", "evidence": "catalog/sources/docstring-parser/evidence/revalidation-20260905.md"},
+    {"task_id": "dot-prop", "status": "artifact-or-verifier-blocked", "reason": "Oracle payload performs runtime GitHub fetch.", "evidence": "catalog/sources/dot-prop/evidence/revalidation-20260905/blocker.md"},
+    {"task_id": "editables", "status": "artifact-or-verifier-blocked", "reason": "Oracle payload performs runtime GitHub fetch and standalone empty/offline controls are absent.", "evidence": "catalog/sources/editables/evidence/revalidation-20260905/revalidation-blocker.md"},
+    {"task_id": "email-validator", "status": "artifact-or-verifier-blocked", "reason": "A standalone empty control was added, but the Oracle still performs runtime Git fetch; no matrix was run.", "evidence": "catalog/sources/email-validator/evidence/revalidation-20260905/revalidation-blocker.json"},
+    {"task_id": "emittery", "status": "artifact-or-verifier-blocked", "reason": "Oracle payload performs runtime GitHub fetch.", "evidence": "catalog/sources/emittery/evidence/revalidation-20260905/blocker.md"}
+  ],
+  "reliability": {
+    "target_generated_network_errors": 0,
+    "target_source_network_errors": 0,
+    "expected_network_warnings": 8,
+    "global_generated_network_errors_unrelated": 1
+  }
+}
