@@ -9,7 +9,8 @@ checkout、声明式 catalog 和已实现 CLI 为准，不以历史记忆或旧�
 开始工作时按以下顺序核对：
 
 1. 本文件，以及更具体目录中的 `AGENTS.md` 或 `CLAUDE.md`；
-2. `docs/task-authoring-guide.zh-CN.md`、`docs/engineering-roadmap.zh-CN.md`、
+2. `docs/task-authoring-guide.zh-CN.md`、`docs/instruction-authoring-standard.zh-CN.md`、
+   `docs/engineering-roadmap.zh-CN.md`、
    `docs/phase2-harbor-verifier.zh-CN.md` 和 `docs/network-policy.md`；
 3. `src/nl2repobench/`、`tests/`、`harbor-runner/` 和 `examples/harbor/ministats/`；
 4. 当前 `catalog/sources/`、`catalog/tasks/`、`catalog/datasets/` 和 reports。
@@ -125,13 +126,21 @@ blocked 的 source authority 必须明确：`source_freeze.status` 使用 `known
 - source-only test collection、固定分母和 collection error；
 - 隐藏测试到公开行为的双向 traceability。
 
-公开 `instruction.md` 至少包含：
+公开 `instruction.md` 必须遵守 `docs/instruction-authoring-standard.zh-CN.md`，并至少包含：
 
 ```text
 Project Description
 Supports
 API Usage Guide
 Implementation Notes
+```
+
+同时必须包含 `Natural Language Instruction`、`Environment Configuration`（或
+`Supports`）和 `Project Directory Structure`。目录树必须以 `workspace/` 为根，并与
+公开 import path、CLI entry point 和安装元数据一致。批量出题或修改 instruction 后先运行：
+
+```bash
+uv run python scripts/validate_instruction_quality.py
 ```
 
 每个核心 API 要说明 import path、完整 signature、输入域、返回类型/形状、顺序与

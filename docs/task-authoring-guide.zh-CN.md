@@ -196,12 +196,24 @@ AST inventory 只能证明“名字出现了”，不能证明语义足够。最
 
 ### 阶段 D：写公开规格
 
-统一使用四段结构：
+统一使用完整工程规格结构，具体章节顺序以
+`docs/instruction-authoring-standard.zh-CN.md` 为准。至少包含：
 
 1. **Project Description**：项目解决什么问题、边界是什么。
-2. **Supports**：Python 版本、允许的第三方依赖、安装方式、要求的目录和入口。
-3. **API Usage Guide**：逐 API 的 signature、语义、输入输出、异常、状态变化和边界。
-4. **Implementation Nodes**：跨模块约束和少量可验证示例；不提供算法答案。
+2. **Natural Language Instruction**：给 coding agent 的直接建题要求。
+3. **Supports** 或 **Environment Configuration**：版本、依赖、安装和运行边界。
+4. **Project Directory Structure**：以 `workspace/` 为根的目标项目目录树。
+5. **API Usage Guide**：逐 API 的 signature、语义、输入输出、异常、状态变化和边界。
+6. **Implementation Notes**：跨模块约束和少量可验证示例；不提供算法答案。
+7. **Examples** 与 **Error Handling and Boundary Conditions**：普通和边界行为。
+
+写作粒度参考仓库中的 `test_files/autojump/start.md` 和
+`test_files/bleach/start.md`，不要把一段项目简介或API inventory当作完整Instruction。
+新增或修改后运行：
+
+```bash
+uv run python scripts/validate_instruction_quality.py
+```
 
 每个 API 条目至少包含：
 

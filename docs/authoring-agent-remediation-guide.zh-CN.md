@@ -6,6 +6,14 @@ empty/stub/forgery/install-failure/panic/hang/oversized-output/background-proces
 和 offline controls。Worker 的终点是把带有完整结构化证据的 task 交给 integration，
 状态为 `controls-passed`。后续模型评测由独立 Harbor Run 消费 catalog。
 
+Worker 在起草或修改 `instruction.md` 前必须完整阅读
+`docs/instruction-authoring-standard.zh-CN.md`，并运行
+`uv run python scripts/validate_instruction_quality.py`。Instruction 必须像
+`test_files/autojump/start.md` 和 `test_files/bleach/start.md` 一样，包含自然语言任务、
+环境/依赖、以 `workspace/` 为根的 `Project Directory Structure`、完整 API Usage
+Guide、Implementation Notes、示例和边界/错误说明。只有 API inventory 或一句项目
+简介而没有目标目录树的 handoff 不可合入。
+
 ## 存储纪律
 
 大型 source clone、dependency lock、npm cache、Docker build context、test bundle 和
