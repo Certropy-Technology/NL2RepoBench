@@ -49,12 +49,13 @@ Run was started in this lane.
 - Two independent NoNetwork Node projections were byte-identical. The fresh canonical manifest
   digest is `sha256:f46af14d968a0cd972a96a1dabbc7a139fb02f0a3ec150f0a9f0061ec319a021`; the
   `bundle.manifest.json` bytes are SHA-256
-  `sha256:41919f056d9a258c2eb75194281e1eefe30e3d47d10932c8a3e15667bfb1b4e9`.
-- Harbor `0.21.0` Oracle run `axios-revalidation-oracle-20260905` collected and passed `16/16`
+  `sha256:0192066c8c9f133d781ee2551070004818cfccc9953f71a572d16c3543e073a7`.
+- Harbor `0.21.0` Oracle run `axios-final-v2-oracle-20260905` collected and passed `16/16`
   leaves with reward `1.0`; network probes reported `public_network_available=false`.
-- Fresh independently prepared `stub` and `forgery` controls each collected `16/16` leaves,
+- The standalone `empty` control produced the allowed candidate installation failure, collected
+  `0/16`, and scored `0.0`. Fresh independently prepared `stub` and `forgery` controls each
+  collected `16/16` leaves,
   passed `0`, and scored `0.0`. Forgery wrote candidate `reward.json` and `report.json`, while
   verifier-owned grading remained `0.0`.
-- Task-local receipt summaries are in `evidence/revalidation-*.json`; complete ignored Harbor
-  run trees remain under the worker `.nl2repo/axios-revalidation-runs/` directory for parent
-  artifact inspection. The parent must regenerate `catalog/tasks/axios` from the fresh manifest.
+- Task-local receipt summaries are in `evidence/revalidation-*.json`. The parent regenerated
+  `catalog/tasks/axios` from this final bundle and byte-compared it with the second compile.
