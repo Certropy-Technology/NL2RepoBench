@@ -1,0 +1,80 @@
+{
+  "schema_version": "1.0",
+  "report_kind": "instruction-revalidation-wave",
+  "wave": 9,
+  "date": "2026-09-07",
+  "workflows": [
+    "b1f861f3-b51a-4bb6-b24e-bb771b08f1ee",
+    "ba2b778b-1e5b-4204-a4ab-75100c123526"
+  ],
+  "queue": "reports/instruction-revalidation-queue-20260905.json",
+  "base_commit": "f1a0c6f90129963f46d78cc47aa1c8768258835d",
+  "integration_commits": [
+    "668a3e46ed4c26e850bb758fe7f8d50e9a0987ac",
+    "cd1e9fd6aeaee2f2b74079ff156c5a0e617bb79f",
+    "14053b62d44dfc9591490fe953be538265575a8a"
+  ],
+  "network_policy": "no-network",
+  "requested_concurrency": {"initial": 32, "provider_retry": 13},
+  "counts": {
+    "task_count": 32,
+    "durable_source_local_evidence": 32,
+    "fully_revalidated": 3,
+    "contract_ceiling_review_pending": 1,
+    "control_matrix_pending": 1,
+    "replacement_proposal_pending": 1,
+    "infrastructure_pending": 2,
+    "artifact_or_verifier_blocked": 24,
+    "projection_refreshed": 0
+  },
+  "fully_revalidated": [
+    {
+      "task_id": "markdown-it-py",
+      "source_digest": "sha256:6e845c73d38a99145aff9c8e824d8d497c7307bd7206fac2164801f4433d85c3",
+      "oracle": {"passed": 24, "total": 24, "reward": 1.0},
+      "controls": "fresh NoNetwork stub, forgery, install-hang",
+      "evidence": "catalog/sources/markdown-it-py/evidence/revalidation-20260905/revalidation-summary.md"
+    },
+    {
+      "task_id": "meow",
+      "source_digest": "sha256:20135ee5f801dae4630dc1550e118a5bacd415768543e0073b01e60152895f69",
+      "oracle": {"passed": 37, "total": 37, "reward": 1.0},
+      "controls": "fresh NoNetwork call-hang, forgery, hang, install-script, loader-hook, offline, stub",
+      "evidence": "catalog/sources/meow/evidence/revalidation-20260905/revalidation-summary.md"
+    },
+    {
+      "task_id": "mdast-util-from-markdown",
+      "source_digest": "sha256:7ef8897ef9cc4e31d29c24829163c02b9a8bca16ec1f7290099acf2875addfc7",
+      "oracle": {"passed": 21, "total": 21, "reward": 1.0},
+      "controls": "fresh NoNetwork empty, stub, forgery, install-script, loader-hook, hang, timeout, offline",
+      "evidence": "catalog/sources/mdast-util-from-markdown/evidence/revalidation-20260905/control-summary.json"
+    }
+  ],
+  "special_cases": {
+    "lodash-es": "fresh matrix valid at 28/30 (0.9333333333333333) with two preserved candidate-runner contract ceiling failures; production evidence and projection not replaced",
+    "nanoid": "fresh Oracle 28/28 reward 1.0, but forgery/install-script/loader-hook ended as installation-failure controls; complete controls gate remains pending",
+    "mime": "exact source recovery and unregistered replacement Oracle proposal; parent CAS registration, double compile, and full matrix remain pending",
+    "node-fetch": "exact source and compile recovered; Harbor Oracle/control attempts were infrastructure-incomplete after Docker daemon and trial timeout",
+    "mdast-util-to-markdown": "bounded local recovery scan timed out; no new Oracle/control result claimed"
+  },
+  "artifact_or_verifier_blocked": [
+    "lxml", "magic-string", "marshmallow", "mdast-util-find-and-replace", "mdast-util-mdxjs-esm",
+    "mdast-util-phrasing", "mdast-util-to-hast", "mdurl", "micromark-util-character",
+    "micromark-util-chunked", "micromatch", "minimist", "multidict", "mypy-extensions",
+    "networkx", "normalize-url", "mimic-fn", "msal", "msgspec", "nock",
+    "npm-run-path", "oauthlib", "openai", "opentelemetry-semantic-conventions"
+  ],
+  "projection_policy": {
+    "refreshed": false,
+    "reason": "Fresh source-local bundles differ from existing generated projections; parent must complete projection-specific review and path/manifest acceptance before replacement.",
+    "production_evidence_changed": false
+  },
+  "reliability": {
+    "provider_retry_wave_initial_failures": 13,
+    "provider_retry_wave_recovered": 13,
+    "source_validation_passed": 32,
+    "task_network_errors": 0,
+    "historical_receipts_reused": false,
+    "absolute_private_paths_added": false
+  }
+}
