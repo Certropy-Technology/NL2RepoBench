@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "task_id": "mdurl",
+  "command_template": "uv run nl2repo harbor compile catalog/sources/mdurl --output <output> --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+  "compile_a": {
+    "output": "revalidation compile A",
+    "exit_code": 0,
+    "bundle_manifest_sha256": "sha256:d726a3e13e48bed8293abdad41c41d3626d104d77644fd349129a9f99261c090",
+    "canonical_manifest_digest": "sha256:747b8ee0dcd4b29895255ff4c4c2e5d2956691376c6c1c3d2b011399eb5b3162",
+    "file_count": 59
+  },
+  "compile_b": {
+    "output": "revalidation compile B",
+    "exit_code": 0,
+    "bundle_manifest_sha256": "sha256:d726a3e13e48bed8293abdad41c41d3626d104d77644fd349129a9f99261c090",
+    "canonical_manifest_digest": "sha256:747b8ee0dcd4b29895255ff4c4c2e5d2956691376c6c1c3d2b011399eb5b3162",
+    "file_count": 59
+  },
+  "byte_identical": true,
+  "projection_updated": false
+}

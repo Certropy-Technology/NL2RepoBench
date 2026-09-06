@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "task_id": "nock",
+  "source_revision": "1ee467c68d601ddc22629d7a657061e6c27097c2",
+  "expected_archive_sha256": "sha256:8c54a05e667935a42b69be72e1a95d0fb027805068dcc11b0d42b654525e0918",
+  "searched": [
+    "checked-in catalog/tasks/nock/solution and generated projection",
+    "private artifact CAS",
+    "retained .nl2repo archives and source.tar files",
+    "task-local and historical authoring records"
+  ],
+  "exact_archive_found": false,
+  "historical_reference": "A recovery manifest records a prior archive path and digest, but that absolute authoring path is not present in this checkout and its bytes were not available for verification.",
+  "result": "No exact local source archive is available for a safe NoNetwork Oracle replacement."
+}

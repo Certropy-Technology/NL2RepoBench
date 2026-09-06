@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0",
+  "task_id": "mdurl",
+  "checked_at": "2026-09-06",
+  "artifact_root": "private CAS configured by the integration checkout",
+  "artifacts": [
+    {
+      "kind": "dependency-lock",
+      "declared_sha256": "sha256:4b02b4a26d9cc1cf2ea6dbbe11fdeb65ce9bec6372e2bab1343a7f59064a1b1f",
+      "declared_size_bytes": 176,
+      "observed_size_bytes": 176,
+      "observed_sha256": "sha256:4b02b4a26d9cc1cf2ea6dbbe11fdeb65ce9bec6372e2bab1343a7f59064a1b1f",
+      "exact_match": true
+    },
+    {
+      "kind": "verifier-bundle",
+      "declared_sha256": "sha256:b922945d177720a6b319b2ffeca15480ee103e3c3a248df59c8ebd1f0290e8b8",
+      "declared_size_bytes": 30720,
+      "observed_size_bytes": 30720,
+      "observed_sha256": "sha256:b922945d177720a6b319b2ffeca15480ee103e3c3a248df59c8ebd1f0290e8b8",
+      "exact_match": true
+    },
+    {
+      "kind": "oracle-bundle",
+      "declared_sha256": "sha256:78525d1dbe829fd40c6f6636f593164851803841acb95ecdad661dcf0af0e08a",
+      "declared_size_bytes": 10240,
+      "observed_size_bytes": 10240,
+      "observed_sha256": "sha256:78525d1dbe829fd40c6f6636f593164851803841acb95ecdad661dcf0af0e08a",
+      "exact_match": true,
+      "runnable_under_no_network": false
+    }
+  ],
+  "source_archive_recovered": false
+}

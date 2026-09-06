@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "task_id": "lxml",
+  "oracle_bundle_digest": "sha256:79f0a099b74cb482085c80144be1ff1ebc41ce80cfe6c722c310a9a267b0c95d",
+  "bundle_inner_files": [
+    {
+      "path": "solve.sh",
+      "sha256": "sha256:2df3e33fc7b060618957c1e4693d1bb937cd02daf2cd9cda2ec1d41bcc09f547",
+      "size_bytes": 860
+    }
+  ],
+  "networking": {
+    "runtime_fetch_present": true,
+    "url": "https://github.com/lxml/lxml.git",
+    "operation": "git fetch --depth 1 origin <frozen revision>",
+    "source_archive_verification": "solve.sh generates and checks the archive after fetch"
+  },
+  "safety_decision": "not runnable under the required NoNetwork Oracle gate; no source-host authorization used"
+}

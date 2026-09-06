@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "task_id": "nock",
+  "oracle_bundle_digest": "sha256:06bfc02406c08733c17c9e10dbfc7c158e11098bfa619135b72b890b9e3baca3",
+  "oracle_bundle_files": ["package.json","package-lock.json","solve.sh"],
+  "solve_sha256": "sha256:3011d4fdde01f0573ce1c41e5311ccf0010fc67b7ba5a2f5ad766d8811ee2fd9",
+  "network_access_detected": true,
+  "network_lines": [
+    "git remote add origin https://github.com/nock/nock",
+    "git fetch --depth 1 origin <frozen revision>"
+  ],
+  "execution": "not-run",
+  "reason": "The Oracle payload performs a runtime GitHub fetch, which is forbidden by the current NoNetwork gate."
+}

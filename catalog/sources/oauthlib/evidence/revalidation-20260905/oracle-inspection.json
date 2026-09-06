@@ -1,0 +1,15 @@
+{
+  "task_id": "oauthlib",
+  "oracle_bundle_digest": "sha256:e1ceac0c33ca06aa7f6b2f9e30abd72e13e4eb120eaa3517190e8b712ef24639",
+  "outer_size_bytes": 10240,
+  "payload_files": ["solve.sh"],
+  "solve_script_sha256": "sha256:af945bd64a81841c1e761c348470b21424769cf8a53411954135e19b2813676d",
+  "forbidden_runtime_operations": [
+    "git clone --filter=blob:none --no-checkout https://github.com/oauthlib/oauthlib",
+    "git -C ... fetch --no-tags origin 40b0ab56da3682c2484a4b78bbff309f8025d950"
+  ],
+  "source_archive_constant": "sha256:7d459f401eb8595ad42c7a77edfb0ee17b67acf27213812d1c13a1ed505d7c2b",
+  "network_policy": "no-network",
+  "safe_to_execute": false,
+  "reason": "The bundle has no embedded source payload and its only solve path performs a forbidden runtime GitHub fetch."
+}

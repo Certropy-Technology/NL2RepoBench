@@ -1,0 +1,54 @@
+{
+  "schema_version": "1.0",
+  "task_id": "marshmallow",
+  "source_digest": "sha256:6b8a6087f0d7c1c5999a96beb03c35b3e4dac0be15bfa1da3a95b78d0b10f0e1",
+  "checked_at": "2026-09-06T18:00:00Z",
+  "network_policy": "no-network",
+  "declared_private_artifacts": [
+    {
+      "name": "dependencies.lock_artifact",
+      "digest": "sha256:bc408863839162492d8a79745b9b43d824f7f3f02624578d1a01a2ef200085fe",
+      "size_bytes": 381,
+      "cas_path": ".nl2repo/artifacts/private/sha256/bc/bc408863839162492d8a79745b9b43d824f7f3f02624578d1a01a2ef200085fe",
+      "exists": false
+    },
+    {
+      "name": "verifier.bundle",
+      "digest": "sha256:92658c9384b100fe31012387e6f6a30723e060409b98a924d612a7509ee896c2",
+      "size_bytes": 30720,
+      "cas_path": ".nl2repo/artifacts/private/sha256/92/92658c9384b100fe31012387e6f6a30723e060409b98a924d612a7509ee896c2",
+      "exists": false
+    },
+    {
+      "name": "oracle_bundle",
+      "digest": "sha256:aa7501c75af112c83d666772e5e63b25d1b7c8b7bef06ce0fd615ac580180e1b",
+      "size_bytes": 1454080,
+      "cas_path": ".nl2repo/artifacts/private/sha256/aa/aa7501c75af112c83d666772e5e63b25d1b7c8b7bef06ce0fd615ac580180e1b",
+      "exists": false
+    }
+  ],
+  "local_recovery": {
+    "generated_projection_source_tar": {
+      "path": "catalog/tasks/marshmallow/solution/source.tar",
+      "size_bytes": 1443840,
+      "sha256": "sha256:a5cb26f6b0028ddbcf39d6cf2733aa1889ec4e1eb853600e1080aa747034ee17",
+      "expected_source_archive_sha256": "sha256:c531024b6b6cf15be06fd2205f9304265524a3b1958e3e6c09793bc9b9f35728",
+      "accepted": false,
+      "reason": "The bytes do not match the frozen source archive digest; the tar also contains generated __pycache__ entries and cannot prove an exact immutable source archive."
+    },
+    "bounded_search": {
+      "scopes": [
+        ".nl2repo",
+        "catalog/tasks/marshmallow",
+        "catalog/sources/marshmallow",
+        "local authoring handoff records"
+      ],
+      "matching_source_archive_found": false,
+      "matching_private_artifacts_found": false,
+      "matching_verifier_bundle_found": false,
+      "matching_oracle_bundle_found": false
+    }
+  },
+  "status": "artifact-blocked",
+  "next_step": "Recover or register exact hash-verified lock, verifier, and Oracle bundles and prove the source archive matches the frozen revision before compiling a new final manifest."
+}

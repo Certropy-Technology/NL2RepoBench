@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "task_id": "marshmallow",
+  "source_digest": "sha256:6b8a6087f0d7c1c5999a96beb03c35b3e4dac0be15bfa1da3a95b78d0b10f0e1",
+  "oracle_bundle": {
+    "digest": "sha256:aa7501c75af112c83d666772e5e63b25d1b7c8b7bef06ce0fd615ac580180e1b",
+    "size_bytes": 1454080,
+    "cas_present": false,
+    "runtime_inspection": "not possible without the declared private bundle"
+  },
+  "projection_payload": {
+    "path": "catalog/tasks/marshmallow/solution/source.tar",
+    "sha256": "sha256:a5cb26f6b0028ddbcf39d6cf2733aa1889ec4e1eb853600e1080aa747034ee17",
+    "frozen_source_digest": "sha256:c531024b6b6cf15be06fd2205f9304265524a3b1958e3e6c09793bc9b9f35728",
+    "runtime_fetch_allowed": false,
+    "accepted_for_oracle": false,
+    "reason": "The available projection payload is not byte-identical to the frozen source archive and includes generated cache files."
+  },
+  "execution": {
+    "oracle_run": "not-run",
+    "empty_control": "not-run",
+    "stub_control": "not-run",
+    "forgery_control": "not-run",
+    "offline_control": "not-run",
+    "reason": "A fresh complete matrix cannot be run or accepted while the declared verifier/Oracle bundles and exact source payload are unavailable."
+  },
+  "status": "artifact-blocked"
+}

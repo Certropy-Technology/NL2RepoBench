@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "task_id": "nock",
+  "source_digest": "sha256:43c6427c5a6414bb351f780f9cb7716948722c9f36aa51fa319e7055aa96de61",
+  "artifacts": [
+    {"name":"oracle_bundle","digest":"sha256:06bfc02406c08733c17c9e10dbfc7c158e11098bfa619135b72b890b9e3baca3","size_bytes":10240,"verified":true},
+    {"name":"candidate_dependencies","digest":"sha256:ba76c029f45f2c6077bd6f9e5693b16fafacc7c8852ffac41c2f228d0f8b9bae","size_bytes":1863680,"verified":true},
+    {"name":"commands","digest":"sha256:ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a","size_bytes":176,"verified":true},
+    {"name":"test_bundle","digest":"sha256:582caa23f4e24f2ca36d3447de8b720aec74cc5e0f6079f9b56909b0aaf801a7","size_bytes":30720,"verified":true}
+  ],
+  "method": "Each private CAS object was checked offline by exact byte size and SHA-256 against task.toml."
+}

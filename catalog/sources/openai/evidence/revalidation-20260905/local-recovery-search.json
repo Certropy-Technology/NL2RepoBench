@@ -1,0 +1,58 @@
+{
+  "schema_version": "1.0",
+  "task_id": "openai",
+  "revalidation": "instruction-migration-20260905",
+  "target": {
+    "revision": "555ac487f450f24928d859478ea2f41b58906206",
+    "source_archive_sha256": "sha256:3fee3c1832ceafd565161d3a0c42555823c7bdb7ca20dc2f217e8f7437365720",
+    "source_archive_size_bytes": 14653440
+  },
+  "network_authorization": "none",
+  "network_used": false,
+  "searches": [
+    {
+      "scope": "catalog/tasks/openai/solution",
+      "method": "inspect generated solution and exact archive-size candidates",
+      "result": "Generated solution contains only solve.sh; no source.tar or oracle-package payload was found.",
+      "status": "not_found"
+    },
+    {
+      "scope": "catalog/sources/openai and task-local evidence",
+      "method": "inspect all files and search the frozen revision/archive digest",
+      "result": "No source archive, embedded Oracle payload, or matching archive bytes are tracked under the task source.",
+      "status": "not_found"
+    },
+    {
+      "scope": "parent private CAS",
+      "method": "exact digest lookup and tar inventory",
+      "result": "All three declared artifacts are present and hash-valid; the Oracle tar inventory is only solve.sh.",
+      "status": "insufficient_payload"
+    },
+    {
+      "scope": "retained authoring state and historical logs",
+      "method": "inspect task claim, bounded authoring paths, and task-specific logs",
+      "result": "Historical state records the original worktree and an online-fetch claim, but does not retain the source archive bytes.",
+      "status": "insufficient_payload"
+    },
+    {
+      "scope": "local Git object stores",
+      "method": "exact frozen commit lookup",
+      "result": "Commit 555ac487f450f24928d859478ea2f41b58906206 is absent from the checked repositories; no local archive can be proven from that revision.",
+      "status": "not_found"
+    },
+    {
+      "scope": "local package/module caches",
+      "method": "inspect installed openai package trees and bounded archive candidates",
+      "result": "A newer installed openai package tree exists in an authoring environment, but it has no frozen-commit proof and is not equivalent to the declared Git archive. The broad historical filesystem candidate scan exceeded its bound and is not treated as proof of absence.",
+      "status": "not_proven"
+    }
+  ],
+  "replacement": {
+    "constructed": false,
+    "reason": "No local bytes prove both the frozen revision and the declared source archive digest.",
+    "temporary_path": null,
+    "outer_sha256": null,
+    "inner_inventory": []
+  },
+  "next_step": "Recover the exact source archive with the declared SHA-256 from a trusted retained source or a local Git object store proving the frozen commit. Then register an offline Oracle bundle, compile twice, and rerun Oracle plus the full supported control matrix against the new manifest."
+}

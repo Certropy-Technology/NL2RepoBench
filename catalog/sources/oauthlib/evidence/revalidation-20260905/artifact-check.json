@@ -1,0 +1,30 @@
+{
+  "task_id": "oauthlib",
+  "source_digest_from_queue": "sha256:849fa31fb29d2cde54e217eef5711ce62eea0a55105d42495f5c31e686bb",
+  "catalog_source_archive_digest": "sha256:7d459f401eb8595ad42c7a77edfb0ee17b67acf27213812d1c13a1ed505d7c2b",
+  "artifacts": {
+    "dependency_lock": {
+      "digest": "sha256:a55530deb66485e0d12a067aa6b80a0a92b51f0a5b79c9097b80e5a8ee1cbb11",
+      "size_bytes": 440,
+      "present": true,
+      "verified": true
+    },
+    "verifier_bundle": {
+      "digest": "sha256:2acd29360c533e8b07384a1381f6aa9d636316440d647e22a08ff0fedf5e994b",
+      "size_bytes": 20480,
+      "present": true,
+      "verified": true,
+      "inventory": ["run.py", "scenarios.py"]
+    },
+    "oracle_bundle": {
+      "digest": "sha256:e1ceac0c33ca06aa7f6b2f9e30abd72e13e4eb120eaa3517190e8b712ef24639",
+      "size_bytes": 10240,
+      "present": true,
+      "verified": true,
+      "inventory": ["solve.sh"],
+      "installable_source_payload_present": false
+    }
+  },
+  "network": "no-network",
+  "result": "oracle source payload unavailable"
+}

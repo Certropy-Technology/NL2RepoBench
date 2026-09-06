@@ -1,0 +1,45 @@
+{
+  "schema_version": "revalidation-artifact-verification-v1",
+  "task_id": "node-fetch",
+  "checked_at": "2026-09-07",
+  "artifact_root": "parent-private-CAS/private/sha256",
+  "artifacts": [
+    {
+      "field": "dependencies.artifact",
+      "digest": "sha256:f1c2e6234da6efecf93be9009e1e7edc43ba7f4fc0512fcf6a19b2ad318cabfc",
+      "declared_size_bytes": 2058240,
+      "actual_size_bytes": 2058240,
+      "actual_sha256": "sha256:f1c2e6234da6efecf93be9009e1e7edc43ba7f4fc0512fcf6a19b2ad318cabfc",
+      "match": true
+    },
+    {
+      "field": "tests.commands_artifact",
+      "digest": "sha256:5465aa94f8e12c6f15463eccf5ee259d7561f21bad115fc8f47b1fd7b41ee3b1",
+      "declared_size_bytes": 10240,
+      "actual_size_bytes": 10240,
+      "actual_sha256": "sha256:5465aa94f8e12c6f15463eccf5ee259d7561f21bad115fc8f47b1fd7b41ee3b1",
+      "match": true
+    },
+    {
+      "field": "tests.test_bundle",
+      "digest": "sha256:57f2177f723ca58dca5a0a0e8ee8f1e7bae931d5fba2b42aa4de00dfc217d0cc",
+      "declared_size_bytes": 20480,
+      "actual_size_bytes": 20480,
+      "actual_sha256": "sha256:57f2177f723ca58dca5a0a0e8ee8f1e7bae931d5fba2b42aa4de00dfc217d0cc",
+      "match": true
+    },
+    {
+      "field": "oracle_bundle",
+      "digest": "sha256:f3c3906f8159a3ec78e61ea9e96ff4836334295c9fac38a18d476f1371581f85",
+      "declared_size_bytes": 2416640,
+      "actual_size_bytes": 2416640,
+      "actual_sha256": "sha256:f3c3906f8159a3ec78e61ea9e96ff4836334295c9fac38a18d476f1371581f85",
+      "match": true,
+      "source_archive_sha256": "sha256:c54ad1e222b0dab09410542e9142b5374a63a72b2e5cc8e931b147559628265c",
+      "source_archive_matches_projection": true,
+      "source_archive_members": 64,
+      "solve_script_network_commands": false
+    }
+  ],
+  "all_declared_artifacts_match": true
+}

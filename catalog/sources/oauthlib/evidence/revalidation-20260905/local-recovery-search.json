@@ -1,0 +1,38 @@
+{
+  "task_id": "oauthlib",
+  "search_order": [
+    "current generated projection",
+    "task-local evidence and source assets",
+    "private CAS",
+    "retained authoring archives and run trees",
+    "historical handoff artifacts",
+    "local package/module caches",
+    "Git history and tracked objects"
+  ],
+  "commands": [
+    {
+      "command": "tar -tf .nl2repo/artifacts/private/sha256/e1/e1ceac0c33ca06aa7f6b2f9e30abd72e13e4eb120eaa3517190e8b712ef24639",
+      "result": "passed",
+      "summary": "The exact outer Oracle bundle contains only solve.sh; it contains no source.tar or oracle-package payload."
+    },
+    {
+      "command": "find catalog/tasks/oauthlib -type f -name source.tar",
+      "result": "passed",
+      "summary": "No source archive exists in the generated projection."
+    },
+    {
+      "command": "find local-artifact-root -type f -name source.tar -size 1890k; find historical-handoff-root -type f -name source.tar -size 1890k",
+      "result": "passed",
+      "summary": "No local candidate matched the frozen 1,935,360-byte archive size; no candidate was available for hash verification."
+    },
+    {
+      "command": "git log --all --name-only -- catalog/sources/oauthlib catalog/tasks/oauthlib",
+      "result": "passed",
+      "summary": "History contains source metadata and solve.sh only; no tracked source archive payload."
+    }
+  ],
+  "exact_archive_recovered": false,
+  "source_authority": "known",
+  "network": "no-network",
+  "next_step": "Parent must recover or independently register an exact archive-matching local Oracle payload before compiling and rerunning the complete matrix."
+}

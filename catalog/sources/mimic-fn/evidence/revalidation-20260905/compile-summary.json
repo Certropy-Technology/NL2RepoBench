@@ -1,0 +1,9 @@
+{
+  "schema_version":"1.0",
+  "task_id":"mimic-fn",
+  "commands":[
+    {"command":"uv run nl2repo harbor compile catalog/sources/mimic-fn --output .nl2repo/mimic-fn-revalidation-20260906/compile-a --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private","exit_code":0,"result":"passed"},
+    {"command":"uv run nl2repo harbor compile catalog/sources/mimic-fn --output .nl2repo/mimic-fn-revalidation-20260906/compile-b --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private","exit_code":0,"result":"passed"}
+  ],
+  "comparison":{"result":"passed","method":"sha256 of every file keyed by relative path after removing output-root prefix","file_count":73}
+}

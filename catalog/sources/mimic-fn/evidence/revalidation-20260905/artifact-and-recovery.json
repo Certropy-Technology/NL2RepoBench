@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "task_id": "mimic-fn",
+  "queue_source_digest": "sha256:3373bd50f0a3ec7dcd439ab45313871631dd24d49d3b1d8761232b572b02988c",
+  "declared_source_archive_digest": "sha256:52b0b045635fe457322cea36d04dcaa0b4944d4ac21d07448bb44f93dc3e8101",
+  "private_artifacts": [
+    {"digest":"sha256:f8634a4808d9e4d5271b571f9cb8a78aadac348b8b095674c11feabc6825c96f","size_bytes":10240,"media_type":"application/vnd.nl2repobench.npm-bundle+tar","exact_local_match":true},
+    {"digest":"sha256:10e70a89b271a2cd71d8dbaa6848530c6550ac4d87e65ae87d7332265e5eedd9","size_bytes":10240,"media_type":"application/vnd.nl2repobench.node-commands+tar","exact_local_match":true},
+    {"digest":"sha256:487e8230ccaf181078561c8e5344a7358b2936af597933109439cfe9e27283b6","size_bytes":20480,"media_type":"application/vnd.nl2repobench.node-tests+tar","exact_local_match":true},
+    {"digest":"sha256:cd717f7e4a44f91cedbe7bf26d077113d4df8ec45e6af0a79efe79cb209e8951","size_bytes":10240,"media_type":"application/vnd.nl2repobench.oracle+tar","exact_local_match":true}
+  ],
+  "oracle_bundle_inventory": ["./solve.sh"],
+  "oracle_source_fetch": {"present":true,"mechanism":"git fetch --depth=1 origin <frozen revision>","forbidden_under_current_policy":true},
+  "local_recovery_search": {
+    "searched": ["current catalog/tasks/mimic-fn", "retained final Harbor workspace", "private CAS", "bounded local archive paths", "local Git object database", "historical local mimic-fn projections"],
+    "exact_source_archive_match": false,
+    "reason": "The retained workspace contains generated package files but not the frozen git archive; the local checkout does not contain revision 3ee1e62d926ac0a5cf631815734d8e06a9381d72. No local archive matched the declared source digest."
+  },
+  "compile": {
+    "toolchain":"toolchain.node.lock.toml",
+    "compile_a":"passed",
+    "compile_b":"passed",
+    "relative_tree_byte_identical":true,
+    "compiled_file_count":73,
+    "bundle_manifest_sha256":"sha256:0097f4c6cfcbec878572c15cb947ce94e29fb8bc326693965228c8326e9b31db",
+    "canonical_manifest_digest":"sha256:d88ada8302b1b10b57e67823510e743e5c8e982ffb0315521089ec8fa70cf4e1"
+  }
+}

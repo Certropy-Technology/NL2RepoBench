@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "task_id": "msgspec",
+  "queue_source_digest": "sha256:a99baa922e8842fce5f95798b228271f9089bd3e6526b616e2239dd8161ee1bb",
+  "searches": [
+    {
+      "location": "catalog/tasks/msgspec",
+      "result": "The checked-in projection contains solution/solve.sh but no source.tar, distribution archive, or source tree payload."
+    },
+    {
+      "location": "parent-private-CAS",
+      "result": "The declared dependency-lock, verifier, and Oracle objects exist and match size and SHA-256; the Oracle object contains only solve.sh."
+    },
+    {
+      "location": "task-local evidence, retained authoring state, and bounded local archive/cache search",
+      "result": "No exact frozen source archive or immutable local Git object proving both revision f51f378335b01dc0026dc6553a0b9e1915a8edae and archive digest sha256:0583e9ecf3d8f3f233722ba02361894e01f4bdc470e8fbe74d797ae758004390 was found."
+    }
+  ],
+  "replacement_bundle": null,
+  "next_step": "Parent must recover or supply a trusted exact source payload, build an offline Oracle bundle, compile twice with the locked toolchain, and run a fresh Oracle/control matrix."
+}

@@ -1,0 +1,83 @@
+{
+  "schema_version": "1.0",
+  "task_id": "mdast-util-find-and-replace",
+  "queue_source_digest": "sha256:722aaea920d6bc96b8cd1ae17321909fef2592acc6bdbd075120e8318f373736",
+  "validated_source_digest": "sha256:722aaea920d6bc96b8cd1ae17321909fef2592acc6bdbd075120e8318f373736",
+  "network_used": false,
+  "artifact_root": "<parent-private-cas>",
+  "artifacts": [
+    {
+      "kind": "dependency-bundle",
+      "digest": "sha256:cde2303142b36ec9b1f3f5a40973748bbca59c70e5c1808a6da19a8cf52f2767",
+      "declared_size_bytes": 368640,
+      "actual_size_bytes": 368640,
+      "sha256_valid": true
+    },
+    {
+      "kind": "commands-bundle",
+      "digest": "sha256:ecade7e4a7652dc33367d2c5ce2971815591d9ae5bc4482e009eb1fa3af6552a",
+      "declared_size_bytes": 176,
+      "actual_size_bytes": 176,
+      "sha256_valid": true
+    },
+    {
+      "kind": "test-bundle",
+      "digest": "sha256:bb83e1b66bbd37c370e415c68d33262795cc92529845603b1cb0b5ca40d26c36",
+      "declared_size_bytes": 40960,
+      "actual_size_bytes": 40960,
+      "sha256_valid": true
+    },
+    {
+      "kind": "oracle-bundle",
+      "digest": "sha256:729739e81da7f099ce0ed2170fe184deb56f4bae2a8114fc554e42b812c44cb1",
+      "declared_size_bytes": 20480,
+      "actual_size_bytes": 20480,
+      "sha256_valid": true,
+      "inner_files": [
+        {
+          "path": "index.d.ts",
+          "size_bytes": 552
+        },
+        {
+          "path": "index.d.ts.map",
+          "size_bytes": 305
+        },
+        {
+          "path": "lib/index.d.ts",
+          "size_bytes": 2158
+        },
+        {
+          "path": "lib/index.d.ts.map",
+          "size_bytes": 696
+        },
+        {
+          "path": "normalize-package.mjs",
+          "size_bytes": 924
+        },
+        {
+          "path": "package-lock.json",
+          "size_bytes": 2519
+        },
+        {
+          "path": "solve.sh",
+          "size_bytes": 1046
+        }
+      ],
+      "contains_source_archive": false
+    }
+  ],
+  "commands": [
+    {
+      "command": "uv run nl2repo task validate-source catalog/sources/mdast-util-find-and-replace",
+      "exit_code": 0
+    },
+    {
+      "command": "sha256sum over the four declared private CAS artifacts with exact size checks",
+      "exit_code": 0
+    },
+    {
+      "command": "tar -tvf the declared Oracle bundle",
+      "exit_code": 0
+    }
+  ]
+}

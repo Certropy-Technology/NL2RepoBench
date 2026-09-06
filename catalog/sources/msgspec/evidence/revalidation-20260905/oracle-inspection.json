@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "task_id": "msgspec",
+  "oracle_bundle_digest": "sha256:a3250a439e62ba3cda3b830cb2469245f9052d3f00338cf7cddf666f970a15d4",
+  "oracle_bundle_members": [
+    {"path":"solve.sh","size_bytes":498,"sha256":"sha256:16d66d65387bddcc199db1018621858d2d111b74b38a707c5e237de296b4e10a"}
+  ],
+  "source_payload_present": false,
+  "runtime_behavior": "solve.sh initializes a temporary Git repository, adds https://github.com/jcrist/msgspec, fetches the frozen revision, archives it, and copies the checkout into /workspace.",
+  "network_policy": "no-network",
+  "result": "runtime-source-fetch-forbidden",
+  "required_remediation": "Recover the exact frozen source archive from a trusted local payload, then construct and independently verify an offline Oracle bundle before compile and Harbor execution."
+}

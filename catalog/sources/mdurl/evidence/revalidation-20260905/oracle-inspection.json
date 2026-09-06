@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "task_id": "mdurl",
+  "declared_oracle_bundle_sha256": "sha256:78525d1dbe829fd40c6f6636f593164851803841acb95ecdad661dcf0af0e08a",
+  "outer_size_bytes": 10240,
+  "members": [
+    {
+      "path": "solve.sh",
+      "size_bytes": 968,
+      "sha256": "sha256:89ad82826edd4fe65f86dffc56f7eb04affee72feb766e9789b1531c5fca61fb"
+    }
+  ],
+  "source_payload_present": false,
+  "runtime_source_fetch_detected": true,
+  "network_revalidation_allowed": false,
+  "decision": "do-not-run",
+  "reason": "solve.sh clones GitHub and fetches the frozen revision at runtime; no exact local source archive was recovered."
+}

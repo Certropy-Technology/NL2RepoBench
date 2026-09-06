@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0",
+  "task_id": "mdast-util-phrasing",
+  "result": "all-declared-artifacts-match",
+  "artifact_root": "parent-private-CAS (offline verified)",
+  "artifacts": [
+    {
+      "role": "dependency_bundle",
+      "digest": "sha256:4e853fb5f3465a9f302a37286aed17c260e3b13e7ab2301887db779e8d333bcb",
+      "size_bytes": 276480,
+      "actual_size_bytes": 276480,
+      "sha256_match": true
+    },
+    {
+      "role": "commands_bundle",
+      "digest": "sha256:41d2aaf847aac1154dc6dafc98cc48273f4b1ac59b05c000c0f42ca4af5836e0",
+      "size_bytes": 10240,
+      "actual_size_bytes": 10240,
+      "sha256_match": true
+    },
+    {
+      "role": "test_bundle",
+      "digest": "sha256:4da2121bc1639031f31c2df6d06e835f66a8cf57b58295f7b25ab6bf019450d2",
+      "size_bytes": 20480,
+      "actual_size_bytes": 20480,
+      "sha256_match": true
+    },
+    {
+      "role": "oracle_bundle",
+      "digest": "sha256:e80f7a51ddf561aa6f531e7a591274ee783b627f0b52aeaa5f44c0512efdbbc7",
+      "size_bytes": 10240,
+      "actual_size_bytes": 10240,
+      "sha256_match": true
+    }
+  ]
+}

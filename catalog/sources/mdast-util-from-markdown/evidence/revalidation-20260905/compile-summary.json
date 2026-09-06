@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0",
+  "task_id": "mdast-util-from-markdown",
+  "source_revision": "f94143765912425fb94ed6518d3a3d1c54f994d4",
+  "source_digest": "sha256:515825acb5478f8bf59c32403e5febc499a100ed0b1183f4596e8be2f38b5a19",
+  "instruction_source_digest": "sha256:7ef8897ef9cc4e31d29c24829163c02b9a8bca16ec1f7290099acf2875addfc7",
+  "runtime": {
+    "language": "node",
+    "version": "24.19.0",
+    "package_manager": "npm",
+    "package_manager_version": "11.17.0",
+    "network_mode": "no-network"
+  },
+  "compile_command": "uv run nl2repo harbor compile catalog/sources/mdast-util-from-markdown --output <task-local-compile> --toolchain toolchain.node.lock.toml --artifact-root <private-CAS> --allow-private",
+  "allow_incomplete": false,
+  "bundle_manifest": {
+    "path": "bundle-manifest.json",
+    "raw_sha256": "sha256:242037a8d2af8dec2f26c30b72135918f0d92629c69712086edb2c2868faad21",
+    "canonical_manifest_digest": "sha256:4d5db203b6df91feaeafc669c4320cbf5ff63195363fb0d1d5abb1daa99b0020",
+    "file_count": 362
+  },
+  "repeat_compile": {
+    "first_file_count": 363,
+    "second_file_count": 363,
+    "byte_identical": true,
+    "manifest_byte_identical": true
+  },
+  "path_leak_scan": {
+    "excluded_npm_cache_metadata": true,
+    "patterns": ["absolute authoring path", "worker worktree path", "live authoring path", "private artifact URI"],
+    "matches": []
+  }
+}

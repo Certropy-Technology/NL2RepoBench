@@ -1,0 +1,52 @@
+{
+  "schema_version": "1.0",
+  "task_id": "mdurl",
+  "queue_source_digest": "sha256:a083cb9fcbc97480adb8c99fe023bfbf0f51f2ceac55bb918cdcc3895e429c02",
+  "declared_upstream_revision": "524d2edbbcb8bb48301ba716c7482827bcabb281",
+  "declared_source_archive": {
+    "sha256": "sha256:f0caa116deb9e08c885a2ae9df766a05b9a4974ea684d298fbaed0f2d0884595",
+    "size_bytes": 81920
+  },
+  "declared_private_artifacts": [
+    {
+      "kind": "dependency-lock",
+      "sha256": "sha256:4b02b4a26d9cc1cf2ea6dbbe11fdeb65ce9bec6372e2bab1343a7f59064a1b1f",
+      "size_bytes": 176,
+      "exact_cas_match": true
+    },
+    {
+      "kind": "verifier-bundle",
+      "sha256": "sha256:b922945d177720a6b319b2ffeca15480ee103e3c3a248df59c8ebd1f0290e8b8",
+      "size_bytes": 30720,
+      "exact_cas_match": true
+    },
+    {
+      "kind": "oracle-bundle",
+      "sha256": "sha256:78525d1dbe829fd40c6f6636f593164851803841acb95ecdad661dcf0af0e08a",
+      "size_bytes": 10240,
+      "exact_cas_match": true,
+      "payload_assessment": "fetch-only solve.sh; no source archive"
+    }
+  ],
+  "searches": [
+    {
+      "location": "catalog/tasks/mdurl",
+      "result": "projection contains generated runtime only; no source.tar"
+    },
+    {
+      "location": "retained historical authoring worktrees",
+      "result": "historical mdurl copies contain the same fetch-only solve.sh and installed package files, but no exact 81920-byte source archive"
+    },
+    {
+      "location": "git object database",
+      "result": "frozen upstream revision is not present in this checkout"
+    },
+    {
+      "location": "local package cache and installed mdurl distributions",
+      "result": "package modules are not acceptable substitutes for the declared upstream archive and cannot prove the frozen commit"
+    }
+  ],
+  "recovery_decision": "blocked-pending-trusted-source-archive",
+  "reason": "The only Oracle payload is network-fetching and no trusted local bytes prove the frozen upstream revision and archive digest.",
+  "next_step": "Recover an exact 81920-byte archive with sha256 f0caa116deb9e08c885a2ae9df766a05b9a4974ea684d298fbaed0f2d0884595, construct a replacement Oracle bundle, then have the parent independently audit/register it and rerun the full matrix."
+}

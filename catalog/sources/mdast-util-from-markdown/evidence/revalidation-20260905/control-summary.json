@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "task_id": "mdast-util-from-markdown",
+  "bundle_manifest_digest": "sha256:4d5db203b6df91feaeafc669c4320cbf5ff63195363fb0d1d5abb1daa99b0020",
+  "run_policy": {"harbor_agent": "oracle", "network_mode": "no-network", "max_retries": 0},
+  "oracle": {"receipt": "oracle-result.json", "grading": "oracle-grading.json", "network": "oracle-network.json", "valid": true, "collected": 21, "passed": 21, "failed": 0, "reward": 1.0, "public_network_available": false},
+  "controls": {
+    "empty": {"grading": "empty-grading.json", "network": "empty-network.json", "valid": true, "collected": 0, "passed": 0, "failed": 0, "reward": 0.0, "failure_reason": "candidate-installation-failed"},
+    "stub": {"grading": "stub-grading.json", "network": "stub-network.json", "valid": true, "collected": 21, "passed": 3, "failed": 18, "reward": 0.14285714285714285},
+    "forgery": {"grading": "forgery-grading.json", "network": "forgery-network.json", "valid": true, "collected": 21, "passed": 3, "failed": 18, "reward": 0.14285714285714285, "verifier_owned_reward": true},
+    "install-script": {"grading": "install-script-grading.json", "network": "install-script-network.json", "valid": true, "collected": 0, "passed": 0, "failed": 0, "reward": 0.0, "failure_reason": "candidate-installation-failed"},
+    "loader-hook": {"grading": "loader-hook-grading.json", "network": "loader-hook-network.json", "valid": true, "collected": 21, "passed": 3, "failed": 18, "reward": 0.14285714285714285},
+    "hang": {"grading": "hang-grading.json", "network": "hang-network.json", "valid": true, "collected": 0, "passed": 0, "failed": 0, "reward": 0.0, "failure_reason": "candidate-call-failed"},
+    "timeout": {"grading": "timeout-grading.json", "network": "timeout-network.json", "valid": true, "collected": 0, "passed": 0, "failed": 0, "reward": 0.0, "failure_reason": "candidate-call-failed"},
+    "offline": {"grading": "offline-grading.json", "network": "offline-network.json", "valid": true, "collected": 21, "passed": 1, "failed": 20, "reward": 0.047619047619047616}
+  },
+  "network_assertion": "Every copied network receipt reports public_network_available=false and both external probes false.",
+  "control_completion": "All eight task-local control scripts were prepared and executed; low scores and bounded timeout/install failures are expected adversarial outcomes, not infrastructure failures."
+}

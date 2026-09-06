@@ -1,0 +1,66 @@
+{
+  "schema_version": "1.0",
+  "task_id": "openai",
+  "source_digest": "sha256:d51d1fbb6f05f0c35b5a46eb0b25c7d6532c9693f799bc1bf75003f350d1e451",
+  "commands": [
+    {
+      "command": "uv run nl2repo task validate-source catalog/sources/openai",
+      "exit_code": 0,
+      "result": "passed before mutation"
+    },
+    {
+      "command": "uv run python scripts/validate_instruction_quality.py",
+      "exit_code": 0,
+      "result": "instruction quality passed"
+    },
+    {
+      "command": "uv run nl2repo task lint-network",
+      "exit_code": 0,
+      "result": "no openai findings and zero openai errors"
+    },
+    {
+      "command": "uv run nl2repo task lint-network --include-generated",
+      "exit_code": 0,
+      "result": "no openai errors; one unrelated repository-wide historical error was reported"
+    },
+    {
+      "command": "bash -n catalog/sources/openai/harbor/controls/*.sh",
+      "exit_code": 0,
+      "result": "shell syntax passed"
+    },
+    {
+      "command": "python3 -m json.tool <task-local JSON files>",
+      "exit_code": 0,
+      "result": "all openai JSON files parsed"
+    },
+    {
+      "command": "python3 -c 'tomllib.load(...)'",
+      "exit_code": 0,
+      "result": "task.toml parsed"
+    },
+    {
+      "command": "git diff --check",
+      "exit_code": 0,
+      "result": "passed"
+    },
+    {
+      "command": "uv run ruff check src tests scripts",
+      "exit_code": 1,
+      "result": "pre-existing findings in scripts/build_instruction_revalidation_queue.py and scripts/validate_instruction_quality.py; no task-local Python was changed"
+    },
+    {
+      "command": "uv run pytest -q -p no:cacheprovider tests/test_no_vendor_install.py",
+      "exit_code": 1,
+      "result": "test passed, but repository coverage fail-under wrapper returned 1 with 0 percent collected"
+    }
+  ],
+  "compile": {
+    "started": false,
+    "reason": "No exact offline source archive or frozen Git commit was available; the Oracle bundle requires forbidden runtime GitHub fetch."
+  },
+  "harbor": {
+    "started": false,
+    "oracle": null,
+    "controls": null
+  }
+}

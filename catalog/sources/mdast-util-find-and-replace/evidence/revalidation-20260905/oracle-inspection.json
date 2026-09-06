@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "task_id": "mdast-util-find-and-replace",
+  "oracle_bundle_digest": "sha256:729739e81da7f099ce0ed2170fe184deb56f4bae2a8114fc554e42b812c44cb1",
+  "revision": "fd73ef856ab4f7b6326e3255aea36f439b75e2d5",
+  "required_source_archive_sha256": "sha256:be821926713dee556bca6f0aa2cff873a8fef69d142f438327e84f08cf2d57d9",
+  "network_used": false,
+  "solve_script": {
+    "sha256": "sha256:606bb2a367dae9b94ec06f097e8ce9fbc2ff6ae3e02fa3c611c07a6107ed6839",
+    "size_bytes": 1046,
+    "runtime_source_fetch": true,
+    "source_host": "github.com"
+  },
+  "inspection": [
+    "The Oracle script initializes a temporary Git repository, adds the upstream GitHub remote, fetches the frozen revision, creates an unprefixed Git archive, and verifies the archive digest.",
+    "The hash-valid Oracle bundle contains no source.tar, source archive, Git object database, or installable source tree.",
+    "The script therefore cannot run under the current revalidation NoNetwork contract without an offline replacement payload."
+  ],
+  "harbor_run_started": false,
+  "source_host_authorized": false
+}

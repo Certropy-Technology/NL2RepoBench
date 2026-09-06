@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0",
+  "task_id": "lxml",
+  "source_revision": "36f11f9d5edca7e85d20102fa253c1dad42929ee",
+  "required_archive_sha256": "sha256:cac1e83f3fa07b77097da8f98cb58bd4b2bc3e6b5a55eb7b6c942ed1b0e66d29",
+  "searches": [
+    {
+      "location_class": "catalog/tasks generated projections",
+      "result": "no exact lxml source archive; generated projection contains only solve.sh and runtime files"
+    },
+    {
+      "location_class": "private CAS and task-local revalidation artifacts",
+      "result": "no source archive object matching the required digest"
+    },
+    {
+      "location_class": "retained authoring worktrees and handoff artifacts",
+      "result": "only copies of task metadata, generated runtime, and historical evidence; no matching archive bytes"
+    },
+    {
+      "location_class": "bounded local archive scan",
+      "result": "no file hashed to the required source archive digest"
+    }
+  ],
+  "accepted_recovery_payload": null,
+  "conclusion": "exact source archive/replacement cannot be proven from trusted local bytes; do not authorize runtime source fetch"
+}

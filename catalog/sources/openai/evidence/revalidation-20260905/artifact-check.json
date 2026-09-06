@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0",
+  "task_id": "openai",
+  "revalidation": "instruction-migration-20260905",
+  "queue_source_digest": "sha256:d51d1fbb6f05f0c35b5a46eb0b25c7d6532c9693f799bc1bf75003f350d1e451",
+  "network_used": false,
+  "artifact_root": "parent-private-cas",
+  "artifacts": [
+    {
+      "role": "dependency-lock",
+      "digest": "sha256:de1b15d7edd089e220dade99d3893c148aac8640a75e34fbba649cf3de3a30fb",
+      "declared_size_bytes": 24906,
+      "actual_size_bytes": 24906,
+      "sha256_match": true
+    },
+    {
+      "role": "verifier-bundle",
+      "digest": "sha256:db75123fd565cec1e8dfee99876d74545e16a72e23bab045fd2b24a42f415767",
+      "declared_size_bytes": 20480,
+      "actual_size_bytes": 20480,
+      "sha256_match": true,
+      "members": [
+        {
+          "path": "run.py",
+          "size_bytes": 11222,
+          "sha256": "sha256:a50c90fb500f83be0b0de7fbdc25dbdf3f21a78214cb5f53c2c1f81ba78e6bfe"
+        }
+      ]
+    },
+    {
+      "role": "oracle-bundle",
+      "digest": "sha256:491ad31932867232eeb184b3a1662a7f4d770962588007a0e657fdb57aa7f988",
+      "declared_size_bytes": 10240,
+      "actual_size_bytes": 10240,
+      "sha256_match": true,
+      "members": [
+        {
+          "path": "solve.sh",
+          "size_bytes": 706,
+          "sha256": "sha256:db390c3e7bbb800a13af3dac785a19d55e1828a31bd207db67e4b4d1438ee6a0"
+        }
+      ],
+      "source_archive_present": false
+    }
+  ],
+  "status": "verified-but-oracle-payload-insufficient"
+}

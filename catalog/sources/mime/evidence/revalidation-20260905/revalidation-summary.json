@@ -1,0 +1,63 @@
+{
+  "schema_version": "1.0",
+  "task_id": "mime",
+  "task_version": "2.0.0",
+  "source_digest": "sha256:2538fa5b2bbd69faeb9bd87058227df1c1fc9205d9cef1d57b73201fc488f0e7",
+  "queue_source_digest": "sha256:2538fa5b2bbd69faeb9bd87058227df1c1fc9205d9cef1d57b73201fc488f0e7",
+  "mode": "validate",
+  "status": "replacement-proposal-pending",
+  "lifecycle_changed": false,
+  "production_evidence_changed": false,
+  "local_recovery": {
+    "source_archive": {
+      "origin": "checked-in generated task and current private Oracle CAS",
+      "relative_path": "catalog/tasks/mime/solution/oracle-source.tar",
+      "size_bytes": 266240,
+      "sha256": "sha256:8f8e826ccafe064ca20139c47422291210c5bf8998fbe32f9ef3d9706d589199",
+      "revision": "f2d1243892616c0ec1031eb5132d56e43159ecc0",
+      "verified": true
+    },
+    "private_artifacts_verified": [
+      {"name":"dependencies.artifact","size_bytes":491,"sha256":"sha256:3705c717f949ecf4d9cc50887c243f0996d903b0cafa636c61ffad50992de13d"},
+      {"name":"tests.commands_artifact","size_bytes":277,"sha256":"sha256:42fc276182d21df4be4710c83ed42f38e2e1b84bad407c083dbd37d340f3ed5a"},
+      {"name":"tests.test_bundle","size_bytes":3135,"sha256":"sha256:a8d3d6d3ae9e5c3a2a3448255f1224fe0da6c0cce7260a11aafb163021823de0"},
+      {"name":"oracle_bundle","size_bytes":87585,"sha256":"sha256:d35f9716b8601c24965ed88d67febb2b0e6acd59d0c5f20c194aa1ce4ef0d2ba"}
+    ],
+    "recovery_search": "The current generated Oracle projection and its exact private CAS payload contain the frozen archive. No alternate source bytes were substituted. The Oracle solve script still performs a runtime GitHub reachability probe before copying that local archive."
+  },
+  "compile": {
+    "command": "uv run nl2repo harbor compile catalog/sources/mime --output <compile-output> --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+    "compile_count": 2,
+    "outputs_byte_identical": true,
+    "raw_manifest_sha256": "sha256:9d91a9364b063e6234864d5d52efd18deb854f30be0cbeca840b0b2ac0e689b4",
+    "canonical_manifest_digest": "sha256:cfb41b0ac058f443108772f0748ec111955ff14a67cef959d9ce24e3b41a7230",
+    "compiled_file_count": 85
+  },
+  "replacement_oracle": {
+    "reason": "Remove only the runtime GitHub reachability probe; retain the frozen archive SHA-256 check, archive copy, workspace reset, and local oracle package.",
+    "relative_bundle_path": ".nl2repo/mime-replacement-oracle/mime-oracle-no-network.tar",
+    "outer_size_bytes": 399360,
+    "outer_sha256": "sha256:336fe8c2758d3972bfa04adf472eb87cbab134bf81c948d900fce75808c541e5",
+    "inner_source_archive_sha256": "sha256:8f8e826ccafe064ca20139c47422291210c5bf8998fbe32f9ef3d9706d589199",
+    "inner_source_archive_size_bytes": 266240,
+    "solve_sha256": "sha256:fcf616e084ab54caef59852edaa587be48bab140b5dd391562d56d651f96ff3c",
+    "network_probe_removed": true,
+    "source_payload_changed": false,
+    "parent_cas_registration_required": true
+  },
+  "network_smoke": {
+    "command": "docker run --rm --network none --user root -v <replacement>:/solution:ro -v <workspace>:/workspace docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848 bash -lc 'bash /solution/solve.sh && cd /workspace && npm ci --offline --ignore-scripts --no-audit --no-fund && node --input-type=module -e ...'",
+    "exit_code": 0,
+    "source_archive_hash_check": "passed",
+    "offline_npm_install": "passed",
+    "basic_api_smoke": "passed",
+    "public_network_available": false
+  },
+  "required_parent_actions": [
+    "independently inspect replacement outer tar and solve.sh diff",
+    "register replacement Oracle bundle in private CAS",
+    "update only the source artifact reference and recompile twice",
+    "run the complete current-manifest Oracle and controls matrix",
+    "write fresh durable production evidence only after all required gates pass"
+  ]
+}

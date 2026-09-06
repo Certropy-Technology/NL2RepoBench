@@ -1,0 +1,10 @@
+{
+  "schema_version": "1.0",
+  "task_id": "lxml",
+  "command": "uv run nl2repo harbor compile catalog/sources/lxml --output .nl2repo/lxml-revalidation-compile-a --toolchain toolchain.lock.toml --artifact-root parent-private-CAS --allow-private",
+  "exit_code": 0,
+  "generated_manifest_sha256": "sha256:88650ac30414db46134d8175dabf09bf8f3bd0d7248402bff62a1de8714e5778",
+  "generated_canonical_manifest_digest": "sha256:9f3c7f2559bbf7bd3ecf620bd6a8ff3374211ad80667a8a957c7fe307f9e47a3",
+  "oracle_payload_review": "compiled solve.sh retains runtime GitHub fetch; no execution performed",
+  "evidence_scope": "ignored local compile output; not a production projection"
+}

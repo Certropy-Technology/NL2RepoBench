@@ -1,0 +1,8 @@
+{
+  "task_id": "mime",
+  "command": "uv run nl2repo harbor compile catalog/sources/mime --output .nl2repo/mime-worker-compile-a --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+  "exit_code": 0,
+  "bundle_manifest_sha256": "sha256:9d91a9364b063e6234864d5d52efd18deb854f30be0cbeca840b0b2ac0e689b4",
+  "canonical_manifest_digest": "sha256:cfb41b0ac058f443108772f0748ec111955ff14a67cef959d9ce24e3b41a7230",
+  "file_count": 85
+}

@@ -1,0 +1,31 @@
+{
+  "schema_version": "revalidation-compile-summary-v1",
+  "task_id": "node-fetch",
+  "source_revision": "8b3320d2a7c07bce4afc6b2bf6c3bbddda85b01f",
+  "source_digest": "sha256:c54ad1e222b0dab09410542e9142b5374a63a72b2e5cc8e931b147559628265c",
+  "instruction_digest": "sha256:654e0cff2419462cd24d8f3b3b4a8b57713e31b08f627777d36082ece0b0712d",
+  "toolchain": "toolchain.node.lock.toml",
+  "compiler_command": "uv run nl2repo harbor compile catalog/sources/node-fetch --output <output> --toolchain toolchain.node.lock.toml --artifact-root <parent-private-CAS> --allow-private",
+  "allow_incomplete": false,
+  "compilations": [
+    {
+      "output": ".nl2repo/node-fetch-revalidation-compile-a/node-fetch",
+      "manifest_size_bytes": 35858,
+      "raw_manifest_sha256": "sha256:57a5fd070f61f98ea2f7cf51b047470d5e0d03601ed55f55a191bb21b6ab5229",
+      "canonical_manifest_digest": "sha256:42332892b91bf47fee1b73c211a75ce8cd10b02b75a1ddd9edebafe1b159eefa",
+      "source_tar_sha256": "sha256:c54ad1e222b0dab09410542e9142b5374a63a72b2e5cc8e931b147559628265c"
+    },
+    {
+      "output": ".nl2repo/node-fetch-revalidation-compile-b/node-fetch",
+      "manifest_size_bytes": 35858,
+      "raw_manifest_sha256": "sha256:57a5fd070f61f98ea2f7cf51b047470d5e0d03601ed55f55a191bb21b6ab5229",
+      "canonical_manifest_digest": "sha256:42332892b91bf47fee1b73c211a75ce8cd10b02b75a1ddd9edebafe1b159eefa",
+      "source_tar_sha256": "sha256:c54ad1e222b0dab09410542e9142b5374a63a72b2e5cc8e931b147559628265c"
+    }
+  ],
+  "byte_identical_manifests": true,
+  "compiled_projection_leak_scan": {
+    "forbidden_path_or_private_uri_matches": 0,
+    "oracle_script_network_command_matches": 0
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "schema_version": "1.0",
+  "task_id": "opentelemetry-semantic-conventions",
+  "purpose": "instruction-revalidation-local-recovery",
+  "network": "not-used",
+  "source_digest": "sha256:56d1799c08cb1ca124714b85dc6855ad986c9f4b64519f588d8b25a383a3eebc",
+  "frozen_source_archive": {
+    "path": "catalog/tasks/opentelemetry-semantic-conventions/solution/source.tar",
+    "size_bytes": 870400,
+    "sha256": "sha256:261528522499c80a3a264c33028a582476c8c460ef6411dea52b33946ad52d0b",
+    "matches_declared_source": true
+  },
+  "declared_private_artifacts": [
+    {
+      "kind": "lock",
+      "digest": "sha256:ad7e52e0f1bf40e1b43abefc569975aad6862d932cb60ae9a18216cfaf7a797e",
+      "size_bytes": 1886,
+      "cas_status": "missing",
+      "projection_status": "exact_bytes_present",
+      "projection_paths": [
+        "catalog/tasks/opentelemetry-semantic-conventions/environment/candidate-requirements.lock.txt",
+        "catalog/tasks/opentelemetry-semantic-conventions/tests/candidate-requirements.lock.txt"
+      ]
+    },
+    {
+      "kind": "verifier",
+      "digest": "sha256:19f82da6b23019bbf1274d54f5d39a17328218dc887a6efa48dcf023725a0ccf",
+      "size_bytes": 20480,
+      "cas_status": "missing",
+      "projection_status": "not_recoverable_from_projection"
+    },
+    {
+      "kind": "oracle",
+      "digest": "sha256:1e7b650df7c1cef0fe360af11da245100c80f886b3f3187aade5434db22c67e7",
+      "size_bytes": 880640,
+      "cas_status": "missing",
+      "projection_status": "not_recoverable_from_projection"
+    }
+  ],
+  "searches": [
+    {
+      "scope": "current private CAS",
+      "result": "not-found",
+      "checked": "declared digest and size"
+    },
+    {
+      "scope": "current generated task projection",
+      "result": "source archive and lock only",
+      "checked": "bundle manifest, solution, environment, tests and verifier files"
+    },
+    {
+      "scope": "tracked history and historical authoring handoffs",
+      "result": "no exact verifier or Oracle bytes",
+      "checked": "task history, local authoring directories and task-named handoff paths"
+    },
+    {
+      "scope": "bounded local package/module caches",
+      "result": "no digest-matching private bundles",
+      "checked": "task-named archive, lock and runtime payload candidates"
+    }
+  ],
+  "recovery_decision": "blocked",
+  "reason": "The exact verifier and Oracle bundle bytes required by task.toml are unavailable. The projection's source and lock bytes do not prove either private bundle, and network retrieval is forbidden."
+}

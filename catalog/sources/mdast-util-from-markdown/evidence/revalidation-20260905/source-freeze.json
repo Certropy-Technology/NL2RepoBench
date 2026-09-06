@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "task_id": "mdast-util-from-markdown",
+  "upstream_url": "https://github.com/syntax-tree/mdast-util-from-markdown",
+  "revision": "f94143765912425fb94ed6518d3a3d1c54f994d4",
+  "license_spdx": "MIT",
+  "source_archive_sha256": "sha256:515825acb5478f8bf59c32403e5febc499a100ed0b1183f4596e8be2f38b5a19",
+  "oracle_bundle_sha256": "sha256:1d9e66196b40bfd3c3a4a139e76b7d68a0765ea57a75272d6e765e84258da2c7",
+  "oracle_bundle_size_bytes": 56882,
+  "reference_payload": {
+    "source_tar_sha256": "sha256:515825acb5478f8bf59c32403e5febc499a100ed0b1183f4596e8be2f38b5a19",
+    "revision_file_matches": true,
+    "solve_script_uses_local_source_tar": true,
+    "runtime_fetch": false
+  },
+  "private_dependency_artifacts": [
+    {"sha256": "sha256:ff246aef973478493951ab7b6db855b735b58ede0e23e6bd493eb82dcb359a1c", "size_bytes": 2222080},
+    {"sha256": "sha256:bcca2dc13d661e0f698c924844ed13d0bca1c13687d8318ac92fd63fdcfb147f", "size_bytes": 175},
+    {"sha256": "sha256:132c271ac97ca12cc0f761796c4db70a9d4f665dd81973975d92481196286842", "size_bytes": 20480},
+    {"sha256": "sha256:1d9e66196b40bfd3c3a4a139e76b7d68a0765ea57a75272d6e765e84258da2c7", "size_bytes": 56882}
+  ],
+  "cas_verification": "All four declared artifacts matched the parent private CAS by exact size and SHA-256 in an offline preflight."
+}

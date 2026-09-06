@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "task_id": "openai",
+  "oracle_bundle_digest": "sha256:491ad31932867232eeb184b3a1662a7f4d770962588007a0e657fdb57aa7f988",
+  "oracle_bundle_members": ["solve.sh"],
+  "embedded_source_payload": false,
+  "solve_script_sha256": "sha256:db390c3e7bbb800a13af3dac785a19d55e1828a31bd207db67e4b4d1438ee6a0",
+  "frozen_revision": "555ac487f450f24928d859478ea2f41b58906206",
+  "expected_source_archive_sha256": "sha256:3fee3c1832ceafd565161d3a0c42555823c7bdb7ca20dc2f217e8f7437365720",
+  "runtime_network_operations": [
+    "git fetch --depth=1 origin 555ac487f450f24928d859478ea2f41b58906206 from https://github.com/openai/openai-python"
+  ],
+  "network_policy_compatible": false,
+  "failure_class": "artifact-or-verifier",
+  "reason": "The current Oracle bundle contains no source archive and requires a runtime GitHub fetch. This revalidation forbids source-host, DNS, registry, and external-service authorization.",
+  "harbor_run_started": false,
+  "compile_started": false
+}

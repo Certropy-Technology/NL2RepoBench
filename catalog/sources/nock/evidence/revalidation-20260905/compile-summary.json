@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "task_id": "nock",
+  "command": "uv run nl2repo harbor compile catalog/sources/nock --output <ephemeral-a-or-b> --toolchain toolchain.node.lock.toml --artifact-root <private-artifact-root> --allow-private",
+  "runs": 2,
+  "result": "passed",
+  "byte_identical": true,
+  "generated_file_count": 155,
+  "canonical_manifest_digest": "sha256:e25adca224ade93b634d7c61862cc3608ede0a4571f5db0a95f67a0eb31221b7",
+  "manifest_file_sha256": "sha256:c411fa05ea098f422af1b3e230d74174c03a260c2b8c3ac575e0e64bbdb3ba94",
+  "projection_action": "not replaced; parent must review and regenerate the checked-in projection after a valid receipt"
+}

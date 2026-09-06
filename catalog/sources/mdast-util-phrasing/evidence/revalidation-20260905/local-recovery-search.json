@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0",
+  "task_id": "mdast-util-phrasing",
+  "target_revision": "67d563d643f75cf4fd26bc3121ddebb89e3a0a9c",
+  "target_archive_sha256": "sha256:fe71915a39869c97b9a9132886ff511654b42d4109183853592b580db458650b",
+  "result": "not-recovered",
+  "replacement_bundle_created": false,
+  "searches": [
+    {
+      "scope": "current checked-in generated runtime",
+      "result": "catalog/tasks/mdast-util-phrasing/solution contains only package-lock.json and solve.sh; no source.tar, oracle-package, or installable source payload is present",
+      "exit_code": 0
+    },
+    {
+      "scope": "task-local source and prior evidence",
+      "result": "catalog/sources/mdast-util-phrasing contains inventories, instruction, controls, metadata, and prior production evidence, but no source archive or embedded Oracle source payload",
+      "exit_code": 0
+    },
+    {
+      "scope": "current private Oracle bundle",
+      "result": "the exact outer Oracle artifact matches its declared digest and size, but its archive inventory contains only package-lock.json and solve.sh; solve.sh performs a runtime GitHub fetch and contains no source bytes",
+      "exit_code": 0
+    },
+    {
+      "scope": "retained authoring archives, runs, worktrees, handoffs, and session artifacts",
+      "result": "bounded path and exact archive-digest searches found no mdast-util-phrasing source.tar or payload matching the frozen archive digest",
+      "exit_code": 0
+    },
+    {
+      "scope": "repository Git objects and local package/module caches",
+      "result": "the frozen revision is not present as a local Git commit and no cache entry proved the exact Git archive bytes; installed or registry package metadata is not accepted as proof of the frozen revision/archive",
+      "exit_code": 0
+    }
+  ],
+  "next_step": "Recover an exact source archive with SHA-256 fe71915a39869c97b9a9132886ff511654b42d4109183853592b580db458650b and prove it corresponds to revision 67d563d643f75cf4fd26bc3121ddebb89e3a0a9c. Then construct/register a NoNetwork Oracle bundle, compile twice, and rerun Oracle plus all supported controls against the new manifest."
+}

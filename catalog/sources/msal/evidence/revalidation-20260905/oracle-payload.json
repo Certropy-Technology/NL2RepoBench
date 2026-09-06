@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "task_id": "msal",
+  "oracle_bundle_digest": "sha256:3896496daa2f706463aece4fcb65439ac50f53a2374fb34e7faaf26195371a52",
+  "oracle_bundle_size_bytes": 10240,
+  "bundle_members": ["solve.sh"],
+  "solve_sha256": "sha256:f89299ec3fcb1c11720598f2e5fef344ecc14d8efb3522cb050908f855738285",
+  "source_payload_present": false,
+  "runtime_source_fetch": {
+    "detected": true,
+    "command": "git fetch -q --depth 1 origin 1416438a14118949d05be634124ab5d1c94c1f99",
+    "host": "github.com",
+    "source_url": "https://github.com/AzureAD/microsoft-authentication-library-for-python",
+    "archive_command": "git archive --format=tar 1416438a14118949d05be634124ab5d1c94c1f99 -o <ignored-source-archive>",
+    "required_archive_digest": "sha256:8061a883f29af255e7b3ba4da8c8f2b61a16e767e2ab40557443ad24a295b71a"
+  },
+  "disposition": "not runnable under the required NoNetwork contract",
+  "oracle_controls_run": false
+}

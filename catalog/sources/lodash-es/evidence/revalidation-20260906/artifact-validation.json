@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "task_id": "lodash-es",
+  "offline": true,
+  "artifact_root": "parent-local-CAS",
+  "artifacts": [
+    {"role": "npm-dependencies", "digest": "sha256:f01344b94a5615ed1db23ea6056bb1d7f0f7f71286b8cccf1db7a72b69611673", "size_bytes": 10240, "sha256_verified": true},
+    {"role": "commands", "digest": "sha256:e9338437d214111fee4790824bfc08ed1346a2519c1bcb439d53217221ed1040", "size_bytes": 10240, "sha256_verified": true},
+    {"role": "tests", "digest": "sha256:75dc3dbbcf630cfd96493e8e4a0cb2562e5fc653a25d3cda7a8b52ec1986a19b", "size_bytes": 10240, "sha256_verified": true},
+    {"role": "oracle", "digest": "sha256:d7b00b1e68ee5e4d19e3e333f9472460702c167667bdf7f3b802f2fb278b3e86", "size_bytes": 552960, "sha256_verified": true, "source_archive_sha256": "sha256:4b815834ee052cbd62e39ae63019905344135368cd48f0dfcbbcaf7635e3ec9a"}
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "schema_version": "1.0",
+  "task_id": "msgspec",
+  "queue_source_digest": "sha256:a99baa922e8842fce5f95798b228271f9089bd3e6526b616e2239dd8161ee1bb",
+  "validated_source_digest": "sha256:a99baa922e8842fce5f95798b228271f9089bd3e6526b616e2239dd8161ee1bb",
+  "artifact_root": "<parent-private-cas>",
+  "artifacts": [
+    {
+      "kind": "dependency-lock",
+      "digest": "sha256:a45d0ec949fc360bc40c48cb1f6f1dc371feb5b9335a46fb9aa4d004066ecc3b",
+      "declared_size_bytes": 13079,
+      "observed_size_bytes": 13079,
+      "sha256_valid": true,
+      "size_valid": true
+    },
+    {
+      "kind": "verifier-bundle",
+      "digest": "sha256:adb7aecbd46fe672addae4664bd5c68b1804fe3f0e9eef71af9825b0b77f84e0",
+      "declared_size_bytes": 2785,
+      "observed_size_bytes": 2785,
+      "sha256_valid": true,
+      "size_valid": true,
+      "members": [
+        {"path":"run.py","size_bytes":8610,"sha256":"sha256:97dd1891e61af8dbe7323201608fb97f09e9dc2d512b3c9bc04bd1bee01200ce"}
+      ]
+    },
+    {
+      "kind": "oracle-bundle",
+      "digest": "sha256:a3250a439e62ba3cda3b830cb2469245f9052d3f00338cf7cddf666f970a15d4",
+      "declared_size_bytes": 408,
+      "observed_size_bytes": 408,
+      "sha256_valid": true,
+      "size_valid": true,
+      "members": [
+        {"path":"solve.sh","size_bytes":498,"sha256":"sha256:16d66d65387bddcc199db1018621858d2d111b74b38a707c5e237de296b4e10a"}
+      ]
+    }
+  ],
+  "commands": [
+    {"command":"uv run nl2repo task validate-source catalog/sources/msgspec","exit_code":0},
+    {"command":"sha256sum and stat over all three declared private CAS artifacts","exit_code":0},
+    {"command":"tar -tvf over verifier and Oracle CAS bundles","exit_code":0}
+  ]
+}

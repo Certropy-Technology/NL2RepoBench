@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0",
+  "task_id": "mdast-util-find-and-replace",
+  "target_revision": "fd73ef856ab4f7b6326e3255aea36f439b75e2d5",
+  "target_archive_sha256": "sha256:be821926713dee556bca6f0aa2cff873a8fef69d142f438327e84f08cf2d57d9",
+  "target_archive_size_bytes": 51200,
+  "network_used": false,
+  "exact_payload_found": false,
+  "replacement_bundle_created": false,
+  "searches": [
+    {
+      "scope": "checked-in generated runtime",
+      "result": "No source archive is present under the task projection; the solution contains declarations, normalization metadata, package lock, and the network-fetching solve.sh only.",
+      "exit_code": 0
+    },
+    {
+      "scope": "task-local source and evidence",
+      "result": "No source.tar, source.tar.gz, Git object database, or embedded Oracle source payload was present before this evidence was written.",
+      "exit_code": 0
+    },
+    {
+      "scope": "retained task-specific authoring session records",
+      "result": "Retained JSONL records preserve metadata, command history, and old worktree references but no source archive bytes.",
+      "exit_code": 0
+    },
+    {
+      "scope": "retained authoring worktree paths and local archive names",
+      "result": "The bounded task-specific search found no task archive, tarball, or source payload with the required 51200-byte archive digest.",
+      "exit_code": 0
+    },
+    {
+      "scope": "parent private CAS",
+      "result": "The declared dependency, commands, tests, and Oracle bundles are present and hash-valid; the Oracle bundle has no source archive.",
+      "exit_code": 0
+    },
+    {
+      "scope": "package and module caches",
+      "result": "No trusted local Git object or exact frozen Git archive was established; package cache material cannot prove the declared Git revision and archive digest.",
+      "exit_code": 0
+    }
+  ],
+  "next_step": "Recover or reconstruct the exact 51200-byte archive from a trusted local source proving the frozen revision and digest, then construct an offline Oracle replacement bundle for parent review and CAS registration."
+}

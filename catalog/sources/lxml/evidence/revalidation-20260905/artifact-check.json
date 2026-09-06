@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0",
+  "task_id": "lxml",
+  "checked_at": "2026-09-06",
+  "artifact_root": "private CAS (parent integration checkout)",
+  "artifacts": [
+    {
+      "name": "dependencies.lock_artifact",
+      "digest": "sha256:56a79992e5df8df4362eb3e119a9b21648f94c0f910ee47f23c8915137721b90",
+      "size_bytes": 4463,
+      "hash_and_size_match": true
+    },
+    {
+      "name": "verifier.bundle",
+      "digest": "sha256:9530726b11cb52d88f94ba219f38165f60a6a7bb5206c4da7c23e2ed01632545",
+      "size_bytes": 10240,
+      "hash_and_size_match": true,
+      "inner_inventory": ["run.py"]
+    },
+    {
+      "name": "oracle_bundle",
+      "digest": "sha256:79f0a099b74cb482085c80144be1ff1ebc41ce80cfe6c722c310a9a267b0c95d",
+      "size_bytes": 10240,
+      "hash_and_size_match": true,
+      "inner_inventory": ["solve.sh"]
+    }
+  ],
+  "source_freeze": {
+    "revision": "36f11f9d5edca7e85d20102fa253c1dad42929ee",
+    "source_archive_sha256": "sha256:cac1e83f3fa07b77097da8f98cb58bd4b2bc3e6b5a55eb7b6c942ed1b0e66d29"
+  },
+  "result": "declared dependency, verifier, and Oracle bundle artifacts are exact; Oracle source archive is not an artifact in the bundle"
+}

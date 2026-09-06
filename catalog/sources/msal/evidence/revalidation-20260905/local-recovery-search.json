@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "task_id": "msal",
+  "search_policy": "bounded local recovery before blocker",
+  "sources_checked": [
+    {"source":"catalog/tasks/msal","result":"contains only solution/solve.sh; no source archive or oracle package"},
+    {"source":"parent private CAS","result":"oracle and verifier tarballs verified; oracle contains only solve.sh"},
+    {"source":"retained authoring worktrees","result":"no exact msal archive or hash-matching source payload found"},
+    {"source":"retained local archives and package caches","result":"bounded search found no file matching frozen MSAL archive digest"},
+    {"source":"historical task-local evidence","result":"only prior non-durable receipts and network-authorizing command; no source payload"}
+  ],
+  "exact_source_archive": {"digest":"sha256:8061a883f29af255e7b3ba4da8c8f2b61a16e767e2ab40557443ad24a295b71a","found":false},
+  "replacement_bundle": {"constructed":false,"reason":"No trusted local source bytes were found to bind to the frozen revision and archive digest."},
+  "next_step": "Provide or restore exact source archive bytes, construct a local Oracle bundle without runtime fetch, compile twice, then run the complete NoNetwork matrix.",
+  "lifecycle_changed": false,
+  "production_evidence_changed": false
+}
