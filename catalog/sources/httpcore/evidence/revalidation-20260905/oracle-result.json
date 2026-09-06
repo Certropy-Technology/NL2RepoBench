@@ -1,0 +1,10 @@
+{
+  "schema_version": "1.0",
+  "task_id": "httpcore",
+  "source_digest": "sha256:a538f2f287bf8dfd0796406f8b3aa38e7a9c5e6bc10dd48b7fa475d49c3f4b0a",
+  "harbor_version": "0.21.0",
+  "first_attempt": {"exit_code": 0, "trials": 0, "exception": "EnvironmentStartTimeoutError", "failure_class": "infrastructure"},
+  "bounded_retry": {"exit_code": 0, "trials": 1, "trial_id": "httpcore__zv4bEh6", "valid": true, "collected": 0, "expected_total": 24, "passed": 0, "reward": 0.0, "failure_class": "infrastructure", "failure_reason": "candidate-installation-failed: Errno 11 Resource temporarily unavailable during PEP 517 metadata preparation"},
+  "retry_policy": {"infrastructure_retries_used": 1, "additional_retries": "not-run"},
+  "production_evidence_updated": false
+}

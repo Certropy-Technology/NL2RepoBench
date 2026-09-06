@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "task_id": "has-ansi",
+  "source_digest": "sha256:145558676d7d5fa6f03faeef001a7e46e5736d58e893cde475d1392a9ab031af",
+  "manifest_sha256": "sha256:1d763162723fbb0ca5e61ceb8c0f75395921c0867059110cdba48dd915e38676",
+  "valid": true,
+  "expected_total": 24,
+  "collected": 24,
+  "passed": 24,
+  "failed": 0,
+  "skipped": 0,
+  "reward": 1.0,
+  "network": false,
+  "grading_sha256": "sha256:37c211201c0c809ee0f5aec8d775c44f133dea2498ab3c9ed20c3d210ca62c8a",
+  "network_sha256": "sha256:3e87a830a7adeda97cd2efe52b1240b9ba4323004f1945cc173c852f17bf6c8",
+  "result_sha256": "sha256:daa3b11cdde03546896b0db1f9b7ea0268c19050cf4541a1ab7e90a3ec2482f6",
+  "command": "uv run --frozen --project harbor-runner harbor run -p compiled/has-ansi -a oracle --job-name has-ansi-revalidation-oracle-retry-20260905 --jobs-dir runs/oracle-retry --n-concurrent 1 --max-retries 1 --quiet --yes"
+}

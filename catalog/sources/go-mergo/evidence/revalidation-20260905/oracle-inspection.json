@@ -1,0 +1,10 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-mergo",
+  "oracle_bundle_digest": "sha256:b7d5336c64a943af75234debe79fd55609ffc80340ff6abc420bd1e6710cc4b5",
+  "members": ["solve.sh"],
+  "solve_behavior": "initializes a temporary git repository, fetches the pinned revision from github.com, creates a git archive, verifies the archive digest, and extracts it into /workspace",
+  "source_archive_in_bundle": false,
+  "safe_for_no_network_oracle": false,
+  "inspection_result": "blocked before Harbor Oracle"
+}

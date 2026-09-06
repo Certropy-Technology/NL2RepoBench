@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-sqlmock",
+  "revision": "4e29cb9ba9984db4da4003b5c813f3747f450bc7",
+  "required_archive": {"size_bytes": 256000, "sha256": "sha256:359bb2e809bade7c01d70eb5cb05a4ebef6c2a835a63293f0471c53d12b05734"},
+  "searches": [
+    {"scope": "current Oracle bundle", "result": "only solve.sh; no source payload", "exit_code": 0},
+    {"scope": "task source freeze path", "result": "missing", "exit_code": 1},
+    {"scope": "local authoring-live archive, source.tar/upstream-source.tar, exact 256000-byte size", "result": "zero matches", "exit_code": 0},
+    {"scope": "private CAS, exact 256000-byte size", "result": "one unrelated object; sha256:ba57de80e0aeee35c76b6564fbd64d2ce8b9a775d8b35413af259075baed1f72", "exit_code": 0},
+    {"scope": "historical handoff receipts", "result": "metadata and receipts only; source archive bytes not materialized locally", "exit_code": 0}
+  ],
+  "replacement_payload": "not-constructed",
+  "network_access": "none"
+}

@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "task_id": "httptools",
+  "source_digest": "sha256:e7dc5e4192e340af8c61fb62b6c9447cb8c70c4ab5f4338dd04fb0c0787854cb",
+  "canonical_manifest_digest": "sha256:c38e9e2fe35e3bd05cdd5fc7b161a7523b330697b356d8f0fb1f7cd697793605",
+  "runs": {
+    "oracle_initial": {"exit_code": 1, "failure_class": "infrastructure", "failure_type": "EnvironmentStartTimeoutError", "trials_completed": 0},
+    "oracle_retry": {"exit_code": 0, "trials_completed": 1, "reward": 1.0, "test_pass_rate": 1.0, "result_sha256": "sha256:0b5d1ecccad9592756576c1b6744f12fa69ab888aec75f87df911b891c3cf26e"},
+    "empty": {"exit_code": 0, "trials_completed": 1, "reward": 0.0, "test_pass_rate": 0.0, "result_sha256": "sha256:3f22e44eeee94e021beb78aa94136dfb292666a49bcf3cfde1e8e0e870bc4d41"},
+    "stub": {"exit_code": 0, "trials_completed": 1, "reward": 0.0, "test_pass_rate": 0.0, "result_sha256": "sha256:bf00bffe329d007c56406f5d741267775f30868d49bdb4a3de8fbb4183f04805"},
+    "forgery": {"exit_code": 0, "trials_completed": 1, "reward": 0.0, "test_pass_rate": 0.0, "result_sha256": "sha256:65770d5c0bddd4791201e5c353ec2eff079134a634b62c4f87c164fe16d32ecb"},
+    "offline": {"exit_code": 0, "trials_completed": 1, "reward": 1.0, "test_pass_rate": 1.0, "result_sha256": "sha256:cd3b22c8d78e5d93b7b9ddcf4019eb3842feb01d249b1b99390d159603aeb587"},
+    "call-hang": {"exit_code": 0, "trials_completed": 1, "reward": 0.0, "test_pass_rate": 0.0, "bounded": true, "result_sha256": "sha256:6525d95b6b92c7d2038a5c88de00cd8205a3ab3bacd0265f81ba9e8ceee6326f"}
+  }
+}

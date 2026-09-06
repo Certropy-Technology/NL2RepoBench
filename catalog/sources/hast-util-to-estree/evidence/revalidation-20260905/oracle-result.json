@@ -1,0 +1,10 @@
+{
+  "schema_version": "1.0",
+  "task_id": "hast-util-to-estree",
+  "attempts": [
+    {"name": "oracle", "status": "infrastructure-failed", "failure_class": "EnvironmentStartTimeoutError", "exit_code": 1},
+    {"name": "oracle-retry", "status": "passed", "valid": true, "collected": 33, "passed": 33, "failed": 0, "reward": 1.0, "exit_code": 0}
+  ],
+  "retry_policy": "one bounded infrastructure retry",
+  "network_policy": "no-network"
+}

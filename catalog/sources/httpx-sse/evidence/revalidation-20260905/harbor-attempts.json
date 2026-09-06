@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0",
+  "task_id": "httpx-sse",
+  "source_digest": "sha256:54877b5a8e32dee78262d3a6350fb262e57a2739964222c9a48f5ac40720c040",
+  "command": "uv run --frozen --project harbor-runner harbor run -p <compiled-bundle> -a oracle --job-name httpx-sse-revalidation-oracle -o <run-output> --n-concurrent 1 --yes",
+  "network_policy": "no-network",
+  "attempts": [
+    {
+      "attempt": 1,
+      "exit_code": 1,
+      "failure_class": "infrastructure",
+      "stderr_summary": "Docker daemon is not running. Please start Docker and try again."
+    },
+    {
+      "attempt": 2,
+      "exit_code": 1,
+      "failure_class": "infrastructure",
+      "stderr_summary": "Docker daemon is not running. Please start Docker and try again."
+    }
+  ],
+  "retry_policy": "one bounded infrastructure retry used",
+  "controls_started": false,
+  "production_evidence_replaced": false
+}

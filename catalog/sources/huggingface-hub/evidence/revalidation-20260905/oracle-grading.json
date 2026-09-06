@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "task_id": "huggingface-hub",
+  "source_digest": "sha256:4fa914929806b1aa576bf6e1c5d222ee881dadef1a108e6bae0ee09b3dd34b1f",
+  "expected_total": 40,
+  "collected": 0,
+  "passed": 0,
+  "failed": 0,
+  "skipped": 0,
+  "reward": 0.0,
+  "valid": true,
+  "failure_class": "artifact-or-verifier",
+  "failure_reason": "candidate-installation-failed after Oracle source fetch exit 128",
+  "receipt_sha256": "sha256:d1351d958a38142f3a8d22079ef3c9061bc77ad9de4ce6e2d14d28f327bdea43",
+  "metric_contract": "fixed-test-pass-rate-v1"
+}

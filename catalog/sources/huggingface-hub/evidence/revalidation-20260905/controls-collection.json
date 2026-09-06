@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "task_id": "huggingface-hub",
+  "expected_total": 40,
+  "controls": {
+    "stub": {"collected": 40, "collection_errors": [], "receipt_sha256": "sha256:fb7f8a479b96e971d4f7f27046de11e723b743f0bfa839030596567fec555ba5"},
+    "forgery": {"collected": 40, "collection_errors": [], "receipt_sha256": "sha256:fb7f8a479b96e971d4f7f27046de11e723b743f0bfa839030596567fec555ba5"},
+    "call-hang": {"collected": 40, "collection_errors": [], "receipt_sha256": "sha256:fb7f8a479b96e971d4f7f27046de11e723b743f0bfa839030596567fec555ba5"},
+    "install-hang": {"collected": 0, "collection_errors": ["candidate installation timed out before collection"], "receipt_sha256": "sha256:d1351d958a38142f3a8d22079ef3c9061bc77ad9de4ce6e2d14d28f327bdea43"}
+  }
+}

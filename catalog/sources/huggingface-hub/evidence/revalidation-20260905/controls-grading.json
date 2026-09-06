@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "task_id": "huggingface-hub",
+  "expected_total": 40,
+  "controls": {
+    "stub": {"collected": 40, "passed": 1, "failed": 39, "skipped": 0, "reward": 0.025, "valid": true, "receipt_sha256": "sha256:a0d2c70457f1de31be1dd8ef43c59f33b2ba7ac607cfe20f75d1ea280ee2230c"},
+    "forgery": {"collected": 40, "passed": 1, "failed": 39, "skipped": 0, "reward": 0.025, "valid": true, "verifier_owned_reward": true, "receipt_sha256": "sha256:a0d2c70457f1de31be1dd8ef43c59f33b2ba7ac607cfe20f75d1ea280ee2230c"},
+    "call-hang": {"collected": 40, "passed": 3, "failed": 37, "skipped": 0, "reward": 0.075, "valid": true, "receipt_sha256": "sha256:5fdaaed87e82bd788b27d785f85352894e8f6e8c6924393b095fc1acf470d6eb"},
+    "install-hang": {"collected": 0, "passed": 0, "failed": 0, "skipped": 0, "reward": 0.0, "valid": true, "failure_reason": "candidate-installation-failed", "receipt_sha256": "sha256:d1351d958a38142f3a8d22079ef3c9061bc77ad9de4ce6e2d14d28f327bdea43"}
+  },
+  "metric_contract": "fixed-test-pass-rate-v1",
+  "network_policy": "no-network"
+}

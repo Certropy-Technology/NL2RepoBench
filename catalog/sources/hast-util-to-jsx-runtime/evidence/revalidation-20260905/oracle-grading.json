@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "task_id": "hast-util-to-jsx-runtime",
+  "manifest_digest": "sha256:424fd2a2d9661253f3eb263976c5d86f2c78961d81dae3cecb9b6918a979bf7e",
+  "metric_contract": "node-test-leaf-pass-rate-v1",
+  "framework": "node:test",
+  "expected_total": 24,
+  "collected": 24,
+  "passed": 24,
+  "failed": 0,
+  "skipped": 0,
+  "collection_errors": 0,
+  "reward": 1.0,
+  "valid": true,
+  "exit_code": 0,
+  "receipt_sha256": {
+    "grading": "sha256:6c99b2c97900798f2a06f6b9d5f4bb2a645c2d436981f7bc3edb13eb47915273",
+    "report": "sha256:92a0a57aaa402afa1fd6224170b9d3a07bbcbdbfba1a349cdd516965365ab788",
+    "reward": "sha256:8cff279124dac5b7bc301ddfd573700a794f7fba6d8bc073afce8ffde99a9cc0"
+  },
+  "command": "uv run --frozen --project harbor-runner harbor run -p <compiled-task> -a oracle --job-name hast-util-to-jsx-runtime-revalidation-oracle-retry-20260905 -o <oracle-run-root> --n-concurrent 1 --yes"
+}

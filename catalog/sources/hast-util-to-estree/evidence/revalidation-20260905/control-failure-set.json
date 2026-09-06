@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "task_id": "hast-util-to-estree",
+  "expected_total": 33,
+  "controls": {
+    "empty": {"failed_ids": [], "skipped_ids": [], "collection_errors": []},
+    "stub": {"failed_count": 30, "skipped_ids": [], "collection_errors": []},
+    "forgery": {"failed_count": 33, "skipped_ids": [], "collection_errors": []},
+    "offline": {"failed_count": 31, "skipped_ids": [], "collection_errors": []},
+    "hang": {"failed_ids": [], "skipped_ids": [], "collection_errors": []}
+  }
+}

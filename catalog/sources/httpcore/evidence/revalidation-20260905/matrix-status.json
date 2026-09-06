@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "task_id": "httpcore",
+  "source_digest": "sha256:a538f2f287bf8dfd0796406f8b3aa38e7a9c5e6bc10dd48b7fa475d49c3f4b0a",
+  "compile": {"status": "passed", "manifest_digest": "sha256:6cd7ebf8b4a0dab07cb4579bd6b5453238a7b701b1f6ab8cbe4218bd63ff6665", "byte_identical_runs": true},
+  "oracle": {"status": "infrastructure-pending", "collected": 0, "total": 24, "reward": 0.0},
+  "controls": {"empty": "not-run", "stub": "not-run", "forgery": "not-run", "offline": "not-run", "install-hang": "not-run", "workspace-invalid": "not-run"},
+  "reason": "The sole bounded infrastructure retry failed during candidate installation; no control receipts are claimed.",
+  "production_evidence_updated": false,
+  "lifecycle_updated": false
+}

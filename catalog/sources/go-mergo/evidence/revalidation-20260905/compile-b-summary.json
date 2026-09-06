@@ -1,0 +1,15 @@
+{
+  "task_id": "go-mergo",
+  "compile": "B",
+  "harbor_version": "0.21.0",
+  "toolchain": "toolchain.go.lock.toml",
+  "allow_private": true,
+  "allow_incomplete": false,
+  "network": "no-network",
+  "exit_code": 0,
+  "file_count": 68,
+  "total_bytes": 240690,
+  "manifest_file_sha256": "sha256:f904d8a2ff87426ebba692f39d3616be587d8c4877d850c4e669647b2c20b5d3",
+  "canonical_manifest_digest": "sha256:c30177431148e77c677cf8283b47fb295d72e13b8f2048d73577fbdb5661af37",
+  "byte_identical_to": "compile-a"
+}

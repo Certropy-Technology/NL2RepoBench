@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "task_id": "httpcore",
+  "source_digest": "sha256:a538f2f287bf8dfd0796406f8b3aa38e7a9c5e6bc10dd48b7fa475d49c3f4b0a",
+  "artifacts": [
+    {"name": "dependencies.lock_artifact", "digest": "sha256:dc2a13a34eb0da9ba22a1de076a125e02a98403b015d5729ebfdf24dd51733b5", "size_bytes": 3653, "present": true, "verified": true},
+    {"name": "verifier.bundle", "digest": "sha256:213c0497a6559a4125519f8bb6b6ae41caa969ed81504ef9c8330e8492306856", "size_bytes": 30720, "present": true, "verified": true},
+    {"name": "oracle_bundle", "digest": "sha256:8ce57d5d76951cdb69bca863b03620112fb4534adeb092e82158ae7dfad5e281", "size_bytes": 645120, "present": true, "verified": true}
+  ],
+  "oracle_inner_source": {"path": "source.tar", "digest": "sha256:8af2769a68cdd7e3b25786f439228ed9b8eed2fb7fb5076d9b173d93d2bc6143", "size_bytes": 634880, "revision": "10a658221deb38a4c5b16db55ab554b0bf731707", "verified": true},
+  "replacement_bundle": null
+}

@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "task_id": "hast-util-to-estree",
+  "source_digest": "sha256:b509d98c738d27b4409e906a78f1e925638ffae253997c5a918620b0e3c15b5f",
+  "instruction_sha256": "sha256:8a8e29847f3a344778dad948071243ec26a5f78f31176d0558c1a7b4cb84fc24",
+  "toolchain": "toolchain.node.lock.toml",
+  "manifest_sha256": "sha256:8eae420be5da6781589df333803002c0672b721c3dd0332f84f6a97f6fb82817",
+  "manifest_size_bytes": 174963,
+  "bundle_file_count": 629,
+  "compile_commands": [
+    "uv run nl2repo harbor compile catalog/sources/hast-util-to-estree --output .nl2repo/hast-estree-compile-a --toolchain toolchain.node.lock.toml --artifact-root <parent-cas> --allow-private",
+    "uv run nl2repo harbor compile catalog/sources/hast-util-to-estree --output .nl2repo/hast-estree-compile-b --toolchain toolchain.node.lock.toml --artifact-root <parent-cas> --allow-private"
+  ],
+  "compile_exit_codes": [0, 0],
+  "byte_identical_recompiles": true
+}

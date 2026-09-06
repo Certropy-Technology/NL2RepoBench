@@ -1,0 +1,8 @@
+{
+  "schema_version": "1.0",
+  "task_id": "httptools",
+  "kind": "oracle-retry",
+  "public_network_available": false,
+  "probes": {"pypi.org:443": false, "1.1.1.1:443": false},
+  "network_sha256": "sha256:a4b96c3182fe0fac948a791cbd1e707b1460d3db46e5356c3804c7de7bf26ebf"
+}

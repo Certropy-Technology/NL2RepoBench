@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "task_id": "httpcore",
+  "source_revision": "10a658221deb38a4c5b16db55ab554b0bf731707",
+  "declared_source_archive_digest": "sha256:8af2769a68cdd7e3b25786f439228ed9b8eed2fb7fb5076d9b173d93d2bc6143",
+  "searches": [
+    {"location": "private CAS oracle bundle", "result": "exact outer bundle found; digest and size verified"},
+    {"location": "oracle bundle inner inventory", "result": "exact source.tar found; digest, size, pyproject.toml, LICENSE.md, and revision marker verified"},
+    {"location": "task-local evidence and historical authoring paths", "result": "reviewed for alternate payloads; no replacement needed"},
+    {"location": "local retained runs and package caches", "result": "no alternate payload accepted; archive format and digest rules preserved"}
+  ],
+  "replacement_bundle": {"needed": false, "accepted": false},
+  "network_access": false
+}

@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "task_id": "hast-util-whitespace",
+  "source_digest": "sha256:66fc7e9df78fc3916e35892a0f9651976b398fb9c7e8417a49dd8ba7f01317e3",
+  "status": "not-run",
+  "failure_class": "infrastructure",
+  "controls": {
+    "empty": {"status": "not-run", "frozen_total": 24},
+    "stub": {"status": "not-run", "frozen_total": 24},
+    "forgery": {"status": "not-run", "frozen_total": 24},
+    "offline": {"status": "not-run", "frozen_total": 24},
+    "call-hang": {"status": "not-run", "frozen_total": 24},
+    "hang": {"status": "not-run", "frozen_total": 24},
+    "install-script": {"status": "not-run", "frozen_total": 24},
+    "loader-hook": {"status": "not-run", "frozen_total": 24}
+  },
+  "reason": "Harbor could not start Docker-backed runs after one bounded Oracle retry."
+}

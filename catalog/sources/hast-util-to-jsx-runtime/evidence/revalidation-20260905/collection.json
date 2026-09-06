@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "task_id": "hast-util-to-jsx-runtime",
+  "manifest_digest": "sha256:424fd2a2d9661253f3eb263976c5d86f2c78961d81dae3cecb9b6918a979bf7e",
+  "framework": "node:test",
+  "report_format": "node-test-json-v1",
+  "expected_total": 24,
+  "oracle": {"collected": 24, "passed": 24, "failed": 0, "skipped": 0, "collection_errors": 0},
+  "controls": {
+    "empty": {"collected": 0, "passed": 0, "failed": 0, "skipped": 0, "collection_errors": 0},
+    "stub": {"collected": 24, "passed": 0, "failed": 24, "skipped": 0, "collection_errors": 0},
+    "forgery": {"collected": 24, "passed": 0, "failed": 24, "skipped": 0, "collection_errors": 0},
+    "hang": {"collected": 0, "passed": 0, "failed": 0, "skipped": 0, "collection_errors": 0},
+    "install-script": {"collected": 0, "passed": 0, "failed": 0, "skipped": 0, "collection_errors": 0},
+    "loader-hook": {"collected": 24, "passed": 0, "failed": 24, "skipped": 0, "collection_errors": 0},
+    "offline": {"collected": 24, "passed": 0, "failed": 24, "skipped": 0, "collection_errors": 0}
+  }
+}

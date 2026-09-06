@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0",
+  "task_id": "hast-util-to-jsx-runtime",
+  "trial_count": 1,
+  "completed_trials": 1,
+  "errored_trials": 0,
+  "retry_count": 1,
+  "successful_attempt": "bounded-infrastructure-retry",
+  "first_attempt": {
+    "failure_class": "infrastructure",
+    "exception": "EnvironmentStartTimeoutError",
+    "exit_code": 0,
+    "trial_started": false,
+    "summary": "Environment start timed out after 600 seconds during Docker build; no verifier trial ran."
+  },
+  "successful_attempt": {
+    "valid": true,
+    "expected_total": 24,
+    "collected": 24,
+    "passed": 24,
+    "reward": 1.0,
+    "exit_code": 0
+  },
+  "first_attempt_result_sha256": "sha256:93d947528d32169b1b3ca88b0ff4db11489de883472535cf734e2fb2e5057c84",
+  "successful_attempt_result_sha256": "sha256:03267f4c17eca2f9c5ebccfe44d2b4ec52e7cf6256e9b5e43a9f4f5df8979c65"
+}

@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "task_id": "hast-util-to-jsx-runtime",
+  "manifest_digest": "sha256:424fd2a2d9661253f3eb263976c5d86f2c78961d81dae3cecb9b6918a979bf7e",
+  "oracle_failed_or_skipped": [],
+  "control_expected_failures": {
+    "empty": "candidate-installation-failed; 0/24",
+    "stub": "24 failed; 0/24",
+    "forgery": "24 failed; 0/24; verifier-owned grading ignored candidate reward.json",
+    "hang": "candidate-call-failed; 0/24",
+    "install-script": "candidate-installation-failed; 0/24",
+    "loader-hook": "24 failed; 0/24",
+    "offline": "24 failed; 0/24; public_network_available=false"
+  },
+  "infrastructure_attempts": [
+    {"stage": "oracle", "failure_class": "infrastructure", "exception": "EnvironmentStartTimeoutError", "remediation": "one bounded retry with a fresh run root", "resolved": true}
+  ]
+}

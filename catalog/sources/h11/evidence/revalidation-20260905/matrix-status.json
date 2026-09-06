@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "task_id": "h11",
+  "source_digest": "sha256:c39edc043ffca6306ae21ee56caf8a501dddfcd90f6120291919e84b462284a2",
+  "compiled_manifest_digest": "sha256:cd5eab0ff5f2cfd767d616330628f777cce481d7f6422b0c6c1085a9f92f644a",
+  "status": "infrastructure-pending",
+  "oracle": "not-run",
+  "empty": "not-run",
+  "stub": "not-run",
+  "forgery": "not-run",
+  "offline": "not-run",
+  "production_evidence_replaced": false,
+  "next_step": "Rerun the complete Harbor 0.21.0 matrix after Docker is available; bind only durable repository-relative receipts to production evidence."
+}

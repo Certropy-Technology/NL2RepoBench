@@ -1,0 +1,11 @@
+# go-mergo instruction revalidation blocker
+
+The migrated instruction digest is `sha256:a59e292c76cbbc9a4ed113e44d23c4ff51c94bbb282d7418aab8123f5b5589a6`, and the queue/source digest validated before this attempt is `sha256:0ccf8b0dc22c8672ef4c5594aa2ead5ad9db9b6e592a7d0699fc33c7c9c22ca3`. The frozen upstream revision is `a50922d8566636f636c4ff8892d725f244c49f44`, with source archive digest `sha256:1c66e6ededb811969590605ef8049f3686a031adb552376c5771a474e57f1512`.
+
+All three declared private CAS objects were found and verified by exact size and SHA-256. Two fresh Harbor 0.21.0 Go compiles using `toolchain.go.lock.toml`, `--allow-private`, the parent private artifact root, and no `--allow-incomplete` completed with exit code 0. Both produced byte-identical 68-file bundles (240690 bytes); the manifest file digest is `sha256:f904d8a2ff87426ebba692f39d3616be587d8c4877d850c4e669647b2c20b5d3`, and the canonical manifest digest is `sha256:c30177431148e77c677cf8283b47fb295d72e13b8f2048d73577fbdb5661af37`.
+
+The frozen Oracle CAS object contains only `solve.sh`. Inspection shows that it initializes a temporary Git repository, fetches the pinned revision from `github.com`, creates and verifies the source archive, and extracts it into `/workspace`. The bundle therefore cannot run under the mandatory NoNetwork policy. The current Oracle bundle, task-local evidence, historical go-mergo handoffs and authoring state, retained compiled task trees, local private CAS, and the local Go module cache were inspected. The only cached module was `dario.cat/mergo@v1.0.2`; it does not prove the frozen revision or archive bytes and was rejected.
+
+No exact local source payload matching the frozen revision and declared archive digest was found. No replacement bundle was constructed, no network authorization was used, and no Oracle or control receipt was run or reused. The existing lifecycle and `production-evidence.json` remain unchanged. The generated `catalog/tasks/go-mergo` projection remains parent-owned and was not edited.
+
+The parent must provide or register a hash-verifiable local Oracle payload containing the frozen source before rerunning the final Oracle and complete controls matrix.

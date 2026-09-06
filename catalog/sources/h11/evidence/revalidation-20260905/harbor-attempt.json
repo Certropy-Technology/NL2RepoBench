@@ -1,0 +1,38 @@
+{
+  "schema_version": "1.0",
+  "task_id": "h11",
+  "source_digest": "sha256:c39edc043ffca6306ae21ee56caf8a501dddfcd90f6120291919e84b462284a2",
+  "compiled_manifest_digest": "sha256:cd5eab0ff5f2cfd767d616330628f777cce481d7f6422b0c6c1085a9f92f644a",
+  "harbor_version": "0.21.0",
+  "network_policy": "no-network",
+  "attempted_jobs": [
+    "h11-revalidation-oracle-20260906",
+    "h11-revalidation-empty-20260906",
+    "h11-revalidation-stub-20260906",
+    "h11-revalidation-forgery-20260906"
+  ],
+  "commands": [
+    {
+      "command": "harbor run -p <compiled h11> -a oracle --job-name h11-revalidation-oracle-20260906 -o <oracle run root> --n-concurrent 1 --yes",
+      "exit_code": 1,
+      "result": "infrastructure",
+      "stderr": "Docker daemon is not running. Please start Docker and try again."
+    },
+    {
+      "command": "harbor run -p <compiled h11> -a oracle --job-name h11-revalidation-oracle-retry-20260906 -o <oracle retry run root> --n-concurrent 1 --yes",
+      "exit_code": 1,
+      "result": "infrastructure",
+      "stderr": "Docker daemon is not running. Please start Docker and try again."
+    }
+  ],
+  "remaining_jobs_not_started": ["empty", "stub", "forgery"],
+  "retry_count": 1,
+  "reason_no_retry": "The single bounded retry was exhausted; policy forbids additional retries, restarting, or globally pruning Docker in this worker.",
+  "receipts": {
+    "oracle": null,
+    "empty": null,
+    "stub": null,
+    "forgery": null,
+    "offline": null
+  }
+}

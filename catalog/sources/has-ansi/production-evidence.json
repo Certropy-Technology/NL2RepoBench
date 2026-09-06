@@ -4,10 +4,11 @@
   "task_version": "2.0.0",
   "terminal_kind": "valid",
   "status": "controls-passed",
-  "bundle": {
-    "path": ".nl2repo/runs/has-ansi-production/compiled-final2/has-ansi/bundle.manifest.json",
-    "sha256": "sha256:8c43082e5ba3343e28f621f5f95d72ccad1bd54faf14cd8829f88fafa2cb7068",
-    "canonical_manifest_digest": "sha256:af5e6f41ad12773f60ce10b620ba6e359aa30a4f6933d8f2e687f6df98d8c310"
+  "catalog_source_digest": "sha256:145558676d7d5fa6f03faeef001a7e46e5736d58e893cde475d1392a9ab031af",
+  "source": {
+    "revision": "8ad46b5ecc1f66de8e526c506d72fbe3e092ef20",
+    "digest": "sha256:bf0286a0fb4a59faf5ca08ba2a1b52221154248db05b6f4f5b9a483db97b4d2b",
+    "license": "MIT"
   },
   "source_freeze": {
     "upstream_url": "https://github.com/chalk/has-ansi",
@@ -17,14 +18,23 @@
     "status": "known",
     "submodules": []
   },
-  "environment": {
-    "harbor_version": "0.21.0",
+  "toolchain": {
+    "harbor": "0.21.0",
+    "task_schema": "2.0",
     "node": "24.19.0",
     "npm": "11.17.0",
-    "platform": "linux/amd64",
-    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
-    "network_policy": "no-network",
-    "agent_allowed_hosts": []
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+  },
+  "compile": {
+    "exit_code": 0,
+    "deterministic": true,
+    "command": "uv run nl2repo harbor compile catalog/sources/has-ansi --toolchain toolchain.node.lock.toml --artifact-root private-artifacts --allow-private",
+    "bundle_manifest": "catalog/sources/has-ansi/evidence/revalidation-20260905/bundle-manifest.json",
+    "bundle_manifest_sha256": "sha256:73e4dd300338b061fa4f942b03b30aa06a39ec27aaf4e25c3527e37c7cf15d8c"
+  },
+  "bundle": {
+    "canonical_manifest_digest": "sha256:a612293242b48d7104cbb04e2c53011889967723e90460a7c18a0640c8aa1a2b",
+    "raw_manifest_sha256": "sha256:1d763162723fbb0ca5e61ceb8c0f75395921c0867059110cdba48dd915e38676"
   },
   "tests": {
     "framework": "node:test",
@@ -34,80 +44,60 @@
     "private_bundle": "sha256:d26de20ca3bc70d11908d1d204f13cafeb1a3c55b2e0179377a6e630a1df61b3"
   },
   "oracle": {
-    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/runs/has-ansi-production/compiled-final/has-ansi -a oracle --job-name has-ansi-oracle-final --jobs-dir .nl2repo/evidence/has-ansi/oracle --n-concurrent 1 --max-retries 0 --quiet --yes",
-    "exit_code": 0,
-    "harbor_version": "0.21.0",
-    "grading": {
-      "path": ".nl2repo/evidence/has-ansi/oracle/has-ansi-oracle-final/has-ansi__XforbFy/verifier/grading.json",
-      "sha256": "sha256:37c211201c0c809ee0f5aec8d775c44f133dea2498ab3c9ed20c3d210ca62c8a",
-      "valid": true,
-      "reward": 1.0,
-      "expected_total": 24,
-      "collected": 24,
-      "passed": 24
-    },
-    "network": {
-      "path": ".nl2repo/evidence/has-ansi/oracle/has-ansi-oracle-final/has-ansi__XforbFy/verifier/network.json",
-      "sha256": "sha256:46f4e1b15ddcc481422808f75b9936891e4fb9220dc8f678043ffeb8b509cf80",
-      "public_network_available": false
-    }
+    "valid": true,
+    "collected": 24,
+    "passed": 24,
+    "failed": 0,
+    "reward": 1.0,
+    "network": false,
+    "receipt": "catalog/sources/has-ansi/evidence/revalidation-20260905/oracle.json",
+    "receipt_sha256": "sha256:472b83a41a1054893aad339b68327fe9de92af2ad6e39183d19e0a150c7554fb"
   },
   "controls": {
-    "summary": {
-      "path": ".nl2repo/evidence/has-ansi/control-summary.json",
-      "sha256": "sha256:bb70f0ca9baec6cf8b861086256da56e672173321757d9a423dd3f3b6f43fc13",
-      "passed": true
-    },
     "empty": {
-      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/runs/has-ansi-production/controls-final/has-ansi-empty -a oracle --job-name has-ansi-empty-final --jobs-dir .nl2repo/evidence/has-ansi/controls/empty --n-concurrent 1 --max-retries 0 --quiet --yes",
-      "exit_code": 0,
-      "grading": {"path": ".nl2repo/evidence/has-ansi/controls/empty/has-ansi-empty-final/has-ansi-empty__yFMujZb/verifier/grading.json", "sha256": "sha256:857fc7d0ca5d79f20c569b663734dd31e8f8f994491149d216d10baec3f54d2b", "valid": true, "reward": 0.0, "failure_class": "model", "failure_reason": "candidate-installation-failed", "collected": 0},
-      "network": {"path": ".nl2repo/evidence/has-ansi/controls/empty/has-ansi-empty-final/has-ansi-empty__yFMujZb/verifier/network.json", "sha256": "sha256:0448a982d950c1747892d5c90d8c0cecb4582e12711d6b225821286386869567", "public_network_available": false}
+      "valid": true, "collected": 0, "expected_total": 24, "reward": 0.0,
+      "failure_class": "model", "failure_reason": "candidate-installation-failed", "network": false,
+      "receipt": "catalog/sources/has-ansi/evidence/revalidation-20260905/empty.json",
+      "receipt_sha256": "sha256:2f52059450f81482ce18a5ab92b46c54626381f38c254755b2e45b42266d7221"
     },
     "stub": {
-      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/runs/has-ansi-production/controls-final/has-ansi-stub -a oracle --job-name has-ansi-stub-final --jobs-dir .nl2repo/evidence/has-ansi/controls/stub --n-concurrent 1 --max-retries 0 --quiet --yes",
-      "exit_code": 0,
-      "grading": {"path": ".nl2repo/evidence/has-ansi/controls/stub/has-ansi-stub-final/has-ansi-stub__XLW8W6V/verifier/grading.json", "sha256": "sha256:c00f0a4b54bd529e5e3a4a1ba23b042f2cc6c052bae398a729284c4b4a572942", "valid": true, "reward": 0.0, "expected_total": 24, "collected": 24, "passed": 0},
-      "network": {"path": ".nl2repo/evidence/has-ansi/controls/stub/has-ansi-stub-final/has-ansi-stub__XLW8W6V/verifier/network.json", "sha256": "sha256:0448a982d950c1747892d5c90d8c0cecb4582e12711d6b225821286386869567", "public_network_available": false}
+      "valid": true, "collected": 24, "passed": 0, "expected_total": 24, "reward": 0.0, "network": false,
+      "receipt": "catalog/sources/has-ansi/evidence/revalidation-20260905/stub.json",
+      "receipt_sha256": "sha256:0d11c235b379b1454ae1b2f96d35f3e5eeff1bd8980f29b97518bdeaa9bd2386"
     },
     "forgery": {
-      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/runs/has-ansi-production/controls-final/has-ansi-forgery -a oracle --job-name has-ansi-forgery-final --jobs-dir .nl2repo/evidence/has-ansi/controls/forgery --n-concurrent 1 --max-retries 0 --quiet --yes",
-      "exit_code": 0,
-      "verifier_owned_reward": true,
-      "grading": {"path": ".nl2repo/evidence/has-ansi/controls/forgery/has-ansi-forgery-final/has-ansi-forgery__hFnCghj/verifier/grading.json", "sha256": "sha256:c00f0a4b54bd529e5e3a4a1ba23b042f2cc6c052bae398a729284c4b4a572942", "valid": true, "reward": 0.0, "expected_total": 24, "collected": 24, "passed": 0},
-      "network": {"path": ".nl2repo/evidence/has-ansi/controls/forgery/has-ansi-forgery-final/has-ansi-forgery__hFnCghj/verifier/network.json", "sha256": "sha256:0448a982d950c1747892d5c90d8c0cecb4582e12711d6b225821286386869567", "public_network_available": false}
+      "valid": true, "collected": 24, "passed": 0, "expected_total": 24, "reward": 0.0, "network": false,
+      "trusted_reward_unaffected": true,
+      "receipt": "catalog/sources/has-ansi/evidence/revalidation-20260905/forgery.json",
+      "receipt_sha256": "sha256:984b089e0ed3af27bce82e9da1c83eb7cf49a781e4736a2a4670021d57a8c94a"
     },
     "install_script": {
-      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/runs/has-ansi-production/controls-final/has-ansi-install-script -a oracle --job-name has-ansi-install-script-final --jobs-dir .nl2repo/evidence/has-ansi/controls/install-script --n-concurrent 1 --max-retries 0 --quiet --yes",
-      "exit_code": 0,
-      "grading": {"path": ".nl2repo/evidence/has-ansi/controls/install-script/has-ansi-install-script-final/has-ansi-install-script__sHMXLS5/verifier/grading.json", "sha256": "sha256:857fc7d0ca5d79f20c569b663734dd31e8f8f994491149d216d10baec3f54d2b", "valid": true, "reward": 0.0, "failure_class": "model", "failure_reason": "candidate-installation-failed", "collected": 0},
-      "network": {"path": ".nl2repo/evidence/has-ansi/controls/install-script/has-ansi-install-script-final/has-ansi-install-script__sHMXLS5/verifier/network.json", "sha256": "sha256:0448a982d950c1747892d5c90d8c0cecb4582e12711d6b225821286386869567", "public_network_available": false}
+      "valid": true, "collected": 0, "expected_total": 24, "reward": 0.0,
+      "failure_class": "model", "failure_reason": "candidate-installation-failed", "network": false,
+      "receipt": "catalog/sources/has-ansi/evidence/revalidation-20260905/install-script.json",
+      "receipt_sha256": "sha256:3d11e061982e17daa8aac6f679cb14f73147fca0f4e8c18c390337de625d75c1"
     },
     "loader_hook": {
-      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/runs/has-ansi-production/controls-final/has-ansi-loader-hook -a oracle --job-name has-ansi-loader-hook-final --jobs-dir .nl2repo/evidence/has-ansi/controls/loader-hook --n-concurrent 1 --max-retries 0 --quiet --yes",
-      "exit_code": 0,
-      "grading": {"path": ".nl2repo/evidence/has-ansi/controls/loader-hook/has-ansi-loader-hook-final/has-ansi-loader-hook__i9D3cGf/verifier/grading.json", "sha256": "sha256:c00f0a4b54bd529e5e3a4a1ba23b042f2cc6c052bae398a729284c4b4a572942", "valid": true, "reward": 0.0, "expected_total": 24, "collected": 24, "passed": 0},
-      "network": {"path": ".nl2repo/evidence/has-ansi/controls/loader-hook/has-ansi-loader-hook-final/has-ansi-loader-hook__i9D3cGf/verifier/network.json", "sha256": "sha256:46f4e1b15ddcc481422808f75b9936891e4fb9220dc8f678043ffeb8b509cf80", "public_network_available": false}
+      "valid": true, "collected": 24, "passed": 0, "expected_total": 24, "reward": 0.0, "network": false,
+      "receipt": "catalog/sources/has-ansi/evidence/revalidation-20260905/loader-hook.json",
+      "receipt_sha256": "sha256:7737b48662702a04c7a2e0f1a9d9aec6e678b01c3e3d2d60587508d707ab7d22"
     },
-    "bounded_hang": {
-      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/runs/has-ansi-production/controls-final/has-ansi-hang -a oracle --job-name has-ansi-hang-final --jobs-dir .nl2repo/evidence/has-ansi/controls/hang --n-concurrent 1 --max-retries 0 --quiet --yes",
-      "exit_code": 0,
-      "completed": true,
-      "grading": {"path": ".nl2repo/evidence/has-ansi/controls/hang/has-ansi-hang-final/has-ansi-hang__jhkcyrX/verifier/grading.json", "sha256": "sha256:c00f0a4b54bd529e5e3a4a1ba23b042f2cc6c052bae398a729284c4b4a572942", "valid": true, "reward": 0.0, "expected_total": 24, "collected": 24, "passed": 0, "runner_exit_code": 1},
-      "network": {"path": ".nl2repo/evidence/has-ansi/controls/hang/has-ansi-hang-final/has-ansi-hang__jhkcyrX/verifier/network.json", "sha256": "sha256:bcbdec45d54bc642b1f5eda83d6674ce15b56f5b66f2247eea11548e2c966dbe", "public_network_available": false}
+    "hang": {
+      "valid": true, "collected": 24, "passed": 0, "expected_total": 24, "reward": 0.0, "network": false,
+      "receipt": "catalog/sources/has-ansi/evidence/revalidation-20260905/hang.json",
+      "receipt_sha256": "sha256:54464636604df23e54c983db30f6571f8c2f8882651f976ae6aade38eec18d28"
     },
     "offline": {
-      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/runs/has-ansi-production/controls-final/has-ansi-offline -a oracle --job-name has-ansi-offline-final --jobs-dir .nl2repo/evidence/has-ansi/controls/offline --n-concurrent 1 --max-retries 0 --quiet --yes",
-      "exit_code": 0,
-      "completed": true,
-      "grading": {"path": ".nl2repo/evidence/has-ansi/controls/offline/has-ansi-offline-final/has-ansi-offline__Za7TJBH/verifier/grading.json", "sha256": "sha256:c00f0a4b54bd529e5e3a4a1ba23b042f2cc6c052bae398a729284c4b4a572942", "valid": true, "reward": 0.0, "expected_total": 24, "collected": 24, "passed": 0},
-      "network": {"path": ".nl2repo/evidence/has-ansi/controls/offline/has-ansi-offline-final/has-ansi-offline__Za7TJBH/verifier/network.json", "sha256": "sha256:46f4e1b15ddcc481422808f75b9936891e4fb9220dc8f678043ffeb8b509cf80", "public_network_available": false}
+      "valid": true, "collected": 24, "passed": 0, "expected_total": 24, "reward": 0.0,
+      "network": false, "public_network_available": false,
+      "receipt": "catalog/sources/has-ansi/evidence/revalidation-20260905/offline.json",
+      "receipt_sha256": "sha256:f9b9e01e9720a532591dfef06ae0dd083ec1d86d45520923c7d1970cebb9337e"
     }
   },
   "residual_risks": [
     "No Harbor model Agent Run was started in this authoring lane; integrator must run the selected model campaign.",
     "Integrator review, publication approval, and dataset integration remain outstanding.",
-    "The generic Node control summarizer change accepts the observed bounded full-collection hang form and includes a focused regression test."
+    "The initial Oracle attempt hit EnvironmentStartTimeoutError; one bounded infrastructure retry passed 24/24 and is retained in oracle-infrastructure-attempt.json."
   ],
   "blocker": null
 }

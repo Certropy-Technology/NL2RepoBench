@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-mergo",
+  "source_digest": "sha256:0ccf8b0dc22c8672ef4c5594aa2ead5ad9db9b6e592a7d0699fc33c7c9c22ca3",
+  "artifacts": [
+    {"role": "oracle_bundle", "digest": "sha256:b7d5336c64a943af75234debe79fd55609ffc80340ff6abc420bd1e6710cc4b5", "size_bytes": 734, "verified": true},
+    {"role": "module_bundle", "digest": "sha256:569c0a6c8b65dfc21cfd74567407b278d9e105d2ea02acf4e8edceda52f63978", "size_bytes": 525, "verified": true},
+    {"role": "verifier_bundle", "digest": "sha256:732a6a20a7c48efca4154afc5159af5eacf37f880c85b98927e23ffcc9910f00", "size_bytes": 1408, "verified": true}
+  ],
+  "artifact_root": "private/sha256/<prefix>/<digest>",
+  "missing": [],
+  "verified_at": "2026-09-05",
+  "network": "no-network"
+}

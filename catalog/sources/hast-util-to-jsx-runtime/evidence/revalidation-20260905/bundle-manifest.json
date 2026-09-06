@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "task_id": "hast-util-to-jsx-runtime",
+  "source_digest": "sha256:8796c7492dfa118feabd9006d12c27278941a4d74b3777510e2268bd0e773317",
+  "canonical_manifest_digest": "sha256:424fd2a2d9661253f3eb263976c5d86f2c78961d81dae3cecb9b6918a979bf7e",
+  "bundle_manifest_sha256": "sha256:86ddd75ba9f211986225b702de50a3276c00743fcc49250678629a13b1371ecd",
+  "file_count": 619,
+  "repeat_compile_byte_identical": true,
+  "compile_command": "uv run nl2repo harbor compile catalog/sources/hast-util-to-jsx-runtime --output <revalidation-compile-a> --toolchain toolchain.node.lock.toml --artifact-root <parent-private-cas> --allow-private",
+  "repeat_compile_command": "uv run nl2repo harbor compile catalog/sources/hast-util-to-jsx-runtime --output <revalidation-compile-b> --toolchain toolchain.node.lock.toml --artifact-root <parent-private-cas> --allow-private",
+  "toolchain": "toolchain.node.lock.toml",
+  "harbor_version": "0.21.0"
+}

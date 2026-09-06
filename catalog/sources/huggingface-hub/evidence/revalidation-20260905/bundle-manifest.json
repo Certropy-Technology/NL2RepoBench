@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "task_id": "huggingface-hub",
+  "source_digest": "sha256:4fa914929806b1aa576bf6e1c5d222ee881dadef1a108e6bae0ee09b3dd34b1f",
+  "compile": {
+    "command": "uv run nl2repo harbor compile catalog/sources/huggingface-hub --output <revalidation-output> --toolchain toolchain.lock.toml --artifact-root <parent-private-cas> --allow-private",
+    "attempts": 2,
+    "exit_codes": [0, 0],
+    "manifest_sha256": "sha256:27bec09c7eee347b90b1fca8291baad29add96b5055b26f6df57184cb2c2a4ba",
+    "canonical_manifest_digest": "sha256:d645b4875f46b94d8ec56d4a9e88588909f6cd07b7b1bed692272186f86eb53e",
+    "file_count": 58,
+    "byte_identical": true
+  },
+  "private_artifacts": {
+    "lock": {"digest": "sha256:65b065f7ae1c55064a20407eca78808697c26fb1190448a3e71717abf0d56f83", "size_bytes": 9451, "verified": true},
+    "verifier": {"digest": "sha256:6ee734d4ca196749765e8313d6102bccd6fc2d56f9de6fb822cabc66aa148cde", "size_bytes": 20480, "verified": true},
+    "oracle": {"digest": "sha256:1146b95791a395c4cdbd3af53f71837bb6b6289337ad527d34039038fae935ab", "size_bytes": 10240, "verified": true, "payload_inventory": ["solve.sh"]}
+  }
+}

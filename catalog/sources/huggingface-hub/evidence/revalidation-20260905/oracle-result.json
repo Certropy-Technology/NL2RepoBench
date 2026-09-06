@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "task_id": "huggingface-hub",
+  "source_digest": "sha256:4fa914929806b1aa576bf6e1c5d222ee881dadef1a108e6bae0ee09b3dd34b1f",
+  "attempts": [
+    {"kind": "environment-start", "exit_code": 1, "failure_class": "infrastructure", "failure": "EnvironmentStartTimeoutError", "trials": 0},
+    {"kind": "oracle-retry", "exit_code": 0, "trials": 1, "agent_exit_code": 128, "failure_class": "artifact-or-verifier", "failure": "pinned Oracle solve.sh attempted the forbidden runtime GitHub clone; no exact local source payload exists", "collected": 0, "expected_total": 40, "reward": 0.0}
+  ],
+  "network": "no-network",
+  "accepted_oracle": false,
+  "next_step": "Supply an exact local archive matching the frozen source digest before rerunning Oracle."
+}

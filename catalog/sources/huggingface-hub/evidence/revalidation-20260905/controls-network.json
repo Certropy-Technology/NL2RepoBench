@@ -1,0 +1,10 @@
+{
+  "schema_version": "1.0",
+  "task_id": "huggingface-hub",
+  "controls": {
+    "stub": {"public_network_available": false, "probes": {"1.1.1.1:443": false, "pypi.org:443": false}, "receipt_sha256": "sha256:44776fc0dabb9a352c0a9f31498b4627984838de6698919ae521d8f1e4e63d85"},
+    "forgery": {"public_network_available": false, "probes": {"1.1.1.1:443": false, "pypi.org:443": false}, "receipt_sha256": "sha256:ce968e0dc27420db1ab4db30c600aa05cdc76e0daf901f162d756fc566cf4cbc"},
+    "call-hang": {"public_network_available": false, "probes": {"1.1.1.1:443": false, "pypi.org:443": false}, "receipt_sha256": "sha256:44776fc0dabb9a352c0a9f31498b4627984838de6698919ae521d8f1e4e63d85"},
+    "install-hang": {"public_network_available": false, "probes": {"1.1.1.1:443": false, "pypi.org:443": false}, "receipt_sha256": "sha256:a4b96c3182fe0fac948a791cbd1e707b1460d3db46e5356c3804c7de7bf26ebf"}
+  }
+}

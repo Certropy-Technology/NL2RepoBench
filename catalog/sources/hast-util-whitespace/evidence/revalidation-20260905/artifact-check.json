@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "task_id": "hast-util-whitespace",
+  "source_digest": "sha256:66fc7e9df78fc3916e35892a0f9651976b398fb9c7e8417a49dd8ba7f01317e3",
+  "artifacts": [
+    {"name": "npm-dependencies", "digest": "sha256:2709f7f061b612e134913f158f1fae41e6f5872bfdd887454e599ad4fed17232", "size_bytes": 475, "sha256_verified": true},
+    {"name": "commands", "digest": "sha256:87f9b085c4130b18155b4a202e67376324866cce37c516ebd668ef44c8e25898", "size_bytes": 206, "sha256_verified": true},
+    {"name": "tests", "digest": "sha256:baa80dde0c7030b7b0258ef7649e614f9ed5043c967142eb9a49fb994f917596", "size_bytes": 1493, "sha256_verified": true},
+    {"name": "oracle", "digest": "sha256:abcadf37573c3a374fed8ae05497ed84c1d294a6893ba34effa140eca43a74c0", "size_bytes": 5930, "sha256_verified": true}
+  ],
+  "oracle_payload": {"outer_digest_verified": true, "outer_size_bytes": 5930, "members": [{"path": "solve.sh", "size_bytes": 898}, {"path": "source.tar", "size_bytes": 30720, "sha256": "sha256:d012e1fee404e631ad5a5b5aa3f338b413417e73f80b53d5d0c0e7a469f8e1be"}]},
+  "local_recovery": {"status": "exact-payload-present", "replacement_proposed": false, "source_revision": "22b88c3f4d51f3777929758e980c257a2838a4b2"}
+}

@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "task_id": "h11",
+  "source_digest": "sha256:c39edc043ffca6306ae21ee56caf8a501dddfcd90f6120291919e84b462284a2",
+  "source_root": {
+    "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+    "exit_code": 0,
+    "tasks_scanned": 480,
+    "global_errors": 0,
+    "h11_findings": 0
+  },
+  "generated_inclusive": {
+    "command": "uv run nl2repo task lint-network --include-generated",
+    "exit_code": 1,
+    "tasks_scanned": 824,
+    "global_errors": 1,
+    "h11_findings": 0,
+    "h11_errors": 0,
+    "note": "The one global error is unrelated to h11 and remains a parent integration issue."
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "task_id": "huggingface-hub",
+  "expected_total": 40,
+  "controls": {
+    "stub": {"failed_leaf_count": 39, "skipped_leaf_ids": [], "failure_set_preserved": true},
+    "forgery": {"failed_leaf_count": 39, "skipped_leaf_ids": [], "failure_set_preserved": true, "verifier_owned_grading": true},
+    "call-hang": {"failed_leaf_count": 37, "skipped_leaf_ids": [], "failure_set_preserved": true},
+    "install-hang": {"failed_leaf_count": 0, "skipped_leaf_ids": [], "collection_blocked": true, "reason": "candidate installation timeout"}
+  }
+}

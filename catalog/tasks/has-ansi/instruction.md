@@ -58,3 +58,64 @@ declared npm dependency. The verifier launches a fresh child process for each
 JSON request, with no network and with candidate code outside the trusted
 `node:test` process. Private tests, the child adapter, the Oracle solution, and
 verifier internals are not part of the package to implement.
+
+## Natural Language Instruction
+
+Build the package from an empty workspace. Implement the default root predicate,
+package metadata, and declaration. Detect accepted ANSI escape sequences at
+any position while preserving ordinary text and rejecting incomplete escapes.
+Keep the synchronous API pure; do not add filesystem, process, TTY, or network
+behavior.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── index.js
+└── index.d.ts
+```
+
+The package is ESM version `6.0.2`, rooted at `index.js`, with its declared
+`ansi-regex` `6.3.0` runtime closure. Private test and verifier files are not
+part of the generated workspace.
+
+## Examples
+
+```js
+import hasAnsi from 'has-ansi';
+hasAnsi('\u001B[31mred\u001B[0m'); // true
+```
+
+```js
+import hasAnsi from 'has-ansi';
+hasAnsi('plain text'); // false
+```
+
+## Error Handling and Boundary Conditions
+
+- The result is a primitive boolean and the input is never mutated.
+- Empty strings, ordinary Unicode, and the literal characters `\\u001B[31m`
+  return `false`; valid CSI, SGR, cursor, OSC, C1, parameter, and intermediate
+  forms follow the declared ANSI grammar.
+- A lone escape or an incomplete sequence is not accepted. Non-string values
+  are outside the scored input domain. All execution uses `network_mode=no-network`.
+
+## Additional Examples
+
+```js
+import hasAnsi from 'has-ansi';
+hasAnsi('prefix\u001B[2Ksuffix'); // true
+hasAnsi('literal \\u001B[31m'); // false
+```
+
+The predicate scans the complete string, including line breaks, and returns as
+soon as a complete accepted sequence is found. It must not strip, normalize,
+or otherwise modify ordinary text. C1 control forms and OSC forms are handled
+according to the accepted ANSI grammar, while an escape followed only by an
+ordinary character remains false.
+
+Keep the implementation synchronous and side-effect free.
+
+The package must preserve its documented default export shape.

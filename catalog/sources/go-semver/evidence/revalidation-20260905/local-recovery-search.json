@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-semver",
+  "source_revision": "dd2b995c61c39ddd668b23ac919b04d607be35ab",
+  "required_archive_digest": "sha256:883b1aa28b1a3920344950359343bdc2e43b5a70d854fb0850913b2c548325e2",
+  "searches": [
+    {
+      "scope": "current private CAS",
+      "checked": ["declared module bundle", "declared Oracle bundle", "declared verifier bundle"],
+      "result": "Oracle bundle contains solve.sh only; no source payload"
+    },
+    {
+      "scope": "task-local evidence and current generated projection",
+      "checked": ["source-freeze.json", "traceability.json", "production-evidence.json", "solution/solve.sh", "runtime solution archive paths"],
+      "result": "no exact frozen source archive"
+    },
+    {
+      "scope": "retained authoring handoffs, archives, and worktrees",
+      "command": "rg --files -g 'source.tar' <retained-authoring-root>",
+      "exit_code": 0,
+      "candidate_count": 4225,
+      "hash_command": "xargs -P8 -n1 sha256sum < indexed-source-tar-list",
+      "hash_exit_code": 0,
+      "exact_digest_matches": 0
+    },
+    {
+      "scope": "retained authoring archive formats",
+      "command": "rg --files -g '*.tar' -g '*.tar.gz' -g '*.tgz' -g '*.zip' <retained-authoring-root>",
+      "exit_code": 0,
+      "candidate_count": 5596,
+      "hash_command": "xargs -P8 -n1 sha256sum < indexed-archive-list",
+      "hash_exit_code": 0,
+      "exact_digest_matches": 0
+    },
+    {
+      "scope": "local Go module cache",
+      "checked": ["revision .info record for dd2b995c61c39ddd668b23ac919b04d607be35ab", "available Masterminds semver module versions"],
+      "result": "revision metadata exists, but no matching pseudo-version source zip or extracted directory; available module zips are different versions and ZIP format"
+    },
+    {
+      "scope": "broad retained-tree archive scan",
+      "command": "find <retained-authoring-root> -type f over archive candidates and hash each candidate",
+      "exit_code": 124,
+      "result": "bounded at 300 seconds before output; replaced by indexed scans above",
+      "failure_class": "infrastructure"
+    }
+  ],
+  "replacement_bundle": "none: no exact source bytes proven"
+}

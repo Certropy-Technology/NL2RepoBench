@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-semver",
+  "source_digest": "sha256:8b969f84d5d34827a61c7e4c73af2e48ab0b2564a2b4a678e4b8b689bcdb9dd3",
+  "compile_command": "uv run nl2repo harbor compile catalog/sources/go-semver --output <task-local-transient-output> --toolchain toolchain.go.lock.toml --artifact-root <parent-CAS-artifact-root> --allow-private",
+  "compile_runs": [
+    {"run": "A", "exit_code": 0, "bundle_manifest_size_bytes": 12731, "bundle_manifest_sha256": "sha256:c0cf8c9fff4e8377bd957dd46e6e8b0a4a1376e5823ba5753926c9790a7d7c6c"},
+    {"run": "B", "exit_code": 0, "bundle_manifest_size_bytes": 12731, "bundle_manifest_sha256": "sha256:c0cf8c9fff4e8377bd957dd46e6e8b0a4a1376e5823ba5753926c9790a7d7c6c"}
+  ],
+  "byte_identity": true,
+  "generated_projection_written": false,
+  "harbor_run": "not-run: no exact local Oracle source payload"
+}

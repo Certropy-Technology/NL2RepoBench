@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0",
+  "task_id": "httpx-sse",
+  "source_digest": "sha256:54877b5a8e32dee78262d3a6350fb262e57a2739964222c9a48f5ac40720c040",
+  "frozen_revision": "ccba32e3f9b03d1c1c42b788fdae7ea59ebcb9b8",
+  "artifacts": {
+    "dependency_lock": {
+      "digest": "sha256:c040982d796cdcbcccba3aca9e8abc7f0353f4220a9d9b98fda1650b37a74adf",
+      "size_bytes": 2336,
+      "sha256_verified": true
+    },
+    "verifier_bundle": {
+      "digest": "sha256:489634abf1fb9a28b13f2331cad9684e6463ea2d04ef2ee5596266c2c17d4237",
+      "size_bytes": 20480,
+      "sha256_verified": true,
+      "inventory": ["adapter.py", "run.py"]
+    },
+    "oracle_bundle": {
+      "digest": "sha256:c52c9b1ff5d137611d0b4cdc84cae61f4e466120b7619e22a602f43f5b09e045",
+      "size_bytes": 81920,
+      "sha256_verified": true,
+      "inventory": ["solve.sh", "source.tar"],
+      "inner_source_archive": {
+        "digest": "sha256:b8c8d892b6c6557f7ffebf2dd28a14b2d4b12b30ff2c6f110736e7f5ff852220",
+        "size_bytes": 71680,
+        "revision_match": true,
+        "tar_inventory_verified": true
+      }
+    }
+  },
+  "local_recovery": {
+    "attempted": true,
+    "sources": [
+      "current private Oracle bundle",
+      "task-local evidence and provenance",
+      "integration private CAS"
+    ],
+    "replacement_bundle": "not needed; exact source.tar was present and matched"
+  }
+}

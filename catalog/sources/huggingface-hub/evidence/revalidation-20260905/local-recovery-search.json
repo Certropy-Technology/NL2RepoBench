@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "task_id": "huggingface-hub",
+  "source_revision": "c6be77fb44d91f474da963e5ad6fce4801811027",
+  "required_source_archive_sha256": "sha256:64d379d7374b8afb92dbade7829d328982633d137941ea0aa088d17582e6294d",
+  "searches": [
+    {"location": "declared Oracle private bundle", "result": "only solve.sh; no source.tar or oracle-package payload"},
+    {"location": "task-local evidence and provenance", "result": "no source archive payload"},
+    {"location": "parent private CAS and retained authoring stores", "result": "no exact archive bytes matching the frozen digest"},
+    {"location": "local package/module caches", "result": "no exact frozen source archive established"}
+  ],
+  "replacement_bundle": "not constructed",
+  "network_access": "none",
+  "conclusion": "No exact local source payload can be proven; do not authorize a source host or replace the Oracle artifact.",
+  "next_step": "Register an exact archive for the frozen revision and digest, then recompile and rerun the full Oracle/control matrix."
+}

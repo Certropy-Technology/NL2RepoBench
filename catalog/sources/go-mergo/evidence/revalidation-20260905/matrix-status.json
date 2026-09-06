@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-mergo",
+  "source_digest": "sha256:0ccf8b0dc22c8672ef4c5594aa2ead5ad9db9b6e592a7d0699fc33c7c9c22ca3",
+  "compile": {"status": "passed", "double_compile_byte_identical": true},
+  "oracle": {"status": "blocked", "failure_class": "artifact-or-verifier", "run": false},
+  "controls": {"status": "not-run", "reason": "Controls require a current Oracle-compatible compiled payload"},
+  "lifecycle_changed": false,
+  "production_evidence_changed": false,
+  "network": "no-network"
+}

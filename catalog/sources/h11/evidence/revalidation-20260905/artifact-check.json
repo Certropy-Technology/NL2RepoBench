@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0",
+  "task_id": "h11",
+  "source_digest": "sha256:c39edc043ffca6306ae21ee56caf8a501dddfcd90f6120291919e84b462284a2",
+  "artifacts": [
+    {
+      "name": "dependencies.lock_artifact",
+      "digest": "sha256:53615811dc1d1f22b94617262702e9d02d56d5d8a0a180227344c700fcddae60",
+      "size_bytes": 373,
+      "sha256_verified": true
+    },
+    {
+      "name": "verifier.bundle",
+      "digest": "sha256:789bd21a098e1f9177e49d4c2da8942364b6a47c397475d3f782c3628b6a591f",
+      "size_bytes": 20480,
+      "sha256_verified": true,
+      "inventory": ["run.py"]
+    },
+    {
+      "name": "oracle_bundle",
+      "digest": "sha256:04c1283e5d38c3b6d4381dcc668054a045c27c417b1d61be7a2ac781d6eeb680",
+      "size_bytes": 440320,
+      "sha256_verified": true,
+      "inventory": ["solve.sh", "source.tar", "revision.txt"],
+      "source_archive_sha256": "sha256:503ed1fbb3efd07a9145b2f5ed05169728319e75d8117a4ef986e3aa91ea33f4",
+      "revision": "62c5068c971579d61fa1b55373390e12f25fd856"
+    }
+  ],
+  "local_recovery": {
+    "exact_payload_found": true,
+    "replacement_bundle": null,
+    "network_used": false
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "task_id": "hast-util-to-jsx-runtime",
+  "manifest_digest": "sha256:424fd2a2d9661253f3eb263976c5d86f2c78961d81dae3cecb9b6918a979bf7e",
+  "expected_total": 24,
+  "controls": {
+    "empty": {"exit_code": 0, "collected": 0, "passed": 0, "failed": 0, "reward": 0.0, "valid": true, "network_available": false, "grading_sha256": "sha256:857fc7d0ca5d79f20c569b663734dd31e8f8f994491149d216d10baec3f54d2b", "network_sha256": "sha256:66e12748165cc76a8487c2c41fcdca2340eb5bac5c7f8d4561f3c1caee928fa4"},
+    "stub": {"exit_code": 0, "collected": 24, "passed": 0, "failed": 24, "reward": 0.0, "valid": true, "network_available": false, "grading_sha256": "sha256:1f4cf18efc68df7c37bc3168dda8451a537017f54ba6a20aadb1272c043b256a", "network_sha256": "sha256:ed41e3b66e3591f958439ab23806b0d8b4096df91ec742d6ab5047fcc2d708ec"},
+    "forgery": {"exit_code": 0, "collected": 24, "passed": 0, "failed": 24, "reward": 0.0, "valid": true, "network_available": false, "verifier_owned_reward": true, "grading_sha256": "sha256:1f4cf18efc68df7c37bc3168dda8451a537017f54ba6a20aadb1272c043b256a", "network_sha256": "sha256:a4b96c3182fe0fac948a791cbd1e707b1460d3db46e5356c3804c7de7bf26ebf"},
+    "hang": {"exit_code": 0, "collected": 0, "passed": 0, "failed": 0, "reward": 0.0, "valid": true, "network_available": false, "failure_class": "model", "failure_reason": "candidate-call-failed", "grading_sha256": "sha256:da7a16f0510b00800c9f64653bdbf071d554d9c30ff969f69f7987c5c22d09a5", "network_sha256": "sha256:8ff082f45627bdd4b2c1fc39e5b46d0520c80c81678e8b8249ad3be40557130a"},
+    "install-script": {"exit_code": 0, "collected": 0, "passed": 0, "failed": 0, "reward": 0.0, "valid": true, "network_available": false, "failure_class": "model", "failure_reason": "candidate-installation-failed", "grading_sha256": "sha256:857fc7d0ca5d79f20c569b663734dd31e8f8f994491149d216d10baec3f54d2b", "network_sha256": "sha256:56eb3338d95959e3ef543b27d0d3c4e4b60632c228f60955764a6d265d5c2357"},
+    "loader-hook": {"exit_code": 0, "collected": 24, "passed": 0, "failed": 24, "reward": 0.0, "valid": true, "network_available": false, "grading_sha256": "sha256:1f4cf18efc68df7c37bc3168dda8451a537017f54ba6a20aadb1272c043b256a", "network_sha256": "sha256:e9de6391408ad60ebead470adb0fa97e2cfd4ebfe89d1477a610bd382e18fc94"},
+    "offline": {"exit_code": 0, "collected": 24, "passed": 0, "failed": 24, "reward": 0.0, "valid": true, "network_available": false, "grading_sha256": "sha256:1f4cf18efc68df7c37bc3168dda8451a537017f54ba6a20aadb1272c043b256a", "network_sha256": "sha256:e9de6391408ad60ebead470adb0fa97e2cfd4ebfe89d1477a610bd382e18fc94"}
+  },
+  "commands": "uv run --frozen --project harbor-runner harbor run with each regenerated control bundle: empty, stub, forgery, hang, install-script, loader-hook, offline",
+  "harbor_version": "0.21.0"
+}

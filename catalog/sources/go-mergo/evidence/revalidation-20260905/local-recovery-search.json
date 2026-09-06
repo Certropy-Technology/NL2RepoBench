@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-mergo",
+  "source_revision": "a50922d8566636f636c4ff8892d725f244c49f44",
+  "source_archive_digest": "sha256:1c66e6ededb811969590605ef8049f3686a031adb552376c5771a474e57f1512",
+  "searches": [
+    {"scope": "current Oracle artifact", "result": "only solve.sh; no source.tar or oracle-package payload", "matching_payload": false},
+    {"scope": "go-mergo task-local evidence and prior production records", "result": "metadata and prior receipts only; no source archive payload", "matching_payload": false},
+    {"scope": "historical go-mergo authoring handoffs and state", "result": "fetch-based Oracle records and task metadata; no matching source archive", "matching_payload": false},
+    {"scope": "retained local compiled task trees", "result": "solution/solve.sh only; no source archive", "matching_payload": false},
+    {"scope": "local Go module cache", "result": "dario.cat/mergo@v1.0.2 only; revision and archive bytes do not match", "matching_payload": false},
+    {"scope": "local private CAS", "result": "declared Oracle/module/verifier bundles verified; Oracle bundle has no source payload", "matching_payload": false}
+  ],
+  "replacement_bundle": null,
+  "network_access": false,
+  "conclusion": "No exact local payload matching the frozen revision and source archive digest was proven."
+}

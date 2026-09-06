@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "task_id": "h11",
+  "source_digest": "sha256:c39edc043ffca6306ae21ee56caf8a501dddfcd90f6120291919e84b462284a2",
+  "harbor_version": "0.21.0",
+  "toolchain": "toolchain.lock.toml",
+  "artifact_root": "parent CAS private artifact store",
+  "allow_private": true,
+  "allow_incomplete": false,
+  "compile_a": {
+    "output": "revalidation compile A/h11",
+    "exit_code": 0,
+    "canonical_manifest_digest": "sha256:cd5eab0ff5f2cfd767d616330628f777cce481d7f6422b0c6c1085a9f92f644a"
+  },
+  "compile_b": {
+    "output": "revalidation compile B/h11",
+    "exit_code": 0,
+    "canonical_manifest_digest": "sha256:cd5eab0ff5f2cfd767d616330628f777cce481d7f6422b0c6c1085a9f92f644a"
+  },
+  "byte_identity": {
+    "manifest_identical": true,
+    "projected_tree_identical": true,
+    "projected_tree_digest": "sha256:7e97dff604ee0e45a5456195a0e21d658e5a182d701fbe37f01a425a92d556ca"
+  }
+}

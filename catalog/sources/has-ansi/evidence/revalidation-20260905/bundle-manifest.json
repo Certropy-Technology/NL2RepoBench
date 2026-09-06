@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "task_id": "has-ansi",
+  "catalog_source_digest": "sha256:145558676d7d5fa6f03faeef001a7e46e5736d58e893cde475d1392a9ab031af",
+  "canonical_manifest_digest": "sha256:a612293242b48d7104cbb04e2c53011889967723e90460a7c18a0640c8aa1a2b",
+  "raw_bundle_manifest_sha256": "sha256:1d763162723fbb0ca5e61ceb8c0f75395921c0867059110cdba48dd915e38676",
+  "file_count": 84,
+  "controls": ["empty.sh", "forgery.sh", "hang.sh", "install-script.sh", "loader-hook.sh", "offline.sh", "stub.sh"],
+  "deterministic_second_compile": true,
+  "toolchain": "toolchain.node.lock.toml",
+  "harbor": "0.21.0"
+}

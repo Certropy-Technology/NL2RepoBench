@@ -1,0 +1,10 @@
+{
+  "task_id": "httpx-sse",
+  "attempt": "a",
+  "command": "uv run nl2repo harbor compile catalog/sources/httpx-sse --output <bundle-output-a> --toolchain toolchain.lock.toml --artifact-root <private-cas-root> --allow-private",
+  "exit_code": 0,
+  "bundle_manifest_sha256": "sha256:33c07c0cd3a4472037a0b961aef716a646cacb7e3218bb809af5dc50d10618db",
+  "canonical_manifest_digest": "sha256:72ef9abc62e34f518933b85fa91636c43b345f981e30ed712a780c3e44ffffe5",
+  "generated_file_count": 60,
+  "evidence_note": "The command is path-sanitized for durable provenance; the generated output is intentionally not used as a final receipt path."
+}

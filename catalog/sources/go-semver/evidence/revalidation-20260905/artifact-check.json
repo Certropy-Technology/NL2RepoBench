@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.0",
+  "task_id": "go-semver",
+  "source_digest": "sha256:8b969f84d5d34827a61c7e4c73af2e48ab0b2564a2b4a678e4b8b689bcdb9dd3",
+  "declared_source_revision": "dd2b995c61c39ddd668b23ac919b04d607be35ab",
+  "declared_upstream_archive_digest": "sha256:883b1aa28b1a3920344950359343bdc2e43b5a70d854fb0850913b2c548325e2",
+  "declared_artifacts": [
+    {
+      "name": "module_bundle",
+      "uri": "artifact://private/sha256:b9bf47e58cb4c81a841b26fb23ad73768d9e6624b1f3bdb93eac1dd1bdb583a0",
+      "digest": "sha256:b9bf47e58cb4c81a841b26fb23ad73768d9e6624b1f3bdb93eac1dd1bdb583a0",
+      "size_bytes": 425,
+      "cas_sha256_verified": true,
+      "cas_size_verified": true
+    },
+    {
+      "name": "oracle_bundle",
+      "uri": "artifact://private/sha256:a4a2abf6822ef3199138ea0350982fb1312d00f6db5666dfd7c3e9e68d0acd46",
+      "digest": "sha256:a4a2abf6822ef3199138ea0350982fb1312d00f6db5666dfd7c3e9e68d0acd46",
+      "size_bytes": 734,
+      "cas_sha256_verified": true,
+      "cas_size_verified": true,
+      "inner_inventory": ["solve.sh"],
+      "source_payload_present": false
+    },
+    {
+      "name": "verifier_bundle",
+      "uri": "artifact://private/sha256:0e76e0c9566953dbd22af1360cb26e40c01c98317e15fceb77e64a5cda605d97",
+      "digest": "sha256:0e76e0c9566953dbd22af1360cb26e40c01c98317e15fceb77e64a5cda605d97",
+      "size_bytes": 1763,
+      "cas_sha256_verified": true,
+      "cas_size_verified": true,
+      "inner_inventory": ["contract.py", "contract.sh"]
+    }
+  ],
+  "source_validation": {
+    "command": "uv run nl2repo task validate-source catalog/sources/go-semver",
+    "exit_code": 0,
+    "reported_source_digest": "sha256:8b969f84d5d34827a61c7e4c73af2e48ab0b2564a2b4a678e4b8b689bcdb9dd3"
+  }
+}

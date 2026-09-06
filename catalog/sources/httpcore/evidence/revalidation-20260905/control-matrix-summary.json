@@ -1,0 +1,8 @@
+{
+  "schema_version": "1.0",
+  "task_id": "httpcore",
+  "status": "not-run",
+  "controls": ["empty", "stub", "forgery", "offline", "install-hang", "workspace-invalid"],
+  "reason": "Controls were not started because the final permitted Oracle infrastructure retry failed at candidate installation with Errno 11; running controls would not produce valid candidate behavior evidence.",
+  "no_control_receipts_claimed": true
+}

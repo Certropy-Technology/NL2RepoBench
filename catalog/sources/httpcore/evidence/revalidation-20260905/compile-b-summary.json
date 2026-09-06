@@ -1,0 +1,8 @@
+{
+  "task_id": "httpcore",
+  "command": "uv run nl2repo harbor compile catalog/sources/httpcore --output .nl2repo/httpcore-revalidation-20260906/compile-b --toolchain toolchain.lock.toml --artifact-root <parent-private-CAS> --allow-private",
+  "exit_code": 0,
+  "manifest_sha256": "sha256:25681b8fb218336350f6136847fc337bfd7c6ec5966d70111a9706887a388d05",
+  "canonical_manifest_digest": "sha256:6cd7ebf8b4a0dab07cb4579bd6b5453238a7b701b1f6ab8cbe4218bd63ff6665",
+  "files": 60
+}

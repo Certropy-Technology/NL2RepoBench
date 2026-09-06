@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "task_id": "has-ansi",
+  "failure_class": "infrastructure",
+  "failure": "EnvironmentStartTimeoutError",
+  "trials": 0,
+  "exit_code": 1,
+  "result_sha256": "sha256:7109c12baf061191ce3925275c96fbe39575763ade2af6da2bbd7afaccbcda17",
+  "retry": "One bounded retry was run in a new job root and passed 24/24; see oracle.json.",
+  "next_step": "None; retain this original infrastructure receipt alongside the successful bounded retry."
+}

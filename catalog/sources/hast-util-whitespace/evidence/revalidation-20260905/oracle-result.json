@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "task_id": "hast-util-whitespace",
+  "source_digest": "sha256:66fc7e9df78fc3916e35892a0f9651976b398fb9c7e8417a49dd8ba7f01317e3",
+  "status": "not-run",
+  "failure_class": "infrastructure",
+  "attempts": [
+    {"kind": "oracle", "exit_code": 1, "error": "Docker daemon is not running. Please start Docker and try again."},
+    {"kind": "oracle-bounded-retry", "exit_code": 1, "error": "Docker daemon is not running. Please start Docker and try again."}
+  ],
+  "expected_total": 24,
+  "collected": null,
+  "passed": null,
+  "failed": null,
+  "reward": null,
+  "public_network_available": null,
+  "next_step": "Retry Harbor Oracle after the Docker/Harbor daemon-state issue is repaired; do not reuse prior receipts."
+}
