@@ -1,0 +1,94 @@
+{
+  "schema_version": "1.0",
+  "task_id": "nanoid",
+  "bundle_manifest_digest": "sha256:34e2fd444f0f983df5a4c63fa7935ad2f0a8c5c3fbef799177992d478cc3d2e0",
+  "network_policy": "no-network",
+  "controls": {
+    "empty": {
+      "agent": "nop",
+      "valid": true,
+      "expected_total": 28,
+      "collected": 0,
+      "passed": 0,
+      "failed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading_sha256": "9160341e4f5921fa4eaf6febcf9b48f8ce0f0547df1f7a0b7cb6841e72973b97",
+      "network_sha256": "63b5d7be15da0346b32cee748b1ce9e3e794a5bc09bf42922ae51fe2815c6b0a"
+    },
+    "stub": {
+      "prepared_bundle": "nanoid-stub",
+      "valid": true,
+      "expected_total": 28,
+      "collected": 28,
+      "passed": 1,
+      "failed": 27,
+      "reward": 0.03571428571428571,
+      "grading_sha256": "19db2c09f6b45305ee9cdc499ef06d9c937375a34b8b13381fa94777753196c6",
+      "network_sha256": "493e5cdd3301285d92282d0278b25ab704821c0badcecdce3aff82464307d379"
+    },
+    "forgery": {
+      "prepared_bundle": "nanoid-forgery",
+      "valid": true,
+      "expected_total": 28,
+      "collected": 0,
+      "passed": 0,
+      "failed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading_sha256": "9160341e4f5921fa4eaf6febcf9b48f8ce0f0547df1f7a0b7cb6841e72973b97",
+      "network_sha256": "1f21c69e56fd6042e73271cd833ed411107f6c1fd28e54794f54463a5ae2ab44"
+    },
+    "install-script": {
+      "prepared_bundle": "nanoid-install-script",
+      "valid": true,
+      "expected_total": 28,
+      "collected": 0,
+      "passed": 0,
+      "failed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading_sha256": "9160341e4f5921fa4eaf6febcf9b48f8ce0f0547df1f7a0b7cb6841e72973b97",
+      "network_sha256": "757704eab3e310547bf41ea7c3a2c28d736b3a17624c061fe77c40e2b1730f06"
+    },
+    "loader-hook": {
+      "prepared_bundle": "nanoid-loader-hook",
+      "valid": true,
+      "expected_total": 28,
+      "collected": 0,
+      "passed": 0,
+      "failed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading_sha256": "9160341e4f5921fa4eaf6febcf9b48f8ce0f0547df1f7a0b7cb6841e72973b97",
+      "network_sha256": "6d5032482599b5ecc994fabdc28ee954738e731c3c98fec6dc9114fdac084e12"
+    },
+    "offline": {
+      "prepared_bundle": "nanoid-offline",
+      "valid": true,
+      "expected_total": 28,
+      "collected": 28,
+      "passed": 1,
+      "failed": 27,
+      "reward": 0.03571428571428571,
+      "grading_sha256": "19db2c09f6b45305ee9cdc499ef06d9c937375a34b8b13381fa94777753196c6",
+      "network_sha256": "c4410c1fef80215a37746810977135b393b590fd7ae48c03b12eea4df14a2280"
+    },
+    "hang": {
+      "prepared_bundle": "nanoid-hang",
+      "valid": true,
+      "expected_total": 28,
+      "collected": 28,
+      "passed": 1,
+      "failed": 27,
+      "reward": 0.03571428571428571,
+      "grading_sha256": "19db2c09f6b45305ee9cdc499ef06d9c937375a34b8b13381fa94777753196c6",
+      "network_sha256": "13cec582eb5e674b55ab96902f96ad7f3b59243cb8d77a70510d1aa6766ecff4"
+    }
+  },
+  "all_network_receipts_public_network_available": false
+}

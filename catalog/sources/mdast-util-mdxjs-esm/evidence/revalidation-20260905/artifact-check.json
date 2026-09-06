@@ -1,0 +1,38 @@
+{
+  "schema_version": "1.0",
+  "task_id": "mdast-util-mdxjs-esm",
+  "queue_source_digest": "sha256:366da4c3f17463f7598d4d4bc971c2c6fa5bf10459cec3ba12262dc945b6d3a3",
+  "artifact_root": "<parent-private-CAS>",
+  "offline": true,
+  "artifacts": [
+    {
+      "role": "dependency_bundle",
+      "declared_digest": "sha256:bd3680a8bafd8aaf9731a9d32032d16e9134b6246da5289529efb89cc78de5a1",
+      "declared_size_bytes": 1008913,
+      "actual_size_bytes": 1008913,
+      "sha256_match": true
+    },
+    {
+      "role": "commands_bundle",
+      "declared_digest": "sha256:ffb2587665a51c27adb62ee636ca85ddecfa7567081bffe3d40500fbc115e47a",
+      "declared_size_bytes": 228,
+      "actual_size_bytes": 228,
+      "sha256_match": true
+    },
+    {
+      "role": "test_bundle",
+      "declared_digest": "sha256:a85689f5dd2874978d8e5f3824d9e12788142529dfb54ce94e8a17c7f65debbe",
+      "declared_size_bytes": 2046,
+      "actual_size_bytes": 2046,
+      "sha256_match": true
+    },
+    {
+      "role": "oracle_bundle",
+      "declared_digest": "sha256:f5cd41aff011adbe30d11090d6073300ebe6b1be3385845234e35abd14a7bc15",
+      "declared_size_bytes": 6745,
+      "actual_size_bytes": 6745,
+      "sha256_match": true
+    }
+  ],
+  "result": "all-declared-artifacts-match"
+}

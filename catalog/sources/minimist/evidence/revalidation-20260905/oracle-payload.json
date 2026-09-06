@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "task_id": "minimist",
+  "oracle_bundle_digest": "sha256:0f065528d1f41e9d892b79b7d3eb34aca88401cd092b2024efabf49918950d90",
+  "bundle_members": ["solve.sh"],
+  "source_payload_present": false,
+  "runtime_source_fetch": {
+    "detected": true,
+    "repository": "https://github.com/minimistjs/minimist.git",
+    "revision": "ecfdaea23e7931c0d529c52b743c711c3278a8ce",
+    "command": "git fetch --quiet --depth=1 origin <revision>",
+    "required_source_digest": "sha256:880c54feb7058c36a6600d35d58a17d834d403b4460cb9c62c33cb455c8adc3c",
+    "archive_output": "<ignored-source-archive>"
+  },
+  "no_network_safe": false,
+  "oracle_controls_run": false,
+  "disposition": "artifact/verifier blocker: the only Oracle payload requires forbidden runtime GitHub fetch"
+}

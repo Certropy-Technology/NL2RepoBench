@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "task_id": "meow",
+  "network": "no-network",
+  "result": "all-declared-artifacts-match",
+  "artifact_root": "<parent-private-CAS>",
+  "artifacts": [
+    {"role": "dependency_bundle", "digest": "sha256:c8b983dd3d5fa25f3648f164ebda2a8a9c95f4259b898fdda19c5f6a65acaa9c", "size_bytes": 10240, "sha256_match": true},
+    {"role": "commands_bundle", "digest": "sha256:db6efe1fdcc4b37b44236cbf9e2a8c55abd3e653490ab1c07c174fb24029ba75", "size_bytes": 10240, "sha256_match": true},
+    {"role": "test_bundle", "digest": "sha256:a58f29fc89c336545e8dbc04d151bce1b0bf2d0247cfe2c0bce773586cde4725", "size_bytes": 20480, "sha256_match": true},
+    {"role": "oracle_bundle", "digest": "sha256:aa2751ef5a8a2246d2603be7626bb8b45ac750c610cadfee2b638c282e270bb0", "size_bytes": 399360, "sha256_match": true}
+  ]
+}

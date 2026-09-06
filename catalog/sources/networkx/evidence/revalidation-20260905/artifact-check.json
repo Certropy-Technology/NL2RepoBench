@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "task_id": "networkx",
+  "source_revision": "ff25fa8296d16ad63d6a02b2d9f979dcafbb50ae",
+  "queue_source_digest": "sha256:28dfa59d67930a9ed79a5cca3b69d240bd23c281a659bc8a7b6631be50aafea6",
+  "declared_source_archive_sha256": "sha256:438319b0534eede5966d6aa88dd6bcea3e0fddb3164040fe982ef5d96580737c",
+  "checks": [
+    {
+      "role": "dependency_lock",
+      "digest": "sha256:0cc1bc4fafe6087fb792bb1a60cf5df9f77808d872ea8b4c44b183b2d4fc6d63",
+      "size_bytes": 105,
+      "sha256_match": true,
+      "location": "<private-CAS>/sha256/0c/0cc1bc4fafe6087fb792bb1a60cf5df9f77808d872ea8b4c44b183b2d4fc6d63"
+    },
+    {
+      "role": "verifier_bundle",
+      "digest": "sha256:a8eeab7e95d71ff75d05b913898df70a886fe348ca663bb5a81ec16e123b8678",
+      "size_bytes": 20480,
+      "sha256_match": true,
+      "location": "<private-CAS>/sha256/a8/a8eeab7e95d71ff75d05b913898df70a886fe348ca663bb5a81ec16e123b8678"
+    },
+    {
+      "role": "oracle_bundle",
+      "digest": "sha256:55c84147730f4785a1f434a5a1297acaca28c76bfadd04c58f0c082e5546bcc8",
+      "size_bytes": 10240,
+      "sha256_match": true,
+      "location": "<private-CAS>/sha256/55/55c84147730f4785a1f434a5a1297acaca28c76bfadd04c58f0c082e5546bcc8"
+    }
+  ],
+  "all_declared_artifacts_present_and_matching": true,
+  "network_mode": "no-network"
+}

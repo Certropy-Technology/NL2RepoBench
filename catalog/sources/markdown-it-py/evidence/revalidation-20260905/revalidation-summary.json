@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "task_id": "markdown-it-py",
+  "source_digest": "sha256:6e845c73d38a99145aff9c8e824d8d497c7307bd7206fac2164801f4433d85c3",
+  "bundle_manifest": {
+    "canonical_digest": "sha256:6740a8dc9d6c7d496e7679e26647f2102d06f45fe752c69bece03bd6835e712a",
+    "raw_sha256": "sha256:9e5a5d750c55488069cbc5a98c6811d2bd1454b2b13d3c6b3aa15d56b740d44d",
+    "file_count": 60,
+    "double_compile_byte_identical": true
+  },
+  "runtime": {"harbor": "0.21.0", "python": "3.12.11", "network_mode": "no-network"},
+  "oracle": {"valid": true, "expected_total": 24, "collected": 24, "passed": 24, "failed": 0, "reward": 1.0, "grading_sha256": "sha256:51db9f6d68f4356348ca5dde0703f989176dbd74cc4dfb35183000a725c1375b", "network_sha256": "sha256:13cec582eb5e674b55ab96902f96ad7f3b59243cb8d77a70510d1aa6766ecff4"},
+  "controls": {
+    "stub": {"valid": true, "expected_total": 24, "collected": 24, "passed": 0, "failed": 24, "reward": 0.0, "network_sha256": "sha256:0cf2e4f5c964b30ba498f871680e8d064618866a080604038b128a1291e19aaf"},
+    "forgery": {"valid": true, "failure_class": "model", "failure_reason": "candidate-installation-failed", "reward": 0.0, "network_sha256": "sha256:d5f749341d7cd295c2401c1a7ed1d3cb9312a8b2d70735d83e4e91e3e62d97dc"},
+    "install-hang": {"valid": true, "failure_class": "model", "failure_reason": "candidate-installation-failed", "reward": 0.0, "network_sha256": "sha256:bd66b8ce81d353aad6a4326c07068b651af5f1418beaa581e6a6f631fb3a301c5"}
+  },
+  "public_network_available": false,
+  "run_root": "<ignored-run-root>",
+  "control_root": "<ignored-control-root>",
+  "lifecycle_changed": false,
+  "production_evidence_changed": false
+}

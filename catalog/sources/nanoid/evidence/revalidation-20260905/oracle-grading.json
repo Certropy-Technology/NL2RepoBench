@@ -1,0 +1,16 @@
+{
+  "schema_version": "2.0",
+  "task_id": "nanoid",
+  "bundle_manifest_digest": "sha256:34e2fd444f0f983df5a4c63fa7935ad2f0a8c5c3fbef799177992d478cc3d2e0",
+  "command": "uv run --frozen --project harbor-runner harbor run -p <run-root>/compile-a/nanoid -a oracle --job-name nanoid-wave9-retry-oracle-20260907 -o <run-root>/oracle --n-concurrent 1 --max-retries 0 --yes",
+  "harbor_version": "0.21.0",
+  "exit_code": 0,
+  "valid": true,
+  "expected_total": 28,
+  "collected": 28,
+  "passed": 28,
+  "failed": 0,
+  "reward": 1.0,
+  "metric_contract": "node-test-leaf-pass-rate-v1",
+  "receipt_sha256": "e89ecf9ed16dd57f7472889f0329adfec265ea0dc084d4e87acea9fe24d4f11"
+}

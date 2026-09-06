@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0",
+  "task_id": "magic-string",
+  "queue_source_digest": "sha256:f3156d9d1406de2215414cbce452b745c5bf4b099d22da15dd71fa9eca3ea8d7",
+  "offline": true,
+  "artifacts": [
+    {
+      "role": "dependency_bundle",
+      "declared_digest": "sha256:6f7ee0c4aed7b295ee5248da37f9804a9c1880ab862b68c50aa7a0ef76e7be35",
+      "declared_size_bytes": 42327,
+      "actual_size_bytes": 42327,
+      "sha256_match": true
+    },
+    {
+      "role": "commands_bundle",
+      "declared_digest": "sha256:b5424ada50a1b8cb7c7e0f76db8b9796a98964e524c3bf59d0300590b50b6176",
+      "declared_size_bytes": 258,
+      "actual_size_bytes": 258,
+      "sha256_match": true
+    },
+    {
+      "role": "test_bundle",
+      "declared_digest": "sha256:4e15351e8c3a1b14b449752a861e1613ec204d2a9e230aa28b5e7268cf4007bf",
+      "declared_size_bytes": 3948,
+      "actual_size_bytes": 3948,
+      "sha256_match": true
+    },
+    {
+      "role": "oracle_bundle",
+      "declared_digest": "sha256:bc15583f4cde2e49f31ee5e80ef669ff44b87da059f2b108dc59efe9f8fcf49e",
+      "declared_size_bytes": 126528,
+      "actual_size_bytes": 126528,
+      "sha256_match": true
+    }
+  ],
+  "revalidation_decision": "blocked-by-generated-projection-path-leak"
+}

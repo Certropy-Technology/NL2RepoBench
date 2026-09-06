@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "task_id": "minimist",
+  "source_digest": "sha256:d22b27805558ef1cb4a9924944e71d0acd547f320862f5e468594dc9fc4dbfb4",
+  "artifact_root": "<parent-private-CAS>",
+  "offline": true,
+  "artifacts": [
+    {"role": "dependency_bundle", "digest": "sha256:1bea0f38985dbf6c8690f6d8e2ac092b8493550a559899dd19266af0a3d8a81b", "size_bytes": 10240, "actual_size_bytes": 10240, "sha256_match": true},
+    {"role": "commands_bundle", "digest": "sha256:08bd7f24e3a6d8ff5d454d628990f32e37ebf94be61d3411ab845caed761c9ee", "size_bytes": 10240, "actual_size_bytes": 10240, "sha256_match": true},
+    {"role": "test_bundle", "digest": "sha256:fe76f3653b13817d74df197fb80c3a64a7d96e4c9108ebc23dde09c25d466255", "size_bytes": 10240, "actual_size_bytes": 10240, "sha256_match": true},
+    {"role": "oracle_bundle", "digest": "sha256:0f065528d1f41e9d892b79b7d3eb34aca88401cd092b2024efabf49918950d90", "size_bytes": 10240, "actual_size_bytes": 10240, "sha256_match": true}
+  ]
+}

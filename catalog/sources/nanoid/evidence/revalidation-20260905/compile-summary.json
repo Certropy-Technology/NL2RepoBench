@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "task_id": "nanoid",
+  "source_digest": "sha256:737e307703cef3a301a532a95e23919d06e87774ba2ce8704c7ff8ae9aab3290",
+  "runtime": "node/npm",
+  "network_policy": "no-network",
+  "artifact_root": "private-cas",
+  "compile_runs": [
+    {
+      "command": "uv run nl2repo harbor compile catalog/sources/nanoid --output <run-root>/compile-a --toolchain toolchain.node.lock.toml --artifact-root <private-cas> --allow-private",
+      "exit_code": 0,
+      "bundle_manifest": "<run-root>/compile-a/nanoid/bundle.manifest.json",
+      "manifest_sha256": "cb1f3850addc0165c268e9d9a1502473d899b582101613b2d141eff82eec56ae",
+      "canonical_manifest_digest": "sha256:34e2fd444f0f983df5a4c63fa7935ad2f0a8c5c3fbef799177992d478cc3d2e0"
+    },
+    {
+      "command": "uv run nl2repo harbor compile catalog/sources/nanoid --output <run-root>/compile-b --toolchain toolchain.node.lock.toml --artifact-root <private-cas> --allow-private",
+      "exit_code": 0,
+      "bundle_manifest": "<run-root>/compile-b/nanoid/bundle.manifest.json",
+      "manifest_sha256": "cb1f3850addc0165c268e9d9a1502473d899b582101613b2d141eff82eec56ae",
+      "canonical_manifest_digest": "sha256:34e2fd444f0f983df5a4c63fa7935ad2f0a8c5c3fbef799177992d478cc3d2e0"
+    }
+  ],
+  "reproducible": true
+}

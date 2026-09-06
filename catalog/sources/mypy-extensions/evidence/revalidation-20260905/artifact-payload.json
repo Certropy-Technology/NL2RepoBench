@@ -1,0 +1,46 @@
+{
+  "schema_version": "revalidation-artifact-payload-v1",
+  "task_id": "mypy-extensions",
+  "queue_source_digest": "sha256:be72a67a7d90cb83447dd9cd30f6787ae35b44c478ff54bbeeaa6c1c94699422",
+  "frozen_upstream_revision": "9fc7fe08c8e638cdd9bbf1aa9bf188aef4fd24ef",
+  "frozen_source_archive_sha256": "sha256:173418926199a751045892c046f5dcd1280f7f360ce6799ad49a54f2679af03e",
+  "artifact_root": "<parent-private-CAS>",
+  "artifacts": [
+    {
+      "role": "dependency_lock",
+      "declared_sha256": "sha256:15474c26171aabab9fe8ef5770ec96e46a21a5a391b84729633c87ddb0b40867",
+      "declared_size_bytes": 188,
+      "actual_sha256": "sha256:15474c26171aabab9fe8ef5770ec96e46a21a5a391b84729633c87ddb0b40867",
+      "actual_size_bytes": 188,
+      "match": true
+    },
+    {
+      "role": "verifier_bundle",
+      "declared_sha256": "sha256:6975a22a6a01264168932f02acbddaa019bd669a60993bfd8ad05fa9f12b400c",
+      "declared_size_bytes": 20480,
+      "actual_sha256": "sha256:6975a22a6a01264168932f02acbddaa019bd669a60993bfd8ad05fa9f12b400c",
+      "actual_size_bytes": 20480,
+      "match": true
+    },
+    {
+      "role": "oracle_bundle",
+      "declared_sha256": "sha256:8f6153bb800558c90f1fb72edf5dcbfaeec3e23475e2cfcdaf2852118e8f7d58",
+      "declared_size_bytes": 10240,
+      "actual_sha256": "sha256:8f6153bb800558c90f1fb72edf5dcbfaeec3e23475e2cfcdaf2852118e8f7d58",
+      "actual_size_bytes": 10240,
+      "match": true
+    }
+  ],
+  "oracle_payload": {
+    "members": ["solve.sh"],
+    "source_archive_present": false,
+    "solve_sha256": "sha256:b1c7924acb1591d94c23285734d396a5346784dc49f8855bafc920cf1beeb3ae",
+    "runtime_source_fetch_detected": true,
+    "network_host": "github.com",
+    "network_command": "git fetch --quiet --depth=1 origin <frozen-revision>",
+    "archive_command": "git archive --format=tar <frozen-revision> > <ignored-source-archive>",
+    "source_digest_check_present": true
+  },
+  "disposition": "artifact-verifier-blocked-under-no-network",
+  "oracle_and_controls_run": false
+}

@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "task_id": "networkx",
+  "oracle_bundle_digest": "sha256:55c84147730f4785a1f434a5a1297acaca28c76bfadd04c58f0c082e5546bcc8",
+  "oracle_bundle_size_bytes": 10240,
+  "bundle_members": ["solve.sh"],
+  "solve_sha256": "sha256:7fd17f285fa9491b17ba8aea8279d94a7725ebb4ecc9378064e316b7083e4fb4",
+  "source_payload_present": false,
+  "runtime_source_fetch": {
+    "detected": true,
+    "commands": [
+      "git clone --filter=blob:none --no-checkout --no-tags <upstream-url> <ignored-source-root>",
+      "git -C <ignored-source-root> fetch --no-tags origin ff25fa8296d16ad63d6a02b2d9f979dcafbb50ae",
+      "git -C <ignored-source-root> archive --format=tar --output=<ignored-source-root>/source.tar ff25fa8296d16ad63d6a02b2d9f979dcafbb50ae"
+    ],
+    "host": "github.com",
+    "required_archive_sha256": "sha256:438319b0534eede5966d6aa88dd6bcea3e0fddb3164040fe982ef5d96580737c"
+  },
+  "disposition": "not-runnable-under-required-no-network-contract",
+  "oracle_and_controls_run": false,
+  "reason": "The generated Oracle bundle has no embedded source archive and its solve script fetches the frozen revision at runtime. No exact offline source payload was available in the bounded checks."
+}

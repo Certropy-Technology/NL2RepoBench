@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "task_id": "magic-string",
+  "oracle_bundle_digest": "sha256:bc15583f4cde2e49f31ee5e80ef669ff44b87da059f2b108dc59efe9f8fcf49e",
+  "oracle_bundle_size_bytes": 126528,
+  "bundle_members": ["distribution.tgz", "package-lock.json", "package.json", "solve.sh", "source.tar"],
+  "source_payload_present": true,
+  "source_payload_size_bytes": 460800,
+  "source_payload_sha256": "sha256:1b3e623bb3bb86c83379df039c375108a2b468fecc4bcaf6ff02d3ee89275503",
+  "frozen_source_digest_match": true,
+  "solve_sha256": "sha256:c56a33ed1f24894942b39b9df1e1be35e1c5f8805a37bbafa9a0cb120374cf7f",
+  "runtime_source_fetch_detected": false,
+  "network_commands_detected": false,
+  "oracle_execution": "not-run",
+  "reason": "The exact offline Oracle payload is safe, but the fresh compiled projection contains an npm cache debug log with absolute authoring-worktree paths. Oracle and controls were not run against a projection that fails artifact hygiene."
+}

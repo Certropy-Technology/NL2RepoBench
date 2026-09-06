@@ -1,0 +1,38 @@
+{
+  "schema_version": "1.0",
+  "task_id": "multidict",
+  "queue_source_digest": "sha256:2167c620c47e72973c164eaeb1ab3c2b06eca76eeecb9f5c2e48365fd0659770",
+  "checked_offline": true,
+  "artifact_root": "<parent-private-CAS>",
+  "artifacts": [
+    {
+      "role": "dependency_lock",
+      "declared_digest": "sha256:f208f75c2ac81a0013f0d7b0e78bc6c61d88c2650daecbce3504209030ad8f53",
+      "declared_size_bytes": 393,
+      "found": false,
+      "sha256_match": false
+    },
+    {
+      "role": "verifier_bundle",
+      "declared_digest": "sha256:f329cf3241c16d2dff018383eb8ab9f88753096bc02907f77a2d845881c3550d",
+      "declared_size_bytes": 20480,
+      "found": false,
+      "sha256_match": false
+    },
+    {
+      "role": "oracle_bundle",
+      "declared_digest": "sha256:5321476e4e48dd505f7b022e423b6e6d1ad0f7ec73ba1a5797c302eb3db40fba",
+      "declared_size_bytes": 819200,
+      "found": false,
+      "sha256_match": false
+    }
+  ],
+  "generated_runtime_source_payload": {
+    "path": "<generated-task>/solution/source.tar",
+    "found": true,
+    "size_bytes": 808960,
+    "sha256": "sha256:bfdff853c97ee413df6bde23098fbef8d6232dec8c4a2a9c2dd6a26dbd93040d",
+    "matches_declared_source_digest": true
+  },
+  "result": "required_private_artifacts_missing"
+}

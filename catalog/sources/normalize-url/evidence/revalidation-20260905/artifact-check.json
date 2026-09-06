@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.0",
+  "task_id": "normalize-url",
+  "source_digest": "sha256:b2415b8b7315ba2df244fc9cad8ad2de80ca598cfffa36c8b2b037951d15ae88",
+  "offline": true,
+  "artifacts": [
+    {
+      "role": "dependency_bundle",
+      "declared_digest": "sha256:2c2465abe004222aa6046f08f8b9e64e5bbd84934574facc0b3ffae57ccb467e",
+      "declared_size_bytes": 10240,
+      "actual_size_bytes": 10240,
+      "sha256_match": true,
+      "path": "<private-CAS>/sha256/2c/2c2465abe004222aa6046f08f8b9e64e5bbd84934574facc0b3ffae57ccb467e"
+    },
+    {
+      "role": "commands_bundle",
+      "declared_digest": "sha256:f72ad603b8f0f137239afa956847655e61af493c71eb1f03e0c96bae180fd35d",
+      "declared_size_bytes": 10240,
+      "actual_size_bytes": 10240,
+      "sha256_match": true,
+      "path": "<private-CAS>/sha256/f7/f72ad603b8f0f137239afa956847655e61af493c71eb1f03e0c96bae180fd35d"
+    },
+    {
+      "role": "test_bundle",
+      "declared_digest": "sha256:670d1df92be1a7691288d679682d4c47c622519cbf884f720522048a7c621d27",
+      "declared_size_bytes": 20480,
+      "actual_size_bytes": 20480,
+      "sha256_match": true,
+      "path": "<private-CAS>/sha256/67/670d1df92be1a7691288d679682d4c47c622519cbf884f720522048a7c621d27"
+    },
+    {
+      "role": "oracle_bundle",
+      "declared_digest": "sha256:29bf24608fa8f45f215ba1e165df12fceb387b9f9868b89f7a1e2f78041d1ec2",
+      "declared_size_bytes": 10240,
+      "actual_size_bytes": 10240,
+      "sha256_match": true,
+      "path": "<private-CAS>/sha256/29/29bf24608fa8f45f215ba1e165df12fceb387b9f9868b89f7a1e2f78041d1ec2"
+    }
+  ],
+  "all_declared_artifacts_match": true
+}

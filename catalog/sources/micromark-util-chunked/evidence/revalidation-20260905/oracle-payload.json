@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "task_id": "micromark-util-chunked",
+  "generated_runtime": "catalog/tasks/micromark-util-chunked",
+  "declared_oracle_bundle": {
+    "digest": "sha256:2e8df526c8e215ad1cacf605c3fd44ef1da064c898d408b6ed52644f00b4a5a6",
+    "size_bytes": 1126400
+  },
+  "generated_source_payload": {
+    "path": "catalog/tasks/micromark-util-chunked/solution/source.tar",
+    "size_bytes": 1116160,
+    "sha256": "sha256:ffbc51c1237344db6b47db8000aaa1668e89eb207f6a94b3a5b6472d5dda08d1",
+    "matches_declared_source_digest": true
+  },
+  "solve_script": {
+    "path": "catalog/tasks/micromark-util-chunked/solution/solve.sh",
+    "source_fetch_detected": false,
+    "network_commands_detected": false,
+    "behavior": "verifies source.tar digest, extracts it, and copies the task package into the candidate workspace"
+  },
+  "decision": "oracle-payload-safe-but-unrunnable",
+  "reason": "The generated task contains a safe exact source payload, but the declared private CAS objects are unavailable in the checked artifact root; no Oracle or control run was started."
+}

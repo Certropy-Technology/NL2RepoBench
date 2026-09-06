@@ -1,0 +1,64 @@
+{
+  "schema_version": "revalidation-artifact-payload-v1",
+  "task_id": "mdast-util-to-hast",
+  "source_revision": "174795b21f7757fffb54dd8d5fb4012f4751f791",
+  "source_archive": {
+    "path": "catalog/tasks/mdast-util-to-hast/solution/source.tar",
+    "size_bytes": 225280,
+    "sha256": "sha256:587e4050147dc8730b15a6ceedd07866301c4309bcdf8856697bbb3ba96f7094",
+    "matches_declared_source": true
+  },
+  "private_artifacts": [
+    {
+      "role": "dependency_bundle",
+      "size_bytes": 1802240,
+      "sha256": "sha256:50debbea9203e137f5d184705ac1986408d3771776f1d0d628f7dd52a2ca0c2d",
+      "matches_declared_size_and_sha256": true
+    },
+    {
+      "role": "commands_bundle",
+      "size_bytes": 152,
+      "sha256": "sha256:40d6501f42aecc2e0fe88eca316f2b61f1bed73bb939e067e7cffa0a9ab582d4",
+      "matches_declared_size_and_sha256": true
+    },
+    {
+      "role": "test_bundle",
+      "size_bytes": 30720,
+      "sha256": "sha256:83a196e48af99adeebfb1aa525abbae1a2ba423ef640890d87fe1f56362908fb",
+      "matches_declared_size_and_sha256": true
+    },
+    {
+      "role": "oracle_bundle",
+      "size_bytes": 245760,
+      "sha256": "sha256:7e8b6372ce2341d6f55a2b9644623b7d0643c0964063683f6a74fb9219fe4c91",
+      "matches_declared_size_and_sha256": true
+    }
+  ],
+  "oracle_payload": {
+    "members": ["solve.sh", "source.tar", "package-lock.json"],
+    "source_payload_present": true,
+    "runtime_source_fetch_detected": false,
+    "network_tokens_detected": [],
+    "safe_for_network_policy": true
+  },
+  "compile_revalidation": {
+    "compile_a": {
+      "manifest_raw_sha256": "sha256:2b650c6344c6d4394946c5009a2a1c125ad83941ced22fc1bbc590b01dec735c",
+      "canonical_manifest_digest": "sha256:63d84e11b19e07c969b1ec0f840c4345c59469fd5df64a74ddf180fdb7e8cf83",
+      "file_count": 305
+    },
+    "compile_b": {
+      "manifest_raw_sha256": "sha256:2b650c6344c6d4394946c5009a2a1c125ad83941ced22fc1bbc590b01dec735c",
+      "canonical_manifest_digest": "sha256:63d84e11b19e07c969b1ec0f840c4345c59469fd5df64a74ddf180fdb7e8cf83",
+      "file_count": 305
+    },
+    "byte_identical_manifests": true,
+    "projection_safe": false,
+    "leak_count": 16,
+    "leak_reason": "npm cache debug logs embed the historical authoring worktree path"
+  },
+  "disposition": "artifact-path-blocked-before-harbor",
+  "harbor_matrix_run": false,
+  "lifecycle_unchanged": true,
+  "production_evidence_unchanged": true
+}

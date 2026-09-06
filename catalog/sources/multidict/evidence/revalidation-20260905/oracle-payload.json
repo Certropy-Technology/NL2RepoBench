@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0",
+  "task_id": "multidict",
+  "generated_oracle_bundle": {
+    "solution_path": "<generated-task>/solution",
+    "source_payload": {
+      "path": "source.tar",
+      "size_bytes": 808960,
+      "sha256": "sha256:bfdff853c97ee413df6bde23098fbef8d6232dec8c4a2a9c2dd6a26dbd93040d",
+      "matches_declared_source_digest": true
+    },
+    "solve_script_sha256": "sha256:f58c15e7a0ae6a6dbb7bf8e55619660c05fbacaabb56147e39c1adbc69860c56",
+    "source_fetch_detected": false,
+    "network_commands_detected": false,
+    "inspection": "The generated solve script verifies the local archive digest, extracts it, removes unsupported source directories, and does not contact an external service."
+  },
+  "declared_cas_oracle_bundle": {
+    "digest": "sha256:5321476e4e48dd505f7b022e423b6e6d1ad0f7ec73ba1a5797c302eb3db40fba",
+    "size_bytes": 819200,
+    "found": false
+  },
+  "disposition": "cannot_run_without_declared_private_artifacts",
+  "oracle_controls_run": false
+}

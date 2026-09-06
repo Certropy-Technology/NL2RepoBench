@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0",
+  "task_id": "normalize-url",
+  "source_revision": "863d275c21d6411a7494b8f728a515633bc01d84",
+  "source_archive_digest": "sha256:6c7fd8315e3feae64c76202281560a3b4a27f807d736371c783d921049ab5cfe",
+  "oracle_bundle_digest": "sha256:29bf24608fa8f45f215ba1e165df12fceb387b9f9868b89f7a1e2f78041d1ec2",
+  "oracle_bundle_size_bytes": 10240,
+  "bundle_members": ["solve.sh"],
+  "source_payload_present": false,
+  "runtime_source_fetch": {
+    "detected": true,
+    "command": "git fetch --depth=1 origin 863d275c21d6411a7494b8f728a515633bc01d84",
+    "host": "github.com",
+    "source_url": "https://github.com/sindresorhus/normalize-url",
+    "archive_command": "git archive --format=tar <frozen-revision> -o <ignored-source-archive>"
+  },
+  "disposition": "not-runnable-under-no-network",
+  "oracle_controls_run": false,
+  "reason": "The only declared Oracle payload contains solve.sh and no source archive; executing it would perform a forbidden runtime GitHub fetch."
+}

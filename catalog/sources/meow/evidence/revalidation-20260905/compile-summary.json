@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "task_id": "meow",
+  "source_revision": "1f3ec6cfd29a2df43ad637023be57001db49c410",
+  "source_digest": "sha256:20135ee5f801dae4630dc1550e118a5bacd415768543e0073b01e60152895f69",
+  "instruction_digest": "sha256:f419121fee6b0992efcd68e56c17c42401092470ab1cfbc596757a95bd4f5663",
+  "toolchain": "toolchain.node.lock.toml",
+  "allow_incomplete": false,
+  "compile_a": {"output": "<task-local-compile-a>", "manifest_bytes": 15737, "raw_manifest_sha256": "sha256:fb577ef93c36be08e0c62a3289ae0f90049034316036d12a4aac8a4eb3b38417"},
+  "compile_b": {"output": "<task-local-compile-b>", "manifest_bytes": 15737, "raw_manifest_sha256": "sha256:fb577ef93c36be08e0c62a3289ae0f90049034316036d12a4aac8a4eb3b38417"},
+  "byte_identical": true,
+  "path_leak_scan": {"forbidden_path_or_private_uri_matches": 0, "oracle_script_network_command_matches": 0}
+}

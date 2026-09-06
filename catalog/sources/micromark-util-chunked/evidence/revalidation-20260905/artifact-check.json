@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0",
+  "task_id": "micromark-util-chunked",
+  "source_digest": "sha256:971c3c9049d98c0e7a1e9ee175022ea2d980051202e938916f9f1b19812e4a6d",
+  "checked_offline": true,
+  "artifact_root": "<parent-private-CAS>",
+  "artifacts": [
+    {
+      "role": "dependency_bundle",
+      "declared_digest": "sha256:14ec819ab0ff26bbe203fe13dbe0b3da484778605b09001d865d0b660e4ed018",
+      "declared_size_bytes": 30720,
+      "present": false,
+      "sha256_match": false
+    },
+    {
+      "role": "commands_bundle",
+      "declared_digest": "sha256:3a000b557c33c88883adc5684ce3ad7bf41f7c33818d85d4a3e7b3f6d1f58aa1",
+      "declared_size_bytes": 10240,
+      "present": false,
+      "sha256_match": false
+    },
+    {
+      "role": "test_bundle",
+      "declared_digest": "sha256:7e4742635a99ab260ea21703be776116db2196d52cc273e4bc8139d6852bd1bb",
+      "declared_size_bytes": 10240,
+      "present": false,
+      "sha256_match": false
+    },
+    {
+      "role": "oracle_bundle",
+      "declared_digest": "sha256:2e8df526c8e215ad1cacf605c3fd44ef1da064c898d408b6ed52644f00b4a5a6",
+      "declared_size_bytes": 1126400,
+      "present": false,
+      "sha256_match": false
+    }
+  ],
+  "decision": "blocked-missing-private-artifacts",
+  "next_step": "Restore or register all four exact CAS objects, then rerun artifact verification and fresh NoNetwork gates."
+}

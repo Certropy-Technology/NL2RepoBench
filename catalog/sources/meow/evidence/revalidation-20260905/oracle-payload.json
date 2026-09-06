@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "task_id": "meow",
+  "oracle_bundle_digest": "sha256:aa2751ef5a8a2246d2603be7626bb8b45ac750c610cadfee2b638c282e270bb0",
+  "oracle_bundle_size_bytes": 399360,
+  "bundle_members": ["build/dependencies.js", "build/index.d.ts", "build/index.js", "build/licenses.md", "build/options.js", "build/parser.js", "build/utils.js", "build/validate.js", "package-lock.json", "package.json", "solve.sh"],
+  "source_payload_present": true,
+  "source_payload_kind": "frozen-build-runtime",
+  "runtime_source_fetch": false,
+  "network_commands_in_solve": 0,
+  "oracle_controls_run": true,
+  "note": "The exact Oracle bundle contains the frozen build payload; solve.sh copies only bundled files and performs no registry, GitHub, DNS, or external-service access."
+}

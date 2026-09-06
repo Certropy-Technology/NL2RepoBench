@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "task_id": "mdast-util-mdxjs-esm",
+  "oracle_bundle_digest": "sha256:f5cd41aff011adbe30d11090d6073300ebe6b1be3385845234e35abd14a7bc15",
+  "oracle_bundle_size_bytes": 6745,
+  "bundle_members": ["adapter.js", "package-lock.json", "package.json", "solve.sh"],
+  "source_payload_present": false,
+  "solve_sha256": "sha256:3097eedf0c74426649c58ca4b4f09564569be78444af88b7f41bb14d3b483b17",
+  "runtime_source_fetch": {
+    "detected": true,
+    "host": "github.com",
+    "source_url": "https://github.com/syntax-tree/mdast-util-mdxjs-esm",
+    "commands": [
+      "git clone --filter=blob:none --no-checkout <upstream-url> <temporary-upstream>",
+      "git archive --format=tar <frozen-revision> > <temporary-source-archive>"
+    ],
+    "frozen_revision": "8d05c28d15ec5b690e7fbb08d703b0752d431109",
+    "required_source_digest": "sha256:a05b484b17c05730094d3b2f2458562a48d6b76fac39dcc2b7bfc5d9a33c4f87"
+  },
+  "no_network_disposition": "not-runnable-under-required-NoNetwork-contract",
+  "oracle_and_controls_run": false,
+  "reason": "The exact Oracle bundle has no embedded source archive and its solve.sh performs a runtime GitHub clone/archive fetch. No host authorization was used."
+}
