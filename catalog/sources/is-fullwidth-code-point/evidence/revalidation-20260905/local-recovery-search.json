@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "task_id": "is-fullwidth-code-point",
+  "source_revision": "2696d873463fde9f6b09b49c98380bd49c67b00a",
+  "source_archive_sha256": "sha256:fdc4bd52b082a3ac5654f92c8b6b1d50d4c105cb48b65930e2e40a7673a7fdd0",
+  "search_order": ["checked-in generated runtime and task evidence", "historical handoffs and retained authoring worktrees", "local repository objects and caches"],
+  "searches": [
+    {"scope": "catalog/sources/is-fullwidth-code-point and catalog/tasks/is-fullwidth-code-point", "result": "Oracle bundle contains only solve.sh; no source archive or source payload"},
+    {"scope": "integration .nl2repo authoring-live evidence, handoffs, worktrees, runs, and retained session logs", "result": "No exact source archive or payload hash match; prior successful Oracle used GitHub host authorization"},
+    {"scope": "repository objects and local caches", "result": "No exact archive hash match; only unrelated source archives and package node_modules were found"}
+  ],
+  "replacement_constructed": false,
+  "replacement_reason": "No exact bytes could be proven against the frozen source archive digest and revision."
+}

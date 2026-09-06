@@ -1,0 +1,64 @@
+{
+  "schema_version": "1.0",
+  "task_id": "is-stream",
+  "queue_source_content_digest": "sha256:38a25831cea1a932e76995f0d771e3b4163e6dd70a86c14340579e8de39b82ab",
+  "declared_source_archive_digest": "sha256:465680c19959fc1c1f85702de085b7118845e584ea797653f90c1130d550e3fd",
+  "artifacts": [
+    {
+      "role": "npm-dependency-closure",
+      "digest": "sha256:2159a90d97d788894302c73870d88e64ae683a3ca65f0a2c555a444d0eba5b7d",
+      "size_bytes": 10240,
+      "present": true,
+      "size_matches": true,
+      "sha256_matches": true
+    },
+    {
+      "role": "command-plan",
+      "digest": "sha256:cce70c142560ca3a95bd4c792e6508aabb75be2a1c81993ff02286e71c954bc5",
+      "size_bytes": 10240,
+      "present": true,
+      "size_matches": true,
+      "sha256_matches": true
+    },
+    {
+      "role": "private-test-bundle",
+      "digest": "sha256:cfad4d23a87d7882fe234251b1719d36854800e2deb77c6bff162961a2054e9c",
+      "size_bytes": 10240,
+      "present": true,
+      "size_matches": true,
+      "sha256_matches": true
+    },
+    {
+      "role": "current-oracle",
+      "digest": "sha256:0d8b9e0c7beed6d0b96d6922f7419f85bce1a275d81b0b2014bfb768feb4eb50",
+      "size_bytes": 20480,
+      "present": true,
+      "size_matches": true,
+      "sha256_matches": true,
+      "safe_for_no_network_oracle": false,
+      "reason": "solve.sh performs git fetch from github.com at runtime."
+    }
+  ],
+  "local_recovery_search": {
+    "checked": [
+      "declared private CAS objects",
+      "checked-in generated runtime",
+      "task-local historical evidence and authoring handoffs",
+      "retained authoring-live worktree records",
+      "local npm cache"
+    ],
+    "exact_prefixed_git_archive_found": false,
+    "local_npm_tarball": {
+      "package": "is-stream@4.0.1",
+      "sha256": "sha256:b8f4acd481d7324aa120b33a7a5c6784a986e3acdb670832976b9a2c5f298d19",
+      "integrity": "sha512-Dnz92NInDqYckGEUJv689RbRiTSEHCQ7wOVeALbkOz999YpqT46yMRIGtSNl2iCL1waAZSx40+h59NV/EwzV/A==",
+      "git_head": "0868e196b222faa5e4b58c86c5bc6c480a94a966",
+      "matches_frozen_revision": false,
+      "payload_byte_matches_current_oracle": [
+        "package.json",
+        "index.js to upstream.js",
+        "index.d.ts"
+      ]
+    }
+  }
+}

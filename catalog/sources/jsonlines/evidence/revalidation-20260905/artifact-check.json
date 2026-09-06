@@ -1,0 +1,54 @@
+{
+  "schema_version": "1.0",
+  "task_id": "jsonlines",
+  "queue_source_digest": "sha256:3a185f61141fed92c162d5c0ece99edc9dd7357081018ccc82ff63579e7dbc49",
+  "instruction_sha256": "sha256:5e69984b3abce556f21a565885c3863f9a4ad4bdbea1ac095e0accb6ebc0ac9e",
+  "source_archive": {
+    "path": "catalog/tasks/jsonlines/solution/source.tar",
+    "declared_sha256": "sha256:fd839af51a766d70dccb95db84e6bcf741f55b01ed756b817be4838f202407a6",
+    "actual_sha256": "sha256:fd839af51a766d70dccb95db84e6bcf741f55b01ed756b817be4838f202407a6",
+    "declared_size_bytes": 71680,
+    "actual_size_bytes": 71680,
+    "result": "exact"
+  },
+  "artifacts": [
+    {
+      "role": "dependencies.lock_artifact",
+      "declared_sha256": "sha256:20ed7127abfff312a28b82beacd113204107222df88db0a656bab6403a6c2034",
+      "declared_size_bytes": 558,
+      "cas_result": "missing",
+      "generated_runtime_path": "catalog/tasks/jsonlines/environment/candidate-requirements.lock.txt",
+      "generated_runtime_sha256": "sha256:20ed7127abfff312a28b82beacd113204107222df88db0a656bab6403a6c2034",
+      "generated_runtime_size_bytes": 558,
+      "generated_runtime_result": "exact"
+    },
+    {
+      "role": "verifier.bundle",
+      "declared_sha256": "sha256:e1e953f420f49ef8d846cbc415e40ac272c1abbf26c736a09aadb9beb41d8ba3",
+      "declared_size_bytes": 30720,
+      "cas_result": "missing",
+      "generated_runtime_result": "no private bundle payload present"
+    },
+    {
+      "role": "oracle_bundle",
+      "declared_sha256": "sha256:823aa329652e4b1ed29375c82b7abbddc0aaea2c87c6fcf0190674eff8d0792f",
+      "declared_size_bytes": 81920,
+      "cas_result": "missing",
+      "generated_runtime_result": "no private bundle payload present"
+    }
+  ],
+  "recovery_search": {
+    "network_access": "forbidden",
+    "log": "catalog/sources/jsonlines/evidence/revalidation-20260905/recovery-search.log",
+    "log_sha256": "sha256:695b46bbc738f7c06fb94db8c9bc4db3d437c06ce4afff1bf59f332314d3f42c",
+    "scopes": [
+      "configured shared private CAS",
+      "current checked-in generated runtime",
+      "historical local worktrees and recovery manifest",
+      "local handoff artifacts"
+    ],
+    "exact_outer_bundle_matches": 0,
+    "replacement_proposed": false
+  },
+  "outcome": "artifact-or-verifier-blocked-before-compile"
+}

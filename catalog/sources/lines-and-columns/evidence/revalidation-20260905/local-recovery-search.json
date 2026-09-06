@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0",
+  "task_id": "lines-and-columns",
+  "queue_source_digest": "sha256:81b0aeab3dd8dc69e24faa91ce818321955055d4efda9a253e55b131436c00cb",
+  "frozen_revision": "eea2581b131685f2c21de777fd037c8ddd343354",
+  "required_source_archive_sha256": "sha256:ecd2011652df85d6d95d08e80d8d1d2ce06ac5dfcc9aca7ef3f28eace03c01f9",
+  "declared_artifacts": [
+    {"kind": "npm-bundle", "digest": "sha256:beddb6b453f8315cf2ea08b237ff6dd4bef26cc0c60e610acf1e17c9a807a887", "size_bytes": 10240, "status": "exact"},
+    {"kind": "commands", "digest": "sha256:e9338437d214111fee4790824bfc08ed1346a2519c1bcb439d53217221ed1040", "size_bytes": 10240, "status": "exact"},
+    {"kind": "tests", "digest": "sha256:aa28d8707fda2c6e9667acbd4529610dd78116234c062a91877b41bc3a3d0a71", "size_bytes": 10240, "status": "exact"},
+    {"kind": "oracle", "digest": "sha256:476c73cd585be59118622ae3b44707e58de11161c312d86158293c5f2e11e21e", "size_bytes": 10240, "status": "exact", "payload": "solve.sh only"}
+  ],
+  "searches": [
+    {"scope": "current private CAS", "result": "declared artifacts exact; no source archive object matching the required digest"},
+    {"scope": "current catalog/tasks/lines-and-columns projection", "result": "solution/solve.sh only; no source.tar or oracle-package payload"},
+    {"scope": "task-local source evidence, harbor assets, and production evidence", "result": "no source archive payload"},
+    {"scope": "retained authoring worktrees and authoring-work directories", "result": "original worktree directories absent; no source archive found"},
+    {"scope": "historical handoff/session records", "result": "records contain scripts and metadata only; no hash-matching payload bytes"},
+    {"scope": "local npm/pnpm caches", "result": "no task source archive or matching package payload established"},
+    {"scope": "bounded archive hash scan", "result": "no match before bounded timeout; no candidate promoted"}
+  ],
+  "oracle_assessment": {
+    "script_path": "catalog/sources/lines-and-columns/harbor/solution/solve.sh",
+    "script_sha256": "sha256:17c7b481002b0d88631d1e000bb93f2c80c880f2d68cbf88571afd610b9c0e58",
+    "runtime_source_fetch": "https://github.com/eventualbuddha/lines-and-columns",
+    "network_policy": "no-network",
+    "result": "cannot run under the current policy without an exact local source payload"
+  },
+  "replacement_bundle": null,
+  "network_access": "none",
+  "conclusion": "No exact local source payload can be proven. Existing lifecycle and production evidence remain unchanged.",
+  "next_step": "Register an exact archive for the frozen revision and digest, replace the fetch-only Oracle payload, compile twice, then rerun Oracle and the complete supported control matrix against the new manifest."
+}

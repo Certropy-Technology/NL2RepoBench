@@ -1,0 +1,46 @@
+{
+  "schema_version": "1.0",
+  "task_id": "iso8601",
+  "source_digest": "sha256:88a3765b6b36b0c76caab4fa5b502cd39cf73804714ab84db44d13779714f8e3",
+  "instruction_sha256": "sha256:1b4d2afd14e3ff3efb078e81cb8cce9b1d61ba642f8374de640ea01b0ad63eaa",
+  "network_used": false,
+  "artifacts": [
+    {
+      "name": "dependencies.lock_artifact",
+      "digest": "sha256:7354071a6b2e0ed06c1a8b9f2e471025c007c90fb41dc9bf85dd68a9c51df48d",
+      "size_bytes": 543,
+      "actual_size_bytes": 543,
+      "sha256_verified": true,
+      "cas_path": ".nl2repo/artifacts/private/sha256/73/7354071a6b2e0ed06c1a8b9f2e471025c007c90fb41dc9bf85dd68a9c51df48d"
+    },
+    {
+      "name": "verifier.bundle",
+      "digest": "sha256:d71cc028e6560e4344b093c30e5dfc5a5654152a224cce9f5f80cc48df00c5af",
+      "size_bytes": 10240,
+      "actual_size_bytes": 10240,
+      "sha256_verified": true,
+      "cas_path": ".nl2repo/artifacts/private/sha256/d7/d71cc028e6560e4344b093c30e5dfc5a5654152a224cce9f5f80cc48df00c5af",
+      "inventory": ["run.py"]
+    },
+    {
+      "name": "oracle_bundle",
+      "digest": "sha256:44fdda4299350e28f2aa2d45347bcf405437c197fe197b978d3481d37760e157",
+      "size_bytes": 10240,
+      "actual_size_bytes": 10240,
+      "sha256_verified": true,
+      "cas_path": ".nl2repo/artifacts/private/sha256/44/44fdda4299350e28f2aa2d45347bcf405437c197fe197b978d3481d37760e157",
+      "inventory": ["solve.sh"],
+      "source_archive_present": false,
+      "source_archive_digest": "sha256:6253d109a195cd118c204e64b513b14d8d07e0293c6089bf1dd1167cc2e2a97f",
+      "source_archive_size_bytes": null
+    }
+  ],
+  "oracle_payload_assessment": {
+    "solve_script_fetches": "https://github.com/micktwomey/pyiso8601",
+    "revision": "00c9262b9ad141f287b3263be7f2244fa01988c2",
+    "declared_source_archive_sha256": "sha256:6253d109a195cd118c204e64b513b14d8d07e0293c6089bf1dd1167cc2e2a97f",
+    "runtime_source_fetch_required": true,
+    "no_network_execution_allowed": true,
+    "runnable_under_current_policy": false
+  }
+}

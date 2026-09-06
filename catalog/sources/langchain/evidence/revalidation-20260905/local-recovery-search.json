@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0",
+  "task_id": "langchain",
+  "target": {
+    "revision": "502b2b445b89b753cd468df979b71503f8f99425",
+    "archive_sha256": "sha256:324411670c256bcbdf4dfab75a1b099910b6fc8880a4e9722270288c5a1e4ccd",
+    "archive_size_bytes": 3010560
+  },
+  "searches": [
+    {
+      "scope": "checked-in generated runtime and task-local source/evidence",
+      "result": "No source archive or equivalent payload; only the network-fetching solve.sh and source metadata are present.",
+      "exit_code": 0
+    },
+    {
+      "scope": "parent private CAS",
+      "result": "All three declared private artifacts exist and match; the Oracle object contains only solve.sh and no source payload. No artifact is bound to the frozen source archive digest.",
+      "exit_code": 0
+    },
+    {
+      "scope": "historical worker handoffs and transcript index",
+      "result": "No 3,010,560-byte file or matching source digest was retained. The original authoring worktree path is absent.",
+      "exit_code": 0
+    },
+    {
+      "scope": "authoring archive receipts",
+      "result": "The local receipt indexes 580 archived objects and proves a 159-file, 2,869,937-byte post-Oracle workspace existed, but it contains no source.tar object. The object bytes are in external OSS and were not fetched because all external service access is forbidden.",
+      "exit_code": 0
+    },
+    {
+      "scope": "local Docker containers, images, volumes, and build-cache labels",
+      "result": "No langchain, prior trial, or Oracle workspace object remains locally addressable.",
+      "exit_code": 0
+    },
+    {
+      "scope": "bounded broad filesystem probes",
+      "result": "Two initial unindexed find probes exceeded the 300-second and 180-second bounds. Follow-up indexed task-name and archive-receipt searches completed and found no exact source bytes.",
+      "exit_code": 124,
+      "failure_class": "infrastructure"
+    }
+  ],
+  "exact_payload_found": false,
+  "replacement_bundle_constructed": false,
+  "next_step": "Recover the exact frozen git archive or all 159 SHA-bound archived Oracle workspace files through an approved parent-side local/import process, then build a private Oracle bundle whose solve.sh copies the embedded payload without network access. Parent must register it, update task.toml, double-compile, and rerun the full matrix."
+}

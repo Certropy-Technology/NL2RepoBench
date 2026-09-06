@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "task_id": "js-yaml",
+  "oracle_bundle_sha256": "sha256:194fcf78e706167a7e59becd5407b00809d4359f7a651c1de42d2fb1c268215e",
+  "members": [
+    {"path": "solve.sh", "size": 1066, "sha256": "sha256:7ade2ae14f2d6181843aad47c70fef0ab7db4caf54db989ebc3e3733bcabb4b3"},
+    {"path": "reference-dist.mjs", "size": 128552, "sha256": "sha256:5936ce8c292cbcbf2f633bbf19bb21beefae9ae0d71bcf426e148ff996296ca4"}
+  ],
+  "source_payload_present": false,
+  "runtime_source_fetch": "git clone https://github.com/nodeca/js-yaml",
+  "runtime_source_fetch_allowed": false,
+  "harbor_run_decision": "not-run-unresolved-oracle-source-payload"
+}

@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "task_id": "koa",
+  "source_digest": "sha256:64012f706a24ff01cc8c11126c74ece05ab4c41473ac25e27fc9c34739958538",
+  "validations": [
+    {"command":"uv run nl2repo task validate-source catalog/sources/koa","exit_code":0,"summary":"task_id koa, version 2.1.1, expected instruction-migration source digest"},
+    {"command":"python3 scripts/validate_instruction_quality.py","exit_code":0,"summary":"repository-wide instruction quality passed"},
+    {"command":"uv run nl2repo task lint-network","exit_code":0,"summary":"koa findings 0, koa errors 0"},
+    {"command":"bash -n catalog/sources/koa/harbor/controls/*","exit_code":0,"summary":"all seven task-local control scripts parse"},
+    {"command":"node --check catalog/tasks/koa/tests/private/{test_client,koa-behavior.test}.mjs","exit_code":0,"summary":"generated verifier JavaScript parses"},
+    {"command":"JSON/TOML parser and evidence path/hash scan","exit_code":0,"summary":"all revalidation JSON parses; five command logs are repository-relative and SHA-256 bound"},
+    {"command":"git diff --check && git diff --cached --check","exit_code":0,"summary":"no whitespace errors and no staged files"}
+  ],
+  "leak_scan": {"scope":"absolute workspace paths, ignored run roots, private URIs, and authoring paths","matches":0}
+}

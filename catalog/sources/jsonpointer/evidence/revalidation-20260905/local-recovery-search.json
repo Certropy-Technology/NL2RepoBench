@@ -1,0 +1,51 @@
+{
+  "schema_version": "1.0",
+  "task_id": "jsonpointer",
+  "revalidation": "instruction-migration-20260905",
+  "network_authorization": "none",
+  "target": {
+    "revision": "5998f951dcc5ace60f67f35afe6778c445401a07",
+    "source_archive_sha256": "sha256:f8379acb630446222410697e7e7f33830294f07681de2ae941db723dd4ae989c",
+    "oracle_bundle_sha256": "sha256:67ab4eb9524177fbc30e3008e87727c339d9640ae6454f8f0a9174735389ca2d"
+  },
+  "searches": [
+    {
+      "scope": "catalog/sources/jsonpointer, catalog/tasks/jsonpointer, task-local revalidation output",
+      "method": "filename and exact SHA-256 search",
+      "result": "no source archive; generated runtime contains only solve.sh network fetch",
+      "status": "not_found"
+    },
+    {
+      "scope": ".nl2repo/artifacts local CAS",
+      "method": "exact digest lookup and tar inventory",
+      "result": "oracle bundle exists and hashes exactly, but tar inventory is only solve.sh; no source.tar or oracle-package payload",
+      "status": "insufficient_payload"
+    },
+    {
+      "scope": ".nl2repo/authoring-live/sessions/python-author-wave2-20260828/jsonpointer",
+      "method": "task-specific exact digest, revision, source.tar, and archive metadata search",
+      "result": "historical session proves a prior online fetch and archive digest claim, but contains no reusable source archive bytes",
+      "status": "insufficient_payload"
+    },
+    {
+      "scope": ".nl2repo/authoring-live/worktrees/*/jsonpointer and retained handoff artifacts",
+      "method": "bounded filename and task-specific metadata search",
+      "result": "no exact source archive or matching payload found; dedicated historical jsonpointer worktree is absent",
+      "status": "not_found"
+    },
+    {
+      "scope": "local caches and Git object repositories",
+      "method": "bounded exact revision/archive search",
+      "result": "no local repository with commit 5998f951dcc5ace60f67f35afe6778c445401a07 and no exact archive found; broad filesystem hash scans exceeded their bounded timeout and are not treated as proof of absence",
+      "status": "not_proven"
+    }
+  ],
+  "replacement": {
+    "constructed": false,
+    "reason": "No local bytes can prove both the frozen revision and declared archive digest under the absolute NoNetwork policy.",
+    "temporary_path": null,
+    "outer_sha256": null,
+    "inner_inventory": []
+  },
+  "next_step": "Parent must recover an exact local source payload or CAS backup, verify revision and archive digest, replace the Oracle bundle in shared CAS, then recompile and rerun the complete Oracle/control matrix. Do not authorize GitHub, registry, DNS, or external services."
+}

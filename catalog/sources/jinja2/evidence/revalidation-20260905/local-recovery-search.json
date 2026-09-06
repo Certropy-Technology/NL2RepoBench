@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0",
+  "task_id": "jinja2",
+  "target": {
+    "revision": "5ef70112a1ff19c05324ff889dd30405b1002044",
+    "archive_sha256": "sha256:61082a25b5f6e7c49a0e4c12d9aa6be8e684489e0d613dc14512e8ea0c001421",
+    "archive_size_bytes": 1249280
+  },
+  "network_used": false,
+  "searches": [
+    {
+      "scope": "declared private Oracle bundle",
+      "result": "The hash-valid bundle contains only solve.sh; it has no source.tar, oracle-package directory, or other source payload.",
+      "exit_code": 0
+    },
+    {
+      "scope": "checked-in and retained generated jinja2 runtime projections",
+      "result": "Only the 599-byte network-fetching solve.sh is present; no source archive is present.",
+      "exit_code": 0
+    },
+    {
+      "scope": "historical task-named authoring worktree and Harbor run roots",
+      "result": "The paths recorded by prior evidence and handoff logs no longer exist; no payload could be read from them.",
+      "exit_code": 0
+    },
+    {
+      "scope": "retained jinja2 authoring session records",
+      "result": "Two JSONL session records preserve command output and old paths but not source bytes. They confirm that the old Oracle cloned the upstream repository at runtime.",
+      "exit_code": 0
+    },
+    {
+      "scope": "task-named handoff and worktree-diff archives",
+      "result": "No jinja2 source payload or replacement bundle was found.",
+      "exit_code": 0
+    },
+    {
+      "scope": "local uv cache and exact 1249280-byte candidates",
+      "result": "No file with the required archive size and digest was found. A cached editable wheel points to the removed historical worktree and is not a frozen source archive.",
+      "exit_code": 0
+    },
+    {
+      "scope": "task-named Docker containers and images",
+      "result": "No retained jinja2 container or image exposing an Oracle workspace was found. No Docker object was started, stopped, removed, or pruned.",
+      "exit_code": 0
+    }
+  ],
+  "exact_payload_found": false,
+  "replacement_bundle_created": false,
+  "conclusion": "No trusted-local bytes can be proven equal to the declared unprefixed git archive. Revalidation cannot run under the required NoNetwork policy until the exact payload is recovered or independently reconstructed and hash-verified."
+}

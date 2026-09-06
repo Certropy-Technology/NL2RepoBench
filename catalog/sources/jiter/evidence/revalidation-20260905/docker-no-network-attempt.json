@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "task_id": "jiter",
+  "kind": "replacement-oracle-local-smoke",
+  "command": "docker run --rm --network none -v <replacement-solve.sh>:/solve.sh:ro -v <workspace>:/workspace python:3.12-slim@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a bash /solve.sh",
+  "timeout_seconds": 300,
+  "exit_code": 124,
+  "failure_class": "infrastructure",
+  "failure_reason": "Docker command did not start a completed container while the shared host had 38 running containers; no verifier or candidate result was produced.",
+  "retry_policy": "No further Docker retry in this worker. The sole bounded retry used a static/local smoke because the replacement has no network operation."
+}

@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "task_id": "koa",
+  "source_digest": "sha256:069a16c6ea48c4d9e9f34fa31746c238c081fbce1f67cc99c85b75057faf5245",
+  "cas_root": "<parent-cas>/private/sha256",
+  "checked_offline": true,
+  "artifacts": [
+    {"name":"oracle_bundle","digest":"sha256:aef8a655ae3c67a6352f3a7642f4542b8e973dcc40694f1914f4e57295db6577","declared_size_bytes":524177,"actual_size_bytes":524177,"sha256":"sha256:aef8a655ae3c67a6352f3a7642f4542b8e973dcc40694f1914f4e57295db6577","status":"verified"},
+    {"name":"dependencies.artifact","digest":"sha256:ecf3bc094dd2de65ed386273fcd90ac1881e55e0b7d36b5c0ebbec654ad3993d","declared_size_bytes":532951,"actual_size_bytes":532951,"sha256":"sha256:ecf3bc094dd2de65ed386273fcd90ac1881e55e0b7d36b5c0ebbec654ad3993d","status":"verified"},
+    {"name":"tests.commands_artifact","digest":"sha256:59c5dabbbb3147a356167e447a5d25b753b45f269c20741d6b6c12c603d6a195","declared_size_bytes":507,"actual_size_bytes":507,"sha256":"sha256:59c5dabbbb3147a356167e447a5d25b753b45f269c20741d6b6c12c603d6a195","status":"verified"},
+    {"name":"tests.test_bundle","digest":"sha256:2ff5d903a37fa742e8ad7f55e41faef7db5d070d316e9d151d581e8f0d30f36b","declared_size_bytes":3288,"actual_size_bytes":3288,"sha256":"sha256:2ff5d903a37fa742e8ad7f55e41faef7db5d070d316e9d151d581e8f0d30f36b","status":"verified"}
+  ],
+  "oracle_payload_inspection": {
+    "source_archive_present": false,
+    "top_level_members": ["npm-cache", "runtime-package-lock.json", "solve.sh"],
+    "solve_network_calls": ["git -C ... fetch ... https://github.com/koajs/koa", "UPSTREAM_URL=https://github.com/koajs/koa"],
+    "status": "unresolved-network-fetch"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "task_id": "js-yaml",
+  "artifact_root": "parent-private-cas",
+  "offline": true,
+  "artifacts": [
+    {"role": "dependency-bundle", "digest": "sha256:c31c6bd8ffa0ea14677f5553b9d1b8c9146af0efb68c5abb51423cb8b647f683", "declared_size": 486, "actual_size": 486, "sha256_match": true},
+    {"role": "command-bundle", "digest": "sha256:10606c297187a76df5147ec51ef029894b0c2446f23aee9a951801e5202950cf", "declared_size": 286, "actual_size": 286, "sha256_match": true},
+    {"role": "test-bundle", "digest": "sha256:b7d97a7463b8128e1760299004a71442aaaff0b6d80e15ff816f426d3fccb7a8", "declared_size": 2627, "actual_size": 2627, "sha256_match": true},
+    {"role": "oracle-bundle", "digest": "sha256:194fcf78e706167a7e59becd5407b00809d4359f7a651c1de42d2fb1c268215e", "declared_size": 28532, "actual_size": 28532, "sha256_match": true}
+  ],
+  "all_present": true,
+  "all_size_and_digest_matches": true
+}

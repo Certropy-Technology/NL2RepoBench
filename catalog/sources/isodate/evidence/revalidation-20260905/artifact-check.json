@@ -1,0 +1,46 @@
+{
+  "schema_version": "1.0",
+  "task_id": "isodate",
+  "queue_source_digest": "sha256:d18dc8531a11701dc1d94066093522c370f7169667e2ba64a984de8ef67f34bf",
+  "validated_source_digest_before_changes": "sha256:d18dc8531a11701dc1d94066093522c370f7169667e2ba64a984de8ef67f34bf",
+  "private_artifacts": [
+    {
+      "kind": "dependency-lock",
+      "digest": "sha256:309f6694aa87bcec0c13aabd117fe7b07ae6f15c63ac7a62f758901471562b08",
+      "declared_size_bytes": 1124,
+      "actual_size_bytes": 1124,
+      "digest_verified": true
+    },
+    {
+      "kind": "verifier-bundle",
+      "digest": "sha256:5e2dae6d7e23548fd7e4b64edab32add934b49a1b8b6c919b5872cc6d857b506",
+      "declared_size_bytes": 10240,
+      "actual_size_bytes": 10240,
+      "digest_verified": true,
+      "inner_files": [
+        {
+          "path": "run.py",
+          "size_bytes": 7233,
+          "sha256": "sha256:f5241f980836b8c43fb02bdb561618beef78e26f7e1fb69ab154b6dd08a45150"
+        }
+      ]
+    },
+    {
+      "kind": "oracle-bundle",
+      "digest": "sha256:d22e6816f133b771600a58feb26e4904f7b9103f75779f37741f3a45b3ab440c",
+      "declared_size_bytes": 10240,
+      "actual_size_bytes": 10240,
+      "digest_verified": true,
+      "inner_files": [
+        {
+          "path": "solve.sh",
+          "size_bytes": 1402,
+          "sha256": "sha256:f9bd0e253a529730b0487f9a7fd9123a8423da363b9c857cc917b406eb0753ba"
+        }
+      ],
+      "contains_source_payload": false
+    }
+  ],
+  "storage": "parent-private-cas",
+  "network_used": false
+}

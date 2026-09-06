@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "task_id": "is-string",
+  "manifest_digest": "sha256:95a93005767924ebddc7d26c93ff3e5a1a10722c79a1e9559c0a80b680bee18b",
+  "expected_total": 28,
+  "controls": {
+    "empty": {"valid": true, "collected": 0, "passed": 0, "failed": 0, "reward": 0.0, "failure_class": "model", "failure_reason": "candidate-installation-failed", "grading_receipt_sha256": "sha256:9160341e4f5921fa4eaf6febcf9b48f8ce0f0547df1f7a0b7cb6841e72973b97", "network_receipt_sha256": "sha256:e9de6391408ad60ebead470adb0fa97e2cfd4ebfe89d1477a610bd382e18fc94"},
+    "stub": {"valid": true, "collected": 28, "passed": 0, "failed": 28, "reward": 0.0, "grading_receipt_sha256": "sha256:03d16fc93d80f66e202774289151819c5dd681d1dff0d7dd7fc2c72a8150880f", "network_receipt_sha256": "sha256:e9de6391408ad60ebead470adb0fa97e2cfd4ebfe89d1477a610bd382e18fc94"},
+    "forgery": {"valid": true, "collected": 28, "passed": 0, "failed": 28, "reward": 0.0, "verifier_owned_reward": true, "grading_receipt_sha256": "sha256:03d16fc93d80f66e202774289151819c5dd681d1dff0d7dd7fc2c72a8150880f", "network_receipt_sha256": "sha256:e9de6391408ad60ebead470adb0fa97e2cfd4ebfe89d1477a610bd382e18fc94"},
+    "install-script": {"valid": true, "collected": 0, "passed": 0, "failed": 0, "reward": 0.0, "failure_class": "model", "failure_reason": "candidate-installation-failed", "grading_receipt_sha256": "sha256:9160341e4f5921fa4eaf6febcf9b48f8ce0f0547df1f7a0b7cb6841e72973b97", "network_receipt_sha256": "sha256:44776fc0dabb9a352c0a9f31498b4627984838de6698919ae521d8f1e4e63d85"},
+    "loader-hook": {"valid": true, "collected": 28, "passed": 0, "failed": 28, "reward": 0.0, "grading_receipt_sha256": "sha256:03d16fc93d80f66e202774289151819c5dd681d1dff0d7dd7fc2c72a8150880f", "network_receipt_sha256": "sha256:efe96978dab09e0feef695aac25936947879c032f6916bd0bc39b712bc6298a5"},
+    "hang": {"valid": true, "collected": 0, "passed": 0, "failed": 0, "reward": 0.0, "failure_class": "model", "failure_reason": "candidate-call-failed", "bounded": true, "grading_receipt_sha256": "sha256:c4a35971df246c638c870f75696c0e79c0bd23df735a7f31b8372856735e09b8", "network_receipt_sha256": "sha256:3b8f9341456ad8400a61b5dbc6ea2c6dd3e02f4f701669f2db62ebe0df19c324"},
+    "offline": {"valid": true, "collected": 28, "passed": 0, "failed": 28, "reward": 0.0, "public_network_available": false, "grading_receipt_sha256": "sha256:03d16fc93d80f66e202774289151819c5dd681d1dff0d7dd7fc2c72a8150880f", "network_receipt_sha256": "sha256:3b8f9341456ad8400a61b5dbc6ea2c6dd3e02f4f701669f2db62ebe0df19c324"}
+  }
+}

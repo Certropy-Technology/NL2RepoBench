@@ -1,0 +1,46 @@
+{
+  "schema_version": "1.0",
+  "task_id": "jinja2",
+  "checked_offline": true,
+  "artifact_root": "<parent-private-cas>",
+  "artifacts": [
+    {
+      "kind": "candidate-dependency-lock",
+      "digest": "sha256:6f0c0fb81b16f79cd65c5709201febcf0c5cf4ae9c68da2f353557aa161ceed5",
+      "declared_size_bytes": 5612,
+      "actual_size_bytes": 5612,
+      "sha256_valid": true
+    },
+    {
+      "kind": "verifier-bundle",
+      "digest": "sha256:3e31f6816a1186a8f30bb15645bc99f76ad4cfa00711a7e0c145598b47837c4a",
+      "declared_size_bytes": 20480,
+      "actual_size_bytes": 20480,
+      "sha256_valid": true,
+      "inner_inventory": [
+        {
+          "path": "run.py",
+          "size_bytes": 17445,
+          "sha256": "sha256:c930505574e431483534ff00853b1d9aa8ca43ec91d8cc2fb0629ee47c51bcf7"
+        }
+      ],
+      "python_compile_valid": true
+    },
+    {
+      "kind": "oracle-bundle",
+      "digest": "sha256:f343631558527535794c15412ac39fe3c80ec1932507b1a38105a30db797a1b4",
+      "declared_size_bytes": 10240,
+      "actual_size_bytes": 10240,
+      "sha256_valid": true,
+      "inner_inventory": [
+        {
+          "path": "solve.sh",
+          "size_bytes": 599,
+          "sha256": "sha256:eb1dbdab0818fa586a9e20ea406494cb7d07d5432bb86c6e0d89191fdbb4346e"
+        }
+      ],
+      "contains_frozen_source_payload": false,
+      "requires_runtime_network": true
+    }
+  ]
+}

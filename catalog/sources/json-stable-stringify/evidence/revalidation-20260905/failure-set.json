@@ -1,0 +1,10 @@
+{
+  "schema_version": "1.0",
+  "task_id": "json-stable-stringify",
+  "expected_total": 52,
+  "stub_failed_leaf_count": 52,
+  "forgery_failed_leaf_count": 52,
+  "offline_failed_leaf_count": 31,
+  "stub_and_forgery_failed_leaf_ids": ["basic", "nested", "array-order", "string", "number", "boolean", "null", "undefined-root", "nan", "infinity", "undefined-property", "undefined-array", "to-json", "numeric-keys", "escaping", "space-string", "space-number", "space-zero", "empty-object", "empty-array", "collapse-empty", "pretty-empty", "reverse-cmp", "value-cmp", "get-cmp", "direct-cmp", "tie-cmp", "replacer-parent", "replacer-omit", "replacer-replace", "replacer-root", "cycle-error", "cycle-value", "shared-reference", "null-prototype", "inherited", "symbol", "non-enumerable", "date", "bigint", "collapse-type-string", "collapse-type-null", "cmp-values", "no-options", "null-options", "long-space", "nested-empty", "property-to-json", "replacer-array", "nested-cycle", "unicode", "negative-zero"],
+  "offline_failed_leaf_ids": ["basic", "nested", "array-order", "to-json", "numeric-keys", "escaping", "space-string", "space-number", "space-zero", "collapse-empty", "pretty-empty", "value-cmp", "get-cmp", "replacer-parent", "replacer-omit", "replacer-replace", "replacer-root", "cycle-value", "null-prototype", "symbol", "collapse-type-string", "collapse-type-null", "cmp-values", "no-options", "null-options", "long-space", "nested-empty", "property-to-json", "replacer-array", "nested-cycle", "unicode"]
+}

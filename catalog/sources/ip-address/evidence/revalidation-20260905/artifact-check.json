@@ -1,0 +1,68 @@
+{
+  "schema_version": "1.0",
+  "task_id": "ip-address",
+  "queue_catalog_source_digest": "sha256:fa27ead6260eab4025afeb8fcf134d1bb3110a1e3d11b22404f4ee104bcacafb",
+  "validated_catalog_source_digest_before_changes": "sha256:fa27ead6260eab4025afeb8fcf134d1bb3110a1e3d11b22404f4ee104bcacafb",
+  "private_artifacts": [
+    {
+      "role": "candidate npm bundle",
+      "digest": "sha256:19faf94e16d65ac03244727e846df58e9d83a68728f6f70e2d7ed1bab274b828",
+      "declared_size_bytes": 415,
+      "actual_size_bytes": 415,
+      "sha256_valid": true
+    },
+    {
+      "role": "command plan",
+      "digest": "sha256:8f6c05645b4ef96eb1fa5828fef0c244fcb1a24497fac1ccb4acd85993bbee41",
+      "declared_size_bytes": 270,
+      "actual_size_bytes": 270,
+      "sha256_valid": true
+    },
+    {
+      "role": "private tests",
+      "digest": "sha256:fc91a711f1b8b9214d294434cd417276796e8fa290c308c91a22f067a182a2aa",
+      "declared_size_bytes": 4368,
+      "actual_size_bytes": 4368,
+      "sha256_valid": true
+    },
+    {
+      "role": "current Oracle bundle",
+      "digest": "sha256:62b2b8877d3623e6ea0667a54eb91a174d881d1edb94a840e3ba86e337a6219e",
+      "declared_size_bytes": 56739,
+      "actual_size_bytes": 56739,
+      "sha256_valid": true,
+      "runtime_network_fetch": "git clone https://github.com/beaugunderson/ip-address.git"
+    }
+  ],
+  "oracle_payload": {
+    "embedded_package": "oracle-package/",
+    "package_version": "10.5.0",
+    "file_count": 31,
+    "license_sha256": "sha256:f8d791359a50cbcac82c29cb7b0b1b889b28be76fdd35b8ee33f0f7c8704702a",
+    "source_maps_include_sources_content": true,
+    "frozen_revision": "ef98e0a0e77fbef1fdf8bc3bd33288b00b3103c9",
+    "frozen_source_archive_sha256": "sha256:5003fe0f3466d3c7b6a494d5aae4df4ca87d165fbede1e50b87fceaaa7f4977d"
+  },
+  "local_recovery_search": {
+    "current_generated_runtime": "The generated solution contains the same embedded oracle-package but no source.tar.",
+    "original_authoring_path": "The recorded source/source.tar path is no longer present.",
+    "historical_handoffs": "No task-specific source archive was found.",
+    "authoring_state": "Only the original claim and two agent logs remain; no source archive remains.",
+    "local_package_cache": "A package cache entry was found for version 10.7.0, not the frozen 10.5.0 payload, and was rejected.",
+    "result": "The existing hash-verified Oracle's embedded 10.5.0 package is the only exact local reference payload."
+  },
+  "replacement_oracle": {
+    "temporary_path": ".nl2repo/ip-address-recovery/oracle-bundle.tar",
+    "digest": "sha256:2c366383f5c693af884cb4000354c0c9519883b640621289bd084aeb59f4bcfe",
+    "size_bytes": 307200,
+    "media_type": "application/vnd.nl2repobench.oracle+tar",
+    "solve_sha256": "sha256:8cb86f899aa49ba4ab99e880630842a309d6bef1a9b3f9e2d239c853061d38ba",
+    "source_freeze_sha256": "sha256:96cc9eb24cd173e9dff40f50b497424e313b6ce1a6abf942fda43d5336db4af6",
+    "oracle_package_manifest_sha256": "sha256:4558abaf641a47be88f675fe28286147a6257f52abe18771154d97bd7e50c074",
+    "oracle_package_file_count": 31,
+    "deterministic_repack": true,
+    "offline_solve_smoke": true,
+    "network_capable_tokens_in_solve": false
+  },
+  "disposition": "parent-cas-registration-required-before-compile"
+}

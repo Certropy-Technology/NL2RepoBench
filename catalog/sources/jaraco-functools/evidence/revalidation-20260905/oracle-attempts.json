@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0",
+  "task_id": "jaraco-functools",
+  "manifest_digest": "sha256:289ea7060e870fcc52ccbaa7b7f1fd79080c82a7f87e1df5db62b15133627fef",
+  "harbor_version": "0.21.0",
+  "network_authorizations": [],
+  "attempts": [
+    {
+      "attempt": 1,
+      "command": "uv run --frozen --project harbor-runner harbor run -p <compiled-task> -a oracle --job-name jaraco-functools-revalidation-oracle-20260905 -o <fresh-run-root> --n-concurrent 1 --yes",
+      "command_exit_code": 1,
+      "failure_class": "infrastructure",
+      "failure_type": "DockerDaemonUnavailable",
+      "trial_started": false,
+      "completed_trials": 0,
+      "log": "catalog/sources/jaraco-functools/evidence/revalidation-20260905/oracle-attempt-1.txt",
+      "log_sha256": "sha256:d32be92789d0cce97f15ace7f23f6a106faa48942e194f0b09a7c5030bd15b46",
+      "summary": "Harbor reported that the Docker daemon was not running."
+    },
+    {
+      "attempt": 2,
+      "command": "uv run --frozen --project harbor-runner harbor run -p <compiled-task> -a oracle --job-name jaraco-functools-revalidation-oracle-retry-20260905 -o <fresh-retry-run-root> --n-concurrent 1 --yes",
+      "command_exit_code": 0,
+      "failure_class": "infrastructure",
+      "failure_type": "EnvironmentStartTimeoutError",
+      "trial_started": false,
+      "completed_trials": 0,
+      "errored_trials": 1,
+      "environment_start_timeout_seconds": 600.0,
+      "docker_server_available_before_attempt": true,
+      "docker_containers_running_before_attempt": 34,
+      "log": "catalog/sources/jaraco-functools/evidence/revalidation-20260905/oracle-attempt-2.txt",
+      "log_sha256": "sha256:1d0e3f6c96c352bd89960cda1c1246adca3f93a820ee1aab8e3cd2afec8be513",
+      "exception_log": "catalog/sources/jaraco-functools/evidence/revalidation-20260905/oracle-exception.txt",
+      "exception_log_sha256": "sha256:51025ac5b9589d89c07e7901da1de2ee238397d8002f5355cd6f970dcc3f305b",
+      "summary": "The Docker compose environment build did not finish within Harbor's 600-second environment-start timeout; no Oracle solution or verifier trial ran."
+    }
+  ],
+  "bounded_retry_limit_reached": true,
+  "oracle_receipt_created": false,
+  "controls_run": false,
+  "reason_controls_not_run": "The current manifest has no successful Oracle receipt and the only permitted infrastructure retry was exhausted."
+}

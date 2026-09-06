@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "task_id": "is-stream",
+  "status": "pending-parent-private-cas-registration",
+  "proposed_oracle_bundle": {
+    "digest": "sha256:7090924fc778bc345ce32eca631f0fce045468afd754d60f277b3e1f90f117ca",
+    "size_bytes": 20480,
+    "media_type": "application/vnd.nl2repobench.oracle+tar",
+    "visibility": "private"
+  },
+  "replacement_changes": [
+    "The replacement solve.sh copies the bundled package payload into /workspace.",
+    "The replacement contains no git, curl, npm registry, DNS, or external-service command.",
+    "The package transformation after copying is byte-for-byte equivalent to the prior Oracle bundle's package transformation."
+  ],
+  "retained_payload": {
+    "adapter.js": "sha256:1a212636af51dfbd300c40be312d55328c2d876518b44b22b3d11fc05fd2552b",
+    "index-wrapper.js": "sha256:60e7e0d1bc2f44916f51c15d5ca3d5d994c3a4197293e27727ec8d2aa33eaa4f",
+    "index.d.ts": "sha256:af3b1b4a00b5e4e190b0585b239d9589c86fcb3a6c464c9fb9b387d9bc8ae481",
+    "package-lock.json": "sha256:58cb6de4bf68cb6dacdf27b360abfed779233a555ad1d32e1d71bd773dc3a0a1",
+    "package.json": "sha256:fc7c9b9a57fbe9f4553d969cce8829a91c6f288f593855abacf5b2f2ad2deeb2",
+    "upstream.js": "sha256:954118ba7edb18fab0a2cf0f075e27470b2a5638ed6e14462a899bfafd912c41"
+  },
+  "new_files": {
+    "solve.sh": "sha256:df2721fd751f0b3080f29c8118638a91ca1385dadbcda6590be00c80e822e282",
+    "source-provenance.json": "sha256:0410e4eef5d59c724698e80c862609d3c87d3210441f99d14448e8ece6741c34"
+  },
+  "authority_limit": "The current Oracle bundle's solve.sh names the frozen revision and archive digest, but the exact prefixed git archive was not retained locally. The local npm tarball confirms published payload bytes but has a different gitHead. Parent must decide whether the prior CAS provenance is sufficient, register the proposed bundle, update task.toml, and rerun the full final-manifest matrix."
+}

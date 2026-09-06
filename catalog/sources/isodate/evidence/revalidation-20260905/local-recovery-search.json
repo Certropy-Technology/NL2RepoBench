@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0",
+  "task_id": "isodate",
+  "target_revision": "17cb25eb7bc3556a68f3f7b241313e9bb8b23760",
+  "target_archive_sha256": "sha256:50b897e1c615278d8f9add946f74635564c500d01503793a0663f615eedf8622",
+  "network_used": false,
+  "searches": [
+    {
+      "scope": "declared Oracle bundle",
+      "result": "The hash-valid 10240-byte bundle contains only solve.sh and no source.tar, oracle-package, Git object database, or installable source tree.",
+      "exact_match": false
+    },
+    {
+      "scope": "checked-in generated runtime and task-local source/evidence",
+      "result": "No frozen source payload is present. The generated solution is the same network-fetching solve.sh.",
+      "exact_match": false
+    },
+    {
+      "scope": "retained authoring state, task-local historical handoffs, and session handoff records",
+      "result": "Only metadata, logs, and copies of the public catalog source were found. No source archive or retained isodate authoring worktree exists.",
+      "exact_match": false
+    },
+    {
+      "scope": "read-only retained integration/user archives and exact Git object path for the frozen commit",
+      "result": "No isodate source archive and no Git commit object for the frozen revision was found.",
+      "exact_match": false
+    },
+    {
+      "scope": "local uv and pip caches",
+      "result": "An editable wheel was found, but it contains only metadata and a .pth pointing to the deleted historical source worktree. It contains no package source and cannot prove the frozen archive bytes.",
+      "exact_match": false,
+      "editable_wheel_version": "0.7.3.dev3+g17cb25eb7"
+    },
+    {
+      "scope": "task-named Docker containers, images, and volumes",
+      "result": "No retained isodate container, image, or volume was present.",
+      "exact_match": false
+    }
+  ],
+  "replacement_bundle_constructed": false,
+  "conclusion": "No trusted local bytes can be tied to both the frozen revision and required git-archive SHA-256. A replacement Oracle bundle cannot be constructed without new parent-supplied source bytes."
+}

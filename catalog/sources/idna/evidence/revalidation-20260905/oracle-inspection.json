@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0",
+  "task_id": "idna",
+  "oracle_bundle_digest": "sha256:521add0689c5575295f3018cdd46e18b5ff30f7cfb5dfb90b8cb139363fec8f6",
+  "oracle_bundle_members": [
+    "solve.sh"
+  ],
+  "embedded_source_payload": false,
+  "solve_script_sha256": "sha256:69a8424df45305091df4cad2d84d2d77df38be4209515f443d544971c7c303d5",
+  "frozen_revision": "e2073db14d28d1c3299649dd0c2dd4205b43ebfd",
+  "expected_source_archive_sha256": "sha256:9f05c7eabad5785cddefcb84a85230194b42dccb20b349027135854db25161f8",
+  "runtime_network_operations": [
+    "git clone --no-checkout https://github.com/kjd/idna"
+  ],
+  "network_policy_compatible": false,
+  "failure_class": "artifact",
+  "reason": "The current Oracle bundle contains no source payload and requires a runtime GitHub clone. This revalidation forbids source-host, DNS, registry, and external-service authorization.",
+  "harbor_run_started": false,
+  "compile_started": false
+}

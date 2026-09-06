@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0",
+  "task_id": "is-docker",
+  "stage": "instruction-revalidation",
+  "queued_source_digest": "sha256:654e1596a2f8daa972fb91493bc4cf8eb36a67965972f4142c88cf400945317c",
+  "source_digest_validation": "passed",
+  "private_artifacts": {
+    "dependency_bundle": {"digest": "sha256:934424095c625306be9dae55af83595b3eddb72cde5ece77ebe699b5693c560c", "declared_size_bytes": 389, "actual_size_bytes": 389, "sha256_match": true},
+    "commands_bundle": {"digest": "sha256:cd8c474b07f9d98b9707e628c834b6b047a4eef01ab0bb444dd02dc9d0ba64b6", "declared_size_bytes": 207, "actual_size_bytes": 207, "sha256_match": true},
+    "test_bundle": {"digest": "sha256:9dc50873a7bd7e5e3678fef19b9de19fa02ae4e57f4fee360105563406bff5bf", "declared_size_bytes": 1273, "actual_size_bytes": 1273, "sha256_match": true},
+    "oracle_bundle": {"digest": "sha256:ebbbdaa2082144969dff0c23bd5e23205fdccf026afeb41747f2d0ebbfcacd99", "declared_size_bytes": 1357, "actual_size_bytes": 1357, "sha256_match": true}
+  },
+  "oracle_inspection": {
+    "outer_bundle_sha256": "sha256:ebbbdaa2082144969dff0c23bd5e23205fdccf026afeb41747f2d0ebbfcacd99",
+    "members": ["solve.sh"],
+    "runtime_source_fetch": true,
+    "source_host": "github.com",
+    "no_network_run": "not-started"
+  },
+  "local_recovery": {
+    "searched": ["checked-in generated runtime", "task-local evidence", "historical authoring worktrees and handoffs", "retained run receipts", "local npm cache"],
+    "exact_git_archive_sha256": "sha256:4b0b0b2f7949858e2c44da8b3dd2224ccc95eb8545674c867147ae93e6381cb5",
+    "exact_git_archive_found": false,
+    "cached_release_found": true,
+    "cached_release": {
+      "package": "is-docker",
+      "version": "4.0.0",
+      "git_head": "59379f14b6dda26a0167fce55d80bf546857f92d",
+      "size_bytes": 1779,
+      "sha1": "6aab87c77a30ddff39c460af372ee1795aee7848",
+      "sha512_integrity": "sha512-LHE+wROyG/Y/0ZnbktRCoTix2c1RhgWaZraMZ8o1Q7zCh0VSrICJQO5oqIIISrcSBtrXv0o233w1IYwsWCjTzA==",
+      "members": ["package/license", "package/cli.js", "package/index.js", "package/package.json", "package/readme.md", "package/index.d.ts"],
+      "usable_as_frozen_git_archive": false
+    },
+    "replacement_bundle": null
+  },
+  "commands": [
+    {"command": "uv run nl2repo task validate-source catalog/sources/is-docker", "exit_code": 0, "result": "queued source digest matched and source validation passed"},
+    {"command": "offline private artifact size and SHA-256 audit", "exit_code": 0, "result": "4/4 artifacts matched declared size and digest"},
+    {"command": "tar -tvf private Oracle bundle", "exit_code": 0, "result": "bundle contains solve.sh only; solve.sh performs runtime GitHub fetch"},
+    {"command": "bounded local archive and payload search", "exit_code": 0, "result": "no exact 4b0b2f Git archive; no 13-file frozen source payload"},
+    {"command": "npm pack is-docker@4.0.0 --offline --ignore-scripts --json", "exit_code": 1, "result": "ENOTCACHED; direct cached tarball body was separately verified against published SHA-512 and SHA-1"}
+  ],
+  "decision": "artifact-or-verifier-blocked",
+  "lifecycle_preserved": "packaged",
+  "compile": "not-run",
+  "harbor": "not-run",
+  "reason": "The only Oracle payload fetches the frozen revision from GitHub at runtime. The local npm cache has the matching 4.0.0 release and Git head but not the required prefixed Git archive bytes, so constructing a replacement would be speculative.",
+  "next_unblock_action": "Provide or recover a local source archive whose bytes hash to sha256:4b0b0b2f7949858e2c44da8b3dd2224ccc95eb8545674c867147ae93e6381cb5, then replace the Oracle bundle in parent CAS and recompile before running Oracle and controls."
+}

@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0",
+  "task_id": "is-unicode-supported",
+  "queue_instruction_digest": "sha256:f5e57567a989f3bdd624acbe85f9731b971cf14bc236cb3e183ff34425e429ee",
+  "source_revision": "e0373335038856c63034c8eef6ac43ee3827a601",
+  "source_archive_digest": "sha256:f15b5aac5c7f5e331c91310d01ac6c73efb36686bd9ae87c47847dbf6978bc38",
+  "source_archive_size_bytes": null,
+  "oracle_bundle": {
+    "digest": "sha256:d010d8d5808855f7cb599615abb9cf4f8ae483eb25a1d0167bef1a4c4d693105",
+    "size_bytes": 10240,
+    "sha256_verified": true,
+    "members": ["./", "./solve.sh"],
+    "source_payload_present": false,
+    "network_fetch": "https://github.com/sindresorhus/is-unicode-supported"
+  },
+  "declared_artifacts": [
+    {"field": "dependencies.artifact", "digest": "sha256:35899cb523c2a7a07e0639c5df87900c354a16eb0a9f53ddb74808ee18411fdd", "size_bytes": 10240, "sha256_verified": true},
+    {"field": "tests.commands_artifact", "digest": "sha256:005ffae244839bfaceab5ce2c04af99127726c472e30db90c1af6243617c7f82", "size_bytes": 10240, "sha256_verified": true},
+    {"field": "tests.test_bundle", "digest": "sha256:1b49cf389301637da257db381c87879340d19af8eeca5946b334bc8185322da3", "size_bytes": 10240, "sha256_verified": true},
+    {"field": "oracle_bundle", "digest": "sha256:d010d8d5808855f7cb599615abb9cf4f8ae483eb25a1d0167bef1a4c4d693105", "size_bytes": 10240, "sha256_verified": true}
+  ],
+  "searches": [
+    {"location": "checked-in catalog/tasks/is-unicode-supported runtime", "result": "generated verifier and solve script only; no source archive"},
+    {"location": "task-local evidence and provenance", "result": "historical receipts and metadata only; no source archive"},
+    {"location": "retained authoring worktrees, handoffs, archives, and runs", "result": "task projections and logs found; no exact source archive digest"},
+    {"location": "local npm cache and npm registry metadata", "result": "package registry entries exist, but package tarballs are not the required git archive and do not match the frozen archive digest"},
+    {"location": "local CAS", "result": "all four declared outer artifacts found and verified; no source archive object declared or present"}
+  ],
+  "replacement_bundle": {"needed": true, "constructed": false, "reason": "No exact source archive bytes were found locally; no replacement path or binding is proposed."},
+  "commands_log": {
+    "path": "catalog/sources/is-unicode-supported/evidence/revalidation-20260905/revalidation-commands.log",
+    "sha256": "sha256:2bc335464edfd824d0678baa08724096639a7113a6787e8770d46e8a7ae9d700"
+  },
+  "network_access": false
+}

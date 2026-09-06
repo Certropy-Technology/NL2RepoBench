@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "task_id": "jaraco-functools",
+  "manifest_digest": "sha256:289ea7060e870fcc52ccbaa7b7f1fd79080c82a7f87e1df5db62b15133627fef",
+  "expected_total": 35,
+  "oracle": {
+    "status": "infrastructure-blocked",
+    "valid": null,
+    "collected": null,
+    "passed": null,
+    "failed": null,
+    "skipped": null,
+    "reward": null,
+    "grading_available": false,
+    "network_receipt_available": false,
+    "collection_available": false,
+    "result_available": false,
+    "reason": "Both Harbor attempts failed before an Oracle or verifier trial ran; the bounded retry ended with EnvironmentStartTimeoutError."
+  },
+  "controls": {
+    "empty": "not-run",
+    "stub": "not-run",
+    "forgery": "not-run",
+    "call-hang": "not-run",
+    "offline": "not-run"
+  },
+  "production_evidence_replaced": false
+}

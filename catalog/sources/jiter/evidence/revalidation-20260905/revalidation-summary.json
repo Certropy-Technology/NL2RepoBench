@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0",
+  "task_id": "jiter",
+  "requested_source_digest": "sha256:491ba966d5e87c3c0475f647dabcf57ba86efab03c7c14877a7a831ef29cdd93",
+  "validated_source_digest": "sha256:491ba966d5e87c3c0475f647dabcf57ba86efab03c7c14877a7a831ef29cdd93",
+  "lifecycle_before": "packaged",
+  "lifecycle_after": "packaged",
+  "production_evidence_changed": false,
+  "generated_projection_changed": false,
+  "artifact_checks": {
+    "dependency_lock": {"sha256": "sha256:d978dd32c7d5c8bb3a1f40f9b05fe68f34fb24bef1ae4bd9b3c60af6fb1f87fd", "size_bytes": 189, "verified": true},
+    "verifier_bundle": {"sha256": "sha256:73818aeb5481e0001983de93771711e142cf2c3007e0d44f4e64dbdd6321ae77", "size_bytes": 10240, "verified": true},
+    "oracle_bundle": {"sha256": "sha256:019efb1b405ef966bcac507279b3c3532d439c62301a828c2957c742d336a260", "size_bytes": 10240, "verified": true, "runtime_network_fetch": true}
+  },
+  "replacement_proposal": {
+    "status": "parent-review-only",
+    "outer_sha256": "sha256:a8c5c33e7b32bffc8a055e4fece0a01450e5e1dca9fdc39624edcdfd41b1cc6a",
+    "outer_size_bytes": 10240,
+    "inner_solve_sha256": "sha256:241e0b37e143b109716c609e6c1dce24ef73bac9d8e142fec457e7b53bee86b2",
+    "inner_solve_size_bytes": 5362,
+    "adaptation_body_sha256": "sha256:d5236528d8e091d7a9d53f72bbc3ffdf8b6d11d09175380166faf2b3f910ad7e",
+    "adaptation_body_size_bytes": 5215,
+    "network_audit": "no URL, Git, curl, wget, registry, or DNS operation",
+    "local_static_smoke": {"collected": 32, "passed": 32, "failed": 0, "reward": 1.0, "receipt_sha256": "sha256:9a650376715b5b8c6c5a9f879a717a76fce68feb3c2216325010c038b009321e"}
+  },
+  "harbor": {
+    "compile": "not-run; replacement is not registered in shared CAS",
+    "oracle": "not-run; current bundle requires forbidden runtime source fetch",
+    "controls": "not-run; current bundle requires forbidden runtime source fetch",
+    "docker_no_network_attempt": {"result": "infrastructure-timeout", "timeout_seconds": 300}
+  },
+  "static_validation": {
+    "source_validation": true,
+    "instruction_quality": true,
+    "shell_syntax": true,
+    "python_syntax": true,
+    "json_toml_parse": true,
+    "task_network_errors": 0,
+    "task_network_warnings": 1,
+    "git_diff_check": true
+  },
+  "evidence": [
+    "catalog/sources/jiter/evidence/revalidation-20260905/local-recovery-search.json",
+    "catalog/sources/jiter/evidence/revalidation-20260905/replacement-oracle-proposal.md",
+    "catalog/sources/jiter/evidence/revalidation-20260905/replacement-oracle.diff",
+    "catalog/sources/jiter/evidence/revalidation-20260905/docker-no-network-attempt.json"
+  ],
+  "next_step": "Parent independently reconstructs/registers the replacement bundle, updates oracle_bundle, compiles twice, and runs fresh Oracle, empty, stub, forgery, and offline controls."
+}

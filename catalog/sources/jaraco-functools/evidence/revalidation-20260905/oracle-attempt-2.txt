@@ -1,0 +1,9 @@
+command: uv run --frozen --project harbor-runner harbor run -p <compiled-task> -a oracle --job-name jaraco-functools-revalidation-oracle-retry-20260905 -o <fresh-retry-run-root> --n-concurrent 1 --yes
+exit_code: 0
+failure_class: infrastructure
+failure_type: EnvironmentStartTimeoutError
+trial_started: false
+completed_trials: 0
+errored_trials: 1
+environment_start_timeout_seconds: 600.0
+output: Docker compose environment build timed out; Harbor reported one EnvironmentStartTimeoutError.

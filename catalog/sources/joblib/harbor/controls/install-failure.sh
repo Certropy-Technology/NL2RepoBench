@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -euo pipefail
+rm -rf /workspace/* /workspace/.[!.]* /workspace/..?* 2>/dev/null || true
+printf '%s\n' 'intentionally invalid candidate project' > /workspace/README.txt

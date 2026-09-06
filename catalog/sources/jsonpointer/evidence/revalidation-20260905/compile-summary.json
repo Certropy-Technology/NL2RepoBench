@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "task_id": "jsonpointer",
+  "revalidation": "instruction-migration-20260905",
+  "command": "uv run nl2repo harbor compile catalog/sources/jsonpointer --output .nl2repo/jsonpointer-revalidation-20260905/compile-a --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+  "repeat_command": "uv run nl2repo harbor compile catalog/sources/jsonpointer --output .nl2repo/jsonpointer-revalidation-20260905/compile-b --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+  "compile_exit_codes": [0, 0],
+  "byte_identical_recompiles": true,
+  "canonical_manifest_digest": "sha256:7fedf7712504d0bd5158fd669e6c5d9a876d677f3c15b907eafdaa28efa9e59f",
+  "bundle_manifest_sha256": "sha256:044aeb7ffa78704727ffbce73ec65013a32e26ce57cab7a2582ec9bafb11b1c9",
+  "bundle_file_count": 57,
+  "oracle_ready": false,
+  "oracle_blocker": "The compiled solve.sh fetches https://github.com/stefankoegl/python-json-pointer and the trusted Oracle bundle contains no source payload. No source-host authorization was used.",
+  "temporary_outputs_ignored": true
+}

@@ -3,9 +3,10 @@
   "task_id": "json-stable-stringify",
   "upstream_url": "https://github.com/ljharb/json-stable-stringify",
   "revision": "4c3d8989da7dd5a341d8ab49b780fbe267411797",
-  "revision_verified_by": "Oracle solve.sh fetched the requested revision and verified the archive digest before extraction",
+  "revision_verified_by": "The private Oracle bundle contains the verified archive for the requested revision; solve.sh verifies its SHA-256 before extraction",
   "source_archive": {
-    "path": ".nl2repo/authoring-work/compiled/json-stable-stringify/solution/source-archive.tar",
+    "artifact_ref": "artifact://private/sha256:7bc11961cf63932550d75f7f4db7c5294175ddd2e92e1dc8f7d4b96e59559b2a",
+    "inner_path": "source-archive.tar",
     "sha256": "sha256:d59c0a2beaa4fdced120056f9e7dbbdc806f7285114168b586bf40ffac2119fb",
     "size_bytes": 71680
   },

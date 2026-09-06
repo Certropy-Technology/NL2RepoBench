@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "task_id": "jaraco-context",
+  "harbor_version": "0.21.0",
+  "manifest_digest": "sha256:c3c1b9c7fb882e89ed52ee590edd5e35ef4ff8889436d9b605d318984d227125",
+  "runs": {
+    "oracle": {"exit_code": 0, "valid": true, "reward": 1.0, "test_pass_rate": 1.0, "raw_result_sha256": "sha256:bb2cffdee4ab1fe02cb09405b40ed70d20849061f61cf0262bcf3c44527db522"},
+    "empty": {"exit_code": 0, "valid": true, "reward": 0.0, "test_pass_rate": 0.0, "raw_result_sha256": "sha256:47f849971ebb0e2cc1ba3111ae0b14bbfd4a14d4ff6e0116139585be8efe4c80"},
+    "stub": {"exit_code": 0, "valid": true, "reward": 0.0, "test_pass_rate": 0.0, "raw_result_sha256": "sha256:1e504bce39ae4e9bc93ffb25559d3355709feee49e0898a3d7e882a0c1bf1adc"},
+    "forgery": {"exit_code": 0, "valid": true, "reward": 0.0, "test_pass_rate": 0.0, "raw_result_sha256": "sha256:decaa7cf333460b914f47802f1e25b8f8b3875e6ece9a054c07217495c14fcbb"},
+    "install-hang": {"exit_code": 0, "valid": true, "reward": 0.0, "test_pass_rate": 0.0, "raw_result_sha256": "sha256:3f1c2390b9a0c0b106f9f71ad4ed145899776d1529b7b399447f32e6541e6164"}
+  }
+}

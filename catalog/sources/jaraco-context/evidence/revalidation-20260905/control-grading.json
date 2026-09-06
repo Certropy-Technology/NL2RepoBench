@@ -1,0 +1,52 @@
+{
+  "schema_version": "1.0",
+  "task_id": "jaraco-context",
+  "manifest_digest": "sha256:c3c1b9c7fb882e89ed52ee590edd5e35ef4ff8889436d9b605d318984d227125",
+  "expected_total": 43,
+  "controls": {
+    "empty": {
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "raw_grading_sha256": "sha256:103761c416cb8082abecad162878f2bcb474f47644886aa832b3033e23f3cff1"
+    },
+    "stub": {
+      "valid": true,
+      "candidate_install": "success",
+      "collected": 43,
+      "passed": 0,
+      "failed": 43,
+      "reward": 0.0,
+      "raw_grading_sha256": "sha256:e5b821c5bb512745c51e8f579cb918dbe2571c756e731f2b6db5e3f12923d763",
+      "raw_junit_sha256": "sha256:f4b017b15dd9fb1e8ba8df10b4f81a1c1144c1712e920824051c1d762fcb60eb"
+    },
+    "forgery": {
+      "valid": true,
+      "candidate_install": "success",
+      "collected": 43,
+      "passed": 0,
+      "failed": 43,
+      "reward": 0.0,
+      "candidate_claimed_collected": 19,
+      "candidate_claimed_passed": 19,
+      "candidate_claimed_reward": 1.0,
+      "verifier_owned_reward": true,
+      "raw_grading_sha256": "sha256:e5b821c5bb512745c51e8f579cb918dbe2571c756e731f2b6db5e3f12923d763",
+      "raw_junit_sha256": "sha256:f4b017b15dd9fb1e8ba8df10b4f81a1c1144c1712e920824051c1d762fcb60eb"
+    },
+    "install-hang": {
+      "valid": true,
+      "candidate_install": "timeout",
+      "candidate_install_returncode": -9,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "raw_grading_sha256": "sha256:103761c416cb8082abecad162878f2bcb474f47644886aa832b3033e23f3cff1"
+    }
+  }
+}

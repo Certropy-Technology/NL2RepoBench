@@ -1,0 +1,53 @@
+{
+  "schema_version": "1.0",
+  "task_id": "jiter",
+  "searched_at": "2026-09-06",
+  "required_source_archive": {
+    "sha256": "sha256:093d45e8a53c7d8be9472abbc0e6ff822b9d6987ce17a61bcb75092a11b01693",
+    "revision": "0fc3c06b4555bb814d3c44ba08d715d9d064da3d"
+  },
+  "private_artifacts": [
+    {
+      "role": "dependency-lock",
+      "sha256": "sha256:d978dd32c7d5c8bb3a1f40f9b05fe68f34fb24bef1ae4bd9b3c60af6fb1f87fd",
+      "size_bytes": 189,
+      "status": "verified"
+    },
+    {
+      "role": "verifier-bundle",
+      "sha256": "sha256:73818aeb5481e0001983de93771711e142cf2c3007e0d44f4e64dbdd6321ae77",
+      "size_bytes": 10240,
+      "status": "verified"
+    },
+    {
+      "role": "oracle-bundle",
+      "sha256": "sha256:019efb1b405ef966bcac507279b3c3532d439c62301a828c2957c742d336a260",
+      "size_bytes": 10240,
+      "status": "verified-network-fetching"
+    }
+  ],
+  "searches": [
+    {
+      "scope": "declared authoring workspace",
+      "path": ".nl2repo/authoring-work/python-author-wave2-20260828/jiter",
+      "result": "absent"
+    },
+    {
+      "scope": "retained authoring worktrees and handoffs",
+      "result": "task metadata copies found, no archive payload matching the required SHA-256"
+    },
+    {
+      "scope": "checked-in generated runtime",
+      "result": "contains the same network-fetching Oracle solve.sh and no source archive"
+    },
+    {
+      "scope": "local uv and package caches",
+      "result": "only unrelated jiter 0.11/0.16 native wheels and the task adaptation wheel; no matching frozen archive"
+    },
+    {
+      "scope": "bounded archive-name/hash scan of local CAS, authoring archive, and handoff store",
+      "result": "no exact matching archive found; broad scans were time-bounded after 180 seconds and 600 seconds without a hit"
+    }
+  ],
+  "conclusion": "No trusted local copy of the declared upstream archive is available. The existing Oracle bundle is otherwise intact but requires GitHub at runtime, which is forbidden for this revalidation."
+}

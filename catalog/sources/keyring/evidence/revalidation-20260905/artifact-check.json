@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "task_id": "keyring",
+  "source_digest": "sha256:930b142979344e3f758403d1caf80fc564f8d86eee4629a618e3b5e0b5b7a83e",
+  "artifact_root": "parent-private-cas",
+  "artifacts": {
+    "dependencies.lock_artifact": {
+      "digest": "sha256:724d58a9ba8a0db35fe30b6482633dabc5f54807a1368e81b157df2847e054f6",
+      "declared_size_bytes": 14722,
+      "actual_size_bytes": 14722,
+      "sha256_verified": true
+    },
+    "verifier.bundle": {
+      "digest": "sha256:385ca65e01e0102cfc81b3239e51e5a6eb325b77fe9c3b0a46c99d91b2c2cf48",
+      "declared_size_bytes": 30720,
+      "actual_size_bytes": 30720,
+      "sha256_verified": true,
+      "members": ["adapter.py", "run.py"]
+    },
+    "oracle_bundle": {
+      "digest": "sha256:26a926dade936b0de138795350ed69fdd21a60b0cef31fa5e852f36da216a629",
+      "declared_size_bytes": 20480,
+      "actual_size_bytes": 20480,
+      "sha256_verified": true,
+      "members": ["LICENSE", "provenance.txt", "solve.sh", "write_stub.sh"],
+      "source_payload_present": false,
+      "runtime_source_fetch": true,
+      "runtime_source_host": "github.com"
+    }
+  },
+  "result": "dependency and verifier artifacts are intact; Oracle cannot execute under the required no-network policy"
+}

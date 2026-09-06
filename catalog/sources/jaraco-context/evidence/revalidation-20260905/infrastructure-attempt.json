@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "task_id": "jaraco-context",
+  "stage": "oracle",
+  "attempt": 1,
+  "failure_class": "infrastructure",
+  "failure_type": "EnvironmentStartTimeoutError",
+  "failure_reason": "Environment start timed out after 600.0 seconds before a verifier trial ran.",
+  "harbor_exit_code": 0,
+  "trials_completed": 0,
+  "bounded_retry_count": 1,
+  "retry_outcome": "passed",
+  "raw_job_result_sha256": "sha256:e46a17bd71cd892b8f38574411ac633c2113c303d2f18818956ce4d2483f5b4b",
+  "raw_trial_result_sha256": "sha256:b2f4037560eefcd4a62d0e923a1d75ef7590d641e59ee19066d554984266d40e"
+}

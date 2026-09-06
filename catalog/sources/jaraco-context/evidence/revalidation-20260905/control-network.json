@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "task_id": "jaraco-context",
+  "network_mode": "no-network",
+  "controls": {
+    "empty": {"public_network_available": false, "raw_network_sha256": "sha256:9fe510ab5c25808b5c7f58a3e60e5f3dea5fbbfb2a0969285ff0e26cac0380b4"},
+    "stub": {"public_network_available": false, "raw_network_sha256": "sha256:05933bfe2f7071aaa6b8209c5172ea29cffa10ecb4ed95b5460cc0b62c05a0e4"},
+    "forgery": {"public_network_available": false, "raw_network_sha256": "sha256:729dd986045e7dd8c11b3c7eae253ebe81611422e3f74324761ea602fa3c3095"},
+    "install-hang": {"public_network_available": false, "raw_network_sha256": "sha256:29b08413b96d864480de5b121756ed62dae314ee47c23571dc928bad811caa30"}
+  },
+  "probes": ["1.1.1.1:443", "pypi.org:443"],
+  "all_probes_false": true
+}

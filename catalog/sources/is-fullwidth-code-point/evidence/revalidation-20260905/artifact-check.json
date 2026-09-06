@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "task_id": "is-fullwidth-code-point",
+  "source_digest": "sha256:257dd9f165bb2faa80c6fda8a4b925db0cde977ad53f2bf9048cb7b3bbf7e179",
+  "checks": [
+    {"field": "dependencies.artifact", "digest": "sha256:9607e338cacf9eb43b7d8d7fcdbaf8447cabfc777c27a7ea635569ef6abe1376", "size_bytes": 51200, "size_ok": true, "digest_ok": true},
+    {"field": "tests.commands_artifact", "digest": "sha256:7ab4a775639ec6c6f9d6c2038698f8cd66bb08e7c8234520edf4f881bee3d785", "size_bytes": 10240, "size_ok": true, "digest_ok": true},
+    {"field": "tests.test_bundle", "digest": "sha256:a28ac087b1ebd11b492841ea2d1c670ad0bc705a7514f346c0208dac146c4901", "size_bytes": 10240, "size_ok": true, "digest_ok": true},
+    {"field": "oracle_bundle", "digest": "sha256:baf58342b89db76dee1cc13b94f19f8dfeae3b883975ce40f401ec8f31b828ea", "size_bytes": 10240, "size_ok": true, "digest_ok": true}
+  ],
+  "oracle_bundle_inventory": ["solve.sh"],
+  "oracle_bundle_contains_source_archive": false,
+  "oracle_solve_requires_network": true
+}

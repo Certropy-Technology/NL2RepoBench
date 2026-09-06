@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "task_id": "jaraco-functools",
+  "task_version": "0.1.0",
+  "source_digest": "sha256:8b9871abd118ccf54e49e2eb3ce3f24c1496ea1b442c30116b66ca3050304336",
+  "instruction_sha256": "sha256:15de7c6926eb086a386b88ab6354baba3c12a08cafc81f2922896ab37abba7e8",
+  "toolchain": "toolchain.lock.toml",
+  "toolchain_lock_digest": "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366",
+  "canonical_manifest_digest": "sha256:289ea7060e870fcc52ccbaa7b7f1fd79080c82a7f87e1df5db62b15133627fef",
+  "bundle_manifest_sha256": "sha256:0ddf957cb29d983363c328471b44d68ae38489528a426d532036f95119e61f4e",
+  "file_count": 59,
+  "compile_exit_codes": [0, 0],
+  "repeat_compile_byte_identical": true,
+  "compile_command": "uv run nl2repo harbor compile catalog/sources/jaraco-functools --output <ignored-compile-root> --toolchain toolchain.lock.toml --artifact-root <parent-cas> --allow-private",
+  "allow_incomplete": false
+}

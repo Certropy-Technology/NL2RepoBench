@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "task_id": "langchain",
+  "oracle_bundle_digest": "sha256:2ebeaca61789b954bfb8b6405e25cb6f162b9154bfb024ef13c38f1ece43a488",
+  "oracle_bundle_size_bytes": 10240,
+  "solve_sha256": "sha256:833cfe8241796919bab4355412b0c810c4fef0839eb5e2f9e60f1119ca39fdd4",
+  "solve_size_bytes": 908,
+  "declared_revision": "502b2b445b89b753cd468df979b71503f8f99425",
+  "declared_source_archive_sha256": "sha256:324411670c256bcbdf4dfab75a1b099910b6fc8880a4e9722270288c5a1e4ccd",
+  "declared_source_archive_size_bytes": 3010560,
+  "network_operations": [
+    "git remote add origin https://github.com/langchain-ai/langchain",
+    "git fetch --depth=1 origin <revision>"
+  ],
+  "embedded_source_payload": false,
+  "strict_no_network_compatible": false,
+  "classification": "artifact-or-verifier-blocked",
+  "reason": "The current Oracle cannot populate /workspace without source-host access, which is forbidden for this revalidation."
+}

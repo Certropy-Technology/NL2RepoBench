@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "task_id": "importlib-metadata",
+  "oracle_bundle_digest": "sha256:aad21b20fc483f75ef5d1fcd3773a822e66ee87043c950cd4809bc9a0484dab9",
+  "oracle_bundle_size_bytes": 20480,
+  "members": [
+    {
+      "path": "LICENSE",
+      "size_bytes": 10280,
+      "sha256": "sha256:074e6e32c86a4c0ef8b3ed25b721ca23aca83df277cd88106ef7177c354615ff"
+    },
+    {
+      "path": "solve.sh",
+      "size_bytes": 1620,
+      "sha256": "sha256:81daf5285f0669f1c58814af34f3c26b7ccea278de8149ff291e1edc06be7a94"
+    }
+  ],
+  "source_payload_present": false,
+  "network_operations": [
+    "git remote add origin https://github.com/python/importlib_metadata",
+    "git fetch --depth 1 origin 9757b400ee412ddb1d685f139ed3300f607c059a"
+  ],
+  "policy_result": "forbidden",
+  "reason": "Agent, candidate, verifier, Oracle, and controls must not receive source-host, DNS, registry, or external-service access during this revalidation."
+}

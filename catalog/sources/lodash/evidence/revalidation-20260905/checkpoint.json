@@ -1,0 +1,28 @@
+{
+  "checkpoint": "2026-09-06",
+  "compile": {
+    "canonical_manifest_digest": "sha256:b77f838d63fa7ea7a9b364e342871bc0610b0e61598135d84d8442e3b022f563",
+    "deterministic": true,
+    "file_count": 76,
+    "raw_bundle_manifest_sha256": "sha256:7595c5ff00bede0d8977946c76d402031bd45d73a7e227d235050d27828613e6"
+  },
+  "controls": {
+    "empty": "0/0 candidate-installation-failed",
+    "forgery": "1/63 verifier-owned-reward",
+    "stub": "1/63",
+    "timeout": "not-run"
+  },
+  "network": "all completed verifier network probes reported public_network_available=false",
+  "oracle": {
+    "collected": 63,
+    "failed": 1,
+    "failed_test_ids": [
+      "contract.test.mjs::package metadata is scripts-free CommonJS lodash 4.18.1"
+    ],
+    "passed": 62,
+    "reward": 0.9841269841269841,
+    "valid": true
+  },
+  "schema_version": "1.0",
+  "task_id": "lodash"
+}

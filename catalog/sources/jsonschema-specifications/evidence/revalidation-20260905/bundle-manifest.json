@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "task_id": "jsonschema-specifications",
+  "queue_source_digest": "sha256:27fc999a66326574f4b71031ada13310f75cbe5e7413585ac15448eb9da136e2",
+  "validated_source_digest": "sha256:27fc999a66326574f4b71031ada13310f75cbe5e7413585ac15448eb9da136e2",
+  "instruction_sha256": "sha256:af0696c4668c20bef362e340a4256fedd4354626a54800cd3ebcb7e0ee25daee",
+  "toolchain": "toolchain.lock.toml",
+  "toolchain_lock_digest": "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366",
+  "compile_commands": [
+    "uv run nl2repo harbor compile catalog/sources/jsonschema-specifications --output <compile-a> --toolchain toolchain.lock.toml --artifact-root <parent-private-cas> --allow-private",
+    "uv run nl2repo harbor compile catalog/sources/jsonschema-specifications --output <compile-b> --toolchain toolchain.lock.toml --artifact-root <parent-private-cas> --allow-private"
+  ],
+  "compile_exit_codes": [0, 0],
+  "byte_identical_recompiles": true,
+  "bundle_manifest_sha256": "sha256:16bb50d3a7155a2adffdfb568b06c10494298dbe5b72a91b53aa76617bb8d90e",
+  "canonical_manifest_digest": "sha256:3ba86ffa1f547414ad30c1f95bf0ec9fbaea763afae647d5edc4f6baad1f94e0",
+  "manifest_size_bytes": 10850,
+  "bundle_file_count": 57
+}

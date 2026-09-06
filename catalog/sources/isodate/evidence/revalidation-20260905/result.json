@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "task_id": "isodate",
+  "outcome": "artifact-or-verifier-blocked",
+  "failure_class": "artifact",
+  "failure_reason": "oracle-source-payload-unavailable-under-no-network",
+  "compiled": true,
+  "byte_identical_recompiles": true,
+  "canonical_manifest_digest": "sha256:c696631df4d7357979746060c98e6e74541b8ba5359d81299ed35984889ac7f1",
+  "harbor_trial_count": 0,
+  "oracle_valid": null,
+  "reward": null,
+  "expected_total": 34,
+  "prior_receipts_reused": false,
+  "replacement_bundle": null,
+  "next_step": "Parent supplies and registers an Oracle bundle containing the exact source archive with SHA-256 50b897e1c615278d8f9add946f74635564c500d01503793a0663f615eedf8622, then recompiles and runs the complete NoNetwork matrix."
+}

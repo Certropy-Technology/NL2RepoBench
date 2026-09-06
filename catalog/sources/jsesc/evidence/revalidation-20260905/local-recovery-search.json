@@ -1,0 +1,48 @@
+{
+  "schema_version": "1.0",
+  "task_id": "jsesc",
+  "required_revision": "203c8694d605b6f29d4c67d372897499ec4468fb",
+  "required_git_archive": {
+    "size_bytes": 81920,
+    "sha256": "sha256:2f611c6a89206ce324ec112596b7aef0f76a22ddf402fb1960ac11be15532cce"
+  },
+  "searches": [
+    {
+      "scope": "checked-in generated runtime and retained supervisor compile",
+      "result": "Only the runtime-fetching solve.sh is present; no source.tar, package payload, or local Git object is embedded.",
+      "exit_code": 0
+    },
+    {
+      "scope": "task-local source/evidence and historical copies in retained authoring worktrees",
+      "result": "Catalog metadata and controls are present, but the original authoring-work/jsesc directory and its source.tar are absent.",
+      "exit_code": 0
+    },
+    {
+      "scope": "historical claim, handoff, worker artifact, async-run, and retained-run archives",
+      "result": "The claim identifies the deleted original worktree. No 81920-byte jsesc source archive was found in bounded handoff and async-run searches.",
+      "exit_code": 0
+    },
+    {
+      "scope": "local loose Git object and cache search",
+      "result": "The required commit is not present in the current repository; broad shared-archive filename searches exceeded the 300-second bound and yielded no match before timeout.",
+      "exit_code": 124
+    },
+    {
+      "scope": "local npm content-addressed cache",
+      "result": "A jsesc-3.1.0.tgz cache object was extracted without network. It is 10038 bytes with SHA-256 0c712225ccca9a70bf83f2ac2f52a268c858c7df3b3df196f1623239d80d3c09 and SHA-512 integrity sha512-/sM3dO2FOzXjKQhJuo0Q173wf2KOo8t4I8vHy6lF9poUp7bKT0/NHE8fPX23PwfhnykfqnC2xRxOnVw5XuGIaA==.",
+      "exit_code": 0
+    }
+  ],
+  "rejected_candidates": [
+    {
+      "kind": "npm package tarball",
+      "version": "3.1.0",
+      "size_bytes": 10038,
+      "sha256": "sha256:0c712225ccca9a70bf83f2ac2f52a268c858c7df3b3df196f1623239d80d3c09",
+      "packument_git_head": "819f534875fd87c9033bb72148ab6a6ad1219ca0",
+      "reason": "Its bytes do not match the frozen Git archive and its cached packument gitHead does not match the required revision. It cannot establish the frozen source authority."
+    }
+  ],
+  "replacement_constructed": false,
+  "next_step": "Recover the exact 81920-byte Git archive with SHA-256 2f611c6a89206ce324ec112596b7aef0f76a22ddf402fb1960ac11be15532cce, or another immutable payload whose revision binding is independently proven to the required commit. Then build and register a source-embedded Oracle, recompile, and rerun the full matrix."
+}

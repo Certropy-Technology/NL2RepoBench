@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0",
+  "task_id": "jsonschema-specifications",
+  "required_revision": "7aee138ac610b09b81aae1d338b8ed4601a01764",
+  "required_source_archive_sha256": "sha256:07328bc116206bfa14d749cb01ee5039f20e0ed28bdf017bc010101f23a11053",
+  "network_used": false,
+  "searches": [
+    {
+      "scope": "current private Oracle bundle and checked-in generated runtime",
+      "result": "Only solve.sh was present; no source.tar, source.tar.gz, oracle-package, or installable source payload was present.",
+      "exit_code": 0
+    },
+    {
+      "scope": "task-local source evidence and original authoring session transcript",
+      "result": "The transcript records the historical source checkout and successful GitHub-authorized Oracle, but contains no recoverable source payload bytes. The original dedicated worktree and authoring-work directory no longer exist.",
+      "exit_code": 0
+    },
+    {
+      "scope": "task-specific supervisor compile projection",
+      "result": "The projection contains only the network-fetching solve.sh and no frozen source payload.",
+      "exit_code": 0
+    },
+    {
+      "scope": "retained task run paths, stopped containers, and named Docker volumes",
+      "result": "No retained jsonschema-specifications run path, container, or volume was found.",
+      "exit_code": 0
+    },
+    {
+      "scope": "current repository Git object database",
+      "result": "The required upstream commit object is absent.",
+      "exit_code": 0
+    },
+    {
+      "scope": "local package caches",
+      "result": "An installed jsonschema-specifications 2025.9.1 wheel cache exists, but it is not the declared source archive and cannot prove the required revision or archive digest.",
+      "exit_code": 0
+    },
+    {
+      "scope": "bounded historical authoring tree searches",
+      "result": "Broad searches exceeded their 180-second and 300-second bounds; narrower task-specific searches completed and found no matching payload.",
+      "exit_code": 124
+    }
+  ],
+  "exact_payload_found": false,
+  "replacement_bundle_constructed": false,
+  "conclusion": "No trusted local bytes can be proven to match the frozen source archive. A replacement Oracle bundle cannot be constructed without weakening source authority."
+}

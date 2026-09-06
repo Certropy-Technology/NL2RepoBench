@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "task_id": "lodash",
+  "offline": true,
+  "artifact_root": "parent-local-CAS",
+  "artifacts": [
+    {"role": "npm-dependencies", "digest": "sha256:0518ee80b4df32f3e5ceff4095154a9eea283650152fa9cc5b55f2ea90432b03", "size_bytes": 10240, "sha256_verified": true, "inner_files": ["bundle.manifest.json", "package-lock.json"]},
+    {"role": "commands", "digest": "sha256:a832562812d78324c3ac1b16a15a9ab97c6e9e92ad7de119f2da7bb997be8661", "size_bytes": 10240, "sha256_verified": true, "inner_files": ["command-plan.json"]},
+    {"role": "tests", "digest": "sha256:0bfac49f72b66befde0675f872b39095596a8f7273bff05f3edef58ca2302b4c", "size_bytes": 20480, "sha256_verified": true, "inner_files": ["candidate_adapter.source", "contract.test.mjs", "test_client.mjs"]},
+    {"role": "oracle", "digest": "sha256:a2e7311466ffb7e3ed6774bb8ade582d984ba6293d571f059f3109cfd2d2168c", "size_bytes": 4782080, "sha256_verified": true, "inner_files": ["package-lock.json", "package.json", "solve.sh", "source.tar"], "source_archive_sha256": "sha256:4b815834ee052cbd62e39ae63019905344135368cd48f0dfcbbcaf7635e3ec9a"}
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "task_id": "is-stream",
+  "replacement_oracle_bundle_sha256": "sha256:7090924fc778bc345ce32eca631f0fce045468afd754d60f277b3e1f90f117ca",
+  "container_network": "none",
+  "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+  "commands": [
+    {"command": "bash /solution/solve.sh", "exit_code": 0},
+    {"command": "npm ci --offline --ignore-scripts --no-audit --no-fund", "exit_code": 0},
+    {"command": "npm pack --ignore-scripts", "exit_code": 0},
+    {"command": "node --test contract.test.mjs", "exit_code": 0}
+  ],
+  "collection": {
+    "expected_total": 32,
+    "collected": 32,
+    "passed": 32,
+    "failed": 0,
+    "skipped": 0
+  },
+  "note": "This is a direct local smoke test of the replacement bundle, not a Harbor Oracle receipt and not production evidence."
+}

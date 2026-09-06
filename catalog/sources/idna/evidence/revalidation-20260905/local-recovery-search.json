@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.0",
+  "task_id": "idna",
+  "target_revision": "e2073db14d28d1c3299649dd0c2dd4205b43ebfd",
+  "target_archive_sha256": "sha256:9f05c7eabad5785cddefcb84a85230194b42dccb20b349027135854db25161f8",
+  "result": "not-recovered",
+  "replacement_bundle_created": false,
+  "searches": [
+    {
+      "scope": "current checked-in generated runtime",
+      "result": "catalog/tasks/idna/solution contains only solve.sh with SHA-256 69a8424df45305091df4cad2d84d2d77df38be4209515f443d544971c7c303d5; no source archive is present",
+      "exit_code": 0
+    },
+    {
+      "scope": "task-local source and evidence",
+      "result": "No source.tar, source.tar.gz, upstream archive, or embedded Oracle source payload is tracked under catalog/sources/idna",
+      "exit_code": 0
+    },
+    {
+      "scope": "original authoring claim and exact historical work paths",
+      "result": "The retained claim identifies the original idna worktree, but that worktree, the task authoring-work directory, the task handoff directory, and the task run directory have been removed",
+      "exit_code": 0
+    },
+    {
+      "scope": "retained worker handoff and patch indexes",
+      "result": "No idna-specific handoff or patch contains the frozen revision, expected archive digest, or a recoverable source payload",
+      "exit_code": 0
+    },
+    {
+      "scope": "local uv package cache",
+      "result": "The cache contains installed idna 3.19 wheel trees, but no immutable revision marker or exact frozen Git archive; wheel contents are not accepted as proof of the declared Git revision/archive bytes",
+      "exit_code": 0
+    },
+    {
+      "scope": "local uv Git cache",
+      "result": "The bounded Git cache repositories do not contain commit e2073db14d28d1c3299649dd0c2dd4205b43ebfd and do not identify the kjd/idna remote",
+      "exit_code": 0
+    }
+  ],
+  "next_step": "Recover the exact source archive with SHA-256 9f05c7eabad5785cddefcb84a85230194b42dccb20b349027135854db25161f8 from a trusted retained source, or reproduce it from a local Git object store that proves commit e2073db14d28d1c3299649dd0c2dd4205b43ebfd. Then build an offline Oracle bundle, register it in the parent CAS, update task.toml, compile twice, and rerun Oracle plus the full control matrix."
+}

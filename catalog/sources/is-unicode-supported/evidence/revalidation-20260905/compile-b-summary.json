@@ -1,0 +1,10 @@
+{
+  "schema_version": "1.0",
+  "task_id": "is-unicode-supported",
+  "command": "uv run nl2repo harbor compile catalog/sources/is-unicode-supported --output .nl2repo/is-unicode-supported-revalidation-compile-b --toolchain toolchain.node.lock.toml --artifact-root <parent-cas> --allow-private",
+  "exit_code": 0,
+  "manifest_sha256": "sha256:e311ded992ad66863a5d545a1313d3a50babdd5e444f1b5579a4902064c8b2ec",
+  "canonical_manifest_digest": "sha256:9c7f5fe442ad1eb200296ce3215aac76a327878f55abdad2d410fa70eddc1922",
+  "manifest_size_bytes": 14104,
+  "file_count": 74
+}

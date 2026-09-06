@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "task_id": "is-string",
+  "manifest_digest": "sha256:95a93005767924ebddc7d26c93ff3e5a1a10722c79a1e9559c0a80b680bee18b",
+  "framework": "node:test",
+  "expected_total": 28,
+  "collected": 28,
+  "skipped": 0,
+  "collection_errors": 0,
+  "leaf_ids": ["package-inventory", "undefined", "null", "boolean", "number", "nan", "infinity", "bigint", "symbol", "function", "primitive-empty", "primitive-unicode", "primitive-long", "boxed-empty", "boxed-unicode", "boxed-altered-tag", "boxed-cross-realm", "boxed-number", "boxed-boolean", "array", "regexp", "date", "ordinary-object", "fake-tag", "throwing-tag-getter", "conversion-methods", "throwing-conversion-methods", "prototype-shaped-object"]
+}

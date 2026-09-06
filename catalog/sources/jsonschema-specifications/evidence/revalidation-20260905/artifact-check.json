@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0",
+  "task_id": "jsonschema-specifications",
+  "checked_offline": true,
+  "artifact_root": "<parent-private-cas>",
+  "artifacts": [
+    {
+      "binding": "dependencies.lock_artifact",
+      "digest": "sha256:1b4ee11b80043c94719346dd9498b4e5753a17d971cb81b22cc890de6e6a9092",
+      "declared_size_bytes": 12859,
+      "actual_size_bytes": 12859,
+      "sha256_matches": true
+    },
+    {
+      "binding": "verifier.bundle",
+      "digest": "sha256:0ff2af5df32bc91142a2c6cd2e5c317f6c118a6bcac070479696f70708a8446a",
+      "declared_size_bytes": 10240,
+      "actual_size_bytes": 10240,
+      "sha256_matches": true,
+      "inner_inventory": [
+        {"path": "run.py", "size_bytes": 6979}
+      ]
+    },
+    {
+      "binding": "oracle_bundle",
+      "digest": "sha256:9bbf2aba056aff673128b50a053cd84e4dfad642eb2ac68000a0c4b43b1c0041",
+      "declared_size_bytes": 10240,
+      "actual_size_bytes": 10240,
+      "sha256_matches": true,
+      "inner_inventory": [
+        {"path": "solve.sh", "size_bytes": 1347, "sha256": "sha256:af17b2ed4325357eec57a543e98dec3711edb4253490b776bc295a6b7afbc3d7"}
+      ],
+      "contains_frozen_source_payload": false,
+      "runtime_source_fetch": "git clone and git fetch from github.com"
+    }
+  ]
+}

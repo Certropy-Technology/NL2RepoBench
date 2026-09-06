@@ -1,20 +1,78 @@
 {
   "schema_version": "1.0",
   "task_id": "json-stable-stringify",
+  "task_version": "1.0.0",
   "terminal_kind": "valid",
-  "source_digest": "sha256:d59c0a2beaa4fdced120056f9e7dbbdc806f7285114168b586bf40ffac2119fb",
-  "bundle": {"path": ".nl2repo/authoring-work/final-compile/json-stable-stringify/bundle.manifest.json", "sha256": "sha256:51e69c281dfa5462cb5cde0f57569d416f5b3c9b53da50e0ae4bf5b7b9a0c29f", "canonical_manifest_digest": "sha256:be195bf05e89e25f48c2679d71696648209d555944416de3c6d9152d7cac678e", "file_count": 265},
-  "oracle": {"harbor_version": "0.21.0", "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/final-compile-2/json-stable-stringify -a oracle --job-name json-stable-stringify-authoring-oracle-final-20260829 -o .nl2repo/runs/json-stable-stringify-authoring-oracle-final-20260829 --n-concurrent 1 --yes --no-delete", "exit_code": 0, "valid": true, "reward": 1.0, "collected": 52, "passed": 52, "grading": {"path": ".nl2repo/runs/json-stable-stringify-authoring-oracle-final-20260829/json-stable-stringify-authoring-oracle-final-20260829/json-stable-stringify__fmgVEip/verifier/grading.json", "sha256": "sha256:7a4f48952ec806f15a63666265a49e1e5b487e76bf85e0bf55821351977bed1a"}, "network": {"path": ".nl2repo/runs/json-stable-stringify-authoring-oracle-final-20260829/json-stable-stringify-authoring-oracle-final-20260829/json-stable-stringify__fmgVEip/verifier/network.json", "sha256": "sha256:0d541683d2d1b5b61acd42851c0ff9c3dd5c2c16418f8dbd73faaf8f2df57043"}},
-  "controls": {
-    "matrix": "evidence/control-matrix.json",
-    "empty": {"command": "docker run --rm --network none -v controls/empty.sh:/control.sh:ro -v workspace:/workspace -v logs:/logs/verifier image bash -lc 'bash /control.sh && /tests/test.sh'", "exit_code": 0, "valid": true, "reward": 0.0, "collected": 0, "failure_class": "model", "failure_reason": "candidate-installation-failed", "grading": {"path": ".nl2repo/authoring-work/control-runs/empty/logs/grading.json", "sha256": "sha256:4b0f6a12a27a6e1a737e0d24ff66745ae24482fe5451e7c4df132666935a5b4a"}, "network": {"path": ".nl2repo/authoring-work/control-runs/empty/logs/network.json", "sha256": "sha256:1e05289a5c5281d80660bebf1ec5039b7e3397ed2329a42fb76406f2785216a5"}},
-    "stub": {"command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/controls/json-stable-stringify-stub -a oracle --job-name json-stable-stringify-control-stub-20260829 -o .nl2repo/runs/json-stable-stringify-control-stub-20260829 --n-concurrent 1 --yes --no-delete", "exit_code": 0, "valid": true, "reward": 0.0, "collected": 52, "passed": 0, "verifier_owned_reward": true, "grading": {"path": ".nl2repo/runs/json-stable-stringify-control-stub-20260829/json-stable-stringify-control-stub-20260829/json-stable-stringify-stub__eBeSkEL/verifier/grading.json", "sha256": "sha256:f11df344d943ba294f001eae158fea4c8581acc2977e32cf111300e0270ccd1d"}, "network": {"path": ".nl2repo/runs/json-stable-stringify-control-stub-20260829/json-stable-stringify-control-stub-20260829/json-stable-stringify-stub__eBeSkEL/verifier/network.json", "sha256": "sha256:ab6e00fd9d734da65d42689d7e4420175410f9f95f79ea3247c761007e4aa728"}},
-    "forgery": {"command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/authoring-work/controls/json-stable-stringify-forgery -a oracle --job-name json-stable-stringify-control-forgery-20260829 -o .nl2repo/runs/json-stable-stringify-control-forgery-20260829 --n-concurrent 1 --yes --no-delete", "exit_code": 0, "valid": true, "reward": 0.0, "collected": 52, "passed": 0, "verifier_owned_reward": true, "grading": {"path": ".nl2repo/runs/json-stable-stringify-control-forgery-20260829/json-stable-stringify-control-forgery-20260829/json-stable-stringify-forgery__aaDanNj/verifier/grading.json", "sha256": "sha256:f11df344d943ba294f001eae158fea4c8581acc2977e32cf111300e0270ccd1d"}, "network": {"path": ".nl2repo/runs/json-stable-stringify-control-forgery-20260829/json-stable-stringify-control-forgery-20260829/json-stable-stringify-forgery__aaDanNj/verifier/network.json", "sha256": "sha256:00c8857e1533a7e3a8bbbfd5ce4244699b0af00ca2d8c874c68bc655c08848c0"}},
-    "install-script": {"command": "docker run --rm --network none -v controls/install-script.sh:/control.sh:ro -v workspace:/workspace -v logs:/logs/verifier image bash -lc 'bash /control.sh && /tests/test.sh'", "exit_code": 0, "valid": true, "reward": 0.0, "collected": 0, "failure_class": "model", "failure_reason": "candidate-installation-failed", "grading": {"path": ".nl2repo/authoring-work/control-runs/install-script/logs/grading.json", "sha256": "sha256:4b0f6a12a27a6e1a737e0d24ff66745ae24482fe5451e7c4df132666935a5b4a"}, "network": {"path": ".nl2repo/authoring-work/control-runs/install-script/logs/network.json", "sha256": "sha256:1e05289a5c5281d80660bebf1ec5039b7e3397ed2329a42fb76406f2785216a5"}},
-    "loader-hook": {"command": "docker run --rm --network none -v controls/loader-hook.sh:/control.sh:ro -v workspace:/workspace -v logs:/logs/verifier image bash -lc 'bash /control.sh && /tests/test.sh'", "exit_code": 0, "valid": true, "reward": 0.0, "collected": 52, "passed": 0, "grading": {"path": ".nl2repo/authoring-work/control-runs/loader-hook/logs/grading.json", "sha256": "sha256:f11df344d943ba294f001eae158fea4c8581acc2977e32cf111300e0270ccd1d"}, "network": {"path": ".nl2repo/authoring-work/control-runs/loader-hook/logs/network.json", "sha256": "sha256:1e05289a5c5281d80660bebf1ec5039b7e3397ed2329a42fb76406f2785216a5"}},
-    "hang": {"command": "docker run --rm --network none -v controls/hang.sh:/control.sh:ro -v workspace:/workspace -v logs:/logs/verifier image bash -lc 'bash /control.sh && /tests/test.sh'", "exit_code": 0, "valid": true, "reward": 0.0, "collected": 0, "failure_class": "model", "failure_reason": "candidate-call-failed", "bounded_timeout": true, "grading": {"path": ".nl2repo/authoring-work/control-runs/hang/logs/grading.json", "sha256": "sha256:7363df2d8302c8c374ac2edaca4e80443e264e5cb874489c29378d5a023f1d16"}, "network": {"path": ".nl2repo/authoring-work/control-runs/hang/logs/network.json", "sha256": "sha256:1e05289a5c5281d80660bebf1ec5039b7e3397ed2329a42fb76406f2785216a5"}},
-    "offline": {"command": "docker run --rm --network none -v controls/offline.sh:/control.sh:ro -v workspace:/workspace -v logs:/logs/verifier image bash -lc 'bash /control.sh && /tests/test.sh'", "exit_code": 0, "valid": true, "reward": 0.40384615384615385, "collected": 52, "passed": 21, "public_network_available": false, "grading": {"path": ".nl2repo/authoring-work/control-runs/offline/logs/grading.json", "sha256": "sha256:f3c67e00bbf296039154194f6a88ee9149fbb481f52594976b48a83573c60973"}, "network": {"path": ".nl2repo/authoring-work/control-runs/offline/logs/network.json", "sha256": "sha256:1e05289a5c5281d80660bebf1ec5039b7e3397ed2329a42fb76406f2785216a5"}}
+  "status": "artifact-path-remediation-pending",
+  "catalog_source_digest": "sha256:37b38cd79f929957480ab8dfefa095ee03eb554d2ad641c12b1e153689a6942e",
+  "source_freeze": {
+    "upstream_url": "https://github.com/ljharb/json-stable-stringify",
+    "revision": "4c3d8989da7dd5a341d8ab49b780fbe267411797",
+    "license_spdx": "MIT",
+    "source_digest": "sha256:d59c0a2beaa4fdced120056f9e7dbbdc806f7285114168b586bf40ffac2119fb",
+    "status": "known",
+    "archive_size_bytes": 71680
   },
-  "environment": {"runtime": "Node 24.19.0", "npm": "11.17.0", "base_image": "node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848", "agent_image": "nl2repobench/openhands-sdk-fork:930e9b1da-bookworm@sha256:bb48824b85940a3b6083ce0a1d713af6963ebf92bcba318dfc5838461a4081c3", "network_mode": "no-network"},
-  "notes": ["No Harbor Agent Run was started in this authoring lane.", "Full catalog network lint has unrelated pre-existing warnings but zero errors; this task has explicit no-network policy and no task-local finding.", "The source tree remains without catalog/tasks/json-stable-stringify; integrator must perform canonical projection and review before publication."]
+  "toolchain": {
+    "harbor": "0.21.0",
+    "task_schema": "2.0",
+    "node": "24.19.0",
+    "npm": "11.17.0",
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "network_mode": "no-network"
+  },
+  "compile": {
+    "exit_codes": [0, 0],
+    "deterministic": true,
+    "bundle_manifest": "catalog/sources/json-stable-stringify/evidence/revalidation-20260905/bundle-manifest.json",
+    "bundle_manifest_sha256": "sha256:d9d20ac3976981cf52d35d1f021b172529f6b2b04c8c87087396d21928fd6f2b",
+    "canonical_manifest_digest": "sha256:1873719989fd91268d489850b389641ecb63c55020835a8aa9e8730ef050bc9f",
+    "candidate_bundle_manifest_sha256": "sha256:3998043827ad460b2dde9573fef61fc84530a5c370c1fc0685bdcd25cf66f346",
+    "file_count": 265
+  },
+  "oracle": {
+    "valid": true,
+    "expected_total": 52,
+    "collected": 52,
+    "passed": 52,
+    "failed": 0,
+    "skipped": 0,
+    "reward": 1.0,
+    "exit_code": 0,
+    "grading": "catalog/sources/json-stable-stringify/evidence/revalidation-20260905/oracle-grading.json",
+    "grading_sha256": "sha256:4b4abcf0066cfc78257b2c0ca0d480a6639b878c12c517ac4c4e31fcab8b91e0",
+    "network": "catalog/sources/json-stable-stringify/evidence/revalidation-20260905/oracle-network.json",
+    "network_sha256": "sha256:35811eecfa2332b080c902cf9590b4051fc01e4577b1f5b819540d6c52906b19",
+    "result": "catalog/sources/json-stable-stringify/evidence/revalidation-20260905/oracle-result.json",
+    "result_sha256": "sha256:abf735f257c227e9b06afbfdff149aa3e2243c977acbb151910a85d532fdbad4",
+    "collection": "catalog/sources/json-stable-stringify/evidence/revalidation-20260905/collection.json",
+    "collection_sha256": "sha256:8ea01e9e35e7e7d7c5fa04d9c0690b03c2e29e411d53ff2bf2714f352b84ad2f",
+    "public_network_available": false
+  },
+  "controls": {
+    "matrix": "catalog/sources/json-stable-stringify/evidence/revalidation-20260905/control-matrix.json",
+    "matrix_sha256": "sha256:561af2643a6e518d205622a9c9ec3cc1b39fb85fe50f3195c0638a43ee43b1b2",
+    "failure_set": "catalog/sources/json-stable-stringify/evidence/revalidation-20260905/failure-set.json",
+    "failure_set_sha256": "sha256:e214a24783f39f1a5a5ccb9b41e1ed952e804868bf4c2dfebc130a67107601eb",
+    "collection": "catalog/sources/json-stable-stringify/evidence/revalidation-20260905/collection.json",
+    "collection_sha256": "sha256:8ea01e9e35e7e7d7c5fa04d9c0690b03c2e29e411d53ff2bf2714f352b84ad2f",
+    "empty": {"valid": true, "collected": 0, "passed": 0, "reward": 0.0, "failure_class": "model", "failure_reason": "candidate-installation-failed"},
+    "stub": {"valid": true, "collected": 52, "passed": 0, "reward": 0.0, "verifier_owned_reward": true},
+    "forgery": {"valid": true, "collected": 52, "passed": 0, "reward": 0.0, "verifier_owned_reward": true},
+    "install_script": {"valid": true, "collected": 0, "passed": 0, "reward": 0.0, "failure_class": "model", "failure_reason": "candidate-installation-failed"},
+    "loader_hook": {"valid": true, "collected": 52, "passed": 0, "reward": 0.0},
+    "hang": {"valid": true, "collected": 0, "passed": 0, "reward": 0.0, "failure_class": "model", "failure_reason": "candidate-call-failed", "bounded": true},
+    "offline": {"valid": true, "collected": 52, "passed": 21, "reward": 0.40384615384615385, "public_network_available": false}
+  },
+  "residual_risks": [
+    "Offline controls intentionally exercise the no-network candidate without the Oracle source payload and passed 21/52 leaves.",
+    "The candidate compiled bundle contains an absolute authoring-worktree path in npm cache index metadata. The parent rejected that projection; the dependency artifact must be normalized and the full final matrix rerun.",
+    "Model Agent Run, review, pilot, and publication remain separate gates."
+  ],
+  "acceptance": {
+    "accepted": false,
+    "failure_class": "artifact",
+    "evidence": "catalog/sources/json-stable-stringify/evidence/revalidation-20260905/artifact-path-blocker.md",
+    "next_step": "Normalize absolute npm cache index keys without changing package bytes, register the replacement dependency artifact, compile twice, and rerun Oracle plus every control."
+  }
 }

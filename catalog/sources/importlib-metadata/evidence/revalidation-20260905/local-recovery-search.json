@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0",
+  "task_id": "importlib-metadata",
+  "target": {
+    "revision": "9757b400ee412ddb1d685f139ed3300f607c059a",
+    "commit_tree": "f8ae23f8f977a1cac10eb0c421ec1c2057fcb91f",
+    "source_archive_size_bytes": 225280,
+    "source_archive_sha256": "sha256:921c3509959fd9a207da52966da0d4fb2da167e51a9b7a4abb8eff4f46abbf39"
+  },
+  "network_used": false,
+  "searches": [
+    {
+      "scope": "checked-in generated runtime and task-local source/evidence",
+      "result": "No source.tar or equivalent frozen source payload was present."
+    },
+    {
+      "scope": "retained authoring work, preserved worktree, run, main-recovery, and handoff records",
+      "result": "Historical records preserved the expected digest and deleted authoring paths, but no matching archive bytes remained."
+    },
+    {
+      "scope": "private artifact CAS",
+      "result": "No 225280-byte source archive was present."
+    },
+    {
+      "scope": "local package and Git caches",
+      "result": "The local uv Git object cache contained the exact full commit object and tree."
+    }
+  ],
+  "reconstruction": {
+    "command": "git --git-dir=<local-uv-git-object-cache> archive --format=tar --output=<worker-ignored-output>/source.tar 9757b400ee412ddb1d685f139ed3300f607c059a",
+    "revision_verified": true,
+    "commit_tree": "f8ae23f8f977a1cac10eb0c421ec1c2057fcb91f",
+    "archive_size_bytes": 225280,
+    "archive_sha256": "sha256:921c3509959fd9a207da52966da0d4fb2da167e51a9b7a4abb8eff4f46abbf39",
+    "matches_frozen_source": true
+  }
+}

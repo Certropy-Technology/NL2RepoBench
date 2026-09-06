@@ -1,0 +1,6 @@
+command: uv run --frozen --project harbor-runner harbor run -p <compiled-task> -a oracle --job-name jaraco-functools-revalidation-oracle-20260905 -o <fresh-run-root> --n-concurrent 1 --yes
+exit_code: 1
+failure_class: infrastructure
+failure_type: DockerDaemonUnavailable
+trial_started: false
+output: Docker daemon is not running. Please start Docker and try again.

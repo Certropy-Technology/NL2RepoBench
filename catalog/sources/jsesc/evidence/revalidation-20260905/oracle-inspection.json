@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0",
+  "task_id": "jsesc",
+  "oracle_bundle": "sha256:bc296bb069f9065c3905539b1060f4e1be7af92d8a00e50be260773704f21e1a",
+  "members": [
+    {
+      "path": "solve.sh",
+      "size_bytes": 1362,
+      "sha256": "sha256:26c97653ebfadc2d8039ddd0b806d4dfd365b1893d0d7815eee1cd186bf0e12d"
+    }
+  ],
+  "embedded_source_payload": false,
+  "declared_revision": "203c8694d605b6f29d4c67d372897499ec4468fb",
+  "declared_git_archive_sha256": "sha256:2f611c6a89206ce324ec112596b7aef0f76a22ddf402fb1960ac11be15532cce",
+  "runtime_network_operations": [
+    "git remote add origin https://github.com/mathiasbynens/jsesc",
+    "git fetch --depth=1 origin 203c8694d605b6f29d4c67d372897499ec4468fb"
+  ],
+  "decision": "Do not execute this Oracle and do not authorize a source host, DNS, registry, or external service. A replacement must embed an exact revision-bound local payload."
+}

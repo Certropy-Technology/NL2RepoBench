@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "task_id": "jaraco-context",
+  "kind": "oracle",
+  "network_mode": "no-network",
+  "public_network_available": false,
+  "probes": {
+    "1.1.1.1:443": false,
+    "pypi.org:443": false
+  },
+  "route_table_has_public_route": false,
+  "raw_network_sha256": "sha256:b1609c09c2c823d67b550046293dafc03aeefefa17a2a4d5c5d5f1267cb93c97"
+}

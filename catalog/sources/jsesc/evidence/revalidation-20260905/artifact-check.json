@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0",
+  "task_id": "jsesc",
+  "checked_offline": true,
+  "artifact_root": "<parent-cas>",
+  "artifacts": [
+    {
+      "role": "candidate npm bundle",
+      "digest": "sha256:7ff145bb826a3ae8413d64b8759d4d92a07aad8e5be7e2f5a88966f4e48dca20",
+      "declared_size_bytes": 10240,
+      "actual_size_bytes": 10240,
+      "sha256_matches": true
+    },
+    {
+      "role": "test commands",
+      "digest": "sha256:8f2e1bc25e31d58b3642be7013cd8659e85f1478be032e9a9c32a248a3900ff9",
+      "declared_size_bytes": 10240,
+      "actual_size_bytes": 10240,
+      "sha256_matches": true
+    },
+    {
+      "role": "private tests",
+      "digest": "sha256:d9be73c85dac92e0ffc271ee07fcff14d2f608af74d361f4913c966c701d622c",
+      "declared_size_bytes": 20480,
+      "actual_size_bytes": 20480,
+      "sha256_matches": true
+    },
+    {
+      "role": "oracle",
+      "digest": "sha256:bc296bb069f9065c3905539b1060f4e1be7af92d8a00e50be260773704f21e1a",
+      "declared_size_bytes": 10240,
+      "actual_size_bytes": 10240,
+      "sha256_matches": true
+    }
+  ],
+  "result": "All four declared private artifacts exist and match their declared size and SHA-256. The Oracle artifact is nevertheless unusable under the current NoNetwork contract because it contains only a runtime-fetching solve script."
+}

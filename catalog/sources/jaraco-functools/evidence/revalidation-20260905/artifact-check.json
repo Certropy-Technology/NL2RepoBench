@@ -1,0 +1,46 @@
+{
+  "schema_version": "1.0",
+  "task_id": "jaraco-functools",
+  "queue_source_digest": "sha256:8b9871abd118ccf54e49e2eb3ce3f24c1496ea1b442c30116b66ca3050304336",
+  "source_validation_before_changes": true,
+  "private_artifacts": [
+    {
+      "binding": "dependencies.lock_artifact",
+      "digest": "sha256:92b30ae17afb26ddd7397ec510c14201dc1182cd39819b7fbf0fb3a30221d3dc",
+      "size_bytes": 1306,
+      "digest_matches": true,
+      "size_matches": true
+    },
+    {
+      "binding": "verifier.bundle",
+      "digest": "sha256:d403e67383ad65627c91ef658e2043ea6a86d6ba05b3dc4362638e26392056ef",
+      "size_bytes": 30720,
+      "digest_matches": true,
+      "size_matches": true,
+      "inner_files": {
+        "adapter.py": "sha256:6bf1f89a6edfc440453db3a73ae7bde9bbc5c5d279df76912624817d60d60e7b",
+        "run.py": "sha256:3e5da9790931ec3707c5d7098a143dc88daf6800919d4985230168ed4a82c9ea"
+      },
+      "python_syntax_valid": true
+    },
+    {
+      "binding": "oracle_bundle",
+      "digest": "sha256:eadd678e5d943a3fbe5125f7d440daff211268b78e8053590917da36e8afa4c8",
+      "size_bytes": 92160,
+      "digest_matches": true,
+      "size_matches": true,
+      "inner_files": {
+        "solve.sh": "sha256:366b45cd9b9b19e99c51fafdc721f8c4fea8c1463039226a35a65b482f498651",
+        "source.tar": "sha256:7ef01289b53574ed426a959b34621ae611bf415d17b03bb9b807f5c81e1e53ff"
+      },
+      "source_archive_size_bytes": 81920,
+      "source_archive_matches_task_source_digest": true,
+      "runtime_network_fetch": false
+    }
+  ],
+  "local_recovery": {
+    "required": false,
+    "reason": "All declared private artifacts were present in the parent CAS and matched their declared sizes and SHA-256 digests. The Oracle already contains the frozen source archive."
+  },
+  "replacement_artifacts": []
+}

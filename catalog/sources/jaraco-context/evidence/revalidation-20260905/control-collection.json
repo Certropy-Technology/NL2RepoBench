@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "task_id": "jaraco-context",
+  "expected_total": 43,
+  "controls": {
+    "empty": {"collected": 0, "allowed_installation_failure": true},
+    "stub": {"collected": 43, "collection_errors": [], "raw_collection_sha256": "sha256:20b6b27a19353986fa1c57329dbe7a2418dff32fe4806dc4af43e4f3825f65a9"},
+    "forgery": {"collected": 43, "collection_errors": [], "raw_collection_sha256": "sha256:20b6b27a19353986fa1c57329dbe7a2418dff32fe4806dc4af43e4f3825f65a9"},
+    "install-hang": {"collected": 0, "bounded_installation_timeout": true}
+  }
+}

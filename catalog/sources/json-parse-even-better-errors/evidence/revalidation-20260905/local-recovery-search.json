@@ -1,0 +1,76 @@
+{
+  "schema_version": "1.0",
+  "task_id": "json-parse-even-better-errors",
+  "purpose": "Instruction migration revalidation local-recovery search",
+  "source_authority": {
+    "status": "known",
+    "revision": "098b8d00e72e4807adba733c2cdde686b2b9bf82",
+    "archive_size_bytes": 112640,
+    "archive_sha256": "sha256:6bcf80e775ad5481a30fc401ede155fc49ebc44ae03a2f76f323430ce28c5f9f",
+    "catalog_source_digest": "sha256:fc6aceb4c59ec801b501148dcc74382e64e94f688c6a6a4dcf7e4cc914746d2c"
+  },
+  "searches": [
+    {
+      "scope": "catalog/tasks/json-parse-even-better-errors",
+      "command": "find catalog/tasks/json-parse-even-better-errors -type f -name 'source.tar' -o -name '*source*.tar'",
+      "exit_code": 0,
+      "result": "no source archive; generated solution/solve.sh is present and performs runtime GitHub fetch"
+    },
+    {
+      "scope": "catalog and tracked Git objects",
+      "command": "git rev-list --objects --all | rg 'json-parse-even-better-errors/(source\\.tar|.*source.*tar)$'",
+      "exit_code": 0,
+      "result": "no matching tracked source archive"
+    },
+    {
+      "scope": "retained local worktrees and handoffs",
+      "command": "bounded task-id search across retained local worktrees and handoffs",
+      "exit_code": 0,
+      "result": "no task-local source archive or upstream checkout found"
+    },
+    {
+      "scope": "retained authoring session",
+      "command": "bounded digest and source-tar search across the retained task authoring session",
+      "exit_code": 0,
+      "result": "session log records upstream checkout and archive digest, but no retained payload bytes"
+    },
+    {
+      "scope": "retained state archives",
+      "command": "for archive in .nl2repo/legacy-integration-state-20260828.tar.zst .nl2repo/root-nested-state-20260828.tar.zst .nl2repo/root-state-recovery-20260828.tar.zst .nl2repo/selected-authoring-metadata-20260828.tar.zst; do tar --zstd -tf \"$archive\"; done | rg 'json-parse-even-better-errors|6bcf80e775ad5481a30fc401ede155fc49ebc44ae03a2f76f323430ce28c5f9f'",
+      "exit_code": 0,
+      "result": "no matching task payload or archive entry"
+    },
+    {
+      "scope": "private CAS",
+      "command": "test -f .nl2repo/artifacts/private/sha256/6b/6bcf80e775ad5481a30fc401ede155fc49ebc44ae03a2f76f323430ce28c5f9f",
+      "exit_code": 1,
+      "result": "declared Oracle artifact is present, but it contains only solve.sh and no source archive"
+    }
+  ],
+  "oracle_inspection": {
+    "bundle_sha256": "sha256:6bc2c1ad1727b16baabc2d7984ab5dbf28321d69dc506a45b6810bd664fb6e94",
+    "bundle_size_bytes": 737,
+    "bundle_sha256": "sha256:6bc2c1ad1727b16baabc2d7984ab5dbf28321d69dc506a45b6810bd664fb6e94",
+    "inventory": ["solve.sh"],
+    "runtime_source_fetch": "https://github.com/npm/json-parse-even-better-errors.git",
+    "network_policy": "no-network",
+    "reusable": false,
+    "reason": "The bundle has no frozen source payload and solve.sh fetches the revision at runtime."
+  },
+  "dependency_artifacts": {
+    "all_declared_artifacts_checked": true,
+    "missing_or_mismatched": [],
+    "checked": [
+      {"name": "dependency", "size_bytes": 390, "sha256": "sha256:f5e99d78f60de54f9740184515aa32094a267f457ff9bf5af9a2f8da54e61e07"},
+      {"name": "commands", "size_bytes": 261, "sha256": "sha256:3a0d5d438bfa114938040770c8c288320518bdaec8733dbd7f373f0c5cf0827f"},
+      {"name": "tests", "size_bytes": 3328, "sha256": "sha256:fad36e3e1a8c3a75e4c92bf8fd02fec7962b64642af6b862877375437aa29ff5"},
+      {"name": "oracle", "size_bytes": 737, "sha256": "sha256:6bc2c1ad1727b16baabc2d7984ab5dbf28321d69dc506a45b6810bd664fb6e94"}
+    ]
+  },
+  "classification": {
+    "failure_class": "artifact/verifier",
+    "status": "revalidation-blocked",
+    "next_step": "Provide a trusted local source archive matching the known revision, 112640-byte size, and declared SHA-256; then replace the Oracle bundle, compile twice, and rerun the complete current-manifest Harbor matrix under NoNetwork.",
+    "no_compile_or_harbor_run": true
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0",
+  "task_id": "locate-path",
+  "checked_at": "2026-09-05",
+  "artifact_root": "parent-private-cas",
+  "result": "all-declared-private-artifacts-present-and-hash-valid",
+  "artifacts": [
+    {
+      "role": "npm-dependency-bundle",
+      "digest": "sha256:a8e25ba26ed07c42e2dbec04a71145bcd7b15eb3a41735caf49c59c5772b0afb",
+      "expected_size_bytes": 204800,
+      "actual_size_bytes": 204800,
+      "sha256_matches": true
+    },
+    {
+      "role": "command-plan",
+      "digest": "sha256:2d26f417e15b226e1c66e85a46755677f1a57cbd6e0301c23876ded148feb12c",
+      "expected_size_bytes": 10240,
+      "actual_size_bytes": 10240,
+      "sha256_matches": true
+    },
+    {
+      "role": "private-test-bundle",
+      "digest": "sha256:62e374a588e0d6cf85eba3369395735fd940f1f5a681c925d86e8c062896e9f5",
+      "expected_size_bytes": 30720,
+      "actual_size_bytes": 30720,
+      "sha256_matches": true
+    },
+    {
+      "role": "oracle-bundle",
+      "digest": "sha256:d813f5ac9a4cf9a15f2c84d9570eceb8e0d08e61112e8be610a505bd7e1ea9b1",
+      "expected_size_bytes": 20480,
+      "actual_size_bytes": 20480,
+      "sha256_matches": true
+    }
+  ],
+  "oracle_bundle_inventory": [
+    "package-lock.json",
+    "runtime-package.json",
+    "solve.sh"
+  ],
+  "oracle_source_payload_present": false
+}

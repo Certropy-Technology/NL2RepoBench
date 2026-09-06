@@ -1,0 +1,38 @@
+{
+  "schema_version": "1.0",
+  "task_id": "keyring",
+  "source_digest": "sha256:930b142979344e3f758403d1caf80fc564f8d86eee4629a618e3b5e0b5b7a83e",
+  "required_payload": {
+    "archive_size_bytes": 235520,
+    "archive_sha256": "sha256:30dfe6cd4dcf67495e2ff1d8a3196593b5263f8d9180fe2cabc5cdc3582815a9",
+    "revision": "7603e7cadc254b4c6e3fc2b2f0916a005e78087d"
+  },
+  "searches": [
+    {
+      "scope": "generated catalog/tasks/keyring and source-local evidence",
+      "result": "No source archive; generated solution contains only the fetch-based solve.sh.",
+      "exit_code": 0
+    },
+    {
+      "scope": "task authoring worktree recorded by the historical keyring session",
+      "result": "The recorded .nl2repo/authoring-work/keyring directory no longer exists.",
+      "exit_code": 1
+    },
+    {
+      "scope": "bounded task-local files under .nl2repo/authoring-live",
+      "result": "No matching 235520-byte archive or source.tar was found for keyring.",
+      "exit_code": 0
+    },
+    {
+      "scope": "worker handoffs, worktree diffs, preserved worktree, and local caches",
+      "result": "No hash-verifiable archive or payload was found.",
+      "exit_code": 0
+    },
+    {
+      "scope": "351 local Git object repositories under the bounded recovery roots",
+      "result": "No repository contained commit 7603e7cadc254b4c6e3fc2b2f0916a005e78087d.",
+      "exit_code": 0
+    }
+  ],
+  "conclusion": "No exact local source payload exists; do not construct a replacement bundle and do not authorize source-host or registry access."
+}

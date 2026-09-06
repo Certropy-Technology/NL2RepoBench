@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "task_id": "koa",
+  "source_digest": "sha256:069a16c6ea48c4d9e9f34fa31746c238c081fbce1f67cc99c85b75057faf5245",
+  "revision": "9c202e0077f4e314795222aff1be0da0bf9b2493",
+  "search_policy": "bounded trusted-local recovery; no network",
+  "locations": [
+    {"scope":"current catalog/tasks/koa generated runtime and source evidence","result":"runtime and metadata found, no source.tar or oracle payload matching the frozen source digest","exact_match":false},
+    {"scope":"parent CAS private artifacts","result":"oracle bundle is present and hash-valid but contains no source archive; dependency, command, and test artifacts are hash-valid","exact_match":false},
+    {"scope":"checked-in task evidence and retained production runs","result":"no durable koa grading/network/result receipt available for this revalidation; prior production evidence references ignored authoring paths","exact_match":false},
+    {"scope":"historical handoffs, authoring archives, retained worktrees, local caches","result":"bounded scans found duplicated task metadata/runtime files only; no exact source archive or hash-verifiable replacement bundle","exact_match":false}
+  ],
+  "replacement_bundle": null,
+  "status": "no-hash-verifiable-local-source-payload",
+  "next_step": "Parent must obtain or construct a source-digest-verified offline Oracle bundle before rerunning Oracle and controls. Do not authorize GitHub, codeload, npm registry, DNS, or external services."
+}

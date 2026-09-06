@@ -1,0 +1,61 @@
+{
+  "schema_version": "1.0",
+  "task_id": "idna",
+  "queue_source_digest": "sha256:77f31395c0968d86e6470daa7f444772b7dbb868ab135e5058997b7cc7c100c5",
+  "validated_source_digest": "sha256:77f31395c0968d86e6470daa7f444772b7dbb868ab135e5058997b7cc7c100c5",
+  "artifact_root": "<parent-private-cas>",
+  "artifacts": [
+    {
+      "kind": "dependency-lock",
+      "digest": "sha256:9ebd5cfcb72a1f3e0e0f3bc3d2586b0ca18a3c7db81163f90f73b7f4358cc444",
+      "declared_size_bytes": 188,
+      "observed_size_bytes": 188,
+      "sha256_valid": true,
+      "size_valid": true
+    },
+    {
+      "kind": "verifier-bundle",
+      "digest": "sha256:f25bb7966325165e6e9677de59f335c17822af730d2edc3001f7c01e531c2a20",
+      "declared_size_bytes": 10240,
+      "observed_size_bytes": 10240,
+      "sha256_valid": true,
+      "size_valid": true,
+      "members": [
+        {
+          "path": "run.py",
+          "size_bytes": 6620,
+          "sha256": "sha256:767d8a92c787e733f144705d5a8af616268e03dc1609ea1300ed4bc77b9ff42d"
+        }
+      ]
+    },
+    {
+      "kind": "oracle-bundle",
+      "digest": "sha256:521add0689c5575295f3018cdd46e18b5ff30f7cfb5dfb90b8cb139363fec8f6",
+      "declared_size_bytes": 10240,
+      "observed_size_bytes": 10240,
+      "sha256_valid": true,
+      "size_valid": true,
+      "members": [
+        {
+          "path": "solve.sh",
+          "size_bytes": 646,
+          "sha256": "sha256:69a8424df45305091df4cad2d84d2d77df38be4209515f443d544971c7c303d5"
+        }
+      ]
+    }
+  ],
+  "commands": [
+    {
+      "command": "uv run nl2repo task validate-source catalog/sources/idna",
+      "exit_code": 0
+    },
+    {
+      "command": "sha256sum <parent-private-cas>/private/sha256/{9e,f2,52}/<declared-digest>",
+      "exit_code": 0
+    },
+    {
+      "command": "tar -tvf <oracle-or-verifier-bundle>",
+      "exit_code": 0
+    }
+  ]
+}

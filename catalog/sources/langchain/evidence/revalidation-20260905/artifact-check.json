@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0",
+  "task_id": "langchain",
+  "checked_at": "2026-09-06T04:31:23Z",
+  "artifact_root": "<parent-cas>",
+  "artifacts": [
+    {
+      "kind": "dependency-lock",
+      "declared_digest": "sha256:1e1776a529947716f00354f83073a7b567d6c8a68b55c803f24184dd2177a538",
+      "actual_digest": "sha256:1e1776a529947716f00354f83073a7b567d6c8a68b55c803f24184dd2177a538",
+      "declared_size_bytes": 92414,
+      "actual_size_bytes": 92414,
+      "available": true,
+      "valid": true,
+      "details": "The lock has 1,179 lines, 1,055 hash entries, and no absolute authoring-worktree references."
+    },
+    {
+      "kind": "verifier-bundle",
+      "declared_digest": "sha256:dbebf5022d11f7d81ba0d89acb4f1418568b918d5873a74fac1ebbba0d510be0",
+      "actual_digest": "sha256:dbebf5022d11f7d81ba0d89acb4f1418568b918d5873a74fac1ebbba0d510be0",
+      "declared_size_bytes": 40960,
+      "actual_size_bytes": 40960,
+      "available": true,
+      "valid": true,
+      "inner_inventory": [
+        {"path": "child.py", "size_bytes": 17510},
+        {"path": "run.py", "size_bytes": 17930}
+      ]
+    },
+    {
+      "kind": "oracle-bundle",
+      "declared_digest": "sha256:2ebeaca61789b954bfb8b6405e25cb6f162b9154bfb024ef13c38f1ece43a488",
+      "actual_digest": "sha256:2ebeaca61789b954bfb8b6405e25cb6f162b9154bfb024ef13c38f1ece43a488",
+      "declared_size_bytes": 10240,
+      "actual_size_bytes": 10240,
+      "available": true,
+      "valid": true,
+      "inner_inventory": [
+        {"path": "solve.sh", "size_bytes": 908}
+      ],
+      "runtime_safe": false,
+      "reason": "solve.sh performs a runtime git fetch from github.com and the bundle contains no frozen source payload."
+    }
+  ]
+}

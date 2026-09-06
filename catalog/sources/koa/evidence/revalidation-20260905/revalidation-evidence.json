@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "task_id": "koa",
+  "terminal_kind": "revalidation-blocked",
+  "failure_class": "artifact-or-verifier-blocked",
+  "source_freeze": {"status":"known","revision":"9c202e0077f4e314795222aff1be0da0bf9b2493","source_digest":"sha256:069a16c6ea48c4d9e9f34fa31746c238c081fbce1f67cc99c85b75057faf5245","license_spdx":"MIT"},
+  "commands": [
+    {"name":"artifact-check","log":"catalog/sources/koa/evidence/revalidation-20260905/artifact-check.json","log_sha256":"sha256:06861600ba854577d4def1bd429ba7b3029b6d25c1e6e7cb2b579b2ac66a18b3"},
+    {"name":"local-recovery-search","log":"catalog/sources/koa/evidence/revalidation-20260905/local-recovery-search.json","log_sha256":"sha256:30cace4631b3c5e44be41fe29964c16559530504d03929446f959201989729be"},
+    {"name":"compile-a","log":"catalog/sources/koa/evidence/revalidation-20260905/compile-a.log","log_sha256":"sha256:72854e8aa80dc6195137d3295a5c7df2adc5fb1e97d0f2463ffc48a3bf52e0cb"},
+    {"name":"compile-b","log":"catalog/sources/koa/evidence/revalidation-20260905/compile-b.log","log_sha256":"sha256:a1793e00d94adf12c3e85561cc93316c2533e4992e47108e88fd027ee7f20463"},
+    {"name":"compile-diff","log":"catalog/sources/koa/evidence/revalidation-20260905/compile-diff.log","log_sha256":"sha256:6cd52b13e1aa876547a1f7accd340914d8edbc430ef9bfe087e9ee4915394057"},
+    {"name":"static-validation","log":"catalog/sources/koa/evidence/revalidation-20260905/validation-summary.json","log_sha256":"sha256:fa4d0f557e4bf976a60713978e5eaeb4df73ff22264bc959f0a6cbdf2bcdb8b1"}
+  ],
+  "oracle": {"status":"not-run","reason":"Oracle bundle performs forbidden GitHub fetch and contains no source archive"},
+  "controls": {"status":"not-run","reason":"Oracle/source payload unresolved; no controls receipt was fabricated"},
+  "next_step":"Construct and parent-register a replacement private Oracle bundle whose internal source archive exactly matches the frozen source digest and revision; rerun compile and all required Harbor gates.",
+  "production_evidence_preserved": true
+}

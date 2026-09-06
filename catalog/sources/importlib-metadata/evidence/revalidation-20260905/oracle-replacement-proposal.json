@@ -1,0 +1,54 @@
+{
+  "schema_version": "1.0",
+  "task_id": "importlib-metadata",
+  "status": "parent-cas-registration-required",
+  "media_type": "application/vnd.nl2repobench.private-bundle+tar",
+  "outer": {
+    "digest": "sha256:17e16765a773bc55417e7b8b18cbe182a2fb3f0c503f496086ada02f2a7af944",
+    "size_bytes": 245760,
+    "repeat_pack_byte_identical": true
+  },
+  "members": [
+    {
+      "path": "LICENSE",
+      "mode": "0644",
+      "size_bytes": 10280,
+      "sha256": "sha256:074e6e32c86a4c0ef8b3ed25b721ca23aca83df277cd88106ef7177c354615ff"
+    },
+    {
+      "path": "solve.sh",
+      "mode": "0755",
+      "size_bytes": 1034,
+      "sha256": "sha256:5cbe460755254d79099ecb193c6e8e072b9d4a647be937e556d9e9f920d5175d"
+    },
+    {
+      "path": "source.tar",
+      "mode": "0644",
+      "size_bytes": 225280,
+      "sha256": "sha256:921c3509959fd9a207da52966da0d4fb2da167e51a9b7a4abb8eff4f46abbf39"
+    }
+  ],
+  "solve_contract": {
+    "network_operations": [],
+    "verifies_source_archive_sha256": true,
+    "verifies_license_sha256": true,
+    "clears_workspace": true,
+    "extracts_source_at_workspace_root": true,
+    "checks_installable_entrypoint": "pyproject.toml",
+    "local_smoke_exit_code": 0
+  },
+  "proposed_binding": {
+    "toml_path": "oracle_bundle",
+    "digest": "sha256:17e16765a773bc55417e7b8b18cbe182a2fb3f0c503f496086ada02f2a7af944",
+    "size_bytes": 245760,
+    "media_type": "application/vnd.nl2repobench.private-bundle+tar",
+    "uri": "artifact://private/sha256:17e16765a773bc55417e7b8b18cbe182a2fb3f0c503f496086ada02f2a7af944",
+    "visibility": "private"
+  },
+  "next_steps": [
+    "Parent independently verifies and registers the replacement in the shared private CAS.",
+    "Parent updates task.toml to the proposed Oracle binding and recomputes the source digest.",
+    "The updated source is compiled twice with toolchain.lock.toml and byte-compared.",
+    "Oracle and every supported control are rerun under NoNetwork before production-evidence.json is replaced."
+  ]
+}

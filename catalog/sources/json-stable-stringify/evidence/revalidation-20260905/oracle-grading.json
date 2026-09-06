@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "task_id": "json-stable-stringify",
+  "manifest_digest": "sha256:1873719989fd91268d489850b389641ecb63c55020835a8aa9e8730ef050bc9f",
+  "metric_contract": "node-test-leaf-pass-rate-v1",
+  "framework": "node:test",
+  "expected_total": 52,
+  "collected": 52,
+  "passed": 52,
+  "failed": 0,
+  "skipped": 0,
+  "collection_errors": 0,
+  "reward": 1.0,
+  "valid": true,
+  "exit_code": 0,
+  "receipt_sha256": {
+    "grading": "sha256:7a4f48952ec806f15a63666265a49e1e5b487e76bf85e0bf55821351977bed1a",
+    "report": "sha256:65ad5e31fb37b43714eec30e8837163a3b4675243952d11adf128c4ed9a21c97",
+    "reward": "sha256:8cff279124dac5b7bc301ddfd573700a794f7fba6d8bc073afce8ffde99a9cc0"
+  }
+}

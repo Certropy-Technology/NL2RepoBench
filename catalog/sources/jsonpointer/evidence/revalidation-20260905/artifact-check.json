@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0",
+  "task_id": "jsonpointer",
+  "revalidation": "instruction-migration-20260905",
+  "queue_source_digest": "sha256:6651caa330c0dcec3efa2674534e6f14d94295412b33ec21ae79fed04809ccef",
+  "declared_source_archive_digest": "sha256:f8379acb630446222410697e7e7f33830294f07681de2ae941db723dd4ae989c",
+  "declared_artifacts": {
+    "dependencies.lock_artifact": {
+      "digest": "sha256:bc0a6d789df4f47cdb4050c81c19bb27d03bf83825fc5b01fe959435ec43e13f",
+      "declared_size_bytes": 373,
+      "checked_path": ".nl2repo/artifacts/private/sha256/bc/bc0a6d789df4f47cdb4050c81c19bb27d03bf83825fc5b01fe959435ec43e13f",
+      "actual_size_bytes": 373,
+      "actual_sha256": "sha256:bc0a6d789df4f47cdb4050c81c19bb27d03bf83825fc5b01fe959435ec43e13f",
+      "status": "verified"
+    },
+    "verifier.bundle": {
+      "digest": "sha256:24789e45f01b2f3185d84a20f01620d99285263889e967bd5c14d193073843c5",
+      "declared_size_bytes": 10240,
+      "checked_path": ".nl2repo/artifacts/private/sha256/24/24789e45f01b2f3185d84a20f01620d99285263889e967bd5c14d193073843c5",
+      "actual_size_bytes": 10240,
+      "actual_sha256": "sha256:24789e45f01b2f3185d84a20f01620d99285263889e967bd5c14d193073843c5",
+      "status": "verified"
+    },
+    "oracle_bundle": {
+      "digest": "sha256:67ab4eb9524177fbc30e3008e87727c339d9640ae6454f8f0a9174735389ca2d",
+      "declared_size_bytes": 10240,
+      "checked_path": ".nl2repo/artifacts/private/sha256/67/67ab4eb9524177fbc30e3008e87727c339d9640ae6454f8f0a9174735389ca2d",
+      "actual_size_bytes": 10240,
+      "actual_sha256": "sha256:67ab4eb9524177fbc30e3008e87727c339d9640ae6454f8f0a9174735389ca2d",
+      "tar_inventory": ["solve.sh"],
+      "payload_source_archive": false,
+      "status": "verified-but-insufficient-for-no-network-oracle"
+    }
+  },
+  "checked_at": "2026-09-05",
+  "network_authorization": "none",
+  "replacement_constructed": false,
+  "status": "oracle-payload-unresolved"
+}

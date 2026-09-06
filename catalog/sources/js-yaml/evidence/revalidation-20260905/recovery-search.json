@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "task_id": "js-yaml",
+  "purpose": "instruction-revalidation-local-recovery",
+  "source_revision": "6b4ff5e92474186b0c0381021ba4120f883c1995",
+  "source_archive_sha256": "sha256:2f0874ea3403323297f422b9a8f91fd28e506ec80b124a0ee6a90175ee368096",
+  "oracle_bundle_sha256": "sha256:194fcf78e706167a7e59becd5407b00809d4359f7a651c1de42d2fb1c268215e",
+  "network_policy": "no-network",
+  "reference_source_fetch": "forbidden",
+  "evidence": {
+    "artifact_check": {"path": "catalog/sources/js-yaml/evidence/revalidation-20260905/artifact-check.json", "sha256": "sha256:48270c00240d14e9e0045dce5ab29145206f78ecd6e391bc48b7354a2970ba7d"},
+    "oracle_inspection": {"path": "catalog/sources/js-yaml/evidence/revalidation-20260905/oracle-inspection.json", "sha256": "sha256:067f2b130336106b4061b404b8af852c2072848cbd2bcf59bf87c4c13c1cd37a"},
+    "commands": {"path": "catalog/sources/js-yaml/evidence/revalidation-20260905/recovery-commands.log", "sha256": "sha256:c2e8b68e5438473a52b473c5479100152b4d9acecdcc14e54164f956a1d0e88e"},
+    "bundle_manifest": {"path": "catalog/sources/js-yaml/evidence/revalidation-20260905/bundle-manifest.json", "sha256": "sha256:40bb6f815f6f5cbb83673c0e1aca2c8333024772bfbd92175f999a6f2c0f509d"}
+  },
+  "searches": [
+    {"scope": "Oracle private bundle", "result": "solve.sh and reference-dist.mjs only; no source archive", "exit_code": 0},
+    {"scope": "task-local authoring handoffs and retained archives", "result": "no exact js-yaml payload found", "exit_code": 0},
+    {"scope": "generated projections and local artifact/cache files", "result": "no file matched the frozen source archive SHA-256", "exit_code": 0},
+    {"scope": "local Git object stores", "result": "pinned commit unavailable", "exit_code": 1}
+  ],
+  "replacement": null,
+  "resolved": false,
+  "next_step": "Provide an independently hash-verified local source archive or Oracle bundle containing the frozen revision and archive digest; then parent must register it, recompile twice, and rerun Oracle plus all supported controls."
+}

@@ -1,0 +1,53 @@
+{
+  "schema_version": "1.0",
+  "task_id": "jsonc-parser",
+  "revalidation_source_digest": "sha256:e366a245047ae686542da07fe1768750a1d1aaa77de14a36cb98403db5e66b5c",
+  "immutable_source_archive_digest": "sha256:4d9fef513a7d3543b79aa9965ffe967cede24c3b675037e44374123589a2ad9b",
+  "status": "unresolved-artifact-recovery",
+  "network_policy": "no-network",
+  "searches": [
+    {
+      "scope": "parent CAS <integration-root>/.nl2repo/artifacts/private/sha256",
+      "result": "All four declared digest leaves are absent: 95f5d2f3, e3eae4a8, 44f78a30, 3d2ff979.",
+      "commands": [
+        "python3 offline artifact-reference resolver against .nl2repo/artifacts/private/sha256",
+        "find <integration-root>/.nl2repo/artifacts -type f -name '<declared digest>'"
+      ]
+    },
+    {
+      "scope": "current catalog/tasks/jsonc-parser projection",
+      "result": "Source and distribution archives, test files, and generated runtime are present, but none is the exact missing private outer bundle byte stream.",
+      "commands": [
+        "sha256sum and stat on catalog/tasks/jsonc-parser/solution/*.tar and tests projection files",
+        "tar -tvf catalog/tasks/jsonc-parser/solution/source.tar",
+        "tar -tvf catalog/tasks/jsonc-parser/solution/distribution.tar"
+      ]
+    },
+    {
+      "scope": "historical local authoring worktrees, handoffs, retained runs, archives, and worker artifact store",
+      "result": "No exact digest-matching payload was found. Historical files contain metadata, projections, or old references only.",
+      "commands": [
+        "bounded recursive search of historical local task worktrees for jsonc-parser payloads",
+        "bounded search of historical handoffs, retained runs, and worker artifact storage for jsonc-parser payloads",
+        "git log --all -p -- catalog/sources/jsonc-parser/task.toml"
+      ]
+    },
+    {
+      "scope": "local package caches",
+      "result": "No exact digest-matching 10,240-byte, 30,720-byte, or 389,120-byte payload was found.",
+      "commands": [
+        "bounded find/hash scan of local npm, uv, pip, and system package caches"
+      ]
+    }
+  ],
+  "declared_missing_artifacts": [
+    {"kind": "npm-dependency-bundle", "digest": "sha256:95f5d2f3b01cdde10bd0755a35f81fcafe3481f035a87ba55604092f3a5eab48", "size_bytes": 10240},
+    {"kind": "node-command-bundle", "digest": "sha256:e3eae4a8e5200c195e49c2a40e53b184d57bb3c291d1abbd94f2710daec42233", "size_bytes": 10240},
+    {"kind": "node-test-bundle", "digest": "sha256:44f78a303e09ed29d26b217fa368606f063079d931dd5876aa9d052132069f55", "size_bytes": 30720},
+    {"kind": "oracle-bundle", "digest": "sha256:3d2ff9790b3049f39f3f93621a45bd79cef6ec3f89485611a1812cc1c09280b8", "size_bytes": 389120}
+  ],
+  "replacement": null,
+  "next_step": "Parent must register exact private CAS objects or provide independently hash-verified replacement bundles. Until then do not compile, run Oracle, run controls, or reuse prior receipts.",
+  "lifecycle_preserved": true,
+  "production_evidence_preserved": true
+}

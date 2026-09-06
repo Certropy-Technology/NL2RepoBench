@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0",
+  "task_id": "leven",
+  "source_revision": "fbc77137f0361b26aaa8465854e0ae8e492db6ba",
+  "required_source_archive": {
+    "sha256": "sha256:14181e2e61abff5adcf7678a8a8e97cac49c90520d5f9d47e33a27687eeef055",
+    "size_bytes": 51200
+  },
+  "private_artifacts": {
+    "dependencies": {"sha256": "sha256:190da8b4f3833f97db51d8c672654ff3b88881ab6978e11c7295f1ef22c85ff0", "size_bytes": 10240, "valid": true},
+    "commands": {"sha256": "sha256:fe0bcfd3dfb3dd6c1934d5eaf2340276ef301880a814cc01c4f58fbaa957eab9", "size_bytes": 10240, "valid": true},
+    "tests": {"sha256": "sha256:e75687acd4854ffa4c8aa2b28cf6b725f75657d619c499606bf343da23065fa8", "size_bytes": 20480, "valid": true},
+    "oracle": {"sha256": "sha256:66a74ea0527fdc8e7cf96fb7854cbc45e0f8ad3e019061ed02fe7922abfd6833", "size_bytes": 10240, "valid": true}
+  },
+  "oracle_bundle": {
+    "outer_sha256": "sha256:66a74ea0527fdc8e7cf96fb7854cbc45e0f8ad3e019061ed02fe7922abfd6833",
+    "members": ["solve.sh"],
+    "embedded_source_archive": false,
+    "network_behavior": "solve.sh runs git fetch against github.com before verifying the frozen archive digest."
+  },
+  "searches": [
+    {
+      "scope": "current source, current generated runtime, and task-local evidence",
+      "method": "exact 51200-byte file hash search plus declared-digest text search",
+      "result": "no file matched the required source archive SHA-256"
+    },
+    {
+      "scope": "retained local authoring records, historical leven handoffs, archived run receipts, and task-scoped work directories",
+      "method": "inspect source.tar/oracle candidates and the archived workspace object inventory",
+      "result": "archived receipts record an Oracle-produced workspace but no retained frozen source archive. The workspace is unsuitable as a substitute because solve.sh rewrites package.json and creates package-lock.json after extracting the source archive."
+    },
+    {
+      "scope": "local CAS, worker handoffs, Docker containers/volumes/images, npm cache, and local Git/cache directories",
+      "method": "exact 51200-byte SHA-256 search and revision/package metadata search",
+      "result": "no exact archive found. The npm cache contains only registry metadata and leven@2.1.0, not the declared revision."
+    }
+  ],
+  "outcome": "blocked-pending-exact-local-source-payload",
+  "next_step": "Provide a trusted local 51200-byte Git archive whose SHA-256 is 14181e2e61abff5adcf7678a8a8e97cac49c90520d5f9d47e33a27687eeef055, or a parent-verified replacement Oracle bundle containing that archive. Parent must register any replacement in CAS, rebind task.toml, compile twice, and rerun Oracle and the complete supported control matrix."
+}

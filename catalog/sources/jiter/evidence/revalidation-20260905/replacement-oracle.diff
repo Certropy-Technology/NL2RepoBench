@@ -1,0 +1,19 @@
+--- original-cas-oracle/solve.sh
++++ replacement-no-network/solve.sh
+@@
+-readonly UPSTREAM_URL="https://github.com/pydantic/jiter"
+-readonly UPSTREAM_REVISION="0fc3c06b4555bb814d3c44ba08d715d9d064da3d"
+-readonly SOURCE_ARCHIVE_SHA256="093d45e8a53c7d8be9472abbc0e6ff822b9d6987ce17a61bcb75092a11b01693"
+-readonly FETCH_ROOT="/tmp/jiter-oracle-source"
+ readonly ROOT="/workspace"
+-
+-rm -rf "$FETCH_ROOT"
+-git clone --filter=blob:none --no-checkout "$UPSTREAM_URL" "$FETCH_ROOT"
+-git -C "$FETCH_ROOT" fetch --no-tags origin "$UPSTREAM_REVISION"
+-test "$(git -C "$FETCH_ROOT" rev-parse FETCH_HEAD^{commit})" = "$UPSTREAM_REVISION"
+-git -C "$FETCH_ROOT" archive --format=tar --output="$FETCH_ROOT/source.tar" "$UPSTREAM_REVISION"
+-printf '%s  %s\n' "$SOURCE_ARCHIVE_SHA256" "$FETCH_ROOT/source.tar" | sha256sum --check --strict
+ rm -rf "$ROOT"/*
+@@
+-echo "restored $UPSTREAM_URL at $UPSTREAM_REVISION and built deterministic Python oracle"
++echo "built deterministic pure-Python Oracle from the frozen task adaptation"

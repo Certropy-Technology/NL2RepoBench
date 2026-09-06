@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0",
+  "task_id": "jaraco-context",
+  "checked_offline": true,
+  "artifacts": [
+    {
+      "kind": "dependency-lock",
+      "digest": "sha256:1e46c7b4a0449f037ab4666bead1282541bde2119c5fc759a3a881c527e9b551",
+      "declared_size": 955,
+      "actual_size": 955,
+      "digest_match": true
+    },
+    {
+      "kind": "verifier-bundle",
+      "digest": "sha256:014273926f82071bd3901bfa930a831d12e21f5b599de8ed3c0de46554ba8a8d",
+      "declared_size": 30720,
+      "actual_size": 30720,
+      "digest_match": true,
+      "inner_files": {
+        "adapter.py": "sha256:982e17d78caa52d9a0108eeb4fd74a538bc899a1179364f7d98e1ee2e86dcfa4",
+        "run.py": "sha256:2cb8c736ee67f95f5df440824e7cc9bb7cd209698e30b54e2c87072a20ee584c"
+      }
+    },
+    {
+      "kind": "oracle-bundle",
+      "digest": "sha256:bc2c5e632443a42b42d234ac17ba6e3beb83212beb62e5af5ca27ee83b2a67c6",
+      "declared_size": 71680,
+      "actual_size": 71680,
+      "digest_match": true,
+      "inner_files": {
+        "solve.sh": "sha256:84f41d0390cb68055e57e1e8616f652c0a7b449b616a078e2530a76cf5191262",
+        "source.tar": "sha256:e228a0721648643e4d7663fc71b03cfa533d60f508fa476fcd197d41a3804328"
+      },
+      "source_archive_size": 61440,
+      "contains_network_fetch": false
+    }
+  ],
+  "replacement_artifacts": []
+}

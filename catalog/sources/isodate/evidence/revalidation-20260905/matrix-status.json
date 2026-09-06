@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "task_id": "isodate",
+  "manifest_digest": "sha256:c696631df4d7357979746060c98e6e74541b8ba5359d81299ed35984889ac7f1",
+  "expected_total": 34,
+  "oracle": {
+    "status": "not-run",
+    "reason": "Oracle source restoration requires git clone/fetch from github.com and no matching local source payload was recoverable."
+  },
+  "controls": {
+    "empty": {"status": "not-run"},
+    "stub": {"status": "not-run"},
+    "forgery": {"status": "not-run"},
+    "install-hang": {"status": "not-run"},
+    "call-hang": {"status": "not-run"},
+    "offline": {"status": "not-run"}
+  },
+  "harbor_runs_started": 0,
+  "network_authorizations_added": 0,
+  "prior_receipts_reused": false
+}

@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0",
+  "task_id": "importlib-metadata",
+  "checked_offline": true,
+  "artifacts": {
+    "dependency_lock": {
+      "declared_digest": "sha256:4ba29e58b3d26914ccd51cd4449fadd1a0d114b3392860bc6328f09155d0b3cf",
+      "actual_digest": "sha256:4ba29e58b3d26914ccd51cd4449fadd1a0d114b3392860bc6328f09155d0b3cf",
+      "declared_size_bytes": 1628,
+      "actual_size_bytes": 1628,
+      "status": "verified"
+    },
+    "verifier_bundle": {
+      "declared_digest": "sha256:b40878535a70abfcdd9019fabecffcdf60a6bd5e7e8f498d956062b155a7b264",
+      "actual_digest": "sha256:b40878535a70abfcdd9019fabecffcdf60a6bd5e7e8f498d956062b155a7b264",
+      "declared_size_bytes": 30720,
+      "actual_size_bytes": 30720,
+      "status": "verified",
+      "members": [
+        {
+          "path": "run.py",
+          "size_bytes": 23992,
+          "sha256": "sha256:27b508c7b971d61b9fe41bea96f92b42d4212190b2d14ab78432e2d55dbc3c9b"
+        }
+      ]
+    },
+    "current_oracle_bundle": {
+      "declared_digest": "sha256:aad21b20fc483f75ef5d1fcd3773a822e66ee87043c950cd4809bc9a0484dab9",
+      "actual_digest": "sha256:aad21b20fc483f75ef5d1fcd3773a822e66ee87043c950cd4809bc9a0484dab9",
+      "declared_size_bytes": 20480,
+      "actual_size_bytes": 20480,
+      "status": "verified-but-network-dependent"
+    }
+  },
+  "result": "All declared private artifacts exist and match their size and SHA-256 bindings. The current Oracle bundle is unusable under the mandatory NoNetwork policy because its solve.sh performs a GitHub fetch."
+}

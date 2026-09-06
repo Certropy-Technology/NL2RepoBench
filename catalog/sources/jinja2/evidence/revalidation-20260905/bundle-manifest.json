@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "task_id": "jinja2",
+  "queue_source_digest": "sha256:afdf90d071a2dc6cbdeb4172c311ee6940d28f7feffdbf47ffd851e7af44c96c",
+  "instruction_sha256": "sha256:ed52e9641ae282952ed23e13e74081ef5b7d0e0d3e091318c1aedc3158f76f77",
+  "toolchain": "toolchain.lock.toml",
+  "toolchain_sha256": "sha256:a9ced26fa28eb2c6fc1079c306a92a77bdd0f20aee92a45b9a0f192c1b9fae24",
+  "bundle_manifest_sha256": "sha256:b555822f8b1ee0a37190bc3e10d2d51b51a9276cdb1c59796d5742895ee78ba3",
+  "canonical_manifest_digest": "sha256:98046b2014f19b7e5d862e51dff8d19510cee29df413109d6a3c0ead9a3bc87d",
+  "bundle_file_count": 58,
+  "compile_commands": [
+    "uv run nl2repo harbor compile catalog/sources/jinja2 --output <compile-a> --toolchain toolchain.lock.toml --artifact-root <parent-private-cas> --allow-private",
+    "uv run nl2repo harbor compile catalog/sources/jinja2 --output <compile-b> --toolchain toolchain.lock.toml --artifact-root <parent-private-cas> --allow-private"
+  ],
+  "compile_exit_codes": [0, 0],
+  "byte_identical_recompiles": true,
+  "harbor_execution_status": "not-run",
+  "harbor_execution_reason": "The declared Oracle requires github.com at runtime and no exact trusted-local frozen source payload was recovered."
+}

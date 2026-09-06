@@ -1,74 +1,133 @@
 # Project Description
 
-Build an installable Python package named `jaraco.context` from an empty
-workspace. The import package is `jaraco.context`. Implement the public runtime
-behavior described below; the goal is compatibility with CPython 3.12 on Linux,
-not static type-checker compatibility or documentation tooling.
+Build the installable Python package `jaraco.context` from an empty workspace.
+It provides context managers for temporary directories, working-directory
+changes, safe tar extraction, repository command setup, exception trapping,
+suppression, and interrupt policy. The package must be usable on Python 3.12
+Linux with deterministic local behavior.
 
-# Supports
+# Natural Language Instruction
 
-- Python 3.12 on Linux.
-- A PEP 517 `pyproject.toml` at the repository root and an installable package.
-- Distribution metadata for `jaraco.context` with version `6.1.3.dev6+gbfcb95c78`.
-- No runtime network access and no runtime service or external data.
-- The build backend may use the standard setuptools-based configuration. Keep
-  build-only dependencies out of the installed package's runtime dependencies.
+Implement the public `jaraco.context` context-manager and helper contract. A
+caller must be able to push and restore directories, create and clean temporary
+directories, compose context managers, strip an archive root safely, and use
+exception/decorator helpers. Keep tar extraction traversal-safe and preserve
+cleanup on normal and exceptional exits. The package is a library, not a
+network service; do not add tests, verifier files, or reference source to the
+generated workspace.
+
+# Supports or Environment Configuration
+
+- Python 3.12 on Linux; distribution and import package are both
+  `jaraco.context`.
+- Provide a root `pyproject.toml` and installable PEP 517 package with version
+  `6.1.3.dev6+gbfcb95c78`.
+- Build-only dependencies stay out of runtime dependencies. Runtime execution
+  must not access a network service or external data.
+- `tarball` and `repo_context` describe APIs that accept URL/command inputs,
+  but evaluation observes them through bounded local adapters; never contact a
+  network during agent, candidate, verifier, Oracle, or control runs.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── README.md
+├── LICENSE
+└── jaraco/
+    ├── __init__.py
+    └── context/
+        ├── __init__.py
+        └── py.typed
+```
 
 # API Usage Guide
 
-Implement these importable names in `jaraco.context`:
+```python
+pushd(dir)
+temp_dir(remover=shutil.rmtree)
+robust_remover()
+robust_temp_dir
+tarball(url, target_dir=None)
+tarball_cwd(url, target_dir=None)
+strip_first_component(member, path)
+_default_filter(member, path)
+_compose_tarfile_filters(*filters)
+_compose(*context_managers)
+repo_context(url, branch=None, quiet=True, dest_ctx=robust_temp_dir)
+```
 
-`pushd(dir)` is a context manager that changes the current working directory,
-yields the supplied path, and restores the previous directory even when the
-body raises.
+`pushd` changes to `dir`, yields it, and restores the previous directory even
+when the body raises. `temp_dir` yields a temporary path and calls its remover
+after exit; `robust_temp_dir` uses the platform remover. `strip_first_component`
+mutates and returns the same `TarInfo`, removing its first slash-separated path
+component. The default archive filter combines that operation with the standard
+safe data filter. `_compose_tarfile_filters` applies filters left to right.
 
-`temp_dir(remover=shutil.rmtree)` creates a temporary directory, yields its
-path as a string, and invokes the supplied remover after the context exits.
-`robust_remover()` returns the platform-appropriate recursive remover and
-`robust_temp_dir` is the corresponding partial context manager.
+`tarball` streams a tar archive, strips its common root, yields the extraction
+directory, and removes it afterward. Omitted `target_dir` derives from the URL
+basename after removing `.tar.gz` or `.tgz`. Members escaping the destination
+must be rejected. `tarball_cwd` composes extraction with `pushd`.
 
-`tarball(url, target_dir=None)` downloads a tar archive with
-`urllib.request.urlopen`, streams its extraction, strips the common first path
-component from members, yields the extraction directory, and removes that
-directory on exit. When `target_dir` is omitted, derive it from the URL basename
-by removing `.tar.gz` or `.tgz`. Extraction must reject archive members that
-escape the destination. `tarball_cwd` composes `tarball` with `pushd` so the
-current directory is the extracted directory while the body runs.
+`_compose(*context_managers)` composes dependent factories from right to left:
+the rightmost receives caller arguments and each factory to its left receives
+the previously yielded value. `repo_context` creates a temporary destination,
+selects `git clone` for URLs containing `git` and otherwise `hg clone`, adds an
+optional branch, yields the destination, and cleans it through `dest_ctx`.
+`quiet=True` routes clone output to `subprocess.DEVNULL`.
 
-`strip_first_component(member, path)` removes the first slash-separated path
-component from a `tarfile.TarInfo` and returns that same member. The module's
-`_default_filter` combines this operation with the standard library's safe data
-filter. `_compose_tarfile_filters` composes filters from left to right as used
-by `_default_filter`.
-
-`_compose(*context_managers)` composes dependent context-manager factories from
-the innermost factory on the right to the outermost on the left. The rightmost
-factory receives the caller arguments; each factory to its left receives the
-previous yielded value.
-
-`repo_context(url, branch=None, quiet=True, dest_ctx=robust_temp_dir)` creates a
-temporary destination, runs `git clone` for URLs containing `git` (otherwise
-`hg clone`), optionally adds `--branch BRANCH`, yields the destination, and
-cleans it up through `dest_ctx`. When `quiet` is true, clone output is sent to
-`subprocess.DEVNULL`.
-
-`ExceptionTrap(exceptions=(Exception,))` is a context manager. It suppresses
-matching exception subclasses and records `.type`, `.value`, and `.tb`; it does
-not suppress nonmatching exceptions. Its truth value is true only after a
-matching exception. `.raises` wraps a function and returns whether the selected
-exceptions were raised; `.passes` returns whether the wrapped function completed
-without a selected exception. Preserve wrapped function metadata.
-
-`suppress(*exceptions)` behaves like `contextlib.suppress` and also works as a
-decorator. `on_interrupt(action="error", /, code=1)` handles `KeyboardInterrupt`:
-`"ignore"` propagates it, `"suppress"` suppresses it, and `"error"` raises
-`SystemExit(code)` from the interrupt. Other exception types propagate.
+`ExceptionTrap(exceptions=(Exception,))` suppresses matching subclasses and
+records `type`, `value`, and `tb`; its truth value is true after a match.
+`.raises` and `.passes` are decorators that preserve wrapped metadata. A
+nonmatching exception propagates. `suppress(*exceptions)` follows
+`contextlib.suppress` and also decorates functions. `on_interrupt(action="error",
+/, code=1)` propagates for `ignore`, suppresses for `suppress`, and raises
+`SystemExit(code)` for `error`; other exception types propagate.
 
 # Implementation Notes
 
-Preserve deterministic exception types/messages and context cleanup. Use
-standard-library `tarfile` safe filtering on Python 3.12. Do not implement
-`repo_context` by contacting the network during verification; the behavior is
-observed through a bounded child-side adapter. Do not add test fixtures,
-reference source, or verifier files to the candidate workspace. The package
-must remain usable when imported with `python -I` from its installed target.
+Use context-manager protocols and `tarfile` safe filtering. Cleanup must run on
+both success and failure, and `ExceptionTrap` must not retain a live traceback
+after the context exits. Keep signatures and exception semantics stable. The
+package must import in isolated Python mode from its installed target.
+
+# Examples
+
+```python
+import os
+from jaraco.context import pushd, temp_dir
+
+original = os.getcwd()
+with temp_dir() as path:
+    with pushd(path):
+        assert os.getcwd() == path
+assert os.getcwd() == original
+```
+
+```python
+from jaraco.context import ExceptionTrap, suppress
+
+with ExceptionTrap((ValueError,)) as trap:
+    raise ValueError("bad input")
+assert trap and trap.type is ValueError
+
+@suppress(KeyError)
+def lookup(mapping):
+    return mapping["missing"]
+```
+
+# Error Handling and Boundary Conditions
+
+The task id is `jaraco-context`; the distribution is `jaraco.context`.
+
+- Archive members with `..` or an absolute path that escapes the destination
+  must fail rather than write outside the extraction directory.
+- `pushd`, `tarball`, and temporary contexts restore/clean up when their body
+  raises.
+- `ExceptionTrap` suppresses only configured exception subclasses; unrelated
+  exceptions propagate.
+- `on_interrupt` accepts the documented actions only; the interrupt policy
+  must not swallow unrelated exceptions.
+- Runtime runs are no-network and must not invoke an external clone or download
+  during verification.

@@ -1,0 +1,52 @@
+{
+  "schema_version": "1.0",
+  "task_id": "iso8601",
+  "source_digest": "sha256:88a3765b6b36b0c76caab4fa5b502cd39cf73804714ab84db44d13779714f8e3",
+  "target_source_archive": {
+    "sha256": "sha256:6253d109a195cd118c204e64b513b14d8d07e0293c6089bf1dd1167cc2e2a97f",
+    "revision": "00c9262b9ad141f287b3263be7f2244fa01988c2",
+    "format": "unprefixed git archive tar"
+  },
+  "network_used": false,
+  "searches": [
+    {
+      "scope": "catalog/tasks/iso8601 and all checked-in/generated runtime copies",
+      "method": "find task-local files; inspect solution/solve.sh and bundle manifests",
+      "result": "no source.tar or embedded source payload; only a 904-byte GitHub-fetch solve.sh",
+      "exact_match": false
+    },
+    {
+      "scope": "catalog/sources/iso8601, task-local evidence, and production evidence",
+      "method": "inspect all files and search the target archive digest",
+      "result": "metadata and stale receipts only; no archive bytes",
+      "exact_match": false
+    },
+    {
+      "scope": ".nl2repo/authoring-live historical handoffs, archives, retained runs, and state",
+      "method": "bounded task-name and target-digest searches",
+      "result": "iso8601 metadata and network-fetch Oracle references only; no matching source payload",
+      "exact_match": false
+    },
+    {
+      "scope": "worker handoffs, worktree-diff artifacts, and local async-run records",
+      "method": "bounded search for task id and target digest",
+      "result": "no source archive or hash-matching payload",
+      "exact_match": false
+    },
+    {
+      "scope": "Git object database",
+      "method": "hash every reachable and retained blob below the bounded archive size",
+      "result": "no blob with target SHA-256",
+      "exact_match": false
+    },
+    {
+      "scope": "local uv cache",
+      "method": "inspect iso8601 sdist/wheel cache entries",
+      "result": "only iso8601 2.1.0 wheel and unpacked package files; neither is the frozen git archive",
+      "exact_match": false
+    }
+  ],
+  "replacement": null,
+  "recovery_status": "no-exact-local-payload-found",
+  "next_unblock_action": "Parent must register a private Oracle bundle containing the exact source archive with the declared SHA-256, replace the runtime-fetching solve.sh, then compile and rerun the full current-manifest Harbor matrix under NoNetwork."
+}

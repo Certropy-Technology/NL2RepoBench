@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "task_id": "isodate",
+  "source_digest": "sha256:d18dc8531a11701dc1d94066093522c370f7169667e2ba64a984de8ef67f34bf",
+  "instruction_sha256": "sha256:b988fa533e5014c00bc8f906dfeeec9852a32c30d31cfe20d91789827d05ea63",
+  "toolchain": "toolchain.lock.toml",
+  "toolchain_lock_digest": "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366",
+  "canonical_manifest_digest": "sha256:c696631df4d7357979746060c98e6e74541b8ba5359d81299ed35984889ac7f1",
+  "bundle_manifest_sha256": "sha256:2d0ba19f5bf74004479401416e0cee2492152bf836f642f1eeac9ea772fb96ab",
+  "manifest_size_bytes": 11145,
+  "bundle_file_count": 59,
+  "compile_commands": [
+    "uv run nl2repo harbor compile catalog/sources/isodate --output <ignored-compile-a> --toolchain toolchain.lock.toml --artifact-root <parent-private-cas> --allow-private",
+    "uv run nl2repo harbor compile catalog/sources/isodate --output <ignored-compile-b> --toolchain toolchain.lock.toml --artifact-root <parent-private-cas> --allow-private"
+  ],
+  "compile_exit_codes": [0, 0],
+  "byte_identical_recompiles": true,
+  "allow_incomplete": false
+}
