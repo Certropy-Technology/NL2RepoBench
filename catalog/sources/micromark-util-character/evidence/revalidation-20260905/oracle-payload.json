@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "task_id": "micromark-util-character",
+  "oracle_bundle_digest": "sha256:8e2a036e842d8db9e12a4db670f28c1a9a5430c96407db149000b2c039e054cd",
+  "oracle_bundle_size_bytes": 20480,
+  "bundle_source": "<generated-task>/solution",
+  "members": [
+    {"path": "reference/index.d.ts", "size_bytes": 6208},
+    {"path": "reference/index.d.ts.map", "size_bytes": 808},
+    {"path": "reference/index.js", "size_bytes": 7068},
+    {"path": "solve.sh", "size_bytes": 2439}
+  ],
+  "source_archive_present": false,
+  "runtime_source_fetch_detected": true,
+  "runtime_fetch_summary": "solve.sh initializes a temporary git repository, adds the upstream remote, fetches revision 774a70c6bae6dd94486d3385dbd9a0f14550b709, and creates the archive used for the workspace.",
+  "required_archive_digest": "sha256:ffbc51c1237344db6b47db8000aaa1668e89eb207f6a94b3a5b6472d5dda08d1",
+  "network_policy": "no-network",
+  "execution": "not-run",
+  "decision": "artifact/verifier-blocked",
+  "next_step": "Recover an exact source archive matching the frozen revision and digest, construct a parent-reviewed NoNetwork Oracle bundle, then double-compile and run fresh Oracle and supported controls."
+}

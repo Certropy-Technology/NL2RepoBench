@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0",
+  "task_id": "micromark-util-character",
+  "source_digest": "sha256:ffbc51c1237344db6b47db8000aaa1668e89eb207f6a94b3a5b6472d5dda08d1",
+  "queue_source_digest": "sha256:4bffd8d1369e197fbbe59799731b6f9b9cdb6da577740463fbfa4d476dba21c4",
+  "checked_offline": true,
+  "artifact_root": "<parent-private-CAS>",
+  "artifacts": [
+    {
+      "role": "dependency_bundle",
+      "declared_digest": "sha256:3715cd959353c56f2b92dfef87816b61d2344cbcb83110b387e9e2f91ab89ace",
+      "declared_size_bytes": 112640,
+      "actual_size_bytes": 112640,
+      "sha256_match": true
+    },
+    {
+      "role": "commands_bundle",
+      "declared_digest": "sha256:2a5d540886d7b8c93d91a758afe340389ba3c6a0d8bf14333f4733c602ecbbaa",
+      "declared_size_bytes": 10240,
+      "actual_size_bytes": 10240,
+      "sha256_match": true
+    },
+    {
+      "role": "test_bundle",
+      "declared_digest": "sha256:d2677ae768b2f7198eb693f236f0ed59b94cdde456ec536a69897698abfbd089",
+      "declared_size_bytes": 20480,
+      "actual_size_bytes": 20480,
+      "sha256_match": true
+    },
+    {
+      "role": "oracle_bundle",
+      "declared_digest": "sha256:8e2a036e842d8db9e12a4db670f28c1a9a5430c96407db149000b2c039e054cd",
+      "declared_size_bytes": 20480,
+      "actual_size_bytes": 20480,
+      "sha256_match": true
+    }
+  ],
+  "decision": "artifacts-present-but-oracle-not-nonetwork-safe"
+}
