@@ -1,0 +1,99 @@
+{
+  "schema_version": "1.0",
+  "report_kind": "instruction-revalidation-wave",
+  "wave": 7,
+  "workflow_run": "807bcfdb-4f47-44d9-ba28-fce13ca95d1f",
+  "queue": "reports/instruction-revalidation-queue-20260905.json",
+  "base_commit": "35dfe41c1f86dbf80540b332dc341ad9b83ae177",
+  "integration_commits": [
+    "2a2e151a5feb876f4f165188f88cf563107b79ee",
+    "c2fd2ca8b5f201630a12b980b351b363f8f160f5"
+  ],
+  "network_policy": "no-network",
+  "concurrency": 32,
+  "model_api_cost_usd": 0,
+  "counts": {
+    "task_count": 32,
+    "fully_revalidated": 5,
+    "infrastructure_pending": 5,
+    "artifact_or_verifier_blocked": 22,
+    "projection_refreshed": 1,
+    "replacement_bundles_registered": 2
+  },
+  "tasks": [
+    {"task_id": "go-google-uuid", "status": "artifact-or-verifier-blocked", "reason": "No exact frozen source payload was found; Oracle performs runtime GitHub fetch.", "evidence": "catalog/sources/go-google-uuid/evidence/revalidation-20260905/blocker.md"},
+    {"task_id": "go-govalidator", "status": "artifact-or-verifier-blocked", "reason": "CAS is valid but no exact local source archive was found and Oracle is GitHub-fetching.", "evidence": "catalog/sources/go-govalidator/evidence/revalidation-20260905/blocker.md"},
+    {"task_id": "go-humanize", "status": "artifact-or-verifier-blocked", "reason": "No exact source archive matching the frozen revision was found.", "evidence": "catalog/sources/go-humanize/evidence/revalidation-20260905/blocker.md"},
+    {"task_id": "go-isatty", "status": "artifact-or-verifier-blocked", "reason": "No matching local source payload was available for the runtime-fetching Oracle.", "evidence": "catalog/sources/go-isatty/evidence/revalidation-20260905/blocker.md"},
+    {"task_id": "go-mergo", "status": "artifact-or-verifier-blocked", "reason": "Bounded local recovery found no exact payload; Oracle remains fetch-only.", "evidence": "catalog/sources/go-mergo/evidence/revalidation-20260905/"},
+    {"task_id": "go-multierror", "status": "artifact-or-verifier-blocked", "reason": "No exact frozen archive was found for the solve.sh-only Oracle bundle.", "evidence": "catalog/sources/go-multierror/evidence/revalidation-20260905/blocker.md"},
+    {"task_id": "go-nanoid", "status": "artifact-or-verifier-blocked", "reason": "CAS is valid but the Oracle source payload cannot be recovered offline.", "evidence": "catalog/sources/go-nanoid/evidence/revalidation-20260905/blocker.md"},
+    {"task_id": "go-ordered-map", "status": "artifact-or-verifier-blocked", "reason": "No exact frozen source archive was found.", "evidence": "catalog/sources/go-ordered-map/evidence/revalidation-20260905/blocker.md"},
+    {"task_id": "go-pterm", "status": "artifact-or-verifier-blocked", "reason": "Verifier CAS artifact is missing.", "evidence": "catalog/sources/go-pterm/evidence/revalidation-20260905/blocker.md"},
+    {"task_id": "go-radix", "status": "artifact-or-verifier-blocked", "reason": "No exact local source payload was found for the runtime-fetching Oracle.", "evidence": "catalog/sources/go-radix/evidence/revalidation-20260905/blocker.md"},
+    {"task_id": "go-rosedb", "status": "artifact-or-verifier-blocked", "reason": "No exact source archive was found after bounded local recovery.", "evidence": "catalog/sources/go-rosedb/evidence/revalidation-20260905/blocker.md"},
+    {"task_id": "go-semver", "status": "artifact-or-verifier-blocked", "reason": "4225 source.tar and 5596 archive candidates did not match the frozen digest.", "evidence": "catalog/sources/go-semver/evidence/revalidation-20260905/"},
+    {"task_id": "go-set", "status": "artifact-or-verifier-blocked", "reason": "Exact frozen source archive was unavailable.", "evidence": "catalog/sources/go-set/evidence/revalidation-20260905/blocker.md"},
+    {"task_id": "go-sqlmock", "status": "artifact-or-verifier-blocked", "reason": "Exact frozen Oracle source archive was unavailable.", "evidence": "catalog/sources/go-sqlmock/evidence/revalidation-20260905/"},
+    {"task_id": "go-uuid", "status": "artifact-or-verifier-blocked", "reason": "Oracle bundle contains no source payload and no exact local archive was found.", "evidence": "catalog/sources/go-uuid/evidence/revalidation-20260905/blocker.md"},
+    {"task_id": "go-version", "status": "artifact-or-verifier-blocked", "reason": "Cached module ZIP is not equivalent to the required git archive.", "evidence": "catalog/sources/go-version/evidence/revalidation-20260905/blocker.md"},
+    {"task_id": "google-api-core", "status": "artifact-or-verifier-blocked", "reason": "Oracle bundle is GitHub-fetching and no exact frozen payload was found.", "evidence": "catalog/sources/google-api-core/evidence/revalidation-20260905/blocker.md"},
+    {"task_id": "google-auth", "status": "artifact-or-verifier-blocked", "reason": "No frozen source payload was found for the fetch-based Oracle.", "evidence": "catalog/sources/google-auth/evidence/revalidation-20260905/blocker.md"},
+    {"task_id": "google-genai", "status": "artifact-or-verifier-blocked", "reason": "No exact 44,800,000-byte source archive was found.", "evidence": "catalog/sources/google-genai/evidence/revalidation-20260905/blocker.md"},
+    {
+      "task_id": "graphneuralnetwork",
+      "status": "fully_revalidated",
+      "source_digest": "sha256:322b68a3099bee8b2993b36afd24d86f36816e2d167adb9c1f6ad267a1b6f39a",
+      "canonical_manifest_digest": "sha256:62820c7856320eb3b11f6ba5d69295b6754831e8e4a777e515c759a90c8d6007",
+      "oracle": {"passed": 4, "total": 4, "reward": 1.0},
+      "empty": {"passed": 0, "total": 0, "reward": 0.0, "reason": "candidate-installation-failed"},
+      "stub": {"passed": 0, "total": 4, "reward": 0.0},
+      "forgery": {"passed": 0, "total": 4, "reward": 0.0},
+      "replacement_cas": {"oracle_bundle": "sha256:4a58d62fea09dcbad6c7727d754097f661587531406ded0823b32fa7f26764af", "verifier_bundle": "sha256:2e51141fb80d0865f4d9f84ed3720f9bbbab2e8b64268731e63480f5a203e28f"},
+      "projection": "catalog/tasks/graphneuralnetwork"
+    },
+    {"task_id": "h11", "status": "infrastructure_pending", "reason": "Compile/control preparation progressed, but Harbor Oracle was blocked by infrastructure and no final matrix receipt exists.", "evidence": "catalog/sources/h11/evidence/revalidation-20260905/"},
+    {
+      "task_id": "has-ansi",
+      "status": "fully_revalidated",
+      "oracle": {"passed": 24, "total": 24, "reward": 1.0},
+      "controls": "all seven controls completed with reward 0.0 and NoNetwork receipts",
+      "evidence": "catalog/sources/has-ansi/production-evidence.json"
+    },
+    {
+      "task_id": "hast-util-to-estree",
+      "status": "fully_revalidated",
+      "oracle": {"passed": 33, "total": 33, "reward": 1.0},
+      "controls": {"empty": "0/0", "stub": "3/33", "forgery": "0/33", "offline": "2/33", "hang": "0/0"},
+      "evidence": "catalog/sources/hast-util-to-estree/production-evidence.json"
+    },
+    {
+      "task_id": "hast-util-to-jsx-runtime",
+      "status": "fully_revalidated",
+      "oracle": {"passed": 24, "total": 24, "reward": 1.0},
+      "controls": "empty/stub/forgery/hang/install-script/loader-hook/offline completed with reward 0.0",
+      "evidence": "catalog/sources/hast-util-to-jsx-runtime/evidence/revalidation-20260905/"
+    },
+    {"task_id": "hast-util-whitespace", "status": "infrastructure_pending", "reason": "Oracle and one bounded retry failed before execution with Docker daemon-state errors.", "evidence": "catalog/sources/hast-util-whitespace/evidence/revalidation-20260905/"},
+    {"task_id": "hatchling", "status": "artifact-or-verifier-blocked", "reason": "No exact backend archive payload was found for the fetch-only Oracle.", "evidence": "catalog/sources/hatchling/evidence/revalidation-20260905/blocker.md"},
+    {"task_id": "httpcore", "status": "infrastructure_pending", "reason": "Exact source.tar and deterministic compile exist, but Oracle hit EnvironmentStartTimeoutError then Errno 11; controls were not run.", "evidence": "catalog/sources/httpcore/evidence/revalidation-20260905/"},
+    {
+      "task_id": "httptools",
+      "status": "fully_revalidated",
+      "oracle": {"passed": 20, "total": 20, "reward": 1.0},
+      "controls": {"empty": "0/0", "stub": "0/20", "forgery": "0/20", "call_hang": "0/20", "offline": "20/20"},
+      "evidence": "catalog/sources/httptools/evidence/revalidation-20260905/"
+    },
+    {"task_id": "httpx", "status": "artifact-or-verifier-blocked", "reason": "Oracle, dependency lock, and test/verifier CAS objects are missing.", "evidence": "catalog/sources/httpx/evidence/revalidation-20260905/missing-private-artifacts.md"},
+    {"task_id": "httpx-sse", "status": "infrastructure_pending", "reason": "Oracle failed twice before trial creation because the Docker daemon was unavailable; controls were not run.", "evidence": "catalog/sources/httpx-sse/evidence/revalidation-20260905/"},
+    {"task_id": "huggingface-hub", "status": "infrastructure_pending", "reason": "Initial Oracle startup timed out; bounded retry reached a forbidden GitHub clone and collected 0/40; controls are not sufficient to establish a valid Oracle.", "evidence": "catalog/sources/huggingface-hub/evidence/revalidation-20260905/"},
+    {"task_id": "icecream", "status": "artifact-or-verifier-blocked", "reason": "All three declared private CAS artifacts are missing.", "evidence": "catalog/sources/icecream/evidence/revalidation-20260905/blocker.md"}
+  ],
+  "reliability": {
+    "source_validation_passed": 32,
+    "target_source_network_errors": 0,
+    "replacement_payloads_registered": 2,
+    "projection_changes": 1,
+    "bounded_infrastructure_pending": ["h11", "hast-util-whitespace", "httpcore", "httpx-sse", "huggingface-hub"]
+  }
+}
