@@ -1,0 +1,86 @@
+Source Freeze Evidence for shortuuid
+=====================================
+
+Task ID: shortuuid
+Version: 1.0.0
+Timestamp: 2025-09-07T21:00:00Z
+
+Source Information
+------------------
+Upstream URL: https://github.com/skorokithakis/shortuuid
+Revision: 16374d288c796faa2aee5789ed649c3ed7cdd9be
+License: BSD-3-Clause
+Package Version: 1.0.13
+
+Source Archive
+--------------
+Path: /data/NL2RepoBench-integration-20260827/.nl2repo/authoring-work/python-wave2/shortuuid/source-16374d288c796faa2aee5789ed649c3ed7cdd9be.tar.gz
+SHA-256: 487c8d6094d3a7bc71a823fadcef6ff5efdbee13921f274da333870e45d6d438
+Size: 12030 bytes
+
+Archive Verification
+--------------------
+Command: sha256sum source-16374d288c796faa2aee5789ed649c3ed7cdd9be.tar.gz
+Exit Code: 0
+Result: PASS - SHA-256 matches expected value
+
+Archive Contents
+----------------
+Top-level directory: shortuuid-16374d288c796faa2aee5789ed649c3ed7cdd9be/
+Key files verified:
+  - pyproject.toml (package metadata)
+  - shortuuid/__init__.py (main module)
+  - shortuuid/main.py (core implementation)
+  - shortuuid/cli.py (CLI interface)
+  - shortuuid/test_shortuuid.py (test suite)
+  - COPYING (BSD-3-Clause license)
+
+Package Metadata
+----------------
+Package name: shortuuid
+Import name: shortuuid
+Build backend: poetry-core
+Python requirement: >=3.6
+Runtime dependencies: None (standard library only)
+
+Public API Surface
+------------------
+Module-level functions:
+  - uuid(name=None, pad_length=None) -> str
+  - encode(uuid, pad_length=None) -> str
+  - decode(string, legacy=False) -> uuid.UUID
+  - random(length=None) -> str
+  - get_alphabet() -> str
+  - set_alphabet(alphabet) -> None
+
+Classes:
+  - ShortUUID(alphabet=None)
+    Methods: uuid, encode, decode, random, get_alphabet, set_alphabet, encoded_length
+
+CLI entry point:
+  - shortuuid (from shortuuid.cli:cli)
+
+Test Collection
+---------------
+Test file: shortuuid/test_shortuuid.py
+Framework: pytest (unittest-based)
+Test classes: 6
+Test methods: 19
+Expected frozen total: 19
+
+Test classes:
+  1. LegacyShortUUIDTest (5 tests)
+  2. ClassShortUUIDTest (5 tests)
+  3. ShortUUIDPaddingTest (3 tests)
+  4. EncodingEdgeCasesTest (1 test)
+  5. DecodingEdgeCasesTest (1 test)
+  6. CliTest (3 tests)
+
+Source Freeze Status
+--------------------
+Status: known
+Revision immutable: YES
+License verified: YES
+Archive integrity: VERIFIED
+Source extractable: YES
+Package installable: PENDING (to be verified in environment probe)

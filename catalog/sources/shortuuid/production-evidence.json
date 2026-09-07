@@ -1,0 +1,99 @@
+{
+  "controls": {
+    "background-process": {
+      "collected": 19,
+      "reward": 0.10526315789473684,
+      "valid": true
+    },
+    "empty": {
+      "collected": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "forgery": {
+      "collected": 19,
+      "reward": 0.10526315789473684,
+      "valid": true
+    },
+    "hang": {
+      "collected": 19,
+      "reward": 0.0,
+      "valid": true
+    },
+    "install-failure": {
+      "collected": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "oversized-output": {
+      "collected": 19,
+      "reward": 0.0,
+      "valid": true
+    },
+    "panic": {
+      "collected": 19,
+      "reward": 0.0,
+      "valid": true
+    },
+    "stub": {
+      "collected": 19,
+      "reward": 0.0,
+      "valid": true
+    }
+  },
+  "evidence_files": [
+    {
+      "path": "evidence/gates-20260907/control-background-process-grading.json",
+      "sha256": "sha256:4bf7cb53b89910513f8c4630c19beb6b2693a2519641b15dbd6c013827a02f22"
+    },
+    {
+      "path": "evidence/gates-20260907/control-empty-grading.json",
+      "sha256": "sha256:79087c3bf73d1970c6ca82aadcafab24c6699e3d560b1f9527e5b0452f719164"
+    },
+    {
+      "path": "evidence/gates-20260907/control-forgery-grading.json",
+      "sha256": "sha256:4bf7cb53b89910513f8c4630c19beb6b2693a2519641b15dbd6c013827a02f22"
+    },
+    {
+      "path": "evidence/gates-20260907/control-hang-grading.json",
+      "sha256": "sha256:0a0b119a53ba61b6463901ba6f34aca146e73e3cb51243ecba21c67b8b445b69"
+    },
+    {
+      "path": "evidence/gates-20260907/control-install-failure-grading.json",
+      "sha256": "sha256:79087c3bf73d1970c6ca82aadcafab24c6699e3d560b1f9527e5b0452f719164"
+    },
+    {
+      "path": "evidence/gates-20260907/control-oversized-output-grading.json",
+      "sha256": "sha256:0a0b119a53ba61b6463901ba6f34aca146e73e3cb51243ecba21c67b8b445b69"
+    },
+    {
+      "path": "evidence/gates-20260907/control-panic-grading.json",
+      "sha256": "sha256:0a0b119a53ba61b6463901ba6f34aca146e73e3cb51243ecba21c67b8b445b69"
+    },
+    {
+      "path": "evidence/gates-20260907/control-stub-grading.json",
+      "sha256": "sha256:0a0b119a53ba61b6463901ba6f34aca146e73e3cb51243ecba21c67b8b445b69"
+    },
+    {
+      "path": "evidence/gates-20260907/oracle-grading.json",
+      "sha256": "sha256:bbb341a38a4130e16aa4491908dad0714032d39d1fe16816a14a13e8ffd146b7"
+    },
+    {
+      "path": "evidence/gates-20260907/oracle-network.json",
+      "sha256": "sha256:0cf2e4f5c964b30ba498f871680e8d064618866a080604038b128a1291e19aaf"
+    }
+  ],
+  "license_spdx": "BSD-3-Clause",
+  "oracle": {
+    "collected": 19,
+    "command": "harbor run -p catalog/tasks/shortuuid -a oracle",
+    "reward": 1.0,
+    "valid": true
+  },
+  "published_at": "2026-09-07T00:00:00Z",
+  "revision": "16374d288c796faa2aee5789ed649c3ed7cdd9be",
+  "schema_version": "1.0",
+  "task_id": "shortuuid",
+  "terminal_kind": "valid",
+  "upstream_url": "https://github.com/skorokithakis/shortuuid"
+}

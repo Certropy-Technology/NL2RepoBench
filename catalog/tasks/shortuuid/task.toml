@@ -1,0 +1,57 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/shortuuid"
+version = "1.0.0"
+description = "Build shortuuid package from an empty workspace: a library for concise, unambiguous, URL-safe UUID generation with base57 encoding."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "uuid",
+    "url-safe",
+    "encoding",
+    "base57",
+    "cli",
+]
+
+[metadata]
+difficulty = "easy"
+category = "utility-library"
+tags = [
+    "python",
+    "uuid",
+    "url-safe",
+    "encoding",
+    "cli",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 19
+canonical_manifest_digest = "sha256:d490085e39167677b157b81c6f7d0bbee6177959ac91238224ce098d1ca33a7a"
+toolchain_lock_digest = "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366"
+
+[agent]
+timeout_sec = 1800.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 4096
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 2048
