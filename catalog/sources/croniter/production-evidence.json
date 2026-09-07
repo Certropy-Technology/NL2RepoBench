@@ -1,0 +1,69 @@
+{
+  "controls": {
+    "empty": {
+      "collected": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "forgery": {
+      "collected": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "install-failure": {
+      "collected": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "panic": {
+      "collected": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "stub": {
+      "collected": 15,
+      "reward": 0.133,
+      "valid": true
+    }
+  },
+  "evidence_files": [
+    {
+      "path": "evidence/gates-20260907/control-empty-grading.json",
+      "sha256": "sha256:887b9680e4680f733abdbbcec54cafa6e45845a03cc4ddce557f6a36aefbb4ef"
+    },
+    {
+      "path": "evidence/gates-20260907/control-forgery-grading.json",
+      "sha256": "sha256:887b9680e4680f733abdbbcec54cafa6e45845a03cc4ddce557f6a36aefbb4ef"
+    },
+    {
+      "path": "evidence/gates-20260907/control-install-failure-grading.json",
+      "sha256": "sha256:887b9680e4680f733abdbbcec54cafa6e45845a03cc4ddce557f6a36aefbb4ef"
+    },
+    {
+      "path": "evidence/gates-20260907/control-panic-grading.json",
+      "sha256": "sha256:887b9680e4680f733abdbbcec54cafa6e45845a03cc4ddce557f6a36aefbb4ef"
+    },
+    {
+      "path": "evidence/gates-20260907/control-stub-grading.json",
+      "sha256": "sha256:1c9776cb8896c993b7f83059555b80864e576b6e6eaa765be27482d19fb789bc"
+    },
+    {
+      "path": "evidence/gates-20260907/oracle-grading.json",
+      "sha256": "sha256:a2b0bf72265687e8074258b3dee50b0f71c9ab49b60391db48b3ddeb92df8b8d"
+    },
+    {
+      "path": "evidence/gates-20260907/oracle-network.json",
+      "sha256": "sha256:badb64ba3a44cf2c24fa0061998e451a4713869b9e8712b858d35fb2d9497740"
+    }
+  ],
+  "license_spdx": "MIT",
+  "oracle": {
+    "collected": 15,
+    "reward": 1.0,
+    "valid": true
+  },
+  "revision": "9181ba7de0a91512cb77d537b7e23631ffe4f7e8",
+  "schema_version": "1.0",
+  "task_id": "croniter",
+  "terminal_kind": "valid"
+}
