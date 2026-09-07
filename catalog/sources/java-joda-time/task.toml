@@ -1,0 +1,118 @@
+schema_version = "1.0"
+task_id = "java-joda-time"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "java-library"
+tags = ["java", "maven", "joda-time", "formatting", "offline", "separate-verifier"]
+language = "java"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/JodaOrg/joda-time"
+revision = "d1ee10e1b855b403ae957e2a2765e41c450f7cdc"
+license_spdx = "Apache-2.0"
+source_digest = "sha256:9622ce4425aaa0e9c72c20f932ce5882fd6c0080b6e8a1729c58d702c3a1eeac"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "nl2repobench/java-runtime@sha256:9f4180fc607186b2cdc958049cd1f230d3cbf5a887eeb5106253a4287260e3ef"
+base_image_digest = "sha256:9f4180fc607186b2cdc958049cd1f230d3cbf5a887eeb5106253a4287260e3ef"
+network_mode = "no-network"
+
+[environment.runtime]
+language = "java"
+runtime = "jdk"
+version = "temurin-21.0.12+8"
+package_manager = "maven"
+package_manager_version = "3.9.11"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The bounded FormatUtils contract uses only java.base; all Harbor execution is offline."
+
+[dependencies]
+status = "known"
+package_manager = "maven"
+packages = []
+
+[dependencies.lock]
+digest = "sha256:41a08b07bf4e088d3a505419c5b6c742b6c602419a39327b76ec7b3dc09ba919"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:41a08b07bf4e088d3a505419c5b6c742b6c602419a39327b76ec7b3dc09ba919"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:83360dfb14f65b79a824967eaf40bed9933967c1b1099120fe1d4a473bf83565"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:83360dfb14f65b79a824967eaf40bed9933967c1b1099120fe1d4a473bf83565"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:c71e84a8ca82384a935da7a8a13e08524a94be61310592e7f57af82aab9416a5"
+size_bytes = 1048
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:c71e84a8ca82384a935da7a8a13e08524a94be61310592e7f57af82aab9416a5"
+visibility = "private"
+
+[tests]
+framework = "junit-platform"
+report_format = "junit-open-test-report-xml-v1"
+expected_total = 10
+expected_total_source = "frozen-collection"
+commands = ["mvn --offline validate", "javac --release 21 verifier-owned contract"]
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.sh"
+contract_sha256 = "sha256:f8251dd3696954ee7a0705452dafffdc47e763cffe202c9846b7246f47f15556"
+
+[verifier.bundle]
+digest = "sha256:dcee044a23732757b3f12912ffa7e78338c19b8b29aff15d3e1e80f504d4c8f2"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.verifier+tar"
+uri = "artifact://private/sha256:dcee044a23732757b3f12912ffa7e78338c19b8b29aff15d3e1e80f504d4c8f2"
+visibility = "private"
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Reimplement a bounded org.joda.time.format.FormatUtils API slice for deterministic integer formatting."
+keywords = ["java", "maven", "joda-time", "formatting", "offline"]
+agent_timeout_sec = 900.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 300.0
+candidate_total_timeout_sec = 60.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "inventoried"
+owner = "java-maven-author-wave4"
+reason = "awaiting-integrator: task-local staging complete; parent CAS registration, compilation, Oracle, and controls pending."
+
+[oracle_bundle]
+digest = "sha256:22b9336a6fede68357326c53d4aeffea4863294b86fe52dc112e8c1d12bae2ea"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:22b9336a6fede68357326c53d4aeffea4863294b86fe52dc112e8c1d12bae2ea"
+visibility = "private"

@@ -1,0 +1,11 @@
+$ sha256sum .nl2repo/authoring-inputs/java-maven-wave1/java-commons-bcel/source.tar
+273653bda961ef41e1c0203480cf66edd88a0aa92e464fddebc4f9c15ef770e0  source.tar
+$ tar -tf source.tar | grep '^src/main/java/org/apache/bcel/util/ByteSequence.java$'
+src/main/java/org/apache/bcel/util/ByteSequence.java
+$ sha256sum LICENSE.txt NOTICE.txt
+b1d2870f1a00e4d7f56576e5f0870cba109e041f8af66866cf5b499478e654e7  LICENSE.txt
+0198e63f4daa87c4dd995e326e807c6bd1876439736229713fa5e6081e752b67  NOTICE.txt
+$ javac --release 21 ... CandidateMain.java ContractMain.java
+exit 0
+$ uv run nl2repo task validate-source catalog/sources/java-commons-bcel
+{"instruction":"catalog/sources/java-commons-bcel/instruction.md","source_digest":"sha256:e8b1d7c0aa0fd28443d945b06e098d3a45d19414eb1ba2b3868a73e1221f090e","status":"inventoried","task_id":"java-commons-bcel","version":"0.1.0"}

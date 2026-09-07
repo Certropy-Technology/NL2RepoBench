@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "task_id": "java-commons-lang",
+  "source_revision": "f13aa3d80272db38bbf9e4a35a4945e7c91a9d6b",
+  "contract": "org.apache.commons.lang3.StringUtils",
+  "frozen_total": 16,
+  "leaves": [
+    {"id":"is-empty","public_behavior":"isEmpty(CharSequence)","source":"src/main/java/org/apache/commons/lang3/StringUtils.java:3604"},
+    {"id":"is-blank","public_behavior":"isBlank(CharSequence)","source":"src/main/java/org/apache/commons/lang3/StringUtils.java:3575"},
+    {"id":"contains","public_behavior":"contains(CharSequence,int)","source":"src/main/java/org/apache/commons/lang3/StringUtils.java:1055"},
+    {"id":"count-char","public_behavior":"countMatches(CharSequence,char)","source":"src/main/java/org/apache/commons/lang3/StringUtils.java:1501"},
+    {"id":"count-sub","public_behavior":"countMatches(CharSequence,CharSequence)","source":"src/main/java/org/apache/commons/lang3/StringUtils.java:1538"},
+    {"id":"default","public_behavior":"defaultString(String)","source":"src/main/java/org/apache/commons/lang3/StringUtils.java:1614"},
+    {"id":"default-custom","public_behavior":"defaultString(String,String)","source":"src/main/java/org/apache/commons/lang3/StringUtils.java:1644"},
+    {"id":"capitalize","public_behavior":"capitalize(String)","source":"src/main/java/org/apache/commons/lang3/StringUtils.java:555"},
+    {"id":"uncapitalize","public_behavior":"uncapitalize(String)","source":"src/main/java/org/apache/commons/lang3/StringUtils.java:9110"},
+    {"id":"reverse","public_behavior":"reverse(String)","source":"src/main/java/org/apache/commons/lang3/StringUtils.java:6908"},
+    {"id":"split-whitespace","public_behavior":"split(String)","source":"src/main/java/org/apache/commons/lang3/StringUtils.java:7162"},
+    {"id":"split-char","public_behavior":"split(String,char)","source":"src/main/java/org/apache/commons/lang3/StringUtils.java:7192"},
+    {"id":"substring-negative","public_behavior":"substring(String,int)","source":"src/main/java/org/apache/commons/lang3/StringUtils.java:8261"},
+    {"id":"substring-range","public_behavior":"substring(String,int,int)","source":"src/main/java/org/apache/commons/lang3/StringUtils.java:8312"},
+    {"id":"left","public_behavior":"left(String,int)","source":"src/main/java/org/apache/commons/lang3/StringUtils.java:5154"},
+    {"id":"right","public_behavior":"right(String,int)","source":"src/main/java/org/apache/commons/lang3/StringUtils.java:6968"}
+  ]
+}

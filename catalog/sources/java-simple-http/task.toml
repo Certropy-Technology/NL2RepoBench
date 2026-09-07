@@ -1,0 +1,119 @@
+schema_version = "1.0"
+task_id = "java-simple-http"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "java-library"
+tags = ["java", "maven", "simple-http", "http", "utilities"]
+language = "java"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/svenkubiak/simple-http"
+revision = "9a7b542982b8abbec2644571ed4e723ce231dbc3"
+license_spdx = "Apache-2.0"
+source_digest = "sha256:d2a7900b488057d61f1ea01ccf1349d5721a4d24260ca0d18b718c6fd5861986"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm-amd64"
+base_image = "nl2repobench/java-runtime@sha256:9f4180fc607186b2cdc958049cd1f230d3cbf5a887eeb5106253a4287260e3ef"
+base_image_digest = "sha256:9f4180fc607186b2cdc958049cd1f230d3cbf5a887eeb5106253a4287260e3ef"
+network_mode = "no-network"
+
+[environment.runtime]
+language = "java"
+runtime = "jdk"
+version = "temurin-21.0.12+8"
+package_manager = "maven"
+package_manager_version = "3.9.11"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The bounded Result and Utils contract uses only JDK APIs; agent, candidate, verifier, Oracle, and controls execute without network access."
+
+[dependencies]
+status = "known"
+package_manager = "maven"
+packages = []
+
+[dependencies.lock]
+digest = "sha256:e53d151da2bc13e603576fb83f5255bb326da23ab0e2031a06cb5110055d76da"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:e53d151da2bc13e603576fb83f5255bb326da23ab0e2031a06cb5110055d76da"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:83360dfb14f65b79a824967eaf40bed9933967c1b1099120fe1d4a473bf83565"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:83360dfb14f65b79a824967eaf40bed9933967c1b1099120fe1d4a473bf83565"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:29ef228e015d020a4b8d529a0f34943a56898ef8f90237905af18a2f36afd8b2"
+size_bytes = 1048
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:29ef228e015d020a4b8d529a0f34943a56898ef8f90237905af18a2f36afd8b2"
+visibility = "private"
+
+[tests]
+framework = "junit-platform"
+report_format = "junit-open-test-report-xml-v1"
+expected_total = 12
+expected_total_source = "frozen-collection"
+commands = ["mvn --offline validate", "javac --release 21 verifier-owned ContractMain"]
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.sh"
+contract_sha256 = "sha256:6937c08018dc23cc4f0b98814a0f8e26a2417149d86b01fb5ef100f3a7f71780"
+
+[verifier.bundle]
+digest = "sha256:14cc3ba0342c613aa4a43966fe53897db0d2a2a17a8d1a12105a3bd3281a4bd1"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.verifier+tar"
+uri = "artifact://private/sha256:14cc3ba0342c613aa4a43966fe53897db0d2a2a17a8d1a12105a3bd3281a4bd1"
+visibility = "private"
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Recreate the deterministic simple-http Result value object and Utils utility API slice."
+keywords = ["java", "maven", "simple-http", "result", "utils"]
+agent_timeout_sec = 1200.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 300.0
+candidate_total_timeout_sec = 60.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "inventoried"
+owner = "java-maven-authoring-20260902"
+reason = "awaiting-integrator: immutable simple-http source and Apache-2.0 license are frozen; bounded twelve-leaf Result/Utils contract and task-local Maven/verifier/Oracle/control staging are complete pending parent CAS registration."
+
+[oracle_bundle]
+digest = "sha256:6d0b3200ece78b6957bfa1f1833452a90cc97fe125bbcb168fb2e3617cb11fe2"
+size_bytes = 112640
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:6d0b3200ece78b6957bfa1f1833452a90cc97fe125bbcb168fb2e3617cb11fe2"
+visibility = "private"

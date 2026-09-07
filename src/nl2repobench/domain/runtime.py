@@ -27,6 +27,7 @@ class RuntimeLanguage(StrEnum):
     NODE = "node"
     GO = "go"
     RUST = "rust"
+    JAVA = "java"
 
 
 class PackageManager(StrEnum):
@@ -38,6 +39,7 @@ class PackageManager(StrEnum):
     PNPM = "pnpm"
     GO_MODULES = "go-modules"
     CARGO = "cargo"
+    MAVEN = "maven"
     NONE = "none"
 
 
@@ -72,6 +74,8 @@ class RuntimeDiscriminator(BaseModel):
                 {PackageManager.NPM, PackageManager.PNPM, PackageManager.NONE}
             ),
             RuntimeLanguage.GO: frozenset({PackageManager.GO_MODULES}),
+            RuntimeLanguage.RUST: frozenset({PackageManager.CARGO}),
+            RuntimeLanguage.JAVA: frozenset({PackageManager.MAVEN}),
         }
         if self.package_manager not in allowed[self.language]:
             accepted = ", ".join(

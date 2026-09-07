@@ -1,0 +1,119 @@
+schema_version = "1.0"
+task_id = "java-commons-compress"
+version = "1.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "java-library"
+tags = ["java", "maven", "commons-compress", "archive-utils", "binary-data"]
+language = "java"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/apache/commons-compress"
+revision = "6aaf8d1606d9e5645a99ec48e245415af4f3e806"
+license_spdx = "Apache-2.0"
+source_digest = "sha256:c496290156dbe214e6101b77c1294904514a2940c5313e20eac238ddbc6264eb"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "nl2repobench/java-runtime@sha256:9f4180fc607186b2cdc958049cd1f230d3cbf5a887eeb5106253a4287260e3ef"
+base_image_digest = "sha256:9f4180fc607186b2cdc958049cd1f230d3cbf5a887eeb5106253a4287260e3ef"
+network_mode = "no-network"
+
+[environment.runtime]
+language = "java"
+runtime = "jdk"
+version = "temurin-21.0.12+8"
+package_manager = "maven"
+package_manager_version = "3.9.11"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "The candidate and verifier use a private hash-locked empty Maven closure; only the trusted Oracle fetch is authorized."
+
+[dependencies]
+status = "known"
+package_manager = "maven"
+packages = []
+
+[dependencies.lock]
+digest = "sha256:5a18ce1a2e070b13ae6318a6545828e30f44df83fc388ba423ec659978a20278"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:5a18ce1a2e070b13ae6318a6545828e30f44df83fc388ba423ec659978a20278"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:83360dfb14f65b79a824967eaf40bed9933967c1b1099120fe1d4a473bf83565"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:83360dfb14f65b79a824967eaf40bed9933967c1b1099120fe1d4a473bf83565"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:694df4e095371211dba26cb6fe2dae3b17e9467ca4555c7ee7530ce362e9b3fe"
+size_bytes = 1048
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:694df4e095371211dba26cb6fe2dae3b17e9467ca4555c7ee7530ce362e9b3fe"
+visibility = "private"
+
+[tests]
+framework = "junit-platform"
+report_format = "junit-open-test-report-xml-v1"
+expected_total = 8
+expected_total_source = "frozen-collection"
+commands = ["mvn --offline validate", "javac verifier-owned contract"]
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.sh"
+contract_sha256 = "sha256:68481d46b6066603a6ed4d1e8312e7c5c05e8631793301e98afe50d70b7d5560"
+
+[verifier.bundle]
+digest = "sha256:f5fc730526f0d0b259251aa33abab957ad058eae68b041136112f98cc8f37e3d"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.verifier+tar"
+uri = "artifact://private/sha256:f5fc730526f0d0b259251aa33abab957ad058eae68b041136112f98cc8f37e3d"
+visibility = "private"
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Recreate the deterministic Apache Commons Compress ArchiveUtils byte and text helper behavior."
+keywords = ["java", "maven", "commons-compress", "archive-utils", "binary-data"]
+agent_timeout_sec = 1200.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 300.0
+candidate_total_timeout_sec = 60.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "inventoried"
+owner = "java-maven-authoring-20260902"
+reason = "The source archive, bounded standard-library API slice, positive eight-leaf contract, empty Maven closure, and task-local verifier/Oracle staging are complete; parent integration must register CAS refs and compile the generated runtime."
+
+[oracle_bundle]
+digest = "sha256:f6da8f4a577edacb2a9f9aaf32b3e7f5e7481768b7985bfca07322745d638900"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:f6da8f4a577edacb2a9f9aaf32b3e7f5e7481768b7985bfca07322745d638900"
+visibility = "private"

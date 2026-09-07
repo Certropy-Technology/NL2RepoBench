@@ -765,6 +765,33 @@ class MetadataGapReport(RecordModel):
     tasks: tuple[MetadataGapTask, ...]
 
 
+
+class DependencyOfflineSmoke(BaseModel):
+    model_config = ConfigDict(extra="forbid", frozen=True, str_strip_whitespace=True)
+
+    status: Literal["passed"]
+    command_id: Annotated[str, Field(min_length=1, max_length=128)]
+
+
+class DependencyInventory(RecordModel):
+    """The single external inventory binding dependency lock and store."""
+
+    identity: Annotated[str, Field(pattern=r"^[a-z0-9-]+\+[a-z0-9-]+$")]
+    adapter_version: Annotated[str, Field(min_length=1, max_length=128)]
+    toolchain_digest: str = Field(pattern=SHA256_PATTERN)
+    lock: ArchiveInventory
+    store: ArchiveInventory
+    offline_smoke: DependencyOfflineSmoke
+
+    @model_validator(mode="after")
+    def validate_archive_kinds(self) -> DependencyInventory:
+        if self.lock.archive_kind != "dependency-lock":
+            raise ValueError("dependency lock inventory has the wrong archive kind")
+        if self.store.archive_kind != "offline-store":
+            raise ValueError("dependency store inventory has the wrong archive kind")
+        return self
+
+
 class InventoryEntry(BaseModel):
     """One canonical dependency archive member."""
 

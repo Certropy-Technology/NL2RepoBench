@@ -1,0 +1,19 @@
+{
+  "language": "java",
+  "source_root": "src/main/java/org/apache/commons/lang3/StringUtils.java",
+  "source_digest": "sha256:b0a616effdb8a22ebc074a58571ef49f25758105716e9bc497963bc586c02e6d",
+  "scanner_identity": "java-static-public-api-v1",
+  "public_class": "org.apache.commons.lang3.StringUtils",
+  "public_methods": [
+    "isEmpty(CharSequence)", "isBlank(CharSequence)", "contains(CharSequence,int)",
+    "countMatches(CharSequence,char)", "countMatches(CharSequence,CharSequence)",
+    "defaultString(String)", "defaultString(String,String)", "capitalize(String)",
+    "uncapitalize(String)", "reverse(String)", "split(String)", "split(String,char)",
+    "substring(String,int)", "substring(String,int,int)", "left(String,int)", "right(String,int)"
+  ],
+  "source_evidence": {
+    "StringUtils.java": [555, 1055, 1501, 1538, 1614, 1644, 3575, 3604, 6968, 7162, 7192, 8261, 8312, 9110]
+  },
+  "risk_flags": ["upstream-custom-build-excluded", "deprecated-forwarders-excluded", "locale-free-contract"],
+  "contract_leaf_ids": ["is-empty", "is-blank", "contains", "count-char", "count-sub", "default", "default-custom", "capitalize", "uncapitalize", "reverse", "split-whitespace", "split-char", "substring-negative", "substring-range", "left", "right"]
+}
