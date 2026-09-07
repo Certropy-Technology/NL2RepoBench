@@ -1,0 +1,107 @@
+{
+  "controls": {
+    "background-process": {
+      "collected": 110,
+      "failed": 100,
+      "passed": 10,
+      "reward": 0.09090909090909091,
+      "valid": true
+    },
+    "empty": {
+      "collected": 0,
+      "failed": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "forgery": {
+      "collected": 110,
+      "failed": 100,
+      "passed": 10,
+      "reward": 0.09090909090909091,
+      "valid": true
+    },
+    "install-failure": {
+      "collected": 0,
+      "failed": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "oversized-output": {
+      "collected": 110,
+      "failed": 100,
+      "passed": 10,
+      "reward": 0.09090909090909091,
+      "valid": true
+    },
+    "panic": {
+      "collected": 0,
+      "failed": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "stub": {
+      "collected": 110,
+      "failed": 100,
+      "passed": 10,
+      "reward": 0.09090909090909091,
+      "valid": true
+    }
+  },
+  "controls_notes": {
+    "hang": "excluded by owner decision; not a gate. hang control would be 999999 sleep -> verifier-internal-error, not run since owner disabled hang testing"
+  },
+  "evidence_files": [
+    {
+      "path": "evidence/gates-20260907/control-background-process-grading.json",
+      "sha256": "sha256:c0aa3cdd37c67074fc826a40b4466211c7f79958ac57d37fdab062a6c6f31f70"
+    },
+    {
+      "path": "evidence/gates-20260907/control-empty-grading.json",
+      "sha256": "sha256:d22a2887f0538261fc0b264bad61d83e35073c264bc19c7c2b2c750cfab1e5dd"
+    },
+    {
+      "path": "evidence/gates-20260907/control-forgery-grading.json",
+      "sha256": "sha256:c0aa3cdd37c67074fc826a40b4466211c7f79958ac57d37fdab062a6c6f31f70"
+    },
+    {
+      "path": "evidence/gates-20260907/control-install-failure-grading.json",
+      "sha256": "sha256:d22a2887f0538261fc0b264bad61d83e35073c264bc19c7c2b2c750cfab1e5dd"
+    },
+    {
+      "path": "evidence/gates-20260907/control-oversized-output-grading.json",
+      "sha256": "sha256:c0aa3cdd37c67074fc826a40b4466211c7f79958ac57d37fdab062a6c6f31f70"
+    },
+    {
+      "path": "evidence/gates-20260907/control-panic-grading.json",
+      "sha256": "sha256:d22a2887f0538261fc0b264bad61d83e35073c264bc19c7c2b2c750cfab1e5dd"
+    },
+    {
+      "path": "evidence/gates-20260907/control-stub-grading.json",
+      "sha256": "sha256:c0aa3cdd37c67074fc826a40b4466211c7f79958ac57d37fdab062a6c6f31f70"
+    },
+    {
+      "path": "evidence/gates-20260907/oracle-grading.json",
+      "sha256": "sha256:317cd0bfff0a0f7b45d6405c63d5d71865e4f6f249eb7f34e4ace08627b3f58a"
+    },
+    {
+      "path": "evidence/gates-20260907/oracle-network.json",
+      "sha256": "sha256:493466c343d5646e1645bc297f80ef14b37e194ccee15dac2be04770b2740aa0"
+    }
+  ],
+  "license_spdx": "MIT",
+  "offline": "oracle network.json public_network_available=false",
+  "oracle": {
+    "collected": 110,
+    "failed": 0,
+    "passed": 110,
+    "reward": 1.0,
+    "valid": true
+  },
+  "revision": "1ddce552cd1bdac5db3df931ba3df3bf9dac284c",
+  "schema_version": "1.0",
+  "task_id": "jsonpatch",
+  "terminal_kind": "valid"
+}

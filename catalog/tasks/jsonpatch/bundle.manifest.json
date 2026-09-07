@@ -1,9 +1,9 @@
 {
-  "canonical_manifest_digest": "sha256:de78f28395f77419d459b0179e80ef90ea3ec9cf8e63f975278e71d2b60f83f7",
+  "canonical_manifest_digest": "sha256:9dc5743e699ab08a00ca224803d72e950da152617551e34c1dc0d70f570f66f4",
   "files": [
     {
       "path": "README.md",
-      "sha256": "0ffd503b7da25b6f1a2717eb3d7bdcadd43b376667b0fac709aee1094b558ba4",
+      "sha256": "bd1362f2bf9d9959779dc80b608df10d84471dd4e3cf948b590734b7b0a7f00b",
       "size_bytes": 515
     },
     {
@@ -58,8 +58,8 @@
     },
     {
       "path": "environment/candidate-requirements.lock.txt",
-      "sha256": "023a5d4dd5912a8c7cbf8de97937db44f0d0b606b2d806efc71f12f9572148ce",
-      "size_bytes": 463
+      "sha256": "8678418b5a856a56f6673b31222c759d5ecc629bb74cfe937806a4b5e778b784",
+      "size_bytes": 408
     },
     {
       "path": "instruction.md",
@@ -68,8 +68,8 @@
     },
     {
       "path": "solution/solve.sh",
-      "sha256": "8095ca4759364c841156127dcb63ce4b632d9fc60a3759ecfd5bc02cec2809ca",
-      "size_bytes": 976
+      "sha256": "fd2ec08c71db5623c1ed1016766865194a60abb6ac247d03289fe4a936530de1",
+      "size_bytes": 2158
     },
     {
       "path": "solution/source.tar.gz",
@@ -78,7 +78,7 @@
     },
     {
       "path": "task.toml",
-      "sha256": "8c7ef40f1ca3952b42b83f3ecf18d5fd1ee49cecaca3c1ea3c695e8b79ebad2a",
+      "sha256": "bd50e60eed040633ef065652c82d80ee37c631091fd06c75146ee5a36f6ae1b5",
       "size_bytes": 1139
     },
     {
@@ -88,8 +88,8 @@
     },
     {
       "path": "tests/candidate-requirements.lock.txt",
-      "sha256": "023a5d4dd5912a8c7cbf8de97937db44f0d0b606b2d806efc71f12f9572148ce",
-      "size_bytes": 463
+      "sha256": "8678418b5a856a56f6673b31222c759d5ecc629bb74cfe937806a4b5e778b784",
+      "size_bytes": 408
     },
     {
       "path": "tests/command-plan.json",
@@ -368,8 +368,8 @@
     },
     {
       "path": "tests/verifier/run.py",
-      "sha256": "d66d83776124bab0c7054938133317dab8c89fdd62d19cb0870e3c4478976d22",
-      "size_bytes": 34226
+      "sha256": "3c4267467198635318e452ceada604cad876cdd7768caceca90067cc57087904",
+      "size_bytes": 34234
     }
   ],
   "mode": "production",

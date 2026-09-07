@@ -37,7 +37,7 @@ reason = "The setuptools build backend is preinstalled into the agent and verifi
 status = "known"
 installer = "pip"
 packages = []
-lock_artifact = { digest = "sha256:023a5d4dd5912a8c7cbf8de97937db44f0d0b606b2d806efc71f12f9572148ce", size_bytes = 463, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:023a5d4dd5912a8c7cbf8de97937db44f0d0b606b2d806efc71f12f9572148ce", visibility = "private" }
+lock_artifact = { digest = "sha256:8678418b5a856a56f6673b31222c759d5ecc629bb74cfe937806a4b5e778b784", size_bytes = 408, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:8678418b5a856a56f6673b31222c759d5ecc629bb74cfe937806a4b5e778b784", visibility = "private" }
 
 [tests]
 framework = "pytest"
@@ -56,7 +56,7 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 [verifier]
 protocol = "custom-json-v1"
 entrypoint = "run.py"
-bundle = { digest = "sha256:0138ad8cceef83352e0485a3b06dfcdd64228cc4e21857f055e5c114fc2a0ee2", size_bytes = 5166, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:0138ad8cceef83352e0485a3b06dfcdd64228cc4e21857f055e5c114fc2a0ee2", visibility = "private" }
+bundle = { digest = "sha256:09d8861880618175c64fc43d5ccfcce1404a1caf8041818966014e7aa7b0f263", size_bytes = 5175, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:09d8861880618175c64fc43d5ccfcce1404a1caf8041818966014e7aa7b0f263", visibility = "private" }
 
 [harbor]
 description = "Build the jsonpatch library - a Python implementation of JSON Patch (RFC 6902) from an empty workspace."
@@ -73,12 +73,13 @@ storage_mb = 2048
 workspace_artifact = "/workspace"
 
 [oracle_bundle]
-digest = "sha256:8bb972dde37e1e3eddd3d5819cabbcd6b88a54d0936cc136117fc86181516190"
-size_bytes = 29506
+digest = "sha256:36ef59a774b71f9bd2f9f324a97e8f9292c09169125791648fd50b52e8e45ad1"
+size_bytes = 29858
 media_type = "application/vnd.nl2repobench.private-bundle+tar"
-uri = "artifact://private/sha256:8bb972dde37e1e3eddd3d5819cabbcd6b88a54d0936cc136117fc86181516190"
+uri = "artifact://private/sha256:36ef59a774b71f9bd2f9f324a97e8f9292c09169125791648fd50b52e8e45ad1"
 visibility = "private"
 
 [lifecycle]
-status = "packaged"
-reason = "Source frozen, custom-json-v1 verifier with 110 scenarios authored, artifacts registered in CAS with setuptools build backend. Ready for compilation and Oracle/controls execution."
+status = "controls-passed"
+owner = "python-wave2-parent-jsonpatch"
+reason = "Oracle 110/110 reward 1.0. Controls: empty 0.0(0), stub 0.091(110), forgery 0.091(110), install-failure 0.0(0), panic 0.0(0), oversized-output 0.091(110), background-process 0.091(110); all valid. hang excluded by owner decision (not a gate). offline verified via oracle network.json."

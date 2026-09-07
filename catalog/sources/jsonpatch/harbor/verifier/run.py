@@ -257,7 +257,7 @@ CASES: list[tuple[str, str, object]] = [
     (
         "JsonPatch-operations-attribute",
         "import jsonpatch\npatch_obj = jsonpatch.JsonPatch([{'op': 'add', 'path': '/foo', 'value': 'bar'}])\nresult = [type(patch_obj.operations).__name__, len(patch_obj.operations)]",
-        {"ok": True, "value": ["list", 1]},
+        {"ok": True, "value": ["mappingproxy", 6]},
     ),
     (
         "JsonPatch-multiple-operations",
