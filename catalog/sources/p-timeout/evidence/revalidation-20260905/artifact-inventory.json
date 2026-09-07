@@ -1,0 +1,60 @@
+{
+  "schema_version": "1.0",
+  "task_id": "p-timeout",
+  "revalidation": "instruction-migration-20260905",
+  "source_digest": "sha256:37c8ba48353a78b7aa4e18883614c7ff5895d3306bf25fb8ecf8b67a72e57b82",
+  "source_archive": {
+    "declared_sha256": "sha256:4f8e9a6fa4d0b1f3db355bfec23fe3fb646abdf062e112455a78bf756eeca151",
+    "declared_size_bytes": 40960,
+    "exact_local_payload_found": false,
+    "search_scope": "current source, generated projection, private CAS, local authoring handoffs, historical catalog projections, and bounded local archive/cache paths"
+  },
+  "private_artifacts": [
+    {
+      "kind": "npm-dependency-bundle",
+      "sha256": "sha256:3625eb167b3d1cd4320c05e07fc855e6a807ab749346afaf87e51c21a20d4174",
+      "size_bytes": 10240,
+      "exact_cas_path": "CAS_PRIVATE/sha256/36/3625eb167b3d1cd4320c05e07fc855e6a807ab749346afaf87e51c21a20d4174",
+      "verified": true
+    },
+    {
+      "kind": "commands-bundle",
+      "sha256": "sha256:10e70a89b271a2cd71d8dbaa6848530c6550ac4d87e65ae87d7332265e5eedd9",
+      "size_bytes": 10240,
+      "exact_cas_path": "CAS_PRIVATE/sha256/10/10e70a89b271a2cd71d8dbaa6848530c6550ac4d87e65ae87d7332265e5eedd9",
+      "verified": true
+    },
+    {
+      "kind": "test-bundle",
+      "sha256": "sha256:b34fb24beac30111081257fc3f29bbea22026963c3f7a5e75a4e0fe84c65801d",
+      "size_bytes": 30720,
+      "exact_cas_path": "CAS_PRIVATE/sha256/b3/b34fb24beac30111081257fc3f29bbea22026963c3f7a5e75a4e0fe84c65801d",
+      "verified": true
+    },
+    {
+      "kind": "oracle-bundle",
+      "sha256": "sha256:bb482d9ee73627eb8bd7c69237cf64a8f06dae934fa6087254a30169d0f20aa4",
+      "size_bytes": 10240,
+      "exact_cas_path": "CAS_PRIVATE/sha256/bb/bb482d9ee73627eb8bd7c69237cf64a8f06dae934fa6087254a30169d0f20aa4",
+      "verified": true,
+      "payload_note": "Bundle contains solve.sh only; solve.sh performs a forbidden runtime GitHub fetch and does not contain source bytes."
+    }
+  ],
+  "commands": [
+    {
+      "command": "sha256sum CAS_PRIVATE/sha256/{36/3625eb167b3d1cd4320c05e07fc855e6a807ab749346afaf87e51c21a20d4174,10/10e70a89b271a2cd71d8dbaa6848530c6550ac4d87e65ae87d7332265e5eedd9,b3/b34fb24beac30111081257fc3f29bbea22026963c3f7a5e75a4e0fe84c65801d,bb/bb482d9ee73627eb8bd7c69237cf64a8f06dae934fa6087254a30169d0f20aa4}",
+      "exit_code": 0,
+      "result": "all four CAS digests matched and sizes were 10240, 10240, 30720, and 10240 bytes"
+    },
+    {
+      "command": "tar -tf CAS_PRIVATE/sha256/bb/bb482d9ee73627eb8bd7c69237cf64a8f06dae934fa6087254a30169d0f20aa4",
+      "exit_code": 0,
+      "result": "archive inventory was ./, ./solve.sh; no source archive or package payload"
+    },
+    {
+      "command": "bounded exact-digest search across source, projection, CAS, handoffs, archives, and caches",
+      "exit_code": 0,
+      "result": "no local 40960-byte payload matching sha256:4f8e9a6fa4d0b1f3db355bfec23fe3fb646abdf062e112455a78bf756eeca151"
+    }
+  ]
+}

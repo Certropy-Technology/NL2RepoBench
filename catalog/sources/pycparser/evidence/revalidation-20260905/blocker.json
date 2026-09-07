@@ -1,0 +1,107 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pycparser",
+  "revalidation": "instruction-migration-20260905",
+  "source_digest": "sha256:ce5e4d779eb9d885d6d4617a6b949c390147efbba708dc239d96e984cd716adf",
+  "upstream_revision": "10d17757e282d8af5426d6df4d55eb394042b550",
+  "upstream_archive": {
+    "sha256": "sha256:ed31469eea243e25ce86310039c174a61890d2acc7586cd06f8be38cf1baf5a1",
+    "size_bytes": 1331200,
+    "local_exact_match": false
+  },
+  "classification": {
+    "status": "artifact-or-verifier-blocked",
+    "failure_class": "artifact-or-verifier",
+    "reason": "The only Oracle source acquisition path is a runtime GitHub fetch, and bounded local recovery found no exact frozen source archive.",
+    "oracle": "skipped",
+    "controls": ["empty", "stub", "forgery", "offline", "install-hang", "call-hang"],
+    "rewards_claimed": false,
+    "historical_receipts_reused": false
+  },
+  "artifact_checks": [
+    {
+      "role": "dependency_lock",
+      "sha256": "sha256:53615811dc1d1f22b94617262702e9d02d56d5d8a0a180227344c700fcddae60",
+      "declared_size_bytes": 373,
+      "observed_size_bytes": 373,
+      "observed_sha256": "sha256:53615811dc1d1f22b94617262702e9d02d56d5d8a0a180227344c700fcddae60",
+      "result": "exact"
+    },
+    {
+      "role": "verifier_bundle",
+      "sha256": "sha256:c50ff5ef31c218a7cadfd11c4d117f3995338367d4b7ba6c674b16ad9c7df736",
+      "declared_size_bytes": 20480,
+      "observed_size_bytes": 20480,
+      "observed_sha256": "sha256:c50ff5ef31c218a7cadfd11c4d117f3995338367d4b7ba6c674b16ad9c7df736",
+      "result": "exact",
+      "members": ["run.py"]
+    },
+    {
+      "role": "oracle_bundle",
+      "sha256": "sha256:38394f71a2706274960c425b234cb38d45181ebef554e294120241bf8d23d9d6",
+      "declared_size_bytes": 10240,
+      "observed_size_bytes": 10240,
+      "observed_sha256": "sha256:38394f71a2706274960c425b234cb38d45181ebef554e294120241bf8d23d9d6",
+      "result": "exact",
+      "members": ["solve.sh"]
+    }
+  ],
+  "oracle_bundle_inspection": {
+    "result": "blocked",
+    "runtime_source_fetch": "git fetch origin 10d17757e282d8af5426d6df4d55eb394042b550 from github.com",
+    "embedded_source_archive": false,
+    "declared_archive_check": "solve.sh checks ed31469eea243e25ce86310039c174a61890d2acc7586cd06f8be38cf1baf5a1 after the fetch",
+    "network_authorization": "none"
+  },
+  "local_recovery": {
+    "searches": [
+      "current task source, harbor assets, generated projection, and task-local evidence",
+      "private artifact store and cached archives",
+      "retained historical handoffs and generated worktrees"
+    ],
+    "exact_archive_matches": 0,
+    "replacement_proposal": false
+  },
+  "compile": {
+    "toolchain": "toolchain.lock.toml",
+    "allow_private": true,
+    "compile_a_exit_code": 0,
+    "compile_b_exit_code": 0,
+    "repeat_result": "byte-identical",
+    "bundle_manifest_sha256": "sha256:345b4e383e431009105069d046479154baba9fc5f2896f748bdb0896841049a8",
+    "canonical_manifest_digest": "sha256:d10af582920f9baaca55128f4f43e0dad910e7d34cddc8543a7d4ae9ebc34f53",
+    "file_count_including_manifest": 60
+  },
+  "commands": [
+    {
+      "command": "uv run nl2repo task validate-source catalog/sources/pycparser",
+      "exit_code": 0,
+      "result": "passed",
+      "log": "command-log.txt",
+      "log_sha256": "sha256:796181ff9b4cfe7d8a911cb3f685dabcc11067c0e70f7d87a8afc9b80dc06aeb"
+    },
+    {
+      "command": "uv run nl2repo harbor compile catalog/sources/pycparser twice with toolchain.lock.toml and private artifacts",
+      "exit_code": 0,
+      "result": "passed",
+      "log": "command-log.txt",
+      "log_sha256": "sha256:796181ff9b4cfe7d8a911cb3f685dabcc11067c0e70f7d87a8afc9b80dc06aeb"
+    },
+    {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources --strict",
+      "exit_code": 0,
+      "result": "passed",
+      "log": "command-log.txt",
+      "log_sha256": "sha256:796181ff9b4cfe7d8a911cb3f685dabcc11067c0e70f7d87a8afc9b80dc06aeb"
+    },
+    {
+      "command": "bash -n catalog/sources/pycparser/harbor/controls/*.sh",
+      "exit_code": 0,
+      "result": "passed",
+      "log": "command-log.txt",
+      "log_sha256": "sha256:796181ff9b4cfe7d8a911cb3f685dabcc11067c0e70f7d87a8afc9b80dc06aeb"
+    }
+  ],
+  "next_unblock_action": "Provide a trusted local payload whose archive bytes match the frozen revision and archive digest, then recompile twice and run the complete Harbor 0.21.0 NoNetwork Oracle/control matrix.",
+  "source_and_production_state": "task.toml, lifecycle, production-evidence.json, and generated projection were not modified"
+}

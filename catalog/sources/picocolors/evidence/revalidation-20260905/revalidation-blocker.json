@@ -1,0 +1,56 @@
+{
+  "schema_version": "1.0",
+  "task_id": "picocolors",
+  "revalidation_date": "2026-09-07",
+  "terminal_kind": "revalidation-blocked",
+  "source_digest": "sha256:b6b4665662c768d08e6058dce7b5844375ae78315e42712af8424ae086842a24",
+  "source_freeze": {
+    "status": "known",
+    "revision": "0e7c4af2de299dd7bc5916f2bddd151fa2f66740",
+    "archive_sha256": "sha256:9d10d821b37e7b160c5d6447d3683fded0893880a2c4b95213be94903c25bb91",
+    "license_spdx": "ISC"
+  },
+  "prior_lifecycle": "controls-passed",
+  "lifecycle_changed": false,
+  "historical_production_evidence_changed": false,
+  "network_policy": {
+    "agent": "no-network",
+    "candidate": "no-network",
+    "verifier": "no-network",
+    "oracle": "no-network",
+    "controls": "no-network",
+    "allowed_hosts": []
+  },
+  "artifact_checks": {
+    "dependency": {"digest": "sha256:eef6fa7b36e08f74f097d781012580d188aa5a30fb7d6ed125312b7034f62ed7", "size_bytes": 440, "verified": true},
+    "commands": {"digest": "sha256:736fdd52fed919ee18612d5ad6eb9d05d405ed9033bcbdac792763b35a6df740", "size_bytes": 208, "verified": true},
+    "tests": {"digest": "sha256:61a62fd8c61be5be5fad3b764dbdd363cd1d692f1ed1ed971629c8e7bc28fad8", "size_bytes": 3426, "verified": true},
+    "oracle": {"digest": "sha256:a0c93934d6c3f4ae928d478ea79f8e57bf47a3ae09e6f6fc7f8a4f36d129d5d3", "size_bytes": 881, "verified": true}
+  },
+  "failure_class": "artifact-or-verifier",
+  "blocker": "The exact private Oracle bundle is hash-valid but contains only a solve.sh that performs a runtime git fetch from GitHub. Bounded local recovery found no exact source archive matching the frozen archive digest and expected 61440-byte archive size. Running the Oracle or controls would violate the NoNetwork contract.",
+  "compile": {
+    "attempts": 0,
+    "status": "skipped-before-compile",
+    "reason": "No exact offline Oracle source payload was available; compilation cannot produce a runnable compliant Oracle bundle without changing private artifacts."
+  },
+  "commands": [
+    {"command": "uv run nl2repo task validate-source catalog/sources/picocolors", "exit_code": 0, "log": "evidence/revalidation-20260905/source-validation.log"},
+    {"command": "sha256sum declared private CAS artifacts and stat sizes", "exit_code": 0, "log": "evidence/revalidation-20260905/artifact-check.log"},
+    {"command": "bounded local archive and cache recovery search", "exit_code": 0, "log": "evidence/revalidation-20260905/source-recovery.log"},
+    {"command": "tar -tf declared Oracle bundle and inspect solve.sh", "exit_code": 0, "log": "evidence/revalidation-20260905/oracle-inspection.log"}
+  ],
+  "gates": {
+    "source_validation": "passed",
+    "private_artifact_hashes": "passed",
+    "source_recovery": "failed-no-exact-payload",
+    "compile": "not-run",
+    "oracle_no_network": "blocked-before-run",
+    "empty": "not-run",
+    "stub": "not-run",
+    "forgery": "not-run",
+    "offline": "not-run"
+  },
+  "next_step": "Register a local Oracle bundle containing the exact frozen source archive, or provide a replacement private payload whose internal archive verifies to sha256:9d10d821b37e7b160c5d6447d3683fded0893880a2c4b95213be94903c25bb91. Then compile twice and run the complete Harbor 0.21.0 NoNetwork Oracle/control matrix.",
+  "receipt_reuse": false
+}

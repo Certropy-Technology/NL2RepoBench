@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "task_id": "portalocker",
+  "queue_source_digest": "sha256:642174a73d8c1a537186b6e24b4833f49aade86da4bdf6b11c182f93c9ec6ef3",
+  "validated_source_digest": "sha256:642174a73d8c1a537186b6e24b4833f49aade86da4bdf6b11c182f93c9ec6ef3",
+  "toolchain": "toolchain.lock.toml",
+  "harbor_version": "0.21.0",
+  "compile_command": "uv run nl2repo harbor compile catalog/sources/portalocker --output <compile-root> --toolchain toolchain.lock.toml --artifact-root <private-cas> --allow-private",
+  "compile_exit_code": 0,
+  "compile_count": 2,
+  "manifest": {
+    "files": 60,
+    "bytes": 11311,
+    "sha256": "sha256:6e2725c74559cf756f0d1996d9e23275cdaf1116b02c4680151d34c21149eb0b",
+    "canonical_manifest_digest": "sha256:ae70626ba419aaccd2e4d4fdf74c724ca3e7ab8399a9ede714fda427ffa325e0"
+  },
+  "determinism": {
+    "first_manifest_sha256": "sha256:6e2725c74559cf756f0d1996d9e23275cdaf1116b02c4680151d34c21149eb0b",
+    "second_manifest_sha256": "sha256:6e2725c74559cf756f0d1996d9e23275cdaf1116b02c4680151d34c21149eb0b",
+    "tree_comparison": "61 files byte-identical"
+  },
+  "artifact_verification": {
+    "build_lock": {"size_bytes": 1836, "sha256": "sha256:b5252c4cddd7dde66d8dba59f01ec900f162f60a41aabfb80eea124a5494bb91"},
+    "source_archive": {"size_bytes": 1239040, "sha256": "sha256:b38150745012d3fa9086c1df4a4ac6a2c633914796ec8bc5509bd651f1c6ccac"},
+    "verifier_bundle": {"size_bytes": 20480, "sha256": "sha256:f46b7e8df799c60840491fd6f858ed2bb858cd529c81fe342562c2672b4469d9"},
+    "oracle_bundle": {"size_bytes": 1249280, "sha256": "sha256:7408a4a90b3641ab2877f26b58d04d7681c37264ac52b76baf751cfd93c9d1bf"}
+  },
+  "path_hygiene": "persisted evidence uses placeholders; generated private bundle was not copied into source"
+}

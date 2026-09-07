@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "task_id": "parse-npm-tarball-url",
+  "classification": "artifact-or-verifier-blocked",
+  "source_digest": "sha256:0e71a37a937bf3301b0bcb7bda0902ff35d83e71fdf169e0673e4e36e57c7df5",
+  "source_archive": {
+    "digest": "sha256:cd10dd7f52286e08ac646447dab6312bc072f89b5deca56122bb9405f429ccf2",
+    "size_bytes": 51200,
+    "local_proof": "existing generated projection only; not accepted as a new runtime artifact"
+  },
+  "declared_artifacts": [
+    {"role": "npm-dependency", "digest": "sha256:ec634ced2458053d631f3c0700c791678d463198f966e19d4bcd2815808b3057", "size_bytes": 135192, "exact_local_match": false},
+    {"role": "commands", "digest": "sha256:cab621dcaf7260f80d7c66f04c60ed005c26aa2b0a374856ead7c4cd08bf995e", "size_bytes": 236, "exact_local_match": true},
+    {"role": "tests", "digest": "sha256:6c08d505abd0581f533082cba7abb65edac25522abdd09867056cb36c23c8824", "size_bytes": 3430, "exact_local_match": false},
+    {"role": "oracle", "digest": "sha256:3e4f7b8a4624900ad83a82abcdd61f3aab41b7a18188f86a46850f49b8acc4e3", "size_bytes": 13440, "exact_local_match": false}
+  ],
+  "compile_probe": {
+    "command": "uv run nl2repo harbor compile catalog/sources/parse-npm-tarball-url --output <staging-output>/parse-npm-tarball-url --toolchain toolchain.node.lock.toml --artifact-root <private-cas> --allow-private",
+    "exit_code": 1,
+    "failure": "cannot extract private bundle: artifact is missing: sha256:ec634ced2458053d631f3c0700c791678d463198f966e19d4bcd2815808b3057"
+  },
+  "searches": [
+    {"scope": "local CAS", "bounded": true, "result": "no exact matches for missing dependency, tests, or Oracle objects"},
+    {"scope": "historical handoffs and generated projections", "bounded": true, "result": "source/runtime copies exist but are not accepted private CAS replacements"}
+  ],
+  "network": {"mode": "no-network", "external_fetch_attempted": false},
+  "next_step": "Parent must recover and independently register exact private CAS objects, then rerun compile twice and the complete fresh Harbor matrix.",
+  "private_payload_bytes_in_source": false
+}

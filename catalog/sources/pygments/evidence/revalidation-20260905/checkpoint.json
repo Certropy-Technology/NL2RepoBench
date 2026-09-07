@@ -1,0 +1,62 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pygments",
+  "revalidation": "instruction-migration-20260905",
+  "source": {
+    "revision": "38f426a6b1cd4ffc6429f5808031b7c62ea57b1f",
+    "source_digest": "sha256:3020b621c9c647c499fe804a4606c9818a3d318af42ee867d653ae7d145bb53c",
+    "source_archive_size_bytes": 47749120,
+    "queue_source_digest": "sha256:755ccc5a86dcd5f421710e78b7f0b9f7ace42f53d0766a7b2f35a254e1c31ec0"
+  },
+  "private_artifacts": {
+    "dependency_lock": {
+      "size_bytes": 1404,
+      "sha256": "sha256:bd66c9a73352c89928a286f06d124cc815fc6ea504ebb5eba59e96e66aa87a78",
+      "status": "verified in local CAS"
+    },
+    "verifier_bundle": {
+      "size_bytes": 20480,
+      "sha256": "sha256:b3f45578c1d1fe9166fb49cdafbb6123fb980cf1c9efdab8a579cc48ed2b29fb",
+      "status": "verified in local CAS"
+    },
+    "oracle_bundle": {
+      "size_bytes": 47759360,
+      "sha256": "sha256:b9bbce099bb81c8a94abf39f41a04cf6ae6bc22345aa707513a6de9e3b04ce60",
+      "status": "verified in local CAS"
+    }
+  },
+  "compile": {
+    "command": "timeout 1800s uv run nl2repo harbor compile catalog/sources/pygments --output <staging>/compile-a --toolchain toolchain.lock.toml --artifact-root <artifact-root> --allow-private",
+    "exit_code": 0,
+    "manifest_sha256": "sha256:0e03567acd7c95cdc02aba66a84cca3e974964a74ba24961aa62d90114fd39b2",
+    "manifest_files": 60,
+    "second_compile": {
+      "command": "timeout 1800s uv run nl2repo harbor compile catalog/sources/pygments --output <staging>/compile-b --toolchain toolchain.lock.toml --artifact-root <artifact-root> --allow-private",
+      "exit_code": 0,
+      "manifest_sha256": "sha256:0e03567acd7c95cdc02aba66a84cca3e974964a74ba24961aa62d90114fd39b2",
+      "deterministic": true
+    }
+  },
+  "harbor": {
+    "version": "0.21.0",
+    "network_mode": "no-network",
+    "oracle": {"status": "skipped", "reason": "parent checkpoint before fresh run"},
+    "controls": {"status": "skipped", "reason": "parent checkpoint before fresh run"}
+  },
+  "classification": {
+    "status": "revalidation-incomplete",
+    "failure_class": "infrastructure-pending",
+    "reason": "Fresh Harbor Oracle and controls were not started at the parent orchestration checkpoint; this is not a candidate or verifier result.",
+    "failed_set": [],
+    "skipped_set": ["oracle", "empty", "stub", "forgery", "install-hang", "call-hang", "offline"],
+    "next_step": "Parent should run the fresh NoNetwork Oracle and supported controls against the deterministic compiled manifest before promotion."
+  },
+  "scope": {
+    "task_metadata_changed": false,
+    "lifecycle_changed": false,
+    "production_evidence_changed": false,
+    "generated_projection_changed": false,
+    "shared_cas_changed": false,
+    "private_payload_bytes_added": false
+  }
+}

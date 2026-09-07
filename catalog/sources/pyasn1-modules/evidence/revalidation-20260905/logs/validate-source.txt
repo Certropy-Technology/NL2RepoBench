@@ -1,0 +1,5 @@
+command: uv run nl2repo task validate-source catalog/sources/pyasn1-modules
+exit_code: 0
+stdout: task_id=pyasn1-modules status=controls-passed source_digest=sha256:ae6a83037f6d1a52a3ba368fe28b332ef8f910f2232617c3cab683616211b4eb
+queue_source_digest: sha256:ae6a83037f6d1a52a3ba368fe28b332ef8f910f2232617c3cab683616211b4eb
+result: source digest matched the queue entry before mutation; source validation passed.

@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0",
+  "task_id": "p-locate",
+  "source_digest": "sha256:48c3532ceea3ea335638a1875376a184f34ec9f485ccf258795d597cff4dda43",
+  "toolchain": {
+    "toolchain_lock": "toolchain.node.lock.toml",
+    "node": "24.19.0",
+    "npm": "11.17.0",
+    "compiler": "current checkout uv environment",
+    "artifact_root": "<parent-cas>"
+  },
+  "compiles": [
+    {
+      "label": "compile-a",
+      "command": "uv run nl2repo harbor compile catalog/sources/p-locate --output <compile-a> --toolchain toolchain.node.lock.toml --artifact-root <parent-cas> --allow-private",
+      "exit_code": 0,
+      "manifest_file_sha256": "sha256:19b828ed4877a4d541c9d4a5825f911d2aadabce4ec484eb42765802369463be",
+      "canonical_manifest_digest": "sha256:98dfbe98be5e91dc937650a16b89cee03d7127339b83a7345905d186173206c0",
+      "file_count": 91
+    },
+    {
+      "label": "compile-b",
+      "command": "uv run nl2repo harbor compile catalog/sources/p-locate --output <compile-b> --toolchain toolchain.node.lock.toml --artifact-root <parent-cas> --allow-private",
+      "exit_code": 0,
+      "manifest_file_sha256": "sha256:19b828ed4877a4d541c9d4a5825f911d2aadabce4ec484eb42765802369463be",
+      "canonical_manifest_digest": "sha256:98dfbe98be5e91dc937650a16b89cee03d7127339b83a7345905d186173206c0",
+      "file_count": 91
+    }
+  ],
+  "repeat_compile_byte_identical": true,
+  "bundle_review": {
+    "runtime_source_payload_present": false,
+    "oracle_solver_has_runtime_fetch": true,
+    "oracle_fetch_host": "github.com",
+    "agent_network_mode": "no-network",
+    "verifier_network_mode": "no-network",
+    "static_allowed_hosts": [],
+    "private_path_leaks_in_persisted_evidence": false
+  }
+}

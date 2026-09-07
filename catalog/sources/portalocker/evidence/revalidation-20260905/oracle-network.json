@@ -1,0 +1,9 @@
+{
+  "schema_version": "1.0",
+  "task_id": "portalocker",
+  "public_network_available": false,
+  "probes": {"1.1.1.1:443": false, "pypi.org:443": false},
+  "network_sha256": "sha256:0d7ff7bd153b30e54fe95b768b2973755ce6e089ef2ea0c929f27708ff8b6673",
+  "command": "fresh Harbor verifier network receipt from Oracle retry",
+  "network_mode": "no-network"
+}

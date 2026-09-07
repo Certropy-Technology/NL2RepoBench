@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0",
+  "task_id": "own-keys",
+  "classification": "artifact-or-verifier-blocked",
+  "network_policy": {
+    "agent": "no-network",
+    "candidate": "no-network",
+    "verifier": "no-network",
+    "oracle": "no-network",
+    "controls": "no-network",
+    "external_hosts_authorized": []
+  },
+  "source_validation": {
+    "command": "uv run nl2repo task validate-source catalog/sources/own-keys",
+    "exit_code": 0,
+    "source_digest": "sha256:74db786657066c51ec2f86337c38d068bdd7e3886396d131bf7aedc2e0869e5a"
+  },
+  "private_artifacts": [
+    {"name": "dependencies", "size_bytes": 624640, "sha256": "sha256:a2e186ea0ffed689956a34e68a7ac1b08ca886578c24229bcd98334ce37833a9", "exact_cas_match": true},
+    {"name": "commands", "size_bytes": 10240, "sha256": "sha256:10e70a89b271a2cd71d8dbaa6848530c6550ac4d87e65ae87d7332265e5eedd9", "exact_cas_match": true},
+    {"name": "tests", "size_bytes": 20480, "sha256": "sha256:1f298fbd139aa248587902f41595b6c638f60b2ea2bf91977c18d7c7ca6c5ede", "exact_cas_match": true},
+    {"name": "oracle", "size_bytes": 20480, "sha256": "sha256:801c15f25447029d048cd42057e0d4dd465288596759ae99c55f6adf1295e726", "exact_cas_match": true, "source_payload": "runtime-github-fetch-only"}
+  ],
+  "source_recovery": {
+    "required_archive_sha256": "sha256:be351a99690d1692929f1e4c5c08aba84010cee56973f16156716eab5fa0e816",
+    "bounded_search_scopes": ["private CAS", "task-local authoring paths", "historical handoff paths", "named source.tar candidates"],
+    "matching_archive_found": false,
+    "runtime_fetch_detected": true,
+    "runtime_fetch_host": "github.com"
+  },
+  "commands": [
+    {"name": "validate-source", "exit_code": 0, "result": "passed"},
+    {"name": "validate-instruction-quality", "exit_code": 0, "result": "passed"},
+    {"name": "lint-network-source-tree", "exit_code": 0, "result": "passed"},
+    {"name": "parse-task-local-json", "exit_code": 0, "result": "passed"},
+    {"name": "shell-syntax-check", "exit_code": 0, "result": "passed"},
+    {"name": "bounded-source-recovery", "exit_code": 0, "result": "passed-with-no-match"},
+    {"name": "harbor-compile", "result": "skipped", "reason": "exact frozen source payload unavailable offline"},
+    {"name": "harbor-oracle-and-controls", "result": "skipped", "reason": "Oracle solve performs forbidden runtime source fetch"}
+  ],
+  "skipped_gates": ["compile-twice", "oracle", "empty", "stub", "forgery", "call-hang", "offline"],
+  "remediation": "Recover exact frozen source bytes, construct a source-contained private Oracle bundle, register only after parent review, then compile twice and rerun the complete NoNetwork matrix."
+}

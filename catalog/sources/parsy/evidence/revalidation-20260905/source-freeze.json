@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "task_id": "parsy",
+  "source_freeze": {
+    "status": "known",
+    "revision": "03deafa98a17adc27b1f650241701b2d21902b3e",
+    "source_archive_sha256": "sha256:5b3f5d7aa6d5ee31659ce341bc15dee031ca631cc69e1d3ac392b4b03df6f10f",
+    "source_archive_size_bytes": 194560,
+    "queue_source_digest": "sha256:c2e353526f6cba99e086b0cfb8f4707063f261f9e722973ca6fafd22e565f32e",
+    "validate_source_result": "passed"
+  },
+  "instruction_migration": {
+    "instruction_sha256": "sha256:25066d3662ff73695ee3e35321a343000550c5a8206f24dcca603cb1daa722f8",
+    "prior_receipts_current": false
+  },
+  "commands": [
+    {
+      "command": "uv run nl2repo task validate-source catalog/sources/parsy",
+      "exit_code": 0,
+      "summary": "source digest c2e353... and controls-passed descriptor parsed successfully",
+      "log": "catalog/sources/parsy/evidence/revalidation-20260905/source-validate.log"
+    },
+    {
+      "command": "sha256sum generated projection source/parsy-source.tar",
+      "exit_code": 0,
+      "summary": "194560 bytes; sha256 5b3f5d...",
+      "log": "catalog/sources/parsy/evidence/revalidation-20260905/source-archive-hash.log"
+    }
+  ]
+}

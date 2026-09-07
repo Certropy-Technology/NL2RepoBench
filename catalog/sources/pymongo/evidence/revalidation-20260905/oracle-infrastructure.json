@@ -1,0 +1,16 @@
+{
+  "task_id": "pymongo",
+  "stage": "oracle",
+  "classification": "infrastructure",
+  "command": "uv run --frozen --project harbor-runner harbor run -p <compiled-task>/pymongo -a oracle --job-name pymongo-revalidation-20260907-oracle --jobs-dir <ignored-run-root>/oracle --n-concurrent 1 --max-retries 0 --yes",
+  "exit_code": 1,
+  "harbor_version": "0.21.0",
+  "error_type": "EnvironmentStartTimeoutError",
+  "timeout_seconds": 600,
+  "trial_created": true,
+  "candidate_or_verifier_started": false,
+  "collected": null,
+  "next_step": "Retry exactly once in a clean Docker-capable integration environment; then run the full Oracle and supported controls against the same final manifest.",
+  "network_policy": "no-network",
+  "raw_failure_sha256": "sha256:47462509f5b35eaa6a311596502a6b25d8e812dd48e92d43c1c329028ae2e170"
+}

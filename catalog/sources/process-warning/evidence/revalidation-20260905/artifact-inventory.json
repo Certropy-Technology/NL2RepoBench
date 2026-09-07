@@ -1,0 +1,44 @@
+{
+  "schema_version": "1.0",
+  "task_id": "process-warning",
+  "source_digest": "sha256:6ea9bf54d357fb67d7024510e082e37b59fea0516c32f3e0fdabc897fa9344a4",
+  "artifacts": [
+    {
+      "name": "dependency npm bundle",
+      "digest": "sha256:f6d15162f97a0c7bdb5732cb10efa8c3ec7ede7f9dc4fbbdb36a84aa137d02ed",
+      "size_bytes": 10240,
+      "observed_size_bytes": 10240,
+      "observed_sha256": "sha256:f6d15162f97a0c7bdb5732cb10efa8c3ec7ede7f9dc4fbbdb36a84aa137d02ed",
+      "status": "verified",
+      "inventory": ["bundle.manifest.json", "package-lock.json", "npm-cache/"]
+    },
+    {
+      "name": "commands bundle",
+      "digest": "sha256:10e70a89b271a2cd71d8dbaa6848530c6550ac4d87e65ae87d7332265e5eedd9",
+      "size_bytes": 10240,
+      "observed_size_bytes": 10240,
+      "observed_sha256": "sha256:10e70a89b271a2cd71d8dbaa6848530c6550ac4d87e65ae87d7332265e5eedd9",
+      "status": "verified",
+      "inventory": ["command-plan.json"]
+    },
+    {
+      "name": "private test bundle",
+      "digest": "sha256:960f0f62821d0137af020fac1affda83c00cde029d60b570edd732de789de13a",
+      "size_bytes": 30720,
+      "observed_size_bytes": 30720,
+      "observed_sha256": "sha256:960f0f62821d0137af020fac1affda83c00cde029d60b570edd732de789de13a",
+      "status": "verified",
+      "inventory": ["candidate_adapter.txt", "exports.test.mjs", "spy.test.mjs", "test_client.mjs", "validation.test.mjs", "warning.test.mjs"]
+    },
+    {
+      "name": "Oracle bundle",
+      "digest": "sha256:18e6ef212c352477f48f63185c7e796a9c9e6c3bd64c10907e789b88f48c5c0d",
+      "size_bytes": 10240,
+      "observed_size_bytes": 10240,
+      "observed_sha256": "sha256:18e6ef212c352477f48f63185c7e796a9c9e6c3bd64c10907e789b88f48c5c0d",
+      "status": "verified-but-network-incompatible",
+      "inventory": ["solve.sh"],
+      "finding": "solve.sh performs a runtime fetch from github.com; no source archive is embedded. This cannot execute under the required NoNetwork Oracle contract."
+    }
+  ]
+}

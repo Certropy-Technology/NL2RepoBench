@@ -1,0 +1,5 @@
+commands:
+  python3 -m py_compile catalog/tasks/pyasn1-modules/tests/verifier/run.py
+  bash -n catalog/sources/pyasn1-modules/harbor/controls/forgery.sh catalog/sources/pyasn1-modules/harbor/controls/install-hang.sh catalog/sources/pyasn1-modules/harbor/controls/stub.sh catalog/sources/pyasn1-modules/harbor/controls/workspace-invalid.sh
+exit_code: 0
+result: verifier Python and all source control shell scripts passed syntax checks.

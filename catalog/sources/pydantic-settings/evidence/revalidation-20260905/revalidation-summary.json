@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pydantic-settings",
+  "source_digest": "sha256:c6b9cd7a3c56cb8d6cf846819988600671bf5075a2333432e83f09a617d411fa",
+  "terminal_kind": "revalidation-blocked",
+  "classification": "artifact-or-verifier-blocked",
+  "source_authority": {
+    "status": "known",
+    "revision": "d26fc0c3944fe68cf169f86386988bb83e3df2d8",
+    "archive_sha256": "sha256:57b7dab78777c75bcc2c138d561dea097afe3088c0b3e7f1d67481d6b4bbd5aa"
+  },
+  "declared_artifacts": {
+    "dependency_lock": {"size_bytes": 14279, "sha256": "sha256:b350283c9b3a343cc38b05affa57957f035da0794d4c074f3c50a666e2c86c89", "verified": true},
+    "verifier_bundle": {"size_bytes": 20480, "sha256": "sha256:780ebc4eba8b4ff608530dff777a4aca692bcd7ceb6b32fc4f1bdbe81a2b0723", "verified": true},
+    "oracle_bundle": {"size_bytes": 10240, "sha256": "sha256:356386c9450c398697aabed64a487d768914a0db19f9cd14ddf4a4d42acfce4e", "verified": true}
+  },
+  "recovery": {
+    "source_tar_candidates_checked": 96,
+    "matching_source_tar_found": false,
+    "oracle_bundle_contains_source_archive": false,
+    "oracle_runtime_fetch": "github-forbidden"
+  },
+  "compile": {
+    "isolated_artifact_root": {"exit_code": 1, "classification": "artifact", "reason": "declared dependency lock unavailable in isolated worker CAS"},
+    "parent_cas_read_only": {"exit_code": 0, "repeated": 2, "manifest_sha256": "sha256:2fa7ce7204ebcad89270ca1f675a7cce1f2acaa46186b1fcd75bfc850cce7488", "deterministic": true}
+  },
+  "oracle": {"status": "skipped", "reason": "exact offline source payload unavailable; Oracle solve performs forbidden runtime GitHub fetch"},
+  "controls": {"status": "skipped", "reason": "fresh Oracle and complete controls cannot run safely without exact offline source payload"},
+  "network_policy": "no-network",
+  "remediation": "Recover or parent-register an exact source archive for the frozen revision, then recompile twice and rerun fresh Harbor Oracle and all supported controls.",
+  "evidence": "catalog/sources/pydantic-settings/evidence/revalidation-20260905/revalidation-blocker.md"
+}

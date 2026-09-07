@@ -1,0 +1,64 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pg-connection-string",
+  "classification": "artifact/verifier-blocked",
+  "source_freeze": {
+    "status": "known",
+    "revision": "c9e57617bc92c2ded23a75345f50eadc527bd131",
+    "source_digest": "sha256:87330e434dc4d6c02e9f662910d7fcc81af2cc9bbb7bf97d08f72046766c43a6",
+    "queue_source_digest": "sha256:39c80e9befa6ace8ad03305d2b0cb4250fb682123a3167d68d7f296209eeb696",
+    "instruction_sha256": "sha256:9e9796379d21f915a58fecd87f1f8a434ff040c54fcfc5802a159585ec77a92c"
+  },
+  "private_artifacts": [
+    {"name": "dependency_bundle", "sha256": "sha256:d9a865fda79eafc2cd91022d32244e08b1a6ddf6611611b9ad00ad3a15cdfa3b", "size_bytes": 10240, "verified": true},
+    {"name": "commands_bundle", "sha256": "sha256:5ca07406d874a3d3e348787cae63b470bbc72cb51964d7217d1854d2fdcc52b3", "size_bytes": 10240, "verified": true},
+    {"name": "test_bundle", "sha256": "sha256:37547e51cf5d6056c0ce34dac95279fb7cf7a5bb2e746b8dfa3fa1e50a3a31bb", "size_bytes": 10240, "verified": true},
+    {"name": "oracle_bundle", "sha256": "sha256:f220f7aa90d71517283978252d389e5ebf59aee972e5bf0d87d96fe782bd9cf1", "size_bytes": 10240, "verified": true}
+  ],
+  "oracle_payload": {
+    "source_payload_present": false,
+    "runtime_source_fetch": "github.com",
+    "required_source_digest": "sha256:87330e434dc4d6c02e9f662910d7fcc81af2cc9bbb7bf97d08f72046766c43a6",
+    "harbor_run": "not-run",
+    "reason": "The frozen Oracle bundle contains solve.sh only and fetches the source at runtime; no exact local source archive was established before the bounded recovery scan timed out."
+  },
+  "commands": [
+    {
+      "command": "uv run nl2repo task validate-source catalog/sources/pg-connection-string",
+      "timeout_sec": 300,
+      "exit_code": 0,
+      "result": "passed",
+      "summary": "Validated task source and queue-bound canonical source digest."
+    },
+    {
+      "command": "bounded local exact-source hash scan over trusted local stores",
+      "timeout_sec": 1200,
+      "exit_code": null,
+      "result": "timed-out",
+      "summary": "Recovery scan exceeded its bound; no matching source archive was established."
+    },
+    {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources/pg-connection-string --strict",
+      "timeout_sec": 300,
+      "exit_code": 0,
+      "result": "passed",
+      "summary": "No findings for this source; runtime network policy is no-network."
+    },
+    {
+      "command": "uv run --frozen --project harbor-runner harbor --version",
+      "timeout_sec": 300,
+      "exit_code": 0,
+      "result": "passed",
+      "summary": "Harbor version 0.21.0 is available; no Harbor run was started."
+    }
+  ],
+  "skipped": [
+    "double compile",
+    "fresh Oracle",
+    "empty control",
+    "stub control",
+    "forgery control",
+    "offline control"
+  ],
+  "next_step": "Parent should recover and independently verify an exact source archive matching the frozen revision and digest, then register/review the private replacement payload, compile twice, and run the complete fresh NoNetwork matrix. Do not reuse historical receipts."
+}

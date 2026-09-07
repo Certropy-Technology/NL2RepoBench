@@ -1,0 +1,53 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pendulum",
+  "revalidation": "instruction-migration-20260905",
+  "network_policy": "no-network",
+  "source": {
+    "revision": "0d71391ab2b617b2e86d15c926e6cde9fddc5676",
+    "required_archive_sha256": "sha256:bcc6303eabd924e272cde41cf251ef7c0a383594a67633bfd2005f8c2f777404",
+    "local_exact_archive_found": false,
+    "search_scope": [
+      "trusted integration CAS",
+      "local authoring handoffs",
+      "historical worktree archives",
+      "bounded local source.tar and tarball candidates"
+    ]
+  },
+  "declared_artifacts": [
+    {
+      "kind": "dependency-lock",
+      "sha256": "sha256:7afac5fbe68110febfc05c402083d755a77e746ea57559ed4b4f6a2439cf501c",
+      "size_bytes": 7381,
+      "cas_relpath": ".nl2repo/artifacts/private/sha256/7a/7afac5fbe68110febfc05c402083d755a77e746ea57559ed4b4f6a2439cf501c",
+      "size_matches": true,
+      "sha256_matches": true
+    },
+    {
+      "kind": "verifier-bundle",
+      "sha256": "sha256:cb9db3f7cf82dede3b55aa438e9a0041b69c6995bb43ce2a806f7105ab631ee0",
+      "size_bytes": 20480,
+      "cas_relpath": ".nl2repo/artifacts/private/sha256/cb/cb9db3f7cf82dede3b55aa438e9a0041b69c6995bb43ce2a806f7105ab631ee0",
+      "size_matches": true,
+      "sha256_matches": true,
+      "inventory": ["run.py"]
+    },
+    {
+      "kind": "oracle-bundle",
+      "sha256": "sha256:273ff529e80de67ab61fd28d5c2607b913b019ab64853c6c3918b3f9942115ea",
+      "size_bytes": 491520,
+      "cas_relpath": ".nl2repo/artifacts/private/sha256/27/273ff529e80de67ab61fd28d5c2607b913b019ab64853c6c3918b3f9942115ea",
+      "size_matches": true,
+      "sha256_matches": true,
+      "inventory": ["solve.sh", "pyproject.toml", "_pendulum.cpython-312-x86_64-linux-gnu.so"],
+      "source_payload_present": false,
+      "runtime_source_fetch_present": true
+    }
+  ],
+  "prior_receipts": {
+    "available": true,
+    "current_for_migrated_instruction": false,
+    "reused": false,
+    "prior_bundle_manifest_sha256": "sha256:73d1cf62d8faa33aab232cb174abace6c36f8b543267d3e78233c09a298c7f59"
+  }
+}

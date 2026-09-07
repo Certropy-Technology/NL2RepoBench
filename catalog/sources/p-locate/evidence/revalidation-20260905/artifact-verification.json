@@ -1,0 +1,68 @@
+{
+  "schema_version": "1.0",
+  "task_id": "p-locate",
+  "source_digest": "sha256:48c3532ceea3ea335638a1875376a184f34ec9f485ccf258795d597cff4dda43",
+  "frozen_revision": "b9ccdaaa83f8d2f53f8acf8ff3c97b7aa21f655b",
+  "frozen_source_archive": {
+    "sha256": "sha256:7c1a4f05591c63b2ef538dfb24df894a3ff3d2de56622a85b7787d54e3e0299b",
+    "size_bytes": 30720,
+    "recovery_status": "not-found"
+  },
+  "declared_private_artifacts": [
+    {
+      "name": "dependencies",
+      "sha256": "sha256:6a0913d75bb8ab3708466dceb83046fa8244cfd279591a09183f991a068ccc9f",
+      "size_bytes": 133120,
+      "cas_path": "<parent-cas>/private/sha256/6a/6a0913d75bb8ab3708466dceb83046fa8244cfd279591a09183f991a068ccc9f",
+      "verified": true,
+      "contents": ["package-lock.json", "npm-cache/", "manifest"]
+    },
+    {
+      "name": "commands",
+      "sha256": "sha256:10e70a89b271a2cd71d8dbaa6848530c6550ac4d87e65ae87d7332265e5eedd9",
+      "size_bytes": 10240,
+      "cas_path": "<parent-cas>/private/sha256/10/10e70a89b271a2cd71d8dbaa6848530c6550ac4d87e65ae87d7332265e5eedd9",
+      "verified": true,
+      "contents": ["command-plan.json"]
+    },
+    {
+      "name": "tests",
+      "sha256": "sha256:6a2b2aedd4529bd2e6dd0f4d1a4cb641b617ee118306fe88e67ce80e851fb424",
+      "size_bytes": 30720,
+      "cas_path": "<parent-cas>/private/sha256/6a/6a2b2aedd4529bd2e6dd0f4d1a4cb641b617ee118306fe88e67ce80e851fb424",
+      "verified": true,
+      "contents": ["candidate_adapter.txt", "contract.test.mjs", "test_client.mjs"]
+    },
+    {
+      "name": "oracle",
+      "sha256": "sha256:4af6763bc0c4901a9f0a4b3d7b5f9f6d0cfe555d4f5e24a9de1e74d67acd9cf9",
+      "size_bytes": 10240,
+      "cas_path": "<parent-cas>/private/sha256/4a/4af6763bc0c4901a9f0a4b3d7b5f9f6d0cfe555d4f5e24a9de1e74d67acd9cf9",
+      "verified": true,
+      "contents": ["package-lock.json", "solve.sh"],
+      "runtime_source_fetch": "https://github.com/sindresorhus/p-locate.git"
+    }
+  ],
+  "recovery_scans": [
+    {
+      "command": "find <authoring-roots> <runs> <cas> <cache-roots> -type f -name 'source.tar*' -o -name '*.tar*' | hash and size check against frozen source archive",
+      "result": "passed-no-match",
+      "exit_code": 0,
+      "matching_payload_found": false
+    },
+    {
+      "command": "find <parent-cas> -type f -size 30720c | sha256sum | compare to frozen source archive digest",
+      "result": "passed-no-match",
+      "exit_code": 0,
+      "matching_payload_found": false
+    },
+    {
+      "command": "find <historical-handoffs> -iname '*p-locate*'",
+      "result": "passed-no-match",
+      "exit_code": 0,
+      "matching_payload_found": false
+    }
+  ],
+  "source_and_artifact_authority": "known",
+  "replacement_proposal": null
+}

@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pyasn1-modules",
+  "source_revision": "02f9c577bcd0ad9fedfb0fd5dc598d323f7984bf",
+  "source_archive": {
+    "sha256": "sha256:5f7359441c2f6c58f1ee04134963b6b4c333ed62e45fdd4cacbdad4f6225a967",
+    "size_bytes": 1648640,
+    "present": false,
+    "searched_roots": ["local CAS", "generated projections", "historical handoffs", "archives", "caches"]
+  },
+  "declared_artifacts": [
+    {"name": "lock_artifact", "sha256": "sha256:e3bc914b0a408ea00c822e5126c3e9837a3818dcf2b332a79232d15ba873999c", "size_bytes": 621, "exact_match": true},
+    {"name": "verifier_bundle", "sha256": "sha256:caee125238398681f17b477a62177b38fd7420d4fecf5c0f493d35892a1f7a61", "size_bytes": 788480, "exact_match": true},
+    {"name": "oracle_bundle", "sha256": "sha256:0967006a713d6a099c856c96a65f156779d7712c5914ef30bf4b7b29de8ddc7f", "size_bytes": 10240, "exact_match": true}
+  ],
+  "oracle_payload": {
+    "inventory": ["solve.sh"],
+    "source_archive_present": false,
+    "runtime_source_fetch": "git fetch https://github.com/pyasn1/pyasn1-modules.git 02f9c577bcd0ad9fedfb0fd5dc598d323f7984bf",
+    "runtime_network_allowed": false
+  },
+  "log": "catalog/sources/pyasn1-modules/evidence/revalidation-20260905/logs/payload-search.txt"
+}

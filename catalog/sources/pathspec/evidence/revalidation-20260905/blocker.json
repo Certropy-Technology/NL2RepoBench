@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pathspec",
+  "classification": "artifact-or-verifier-blocked",
+  "source_revision": "df3de4595df6e8a1cfa5782b01926b4fe461a864",
+  "source_digest": "sha256:a6c1a6d96b87a304adaed119ff273dd0fbe047a846ad0d333cbb1593a3c47b35",
+  "source_archive_digest": "sha256:0d8c72748d26926b3b0e7a3a983dd3135e9ad4b462388408a1bafc936a0236d9",
+  "frozen_total": 43,
+  "network_policy": "no-network",
+  "artifacts": [
+    {"role": "dependency-lock", "digest": "sha256:b3d7456ecf8cd481ce5ea8a7e28ad58078a134e6dd51c1a69e1cf6d6074f7d0e", "size_bytes": 442, "status": "missing"},
+    {"role": "verifier-bundle", "digest": "sha256:91cbef328f5dd0e20215ae547e6f0878e349ac4f0b3276edf01ebcce4b2e024a", "size_bytes": 20480, "status": "missing"},
+    {"role": "oracle-bundle", "digest": "sha256:41cd24eb1bcc83c0f964b4617e7269d2e6d978f02f8e8fe6a195956a58dc4807", "size_bytes": 10240, "status": "missing"}
+  ],
+  "commands": [
+    {"command": "uv run nl2repo task validate-source catalog/sources/pathspec", "exit_code": 0, "result": "passed"},
+    {"command": "canonical CAS existence checks for declared artifacts", "exit_code": 1, "result": "failed", "summary": "all three declared private artifacts missing"},
+    {"command": "git diff --check", "exit_code": 0, "result": "passed"}
+  ],
+  "skipped": ["compile-final-manifest", "oracle-no-network", "empty-control", "stub-control", "forgery-control", "install-hang-control", "call-hang-control", "offline-control", "fresh-collection-reward"],
+  "next_step": "Restore exact CAS objects and a local digest-verified source payload, compile twice, then run the complete Harbor 0.21.0 NoNetwork matrix.",
+  "production_evidence_changed": false,
+  "projection_changed": false
+}

@@ -1,0 +1,41 @@
+task: pycparser
+revalidation: instruction-migration-20260905
+network: no-network; no host authorization
+
+command: uv run nl2repo task validate-source catalog/sources/pycparser
+exit_code: 0
+result: passed
+source_digest: sha256:ce5e4d779eb9d885d6d4617a6b949c390147efbba708dc239d96e984cd716adf
+
+command: uv run nl2repo harbor compile catalog/sources/pycparser --output compile-a --toolchain toolchain.lock.toml --artifact-root private-artifacts --allow-private
+exit_code: 0
+result: passed
+bundle_manifest_sha256: sha256:345b4e383e431009105069d046479154baba9fc5f2896f748bdb0896841049a8
+
+command: uv run nl2repo harbor compile catalog/sources/pycparser --output compile-b --toolchain toolchain.lock.toml --artifact-root private-artifacts --allow-private
+exit_code: 0
+result: passed
+bundle_manifest_sha256: sha256:345b4e383e431009105069d046479154baba9fc5f2896f748bdb0896841049a8
+
+command: cmp compile-a/pycparser/bundle.manifest.json compile-b/pycparser/bundle.manifest.json
+exit_code: 0
+result: passed; byte-identical
+
+command: uv run nl2repo task lint-network --tasks-root catalog/sources --strict
+exit_code: 0
+result: passed; no task error
+
+command: bash -n catalog/sources/pycparser/harbor/controls/*.sh
+exit_code: 0
+result: passed
+
+command: bounded local exact-archive recovery search
+exit_code: 0
+result: no matching 1,331,200-byte archive found
+
+command: inspect exact Oracle bundle
+exit_code: 0
+result: blocked; solve.sh performs runtime git fetch from github.com and embeds no source archive
+
+skipped: Harbor 0.21.0 Oracle, empty, stub, forgery, offline, install-hang, and call-hang runs
+skip_reason: required exact source payload is unavailable under NoNetwork

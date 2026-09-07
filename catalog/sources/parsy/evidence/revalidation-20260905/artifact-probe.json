@@ -1,0 +1,46 @@
+{
+  "schema_version": "1.0",
+  "task_id": "parsy",
+  "purpose": "instruction-migration revalidation artifact closure probe",
+  "network_policy": "no-network",
+  "queue_source_digest": "sha256:c2e353526f6cba99e086b0cfb8f4707063f261f9e722973ca6fafd22e565f32e",
+  "declared_artifacts": [
+    {
+      "name": "dependency-lock",
+      "digest": "sha256:5d35f14e65efab521aaea8470ab259e5463e97c8eedeba785ecbbbcc591fed36",
+      "expected_size_bytes": 707,
+      "local_status": "verified",
+      "observed_size_bytes": 707,
+      "observed_sha256": "sha256:5d35f14e65efab521aaea8470ab259e5463e97c8eedeba785ecbbbcc591fed36",
+      "search_scope": "authorized local CAS"
+    },
+    {
+      "name": "verifier-bundle",
+      "digest": "sha256:d9adcae4345746eb166cc0e367d22580f6587a1f42b471205d6f5f27113a897c",
+      "expected_size_bytes": 61440,
+      "local_status": "missing",
+      "search_scope": "authorized local CAS, generated projection, historical handoff and archive paths"
+    },
+    {
+      "name": "oracle-bundle",
+      "digest": "sha256:9daf44390c7aa813a4461b056d0f98f066bc5fe1fcf7eb7aaeda4850b09a53bc",
+      "expected_size_bytes": 204800,
+      "local_status": "missing",
+      "search_scope": "authorized local CAS, generated projection, historical handoff and archive paths"
+    }
+  ],
+  "source_archive": {
+    "source_digest_declared_in_task": "sha256:5b3f5d7aa6d5ee31659ce341bc15dee031ca631cc69e1d3ac392b4b03df6f10f",
+    "observed_size_bytes": 194560,
+    "observed_sha256": "sha256:5b3f5d7aa6d5ee31659ce341bc15dee031ca631cc69e1d3ac392b4b03df6f10f",
+    "status": "verified from generated projection"
+  },
+  "compile": {
+    "attempted": true,
+    "exit_code": 1,
+    "failure_class": "artifact",
+    "log": "catalog/sources/parsy/evidence/revalidation-20260905/compile-attempt.log"
+  },
+  "decision": "blocked",
+  "next_step": "Parent must recover and independently hash-register the exact verifier and Oracle bundles before compiling or running any Harbor gate."
+}

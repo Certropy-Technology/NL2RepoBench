@@ -1,0 +1,11 @@
+{
+  "task_id": "pymongo",
+  "stage": "compile",
+  "command": "uv run nl2repo harbor compile catalog/sources/pymongo --output <WORKTREE>/.nl2repo/pymongo-compile-a --toolchain toolchain.lock.toml --artifact-root <ARTIFACT_ROOT> --allow-private",
+  "exit_code": 0,
+  "file_count": 62,
+  "bundle_manifest_sha256": "sha256:2e177f617806120aea2e46305b41f2417e2b6c6b884e82b7cbd12e48c6214b3a",
+  "canonical_manifest_digest": "sha256:1bde54e754e30a032cf1b96c9d9d93cd5e91e90ac734813516debf818b5f3d8e",
+  "toolchain_lock": "toolchain.lock.toml",
+  "network_policy": "no-network"
+}

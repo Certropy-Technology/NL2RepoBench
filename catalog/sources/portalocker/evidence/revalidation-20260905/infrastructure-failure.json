@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "task_id": "portalocker",
+  "classification": "infrastructure",
+  "stage": "first-fresh-oracle-attempt",
+  "command": "uv run --frozen --project harbor-runner harbor run -p <compiled-bundle> -a oracle --job-name portalocker-revalidation-oracle-20260907 -o <run-root> --n-concurrent 1 --max-retries 0 --yes",
+  "exit_code": 1,
+  "exception": "EnvironmentStartTimeoutError",
+  "reason": "Docker compose build exceeded Harbor's 600 second environment-start timeout; no trial or verifier result was produced.",
+  "raw_receipt": "<run-root>/oracle/<trial>/exception.txt",
+  "remediated": true,
+  "remediation": "One bounded retry completed the Oracle at 32/32 with reward 1.0."
+}

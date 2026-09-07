@@ -1,0 +1,4 @@
+command: uv run nl2repo task lint-network --tasks-root catalog/sources
+exit_code: 0
+scope: repository scan; pyasn1-modules produced no finding
+result: no task network error; existing repository warnings are outside this task.

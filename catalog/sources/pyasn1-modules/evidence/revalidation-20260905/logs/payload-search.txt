@@ -1,0 +1,5 @@
+commands:
+  exact CAS artifact probe for lock, verifier, and oracle digests
+  bounded search of local authoring worktrees, generated projections, archives, and caches for a 1648640-byte file with the frozen source digest
+exit_code: 0
+result: declared lock, verifier, and oracle CAS objects matched exact size and SHA-256; no file matching source archive size and SHA-256 was found in the searched local roots. The only Oracle payload is solve.sh, which performs a runtime GitHub fetch.

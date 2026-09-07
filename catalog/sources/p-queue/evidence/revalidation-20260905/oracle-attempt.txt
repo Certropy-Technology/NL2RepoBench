@@ -1,0 +1,15 @@
+command=uv run --frozen --project harbor-runner harbor run -p <compiled-p-queue> -a oracle --job-name p-queue-revalidation-oracle-20260907 -o <oracle-run-root> --n-concurrent 1 --max-retries 0 --yes
+harbor_version=0.21.0
+started_at=2026-09-07T09:54:58Z
+finished_at=2026-09-07T10:05:47Z
+exit_code=1
+trials_requested=1
+trials_completed=0
+trials_errored=1
+retries=0
+exception=EnvironmentStartTimeoutError
+classification=infrastructure
+oracle_score=not-produced
+controls=skipped-oracle-infrastructure-failure
+network_mode=no-network
+authorized_hosts=[]

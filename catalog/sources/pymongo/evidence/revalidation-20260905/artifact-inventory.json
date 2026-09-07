@@ -1,0 +1,16 @@
+{
+  "task_id": "pymongo",
+  "source_revision": "ebc4bffcc842464e48a3edbd04802d1a42bc818a",
+  "source_archive": {
+    "gzip_size_bytes": 2747294,
+    "gzip_sha256": "sha256:d21660869013cb919af14dfa74e5718a131db2b726dbd71cee29ca8129c8a613",
+    "uncompressed_sha256": "sha256:933f254602e0ec43f463d7a9648f46623c86ba4fd81d9c8703bbe444d13aa068",
+    "embedded_in_oracle_bundle": true
+  },
+  "private_artifacts": [
+    {"kind": "oracle_bundle", "size_bytes": 2754560, "sha256": "sha256:48d2487254b66694094bb15ad511f7cd891881fd9ea7463d2fd372accc2e2257"},
+    {"kind": "verifier_bundle", "size_bytes": 40960, "sha256": "sha256:b8ddcdc6fd2749808e0cb26bbb4ec523844c2b9d938ed60ccf1a739555c269cc"},
+    {"kind": "dependency_lock", "size_bytes": 1893, "sha256": "sha256:d5bada113ff462970d1fb42e3d6ad3fa6628fcddeed7afae554871a9c271aa45"}
+  ],
+  "verification": "All declared CAS bytes matched exact declared sizes and SHA-256 values; no replacement bundle proposed."
+}

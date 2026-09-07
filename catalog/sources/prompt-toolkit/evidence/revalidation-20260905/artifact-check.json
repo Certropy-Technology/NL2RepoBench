@@ -1,0 +1,63 @@
+{
+  "schema_version": "1.0",
+  "task_id": "prompt-toolkit",
+  "classification": "artifact-or-verifier-blocked",
+  "source_freeze": {
+    "revision": "583b3412c792a5cc9f01adde603679f3824a88f3",
+    "source_digest": "sha256:b9dda9618cc8482f22128b28e60b095bb7eb95926e1c17276da2d4eeccc8feb0",
+    "source_archive_size_bytes": 6031360,
+    "license_spdx": "BSD-3-Clause"
+  },
+  "declared_artifacts": {
+    "lock_artifact": {
+      "size_bytes": 375,
+      "sha256": "sha256:87346076fd5fc526db637b9d8703d331aff682e87c9c0a9534f5f171701526d8",
+      "local_check": "passed"
+    },
+    "verifier_bundle": {
+      "size_bytes": 30720,
+      "sha256": "sha256:0a5f03d89b626de5be9bfdb507d3d1f2a2ae7ffafdb9655d1de3f9205c5bf5da",
+      "local_check": "not-found-in-authorized-cas"
+    },
+    "oracle_bundle": {
+      "size_bytes": 6031360,
+      "sha256": "sha256:863d30b08209c483f729cd0517fcfe7a074c3606266d3378d4d4d3d4ae3bc1d5",
+      "local_check": "not-found-in-authorized-cas"
+    }
+  },
+  "commands": [
+    {
+      "command": "uv run nl2repo task validate-source catalog/sources/prompt-toolkit",
+      "exit_code": 0,
+      "result": "passed",
+      "log": "inline: source digest 892e5b4686bcf8560f379fb2345e435d1157f6ca9d4b06d8cda6e658f12ae98b"
+    },
+    {
+      "command": "uv run --frozen --project harbor-runner harbor --version",
+      "exit_code": 0,
+      "result": "passed",
+      "log": "inline: 0.21.0"
+    },
+    {
+      "command": "bounded local artifact recovery and exact size/hash checks",
+      "exit_code": 124,
+      "result": "timed-out",
+      "log": "inline: bounded recovery exceeded 1200 seconds; no artifact acceptance made"
+    },
+    {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources --strict",
+      "exit_code": 1,
+      "result": "failed",
+      "log": "inline: repository-wide pre-existing warnings; no prompt-toolkit task error was reported"
+    },
+    {
+      "command": "git diff --check",
+      "exit_code": 0,
+      "result": "passed",
+      "log": "inline: clean"
+    }
+  ],
+  "network_policy": "no-network",
+  "oracle_and_controls": "skipped",
+  "remediation": "Parent must recover and independently verify the exact verifier and Oracle artifacts, or register a separately reviewed replacement bundle; then compile twice and run a fresh full matrix under no-network."
+}

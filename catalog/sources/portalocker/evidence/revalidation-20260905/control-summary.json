@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0",
+  "task_id": "portalocker",
+  "network_mode": "no-network",
+  "controls": {
+    "empty": {
+      "valid": true,
+      "expected_total": 32,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading_sha256": "sha256:30351f6b00d9689bcf82558d2718c58f89d4da8201f84841e167c82dd271aac4",
+      "network_sha256": "sha256:bd66b8ce81d353aa6a4326c07068b651af5f1418beaa581e6a6f631fb3a301c5"
+    },
+    "stub": {
+      "valid": true,
+      "expected_total": 32,
+      "collected": 32,
+      "passed": 0,
+      "failed": 32,
+      "reward": 0.0,
+      "grading_sha256": "sha256:c1639259700cb9ee085bbb5ae66b5921deb61198e2efcbffc68f04eec84211f2",
+      "network_sha256": "sha256:17326aa90d74939edefdb672e8184073e368de9770da2912fbc5ca51b8c5ac55"
+    },
+    "forgery": {
+      "valid": true,
+      "expected_total": 32,
+      "collected": 32,
+      "passed": 0,
+      "failed": 32,
+      "reward": 0.0,
+      "verifier_owned_reward": true,
+      "workspace_forged_reward": 1.0,
+      "grading_sha256": "sha256:c1639259700cb9ee085bbb5ae66b5921deb61198e2efcbffc68f04eec84211f2",
+      "network_sha256": "sha256:13cec582eb5e674b55ab96902f96ad7f3b59243cb8d77a70510d1aa6766ecff4"
+    },
+    "offline": {
+      "covered_by": "fresh Oracle verifier network receipt",
+      "public_network_available": false,
+      "standalone_prepare_control": "unsupported by Harbor CLI for this Python task"
+    }
+  },
+  "control_commands": [
+    "uv run nl2repo harbor prepare-control <compiled-bundle> empty|stub|forgery --output <control-root> --toolchain toolchain.lock.toml",
+    "uv run --frozen --project harbor-runner harbor run -p <control-bundle> -a oracle --job-name <control-name> -o <run-root> --n-concurrent 1 --max-retries 0 --yes"
+  ]
+}

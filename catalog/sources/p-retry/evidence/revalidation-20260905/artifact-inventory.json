@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0",
+  "task_id": "p-retry",
+  "source_digest": "sha256:74d4571907395aa0a316f47a888a4b200b2570802e527ef4bb84ed91b5022856",
+  "instruction_sha256": "sha256:ba56f7a66e124179ca376ab514e8d2b17a1bc5c5e9be81af338964ad9923de1a",
+  "frozen_source": {
+    "revision": "35681f6c70f8ca2bdcb9542281147679184269fa",
+    "archive_sha256": "sha256:3eabac5b48586a9a65714ad4cc4685a03705e3adcf3ee57d7ce9dabf5beb8278",
+    "archive_size_bytes": 81920,
+    "license_sha256": "sha256:5c932d88256b4ab958f64a856fa48e8bd1f55bc1d96b8149c65689e0c61789d3"
+  },
+  "private_artifacts_verified": [
+    {
+      "name": "npm-bundle",
+      "digest": "sha256:552dfd83b70da41fee2e353cf875ac2b68cd626147cccc3b474f1eb548d77b38",
+      "size_bytes": 40960,
+      "observed_size_bytes": 40960,
+      "observed_sha256": "sha256:552dfd83b70da41fee2e353cf875ac2b68cd626147cccc3b474f1eb548d77b38"
+    },
+    {
+      "name": "commands",
+      "digest": "sha256:b7f8d878325175682d4a97815c9367729cdb81810a43f09b37a8fa5e51b53a52",
+      "size_bytes": 10240,
+      "observed_size_bytes": 10240,
+      "observed_sha256": "sha256:b7f8d878325175682d4a97815c9367729cdb81810a43f09b37a8fa5e51b53a52"
+    },
+    {
+      "name": "tests",
+      "digest": "sha256:522f519655473a3befee3d928b5af42597e716436427f15f8f9fcfea0a12f25b",
+      "size_bytes": 30720,
+      "observed_size_bytes": 30720,
+      "observed_sha256": "sha256:522f519655473a3befee3d928b5af42597e716436427f15f8f9fcfea0a12f25b"
+    },
+    {
+      "name": "oracle",
+      "digest": "sha256:32ae88d9e49922c22544bd9c046d31bf4705afe2f4efbb85fb94536b041579a0",
+      "size_bytes": 10240,
+      "observed_size_bytes": 10240,
+      "observed_sha256": "sha256:32ae88d9e49922c22544bd9c046d31bf4705afe2f4efbb85fb94536b041579a0"
+    }
+  ],
+  "source_recovery_scan": {
+    "roots": ["trusted-local-CAS", "historical-handoffs", "generated-projections", "task-source"],
+    "candidate_files_scanned": 47217,
+    "size_81920_candidates": 7,
+    "exact_archive_matches": 0,
+    "result": "no exact frozen source archive recovered"
+  },
+  "oracle_payload": {
+    "revision_asserted": "35681f6c70f8ca2bdcb9542281147679184269fa",
+    "source_acquisition": "runtime git fetch from github.com",
+    "archive_digest_assertion": "sha256:3eabac5b48586a9a65714ad4cc4685a03705e3adcf3ee57d7ce9dabf5beb8278",
+    "no_network_compatible": false
+  }
+}

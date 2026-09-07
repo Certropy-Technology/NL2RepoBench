@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.0",
+  "task_id": "p-retry",
+  "commands": [
+    {
+      "command": "python3 queue lookup for p-retry; uv run nl2repo task validate-source catalog/sources/p-retry",
+      "exit_code": 0,
+      "result": "passed",
+      "output": "queue source_digest matched validated source_digest sha256:74d4571907395aa0a316f47a888a4b200b2570802e527ef4bb84ed91b5022856; status controls-passed"
+    },
+    {
+      "command": "sha256sum and stat over trusted local CAS declarations",
+      "exit_code": 0,
+      "result": "passed",
+      "output": "npm 40960, commands 10240, tests 30720, oracle 10240; all four SHA-256 values matched"
+    },
+    {
+      "command": "bounded exact source recovery scan over trusted-local-CAS, historical-handoffs, generated-projections, and task-source",
+      "exit_code": 0,
+      "result": "passed",
+      "output": "47217 files scanned; 7 files at 81920 bytes; 0 exact archive digest matches"
+    },
+    {
+      "command": "inspect trusted Oracle solve.sh and policy declarations",
+      "exit_code": 0,
+      "result": "passed",
+      "output": "Oracle fetches exact revision from github.com at runtime; source fetch is forbidden for this NoNetwork revalidation"
+    },
+    {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "exit_code": 0,
+      "result": "passed",
+      "output": "p-retry did not appear in lint findings; full catalog reported 198 pre-existing warnings"
+    },
+    {
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources --strict",
+      "exit_code": 1,
+      "result": "failed",
+      "output": "strict mode rejects 198 catalog-wide warnings; no p-retry finding was reported"
+    },
+    {
+      "command": "python3 -m json.tool catalog/sources/p-retry/evidence/revalidation-20260905/artifact-inventory.json catalog/sources/p-retry/evidence/revalidation-20260905/commands.json; git diff --check",
+      "exit_code": 0,
+      "result": "passed",
+      "output": "validated after evidence write"
+    }
+  ],
+  "skipped_gates": [
+    "compile-twice",
+    "oracle-no-network",
+    "empty-control",
+    "stub-control",
+    "forgery-control",
+    "install-script-control",
+    "loader-hook-control",
+    "timeout-control",
+    "offline-control"
+  ]
+}

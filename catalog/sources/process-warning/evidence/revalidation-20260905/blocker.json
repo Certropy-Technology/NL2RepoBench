@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0",
+  "task_id": "process-warning",
+  "revalidation_date": "2026-09-07",
+  "source_digest": "sha256:6ea9bf54d357fb67d7024510e082e37b59fea0516c32f3e0fdabc897fa9344a4",
+  "instruction_source_digest": "sha256:c24892c75fc0d6f4c76fee19eb7b71eab4146012a6462c39e9de7f5b09124a21",
+  "prior_lifecycle": "controls-passed",
+  "lifecycle_changed": false,
+  "historical_production_evidence_changed": false,
+  "classification": "artifact-or-verifier-blocked",
+  "failure_class": "artifact-or-verifier",
+  "source_freeze": {
+    "status": "known",
+    "revision": "d55637b341e21fef9dc7222590b36b14d030a839",
+    "source_archive_sha256": "sha256:6ea9bf54d357fb67d7024510e082e37b59fea0516c32f3e0fdabc897fa9344a4",
+    "license_spdx": "MIT"
+  },
+  "frozen_total": 24,
+  "attempted_commands": [
+    {"command": "uv run nl2repo task validate-source catalog/sources/process-warning", "exit_code": 0, "result": "passed before mutation and after mutation"},
+    {"command": "verify declared private artifacts by exact size and SHA-256", "exit_code": 0, "result": "all four declared artifacts matched size and digest"},
+    {"command": "bounded local search for exact source archive matching the frozen digest", "exit_code": 1, "result": "no matching source archive"},
+    {"command": "bounded generated-projection and historical-handoff search for process-warning source payload", "exit_code": 0, "result": "metadata and stale projections found; no exact source archive"}
+  ],
+  "commands_log": "catalog/sources/process-warning/evidence/revalidation-20260905/commands.log",
+  "commands_log_sha256": "sha256:98aceff2e2114010b923e611fe1869be8ca886657dd1a71e9abb3bd29686982d",
+  "artifact_inventory": "catalog/sources/process-warning/evidence/revalidation-20260905/artifact-inventory.json",
+  "oracle": {"status": "skipped", "reason": "Oracle solve.sh fetches github.com at runtime and embeds no source archive."},
+  "controls": {"status": "skipped", "reason": "No current compiled bundle exists; controls cannot establish a fresh denominator without first solving the source/artifact blocker.", "skipped": ["empty", "stub", "forgery", "offline", "call-hang", "hang", "install-hang", "install-script", "loader-hook"]},
+  "next_step": "Parent must obtain or register an exact archive for revision d55637b341e21fef9dc7222590b36b14d030a839 with the declared digest, replace the runtime-fetching Oracle payload, compile twice under the locked Node toolchain, and run a complete fresh NoNetwork matrix.",
+  "historical_receipts_reused": false,
+  "production_evidence_changed": false,
+  "projection_changed": false
+}

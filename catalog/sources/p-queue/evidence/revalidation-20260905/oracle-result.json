@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0",
+  "task_id": "p-queue",
+  "stage": "oracle-no-network",
+  "classification": "infrastructure",
+  "command": "uv run --frozen --project harbor-runner harbor run -p <compiled-p-queue> -a oracle --job-name p-queue-revalidation-oracle-20260907 -o <oracle-run-root> --n-concurrent 1 --max-retries 0 --yes",
+  "exit_code": 1,
+  "started_at": "2026-09-07T09:54:58Z",
+  "finished_at": "2026-09-07T10:05:47Z",
+  "harbor_version": "0.21.0",
+  "exception": "EnvironmentStartTimeoutError",
+  "trials": {"requested": 1, "completed": 0, "errored": 1, "retries": 0},
+  "frozen_total": 46,
+  "passed": null,
+  "failed": null,
+  "collected": null,
+  "reward": null,
+  "valid": null,
+  "network": {"mode": "no-network", "public_network_available": null, "probes": []},
+  "failure_log": "catalog/sources/p-queue/evidence/revalidation-20260905/oracle-attempt.txt",
+  "failure_log_sha256": "sha256:10509ca667a6eacf0df7bb953bdbbcdcfb93589d6c0241d49ee611075de8b6e6",
+  "controls": {
+    "empty": "skipped-oracle-infrastructure-failure",
+    "stub": "skipped-oracle-infrastructure-failure",
+    "forgery": "skipped-oracle-infrastructure-failure",
+    "install-script": "skipped-oracle-infrastructure-failure",
+    "timeout": "skipped-oracle-infrastructure-failure",
+    "offline": "skipped-oracle-infrastructure-failure"
+  },
+  "next_step": "Retry once Harbor environment startup is healthy, then run Oracle and every supported control against a newly compiled manifest."
+}

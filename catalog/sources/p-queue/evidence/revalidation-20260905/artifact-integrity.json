@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0",
+  "task_id": "p-queue",
+  "source_digest": "sha256:72ab2b57449aa935dfb297c920c8503e194053481bac0e7ad28442488e510160",
+  "compile": {
+    "toolchain": "toolchain.node.lock.toml",
+    "compile_count": 2,
+    "manifest_sha256": "sha256:379de129e9afa3814ab6d6265c74658a72b15054222773e9d59606a604f6517a",
+    "manifest_size_bytes": 20862,
+    "repeat_compile_byte_identical": true,
+    "allow_incomplete": false
+  },
+  "private_artifacts": [
+    {"name": "npm-bundle", "sha256": "sha256:a5b2e71f921ab4178915df8c9f97e28f7f249afdc0e7da9fdaca9390e9709629", "size_bytes": 204800, "verified_from_local_cas": true},
+    {"name": "commands", "sha256": "sha256:a832562812d78324c3ac1b16a15a9ab97c6e9e92ad7de119f2da7bb997be8661", "size_bytes": 10240, "verified_from_local_cas": true},
+    {"name": "tests", "sha256": "sha256:c6b3310a0d30b62a2213516abd0baaaa1dc2f75a946e2e253c1a11ae90b08948", "size_bytes": 40960, "verified_from_local_cas": true},
+    {"name": "oracle", "sha256": "sha256:8d2e87d889edae1564656cac5f22984d7a2f282543589dd34386901dea39ecb0", "size_bytes": 317440, "verified_from_local_cas": true}
+  ],
+  "path_policy": {"absolute_private_paths_added": false, "runtime_tmp_paths_are_container_local": true}
+}

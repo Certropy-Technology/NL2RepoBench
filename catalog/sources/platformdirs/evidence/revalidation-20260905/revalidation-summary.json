@@ -1,0 +1,79 @@
+{
+  "schema_version": "1.0",
+  "task_id": "platformdirs",
+  "revalidation": "instruction-migration-20260905",
+  "source_freeze": {
+    "status": "known",
+    "revision": "d3cf61ce5e729f2c35f830b69e14adb7b6970a00",
+    "source_digest": "sha256:01837750779cd8f90d271f9b6184cf7d8d78fac37c72ce40ac97ccfb4064d572",
+    "queue_source_digest": "sha256:0b72fb7537d6acc5bf6e3b8f3df3db2e89946eb8f0a24e298c3e6e06faa42bb5",
+    "validate_source_digest": "sha256:0b72fb7537d6acc5bf6e3b8f3df3db2e89946eb8f0a24e298c3e6e06faa42bb5",
+    "license_spdx": "MIT"
+  },
+  "network": {
+    "agent": "no-network",
+    "candidate": "no-network",
+    "verifier": "no-network",
+    "oracle": "no-network",
+    "controls": "no-network",
+    "runtime_reference_fetch": "forbidden"
+  },
+  "artifact_checks": [
+    {
+      "name": "oracle_bundle",
+      "declared_digest": "sha256:35c3c271c7bf483eb3f3c2c86c4b50d821b9215ea0f2dfeccab3aef86f953654",
+      "declared_size_bytes": 10240,
+      "local_cas_path": ".nl2repo/artifacts/private/sha256/35/35c3c271c7bf483eb3f3c2c86c4b50d821b9215ea0f2dfeccab3aef86f953654",
+      "observed": "missing",
+      "hash_verified": false
+    },
+    {
+      "name": "verifier_bundle",
+      "declared_digest": "sha256:550041dc83296bd96733103e086fc7bb0e8ca8e83bcab9a869144e51818fddcc",
+      "declared_size_bytes": 20480,
+      "local_cas_path": ".nl2repo/artifacts/private/sha256/55/550041dc83296bd96733103e086fc7bb0e8ca8e83bcab9a869144e51818fddcc",
+      "observed": "missing",
+      "hash_verified": false
+    },
+    {
+      "name": "candidate_build_lock",
+      "declared_digest": "sha256:24713a5496e38f6da905cbc7944c15efd8863916e5da6825b835f66aa99068f7",
+      "declared_size_bytes": 204,
+      "local_path": "catalog/tasks/platformdirs/environment/candidate-requirements.lock.txt",
+      "observed_digest": "sha256:24713a5496e38f6da905cbc7944c15efd8863916e5da6825b835f66aa99068f7",
+      "observed_size_bytes": 204,
+      "hash_verified": true
+    }
+  ],
+  "local_recovery": {
+    "searched": [
+      "current task-local evidence",
+      "catalog/tasks/platformdirs projection",
+      ".nl2repo/artifacts/private/sha256",
+      "historical authoring worktrees and handoffs"
+    ],
+    "exact_oracle_payload_recovered": false,
+    "exact_verifier_payload_recovered": false,
+    "replacement_proposal": false
+  },
+  "gates": {
+    "oracle": {"status": "not-run", "reason": "missing oracle and verifier CAS artifacts"},
+    "empty": {"status": "not-run", "reason": "missing verifier CAS artifact"},
+    "stub": {"status": "not-run", "reason": "missing verifier CAS artifact"},
+    "forgery": {"status": "not-run", "reason": "missing verifier CAS artifact"},
+    "offline": {"status": "not-run", "reason": "missing verifier CAS artifact"}
+  },
+  "classification": {
+    "kind": "artifact-or-verifier-blocked",
+    "reason": "The current source declares oracle and separate-verifier private bundles that are absent from local CAS. Compilation fails closed before Harbor execution; no fresh receipt is claimed.",
+    "next_step": "Parent must recover exact frozen private bundles from a trusted local source, verify declared size and SHA-256, then compile twice and run the complete NoNetwork matrix. Do not authorize external source or registry access."
+  },
+  "commands": [
+    {"command": "uv run nl2repo task validate-source catalog/sources/platformdirs", "exit_code": 0, "log": "command output recorded in worker execution; source digest matched queue digest"},
+    {"command": "uv run nl2repo harbor compile catalog/sources/platformdirs --output <IGNORED>/platformdirs-revalidation-compile --toolchain toolchain.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "exit_code": 1, "log": "Harbor compile failed closed: missing sha256:550041dc83296bd96733103e086fc7bb0e8ca8e83bcab9a869144e51818fddcc"},
+    {"command": "sha256sum catalog/tasks/platformdirs/environment/candidate-requirements.lock.txt", "exit_code": 0, "log": "sha256:24713a5496e38f6da905cbc7944c15efd8863916e5da6825b835f66aa99068f7"},
+    {"command": "uv run nl2repo task lint-network --tasks-root catalog/sources --strict", "exit_code": 1, "log": "platformdirs has no task-specific error; strict mode failed on unrelated repository warnings"}
+  ],
+  "historical_receipts_reused": false,
+  "private_payload_bytes_added": false
+}

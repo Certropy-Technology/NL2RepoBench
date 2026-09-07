@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "task_id": "portalocker",
+  "receipt": "fresh-oracle-retry-20260907",
+  "valid": true,
+  "expected_total": 32,
+  "collected": 32,
+  "passed": 32,
+  "failed": 0,
+  "skipped": 0,
+  "reward": 1.0,
+  "grading_sha256": "sha256:2084dd9057f9f49409f0f708382474ff3f9bcb20a57ecd3e04231c2c3023b93b",
+  "network_sha256": "sha256:0d7ff7bd153b30e54fe95b768b2973755ce6e089ef2ea0c929f27708ff8b6673",
+  "command": "uv run --frozen --project harbor-runner harbor run -p <compiled-bundle> -a oracle --job-name portalocker-revalidation-oracle-retry-20260907 -o <run-root> --n-concurrent 1 --max-retries 0 --yes",
+  "network_mode": "no-network",
+  "failure_set": []
+}

@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pyasn1-modules",
+  "status": "artifact/verifier-blocked",
+  "source_digest": "sha256:ae6a83037f6d1a52a3ba368fe28b332ef8f910f2232617c3cab683616211b4eb",
+  "source_revision": "02f9c577bcd0ad9fedfb0fd5dc598d323f7984bf",
+  "network_policy": "no-network",
+  "artifact_verification": "catalog/sources/pyasn1-modules/evidence/revalidation-20260905/artifact-verification.json",
+  "classification": {
+    "failure_class": "artifact/verifier",
+    "reason": "Oracle bundle lacks the exact frozen source archive and performs forbidden runtime GitHub fetch.",
+    "oracle": "not-run",
+    "controls": "not-run",
+    "prior_receipts_reused": false
+  },
+  "frozen_denominator": 282,
+  "passed": null,
+  "reward": null,
+  "skipped_gates": ["compile-twice", "oracle", "empty", "stub", "forgery", "install-failure", "workspace-boundary", "offline"],
+  "commands": [
+    {"command": "uv run nl2repo task validate-source catalog/sources/pyasn1-modules", "exit_code": 0, "log": "catalog/sources/pyasn1-modules/evidence/revalidation-20260905/logs/validate-source.txt"},
+    {"command": "uv run nl2repo task lint-network --tasks-root catalog/sources", "exit_code": 0, "log": "catalog/sources/pyasn1-modules/evidence/revalidation-20260905/logs/network-lint.txt"},
+    {"command": "exact CAS verification and bounded source-payload search", "exit_code": 0, "log": "catalog/sources/pyasn1-modules/evidence/revalidation-20260905/logs/payload-search.txt"},
+    {"command": "python3 -m py_compile verifier and bash -n source controls", "exit_code": 0, "log": "catalog/sources/pyasn1-modules/evidence/revalidation-20260905/logs/syntax.txt"}
+  ],
+  "next_step": "Recover an exact source archive or parent-reviewed replacement bundle, register it in CAS, then recompile and rerun every gate under NoNetwork.",
+  "durable_evidence": "All paths are repository-relative and contain no private payload bytes."
+}

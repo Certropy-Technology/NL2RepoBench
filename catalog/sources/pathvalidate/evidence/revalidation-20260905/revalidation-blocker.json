@@ -1,0 +1,61 @@
+{
+  "schema_version": "1.0",
+  "task_id": "pathvalidate",
+  "purpose": "instruction-migration-revalidation",
+  "source_freeze": {
+    "status": "known",
+    "revision": "1ca0a50fce51d5b5bd633457a72abf74dbe3112d",
+    "source_digest": "sha256:4c83bac3feec196a0a9925d5be61bbe9581310cff4f09b6372e203ba13b81918",
+    "queue_source_digest": "sha256:03872c93a8d4252c4850f96294fce6c3b6f88eb34f6e2585d61aead27657c451",
+    "validate_source": "passed"
+  },
+  "classification": {
+    "terminal": "artifact-or-verifier-blocked",
+    "scan_failure_class": "infrastructure",
+    "reason": "The bounded local exact-byte search exceeded its timeout before private verifier and Oracle payloads could be verified; no fresh matrix was run."
+  },
+  "declared_artifacts": {
+    "dependency_lock": {
+      "size_bytes": 2282,
+      "sha256": "sha256:5eb3c82fcb606d102cd7e1c257745ec63e7dce8ffaafa8327a4dda0705762ad5",
+      "status": "hash-matched in generated projection copies"
+    },
+    "verifier_bundle": {
+      "size_bytes": 40960,
+      "sha256": "sha256:6bcd04c8462bef3b7e6957aed7bc5344bf6a73b18e3cb6e2226161887978d7a0",
+      "status": "not verified; bounded local search timed out"
+    },
+    "oracle_bundle": {
+      "size_bytes": 10240,
+      "sha256": "sha256:b8561eb66c5d5287f281d303015e4a894c2fcc50fc840c4d46e7d1ebbd0d1aab",
+      "status": "not verified; bounded local search timed out"
+    }
+  },
+  "commands": [
+    {
+      "command": "uv run nl2repo task validate-source catalog/sources/pathvalidate",
+      "exit_code": 0,
+      "result": "passed",
+      "log": "inline: source_digest=sha256:03872c93a8d4252c4850f96294fce6c3b6f88eb34f6e2585d61aead27657c451"
+    },
+    {
+      "command": "bounded SHA-256 scan of local .nl2repo, integration artifact store, and cache candidates by declared size",
+      "exit_code": 124,
+      "result": "timed-out",
+      "timeout_seconds": 1200,
+      "log": "inline: command exceeded bounded timeout; no payload acceptance claim"
+    },
+    {
+      "command": "fresh Harbor Oracle and controls matrix",
+      "exit_code": null,
+      "result": "skipped",
+      "log": "inline: private verifier/Oracle bundles were not hash-verified"
+    }
+  ],
+  "metrics": {
+    "frozen_total": 54,
+    "oracle": "not-run",
+    "controls": "not-run"
+  },
+  "next_step": "Parent should perform bounded CAS/handoff lookup, register only exact-size/hash matches, then compile twice and run a fresh NoNetwork 54-leaf Oracle plus supported controls."
+}
