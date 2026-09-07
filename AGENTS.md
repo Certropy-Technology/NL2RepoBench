@@ -130,6 +130,11 @@ blocked 的 source authority 必须明确：`source_freeze.status` 使用 `known
 - source-only test collection、固定分母和 collection error；
 - 隐藏测试到公开行为的双向 traceability。
 
+隐藏测试的撰写必须遵守 `docs/instruction-authoring-standard.zh-CN.md` 中的
+**Hidden test authoring contract**：先对冻结源码做 AST 提取得到公开 API 面，再把
+每个隐藏断言约束到公开契约；只允许从公开规格可推导的行为进入隐藏测试，禁止复制
+上游测试、实现内部或需网络/付费/专用硬件的断言。
+
 公开 `instruction.md` 必须遵守 `docs/instruction-authoring-standard.zh-CN.md`，并至少包含：
 
 ```text

@@ -63,6 +63,62 @@ Blocked source 可以没有完整目录树，但 `blocked.md` 必须说明缺失
 closure、已尝试的目录/构建 probe 和下一步解除条件。不要为 blocked 任务伪造可运行
 结构。
 
+## Hidden test authoring contract
+
+隐藏测试的撰写必须遵循两条约束：**断言只能来源于可以从公开规格推导的行为**，并且
+**行为清单必须先从冻结源码做 AST 提取，再与公开 contract 对齐**。隐藏测试不得复制
+上游测试文件或实现内部细节。
+
+### 1. 先从源码提取公开 API 面(不以测试文件当规格)
+
+对每个冻结 revision，在源码上做 AST/静态提取，得到公共符号面，而不是直接照抄上游
+测试或内部函数：
+
+```bash
+uv run nl2repo author scan-source catalog/sources/<task-id>/   # 以 --help 为准
+```
+
+提取器至少产出：
+
+- 导出/root exports：`__init__` re-export、`__all__`、公开模块下无下划线前缀的顶层
+  class/function/constant；
+- 每个公开符号的完整 signature（参数名、默认值、keyword-only、返回注解）；
+- CLI entry point（`pyproject` 的 `[project.scripts]`、console_scripts、Go/Rust/Java
+  的 CLI arg 结构、Node 的 bin 字段）；
+- 跨模块 fallback：同一符号在顶层与唯一入口模块（如 `_io`、`_core`）同时存在时的
+  权威 import path；
+- 对条件依赖、可选 import、try/except fallback，记录实际生效的分支，不要同时断言两个
+  互斥行为。
+
+禁止的输入：直接渲染源码文件树、把源码 filter/内部 helper 当作公开 API、引用
+private/underscore 模块、把依赖闭包里的偶发符号当作项目 API。
+
+### 2. 把公开 API 面约束进 hidden test
+
+- 每个 hidden assertion 必须能映射到 `instruction.md` 的公开契约；反之，每个核心公开
+  承诺至少有测试覆盖（双向 traceability）。
+- root export、re-export、懒 import 后属性、CLI exit code、stdout/stderr、
+  Unicode/空输入/错误输入、状态变化（数据库、文件、缓存、连接、registry）、顺序与
+  确定性、异常契约，必须逐项覆盖——不能只因为 AST 提取干净而遗漏。
+- 断言只能使用公开规格允许的输入和 import path；禁止依赖实现私有状态、内部命名、
+  magic number、上游测试夹具、seed 与实现强耦合的底层行为。
+- 拿不准的行为：优先用“黑盒可观察 + 边界收敛”的断言（如类型、形状、round-trip、
+  不变式、单调性、幂等性），而不是与某次实现等价的精确值。
+- 上游测试属于参考，不在源码中时不得凭记忆补跳过；只有真正可绑定的行为才进入 hidden
+  test，无法可靠绑定的参数明确标注为“不约束”，并保留 blocked 候选。
+
+### 3. 不能写成 hidden assertion 的内容
+
+- 复制上游测试用例、断言文本或 fixture bytes；
+- 依赖实现内部（private helper、内部状态、对象 id、dict 顺序之外的内部 layout）；
+- 只在某个 optimizer/sanitizer/平台分支下为真的行为；
+- 需要网络、付费账号、真实远端数据、专用硬件的断言（NoNetwork 任务一律禁止）。
+
+### 4. contract 变更即版本提升
+
+只要公开 API 面、签名、行为或测试集合变化，就提升 task version 并重跑
+Oracle/empty/stub/forgery/offline 整套控制与固定分母；旧 receipt 不得复用。
+
 ## Writing rules
 
 - 写成项目规格，使用直接、可检查的句子；避免宣传语和空泛形容词。
