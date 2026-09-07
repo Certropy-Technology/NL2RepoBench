@@ -1,0 +1,1308 @@
+{
+  "bindable_observables": [
+    "public imports and re-exports",
+    "Run/Benchmark/BenchmarkSuite value shape",
+    "JSON keys and round-trip",
+    "CLI exit status and parseable output",
+    "input validation and deterministic ordering"
+  ],
+  "cli_entries": [
+    {
+      "command": "pyperf",
+      "entrypoint": "pyperf.__main__:main"
+    },
+    {
+      "command": "python -m pyperf",
+      "entrypoint": "pyperf.__main__:main"
+    }
+  ],
+  "modules": [
+    {
+      "file": "pyperf/__main__.py",
+      "module": "pyperf.__main__",
+      "public_symbols": [
+        {
+          "kind": "Function",
+          "line": 19,
+          "name": "add_cmdline_args",
+          "signature": "cmd, args"
+        },
+        {
+          "kind": "Class",
+          "line": 26,
+          "name": "CommandRunner",
+          "signature": null
+        },
+        {
+          "kind": "Function",
+          "line": 44,
+          "name": "create_parser",
+          "signature": ""
+        },
+        {
+          "kind": "Function",
+          "line": 214,
+          "name": "format_filename_noop",
+          "signature": "filename"
+        },
+        {
+          "kind": "Function",
+          "line": 218,
+          "name": "format_filename_func",
+          "signature": "suites"
+        },
+        {
+          "kind": "Class",
+          "line": 247,
+          "name": "Benchmarks",
+          "signature": null
+        },
+        {
+          "kind": "Function",
+          "line": 360,
+          "name": "load_benchmarks",
+          "signature": "args"
+        },
+        {
+          "kind": "Function",
+          "line": 388,
+          "name": "cmd_compare_to",
+          "signature": "args"
+        },
+        {
+          "kind": "Function",
+          "line": 408,
+          "name": "cmd_collect_metadata",
+          "signature": "args"
+        },
+        {
+          "kind": "Function",
+          "line": 413,
+          "name": "display_benchmarks",
+          "signature": "args, show_metadata=False, hist=False, stats=False, dump=False, result=False, checks=False, display_runs_args=None, only_checks=False"
+        },
+        {
+          "kind": "Function",
+          "line": 527,
+          "name": "cmd_show",
+          "signature": "args"
+        },
+        {
+          "kind": "Function",
+          "line": 537,
+          "name": "cmd_metadata",
+          "signature": "args"
+        },
+        {
+          "kind": "Function",
+          "line": 541,
+          "name": "cmd_check",
+          "signature": "args"
+        },
+        {
+          "kind": "Function",
+          "line": 545,
+          "name": "cmd_dump",
+          "signature": "args"
+        },
+        {
+          "kind": "Function",
+          "line": 555,
+          "name": "cmd_timeit",
+          "signature": "args, timeit_runner"
+        },
+        {
+          "kind": "Function",
+          "line": 561,
+          "name": "cmd_stats",
+          "signature": "args"
+        },
+        {
+          "kind": "Function",
+          "line": 565,
+          "name": "cmd_hist",
+          "signature": "args"
+        },
+        {
+          "kind": "Function",
+          "line": 600,
+          "name": "fatal_missing_benchmarks",
+          "signature": "suite, names"
+        },
+        {
+          "kind": "Function",
+          "line": 608,
+          "name": "fatal_no_more_benchmark",
+          "signature": "suite"
+        },
+        {
+          "kind": "Function",
+          "line": 616,
+          "name": "cmd_convert",
+          "signature": "args"
+        },
+        {
+          "kind": "Function",
+          "line": 704,
+          "name": "cmd_slowest",
+          "signature": "args"
+        },
+        {
+          "kind": "Function",
+          "line": 725,
+          "name": "cmd_system",
+          "signature": "args"
+        },
+        {
+          "kind": "Function",
+          "line": 730,
+          "name": "cmd_bench_command",
+          "signature": "runner, args"
+        },
+        {
+          "kind": "Function",
+          "line": 737,
+          "name": "main",
+          "signature": ""
+        }
+      ]
+    },
+    {
+      "file": "pyperf/_bench.py",
+      "module": "pyperf._bench",
+      "public_symbols": [
+        {
+          "kind": "Class",
+          "line": 89,
+          "name": "Run",
+          "signature": null
+        },
+        {
+          "kind": "Class",
+          "line": 322,
+          "name": "Benchmark",
+          "signature": null
+        },
+        {
+          "kind": "Class",
+          "line": 671,
+          "name": "BenchmarkSuite",
+          "signature": null
+        },
+        {
+          "kind": "Function",
+          "line": 901,
+          "name": "add_runs",
+          "signature": "filename, result"
+        }
+      ]
+    },
+    {
+      "file": "pyperf/_cli.py",
+      "module": "pyperf._cli",
+      "public_symbols": [
+        {
+          "kind": "Function",
+          "line": 11,
+          "name": "empty_line",
+          "signature": "lines"
+        },
+        {
+          "kind": "Function",
+          "line": 16,
+          "name": "format_title",
+          "signature": "title, level=1, lines=None"
+        },
+        {
+          "kind": "Function",
+          "line": 31,
+          "name": "display_title",
+          "signature": "title, level=1"
+        },
+        {
+          "kind": "Function",
+          "line": 37,
+          "name": "format_metadata",
+          "signature": "metadata, prefix='- ', lines=None"
+        },
+        {
+          "kind": "Function",
+          "line": 59,
+          "name": "format_run",
+          "signature": "bench, run_index, run, common_metadata=None, raw=False, verbose=0, lines=None"
+        },
+        {
+          "kind": "Function",
+          "line": 199,
+          "name": "format_stats",
+          "signature": "bench, lines"
+        },
+        {
+          "kind": "Function",
+          "line": 334,
+          "name": "format_histogram",
+          "signature": "benchmarks, bins=20, extend=False, lines=None, checks=False"
+        },
+        {
+          "kind": "Function",
+          "line": 403,
+          "name": "format_checks",
+          "signature": "bench, lines=None, check_too_many_processes=False"
+        },
+        {
+          "kind": "Function",
+          "line": 508,
+          "name": "format_result_value",
+          "signature": "bench"
+        },
+        {
+          "kind": "Function",
+          "line": 538,
+          "name": "format_result",
+          "signature": "bench"
+        },
+        {
+          "kind": "Function",
+          "line": 572,
+          "name": "format_benchmark",
+          "signature": "bench, checks=True, metadata=False, dump=False, stats=False, hist=False, show_name=False, result=True, display_runs_args=None, only_checks=False"
+        },
+        {
+          "kind": "Function",
+          "line": 608,
+          "name": "multiline_output",
+          "signature": "args"
+        },
+        {
+          "kind": "Function",
+          "line": 613,
+          "name": "catch_broken_pipe_error",
+          "signature": "file=None"
+        }
+      ]
+    },
+    {
+      "file": "pyperf/_collect_metadata.py",
+      "module": "pyperf._collect_metadata",
+      "public_symbols": [
+        {
+          "kind": "Function",
+          "line": 36,
+          "name": "normalize_text",
+          "signature": "text"
+        },
+        {
+          "kind": "Function",
+          "line": 42,
+          "name": "collect_python_metadata",
+          "signature": "metadata"
+        },
+        {
+          "kind": "Function",
+          "line": 129,
+          "name": "read_proc",
+          "signature": "path"
+        },
+        {
+          "kind": "Function",
+          "line": 139,
+          "name": "collect_linux_metadata",
+          "signature": "metadata"
+        },
+        {
+          "kind": "Function",
+          "line": 151,
+          "name": "get_cpu_affinity",
+          "signature": ""
+        },
+        {
+          "kind": "Function",
+          "line": 164,
+          "name": "collect_system_metadata",
+          "signature": "metadata"
+        },
+        {
+          "kind": "Function",
+          "line": 205,
+          "name": "collect_memory_metadata",
+          "signature": "metadata"
+        },
+        {
+          "kind": "Function",
+          "line": 219,
+          "name": "collect_cpu_freq",
+          "signature": "metadata, cpus"
+        },
+        {
+          "kind": "Function",
+          "line": 266,
+          "name": "get_cpu_config",
+          "signature": "cpu"
+        },
+        {
+          "kind": "Function",
+          "line": 291,
+          "name": "collect_cpu_config",
+          "signature": "metadata, cpus"
+        },
+        {
+          "kind": "Function",
+          "line": 320,
+          "name": "get_cpu_temperature",
+          "signature": "path, cpu_temp"
+        },
+        {
+          "kind": "Function",
+          "line": 346,
+          "name": "collect_cpu_temperatures",
+          "signature": "metadata"
+        },
+        {
+          "kind": "Function",
+          "line": 363,
+          "name": "collect_cpu_affinity",
+          "signature": "metadata, cpu_affinity, cpu_count"
+        },
+        {
+          "kind": "Function",
+          "line": 376,
+          "name": "collect_cpu_model",
+          "signature": "metadata"
+        },
+        {
+          "kind": "Function",
+          "line": 391,
+          "name": "collect_cpu_metadata",
+          "signature": "metadata"
+        },
+        {
+          "kind": "Function",
+          "line": 413,
+          "name": "collect_metadata",
+          "signature": "process=True"
+        },
+        {
+          "kind": "Function",
+          "line": 425,
+          "name": "cmd_collect_metadata",
+          "signature": "args"
+        }
+      ]
+    },
+    {
+      "file": "pyperf/_command.py",
+      "module": "pyperf._command",
+      "public_symbols": [
+        {
+          "kind": "Function",
+          "line": 11,
+          "name": "parse_subprocess_data",
+          "signature": "output"
+        },
+        {
+          "kind": "Function",
+          "line": 31,
+          "name": "bench_command",
+          "signature": "command, task, loops"
+        },
+        {
+          "kind": "Class",
+          "line": 58,
+          "name": "BenchCommandTask",
+          "signature": null
+        }
+      ]
+    },
+    {
+      "file": "pyperf/_compare.py",
+      "module": "pyperf._compare",
+      "public_symbols": [
+        {
+          "kind": "Function",
+          "line": 5,
+          "name": "is_significant_benchs",
+          "signature": "bench1, bench2"
+        },
+        {
+          "kind": "Class",
+          "line": 22,
+          "name": "CompareData",
+          "signature": null
+        },
+        {
+          "kind": "Function",
+          "line": 31,
+          "name": "compute_normalized_mean",
+          "signature": "bench, ref"
+        },
+        {
+          "kind": "Function",
+          "line": 38,
+          "name": "format_normalized_mean",
+          "signature": "norm_mean"
+        },
+        {
+          "kind": "Function",
+          "line": 47,
+          "name": "format_geometric_mean",
+          "signature": "norm_means"
+        },
+        {
+          "kind": "Function",
+          "line": 52,
+          "name": "get_tags_for_result",
+          "signature": "result"
+        },
+        {
+          "kind": "Class",
+          "line": 56,
+          "name": "CompareResult",
+          "signature": null
+        },
+        {
+          "kind": "Class",
+          "line": 147,
+          "name": "CompareResults",
+          "signature": null
+        },
+        {
+          "kind": "Class",
+          "line": 156,
+          "name": "ReSTTable",
+          "signature": null
+        },
+        {
+          "kind": "Class",
+          "line": 188,
+          "name": "MarkDownTable",
+          "signature": null
+        },
+        {
+          "kind": "Class",
+          "line": 221,
+          "name": "CompareError",
+          "signature": null
+        },
+        {
+          "kind": "Class",
+          "line": 225,
+          "name": "CompareSuites",
+          "signature": null
+        },
+        {
+          "kind": "Function",
+          "line": 480,
+          "name": "compare_suites",
+          "signature": "benchmarks, args"
+        },
+        {
+          "kind": "Function",
+          "line": 484,
+          "name": "timeit_compare_benchs",
+          "signature": "name1, bench1, name2, bench2, args"
+        }
+      ]
+    },
+    {
+      "file": "pyperf/_cpu_utils.py",
+      "module": "pyperf._cpu_utils",
+      "public_symbols": [
+        {
+          "kind": "Function",
+          "line": 16,
+          "name": "get_logical_cpu_count",
+          "signature": ""
+        },
+        {
+          "kind": "Function",
+          "line": 31,
+          "name": "format_cpu_list",
+          "signature": "cpus"
+        },
+        {
+          "kind": "Function",
+          "line": 53,
+          "name": "format_cpu_infos",
+          "signature": "infos"
+        },
+        {
+          "kind": "Function",
+          "line": 67,
+          "name": "parse_cpu_list",
+          "signature": "cpu_list"
+        },
+        {
+          "kind": "Function",
+          "line": 91,
+          "name": "parse_cpu_mask",
+          "signature": "line"
+        },
+        {
+          "kind": "Function",
+          "line": 99,
+          "name": "format_cpu_mask",
+          "signature": "mask"
+        },
+        {
+          "kind": "Function",
+          "line": 110,
+          "name": "format_cpus_as_mask",
+          "signature": "cpus"
+        },
+        {
+          "kind": "Function",
+          "line": 117,
+          "name": "get_isolated_cpus",
+          "signature": ""
+        },
+        {
+          "kind": "Function",
+          "line": 140,
+          "name": "set_cpu_affinity",
+          "signature": "cpus"
+        },
+        {
+          "kind": "Function",
+          "line": 164,
+          "name": "set_highest_priority",
+          "signature": ""
+        }
+      ]
+    },
+    {
+      "file": "pyperf/_formatter.py",
+      "module": "pyperf._formatter",
+      "public_symbols": [
+        {
+          "kind": "Function",
+          "line": 4,
+          "name": "format_timedeltas",
+          "signature": "values"
+        },
+        {
+          "kind": "Function",
+          "line": 21,
+          "name": "format_timedelta",
+          "signature": "value"
+        },
+        {
+          "kind": "Function",
+          "line": 25,
+          "name": "format_filesize",
+          "signature": "size"
+        },
+        {
+          "kind": "Function",
+          "line": 38,
+          "name": "format_filesizes",
+          "signature": "sizes"
+        },
+        {
+          "kind": "Function",
+          "line": 42,
+          "name": "format_seconds",
+          "signature": "seconds"
+        },
+        {
+          "kind": "Function",
+          "line": 67,
+          "name": "format_number",
+          "signature": "number, unit=None, units=None"
+        },
+        {
+          "kind": "Function",
+          "line": 102,
+          "name": "format_integers",
+          "signature": "numbers"
+        },
+        {
+          "kind": "Function",
+          "line": 114,
+          "name": "format_values",
+          "signature": "unit, values"
+        },
+        {
+          "kind": "Function",
+          "line": 121,
+          "name": "format_value",
+          "signature": "unit, value"
+        },
+        {
+          "kind": "Function",
+          "line": 125,
+          "name": "format_datetime",
+          "signature": "dt, microsecond=True"
+        }
+      ]
+    },
+    {
+      "file": "pyperf/_hooks.py",
+      "module": "pyperf._hooks",
+      "public_symbols": [
+        {
+          "kind": "Function",
+          "line": 16,
+          "name": "get_hooks",
+          "signature": ""
+        },
+        {
+          "kind": "Function",
+          "line": 26,
+          "name": "get_hook_names",
+          "signature": ""
+        },
+        {
+          "kind": "Function",
+          "line": 30,
+          "name": "get_selected_hooks",
+          "signature": "hook_names"
+        },
+        {
+          "kind": "Function",
+          "line": 39,
+          "name": "instantiate_selected_hooks",
+          "signature": "hook_names"
+        },
+        {
+          "kind": "Class",
+          "line": 52,
+          "name": "HookError",
+          "signature": null
+        },
+        {
+          "kind": "Class",
+          "line": 56,
+          "name": "HookBase",
+          "signature": null
+        },
+        {
+          "kind": "Class",
+          "line": 99,
+          "name": "pystats",
+          "signature": null
+        },
+        {
+          "kind": "Class",
+          "line": 118,
+          "name": "perf_record",
+          "signature": null
+        }
+      ]
+    },
+    {
+      "file": "pyperf/_linux_memory.py",
+      "module": "pyperf._linux_memory",
+      "public_symbols": [
+        {
+          "kind": "Function",
+          "line": 14,
+          "name": "read_smap_file",
+          "signature": ""
+        },
+        {
+          "kind": "Class",
+          "line": 27,
+          "name": "PeakMemoryUsageThread",
+          "signature": null
+        },
+        {
+          "kind": "Function",
+          "line": 53,
+          "name": "check_tracking_memory",
+          "signature": ""
+        }
+      ]
+    },
+    {
+      "file": "pyperf/_manager.py",
+      "module": "pyperf._manager",
+      "public_symbols": [
+        {
+          "kind": "Class",
+          "line": 17,
+          "name": "Manager",
+          "signature": null
+        }
+      ]
+    },
+    {
+      "file": "pyperf/_metadata.py",
+      "module": "pyperf._metadata",
+      "public_symbols": [
+        {
+          "kind": "Function",
+          "line": 25,
+          "name": "format_generic",
+          "signature": "value"
+        },
+        {
+          "kind": "Function",
+          "line": 32,
+          "name": "format_system_load",
+          "signature": "load"
+        },
+        {
+          "kind": "Function",
+          "line": 37,
+          "name": "is_strictly_positive",
+          "signature": "value"
+        },
+        {
+          "kind": "Function",
+          "line": 41,
+          "name": "is_positive",
+          "signature": "value"
+        },
+        {
+          "kind": "Function",
+          "line": 45,
+          "name": "is_tags",
+          "signature": "value"
+        },
+        {
+          "kind": "Function",
+          "line": 51,
+          "name": "parse_load_avg",
+          "signature": "value"
+        },
+        {
+          "kind": "Function",
+          "line": 59,
+          "name": "format_noop",
+          "signature": "value"
+        },
+        {
+          "kind": "Function",
+          "line": 100,
+          "name": "get_metadata_info",
+          "signature": "name"
+        },
+        {
+          "kind": "Function",
+          "line": 104,
+          "name": "check_metadata",
+          "signature": "name, value"
+        },
+        {
+          "kind": "Function",
+          "line": 120,
+          "name": "parse_metadata",
+          "signature": "metadata"
+        },
+        {
+          "kind": "Function",
+          "line": 135,
+          "name": "format_metadata",
+          "signature": "name, value"
+        },
+        {
+          "kind": "Class",
+          "line": 140,
+          "name": "Metadata",
+          "signature": null
+        }
+      ]
+    },
+    {
+      "file": "pyperf/_process_time.py",
+      "module": "pyperf._process_time",
+      "public_symbols": [
+        {
+          "kind": "Function",
+          "line": 31,
+          "name": "get_max_rss",
+          "signature": "*, children"
+        },
+        {
+          "kind": "Function",
+          "line": 45,
+          "name": "merge_profile_stats_files",
+          "signature": "src, dst"
+        },
+        {
+          "kind": "Function",
+          "line": 60,
+          "name": "bench_process",
+          "signature": "loops, args, kw, profile_filename=None"
+        },
+        {
+          "kind": "Function",
+          "line": 96,
+          "name": "load_hooks",
+          "signature": "metadata"
+        },
+        {
+          "kind": "Function",
+          "line": 117,
+          "name": "write_data",
+          "signature": "dt, max_rss, metadata, out=sys.stdout"
+        },
+        {
+          "kind": "Function",
+          "line": 129,
+          "name": "main",
+          "signature": ""
+        }
+      ]
+    },
+    {
+      "file": "pyperf/_psutil_memory.py",
+      "module": "pyperf._psutil_memory",
+      "public_symbols": [
+        {
+          "kind": "Class",
+          "line": 14,
+          "name": "PeakMemoryUsageThread",
+          "signature": null
+        },
+        {
+          "kind": "Function",
+          "line": 46,
+          "name": "check_tracking_memory",
+          "signature": ""
+        }
+      ]
+    },
+    {
+      "file": "pyperf/_runner.py",
+      "module": "pyperf._runner",
+      "public_symbols": [
+        {
+          "kind": "Function",
+          "line": 22,
+          "name": "strictly_positive",
+          "signature": "value"
+        },
+        {
+          "kind": "Function",
+          "line": 29,
+          "name": "positive_or_nul",
+          "signature": "value"
+        },
+        {
+          "kind": "Function",
+          "line": 42,
+          "name": "comma_separated",
+          "signature": "values"
+        },
+        {
+          "kind": "Function",
+          "line": 47,
+          "name": "parse_python_names",
+          "signature": "names"
+        },
+        {
+          "kind": "Function",
+          "line": 54,
+          "name": "profiling_wrapper",
+          "signature": "func"
+        },
+        {
+          "kind": "Class",
+          "line": 67,
+          "name": "CLIError",
+          "signature": null
+        },
+        {
+          "kind": "Class",
+          "line": 71,
+          "name": "Runner",
+          "signature": null
+        }
+      ]
+    },
+    {
+      "file": "pyperf/_system.py",
+      "module": "pyperf._system",
+      "public_symbols": [
+        {
+          "kind": "Function",
+          "line": 25,
+          "name": "is_root",
+          "signature": ""
+        },
+        {
+          "kind": "Function",
+          "line": 29,
+          "name": "is_permission_error",
+          "signature": "exc"
+        },
+        {
+          "kind": "Function",
+          "line": 33,
+          "name": "write_text",
+          "signature": "filename, content"
+        },
+        {
+          "kind": "Function",
+          "line": 39,
+          "name": "run_cmd",
+          "signature": "cmd"
+        },
+        {
+          "kind": "Function",
+          "line": 56,
+          "name": "get_output",
+          "signature": "cmd"
+        },
+        {
+          "kind": "Function",
+          "line": 72,
+          "name": "use_intel_pstate",
+          "signature": ""
+        },
+        {
+          "kind": "Class",
+          "line": 79,
+          "name": "Operation",
+          "signature": null
+        },
+        {
+          "kind": "Class",
+          "line": 123,
+          "name": "IntelPstateOperation",
+          "signature": null
+        },
+        {
+          "kind": "Class",
+          "line": 129,
+          "name": "TurboBoostMSR",
+          "signature": null
+        },
+        {
+          "kind": "Class",
+          "line": 272,
+          "name": "TurboBoostIntelPstate",
+          "signature": null
+        },
+        {
+          "kind": "Class",
+          "line": 339,
+          "name": "CPUGovernor",
+          "signature": null
+        },
+        {
+          "kind": "Class",
+          "line": 427,
+          "name": "LinuxScheduler",
+          "signature": null
+        },
+        {
+          "kind": "Class",
+          "line": 499,
+          "name": "ASLR",
+          "signature": null
+        },
+        {
+          "kind": "Class",
+          "line": 548,
+          "name": "CPUFrequency",
+          "signature": null
+        },
+        {
+          "kind": "Class",
+          "line": 646,
+          "name": "IRQAffinity",
+          "signature": null
+        },
+        {
+          "kind": "Class",
+          "line": 868,
+          "name": "CheckNOHZFullIntelPstate",
+          "signature": null
+        },
+        {
+          "kind": "Class",
+          "line": 894,
+          "name": "PowerSupply",
+          "signature": null
+        },
+        {
+          "kind": "Class",
+          "line": 938,
+          "name": "PerfEvent",
+          "signature": null
+        },
+        {
+          "kind": "Class",
+          "line": 1008,
+          "name": "System",
+          "signature": null
+        }
+      ]
+    },
+    {
+      "file": "pyperf/_timeit.py",
+      "module": "pyperf._timeit",
+      "public_symbols": [
+        {
+          "kind": "Function",
+          "line": 39,
+          "name": "reindent",
+          "signature": "src, indent"
+        },
+        {
+          "kind": "Class",
+          "line": 43,
+          "name": "Timer",
+          "signature": null
+        },
+        {
+          "kind": "Function",
+          "line": 130,
+          "name": "strip_statements",
+          "signature": "statements"
+        },
+        {
+          "kind": "Function",
+          "line": 139,
+          "name": "format_statements",
+          "signature": "statements"
+        },
+        {
+          "kind": "Function",
+          "line": 143,
+          "name": "create_timer",
+          "signature": "stmt, setup, teardown, globals"
+        },
+        {
+          "kind": "Function",
+          "line": 157,
+          "name": "display_error",
+          "signature": "timer, stmt, setup, teardown"
+        },
+        {
+          "kind": "Function",
+          "line": 184,
+          "name": "bench_timeit",
+          "signature": "runner, name, stmt, setup, teardown, inner_loops=None, duplicate=None, func_metadata=None, globals=None"
+        }
+      ]
+    },
+    {
+      "file": "pyperf/_timeit_cli.py",
+      "module": "pyperf._timeit_cli",
+      "public_symbols": [
+        {
+          "kind": "Function",
+          "line": 11,
+          "name": "add_cmdline_args",
+          "signature": "cmd, args"
+        },
+        {
+          "kind": "Class",
+          "line": 24,
+          "name": "TimeitRunner",
+          "signature": null
+        },
+        {
+          "kind": "Function",
+          "line": 62,
+          "name": "main",
+          "signature": "runner"
+        }
+      ]
+    },
+    {
+      "file": "pyperf/_utils.py",
+      "module": "pyperf._utils",
+      "public_symbols": [
+        {
+          "kind": "Function",
+          "line": 37,
+          "name": "tdist95conf_level",
+          "signature": "df"
+        },
+        {
+          "kind": "Function",
+          "line": 68,
+          "name": "pooled_sample_variance",
+          "signature": "sample1, sample2"
+        },
+        {
+          "kind": "Function",
+          "line": 87,
+          "name": "tscore",
+          "signature": "sample1, sample2"
+        },
+        {
+          "kind": "Function",
+          "line": 104,
+          "name": "is_significant",
+          "signature": "sample1, sample2"
+        },
+        {
+          "kind": "Function",
+          "line": 124,
+          "name": "parse_run_list",
+          "signature": "run_list"
+        },
+        {
+          "kind": "Function",
+          "line": 151,
+          "name": "open_text",
+          "signature": "path, write=False"
+        },
+        {
+          "kind": "Function",
+          "line": 156,
+          "name": "read_first_line",
+          "signature": "path, error=False"
+        },
+        {
+          "kind": "Function",
+          "line": 168,
+          "name": "proc_path",
+          "signature": "path"
+        },
+        {
+          "kind": "Function",
+          "line": 172,
+          "name": "sysfs_path",
+          "signature": "path"
+        },
+        {
+          "kind": "Function",
+          "line": 176,
+          "name": "python_implementation",
+          "signature": ""
+        },
+        {
+          "kind": "Function",
+          "line": 180,
+          "name": "python_has_jit",
+          "signature": ""
+        },
+        {
+          "kind": "Function",
+          "line": 197,
+          "name": "popen_killer",
+          "signature": "proc"
+        },
+        {
+          "kind": "Function",
+          "line": 217,
+          "name": "popen_communicate",
+          "signature": "proc"
+        },
+        {
+          "kind": "Function",
+          "line": 222,
+          "name": "get_python_names",
+          "signature": "python1, python2"
+        },
+        {
+          "kind": "Function",
+          "line": 232,
+          "name": "abs_executable",
+          "signature": "python"
+        },
+        {
+          "kind": "Function",
+          "line": 258,
+          "name": "create_environ",
+          "signature": "inherit_environ, locale, copy_all"
+        },
+        {
+          "kind": "Class",
+          "line": 313,
+          "name": "ReadPipe",
+          "signature": null
+        },
+        {
+          "kind": "Class",
+          "line": 350,
+          "name": "WritePipe",
+          "signature": null
+        },
+        {
+          "kind": "Function",
+          "line": 375,
+          "name": "create_pipe",
+          "signature": ""
+        },
+        {
+          "kind": "Function",
+          "line": 382,
+          "name": "median_abs_dev",
+          "signature": "values"
+        },
+        {
+          "kind": "Function",
+          "line": 388,
+          "name": "percentile",
+          "signature": "values, p"
+        },
+        {
+          "kind": "Function",
+          "line": 420,
+          "name": "geometric_mean",
+          "signature": "data"
+        },
+        {
+          "kind": "Function",
+          "line": 427,
+          "name": "merge_profile_stats",
+          "signature": "profiler, dst"
+        }
+      ]
+    },
+    {
+      "file": "pyperf/_win_memory.py",
+      "module": "pyperf._win_memory",
+      "public_symbols": [
+        {
+          "kind": "Function",
+          "line": 35,
+          "name": "get_peak_pagefile_usage",
+          "signature": ""
+        },
+        {
+          "kind": "Function",
+          "line": 47,
+          "name": "check_tracking_memory",
+          "signature": ""
+        }
+      ]
+    },
+    {
+      "file": "pyperf/_worker.py",
+      "module": "pyperf._worker",
+      "public_symbols": [
+        {
+          "kind": "Class",
+          "line": 22,
+          "name": "WorkerTask",
+          "signature": null
+        },
+        {
+          "kind": "Class",
+          "line": 322,
+          "name": "MemoryUsage",
+          "signature": null
+        },
+        {
+          "kind": "Class",
+          "line": 352,
+          "name": "WorkerProcessTask",
+          "signature": null
+        }
+      ]
+    }
+  ],
+  "non_bindable": [
+    "timing magnitudes",
+    "CPU count/identity",
+    "wall-clock duration",
+    "process scheduling/affinity",
+    "host metadata"
+  ],
+  "root_exports": [
+    "perf_counter"
+  ],
+  "scanner": "python-stdlib-ast",
+  "scanner_policy": "AST only; candidate never imported or executed",
+  "schema_version": "1.0",
+  "source_archive_sha256": "dd93ccfda79214725293e95f1fa6e00cb4a64adcf1326039486d4e1f91caaa62",
+  "source_version": "2.10.0"
+}

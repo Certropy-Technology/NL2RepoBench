@@ -1,0 +1,75 @@
+schema_version = "1.0"
+task_id = "beartype"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "runtime-type-checking"
+tags = ["python", "typing", "runtime-validation", "decorator", "door", "validators", "separate-verifier"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/beartype/beartype"
+# The campaign supplied a frozen PyPI sdist rather than a VCS checkout. The
+# archive digest below is the immutable source authority for this specified
+# task; commit reconciliation is recorded in evidence/source-freeze.txt.
+revision = "9430c6515af3b158acacdc47fe7b1adb646f6624"
+license_spdx = "MIT"
+source_digest = "sha256:8f82b54aa723a2848a56008d18875f91c1db02c32ef6a62319a002e3e25a975f"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12.14"
+os_name = "debian-12-amd64"
+base_image = "python:3.12.14-slim-bookworm"
+base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e"
+system_packages = []
+network_mode = "no-network"
+build_command = "install hash-locked build requirements and build the candidate from the supplied beartype-0.22.9 sdist"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The candidate is pinned to the supplied sdist; build dependencies are preinstalled during image construction, while agent, candidate, verifier, Oracle, and controls run without network access."
+
+[dependencies]
+status = "unknown"
+installer = "pip"
+packages = ["hatchling==1.27.0", "hatch-vcs==0.5.0"]
+
+[tests]
+framework = "pytest"
+expected_total = 1
+expected_total_source = "unknown"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = []
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build the pure-Python beartype 0.22.9 runtime type-checking library from an empty workspace, covering its decorator, DOOR predicates, validator factories, configuration, exception families, and typing compatibility exports."
+keywords = ["python", "typing", "runtime-type-checking", "decorator", "door", "validators"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 360.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "specified"
+owner = "python-author-wave1-beartype"
+reason = "Public specification and AST inventory are bound to the supplied beartype 0.22.9 sdist. Dependency lock, automatic collection, separate verifier, Oracle, and controls are downstream packaging stages."

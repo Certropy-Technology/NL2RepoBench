@@ -1,0 +1,54 @@
+{
+  "schema_shape": "ApiInventory",
+  "schema_version": "1.0",
+  "package": "beartype",
+  "version": "0.22.9",
+  "source_archive_sha256": "8f82b54aa723a2848a56008d18875f91c1db02c32ef6a62319a002e3e25a975f",
+  "scanner_identity": "stdlib-ast-public-reexports-v1",
+  "modules": [
+    {
+      "import_path": "beartype",
+      "exports": ["beartype", "BeartypeConf", "BeartypeStrategy", "BeartypeViolationVerbosity", "BeartypeDecorPlace", "FrozenDict", "__version__", "__version_info__"],
+      "notes": "__all__ declares the listed stable root exports; decorator behavior is specified observationally."
+    },
+    {
+      "import_path": "beartype.door",
+      "exports": ["TypeHint", "UnionTypeHint", "LiteralTypeHint", "AnnotatedTypeHint", "AnyTypeHint", "ClassTypeHint", "NewTypeTypeHint", "TypeVarTypeHint", "CallableTypeHint", "GenericTypeHint", "SubscriptedTypeHint", "TupleFixedTypeHint", "TupleVariableTypeHint", "is_bearable", "die_if_unbearable", "is_subhint"],
+      "signatures": [
+        "is_bearable(obj: object, hint: HintBare[T], *, conf: BeartypeConf = BEARTYPE_CONF_DEFAULT) -> TypeIs[T]",
+        "die_if_unbearable(obj: object, hint: Hint, *, conf: BeartypeConf = BEARTYPE_CONF_DEFAULT, exception_prefix: str = 'die_if_unbearable() ') -> None",
+        "is_subhint(subhint: Hint, superhint: Hint) -> bool",
+        "TypeHint(hint: T_Hint) -> TypeHint[T_Hint]",
+        "TypeHint.args(self) -> tuple",
+        "TypeHint.hint(self) -> T_Hint",
+        "TypeHint.is_ignorable(self) -> bool",
+        "TypeHint.is_bearable(self, obj: object, *, conf: BeartypeConf = BEARTYPE_CONF_DEFAULT) -> bool",
+        "TypeHint.die_if_unbearable(self, obj: object, *, conf: BeartypeConf = BEARTYPE_CONF_DEFAULT, exception_prefix: str = 'die_if_unbearable() ') -> None",
+        "TypeHint.is_subhint(self, other: TypeHint) -> bool",
+        "TypeHint.is_superhint(self, other: TypeHint) -> bool"
+      ]
+    },
+    {
+      "import_path": "beartype.roar",
+      "exports": ["BeartypeException", "BeartypeCaveException", "BeartypeConfException", "BeartypeDoorException", "BeartypeDecorException", "BeartypeCallException", "BeartypeCallHintViolation", "BeartypeCallHintParamViolation", "BeartypeCallHintReturnViolation", "BeartypeDoorHintViolation", "BeartypeWarning", "BeartypeDecorHintWarning", "BeartypeDoorWarning"],
+      "notes": "The frozen module exposes a larger hierarchy; tests should use documented base/family classes rather than every implementation-specific leaf."
+    },
+    {
+      "import_path": "beartype.vale",
+      "exports": ["Is", "IsAttr", "IsEqual", "IsInstance", "IsSubclass"],
+      "notes": "Factories are used through their documented subscription syntax to create validation hints."
+    },
+    {
+      "import_path": "beartype.typing",
+      "exports": ["Any", "Annotated", "Callable", "Literal", "Optional", "TypeVar", "TypedDict", "Union", "cast", "get_args", "get_origin", "get_type_hints", "no_type_check", "overload"],
+      "notes": "Compatibility exports mirror typing names available for the supported interpreter."
+    },
+    {
+      "import_path": "beartype.claw",
+      "exports": ["beartype_all", "beartype_package", "beartype_packages", "beartype_this_package", "beartyping"],
+      "notes": "Import-hook APIs are recorded but not asserted until an isolated child-side adapter and filesystem fixture are packaged."
+    }
+  ],
+  "risk_flags": ["dynamic-module-deprecation-lookup", "runtime-code-generation", "optional-imports", "large-metaprogramming-surface"],
+  "completeness": {"dynamic": true, "generated": true, "native": false, "unresolved": ["full roar leaf hierarchy", "claw import-hook integration"]}
+}

@@ -1,0 +1,9 @@
+package=beartype
+version=0.22.9
+runtime_dependencies=[]
+requires_python=>=3.10
+build_backend=hatchling.build
+build_backend_requirements=hatchling>=1.27.0,hatch-vcs>=0.5.0
+optional_dependency_policy=Do not install dev/doc/test extras for the candidate runtime.
+network_policy=No network during agent/candidate/verifier/Oracle/controls execution; build dependencies must be preinstalled in the image.
+status=build lock and Harbor private verifier remain to be packaged in a later stage.

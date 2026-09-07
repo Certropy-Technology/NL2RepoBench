@@ -1,0 +1,52 @@
+schema_version = "1.0"
+task_id = "build"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "python-build-frontend"
+tags = ["python", "packaging", "pep517", "pep518", "wheel", "sdist", "cli", "repository-generation"]
+language = "python"
+
+[source]
+status = "unknown"
+upstream_url = "https://github.com/pypa/build"
+license_spdx = "MIT"
+source_digest = "sha256:119b2fb462adef986483438377a13b2f42064a2a3a4161f24a0cca698a07ac8c"
+submodules = []
+
+[environment]
+status = "unknown"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The package is authored from the frozen build 1.2.2 sdist. Agent, candidate, verifier, Oracle, and controls must run without egress; packaging backends and all build dependencies must be preinstalled before a production image is created."
+
+[dependencies]
+status = "unknown"
+installer = "pip"
+packages = [
+  "packaging>=19.1",
+  "pyproject_hooks",
+]
+
+[tests]
+framework = "pytest"
+expected_total = 0
+expected_total_source = "unknown"
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[lifecycle]
+status = "specified"
+owner = "authoring/python-wave1"
+reason = "Public API and observable offline-safe behavior are specified from the frozen build 1.2.2 sdist. Production packaging remains downstream of source-revision reconciliation, dependency closure, frozen test collection, verifier, Oracle, and controls evidence."

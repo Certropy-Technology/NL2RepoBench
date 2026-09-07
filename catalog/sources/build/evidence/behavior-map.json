@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "task_id": "build",
+  "behaviors": [
+    {"behavior_id":"wheel-filename-parse","public_symbols":["build._util.parse_wheel_filename"],"public_spec_required":true,"confidence":"static+manual","status":"covered"},
+    {"behavior_id":"dependency-check","public_symbols":["build.check_dependency","build.ProjectBuilder.check_dependencies"],"public_spec_required":true,"confidence":"static+manual","status":"covered"},
+    {"behavior_id":"project-builder-contract","public_symbols":["build.ProjectBuilder"],"public_spec_required":true,"confidence":"static+manual","status":"covered"},
+    {"behavior_id":"metadata-helper","public_symbols":["build.util.project_wheel_metadata"],"public_spec_required":true,"confidence":"static+manual","status":"covered"},
+    {"behavior_id":"isolated-env","public_symbols":["build.env.IsolatedEnv","build.env.DefaultIsolatedEnv"],"public_spec_required":true,"confidence":"static","status":"non-bindable-no-network"},
+    {"behavior_id":"cli-build","public_symbols":["build.__main__.main","build.__main__.entrypoint"],"public_spec_required":true,"confidence":"static+manual","status":"covered"}
+  ]
+}

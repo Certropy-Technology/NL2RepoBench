@@ -1,0 +1,186 @@
+{
+  "schema_version": "1.0",
+  "task_id": "build",
+  "package": "build",
+  "version": "1.2.2",
+  "source_archive_sha256": "119b2fb462adef986483438377a13b2f42064a2a3a4161f24a0cca698a07ac8c",
+  "scanner": "python-stdlib-ast-static",
+  "modules": [
+    {
+      "module": "build",
+      "file": "__init__.py",
+      "public_symbols": []
+    },
+    {
+      "module": "build.__main__",
+      "file": "__main__.py",
+      "public_symbols": [
+        {
+          "name": "build_package",
+          "kind": "FunctionDef",
+          "signature": "srcdir: StrPath, outdir: StrPath, distributions: Sequence[Distribution], config_settings: ConfigSettings | None=None, isolation: bool=True, skip_dependency_check: bool=False, installer: _env.Installer='pip'",
+          "line": 217
+        },
+        {
+          "name": "build_package_via_sdist",
+          "kind": "FunctionDef",
+          "signature": "srcdir: StrPath, outdir: StrPath, distributions: Sequence[Distribution], config_settings: ConfigSettings | None=None, isolation: bool=True, skip_dependency_check: bool=False, installer: _env.Installer='pip'",
+          "line": 243
+        },
+        {
+          "name": "main_parser",
+          "kind": "FunctionDef",
+          "signature": "",
+          "line": 288
+        },
+        {
+          "name": "main",
+          "kind": "FunctionDef",
+          "signature": "cli_args: Sequence[str], prog: str | None=None",
+          "line": 391
+        },
+        {
+          "name": "entrypoint",
+          "kind": "FunctionDef",
+          "signature": "",
+          "line": 444
+        }
+      ]
+    },
+    {
+      "module": "build._builder",
+      "file": "_builder.py",
+      "public_symbols": [
+        {
+          "name": "ProjectBuilder",
+          "kind": "ClassDef",
+          "signature": "class",
+          "line": 127
+        }
+      ]
+    },
+    {
+      "module": "build._ctx",
+      "file": "_ctx.py",
+      "public_symbols": [
+        {
+          "name": "log_subprocess_error",
+          "kind": "FunctionDef",
+          "signature": "error: subprocess.CalledProcessError",
+          "line": 31
+        },
+        {
+          "name": "run_subprocess",
+          "kind": "FunctionDef",
+          "signature": "cmd: Sequence[StrPath], env: Mapping[str, str] | None=None",
+          "line": 42
+        }
+      ]
+    },
+    {
+      "module": "build._exceptions",
+      "file": "_exceptions.py",
+      "public_symbols": [
+        {
+          "name": "BuildException",
+          "kind": "ClassDef",
+          "signature": "class",
+          "line": 7
+        },
+        {
+          "name": "BuildBackendException",
+          "kind": "ClassDef",
+          "signature": "class",
+          "line": 13
+        },
+        {
+          "name": "BuildSystemTableValidationError",
+          "kind": "ClassDef",
+          "signature": "class",
+          "line": 39
+        },
+        {
+          "name": "FailedProcessError",
+          "kind": "ClassDef",
+          "signature": "class",
+          "line": 48
+        },
+        {
+          "name": "TypoWarning",
+          "kind": "ClassDef",
+          "signature": "class",
+          "line": 62
+        }
+      ]
+    },
+    {
+      "module": "build._types",
+      "file": "_types.py",
+      "public_symbols": []
+    },
+    {
+      "module": "build._util",
+      "file": "_util.py",
+      "public_symbols": [
+        {
+          "name": "check_dependency",
+          "kind": "FunctionDef",
+          "signature": "req_string: str, ancestral_req_strings: tuple[str, ...]=(), parent_extras: Set[str]=frozenset()",
+          "line": 15
+        },
+        {
+          "name": "parse_wheel_filename",
+          "kind": "FunctionDef",
+          "signature": "filename: str",
+          "line": 62
+        }
+      ]
+    },
+    {
+      "module": "build.env",
+      "file": "env.py",
+      "public_symbols": [
+        {
+          "name": "IsolatedEnv",
+          "kind": "ClassDef",
+          "signature": "class",
+          "line": 28
+        },
+        {
+          "name": "DefaultIsolatedEnv",
+          "kind": "ClassDef",
+          "signature": "class",
+          "line": 61
+        }
+      ]
+    },
+    {
+      "module": "build.util",
+      "file": "util.py",
+      "public_symbols": [
+        {
+          "name": "project_wheel_metadata",
+          "kind": "FunctionDef",
+          "signature": "source_dir: StrPath, isolated: bool=True, *, runner: SubprocessRunner=pyproject_hooks.quiet_subprocess_runner",
+          "line": 22
+        }
+      ]
+    }
+  ],
+  "root_exports": [
+    "build.ProjectBuilder",
+    "build.BuildException",
+    "build.BuildBackendException",
+    "build.BuildSystemTableValidationError",
+    "build.FailedProcessError",
+    "build.TypoWarning",
+    "build.check_dependency",
+    "build.env.IsolatedEnv",
+    "build.env.DefaultIsolatedEnv",
+    "build.util.project_wheel_metadata"
+  ],
+  "cli_entries": [
+    "build.__main__:entrypoint (pyproject-build)",
+    "python -m build"
+  ]
+}

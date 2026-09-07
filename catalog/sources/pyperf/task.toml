@@ -1,0 +1,70 @@
+schema_version = "1.0"
+task_id = "pyperf"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "benchmarking-library"
+tags = ["python", "benchmarking", "json", "cli", "repository-generation", "ast-inventoried"]
+language = "python"
+
+[source]
+status = "unknown"
+upstream_url = "https://github.com/psf/pyperf"
+# PyPI sdist is the frozen authority for this authoring wave. It does not
+# preserve the upstream Git commit; use the content-addressed sdist identity
+# until a Git revision is separately reconciled by the integrator.
+revision = "dd93ccfda79214725293e95f1fa6e00cb4a64adcf1326039486d4e1f91caaa62"
+license_spdx = "MIT"
+source_digest = "sha256:dd93ccfda79214725293e95f1fa6e00cb4a64adcf1326039486d4e1f91caaa62"
+submodules = []
+
+[environment]
+status = "unknown"
+python_version = "3.12"
+os_name = "debian-12-amd64"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The frozen pyperf source and dependency closure are prepared during image build; agent, candidate, verifier, Oracle, and controls have no run-time network access."
+
+[dependencies]
+status = "unknown"
+installer = "pip"
+packages = ["psutil>=5.9.0"]
+
+[tests]
+framework = "pytest"
+expected_total = 0
+expected_total_source = "unknown"
+commands = ["pip install -e .", "pytest --continue-on-collection-errors pyperf/tests"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Build the pyperf benchmarking library from an empty workspace with its Python API, JSON benchmark model, and command-line entry point."
+keywords = ["python", "benchmark", "runner", "json", "cli"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "specified"
+owner = "pyperf-authoring-worker"
+reason = "Frozen pyperf 2.10.0 source was statically inventoried with Python AST. Public API contract is specified; test collection, dependency lock artifact, verifier, and Harbor projection remain downstream packaging stages."
