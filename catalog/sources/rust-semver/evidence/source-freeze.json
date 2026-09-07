@@ -1,0 +1,33 @@
+{
+  "build_script": {
+    "behaviour": "invokes `rustc --version` to read the compiler minor version and may emit cargo:rustc-check-cfg; performs no network access and no filesystem writes",
+    "path": "build.rs",
+    "risk": "build-script-command",
+    "sloc": 23
+  },
+  "commands": [
+    "git ls-remote origin 'refs/tags/1.0.27^{}'",
+    "git checkout --detach 6ed8561154715b2c34df417a2052597d586f2c43",
+    "git archive --format=tar --prefix=semver/ HEAD | sha256sum",
+    "cargo test --lib --tests --locked --offline"
+  ],
+  "license_files": {
+    "LICENSE-APACHE": {
+      "sha256": "sha256:62c7a1e35f56406896d7aa7ca52d0cc0d272ac022b5d2796e7d6905db8a3636a",
+      "size_bytes": 9723
+    },
+    "LICENSE-MIT": {
+      "sha256": "sha256:23f18e03dc49df91622fe2a76176497404e46ced8a715d9d2b67a7446571cca3",
+      "size_bytes": 1023
+    }
+  },
+  "license_spdx": "MIT OR Apache-2.0",
+  "ref": "tag 1.0.27 peels to the pinned revision",
+  "revision": "6ed8561154715b2c34df417a2052597d586f2c43",
+  "schema_version": "1.0",
+  "source_archive_bytes": 153600,
+  "source_archive_sha256": "sha256:193fa1e8e7fd3f5bd3f5fcf911df523b4d1cd59c33fba7a079bec9dfaf761594",
+  "status": "known",
+  "task_id": "rust-semver",
+  "upstream_url": "https://github.com/dtolnay/semver"
+}

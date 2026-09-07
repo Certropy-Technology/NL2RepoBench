@@ -1,0 +1,87 @@
+schema_version = "1.0"
+task_id = "rustc-hash"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "rust-hashing"
+tags = ["rust", "cargo", "hash", "hasher", "fxhash", "no-std"]
+language = "rust"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/rust-lang/rustc-hash"
+revision = "6ced6cb4235295509102d05f8915e0bb0d8cfe54"
+license_spdx = "Apache-2.0 OR MIT"
+source_digest = "sha256:3e00d3ae4824a067ae028eac598b4ba7313f8eae3aac7d673adeab15f7005905"
+submodules = []
+
+[environment]
+status = "known"
+runtime_version = "1.97.1"
+os_name = "debian-12-amd64"
+base_image = "docker.io/library/rust@sha256:2775a09d208ff0d7c1f50490c45b62db929e87ba1dcbc3f2132ac71a704bcdd3"
+base_image_digest = "sha256:2775a09d208ff0d7c1f50490c45b62db929e87ba1dcbc3f2132ac71a704bcdd3"
+system_packages = ["build-essential"]
+build_command = "cargo test --lib --locked --offline"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "The runtime uses a digest-bound private Cargo closure; Agent and verifier runs have no public network access."
+
+[dependencies]
+status = "known"
+installer = "cargo"
+packages = []
+cargo_bundle = { digest = "sha256:afdd81f5f74049287ac41e84ebac8619bc42f75b361529ec05e0b996fcf5c8fe", size_bytes = 718, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:afdd81f5f74049287ac41e84ebac8619bc42f75b361529ec05e0b996fcf5c8fe", visibility = "private" }
+
+[tests]
+framework = "cargo"
+expected_total = 24
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = []
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:2a17253c08c1ab254afd5298af38b73fbe8d1980b00cc5850a8afc9b207b93c4", size_bytes = 2655, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:2a17253c08c1ab254afd5298af38b73fbe8d1980b00cc5850a8afc9b207b93c4", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
+
+[harbor]
+description = "Rebuild the rustc-hash Rust library with deterministic FxHasher, FxBuildHasher, seeded state, and standard hash collections."
+keywords = ["rust", "cargo", "hash", "hasher", "fxhash"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 360.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:eda6d952ae9929b307ffcd5e3fa299d44d849c9aac607a6bf6f51395855c7dc3"
+size_bytes = 6644
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:eda6d952ae9929b307ffcd5e3fa299d44d849c9aac607a6bf6f51395855c7dc3"
+visibility = "private"
+
+[lifecycle]
+status = "packaged"
+owner = "rust-cargo-wave1"
+reason = "Frozen rustc-hash source, private Cargo closure, separate bridge verifier, and Oracle bundle are prepared; Harbor Oracle and controls remain parent-level gates."

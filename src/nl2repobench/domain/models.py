@@ -763,3 +763,58 @@ class MetadataGapReport(RecordModel):
     complete_task_count: Annotated[int, Field(ge=0)]
     gap_counts: dict[str, int]
     tasks: tuple[MetadataGapTask, ...]
+
+
+class InventoryEntry(BaseModel):
+    """One canonical dependency archive member."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True, str_strip_whitespace=True)
+
+    path: str
+    type: Literal["file", "directory"]
+    mode: Literal["0444", "0555"]
+    size: Annotated[int, Field(ge=0)]
+    sha256: str | None = Field(default=None, pattern=SHA256_PATTERN)
+
+    @model_validator(mode="after")
+    def validate_entry(self) -> InventoryEntry:
+        path = PurePosixPath(self.path)
+        if path.is_absolute() or not path.parts or any(
+            part in {"", ".", ".."} for part in path.parts
+        ):
+            raise ValueError("dependency inventory path is unsafe")
+        if self.type == "directory":
+            if self.mode != "0555" or self.size != 0 or self.sha256 is not None:
+                raise ValueError("dependency inventory directory metadata is invalid")
+        elif self.sha256 is None:
+            raise ValueError("dependency inventory file requires sha256")
+        return self
+
+
+class ArchiveInventory(BaseModel):
+    """Closed-world inventory for one canonical dependency archive."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True, str_strip_whitespace=True)
+
+    archive_kind: Literal["dependency-lock", "offline-store"]
+    archive_digest: str = Field(pattern=SHA256_PATTERN)
+    tree_digest: str = Field(pattern=SHA256_PATTERN)
+    entries: tuple[InventoryEntry, ...]
+    file_count: Annotated[int, Field(ge=0)]
+    directory_count: Annotated[int, Field(ge=0)]
+    total_bytes: Annotated[int, Field(ge=0)]
+
+    @model_validator(mode="after")
+    def validate_counts(self) -> ArchiveInventory:
+        paths = [entry.path for entry in self.entries]
+        if paths != sorted(paths, key=lambda value: value.encode("utf-8")):
+            raise ValueError("dependency inventory entries must be sorted")
+        if len(paths) != len(set(paths)):
+            raise ValueError("dependency inventory entries must be unique")
+        files = [entry for entry in self.entries if entry.type == "file"]
+        directories = [entry for entry in self.entries if entry.type == "directory"]
+        if self.file_count != len(files) or self.directory_count != len(directories):
+            raise ValueError("dependency inventory entry counts do not match")
+        if self.total_bytes != sum(entry.size for entry in files):
+            raise ValueError("dependency inventory total_bytes does not match")
+        return self
