@@ -1,0 +1,82 @@
+schema_version = "1.0"
+task_id = "tilt"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "ruby-template-interface"
+tags = ["ruby", "bundler", "tilt", "template", "render", "json-bridge"]
+language = "ruby"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/jeremyevans/tilt"
+revision = "423835bc01bc3de4f5a521d52796999ed77cee32"
+license_spdx = "MIT"
+source_digest = "sha256:b56304f29928291cb3a4b04a16ddd0341de1a46fcaf2d259ce515b72bbd08157"
+submodules = []
+
+[environment]
+status = "known"
+runtime_version = "3.4.10"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/ruby"
+base_image_digest = "sha256:1fb3661a02aac22a9025495fe2b53d5bb36e9f8841339c769b2409d8d97c6035"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "Bundler dependencies are supplied by a private hash-verified cache; the agent and verifier do not fetch upstream source."
+
+[dependencies]
+status = "known"
+installer = "bundler"
+packages = []
+gem_bundle = { digest = "sha256:b606bd02bb979c337ad26bb137f6bb3c401bc19dde43942de9ac6fb2e4e6deb5", size_bytes = 10240, media_type = "application/vnd.nl2repobench.rubygems-bundle+tar", uri = "artifact://private/sha256:b606bd02bb979c337ad26bb137f6bb3c401bc19dde43942de9ac6fb2e4e6deb5", visibility = "private" }
+
+[tests]
+framework = "ruby-contract"
+expected_total = 10
+expected_total_source = "frozen-collection"
+commands = ["bash /tests/private/contract.sh"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Reimplement a tested subset of Tilt's generic template interface: engine registration/mapping, render, locals, scope, template cache, and string/file source behavior."
+keywords = ["ruby", "bundler", "tilt", "template", "render", "json-bridge", "repository-generation"]
+agent_timeout_sec = 900.0
+verifier_timeout_sec = 900.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 420.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 2048
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "packaged"
+owner = "tilt-wave1-qwen"
+reason = "Frozen pure-Ruby Tilt 2.3.0 release with private Bundler cache, hash-inventoried verifier and Oracle bundles, and a public reviewed bridge plus a 10-leaf ruby-contract-json-v1 contract grounded in the upstream StringTemplate, Mapping, and Cache tests. Oracle and control runs are left to the parent integrator."
+
+[oracle_bundle]
+digest = "sha256:59525a7ffcf21121f8d5eaf8055acd3aa710a441a4a32924578c7fb42a8583f9"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:59525a7ffcf21121f8d5eaf8055acd3aa710a441a4a32924578c7fb42a8583f9"
+visibility = "private"
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:cd3cff3aee4cbbe0a638ae3e390d3f48c4ea742d41ad9c79bb41317e46d7a822", size_bytes = 10240, media_type = "application/vnd.nl2repobench.verifier+tar", uri = "artifact://private/sha256:cd3cff3aee4cbbe0a638ae3e390d3f48c4ea742d41ad9c79bb41317e46d7a822", visibility = "private" }
+entrypoint = "contract.sh"

@@ -1,0 +1,82 @@
+schema_version = "1.0"
+task_id = "sinatra"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "ruby-web-dsl"
+tags = ["ruby", "bundler", "sinatra", "rack", "routing", "json-bridge"]
+language = "ruby"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/sinatra/sinatra"
+revision = "599a007a779dc9940e49f34e9077220f4c209f4b"
+license_spdx = "MIT"
+source_digest = "sha256:06583428e8b85fbbc8603b17d026ff3a74efee848dd486d512ca4db1c0dc663c"
+submodules = []
+
+[environment]
+status = "known"
+runtime_version = "3.4.10"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/ruby"
+base_image_digest = "sha256:1fb3661a02aac22a9025495fe2b53d5bb36e9f8841339c769b2409d8d97c6035"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "Bundler dependencies are supplied by a private hash-verified cache; the agent and verifier do not fetch upstream source."
+
+[dependencies]
+status = "known"
+installer = "bundler"
+packages = ["base64 0.3.0", "logger 1.7.0", "mustermann 3.0.4", "rack 3.2.7", "rack-protection 4.2.1", "rack-session 2.1.2", "tilt 2.6.1"]
+gem_bundle = { digest = "sha256:3ca45a4a44f29cb0a62edbb9ae46e07a2d7d6128ab8db72377b9401e51351e1f", size_bytes = 286720, media_type = "application/vnd.nl2repobench.rubygems-bundle+tar", uri = "artifact://private/sha256:3ca45a4a44f29cb0a62edbb9ae46e07a2d7d6128ab8db72377b9401e51351e1f", visibility = "private" }
+
+[tests]
+framework = "ruby-contract"
+expected_total = 9
+expected_total_source = "frozen-collection"
+commands = ["bash /tests/private/contract.sh"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Reimplement a tested subset of the Sinatra modular DSL: route registration and matching, parameter merging, response control, before/after filters, and halt."
+keywords = ["ruby", "bundler", "sinatra", "rack", "routing", "filters", "json-bridge"]
+agent_timeout_sec = 900.0
+verifier_timeout_sec = 900.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 420.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 2048
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "packaged"
+owner = "ruby-wave1"
+reason = "Source, license, offline dependency closure, public bridge, controls, and private Oracle/verifier artifacts are frozen against the pinned Sinatra 4.2.1 revision, and all nine contract leaves were executed live against that reference source in a no-network MRI 3.4.10 container (Oracle 9/9; stub and forgery 0/9). Official Harbor Oracle and controls receipts are produced by the parent integrator, so this source stops at packaged rather than claiming oracle-passed."
+
+[oracle_bundle]
+digest = "sha256:e80d2791b0f5284f29da8122d957cbd7ccaf1967e949270d8e48f92d7a74c62d"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:e80d2791b0f5284f29da8122d957cbd7ccaf1967e949270d8e48f92d7a74c62d"
+visibility = "private"
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:c5fa657bc0e5fc4ff88c8ce9b9a8a69f033db9e06bb67e314098dacb05f235e6", size_bytes = 10240, media_type = "application/vnd.nl2repobench.verifier+tar", uri = "artifact://private/sha256:c5fa657bc0e5fc4ff88c8ce9b9a8a69f033db9e06bb67e314098dacb05f235e6", visibility = "private" }
+entrypoint = "contract.sh"

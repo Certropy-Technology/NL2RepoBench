@@ -25,7 +25,7 @@ from nl2repobench.storage.artifacts import FileArtifactStore, LocalArtifactResol
 
 JsonObject = dict[str, Any]
 BundleManifestSchema = Literal["1.0", "2.0"]
-RuntimeLanguage = Literal["python", "node"]
+RuntimeLanguage = Literal["python", "node", "ruby"]
 
 VALID_STATUSES = frozenset({"controls-passed", "reviewed", "piloted", "published"})
 BLOCKED_STATUSES = frozenset({"blocked", "excluded"})
@@ -236,8 +236,10 @@ def _bundle_manifest_schema_for_source(
         return "python", "1.0"
     if language == "node":
         return "node", "2.0"
+    if language == "ruby":
+        return "ruby", "1.0"
     raise ProductionGateError(
-        f"{task_id}: source metadata.language must be python or node, got {language!r}"
+        f"{task_id}: source metadata.language must be python, node, or ruby, got {language!r}"
     )
 
 
@@ -324,6 +326,7 @@ def _validate_runtime_shape(task_id: str, source_data: JsonObject, task_root: Pa
         task_root / "tests/verifier/run.py",
         task_root / "tests/runtime/nl2repobench/verification/grader.py",
         task_root / "tests/runtime/node/grade-report.mjs",
+        task_root / "tests/runtime/nl2repobench/verification/ruby_contract_report.py",
     )
     if not any(path.is_file() for path in grader_paths):
         raise ProductionGateError(f"{task_id}: structured grader entrypoint is missing")
@@ -377,6 +380,7 @@ def validate_catalog(
     artifact_root: Path,
     python_toolchain: Path,
     node_toolchain: Path,
+    ruby_toolchain: Path,
     verify_git: bool = True,
     compile_tasks: bool = True,
     require_evidence: bool = True,
@@ -475,11 +479,12 @@ def validate_catalog(
                     )
                     if compile_tasks:
                         output_root = Path(compile_parent.name) / task_id
-                        toolchain = (
-                            node_toolchain
-                            if source_data.get("schema_version") == "2.0"
-                            else python_toolchain
-                        )
+                        metadata = source_data.get("metadata")
+                        language = metadata.get("language") if isinstance(metadata, dict) else None
+                        toolchain = {
+                            "node": node_toolchain,
+                            "ruby": ruby_toolchain,
+                        }.get(language, python_toolchain)
                         compiled = registry.compile_task(
                             source_root,
                             output_root,
@@ -623,11 +628,14 @@ def _validate_grading(
         )
     if not isinstance(counts, dict) or counts.get("collected") != expected_total:
         raise ProductionGateError(f"{task_id}: grading collection differs from frozen total")
-    # Go normalizes the fixed denominator as ``frozen_total`` while the
+    # Go and Ruby normalize the fixed denominator as ``frozen_total`` while the
     # Python/Node adapters expose the same value as ``expected_total``.
     reported_total = grading.get("expected_total", grading.get("frozen_total"))
     if reported_total != expected_total:
         raise ProductionGateError(f"{task_id}: grading expected_total differs from source")
+    if collection is None:
+        # Ruby contract graders nest collection diagnostics under ``report``.
+        collection = grading.get("report")
     if isinstance(collection, dict) and collection.get("collection_errors"):
         raise ProductionGateError(f"{task_id}: grading contains collection errors")
     if grading.get("failure_reason") not in {None, ""}:

@@ -8,6 +8,7 @@ import pytest
 
 from nl2repobench.harbor.pnpm_compiler import PnpmHarborCompiler
 from nl2repobench.package_managers import (
+    BundlerPackageManager,
     PackageManagerError,
     PackageManagerRegistry,
     PnpmPackageManager,
@@ -92,7 +93,8 @@ def test_pnpm_rejects_non_registry_sources(tmp_path, marker: str) -> None:
 def test_package_manager_registry_fails_closed() -> None:
     registry = PackageManagerRegistry.default()
     assert isinstance(registry.resolve("pnpm"), PnpmPackageManager)
-    with pytest.raises(UnknownPackageManagerError, match="registered: go-modules, pnpm"):
+    assert isinstance(registry.resolve("bundler"), BundlerPackageManager)
+    with pytest.raises(UnknownPackageManagerError, match="registered: bundler, go-modules, pnpm"):
         registry.resolve("npm")
 
 

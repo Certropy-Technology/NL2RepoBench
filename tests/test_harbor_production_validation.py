@@ -175,14 +175,14 @@ network_mode = "no-network"
     _write_json(
         task_root / "bundle.manifest.json",
         {
-            "schema_version": "1.0" if language == "python" else "2.0",
+            "schema_version": "2.0" if language == "node" else "1.0",
             "mode": "production",
             "canonical_manifest_digest": "sha256:abc",
             "files": rows,
         },
     )
     source = {
-        "schema_version": "1.0" if language == "python" else "2.0",
+        "schema_version": "2.0" if language == "node" else "1.0",
         "metadata": {"language": language},
         "environment": {"network_policy": {"mode": "no-network"}},
         "tests": {"expected_total": 3},
@@ -205,6 +205,14 @@ def test_runtime_shape_accepts_node_v2_bundle_manifest(tmp_path: Path) -> None:
     source, task_root = _runtime_fixture(tmp_path, language="node")
 
     result = gate._validate_runtime_shape("node-fixture", source, task_root)
+
+    assert result["schema_version"] == "1.4"
+
+
+def test_runtime_shape_accepts_ruby_v1_bundle_manifest(tmp_path: Path) -> None:
+    source, task_root = _runtime_fixture(tmp_path, language="ruby")
+
+    result = gate._validate_runtime_shape("ruby-fixture", source, task_root)
 
     assert result["schema_version"] == "1.4"
 

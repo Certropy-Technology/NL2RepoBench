@@ -58,3 +58,14 @@ def test_registry_resolves_registered_pnpm_identity() -> None:
         )
     )
     assert factory.__name__ == "node_pnpm_factory"
+
+
+def test_registry_resolves_registered_ruby_identity() -> None:
+    registry = HarborCompilerRegistry.default()
+    factory = registry.resolve(
+        RuntimeDiscriminator(
+            language=RuntimeLanguage.RUBY,
+            package_manager=PackageManager.BUNDLER,
+        )
+    )
+    assert factory.__name__ == "ruby_bundler_factory"

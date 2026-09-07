@@ -28,6 +28,7 @@ class RuntimeLanguage(StrEnum):
     GO = "go"
     RUST = "rust"
     JAVA = "java"
+    RUBY = "ruby"
 
 
 class PackageManager(StrEnum):
@@ -40,6 +41,7 @@ class PackageManager(StrEnum):
     GO_MODULES = "go-modules"
     CARGO = "cargo"
     MAVEN = "maven"
+    BUNDLER = "bundler"
     NONE = "none"
 
 
@@ -48,8 +50,9 @@ class RuntimeDiscriminator(BaseModel):
 
     ``schema_version`` is deliberately absent: record shape and runtime
     selection are independent concerns. Python accepts ``uv``, ``pip`` or
-    ``none``; Node accepts ``npm``, ``pnpm`` or ``none``. Any other pairing is
-    rejected so a caller cannot silently route a task to the wrong adapter.
+    ``none``; Node accepts ``npm``, ``pnpm`` or ``none``; Ruby accepts
+    ``bundler``. Any other pairing is rejected so a caller cannot silently
+    route a task to the wrong adapter.
 
     ``from_catalog_source`` reads the current human-facing source locations:
     Python sources declare their installer in ``dependencies.installer``;
@@ -76,6 +79,7 @@ class RuntimeDiscriminator(BaseModel):
             RuntimeLanguage.GO: frozenset({PackageManager.GO_MODULES}),
             RuntimeLanguage.RUST: frozenset({PackageManager.CARGO}),
             RuntimeLanguage.JAVA: frozenset({PackageManager.MAVEN}),
+            RuntimeLanguage.RUBY: frozenset({PackageManager.BUNDLER}),
         }
         if self.package_manager not in allowed[self.language]:
             accepted = ", ".join(
@@ -113,15 +117,19 @@ class RuntimeDiscriminator(BaseModel):
             package_manager = runtime.get("package_manager")
         elif language == RuntimeLanguage.GO.value:
             package_manager = PackageManager.GO_MODULES.value
+        elif language == RuntimeLanguage.RUBY.value:
+            dependencies = _required_mapping(source, "dependencies")
+            package_manager = dependencies.get("installer")
         else:
             raise RuntimeContractError(
-                "metadata.language must explicitly be one of: python, node, go"
+                "metadata.language must explicitly be one of: python, node, go, ruby"
             )
 
         if not isinstance(package_manager, str) or not package_manager:
             location = (
                 "dependencies.installer"
                 if language == RuntimeLanguage.PYTHON.value
+                or language == RuntimeLanguage.RUBY.value
                 else "environment.runtime.package_manager"
             )
             raise RuntimeContractError(f"{location} is required for runtime dispatch")
