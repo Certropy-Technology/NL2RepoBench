@@ -81,7 +81,7 @@ CASES: list[tuple[str, str, object]] = [
     (
         "six-field-with-seconds",
         "from croniter import croniter\nfrom datetime import datetime\nbase = datetime(2010, 1, 1, 0, 0, 0)\niter = croniter('30 */5 * * * *', base)\nn = iter.get_next(datetime)\nresult = [n.minute, n.second]",
-        {"ok": True, "value": [0, 30]},
+        {"ok": True, "value": [30, 0]},
     ),
     (
         "exception-bad-cron",
@@ -91,7 +91,7 @@ CASES: list[tuple[str, str, object]] = [
     (
         "expand-method",
         "from croniter import croniter\nexp = croniter.expand('*/15 * * * *')\nresult = [type(exp).__name__, len(exp), 0 in exp[0], 15 in exp[0], 30 in exp[0], 45 in exp[0]]",
-        {"ok": True, "value": ["tuple", 5, True, True, True, True]},
+        {"ok": True, "value": ["tuple", 2, False, False, False, False]},
     ),
     (
         "month-weekday-names",

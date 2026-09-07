@@ -37,7 +37,7 @@ reason = "The hatchling build backend is preinstalled into the agent and verifie
 status = "known"
 installer = "pip"
 packages = []
-lock_artifact = { digest = "sha256:6b9ee0eed567025e68e2ba9875161a871c1768c1f75c2628473999f8cdb77f5a", size_bytes = 1146, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:6b9ee0eed567025e68e2ba9875161a871c1768c1f75c2628473999f8cdb77f5a", visibility = "private" }
+lock_artifact = { digest = "sha256:b864f8d882f61cd1a2c53660e91fdaacd5d3af2e9e5f823c7c926efd6278b326", size_bytes = 1347, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:b864f8d882f61cd1a2c53660e91fdaacd5d3af2e9e5f823c7c926efd6278b326", visibility = "private" }
 
 [tests]
 framework = "pytest"
@@ -56,7 +56,7 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 [verifier]
 protocol = "custom-json-v1"
 entrypoint = "run.py"
-bundle = { digest = "sha256:591d58730faa638ce6733b213ee6952d8d3f6238be3331bf423fc513bb7dd01f", size_bytes = 1797, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:591d58730faa638ce6733b213ee6952d8d3f6238be3331bf423fc513bb7dd01f", visibility = "private" }
+bundle = { digest = "sha256:11a1569480207739fac4fa66adb46f92b25d45ead687a0fb24769fa2baf9e7dc", size_bytes = 1748, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:11a1569480207739fac4fa66adb46f92b25d45ead687a0fb24769fa2baf9e7dc", visibility = "private" }
 
 [harbor]
 description = "Build the croniter cron iteration library from an empty workspace."
@@ -73,10 +73,10 @@ storage_mb = 2048
 workspace_artifact = "/workspace"
 
 [oracle_bundle]
-digest = "sha256:dd7c41b14cb76beb49dee8c8807c22b2e2fb698e39a58466992857d767600531"
-size_bytes = 251794
+digest = "sha256:181ab81bcd43edee6f2c290da1055a6efad6379852c642df35d32167da6186ba"
+size_bytes = 251834
 media_type = "application/vnd.nl2repobench.private-bundle+tar"
-uri = "artifact://private/sha256:dd7c41b14cb76beb49dee8c8807c22b2e2fb698e39a58466992857d767600531"
+uri = "artifact://private/sha256:181ab81bcd43edee6f2c290da1055a6efad6379852c642df35d32167da6186ba"
 visibility = "private"
 
 [lifecycle]

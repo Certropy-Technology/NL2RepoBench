@@ -5,7 +5,7 @@ set -euo pipefail
 # Restores frozen source from bundled payload
 
 EXPECTED_REVISION="9181ba7de0a91512cb77d537b7e23631ffe4f7e8"
-EXPECTED_DIGEST="ac8e9d432017f5ef6c70f8660e98359353201d58383c38358c221378b74fbe77"
+EXPECTED_DIGEST="e3b69ee8496bc7c8112063aadf9e6ec038534016bed569c428d0290ccdd27ff4"
 WORKSPACE="/workspace"
 BUNDLE_DIR="$(dirname "$0")"
 SOURCE_ARCHIVE="${BUNDLE_DIR}/source.tar.gz"

@@ -1,42 +1,59 @@
 #!/bin/bash
 set -euo pipefail
 
-# Oracle for croniter task
-# Source: https://github.com/kiorky/croniter
-# Revision: 9181ba7de0a91512cb77d537b7e23631ffe4f7e8
-# Expected digest: sha256:ac8e9d432017f5ef6c70f8660e98359353201d58383c38358c221378b74fbe77
+# Oracle solution for croniter task
+# Restores frozen source from bundled payload
 
-echo "[Oracle] Starting croniter Oracle"
-echo "[Oracle] Source digest: sha256:ac8e9d432017f5ef6c70f8660e98359353201d58383c38358c221378b74fbe77"
+EXPECTED_REVISION="9181ba7de0a91512cb77d537b7e23631ffe4f7e8"
+EXPECTED_DIGEST="e3b69ee8496bc7c8112063aadf9e6ec038534016bed569c428d0290ccdd27ff4"
+WORKSPACE="/workspace"
+BUNDLE_DIR="$(dirname "$0")"
+SOURCE_ARCHIVE="${BUNDLE_DIR}/source.tar.gz"
 
-# Extract and verify source
-if [ ! -f /solution/source.tar.gz ]; then
-    echo "[Oracle] ERROR: source.tar.gz not found"
+echo "[ORACLE] Starting croniter solution restoration"
+echo "[ORACLE] Expected revision: ${EXPECTED_REVISION}"
+echo "[ORACLE] Expected digest: ${EXPECTED_DIGEST}"
+
+# Verify source archive exists
+if [ ! -f "${SOURCE_ARCHIVE}" ]; then
+    echo "[ORACLE] ERROR: Source archive not found at ${SOURCE_ARCHIVE}"
     exit 1
 fi
 
-cd /solution
-tar -xzf source.tar.gz
-cd croniter-*
+# Verify digest
+echo "[ORACLE] Verifying source archive digest..."
+ACTUAL_DIGEST=$(sha256sum "${SOURCE_ARCHIVE}" | awk '{print $1}')
+if [ "${ACTUAL_DIGEST}" != "${EXPECTED_DIGEST}" ]; then
+    echo "[ORACLE] ERROR: Digest mismatch"
+    echo "[ORACLE]   Expected: ${EXPECTED_DIGEST}"
+    echo "[ORACLE]   Actual:   ${ACTUAL_DIGEST}"
+    exit 1
+fi
+echo "[ORACLE] Digest verified: ${ACTUAL_DIGEST}"
 
-# Verify source digest
-ACTUAL_DIGEST=$(tar -czf - . | sha256sum | cut -d' ' -f1)
-EXPECTED_DIGEST="ac8e9d432017f5ef6c70f8660e98359353201d58383c38358c221378b74fbe77"
+# Extract to workspace
+echo "[ORACLE] Extracting source to ${WORKSPACE}..."
+cd "${WORKSPACE}"
 
-if [ "$ACTUAL_DIGEST" != "$EXPECTED_DIGEST" ]; then
-    echo "[Oracle] ERROR: Source digest mismatch"
-    echo "[Oracle] Expected: $EXPECTED_DIGEST"
-    echo "[Oracle] Actual: $ACTUAL_DIGEST"
+# Extract with strip-components=1 to remove top-level directory
+tar -xzf "${SOURCE_ARCHIVE}" --strip-components=1
+
+# Verify extraction
+if [ ! -f "${WORKSPACE}/pyproject.toml" ]; then
+    echo "[ORACLE] ERROR: pyproject.toml not found after extraction"
     exit 1
 fi
 
-echo "[Oracle] Source digest verified"
+if [ ! -f "${WORKSPACE}/src/croniter/__init__.py" ]; then
+    echo "[ORACLE] ERROR: src/croniter/__init__.py not found after extraction"
+    exit 1
+fi
 
-# Install to workspace with --no-build-isolation
-echo "[Oracle] Installing to /workspace with --no-build-isolation"
-python -m pip install --no-build-isolation --no-deps --no-index -e . --prefix /workspace --no-warn-script-location
+echo "[ORACLE] Source restored successfully"
+echo "[ORACLE] Contents:"
+ls -la "${WORKSPACE}/" | head -20
 
-echo "[Oracle] Installation complete"
-ls -la /workspace/lib/python*/site-packages/ || true
+echo "[ORACLE] Package structure:"
+ls -la "${WORKSPACE}/src/croniter/" | head -20
 
-echo "[Oracle] Oracle setup complete"
+echo "[ORACLE] Solution restoration complete"
