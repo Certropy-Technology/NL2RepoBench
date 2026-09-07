@@ -6,6 +6,14 @@ workspace. Implement the deterministic offline core contract below for CPython
 package must build with `pip install .` from a source-only workspace and must
 not require network access at runtime.
 
+# Natural Language Instruction
+
+Build the complete offline `openai` Python SDK core from an empty workspace.
+Implement models, query serialization, incremental SSE decoding, webhook
+verification, and injected sync/async HTTP clients exactly as specified below.
+Create the package and build metadata rather than a single module, and keep the
+generated endpoint and live service surface outside the task.
+
 ## Project Description
 
 Recreate the stable core behavior of `openai` version `3.3.1`: Pydantic-backed
@@ -15,7 +23,7 @@ construction. This task is an offline SDK exercise. It does not contact the
 OpenAI service, read credentials from a network, or implement the generated
 endpoint surface.
 
-## Supports
+## Supports or Environment Configuration
 
 - Python 3.12 on Linux amd64; use a `src/openai/` package layout and a
   `pyproject.toml` using the Hatchling build backend.
@@ -27,6 +35,24 @@ endpoint surface.
   a real endpoint.
 - Preserve insertion order in dictionaries and query parameters. Public
   exceptions must be typed and importable from their documented paths.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml          # Hatchling build metadata and dependencies
+└── src/openai/
+    ├── __init__.py         # root exports, version, sentinels
+    ├── _models.py          # BaseModel and recursive construction
+    ├── _qs.py              # query encoding and parsing
+    ├── _streaming.py       # SSE event and decoder
+    ├── lib/_webhooks.py    # signature verification and unwrap
+    └── _client.py          # sync and async injected clients
+```
+
+The `src` mapping and public import paths must work after installation. No
+endpoint fixture, private verifier, Oracle payload, or live-service code belongs
+in the agent-owned tree.
 
 ## API Usage Guide
 
@@ -124,3 +150,36 @@ error messages must not include secrets or payloads. The generated endpoint
 resources, live service calls, Azure/Bedrock providers, realtime websockets,
 TLS/mTLS, file uploads, proxy integration, optional transports, and repository
 release tooling are outside this offline contract.
+
+## Examples
+
+```python
+from openai import BaseModel, NOT_GIVEN
+class Item(BaseModel):
+    name: str
+item = Item(name='one')
+item.to_dict()
+```
+
+```python
+from openai._qs import stringify
+stringify({'filter': {'active': True}, 'tag': ['a', 'b']})
+```
+
+```python
+from openai._streaming import SSEDecoder
+events = list(SSEDecoder().iter_bytes([b'data: {"ok":true}\n\n']))
+```
+
+## Error Handling and Boundary Conditions
+
+- Pydantic validation errors remain typed and unknown fields remain available
+  as documented extras.
+- Query formats outside `repeat`, `comma`, and `brackets`, or unsupported
+  nested formats, raise the documented errors.
+- SSE input may be fragmented and use LF, CR, or CRLF; invalid fields are
+  ignored, while body reads and webhook signatures retain their typed errors.
+- Webhook timestamps outside tolerance and mismatched signatures are rejected
+  without exposing secrets or payloads in errors.
+- HTTP requests use only injected in-memory transports; no endpoint, DNS,
+  credential, or external network access is allowed.

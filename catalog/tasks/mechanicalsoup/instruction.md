@@ -1,3 +1,76 @@
+# Build `mechanicalsoup`
+
+## Project Description
+
+Create the `mechanicalsoup` project from an empty workspace. This is a repository-generation task for the frozen `python` package contract, task specification version `0.1.0`, at source revision `16238f4b726a09563150a2a818cded51ac7d7c1f`. Implement the public behavior described by the local inventories and the task-specific detail below; do not copy upstream source or tests. The supported scope is python, repository-generation.
+
+## Natural Language Instruction
+
+Starting with an empty `workspace/`, create an installable `mechanicalsoup` project. Implement every public/core API named in the API Usage Guide, its package exports, and its documented integration points. Preserve observable input types, return shapes, ordering, determinism, state changes, and documented exception behavior. The project must be usable through its declared `mechanicalsoup` import path (or the package root for this Node task), and all required modules must be present in the directory structure below.
+
+The task-specific specification retained below supplies the detailed behavior for each API family. Treat it as the contract: do not add unrelated APIs, replace deterministic behavior with randomized or time-dependent behavior, or weaken error handling.
+
+## Supports
+
+- Language/runtime: `python` on `3.10`; target environment metadata declares `debian-12`.
+- Distribution/package: `mechanicalsoup`; import/root name: `mechanicalsoup`. Package manager: `pip`.
+- Install from the repository root with `python -m pip install . --no-deps`. Build metadata must be complete and agree with the package entry point.
+- Dependency status in the frozen source metadata is `unknown`. Use only dependencies declared by the task and available in the preinstalled build image; standard-library modules are not third-party runtime dependencies.
+- NoNetwork boundary: agent, candidate, verifier, Oracle, and controls run with `network_mode=no-network`. Do not access GitHub, PyPI, npm registries, Go proxy, DNS, or external services at runtime. Do not fetch source or dependencies during implementation or package use.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── setup.py
+├── mechanicalsoup/
+│   ├── __init__.py
+│   ├── __version__.py
+│   ├── browser.py
+│   ├── form.py
+│   ├── stateful_browser.py
+│   ├── utils.py
+│   └── setup.py
+└── README.md
+```
+
+The tree is the minimum public project layout. Add a module only when it corresponds to a documented import path or package resource. Do not place publicly unavailable evaluator code, non-public evaluation material, Oracle payloads, dependency caches, or trusted reports in this workspace.
+
+## API Usage Guide
+
+The public/core API families recorded in the local inventory are: 1. Project Overview and Objectives, 2. Natural Language Instructions (Prompt), 3. Environment Configuration (Dependency Libraries), Python Version, 4. Project Directory Structure, 5. API Usage Guide, 5.1 Core Classes and Functions, 5.1.1 Module Import, 5.1.2. Browser Class, 5.1.2.1 Initialization Method, 5.1.2.2 Main Methods, 5.1.3 StatefulBrowser Class, 5.1.3.1 Overview, 5.1.3.2 Initialization, 5.1.3.3 Special Methods, 5.1.3.4 Properties, 5.1.3.5 Core Methods, 5.1.3.6 Form Handling, 5.1.3.7 Navigation, 5.1.3.8 Utility Methods, 5.1.3.9 Example Usage, 5.1.4 Form Class, 5.1.5 LinkNotFoundError Class, 5.2 Usage Examples.
+
+For each listed family, the detailed contract below defines the import path or CLI entry, signature, accepted inputs, return type/shape, ordering and determinism, state or I/O side effects, errors, and examples. Implement the complete public surface, including root re-exports and aliases where the specification names them. If an API is stateful, preserve mutation and repeated-call behavior; if it is pure, do not introduce global state.
+
+## Implementation Notes
+
+Keep the implementation self-contained and deterministic under the declared runtime. The candidate repository must install from the workspace root, import through the documented public path, and run without external services. Preserve package metadata, module semantics (ESM/CommonJS or Python import behavior), serialization formats, resource cleanup, and boundary behavior described below. publicly unavailable evaluator adapters and non-public evaluation details are not part of the implementation.
+
+## Examples
+
+Ordinary project examples:
+
+```bash
+cd workspace
+python -m pip install . --no-deps
+```
+
+```python
+# Import the public package and use the task-specific APIs documented below.
+from mechanicalsoup import *
+```
+
+The retained task-specific examples below provide ordinary API calls and combinations grounded in the frozen inventory. Keep their result shapes and ordering exact.
+
+## Error Handling and Boundary Conditions
+
+- Empty inputs, malformed values, missing resources, duplicate values, and unsupported options must follow the task-specific error contracts below; do not silently coerce or discard information unless explicitly specified.
+- Repeated calls must remain deterministic. Filesystem, process, clock, random, native, callback, and serialization boundaries are supported only where the local specification documents them.
+- Network attempts are prohibited and must not be used as a fallback. Installation failures, missing offline dependencies, or unsupported external capabilities are environment/source concerns, not reasons to invent behavior.
+
+
+## Source-derived task detail
+
 # Introduction to the MechanicalSoup_main Project
 
 ## 1. Project Overview and Objectives

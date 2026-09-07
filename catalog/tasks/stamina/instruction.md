@@ -1,65 +1,35 @@
-## Introduction and Goals of the Stamina Project
+# Project Description
 
 Stamina is a Python library **designed for production-grade retry mechanisms**, offering intelligent retry solutions for transient failures in distributed systems. Built on the mature Tenacity library, it aims to provide "the simplest and most user-friendly API, while doing the right thing by default and minimizing the possibility of misuse." Its core features include: intelligent exception retry (supporting precise control using specific exception types and predicate functions), **exponential backoff and jitter mechanism** (starting from 100ms, exponentially increasing with a base of 2, up to a maximum of 5 seconds, with a random jitter of 0 - 1 second added), and comprehensive support for both synchronous and asynchronous code (including the Trio asynchronous library). In short, Stamina is dedicated to providing a robust retry system for handling inevitable transient failures in distributed systems (for example, automatically retrying failed HTTP requests using the `@stamina.retry` decorator, and retrying arbitrary code blocks using the `retry_context()` function), while avoiding cascading failures and the thundering herd effect.
 
-## Natural Language Instruction (Prompt)
+## Natural Language Instruction
 
-Please create a Python project named Stamina to implement a production-grade retry mechanism library. The project should include the following features:
+Create `stamina` from an empty workspace as a complete installable python project. Implement
+the public operations, data or state behavior, input validation, deterministic ordering, and
+error contracts documented below. Keep package metadata, root exports, module imports, and any
+subpath entry points consistent across files. Implement the behavior rather than hard-coding the
+examples, and do not retrieve or copy a reference implementation.
 
-1. Core retry decorator: Implement the `@stamina.retry()` decorator, which can perform intelligent retries based on specified exception types or predicate functions. The decorator should support configuring parameters such as the number of retries, timeout, and backoff strategy, and maintain the type hints of the decorated function.
+The finished repository must install from its root, expose every documented API family, preserve
+the specified side effects and resource lifecycle, and remain usable in a fresh process.
 
-2. Exponential backoff and jitter mechanism: Implement an intelligent backoff algorithm starting with an initial delay of 100ms, exponentially increasing with a base of 2, up to a maximum delay of 5 seconds, and adding a random jitter of 0 - 1 second for each retry to avoid the thundering herd effect. The backoff formula should be: `min(5.0, 0.1 * 2.0^(attempt - 1) + random(0, 1.0))`.
+## Supports
 
-3. Asynchronous retry support: Implement automatic support for asynchronous functions by the `@stamina.retry()` decorator, including compatibility with the asyncio and Trio asynchronous libraries. Asynchronous retries should use an appropriate asynchronous sleep mechanism.
+- Package/distribution name: `stamina`. Primary import or package entry: `stamina`.
+- CPython 3.11 on debian-12 with pip.
+- Install from `workspace/` using `python -m pip install .`.
+- Declared dependency closure: no declared third-party runtime packages. Standard-library modules are not dependencies.
+- Build requirements are supplied before execution; do not add undeclared dependencies,
+  registry overrides, download hooks, or source-fetch steps.
+- Agent, candidate, verifier, Oracle, and controls use `network_mode=no-network`. Runtime access
+  to GitHub, PyPI, npm, the Go proxy, DNS, and external services is forbidden.
+- The declared test framework is `pytest`. A fixed collection
+  contains `129` cases when that value is frozen in metadata;
+  test implementation details are not part of the package surface.
 
-4. Context manager retry: Implement the `stamina.retry_context()` function, which returns an iterable context manager, allowing arbitrary code blocks to be retried. Each context manager should provide information on the current retry count and the next waiting time.
+## Project Directory Structure
 
-5. Function caller: Implement the `RetryingCaller` and `AsyncRetryingCaller` classes, providing a retry mechanism for direct function calls, and supporting the `on()` method for pre-binding exception types.
-
-6. Observability and monitoring: Integrate Prometheus metric collection (the `stamina_retries_total` counter), structlog structured logging, and fallback support for the standard logging module. Provide an `instrumentation` module for custom monitoring hooks.
-
-7. Test mode support: Implement test configuration functionality, allowing global disabling of retries, limiting the number of retries, removing backoff delays, etc., to facilitate unit testing and integration testing.
-
-8. Interface design: Design clear API interfaces for each functional module, including decorators, context managers, caller classes, etc. Each module should define clear input and output formats and error handling mechanisms.
-
-9. Examples and documentation: Provide complete example code and test cases to demonstrate how to use various retry mechanisms to handle common scenarios such as HTTP requests, database operations, and API calls.
-
-10. Core File Requirements: The project must include a well-configured pyproject.toml file, configuring the project as an installable package (supporting `pip install`), and declaring a complete list of dependencies (including core libraries such as tenacity>=8.2.3, typing-extensions>=4.12.2; python_version < '3.10', trio>=0.25.0, anyio>=4.3.0, structlog>=24.1.0, prometheus-client>=0.20.0). It is necessary to provide `stamina/__init__.py` as a unified API entry point, exporting core functions and classes such as retry, retry, AsyncRetryingCaller, retry_context, is_active, is_testing, set_active, set_testing, CONFIG, _Config, _Testing, _make_stop, RetryHookFactory, get_on_retry_hooks, set_on_retry_hooks, RetryDetails, guess_name, get_default_hooks, init_structlog, and providing version information, enabling users to access all major functions through simple statements (from stamina import **, from stamina._config import **, from stamina._core import **, from stamina.instrumentation import **, from stamina.instrumentation.** import **).
-
-## Environment Configuration
-
-### Python Version
-
-The Python version used in the current project is: Python 3.11.7
-
-
-### Core Dependency Library Versions
-
-```Plain
-
-anyio             4.10.0
-dirty-equals      0.9.0
-idna              3.10
-iniconfig         2.1.0
-packaging         25.0
-pip               23.2.1
-pluggy            1.6.0
-Pygments          2.19.2
-pytest            8.4.1
-setuptools        65.5.1
-sniffio           1.3.1
-structlog         25.4.0
-tenacity          9.1.2
-typing_extensions 4.14.1
-wheel             0.42.0
-trio              0.25.0
-```
-
-## Stamina Project Architecture
-
-### Project Directory Structure
-
-```Plain
+```text
 workspace/
 ├── .git_archival.txt
 ├── .gitignore
@@ -86,8 +56,11 @@ workspace/
 │   │   ├── py.typed
 │   │   └── typing.py
 └── zizmor.yml
-
 ```
+
+This is the required public project shape. Additional implementation modules are allowed only
+when they support the documented API; evaluation, source-fetch, and private runtime files are
+not agent-owned project files.
 
 ## API Usage Guide
 
@@ -338,7 +311,7 @@ from contextlib import contextmanager
 class MyRetryHook:
     def __call__(self, details):
         print(f"Will retry {details.name} in {details.wait_for:.2f}s")
-        
+
         @contextmanager
         def _context():
             print("Entering retry context")
@@ -346,7 +319,7 @@ class MyRetryHook:
                 yield
             finally:
                 print("Exiting retry context")
-                
+
         return _context()
 
 # Use custom hook
@@ -362,7 +335,7 @@ import stamina
 stamina.__version__
 ```
 
-##### 11 Global Configuration    
+##### 11 Global Configuration
 
 **Function Description**: Controls the global behavior of Stamina.
 
@@ -436,68 +409,68 @@ result = await arc(fetch_data_async)
 
 ##### 13. Core Configuration Classes
 
-###### 13.1 `_Config` Class  
-**Function Description**: Global retry configuration class, used to manage global settings for retries.  
+###### 13.1 `_Config` Class
+**Function Description**: Global retry configuration class, used to manage global settings for retries.
 
-**Attributes**:  
-- `is_active` (bool): Gets or sets whether the retry functionality is active  
-- `testing` (Optional[_Testing]): Gets or sets the testing mode configuration  
+**Attributes**:
+- `is_active` (bool): Gets or sets whether the retry functionality is active
+- `testing` (Optional[_Testing]): Gets or sets the testing mode configuration
 
-**Methods**:  
-- `__init__(self, lock: Lock)`: Initializes the configuration with a thread lock  
+**Methods**:
+- `__init__(self, lock: Lock)`: Initializes the configuration with a thread lock
 
-###### 13.2 `CONFIG` Global Variable  
-**Function Description**: Global configuration instance, providing access to and modification of the retry system settings.  
+###### 13.2 `CONFIG` Global Variable
+**Function Description**: Global configuration instance, providing access to and modification of the retry system settings.
 
-**Type**: `_Config`  
+**Type**: `_Config`
 
-**Attributes**:  
-- `is_active` (bool): Gets or sets whether the retry functionality is globally enabled  
-- `testing` (Optional[_Testing]): Gets or sets the testing mode configuration  
+**Attributes**:
+- `is_active` (bool): Gets or sets whether the retry functionality is globally enabled
+- `testing` (Optional[_Testing]): Gets or sets the testing mode configuration
 
-**Example**:  
-```python  
-import stamina  
+**Example**:
+```python
+import stamina
 
-# Deactivate retries  
-stamina.CONFIG.is_active = False  
+# Deactivate retries
+stamina.CONFIG.is_active = False
 
-# Check if retries are active  
-if stamina.CONFIG.is_active:  
-    print("Retry functionality is enabled")  
-```  
+# Check if retries are active
+if stamina.CONFIG.is_active:
+    print("Retry functionality is enabled")
+```
 
-###### 13.3 `_Testing` Class  
-**Function Description**: Testing mode configuration class, used to control retry behavior in testing environments.  
+###### 13.3 `_Testing` Class
+**Function Description**: Testing mode configuration class, used to control retry behavior in testing environments.
 
-**Attributes**:  
-- `attempts` (int): Number of attempts in testing mode  
-- `cap` (bool): Whether to cap the maximum number of attempts  
+**Attributes**:
+- `attempts` (int): Number of attempts in testing mode
+- `cap` (bool): Whether to cap the maximum number of attempts
 
-**Methods**:  
-- `__init__(self, attempts: int, cap: bool)`: Initializes the testing configuration  
-- `get_attempts(self, non_testing_attempts: int | None) -> int`: Gets the actual number of attempts to use  
+**Methods**:
+- `__init__(self, attempts: int, cap: bool)`: Initializes the testing configuration
+- `get_attempts(self, non_testing_attempts: int | None) -> int`: Gets the actual number of attempts to use
 
-##### 14. Core Function Functions  
+##### 14. Core Function Functions
 
-###### 14.1 `_make_stop` Function  
-**Function Description**: Combines the number of attempts and timeout duration into a stop condition.  
+###### 14.1 `_make_stop` Function
+**Function Description**: Combines the number of attempts and timeout duration into a stop condition.
 
-**Function Signature**:  
-```python  
-def _make_stop(*, attempts: int | None, timeout: float | None) -> _t.stop_anyof  
-```  
+**Function Signature**:
+```python
+def _make_stop(*, attempts: int | None, timeout: float | None) -> _t.stop_anyof
+```
 
-**Parameters**:  
-- `attempts` (int | None): Maximum number of attempts, None indicates unlimited  
-- `timeout` (float | None): Timeout duration (seconds), None indicates no timeout  
+**Parameters**:
+- `attempts` (int | None): Maximum number of attempts, None indicates unlimited
+- `timeout` (float | None): Timeout duration (seconds), None indicates no timeout
 
-**Return Value**:  
+**Return Value**:
 - Returns a tenacity stop condition object, which can be used to control the stop condition for retries
 
 ---
 
-## Detailed Function Implementation Nodes
+### Detailed Function Implementation Nodes
 
 ### Node 1: Synchronous Retry Decorator
 
@@ -553,7 +526,7 @@ def test_retry_success():
     @stamina.retry(on=ValueError, attempts=2)
     def f():
         return 42
-    
+
     assert f() == 42
 
 def test_retry_with_exception():
@@ -565,7 +538,7 @@ def test_retry_with_exception():
             i += 1
             raise ValueError
         return 42
-    
+
     assert f() == 42
     assert i == 1
 ```
@@ -621,7 +594,7 @@ async def test_async_retry_success():
     @stamina.retry(on=ValueError, attempts=2)
     async def f():
         return 42
-    
+
     assert await f() == 42
 
 async def test_async_retry_with_exception():
@@ -633,7 +606,7 @@ async def test_async_retry_with_exception():
             i += 1
             raise ValueError
         return 42
-    
+
     assert await f() == 42
     assert i == 1
 ```
@@ -678,7 +651,7 @@ def attempt_properties():
             print(f"Current retry count: {attempt.num}")
             print(f"Next waiting time: {attempt.next_wait}")
             print(f"Attempt object: {repr(attempt)}")
-            
+
             if attempt.num < 2:
                 raise ValueError
 
@@ -724,47 +697,47 @@ import httpx
 # Synchronous function caller
 def sync_function_caller():
     rc = stamina.RetryingCaller(attempts=5, timeout=30.0)
-    
+
     def fetch_data(url: str, **kwargs) -> dict:
         resp = httpx.get(url, **kwargs)
         resp.raise_for_status()
         return resp.json()
-    
+
     # Direct call
     result = rc(httpx.HTTPError, fetch_data, "https://api.example.com", headers={"Authorization": "Bearer token"})
-    
+
     # Pre-bind exception types
     bound_rc = rc.on(httpx.HTTPError)
     result = bound_rc(fetch_data, "https://api.example.com", headers={"Authorization": "Bearer token"})
-    
+
     return result
 
 # Asynchronous function caller
 async def async_function_caller():
     async_rc = stamina.AsyncRetryingCaller(attempts=5, timeout=30.0)
-    
+
     async def fetch_data_async(url: str, **kwargs) -> dict:
         async with httpx.AsyncClient() as client:
             resp = await client.get(url, **kwargs)
         resp.raise_for_status()
         return resp.json()
-    
+
     # Direct call
     result = await async_rc(httpx.HTTPError, fetch_data_async, "https://api.example.com", headers={"Authorization": "Bearer token"})
-    
+
     # Pre-bind exception types
     bound_async_rc = async_rc.on(httpx.HTTPError)
     result = await bound_async_rc(fetch_data_async, "https://api.example.com", headers={"Authorization": "Bearer token"})
-    
+
     return result
 
 # Test case verification
 def test_retrying_caller():
     rc = stamina.RetryingCaller().on(BaseException)
-    
+
     def f():
         return 42
-    
+
     assert rc(f) == 42
 
 def test_retrying_caller_with_args():
@@ -775,20 +748,20 @@ def test_retrying_caller_with_args():
             i += 1
             raise ValueError
         return args, kw
-    
+
     bound_rc = stamina.RetryingCaller(wait_max=0).on(ValueError)
     args, kw = bound_rc(f, 42, foo="bar")
-    
+
     assert i == 1
     assert (42,) == args
     assert {"foo": "bar"} == kw
 
 async def test_async_retrying_caller():
     arc = stamina.AsyncRetryingCaller().on(BaseException)
-    
+
     async def f():
         return 42
-    
+
     assert await arc(f) == 42
 ```
 
@@ -811,11 +784,11 @@ import stamina
 def activation_control():
     # Check the current status
     assert stamina.is_active() == True
-    
+
     # Deactivate retries
     stamina.set_active(False)
     assert stamina.is_active() == False
-    
+
     # Reactivate
     stamina.set_active(True)
     assert stamina.is_active() == True
@@ -825,7 +798,7 @@ def testing_mode():
     # Set test mode
     stamina.set_testing(True, attempts=3)
     assert stamina.is_testing() == True
-    
+
     # Reset test mode
     stamina.set_testing(False)
     assert stamina.is_testing() == False
@@ -833,53 +806,53 @@ def testing_mode():
 # Context manager
 def context_manager():
     assert not stamina.is_testing()
-    
+
     with stamina.set_testing(True, attempts=3):
         assert stamina.is_testing()
         assert stamina.CONFIG.testing.get_attempts(None) == 3
         assert not stamina.CONFIG.testing.cap
-    
+
     assert not stamina.is_testing()
 
 # Nested context managers
 def nested_context_manager():
     assert not stamina.is_testing()
-    
+
     with stamina.set_testing(True, attempts=3):
         assert stamina.is_testing()
         assert stamina.CONFIG.testing.attempts == 3
-        
+
         with stamina.set_testing(True, attempts=5, cap=True):
             assert stamina.is_testing()
             assert stamina.CONFIG.testing.attempts == 5
             assert stamina.CONFIG.testing.cap
-        
+
         assert stamina.is_testing()
         assert stamina.CONFIG.testing.attempts == 3
         assert not stamina.CONFIG.testing.cap
-    
+
     assert not stamina.is_testing()
 
 # Test case verification
 def test_activate_deactivate():
     assert stamina.is_active()
-    
+
     stamina.set_active(False)
     assert not stamina.is_active()
-    
+
     stamina.set_active(True)
     assert stamina.is_active()
 
 def test_context_manager_exception():
     assert not stamina.is_testing()
-    
+
     try:
         with stamina.set_testing(True, attempts=3):
             assert stamina.is_testing()
             raise ValueError("test")
     except ValueError:
         pass
-    
+
     assert not stamina.is_testing()
 ```
 
@@ -898,8 +871,8 @@ def test_context_manager_exception():
 
 ```python
 from stamina.instrumentation import (
-    RetryDetails, 
-    RetryHook, 
+    RetryDetails,
+    RetryHook,
     RetryHookFactory,
     get_on_retry_hooks,
     set_on_retry_hooks,
@@ -930,10 +903,10 @@ set_on_retry_hooks([context_manager_hook])
 # Lazy initialization of hooks
 def init_expensive_hook():
     import expensive_module
-    
+
     def expensive_hook(details: RetryDetails) -> None:
         expensive_module.log_retry(details)
-    
+
     return expensive_hook
 
 set_on_retry_hooks([RetryHookFactory(init_expensive_hook)])
@@ -943,7 +916,7 @@ def prometheus_integration():
     counter = get_prometheus_counter()
     if counter:
         print(f"Prometheus counter: {counter}")
-    
+
     # Use the built-in Prometheus hook
     from stamina.instrumentation import PrometheusOnRetryHook
     set_on_retry_hooks([PrometheusOnRetryHook])
@@ -962,13 +935,13 @@ def logging_integration():
 def test_guess_name():
     def function():
         pass
-    
+
     class Foo:
         def method(self):
             pass
-    
+
     foo = Foo()
-    
+
     assert "test_function" in guess_name(function)
     assert "Foo.method" in guess_name(foo.method)
 
@@ -982,7 +955,7 @@ def test_retry_details():
         waited_so_far=1.0,
         caused_by=ValueError("test")
     )
-    
+
     assert details.name == "test_function"
     assert details.retry_num == 1
     assert details.wait_for == 0.5
@@ -991,15 +964,15 @@ def test_retry_details():
 def test_hook_management():
     def hook(details):
         pass
-    
+
     # Set hooks
     set_on_retry_hooks([hook])
     assert hook in get_on_retry_hooks()
-    
+
     # Clear hooks
     set_on_retry_hooks([])
     assert len(get_on_retry_hooks()) == 0
-    
+
     # Restore default hooks
     set_on_retry_hooks(None)
     assert len(get_on_retry_hooks()) > 0
@@ -1031,7 +1004,7 @@ def backoff_formula():
     wait_max = 5.0      # Maximum waiting time
     wait_exp_base = 2.0 # Exponential base
     wait_jitter = 1.0   # Jitter time
-    
+
     # Calculate the backoff time for different retry counts
     for attempt in range(1, 6):
         backoff = _compute_backoff(
@@ -1046,11 +1019,11 @@ def backoff_formula():
 # Test backoff calculation
 def test_backoff_computation():
     rci = stamina.retry_context(on=ValueError, wait_max=0.42)
-    
+
     for i in range(1, 10):
         backoff = rci._backoff_for_attempt_number(i)
         assert backoff <= 0.42
-        
+
         jittered = rci._jittered_backoff_for_rcs(
             SimpleNamespace(attempt_number=i)
         )
@@ -1071,7 +1044,7 @@ def practical_backoff_example():
         resp = httpx.get("https://api.example.com")
         resp.raise_for_status()
         return resp.json()
-    
+
     try:
         result = api_call()
         return result
@@ -1082,11 +1055,11 @@ def practical_backoff_example():
 def test_backoff_clamps():
     """Test that the backoff time does not exceed the maximum limit"""
     rci = stamina.retry_context(on=ValueError, wait_max=0.42)
-    
+
     for i in range(1, 10):
         backoff = rci._backoff_for_attempt_number(i)
         assert backoff <= 0.42
-        
+
         jittered = rci._jittered_backoff_for_rcs(
             SimpleNamespace(attempt_number=i)
         )
@@ -1124,17 +1097,17 @@ def stop_condition_examples():
     @stamina.retry(on=ValueError, attempts=3)
     def limited_attempts():
         pass
-    
+
     # Only limit the timeout
     @stamina.retry(on=ValueError, timeout=30.0)
     def limited_timeout():
         pass
-    
+
     # Combined conditions
     @stamina.retry(on=ValueError, attempts=5, timeout=60.0)
     def combined_conditions():
         pass
-    
+
     # Infinite retries (use with caution)
     @stamina.retry(on=ValueError, attempts=None, timeout=None)
     def infinite_retry():
@@ -1144,7 +1117,7 @@ def stop_condition_examples():
 def test_stop_conditions():
     # Test the condition with no limits
     assert tenacity.stop_never is _make_stop(attempts=None, timeout=None)
-    
+
     # Test the condition with limits
     stop_condition = _make_stop(attempts=3, timeout=30.0)
     assert stop_condition is not None
@@ -1157,14 +1130,14 @@ def practical_stop_examples():
         resp = httpx.get("https://api.example.com")
         resp.raise_for_status()
         return resp.json()
-    
+
     # Persistent retry scenario
     @stamina.retry(on=httpx.HTTPError, attempts=10, timeout=300.0)
     def persistent_api():
         resp = httpx.get("https://api.example.com")
         resp.raise_for_status()
         return resp.json()
-    
+
     # Time-priority scenario
     @stamina.retry(on=httpx.HTTPError, timeout=60.0)
     def time_limited_api():
@@ -1213,21 +1186,21 @@ def version_management():
     # Get the current version
     current_version = stamina.__version__
     print(f"Current version: {current_version}")
-    
+
     # Get the version from the metadata
     metadata_version = metadata.version("stamina")
     print(f"Metadata version: {metadata_version}")
-    
+
     # Verify version consistency
     assert current_version == metadata_version
-    
+
     return current_version
 
 # Version test
 def test_version_consistency():
     """Test version consistency"""
     assert metadata.version("stamina") == stamina.__version__
-    
+
     # Ensure there are no warnings
     import warnings
     with warnings.catch_warnings(record=True) as w:
@@ -1239,7 +1212,7 @@ def version_usage_examples():
     # Record the version in the log
     import logging
     logging.info(f"Stamina version: {stamina.__version__}")
-    
+
     # Include the version in the API response
     def api_info():
         return {
@@ -1247,41 +1220,102 @@ def version_usage_examples():
             "version": stamina.__version__,
             "features": ["retry", "async", "instrumentation"]
         }
-    
+
     # Version check
     def check_version():
         version = stamina.__version__
         major, minor, patch = map(int, version.split('.'))
-        
+
         if major < 1:
             print("Warning: Using a pre-release version")
         elif minor < 5:
             print("It is recommended to upgrade to the latest version")
         else:
             print("Version check passed")
-    
+
     return api_info(), check_version()
 
 # Test case verification
 def test_version_format():
     """Test the version format"""
     version = stamina.__version__
-    
+
     # The version should be a string
     assert isinstance(version, str)
-    
+
     # The version should contain numbers separated by dots
     parts = version.split('.')
     assert len(parts) >= 2
-    
+
     # The major version number should be a number
     assert parts[0].isdigit()
 
 def test_version_no_warnings():
     """Test that there are no warnings when retrieving the version"""
     import warnings
-    
+
     with warnings.catch_warnings(record=True) as w:
         version = stamina.__version__
         assert len(w) == 0
 ```
+
+## Implementation Notes
+
+Preserve all public return shapes, ordering, state transitions, and exception contracts described above. Keep installation metadata and public imports consistent and deterministic.
+
+Use the public language semantics described by each API family. Keep repeated calls deterministic
+unless state mutation is explicitly part of the contract. Public re-exports and declarations must
+match runtime behavior, and installation must not rely on a repository checkout or network access.
+
+## Examples
+
+The API-specific examples above are normative demonstrations of ordinary behavior. These four
+local snippets also provide ordinary and boundary-oriented calls without external services:
+
+```python
+import stamina
+from stamina import is_active, is_testing, set_active, set_testing
+from stamina._config import CONFIG, _Config, _Testing
+from stamina.instrumentation import (
+    RetryHookFactory,get_on_retry_hooks,set_on_retry_hooks,
+)
+from stamina.instrumentation._data import RetryDetails, guess_name
+from stamina.instrumentation._hooks import get_default_hooks
+from stamina.instrumentation._structlog import init_structlog
+from stamina._core import _make_stop
+```
+
+```python
+@stamina.retry(
+    on: Exception | tuple[Exception, ...] | Callable[[Exception], bool],
+    attempts: int | None = 10,
+    timeout: float | timedelta | None = 45.0,
+    wait_initial: float | timedelta = 0.1,
+    wait_max: float | timedelta = 5.0,
+    wait_jitter: float | timedelta = 1.0,
+    wait_exp_base: float = 2.0,
+)
+def func(...): ...
+```
+
+```python
+@stamina.retry(on=ValueError, attempts=3)
+def foo(): ...
+```
+
+```python
+for attempt in stamina.retry_context(on=Exception, attempts=3):
+    with attempt:
+        risky_operation()
+```
+
+## Error Handling and Boundary Conditions
+
+Empty values, malformed values, unsupported types, exhausted inputs, invalid options, and missing
+local resources must follow the API-specific contracts above. Preserve documented exception types
+and messages where they are stated. Do not silently coerce an unsupported value merely to produce
+a result, and do not mutate caller-owned data unless the relevant API explicitly promises it.
+
+All filesystem, process, terminal, clock, randomness, and service interactions are forbidden unless
+the API guide explicitly includes that local behavior. Even for an API that models remote or async
+work, evaluation must remain bounded, deterministic, and disconnected from public networks.

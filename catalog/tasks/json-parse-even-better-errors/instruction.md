@@ -5,6 +5,14 @@ version `6.0.0`, from an empty workspace. It should provide a drop-in style
 JSON parser that keeps the normal JSON result on success and gives structured,
 contextual parse errors on failure.
 
+# Natural Language Instruction
+
+Build the CommonJS package `json-parse-even-better-errors` from an empty
+workspace. Preserve native JSON values and reviver traversal on valid input,
+remove a leading BOM, and expose contextual `JSONParseError` objects for
+failures. Include the `noExceptions` helper and package metadata; keep error
+messages bounded and deterministic.
+
 # Supports
 
 - Node.js `24.19.0` with npm `11.17.0` on Linux x86-64.
@@ -17,7 +25,21 @@ contextual parse errors on failure.
 - The package root must be callable through
   `require("json-parse-even-better-errors")`.
 
+# Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── README.md
+└── lib/
+    └── index.js
+```
+
 # API Usage Guide
+
+Import path: `require('json-parse-even-better-errors')`.
+The equivalent module reference is `import parseJson from 'json-parse-even-better-errors'`.
 
 ## `parseJson(raw, reviver = undefined, context = 20) => any`
 
@@ -74,3 +96,28 @@ access, the clock, randomness, filesystem reads, or subprocesses. Preserve
 native JSON value semantics and do not silently accept malformed JSON. Error
 messages should remain bounded for long inputs, and non-string/non-Buffer
 inputs should fail with a `TypeError` whose code is `EJSONPARSE`.
+
+# Examples
+
+```js
+const parse = require('json-parse-even-better-errors')
+parse('{"name":"Ada"}')
+parse('[1,2]', (key, value) => typeof value === 'number' ? value * 2 : value)
+```
+
+```js
+const parse = require('json-parse-even-better-errors')
+parse.noExceptions('{bad json')
+try { parse('{bad json') } catch (error) { console.log(error.code) }
+```
+
+# Error Handling and Boundary Conditions
+
+- Malformed JSON and unsupported input types use the documented error class or
+  `EJSONPARSE` TypeError; `noExceptions` returns `undefined` for failures.
+- BOM-prefixed strings/buffers parse normally, while primitive results do not
+  receive object formatting metadata.
+- Error context remains bounded by `context`; parser state must not use the
+  clock, filesystem, subprocesses, or network.
+
+The task id and package name are `json-parse-even-better-errors`.

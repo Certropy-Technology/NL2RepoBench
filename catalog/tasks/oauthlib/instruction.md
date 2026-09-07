@@ -6,7 +6,15 @@ request signing and OAuth 2.0 request construction/parsing. The implementation
 must work locally without contacting an authorization server or any other
 network service.
 
-# Supports
+# Natural Language Instruction
+
+Build the complete installable `oauthlib` package from an empty workspace.
+Implement the documented local OAuth 1.0 signing and OAuth 2.0 request,
+response, token, and client contracts. Keep encoding, ordering, duplicate
+parameters, state isolation, and typed protocol errors consistent across the
+modules; do not contact an authorization server.
+
+# Supports or Environment Configuration
 
 - Support Python 3.9 and newer, including Python 3.12.
 - Install from the repository root with `python -m pip install .` after the
@@ -20,9 +28,24 @@ network service.
   services, subprocesses, files outside the installed package, or network
   access at runtime.
 
+# Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml              # package metadata and build backend
+└── oauthlib/
+    ├── __init__.py             # version and debug flag
+    ├── common.py               # encoding, URI, request helpers
+    ├── oauth1/rfc5849/          # OAuth 1.0 parameters and signatures
+    └── oauth2/rfc6749/          # OAuth 2.0 clients and parameters
+```
+
+The import paths in the API guide must be real package modules. Optional RSA,
+JWT, signal, and external integrations are not runtime requirements.
+
 # API Usage Guide
 
-The hidden verifier focuses on JSON-compatible calls to the following public
+The deterministic evaluator focuses on JSON-compatible calls to the following public
 surface. Preserve import paths, argument order, defaults, return shapes, and
 exception behavior. It also checks package metadata and the root debug flag.
 
@@ -166,6 +189,35 @@ tokens; no remote request is sent.
   contract.
 - Error classes and status behavior should remain inspectable. Do not replace
   protocol errors with silent defaults.
-- The hidden tests run the candidate in bounded unprivileged child processes;
+- The evaluator runs the candidate in bounded unprivileged child processes;
   the verifier is offline and does not import candidate code into its trusted
-  process. Do not retrieve OAuthLib's reference source at runtime.
+ process. Do not retrieve OAuthLib's reference source at runtime.
+
+# Examples
+
+```python
+from oauthlib.common import urlencode, urldecode
+encoded = urlencode([('scope', 'read write'), ('scope', 'write')])
+urldecode(encoded)
+```
+
+```python
+from oauthlib.oauth1.rfc5849.signature import sign_hmac_sha256
+sign_hmac_sha256('base', 'client-secret', 'owner-secret')
+```
+
+```python
+from oauthlib.oauth2.rfc6749.parameters import prepare_grant_uri
+prepare_grant_uri('https://client.test/authorize', 'client', 'code', scope=['read'])
+```
+
+# Error Handling and Boundary Conditions
+
+- Preserve malformed percent-escape, invalid URI, insecure transport, and
+  OAuth protocol error classes rather than silently accepting bad input.
+- Duplicate parameter order and percent encoding are significant to OAuth 1.0
+  normalization.
+- Client and token objects must isolate mutable state between instances and
+  calls.
+- RSA/JWT extras, signals, live services, credentials, subprocesses, and
+  network access are outside this local contract.

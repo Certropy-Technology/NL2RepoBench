@@ -1,56 +1,36 @@
-## Project Introduction and Objectives
+# pdfplumber-stable
 
-pdfplumber-stable is a Python library for extracting structured information from PDF documents. It can parse objects such as text, tables, images, and annotations in PDF files, and supports detailed page structure analysis, table detection, and visual debugging. This tool is suitable for scenarios such as automated data extraction, document structure analysis, and batch table processing, aiming to provide developers and data analysts with efficient and robust PDF parsing and analysis capabilities.
+## Project Description
 
-## Natural Language Instruction (Prompt)
+Build an installable `pdfplumber-stable` project from an empty `workspace/`. The project must reproduce the public, local behavior documented in this instruction, including its package entry points, return shapes, ordering, state changes, and documented exceptions. This is a repository-generation task: the agent creates the build metadata and source modules rather than editing an existing implementation.
 
-Please create a Python project named pdfplumber-stable to implement a PDF structured information extraction library. The project should include the following functions:
+Distribution identity: `pdfplumber-stable`; public import package begins at `pdfplumber`.
+The scope is the deterministic local API described below. Network services, undeclared external state, and behavior not represented by the public contract are outside the task.
 
-1. **Opening and Loading PDF Files**: Support opening PDF files through multiple methods such as file paths, file objects, and byte streams. Support password protection, automatic repair, and page selection.
-2. **Extracting PDF Metadata**: Retrieve metadata information of the PDF, such as creation time, modification time, author, and production tool.
-3. **Page Operations and Attribute Retrieval**: Support retrieving basic attributes of the PDF, such as the total number of pages, width and height of a single page, and page numbers. Support operations such as page cropping (crop), region filtering (within_bbox, outside_bbox), and object filtering (filter).
-4. **Extracting PDF Objects**: Extract in detail objects such as characters (chars), lines (lines), rectangles (rects), curves (curves), images (images), annotations (annots), and hyperlinks (hyperlinks) on each page, and retrieve their detailed attributes (such as coordinates, colors, fonts, etc.).
-5. **Text Extraction and Processing**: Support extracting text by page, region, layout, etc. Support extracting words, text lines, and full text. Support advanced text processing such as custom tolerance parameters, regular search, and duplicate character removal.
-6. **Table Detection and Extraction**: Automatically detect and extract tables on the page, and return structured data. Support multiple table boundary recognition strategies (lines, text, explicit specification, etc.), and support custom parameters.
-7. **Processing Images and Graphic Objects**: Retrieve information such as the size, position, color space, and raw data of images. Retrieve the detailed attributes of graphic objects such as lines, rectangles, and curves.
-8. **Visual Debugging and Image Rendering**: Render the page as an image, support object overlay, table visualization, and interactive visualization in Jupyter Notebook.
-9. **Command Line Interface (CLI)**: Provide a CLI tool to support exporting PDF content to formats such as CSV, JSON, and plain text. Support customizing exported content, page numbers, object types, etc. through command line parameters.
-10. **Extracting Form Data**: Support extracting field names and values from PDF forms.
-11. **Exception Handling and Compatibility**: Have fault tolerance for situations such as invalid metadata and abnormal PDF structures, and support multiple versions of Python environments.
-12. **Core File Requirements**: The project must include a complete setup.py file. This file should not only configure the project as an installable package (supporting pip install) but also declare a complete list of dependencies (including core libraries such as pdfminer.six == 20250506, pillow<=9.1, pytest ==8.3.2, pandas ==2.2.2). The setup.py file can verify whether all functional modules work properly. At the same time, it should provide pdfplumber/__init__.py as a unified API entry, import and export T_table_settings, Table, TableSettings (classes), PDFDocEncoding, decode_text, MalformedPDFException, resolve_and_decode, PdfminerException, CTM, TableFinder, fix_fontname_bytes, extract_text, within_bbox, repair, PDFStructTree, and the main import and export functions, and provide version information, enabling users to access all main functions through simple statements such as "from pdfplumber import **" and "from pdfplumber.ctm/table/utils/utils.exceptions/structure import **".
+## Natural Language Instruction
 
----
-## Environment Dependencies and Configuration
+Create the complete project in an empty workspace and make it installable with the command in the environment section. Implement these task-specific capability families from the local API contract:
 
-### Python Version
-The Python version used in the current project is: Python 3.12.4
+1. `Core API`: expose the documented public entry points, signatures, inputs, outputs, and error behavior.
+2. `1. API Import`: preserve the documented object or module behavior, including state and side effects.
+3. `Main functions are available directly`: preserve ordering, determinism, serialization, and boundary semantics where specified.
+4. `pdfplumber.open(), pdfplumber.repair()`: make the public package usable through the documented import path or command-line entry.
 
-**Core Dependent Libraries and Versions**
-- pdfminer.six==20250506           # PDF parsing engine
-- Pillow>=9.1                      # Image processing
-- pypdfium2>=4.18.0                # PDF rendering
-- pandas==2.2.2                    # Data processing
-- numpy==1.26.4                    # Numerical calculation
-- pytest==8.3.2                    # Unit testing
-- black==24.8.0                    # Code formatting
-- flake8==7.1.1                    # Code style checking
-- isort==5.13.2                    # Import sorting
-- jupyterlab==3.6.7                # Interactive development
-- mypy==1.11.1                     # Type checking
-- nbexec==0.2.0                    # Jupyter execution
-- pandas-stubs==2.2.2.240805       # pandas type hints
-- py==1.11.0                       # pytest dependency
-- pytest-cov==5.0.0                # Test coverage
-- pytest-parallel==0.1.1           # Parallel testing
-- setuptools==68.2.2               # Installation tool
-- types-Pillow==10.2.0.20240520    # Pillow type hints
+Do not add speculative APIs or substitute a different package. Keep the implementation self-contained, ensure imports work after installation, and use the exact public names and signatures in the API Usage Guide. A small implementation is acceptable only when it still satisfies every documented contract.
 
-**Standard Library Dependencies**
-- os, sys, re, io, json, logging, pathlib, zipfile, subprocess, collections, itertools, operator, shutil, tempfile, resource
+## Supports or Environment Configuration
 
-## Project Architecture
-### Project Directory Structure
-```
+- CPython 3.12 on the pinned Linux image.
+- Distribution identity: `pdfplumber-stable`; public import package begins at `pdfplumber`.
+- Install from the workspace with `python -m pip install .`; do not download packages during evaluation.
+- No third-party runtime package is declared by the local task metadata; standard-library support is sufficient unless the API section says otherwise.
+- Build metadata and package data must be present in the workspace and agree with the public import paths below.
+- Agent, candidate, evaluator, Oracle, and control execution are network-isolated. Do not access GitHub, package registries, DNS, databases, or external services at runtime.
+- Use deterministic local inputs. Do not rely on the current wall clock, host-specific absolute paths, undeclared environment variables, or an installed copy of the target package.
+
+## Project Directory Structure
+
+```text
 workspace/
 ├── .gitignore
 ├── CHANGELOG.md
@@ -86,11 +66,13 @@ workspace/
 │   │   └── text.py
 ├── setup.cfg
 └── setup.py
-
 ```
 
+The tree lists agent-owned public project files only. Add additional public modules when required by the API Usage Guide, but keep their import paths consistent with package metadata. Do not create evaluator-only files, hidden fixtures, or private reports in the generated project.
 
 ## API Usage Guide
+
+The following is the task-specific public contract recovered from the local instruction and inventory. For every function, class, method, constant, export, and command named below, preserve its complete signature, accepted input domain, return type and shape, ordering, determinism, state/side effects, exceptions, and examples. When the source contract gives an optional argument or a compatibility alias, it is part of the required surface.
 
 ### Core API
 
@@ -238,7 +220,7 @@ from pdfplumber.pdf import PDF
 ```python
 class PDF(Container):
     cached_properties: List[str] = Container.cached_properties + ["_pages"]
-    
+
     def __init__(
         self,
         stream: Union[BufferedReader, BytesIO],
@@ -251,7 +233,7 @@ class PDF(Container):
         unicode_norm: Optional[Literal["NFC", "NFKC", "NFD", "NFKD"]] = None,
         raise_unicode_errors: bool = True,
     )
-    
+
     @classmethod
     def open(
         cls,
@@ -266,28 +248,28 @@ class PDF(Container):
         repair_setting: T_repair_setting = "default",
         raise_unicode_errors: bool = True,
     ) -> "PDF"
-    
+
     def close(self) -> None
-    
+
     def __enter__(self) -> "PDF"
-    
+
     def __exit__(self, t, value, traceback) -> None
-    
+
     @property
     def pages(self) -> List[Page]
-    
+
     @property
     def objects(self) -> Dict[str, T_obj_list]
-    
+
     @property
     def annots(self) -> List[Dict[str, Any]]
-    
+
     @property
     def hyperlinks(self) -> List[Dict[str, Any]]
-    
+
     @property
     def structure_tree(self) -> List[Dict[str, Any]]
-    
+
     def to_dict(self, object_types: Optional[List[str]] = None) -> Dict[str, Any]
 ```
 
@@ -342,7 +324,7 @@ class Page(Container):
     cached_properties: List[str] = Container.cached_properties + ["_layout"]
     is_original: bool = True
     pages = None
-    
+
     def __init__(
         self,
         pdf: "PDF",
@@ -350,41 +332,41 @@ class Page(Container):
         page_number: int,
         initial_doctop: T_num = 0,
     )
-    
+
     def close(self) -> None
-    
+
     @property
     def width(self) -> T_num
-    
+
     @property
     def height(self) -> T_num
-    
+
     @property
     def structure_tree(self) -> List[Dict[str, Any]]
-    
+
     @property
     def layout(self) -> LTPage
-    
+
     @property
     def annots(self) -> T_obj_list
-    
+
     @property
     def hyperlinks(self) -> T_obj_list
-    
+
     @property
     def objects(self) -> Dict[str, T_obj_list]
-    
+
     # Text extraction methods
     def extract_text(self, **kwargs: Any) -> str
-    
+
     def extract_text_simple(self, **kwargs: Any) -> str
-    
+
     def extract_words(self, **kwargs: Any) -> T_obj_list
-    
+
     def extract_text_lines(
         self, strip: bool = True, return_chars: bool = True, **kwargs: Any
     ) -> T_obj_list
-    
+
     def search(
         self,
         pattern: Union[str, Pattern[str]],
@@ -395,20 +377,20 @@ class Page(Container):
         return_chars: bool = True,
         **kwargs: Any
     ) -> T_obj_list
-    
+
     # Table methods
     def find_tables(self, table_settings: Optional[T_table_settings] = None) -> List[Table]
-    
+
     def find_table(self, table_settings: Optional[T_table_settings] = None) -> Optional[Table]
-    
+
     def extract_tables(
         self, table_settings: Optional[T_table_settings] = None
     ) -> List[List[List[Optional[str]]]]
-    
+
     def extract_table(
         self, table_settings: Optional[T_table_settings] = None
     ) -> Optional[List[List[Optional[str]]]]
-    
+
     # Page manipulation methods
     def crop(
         self,
@@ -416,20 +398,20 @@ class Page(Container):
         relative: bool = False,
         strict: bool = True
     ) -> CroppedPage
-    
+
     def within_bbox(
         self, bbox: T_bbox, relative: bool = False, strict: bool = True
     ) -> CroppedPage
-    
+
     def outside_bbox(
         self, bbox: T_bbox, relative: bool = False, strict: bool = True
     ) -> CroppedPage
-    
+
     def filter(self, test_function: Callable[[T_obj], bool]) -> FilteredPage
-    
+
     def dedupe_chars(self, tolerance: T_num = 1) -> "Page"
-    
-    # Visualization methods  
+
+    # Visualization methods
     def to_image(
         self,
         resolution: Optional[Union[int, float]] = None,
@@ -438,7 +420,7 @@ class Page(Container):
         antialias: bool = False,
         force_mediabox: bool = False,
     ) -> PageImage
-    
+
     def to_dict(self, object_types: Optional[List[str]] = None) -> Dict[str, Any]
 ```
 
@@ -459,7 +441,7 @@ class Page(Container):
 - `height` (T_num): Page height
 - `chars`, `lines`, `rects`, `curves`, `images`: Object lists (inherited)
 - `annots` (T_obj_list): Annotation objects
-- `hyperlinks` (T_obj_list): Hyperlink objects  
+- `hyperlinks` (T_obj_list): Hyperlink objects
 - `objects` (Dict[str, T_obj_list]): All page objects by type
 - `structure_tree` (List[Dict]): Page structure tree
 - `layout` (LTPage): pdfminer layout object
@@ -640,31 +622,31 @@ def objects_to_bbox(objects: Iterable[T_obj]) -> T_bbox
 **Return Value**: Smallest bounding box tuple (x0, top, x1, bottom) containing all objects
 
 ##### 6.9. resolve_all
-    
+
 **Function Signature**:
 ```python
 def resolve_all(x: Any) -> Any
 ```
-    
+
 **Parameters**:
 - `x` (Any): PDF object to recursively resolve (can be PDFObjRef, list, dict, or primitive)
-    
+
 **Return Value**: Fully resolved object with all references expanded
-    
+
 **Usage Example**:
 ```python
 from pdfplumber.utils import extract_text, within_bbox, cluster_objects
-    
+
 # Extract text from characters
 text = extract_text(page.chars)
-    
+
 # Get objects within a region
 chars_in_region = within_bbox(page.chars, (100, 100, 200, 200))
-    
+
 # Cluster objects by y-position
 from operator import itemgetter
 clusters = cluster_objects(page.chars, itemgetter("top"), tolerance=5)
-    
+
 # Extract words with character details
 words = extract_words(page.chars, return_chars=True)
 
@@ -770,7 +752,7 @@ from pdfplumber.cli import main
 main(["document.pdf", "--format", "json"])
 ```
 
-#### 8. Table Class 
+#### 8. Table Class
 
 **Import Method**:
 ```python
@@ -783,18 +765,18 @@ from pdfplumber.table import Table
 ```python
 class Table(object):
     def __init__(self, page: "Page", cells: List[T_bbox])
-    
+
     @property
     def bbox(self) -> T_bbox
-    
+
     def _get_rows_or_cols(self, kind: Type[CellGroup]) -> List[CellGroup]
-    
+
     @property
     def rows(self) -> List[CellGroup]
-    
+
     @property
     def columns(self) -> List[CellGroup]
-    
+
     def extract(self, **kwargs: Any) -> List[List[Optional[str]]]
 ```
 
@@ -839,7 +821,7 @@ from pdfplumber.table import TableFinder
 ```python
 class TableFinder(object):
     def __init__(self, page: "Page", settings: Optional[T_table_settings] = None)
-    
+
     def get_edges(self) -> T_obj_list
 ```
 
@@ -886,9 +868,9 @@ class TableSettings:
     intersection_x_tolerance: T_num = UNSET
     intersection_y_tolerance: T_num = UNSET
     text_settings: Optional[Dict[str, Any]] = None
-    
+
     def __post_init__(self) -> None
-    
+
     @classmethod
     def resolve(cls, spec: Optional[T_table_settings] = None) -> "TableSettings"
 ```
@@ -936,22 +918,22 @@ class CTM(NamedTuple):
     d: float
     e: float
     f: float
-    
+
     @property
     def scale_x(self) -> float
 
     @property
     def scale_y(self) -> float
-    
+
     @property
     def skew_x(self) -> float
-    
+
     @property
     def skew_y(self) -> float
-    
+
     @property
     def translation_x(self) -> float
-    
+
     @property
     def translation_y(self) -> float
 ```
@@ -997,23 +979,23 @@ class Serializer:
         include_attrs: Optional[List[str]] = None,
         exclude_attrs: Optional[List[str]] = None,
     )
-    
+
     def serialize(self, obj: Any) -> Any
-    
+
     def do_float(self, x: float) -> float
-    
+
     def do_bool(self, x: bool) -> int
-    
+
     def do_list(self, obj: List[Any]) -> List[Any]
-    
+
     def do_tuple(self, obj: Tuple[Any, ...]) -> Tuple[Any, ...]
-    
+
     def do_dict(self, obj: Dict[str, Any]) -> Dict[str, Any]
-    
+
     def do_PDFStream(self, obj: Any) -> Dict[str, Optional[str]]
-    
+
     def do_PSLiteral(self, obj: PSLiteral) -> str
-    
+
     def do_bytes(self, obj: bytes) -> Optional[str]
 ```
 
@@ -1048,17 +1030,17 @@ from pdfplumber.page import PDFPageAggregatorWithMarkedContent
 class PDFPageAggregatorWithMarkedContent(PDFPageAggregator):
     cur_mcid: Optional[int] = None
     cur_tag: Optional[str] = None
-    
+
     def begin_tag(self, tag: PSLiteral, props: Optional[PDFStackT] = None) -> None
-    
+
     def end_tag(self) -> None
-    
+
     def tag_cur_item(self) -> None
-    
+
     def render_char(self, *args, **kwargs) -> float
-    
+
     def render_image(self, *args, **kwargs) -> None
-    
+
     def paint_path(self, *args, **kwargs) -> None
 ```
 
@@ -1094,61 +1076,61 @@ from pdfplumber.container import Container
 ```python
 class Container(object):
     cached_properties = ["_rect_edges", "_curve_edges", "_edges", "_objects"]
-    
+
     @property
     def pages(self) -> Optional[List[Any]]
 
     @property
     def objects(self) -> Dict[str, T_obj_list]
-    
+
     def to_dict(
         self, object_types: Optional[List[str]] = None
     ) -> Dict[str, Any]
-    
+
     def flush_cache(self, properties: Optional[List[str]] = None) -> None
-    
+
     @property
     def rects(self) -> T_obj_list
-    
+
     @property
     def lines(self) -> T_obj_list
-    
+
     @property
     def curves(self) -> T_obj_list
-    
+
     @property
     def images(self) -> T_obj_list
-    
+
     @property
     def chars(self) -> T_obj_list
-    
+
     @property
     def textboxverticals(self) -> T_obj_list
-    
+
     @property
     def textboxhorizontals(self) -> T_obj_list
-    
+
     @property
     def textlineverticals(self) -> T_obj_list
-    
+
     @property
     def textlinehorizontals(self) -> T_obj_list
-    
+
     @property
     def rect_edges(self) -> T_obj_list
-    
+
     @property
     def curve_edges(self) -> T_obj_list
-    
+
     @property
     def edges(self) -> T_obj_list
-    
+
     @property
     def horizontal_edges(self) -> T_obj_list
-    
+
     @property
     def vertical_edges(self) -> T_obj_list
-    
+
     def to_json(
         self,
         stream: Optional[TextIO] = None,
@@ -1158,7 +1140,7 @@ class Container(object):
         precision: Optional[int] = None,
         indent: Optional[int] = None,
     ) -> Optional[str]
-    
+
     def to_csv(
         self,
         stream: Optional[TextIO] = None,
@@ -1206,7 +1188,7 @@ from pdfplumber.page import DerivedPage
 ```python
 class DerivedPage(Page):
     is_original: bool = False
-    
+
     def __init__(self, parent_page: Page)
 ```
 
@@ -1319,9 +1301,9 @@ class PageImage:
         antialias: bool = False,
         force_mediabox: bool = False,
     )
-    
+
     def reset(self) -> "PageImage"
-    
+
     def save(
         self,
         dest: Union[str, pathlib.Path, BytesIO],
@@ -1331,51 +1313,51 @@ class PageImage:
         bits: int = 8,
         **kwargs: Any,
     ) -> None
-    
+
     def copy(self) -> "PageImage"
-    
+
     def draw_line(
         self,
         points_or_obj: T_contains_points,
         stroke: T_color = DEFAULT_STROKE,
         stroke_width: int = DEFAULT_STROKE_WIDTH,
     ) -> "PageImage"
-    
+
     def draw_lines(
         self,
         list_of_lines: Union[T_seq[T_contains_points], "pd.DataFrame"],
         stroke: T_color = DEFAULT_STROKE,
         stroke_width: int = DEFAULT_STROKE_WIDTH,
     ) -> "PageImage"
-    
+
     def draw_vline(
         self,
         location: T_num,
         stroke: T_color = DEFAULT_STROKE,
         stroke_width: int = DEFAULT_STROKE_WIDTH,
     ) -> "PageImage"
-    
+
     def draw_vlines(
         self,
         locations: Union[List[T_num], "pd.Series[float]"],
         stroke: T_color = DEFAULT_STROKE,
         stroke_width: int = DEFAULT_STROKE_WIDTH,
     ) -> "PageImage"
-    
+
     def draw_hline(
         self,
         location: T_num,
         stroke: T_color = DEFAULT_STROKE,
         stroke_width: int = DEFAULT_STROKE_WIDTH,
     ) -> "PageImage"
-    
+
     def draw_hlines(
         self,
         locations: Union[List[T_num], "pd.Series[float]"],
         stroke: T_color = DEFAULT_STROKE,
         stroke_width: int = DEFAULT_STROKE_WIDTH,
     ) -> "PageImage"
-    
+
     def draw_rect(
         self,
         bbox_or_obj: Union[T_bbox, T_obj],
@@ -1383,7 +1365,7 @@ class PageImage:
         stroke: T_color = DEFAULT_STROKE,
         stroke_width: int = DEFAULT_STROKE_WIDTH,
     ) -> "PageImage"
-    
+
     def draw_rects(
         self,
         list_of_rects: Union[List[T_bbox], T_obj_list, "pd.DataFrame"],
@@ -1391,7 +1373,7 @@ class PageImage:
         stroke: T_color = DEFAULT_STROKE,
         stroke_width: int = DEFAULT_STROKE_WIDTH,
     ) -> "PageImage"
-    
+
     def draw_circle(
         self,
         center_or_obj: Union[T_point, T_obj],
@@ -1399,7 +1381,7 @@ class PageImage:
         fill: T_color = DEFAULT_FILL,
         stroke: T_color = DEFAULT_STROKE,
     ) -> "PageImage"
-    
+
     def draw_circles(
         self,
         list_of_circles: Union[List[T_point], T_obj_list, "pd.DataFrame"],
@@ -1407,7 +1389,7 @@ class PageImage:
         fill: T_color = DEFAULT_FILL,
         stroke: T_color = DEFAULT_STROKE,
     ) -> "PageImage"
-    
+
     def debug_table(
         self,
         table: Table,
@@ -1415,12 +1397,12 @@ class PageImage:
         stroke: T_color = DEFAULT_STROKE,
         stroke_width: int = 1,
     ) -> "PageImage"
-    
+
     def debug_tablefinder(
         self,
         table_settings: Optional[Union[TableFinder, TableSettings, T_table_settings]] = None,
     ) -> "PageImage"
-    
+
     def outline_words(
         self,
         stroke: T_color = (255, 0, 0, 255),
@@ -1429,20 +1411,20 @@ class PageImage:
         x_tolerance: T_num = DEFAULT_X_TOLERANCE,
         y_tolerance: T_num = DEFAULT_Y_TOLERANCE,
     ) -> "PageImage"
-    
+
     def outline_chars(
         self,
         stroke: T_color = (255, 0, 0, 255),
         fill: T_color = (255, 0, 0, int(255 / 4)),
         stroke_width: int = DEFAULT_STROKE_WIDTH,
     ) -> "PageImage"
-    
+
     def _reproject_bbox(self, bbox: T_bbox) -> Tuple[float, float, float, float]
-    
+
     def _reproject(self, coord: Union[T_point, Tuple[T_num, T_num]]) -> Tuple[float, float]
-    
+
     def _repr_png_(self) -> bytes
-    
+
     def show(self) -> None
 ```
 
@@ -1493,11 +1475,11 @@ from pdfplumber.structure import Findable
 ```python
 class Findable:
     children: List["PDFStructElement"]
-    
+
     def find_all(
         self, matcher: Union[str, Pattern[str], MatchFunc]
     ) -> Iterator["PDFStructElement"]
-    
+
     def find(
         self, matcher: Union[str, Pattern[str], MatchFunc]
     ) -> Optional["PDFStructElement"]
@@ -1623,18 +1605,18 @@ class PDFStructElement(Findable):
     attributes: Dict[str, Any] = field(default_factory=dict)
     mcids: List[int] = field(default_factory=list)
     children: List["PDFStructElement"] = field(default_factory=list)
-    
+
     def __iter__(self) -> Iterator["PDFStructElement"]
-    
+
     def all_mcids(self) -> Iterator[Tuple[Optional[int], int]]
-    
+
     def to_dict(self) -> Dict[str, Any]
-    
+
     # Inherited from Findable:
     def find_all(
         self, matcher: Union[str, Pattern[str], MatchFunc]
     ) -> Iterator["PDFStructElement"]
-    
+
     def find(
         self, matcher: Union[str, Pattern[str], MatchFunc]
     ) -> Optional["PDFStructElement"]
@@ -1752,9 +1734,9 @@ class TextMap:
         line_dir_render: T_dir,
         char_dir_render: T_dir,
     ) -> None
-    
+
     def to_string(self) -> str
-    
+
     def match_to_dict(
         self,
         m: re.Match,
@@ -1762,7 +1744,7 @@ class TextMap:
         return_groups: bool,
         return_chars: bool
     ) -> Dict[str, Any]
-    
+
     def search(
         self,
         pattern: Union[str, Pattern[str]],
@@ -1772,7 +1754,7 @@ class TextMap:
         return_chars: bool = True,
         main_group: int = 0,
     ) -> List[Dict[str, Any]]
-    
+
     def extract_text_lines(
         self, strip: bool = True, return_chars: bool = True
     ) -> List[Dict[str, Any]]
@@ -1805,7 +1787,7 @@ from pdfplumber.utils.text import WordMap
 ```python
 class WordMap:
     def __init__(self, tuples: List[Tuple[T_obj, T_obj_list]]) -> None
-    
+
     def to_textmap(
         self,
         layout: bool = False,
@@ -1869,11 +1851,11 @@ class WordExtractor:
         split_at_punctuation: Union[bool, str] = False,
         expand_ligatures: bool = True,
     )
-    
+
     def get_char_dir(self, upright: bool) -> T_dir
-    
+
     def merge_chars(self, ordered_chars: T_obj_list) -> T_obj
-    
+
     def char_begins_new_word(
         self,
         prev_char: T_obj,
@@ -1882,19 +1864,19 @@ class WordExtractor:
         x_tolerance: T_num,
         y_tolerance: T_num,
     ) -> bool
-    
+
     def iter_chars_to_words(
         self, ordered_chars: T_obj_list, direction: T_dir
     ) -> Iterator[T_obj]
-    
+
     def iter_chars_to_lines(self, chars: T_obj_list) -> Iterator[T_obj_list]
-    
+
     def iter_extract_tuples(
         self, chars: T_obj_list
     ) -> Iterator[Tuple[T_obj, T_obj_list]]
-    
+
     def extract_wordmap(self, chars: T_obj_list) -> WordMap
-    
+
     def extract_words(self, chars: T_obj_list, return_chars: bool = False) -> T_obj_list
 ```
 
@@ -1929,7 +1911,7 @@ The `PDFStructTree` class is used to parse the logical structure tree of a PDF d
 ##### Class Definition
 ```python
 class PDFStructTree(Findable):
-    
+
     def __init__(self, doc: "PDF", page: Optional["Page"] = None):
         # ...
 ```
@@ -3175,7 +3157,7 @@ def clip_obj(obj: T_obj, bbox: T_bbox) -> Optional[T_obj]
 ```python
 from pdfplumber.utils.geometry import intersects_bbox
 ```
-    
+
 **Function Signature**:
 ```python
 def intersects_bbox(objs: Iterable[T_obj], bbox: T_bbox) -> T_obj_list
@@ -3732,7 +3714,7 @@ def _find_all(
 - **Return**: bool - True if element type matches the target tag
 
 *match_regex*:
-- **Parameter**: `x` (PDFStructElement) - Element to test  
+- **Parameter**: `x` (PDFStructElement) - Element to test
 - **Return**: bool - True if element type matches the regex pattern
 
 ---
@@ -3883,9 +3865,9 @@ HERE = os.path.abspath(os.path.dirname(__file__))
 
 **Value**:
 ```python
-["snap_tolerance", "snap_x_tolerance", "snap_y_tolerance", "join_tolerance", 
- "join_x_tolerance", "join_y_tolerance", "edge_min_length", "min_words_vertical", 
- "min_words_horizontal", "intersection_tolerance", "intersection_x_tolerance", 
+["snap_tolerance", "snap_x_tolerance", "snap_y_tolerance", "join_tolerance",
+ "join_x_tolerance", "join_y_tolerance", "edge_min_length", "min_words_vertical",
+ "min_words_horizontal", "intersection_tolerance", "intersection_x_tolerance",
  "intersection_y_tolerance", "text_tolerance", "text_x_tolerance", "text_y_tolerance"]
 ```
 
@@ -5033,7 +5015,7 @@ with pdfplumber.open("document.pdf") as pdf:
         # Process each page
         text = page.extract_text()
         print(f"Page {i+1}: {len(text)} characters")
-        
+
         # Extract tables
         tables = page.extract_tables()
         for j, table in enumerate(tables):
@@ -5076,3 +5058,106 @@ with pdfplumber.open("document.pdf", laparams=laparams) as pdf:
     page = pdf.pages[0]
     print(page.extract_text())
 ```
+
+## Implementation Notes
+
+- Keep the root exports and module paths stable after installation; do not make behavior depend on the repository's current directory.
+- Preserve explicit ordering guarantees. When the contract does not promise an order, do not introduce a new observable order accidentally.
+- Propagate documented exceptions and avoid replacing them with generic errors. Validate malformed, empty, boundary, and repeated inputs as described by the API contract.
+- Keep filesystem, process, terminal, and resource effects bounded and local. Close files and other resources on both success and failure.
+- Do not copy an upstream checkout, implementation source, or evaluation-only material into the generated project. Implement the public behavior from this specification.
+
+## Examples
+
+The examples below are retained from the local task specification. They are starting points for ordinary calls and boundary/error behavior; their exact output and exception semantics remain governed by the API Usage Guide.
+
+### Example 1: ordinary usage
+```text
+workspace/
+├── .gitignore
+├── CHANGELOG.md
+├── CITATION.cff
+├── CONTRIBUTING.md
+├── LICENSE.txt
+├── MANIFEST.in
+├── Makefile
+├── README.md
+├── codecov.yml
+├── pdfplumber
+│   ├── __init__.py
+│   ├── _typing.py
+│   ├── _version.py
+│   ├── cli.py
+│   ├── container.py
+│   ├── convert.py
+│   ├── ctm.py
+│   ├── display.py
+│   ├── page.py
+│   ├── pdf.py
+│   ├── py.typed
+│   ├── repair.py
+│   ├── structure.py
+│   ├── table.py
+│   ├── utils
+│   │   ├── __init__.py
+│   │   ├── clustering.py
+│   │   ├── exceptions.py
+│   │   ├── generic.py
+│   │   ├── geometry.py
+│   │   ├── pdfinternals.py
+│   │   └── text.py
+├── setup.cfg
+└── setup.py
+```
+
+### Example 2: ordinary usage
+```text
+import pdfplumber
+
+# Main functions are available directly
+# pdfplumber.open(), pdfplumber.repair()
+```
+
+### Example 3: boundary or error behavior
+```text
+# Table extraction and configuration
+from pdfplumber.table import Table, TableFinder, TableSettings, T_table_settings
+
+# Coordinate transformation matrix
+from pdfplumber.ctm import CTM
+
+# Utility functions
+from pdfplumber.utils import extract_text, within_bbox, dedupe_chars
+from pdfplumber.utils.pdfinternals import resolve_and_decode, decode_text
+
+# Exception handling
+from pdfplumber.utils.exceptions import MalformedPDFException, PdfminerException
+
+# Structure tree parsing
+from pdfplumber.structure import PDFStructTree
+
+# Visualization
+from pdfplumber.display import PageImage, COLORS
+
+# PDF repair function (also available as pdfplumber.repair)
+from pdfplumber.repair import repair
+```
+
+### Example 4: boundary or error behavior
+```text
+import pdfplumber
+
+# Using repair as context manager
+with pdfplumber.repair("broken.pdf") as repaired_stream:
+    with pdfplumber.open(repaired_stream) as pdf:
+        print(len(pdf.pages))
+```
+
+
+## Error Handling and Boundary Conditions
+
+- Empty inputs, invalid types, malformed text or paths, unavailable resources, duplicate calls, and cancellation/timeout cases must follow the exception and return-value contracts documented for the relevant API.
+- Do not silently coerce values, reorder results, swallow exceptions, or use a fallback dependency unless the API section explicitly requires that behavior.
+- File and environment operations must use caller-provided paths and documented defaults only; never read undeclared host files or network resources.
+- The implementation must remain usable in the stated NoNetwork environment. A missing optional integration should expose the documented availability or error behavior rather than attempting an online install.
+- Security-sensitive inputs must be treated as data. Do not execute strings, load untrusted code, or interpolate shell commands unless that behavior is explicitly part of the documented public API.

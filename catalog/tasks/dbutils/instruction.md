@@ -1,8 +1,14 @@
-## Introduction and Goals of the DBUtils Project
+# Project Description
 
 DBUtils is a Python library **for multi-threaded database connection management** that provides stable, persistent, and pooled database connections, suitable for various multi-threaded environments. This tool performs excellently in application servers such as Webware for Python, achieving "the highest performance and optimal stability." Its core functions include: **Connection Pool Management** (automatically managing the creation, reuse, and destruction of database connections), **Persistent Connections** (thread-affinity connections where the same thread always uses the same connection), **Enhanced Connection Stability** (an automatic reconnection mechanism that transparently recovers even if the database restarts), and full support for PostgreSQL and DB-API 2 compatible databases.
 
 In short, DBUtils aims to provide a robust database connection management system for efficiently managing database connections in multi-threaded environments (e.g., creating a connection pool through `PooledDB`, implementing thread-affinity connections through `PersistentDB`, and providing an automatic reconnection function through `SteadyDB`). This library is particularly suitable for scenarios that require high-concurrency database access, such as Web application servers and multi-threaded data processing, significantly improving application performance and enhancing the reliability of database connections.
+
+The scored project is an installable Python package that preserves the DB-API
+2 connection boundary. Connection creators and lightweight fake DB-API drivers
+can be supplied by callers, so importing the package does not require a live
+database. PostgreSQL helpers remain optional integrations and must not force a
+network connection or driver import during ordinary package initialization.
 
 ## Natural Language Instruction (Prompt)
 
@@ -55,6 +61,12 @@ check-manifest>=0.47              # Manifest File Checking Tool
 # Development Environment
 tox>=4.10.0                       # Multi-Environment Testing Tool
 ```
+
+The runtime target is Python 3.12 on Debian 12. Agent, candidate, verifier,
+Oracle, controls, and package execution are NoNetwork: do not access GitHub,
+PyPI, DNS, a database server, or an external service at runtime. Build metadata
+must make optional PostgreSQL, documentation, and test tooling explicit rather
+than treating them as runtime requirements of the core pool classes.
 
 ## DBUtils Project Architecture
 
@@ -1228,3 +1240,42 @@ assert pool._release_timeout == 5
 - `pool._concurrency_optimized` - Status of concurrent performance optimization
 - `pool._acquisition_timeout` - Connection acquisition timeout
 - `pool._release_timeout` - Connection release timeout
+
+# Examples
+
+```python
+from dbutils.pooled_db import PooledDB
+
+pool = PooledDB(creator, mincached=1, maxcached=4, maxconnections=8)
+connection = pool.connection()
+cursor = connection.cursor()
+cursor.execute('SELECT 1')
+connection.close()  # returns the wrapper to the pool
+```
+
+```python
+from dbutils.persistent_db import PersistentDB
+
+factory = PersistentDB(creator, threadlocal=True)
+connection = factory.connection()
+connection.cursor().execute('SELECT 1')
+```
+
+# Error Handling and Boundary Conditions
+
+Pool limits are enforced consistently: a non-blocking request beyond the
+configured maximum raises the documented connection-limit exception, while a
+blocking request waits only for the configured timeout. Closing a pooled or
+persistent wrapper returns or discards the underlying connection according to
+its validity; it must not leak a connection or silently create an unbounded
+pool. Driver exceptions listed by `failures` trigger reconnection when the
+steady wrapper can safely do so, while ordinary application exceptions
+propagate unchanged. No class may assume a concrete database driver, invoke
+network I/O at import time, or access a service during tests.
+
+All public wrappers must preserve DB-API cursor, commit, rollback, and close
+semantics, including repeated close calls. Thread-affine state must not be
+shared accidentally across worker threads, and a connection-use limit must
+cause a fresh connection at the documented boundary. PostgreSQL-specific
+helpers must fail clearly when their optional driver is unavailable rather than
+silently selecting a different protocol.

@@ -13,7 +13,16 @@ function is evaluated only with `data:` URLs, so the required behavior is
 deterministic and works with no network access. This is a bounded task contract,
 not a claim of full upstream compatibility.
 
-## Supports
+# Natural Language Instruction
+
+Build the complete `node-fetch` ESM package from an empty workspace. Implement
+the JSON-safe Fetch subset below, including headers, request and response
+objects, data URLs, redirect classification, package metadata, and the exact
+runtime dependency closure. Preserve body-use state, header normalization,
+status behavior, and typed errors while keeping live network behavior out of
+the task.
+
+## Supports or Environment Configuration
 
 - Node `24.19.0`, npm `11.17.0`, and `linux/amd64`.
 - ESM packaging: `package.json` must set `"type": "module"` and provide a
@@ -32,6 +41,25 @@ request and response payloads are JSON objects limited to 64 KiB and 256 KiB.
 The scored values are JSON strings, null, booleans, finite numbers, arrays, and
 plain objects. Functions, streams, buffers, typed arrays, dates, custom
 prototypes, symbols, bigints, cyclic values, and callbacks are out of scope.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── package.json       # ESM metadata and dependency declarations
+├── package-lock.json  # npm lockfile version 3
+└── src/
+    ├── index.js       # fetch default and root named exports
+    ├── headers.js     # Headers implementation
+    ├── request.js     # Request implementation
+    ├── response.js    # Response implementation
+    └── utils/
+        └── is-redirect.js # redirect status predicate
+```
+
+The package root must expose the documented entries through its ESM export map.
+The dependency packages are installed from the supplied offline closure; do
+not add registry configuration, lifecycle hooks, or evaluator files.
 
 ## API Usage Guide
 
@@ -141,4 +169,35 @@ without network access. The frozen verifier contains 23 `node:test` leaves for
 the JSON-safe contract above. It does not evaluate live networking, redirects
 over sockets, compression, streams, form data, blobs, abort signals, proxy or
 agent options, filesystem helpers, custom header iterables, or TypeScript-only
-behavior.
+ behavior.
+
+## Examples
+
+```js
+import fetch, {Headers, Response, isRedirect} from 'node-fetch';
+const headers = new Headers([['X-Test', 'yes']]);
+const response = new Response('hello', {headers});
+await response.text();
+```
+
+```js
+const response = await fetch('data:text/plain,hello');
+response.headers.get('content-type');
+```
+
+```js
+Response.redirect('https://example.test/path', 302);
+isRedirect(302); // true
+```
+
+## Error Handling and Boundary Conditions
+
+- Invalid header names or values throw `TypeError`; names normalize to lower
+  case and iteration is lexicographic.
+- A GET or HEAD request with a body, or a URL with credentials, throws
+  `TypeError`.
+- Reading a response body twice rejects; `clone()` creates an independently
+  readable body before either side is consumed.
+- Only `data:` is fetched in this contract; `http:` and `https:` reject without
+  attempting network access.
+- Redirect statuses other than 301, 302, 303, 307, and 308 throw `RangeError`.

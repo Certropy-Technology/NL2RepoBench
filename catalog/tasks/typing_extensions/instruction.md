@@ -10,6 +10,13 @@ This task is deliberately scoped to behavior observable at runtime on CPython
 any other static type checker. Stubs, checker plugins, and behavior that exists
 only during static analysis are outside the contract.
 
+# Natural Language Instruction
+
+Create the installable `typing_extensions` package from an empty workspace.
+Implement the runtime typing forms, typed dictionaries, protocols, overload
+registry, decorators, sentinels, and introspection helpers below for CPython
+3.12. Preserve the standard-library interoperation and metadata behavior.
+
 # Supports
 
 - Python: CPython 3.12 on Linux.
@@ -22,6 +29,15 @@ only during static analysis are outside the contract.
 - The installed module may be provided as `src/typing_extensions.py` or an
   equivalent package layout, as long as the public imports and behavior below
   are preserved.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+└── src/
+    └── typing_extensions.py
+```
 
 # API Usage Guide
 
@@ -236,3 +252,25 @@ tuple of multiple arguments.
 - Do not add network calls, environment-specific paths, or remote services.
 - Examples in this specification define runtime behavior only; they are not a
   promise about acceptance or rejection by any static type checker.
+
+# Examples
+
+```python
+from typing_extensions import Annotated, get_args
+
+assert get_args(Annotated[int, "metadata"]) == (int, "metadata")
+```
+
+```python
+from typing_extensions import TypedDict, Required
+
+class Payload(TypedDict):
+    identifier: Required[int]
+```
+
+# Error Handling and Boundary Conditions
+
+Runtime predicates return `False` for unrelated values. Invalid subscriptions,
+unresolved forward references, forbidden qualifiers, and invalid typed-dict
+field declarations raise the documented `TypeError`, `NameError`, or custom
+exception; decorator calls preserve the wrapped callable.

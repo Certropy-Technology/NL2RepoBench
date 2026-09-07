@@ -22,6 +22,14 @@ contract never performs a network request and does not require a native
 extension or the large remote vocabulary files. Preserve the public behavior
 of the APIs below.
 
+## Natural Language Instruction
+
+Create the installable `tiktoken` project from an empty workspace. Implement
+the local tokenizer, registry and model mapping, local-file helpers, and
+educational BPE trainer below. Preserve reversible token bytes, batch order,
+special-token policy, and deterministic model-name lookup without remote
+vocabulary downloads.
+
 ## Supports
 
 - Provide an installable distribution and import package named `tiktoken`,
@@ -37,6 +45,24 @@ of the APIs below.
   `tiktoken_ext.openai_public` importable. Include `tiktoken/py.typed`.
 - Keep normal operations local. `read_file` may read a caller-supplied local
   path; no documented scored operation may call a URL, subprocess, or service.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── tiktoken/
+│   ├── __init__.py
+│   ├── core.py
+│   ├── load.py
+│   ├── model.py
+│   ├── registry.py
+│   ├── _educational.py
+│   └── py.typed
+└── tiktoken_ext/
+    ├── __init__.py
+    └── openai_public.py
+```
 
 ## API Usage Guide
 
@@ -145,3 +171,28 @@ wraps these operations with `encode`, `decode_bytes`, `decode`,
   `blobfile`, NumPy acceleration, live URL fetching, huge remote vocabularies,
   and private upstream tests. These exclusions are an intentional bounded
   adaptation, not permission to omit the documented core API.
+
+## Examples
+
+```python
+from tiktoken import Encoding
+
+ranks = {bytes([i]): i for i in range(256)}
+enc = Encoding("fixture", pat_str=r"[A-Za-z]+", mergeable_ranks=ranks,
+               special_tokens={})
+assert enc.decode(enc.encode("hello")) == "hello"
+```
+
+```python
+from tiktoken.load import dump_tiktoken_bpe, load_tiktoken_bpe
+
+dump_tiktoken_bpe({b"a": 0}, "tokens.bpe")
+assert load_tiktoken_bpe("tokens.bpe") == {b"a": 0}
+```
+
+## Error Handling and Boundary Conditions
+
+Unknown token IDs raise `KeyError`; malformed local BPE lines and digest
+mismatches raise `ValueError`. Disallowed special text raises `ValueError`,
+while `disallowed_special=()` treats it as ordinary text. No operation may
+fetch a URL or infer vocabulary bytes from an external service.

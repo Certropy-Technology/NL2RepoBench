@@ -14,6 +14,13 @@ body decoding, warning helpers, and the package's public re-exports. Socket
 connections, TLS handshakes, proxy servers, HTTP/2 transports, browser APIs,
 and external network I/O are outside this bounded contract.
 
+## Natural Language Instruction
+
+Create the installable `urllib3` package from an empty workspace. Implement
+the deterministic URL, header, multipart, retry, timeout, response, warning,
+and public re-export behavior below. Keep all transport and external I/O out of
+the local contract.
+
 ## Supports
 
 - `pip install .` from a clean workspace and normal imports of `urllib3`.
@@ -25,6 +32,25 @@ and external network I/O are outside this bounded contract.
 - JSON-compatible inputs and deterministic return values for the APIs below.
   Do not add a network client, subprocess dependency, generated endpoint, or
   task-specific test hook.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+└── urllib3/
+    ├── __init__.py
+    ├── _collections.py
+    ├── exceptions.py
+    ├── fields.py
+    ├── filepost.py
+    ├── response.py
+    └── util/
+        ├── __init__.py
+        ├── retry.py
+        ├── timeout.py
+        └── url.py
+```
 
 ## API Usage Guide
 
@@ -105,6 +131,29 @@ inheritance relationships and useful string representations. `disable_warnings`
 changes the standard warning filter for urllib3 warning classes without
 performing I/O.
 
+## Examples
+
+```python
+from urllib3.util import parse_url
+
+assert parse_url("https://example.test/a?q=1").host == "example.test"
+```
+
+```python
+from urllib3._collections import HTTPHeaderDict
+
+headers = HTTPHeaderDict()
+headers.add("X-Test", "one")
+assert headers.getlist("x-test") == ["one"]
+```
+
+## Error Handling and Boundary Conditions
+
+Malformed URLs and invalid retry or timeout values raise the documented
+exceptions. Header lookup is case-insensitive while preserving insertion
+order. Response decoding never changes bytes when disabled, and no helper may
+open sockets or contact a network service.
+
 ## Implementation Notes
 
 Keep public imports and signatures compatible with the described API. Preserve
@@ -115,5 +164,5 @@ required by this task and should not be used to justify network access.
 
 The verifier uses a separate UID-isolated subprocess for every candidate API
 observation. The hidden contract contains 32 deterministic leaf scenarios; it
-does not expose hidden tests, the reference implementation, or trusted reward
+does not expose unpublished tests, the reference implementation, or scoring
 files. Do not read hidden paths or write verifier-owned reports.

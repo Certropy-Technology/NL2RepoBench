@@ -15,6 +15,31 @@ package must not require a runtime third-party dependency.
 - The package must install with the standard build frontend and be importable
   from its installed target under `python -I`.
 
+## Natural Language Instruction
+
+Create the installable `portalocker` package from an empty workspace. Reproduce
+the documented POSIX locking APIs, context-manager lifecycle, contention
+timeouts, temporary and PID lock cleanup, bounded semaphore slots, and atomic
+file publication. Preserve object state across repeated acquire/release calls
+and raise the documented exception classes instead of silently succeeding.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── portalocker/__init__.py
+├── portalocker/constants.py
+├── portalocker/exceptions.py
+├── portalocker/portalocker.py
+├── portalocker/types.py
+└── portalocker/utils.py
+```
+
+The root package re-exports the names listed below. Keep the implementation
+POSIX-focused and self-contained; no verifier, fixture, report, database, or
+service files belong in the generated project.
+
 # API Usage Guide
 
 ## Package exports and flags
@@ -93,3 +118,45 @@ unprivileged candidate child receives JSON requests and returns JSON values;
 the trusted verifier must never import candidate code into its own process.
 Use bounded temporary paths and clean up every lock, child process, and file.
 Do not implement Redis or Windows-only APIs by contacting a service.
+
+## Examples
+
+```python
+from portalocker import Lock
+
+with Lock("state.lock", mode="a") as handle:
+    handle.write("ready")
+```
+
+```python
+from portalocker import open_atomic
+
+with open_atomic("result.txt", binary=False) as handle:
+    handle.write("complete")
+```
+
+```python
+from portalocker import BoundedSemaphore
+
+semaphore = BoundedSemaphore(2, name="workers")
+slot = semaphore.acquire()
+if slot is not None:
+    semaphore.release()
+```
+
+## Error Handling and Boundary Conditions
+
+- A finite lock timeout retries at `check_interval`; exhausted contention
+  raises `AlreadyLocked` when `fail_when_locked=True` and returns `None` only
+  for the documented non-failing semaphore mode.
+- `RLock` releases only after matching acquisitions. Extra releases raise
+  `LockException`, and cleanup must occur after exceptions from the context body.
+- `TemporaryFileLock` and `PidFileLock` remove their marker files on release;
+  malformed PID contents produce `None` from `read_pid()` rather than an
+  unrelated process operation.
+- `open_atomic` must never overwrite an existing destination. It publishes a
+  complete temporary payload or raises `FileExistsError`, and it cleans up
+  temporary resources where publication succeeds.
+- All file paths are local POSIX paths. Empty or non-positive semaphore slot
+  sets have no usable slots, and no operation may contact Redis, DNS, a network,
+  or an external service.

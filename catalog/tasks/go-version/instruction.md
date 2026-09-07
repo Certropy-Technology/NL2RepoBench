@@ -18,6 +18,44 @@ The implementation must be deterministic and self-contained.
   directives, workspaces, generated source, network access, or external
   services.
 
+## Natural Language Instruction
+
+Create the pure-Go `github.com/hashicorp/go-version` module from an empty
+workspace. Implement version parsing, normalization, comparison, constraints,
+copy-safe accessors, and collection sorting with the exact public API below.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── go.mod
+├── go.sum
+├── vendor/modules.txt
+└── version.go
+```
+
+Expose package `version` at the documented module path. Preserve text/database
+interfaces and panic-on-error helpers, but do not include evaluation-only files.
+
+## Examples
+
+```go
+v, err := version.NewVersion("v1.4.2-beta.1")
+```
+
+```go
+constraints, err := version.NewConstraint(">= 1.0, < 2.0")
+ok := constraints.Check(v)
+```
+
+## Error Handling and Boundary Conditions
+
+Handle strict versus loose syntax, prefixes, leading zeroes, prerelease and
+metadata precedence, overflow, invalid constraint ranges, nil comparisons,
+copy-safe segment slices, and empty collections as specified. `Must` helpers may
+panic only on their documented error path; ordinary malformed input returns an
+error.
+
 ## API Usage Guide
 
 Implement package `version` at import path `github.com/hashicorp/go-version`
@@ -125,7 +163,7 @@ Do not copy the upstream implementation or tests into the submission. Keep
 all state instance-local, avoid retaining caller byte/slice storage, and avoid
 panics for malformed public inputs except the explicitly panic-on-error
 `Must` helpers. The evaluation invokes the API through a bounded newline-
-delimited JSON subprocess bridge; the trusted verifier never imports candidate
+delimited JSON subprocess bridge; the evaluator never imports candidate
 code directly. Hidden assertions cover normalization, prefixes, strict and
 loose parsing, comparison edge cases, prerelease rules, safe slice copying,
 constraint operators, sorting, and malformed bridge requests.

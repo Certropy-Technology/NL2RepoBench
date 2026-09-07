@@ -8,6 +8,14 @@ behavior. The module path must be exactly
 `github.com/hashicorp/go-multierror`, and the package at the module root must
 be named `multierror`.
 
+## Natural Language Instruction
+
+Create the module from an empty `workspace/`. Implement error aggregation,
+formatting, wrapping, flattening, prefixing, sorting, and concurrent `Group`
+collection exactly as specified below. Preserve ordinary Go `error` behavior,
+nil and typed-nil handling, deterministic sequential order, and safe concurrent
+mutation. The project is a local library and needs no CLI or service.
+
 ## Supports
 
 - Linux/amd64 with Go `1.26.5`.
@@ -18,9 +26,27 @@ be named `multierror`.
 - The public API must be usable by callers that provide ordinary values from
   the standard `errors` and `sort` packages.
 
+## Project Directory Structure
+
+```text
+workspace/
+├── go.mod
+├── go.sum
+├── multierror.go
+├── group.go
+└── flatten.go
+```
+
+Import path: `github.com/hashicorp/go-multierror`. A caller imports it with
+`import "github.com/hashicorp/go-multierror"`. The module root uses the
+package name `multierror`. The listed files describe the public source
+layout; combine implementation files when desired, but do not add a command,
+network service, or evaluator-owned files.
+
 ## API Usage Guide
 
 Implement package `multierror` with these public declarations and behaviors.
+Import example: `import multierror "github.com/hashicorp/go-multierror"`.
 
 ### `Error` and formatting
 
@@ -121,3 +147,35 @@ The evaluation uses a bounded JSON subprocess bridge that exercises the API
 without importing candidate code into the trusted verifier. It includes empty,
 Unicode, nested, nil, custom-format, wrapping, sorting, and concurrent-group
 cases.
+
+## Examples
+
+```go
+var aggregate *multierror.Error
+aggregate = multierror.Append(aggregate, errors.New("first"), errors.New("second"))
+err := aggregate.ErrorOrNil()
+_ = err
+```
+
+```go
+wrapped := multierror.Prefix(errors.New("disk full"), "save")
+// wrapped.Error() is "save disk full".
+_ = wrapped
+```
+
+```go
+var group multierror.Group
+group.Go(func() error { return errors.New("one") })
+result := group.Wait()
+// result is nil only when every started function returned nil.
+_ = result
+```
+
+## Error Handling and Boundary Conditions
+
+Nil errors are ignored by `Append`; a typed-nil `*Error` must not panic. A nil
+receiver is safe for `ErrorOrNil`, `WrappedErrors`, `Unwrap`, and `Len`.
+`Unwrap` preserves sequential error order and supports `errors.Is` and
+`errors.As`. `Group` must wait for all started functions, collect only non-nil
+errors, and remain race-free; concurrent completion order is intentionally not
+observable as a deterministic ordering contract.

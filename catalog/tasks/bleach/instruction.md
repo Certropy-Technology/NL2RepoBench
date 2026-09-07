@@ -1,5 +1,15 @@
 # Bleach HTML Security Cleaning Library - Complete Documentation
 
+## Project Description
+
+Build an installable Python distribution named `bleach` from an empty
+`workspace/`. Bleach is a security-oriented HTML fragment cleaner and
+linkifier for untrusted text. The scored project must expose the `bleach`
+package, remove unsafe markup and protocols, safely process CSS when a
+sanitizer is configured, and convert recognized URLs or email addresses into
+links. Its behavior is local and deterministic; it is not a web server, a
+browser, or a general HTML document store.
+
 ## Introduction and Goals of the Bleach Project
 
 Bleach is an open-source Python library developed by Mozilla, specifically designed for **HTML content cleaning and linkification**. It is a security-oriented library mainly used to handle HTML content from untrusted sources, preventing security threats such as XSS (Cross-Site Scripting). This tool excels in the field of web application security, achieving "the highest level of security and optimal compatibility." Its core functions include: HTML security cleaning (filtering tags and attributes based on a whitelist), **automatic link recognition and conversion** (supporting automatic linkification of URLs and email addresses), and intelligent processing of CSS styles, character encodings, special symbols, etc. In short, Bleach aims to provide a robust HTML content security processing system to ensure the security of user-generated content (for example, converting dangerous HTML to safe content through `clean()`, and converting URLs in text to clickable links through the `linkify()` function).
@@ -774,3 +784,53 @@ print(result)  # 'pt&gt;alert(1)ipt&gt;'
 ```
 
 This documentation of functional nodes is based on an in-depth analysis of all the test files of the Bleach project. Similar functions are integrated into eight main nodes, and each node contains a representative code block, covering all the core functional points of the library and their usage methods.
+
+## Implementation Notes
+
+Keep the public root exports, module paths, defaults, callback ordering, and
+exception behavior described in the API guide. HTML parsing and serialization
+must preserve safe text while applying the configured tag, attribute,
+protocol, comment, and CSS policies. Linkification must not process skipped
+elements or recursively linkify an existing link. CSS filtering and URL
+protocol checks are security boundaries: do not fall back to unsafe raw HTML
+or style output when an option is omitted.
+
+The generated project should contain the install metadata and public modules
+shown in the directory tree, but must not include private verifier material,
+test fixtures, source archives, or runtime network downloads. Keep callback
+inputs JSON-safe where an adapter is required and make repeated calls with the
+same input and configuration deterministic.
+
+## Examples
+
+```python
+from bleach import clean, linkify
+
+safe = clean('<script>alert(1)</script><p>Hello</p>')
+linked = linkify('Read https://example.com')
+```
+
+```python
+from bleach.sanitizer import Cleaner
+
+cleaner = Cleaner(tags={'p', 'a'}, attributes={'a': ['href']},
+                  protocols={'https'})
+result = cleaner.clean('<p><a href="javascript:bad">x</a></p>')
+```
+
+```python
+from bleach.css_sanitizer import CSSSanitizer
+
+sanitizer = CSSSanitizer(allowed_css_properties={'color'})
+sanitizer.sanitize_css('color: red; position: fixed')
+```
+
+## Error Handling and Boundary Conditions
+
+Cleaning accepts text-like HTML fragments and returns a string. Disallowed
+tags and attributes are escaped or removed according to the configured policy;
+unsafe URL schemes such as `javascript` are rejected even when entity or case
+variations attempt to bypass parsing. Linkifier callbacks run in documented
+order and must not recursively rewrite existing links. CSS properties outside
+the allowlist are removed, and malformed or unsupported callback inputs must
+raise the documented type error rather than bypass sanitization.

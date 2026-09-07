@@ -21,6 +21,44 @@ may exist in the upstream repository are outside this task.
   rules below. Do not add command-line programs or perform I/O from package
   methods.
 
+## Natural Language Instruction
+
+Create the self-contained `golang.org/x/sync` module from an empty workspace.
+Implement `errgroup.Group`, derived-context cancellation, bounded goroutine
+coordination, and first-error behavior exactly as documented below.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── go.mod
+├── go.sum
+├── vendor/modules.txt
+└── errgroup/
+    └── errgroup.go
+```
+
+The package import path is `golang.org/x/sync/errgroup`. No other upstream
+packages or private verifier files are required.
+
+## Examples
+
+```go
+var group errgroup.Group
+group.Go(func() error { return nil }); err := group.Wait()
+```
+
+```go
+group, ctx := errgroup.WithContext(parent)
+group.Go(func() error { select { case <-ctx.Done(): return ctx.Err(); default: return nil } })
+```
+
+## Error Handling and Boundary Conditions
+
+Preserve nil-error completion, first non-nil error, cancellation timing,
+`SetLimit`, `TryGo`, repeated waits, and concurrent calls as specified. Package
+methods perform no I/O or network access.
+
 ## API Usage Guide
 
 Import the package as `golang.org/x/sync/errgroup`.

@@ -14,6 +14,46 @@ and expose the root package `humanize` plus its `english` subpackage.
 - Pure Go only. Do not use cgo, plugins, `unsafe`, external `replace`
   directives, workspaces, generated source, network access, or external services.
 
+## Natural Language Instruction
+
+Create the pure-Go `github.com/dustin/go-humanize` module from an empty
+workspace. Implement the root package and `english` subpackage functions for
+byte sizes, numbers, times, ordinals, words, and pluralization listed below.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── go.mod
+├── go.sum
+├── vendor/modules.txt
+├── bytes.go
+├── comma.go
+├── times.go
+└── english/
+    └── words.go
+```
+
+Preserve both public import paths and exact signatures. Do not add verifier or
+network-service code.
+
+## Examples
+
+```go
+label := humanize.Bytes(1536)
+number := humanize.Comma(1234567)
+```
+
+```go
+phrase := english.PluralWord(2, "item", "")
+```
+
+## Error Handling and Boundary Conditions
+
+Preserve zero, negative where accepted, maximum integer, singular/plural,
+rounding, parse failure, and deterministic time formatting behavior. Locale,
+clock, and network services must not affect fixed-input results.
+
 ## API Usage Guide
 
 Implement these public functions with deterministic output and the exact
@@ -70,8 +110,12 @@ storage. The functions return strings and do not perform I/O.
 
 ## Implementation Notes
 
+The root and subpackage APIs remain independently usable after an offline
+module build. Units, separators, rounding, and plural forms follow the exact
+signatures and defaults stated below.
+
 Keep the module self-contained and compatible with the signatures above.
 Numerical boundary behavior, rounding, sign handling, Unicode micro prefix,
 empty strings, explicit plurals, and irregular plural words are part of the
 public behavior. The evaluation calls the API through a bounded JSON
-subprocess bridge; it does not import candidate code into the trusted verifier.
+subprocess bridge; it does not import candidate code into the evaluator.

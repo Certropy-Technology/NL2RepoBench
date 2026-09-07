@@ -1,4 +1,4 @@
-# Build `ansi-styles`
+# Project Description
 
 ## Project Description
 
@@ -9,7 +9,19 @@ descriptors and color-space conversion helpers for terminal formatting.
 This is a repository-generation task. Reproduce the documented public behavior
 with your own package files; do not copy the pinned upstream source or tests.
 
-## Supports
+# Natural Language Instruction
+
+Create the `ansi-styles` project from an empty `workspace/`. Build an installable implementation, not a loose demonstration script. The public API guide below is the complete source of the task contract; preserve its import paths, signatures, return shapes, ordering, state changes, and exceptions.
+
+Required capabilities:
+- modifier and color style descriptors: implement the documented public behavior and preserve its input/output and error contract.
+- ANSI open/close sequences: implement the documented public behavior and preserve its input/output and error contract.
+- RGB and hexadecimal conversion: implement the documented public behavior and preserve its input/output and error contract.
+- ANSI 256-color and truecolor builders: implement the documented public behavior and preserve its input/output and error contract.
+
+Do not copy an upstream checkout or tests. Keep behavior deterministic and local, and make the package usable from the installation layout described below. The principal public entry points include: `rgbToAnsi256(red, green, blue)`, `hexToRgb(hex)`, `hexToAnsi256(hex)`, `rgbToAnsi256(...hexToRgb(hex))`.
+
+# Supports
 
 - Node.js `24.19.0` and npm `11.17.0` on `linux/amd64`.
 - ESM semantics: `package.json` must contain `"type": "module"`.
@@ -19,11 +31,8 @@ with your own package files; do not copy the pinned upstream source or tests.
 - The package must contain `index.js` and `index.d.ts`, and its package export
   must make both the runtime and declaration files available to consumers.
 - Include a v3 `package-lock.json` that agrees with `package.json`. There are
-  no runtime dependencies, and installation must work offline with:
-
-  ```bash
-  npm ci --offline --ignore-scripts --no-audit --no-fund
-  ```
+  no runtime dependencies, and installation must work offline with
+  `npm ci --offline --ignore-scripts --no-audit --no-fund`.
 
   Development-only tools such as linters, test runners, type checkers, and
   screenshot utilities must not be declared as package dependencies in the
@@ -32,7 +41,22 @@ with your own package files; do not copy the pinned upstream source or tests.
 - Runtime behavior must not need a network service, native addon, custom
   loader, registry configuration, or lifecycle script.
 
-## API Usage Guide
+
+## NoNetwork boundary
+
+Agent, candidate, verifier, Oracle, controls, and normal runtime execution are network-isolated. Do not access GitHub, package registries, Go proxies, DNS, or external services during execution; use only the frozen local build inputs.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── index.js
+└── index.d.ts
+```
+
+# API Usage Guide
 
 ### Default style object
 
@@ -95,10 +119,44 @@ underline-color group uses `58` for 256-color and truecolor builders. Its
 because SGR 58 has no basic 16-color form. The helpers under `color`,
 `bgColor`, and `underlineColor` use the same numeric conversion rules.
 
-## Implementation Notes
+# Implementation Notes
 
 Keep the package ESM-compatible and deterministic. Preserve the documented
 array order, object property behavior, aliases (`gray`/`grey` and
 `bgGray`/`bgGrey`), ANSI close codes, and non-enumerable helper properties.
-Do not include private verifier files, reference source, provider settings,
+Do not include evaluation-only files, reference source, provider settings,
 or network access in the candidate repository.
+
+# Examples
+
+## Ordinary style pair
+
+```javascript
+import ansiStyles from 'ansi-styles'
+
+const redText = `${ansiStyles.red.open}error${ansiStyles.red.close}`
+```
+
+## Ordinary color conversion
+
+```javascript
+const rgb = ansiStyles.hexToRgb('#ff0080')
+const code = ansiStyles.rgbToAnsi256(...rgb)
+```
+
+## Boundary: invalid hexadecimal input
+
+```javascript
+ansiStyles.hexToRgb('not-a-color') // [0, 0, 0]
+```
+
+## Boundary: grayscale endpoints
+
+```javascript
+ansiStyles.rgbToAnsi256(0, 0, 0)       // 16
+ansiStyles.rgbToAnsi256(255, 255, 255) // 231
+```
+
+# Error Handling and Boundary Conditions
+
+Reject invalid inputs using the documented exception or error result. Preserve empty-input behavior, ordering, Unicode/encoding behavior, cancellation or timeout semantics, and local filesystem boundaries where the API specifies them. Never turn a failed local operation into a network request, subprocess, or silent success.

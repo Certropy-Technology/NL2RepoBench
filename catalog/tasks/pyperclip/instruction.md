@@ -1,52 +1,48 @@
-# Project Description
+# pyperclip
 
-Create an installable Python project named `pyperclip`. It provides one plain-text clipboard API while selecting an operating-system-specific implementation at runtime. The project must be usable as both the `pyperclip` import package and the `python -m pyperclip` command.
+## Project Description
 
-The library is an interface to clipboard mechanisms supplied by the host. It does not provide rich clipboard formats, clipboard history, or a persistent in-process replacement for a missing system clipboard.
+Build an installable `pyperclip` project from an empty `workspace/`. The project must reproduce the public, local behavior documented in this instruction, including its package entry points, return shapes, ordering, state changes, and documented exceptions. This is a repository-generation task: the agent creates the build metadata and source modules rather than editing an existing implementation.
 
-# Supports
+Distribution identity: `pyperclip`; public import package begins at `pyperclip`.
+The scope is the deterministic local API described below. Network services, undeclared external state, and behavior not represented by the public contract are outside the task.
 
-- Support Python 3.10 and newer.
-- Use a `src` layout with the package at `src/pyperclip/`.
-- Provide package metadata that supports `python -m pip install -e .` without downloading runtime dependencies.
-- Expose `__version__ = "1.11.0"`.
-- Keep imports lazy: importing `pyperclip` must not initialize Qt, access a clipboard, or launch a helper process.
-- Use only the standard library for the core package. Optional platform backends may use PyObjC, `qtpy`, or PyQt5 when those packages are already installed.
-- Handle plain text only. Backend copy functions coerce their argument with `str()` before encoding or writing it.
-- The Linux verification environment is intentionally headless. It has no X11 or Wayland display, no `/dev/clipboard`, and no `xclip`, `xsel`, `wl-copy`, `wl-paste`, `klipper`, or `qdbus` executable. Automatic detection there must select the unavailable backend. Do not assume or simulate access to a real desktop clipboard in that environment.
+## Natural Language Instruction
 
-The public module must define the following names, even on platforms where a backend cannot be used:
+Create the complete project in an empty workspace and make it installable with the command in the environment section. Implement these task-specific capability families from the local API contract:
 
-```python
-copy
-paste
-set_clipboard
-determine_clipboard
-is_available
-lazy_load_stub_copy
-lazy_load_stub_paste
-init_osx_pbcopy_clipboard
-init_osx_pyobjc_clipboard
-init_dev_clipboard_clipboard
-init_qt_clipboard
-init_xclip_clipboard
-init_xsel_clipboard
-init_wl_clipboard
-init_klipper_clipboard
-init_no_clipboard
-init_windows_clipboard
-init_wsl_clipboard
-CheckedCall
-PyperclipException
-PyperclipWindowsException
-PyperclipTimeoutException
-_executable_exists
-ENCODING
+1. `Primary operations`: expose the documented public entry points, signatures, inputs, outputs, and error behavior.
+2. `copy(text)`: preserve the documented object or module behavior, including state and side effects.
+3. `paste() -> str`: preserve ordering, determinism, serialization, and boundary semantics where specified.
+4. `is_available() -> bool`: make the public package usable through the documented import path or command-line entry.
+
+Do not add speculative APIs or substitute a different package. Keep the implementation self-contained, ensure imports work after installation, and use the exact public names and signatures in the API Usage Guide. A small implementation is acceptable only when it still satisfies every documented contract.
+
+## Supports or Environment Configuration
+
+- CPython 3.12.4 on the pinned Linux image.
+- Distribution identity: `pyperclip`; public import package begins at `pyperclip`.
+- Install from the workspace with `python -m pip install .`; do not download packages during evaluation.
+- Declared build/runtime packages are supplied by the frozen evaluation image: `setuptools==80.10.2`, `wheel==0.45.1`, `pytest==8.3.5`, `iniconfig==2.0.0`, `packaging==24.2`, `pluggy==1.5.0`
+- Build metadata and package data must be present in the workspace and agree with the public import paths below.
+- Agent, candidate, evaluator, Oracle, and control execution are network-isolated. Do not access GitHub, package registries, DNS, databases, or external services at runtime.
+- Use deterministic local inputs. Do not rely on the current wall clock, host-specific absolute paths, undeclared environment variables, or an installed copy of the target package.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── package/
+│   ├── __init__.py
+│   └── (public modules documented in API Usage Guide)
 ```
 
-Set `__all__` to the four primary API names: `copy`, `paste`, `set_clipboard`, and `determine_clipboard`.
+The tree lists agent-owned public project files only. Add additional public modules when required by the API Usage Guide, but keep their import paths consistent with package metadata. Do not create evaluator-only files, hidden fixtures, or private reports in the generated project.
 
-# API Usage Guide
+## API Usage Guide
+
+The following is the task-specific public contract recovered from the local instruction and inventory. For every function, class, method, constant, export, and command named below, preserve its complete signature, accepted input domain, return type and shape, ordering, determinism, state/side effects, exceptions, and examples. When the source contract gives an optional argument or a compatibility alias, it is part of the required surface.
 
 ## Primary operations
 
@@ -183,7 +179,6 @@ Provide `src/pyperclip/__main__.py` with these behaviors:
 - `python -m pyperclip -p` and `--paste` write pasted text to standard output without adding a newline.
 - Any other invocation prints a short usage message and returns normally.
 
-# Implementation Notes
 
 - Set `ENCODING = "utf-8"` and use it consistently for Unix helper-process I/O.
 - Keep backend-specific imports inside initialization or detection paths so importing the module succeeds on every platform.
@@ -211,3 +206,97 @@ assert pyperclip.is_available() is True
 ## Deterministic verification boundary
 
 The verifier may exercise the public functions through a JSON-line fixture adapter. The adapter is external to the package and may provide an in-memory `(copy, paste)` pair through `determine_clipboard`; it must not require a desktop session or persist clipboard data in the library. JSON values sent to that adapter must be converted to ordinary text by the selected copy callable, and the adapter's responses must remain JSON serializable. The package itself must still report the unavailable backend explicitly when no host clipboard mechanism exists.
+
+## Implementation Notes
+
+- Keep the root exports and module paths stable after installation; do not make behavior depend on the repository's current directory.
+- Preserve explicit ordering guarantees. When the contract does not promise an order, do not introduce a new observable order accidentally.
+- Propagate documented exceptions and avoid replacing them with generic errors. Validate malformed, empty, boundary, and repeated inputs as described by the API contract.
+- Keep filesystem, process, terminal, and resource effects bounded and local. Close files and other resources on both success and failure.
+- Do not copy an upstream checkout, implementation source, or evaluation-only material into the generated project. Implement the public behavior from this specification.
+
+## Examples
+
+The examples below are retained from the local task specification. They are starting points for ordinary calls and boundary/error behavior; their exact output and exception semantics remain governed by the API Usage Guide.
+
+### Example 1: ordinary usage
+```text
+copy
+paste
+set_clipboard
+determine_clipboard
+is_available
+lazy_load_stub_copy
+lazy_load_stub_paste
+init_osx_pbcopy_clipboard
+init_osx_pyobjc_clipboard
+init_dev_clipboard_clipboard
+init_qt_clipboard
+init_xclip_clipboard
+init_xsel_clipboard
+init_wl_clipboard
+init_klipper_clipboard
+init_no_clipboard
+init_windows_clipboard
+init_wsl_clipboard
+CheckedCall
+PyperclipException
+PyperclipWindowsException
+PyperclipTimeoutException
+_executable_exists
+ENCODING
+```
+
+### Example 2: ordinary usage
+```text
+import pyperclip
+
+assert pyperclip.is_available() is False
+try:
+    pyperclip.copy("text")
+except pyperclip.PyperclipException:
+    pass
+```
+
+### Example 3: boundary or error behavior
+```text
+pyperclip.set_clipboard("no")
+assert pyperclip.is_available() is True
+```
+
+### Example 4: boundary or error behavior
+```text
+copy
+paste
+set_clipboard
+determine_clipboard
+is_available
+lazy_load_stub_copy
+lazy_load_stub_paste
+init_osx_pbcopy_clipboard
+init_osx_pyobjc_clipboard
+init_dev_clipboard_clipboard
+init_qt_clipboard
+init_xclip_clipboard
+init_xsel_clipboard
+init_wl_clipboard
+init_klipper_clipboard
+init_no_clipboard
+init_windows_clipboard
+init_wsl_clipboard
+CheckedCall
+PyperclipException
+PyperclipWindowsException
+PyperclipTimeoutException
+_executable_exists
+ENCODING
+```
+
+
+## Error Handling and Boundary Conditions
+
+- Empty inputs, invalid types, malformed text or paths, unavailable resources, duplicate calls, and cancellation/timeout cases must follow the exception and return-value contracts documented for the relevant API.
+- Do not silently coerce values, reorder results, swallow exceptions, or use a fallback dependency unless the API section explicitly requires that behavior.
+- File and environment operations must use caller-provided paths and documented defaults only; never read undeclared host files or network resources.
+- The implementation must remain usable in the stated NoNetwork environment. A missing optional integration should expose the documented availability or error behavior rather than attempting an online install.
+- Security-sensitive inputs must be treated as data. Do not execute strings, load untrusted code, or interpolate shell commands unless that behavior is explicitly part of the documented public API.

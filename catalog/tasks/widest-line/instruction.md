@@ -1,11 +1,24 @@
 # Project Description
 
+```text
+workspace/
+├── package.json
+├── package-lock.json
+└── index.js
+```
+
 Build a complete installable npm package named `widest-line`, version `6.0.0`,
 from an empty workspace. Its default export returns the maximum terminal display
 width of any line in a string.
 
 This is a repository-generation task. Create the package files yourself; do not
 fetch or copy the reference repository.
+
+# Natural Language Instruction
+
+Create this package from an empty `workspace/`. Implement the single default
+function using the declared `string-width` dependency. Split on line-feed
+characters, measure each line, and return the largest display width.
 
 # Supports
 
@@ -20,6 +33,18 @@ fetch or copy the reference repository.
   `npm ci --offline --ignore-scripts --no-audit --no-fund` without network access.
 - The function is synchronous, deterministic, stateless, and has no CLI, file,
   clock, randomness, subprocess, or network behavior.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── index.js
+└── index.d.ts
+```
+
+Publish the root default export and its declaration; no CLI is required.
 
 # API Usage Guide
 
@@ -67,3 +92,29 @@ root exports and the declaration signature. Do not bundle a replacement for
 `string-width`; use the declared dependency and keep runtime installation
 offline-compatible. Do not expose tests, verifier code, or the Oracle solution
 in the generated package.
+
+# Examples
+
+```js
+import widestLine from 'widest-line';
+widestLine('alpha\nbeta');
+widestLine('表\nhello');
+```
+
+Line feeds separate measurements and ANSI or combining characters use the
+declared terminal-width dependency.
+
+# Error Handling and Boundary Conditions
+
+The input must be a string; other values raise `TypeError`. Empty lines,
+trailing newlines, wide characters, emoji, ANSI sequences, and controls use
+the dependency's documented width semantics.
+
+The function must return `0` for an empty string and for a string made only of
+line separators. A trailing line separator therefore creates an empty final
+line. ANSI escape sequences contribute no terminal columns; combining marks
+contribute zero additional columns, while full-width characters and emoji use
+the installed `string-width` semantics. Split only on `\n`; preserve the
+dependency's treatment of `\r` and other control characters.
+
+The result is an integer and the input is never modified or retained.

@@ -1,26 +1,48 @@
-# Project Description
+# python-dotenv
 
-Create an installable Python package named `python-dotenv`, imported as
-`dotenv`. It reads shell-like key/value records from `.env` files, optionally
-interpolates `${NAME}` references, discovers files in parent directories,
-loads values into `os.environ`, edits files without discarding unrelated
-content, and provides the `python -m dotenv` command line interface.
+## Project Description
 
-The supported surface is intentionally bounded to the APIs and CLI commands
-below. IPython integration, debugger/frame-based discovery, internal parser
-objects, logging text, and Windows-specific process behavior are outside this
-task.
+Build an installable `python-dotenv` project from an empty `workspace/`. The project must reproduce the public, local behavior documented in this instruction, including its package entry points, return shapes, ordering, state changes, and documented exceptions. This is a repository-generation task: the agent creates the build metadata and source modules rather than editing an existing implementation.
 
-# Supports
+Distribution identity: `python-dotenv`; public import package begins at `dotenv`.
+The scope is the deterministic local API described below. Network services, undeclared external state, and behavior not represented by the public contract are outside the task.
 
-- CPython 3.12 on Linux.
-- Distribution name `python-dotenv`, version `1.1.1`.
-- Import package `dotenv` and module entry point `python -m dotenv`.
-- A setuptools build. Runtime CLI support uses `click>=5.0`.
-- UTF-8 by default, with explicit alternate encodings where documented.
-- No network access or external services at runtime.
+## Natural Language Instruction
 
-# API Usage Guide
+Create the complete project in an empty workspace and make it installable with the command in the environment section. Implement these task-specific capability families from the local API contract:
+
+1. `Parsing with `dotenv_values`: expose the documented public entry points, signatures, inputs, outputs, and error behavior.
+2. `Reading one key`: preserve the documented object or module behavior, including state and side effects.
+3. `Discovering a file`: preserve ordering, determinism, serialization, and boundary semantics where specified.
+4. `Loading the process environment`: make the public package usable through the documented import path or command-line entry.
+
+Do not add speculative APIs or substitute a different package. Keep the implementation self-contained, ensure imports work after installation, and use the exact public names and signatures in the API Usage Guide. A small implementation is acceptable only when it still satisfies every documented contract.
+
+## Supports or Environment Configuration
+
+- CPython 3.12.14 on the pinned Linux image.
+- Distribution identity: `python-dotenv`; public import package begins at `dotenv`.
+- Install from the workspace with `python -m pip install .`; do not download packages during evaluation.
+- Declared build/runtime packages are supplied by the frozen evaluation image: `click==8.4.2`, `setuptools==80.10.2`, `wheel==0.45.1`
+- Build metadata and package data must be present in the workspace and agree with the public import paths below.
+- Agent, candidate, evaluator, Oracle, and control execution are network-isolated. Do not access GitHub, package registries, DNS, databases, or external services at runtime.
+- Use deterministic local inputs. Do not rely on the current wall clock, host-specific absolute paths, undeclared environment variables, or an installed copy of the target package.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── a/
+│   ├── __init__.py
+│   └── (public modules documented in API Usage Guide)
+```
+
+The tree lists agent-owned public project files only. Add additional public modules when required by the API Usage Guide, but keep their import paths consistent with package metadata. Do not create evaluator-only files, hidden fixtures, or private reports in the generated project.
+
+## API Usage Guide
+
+The following is the task-specific public contract recovered from the local instruction and inventory. For every function, class, method, constant, export, and command named below, preserve its complete signature, accepted input domain, return type and shape, ordering, determinism, state/side effects, exceptions, and examples. When the source contract gives an optional argument or a compatibility alias, it is part of the required surface.
 
 ## Parsing with `dotenv_values`
 
@@ -164,7 +186,6 @@ Run the CLI with `python -m dotenv`. Global options are `--file PATH`,
   no value are omitted. A missing file or command exits nonzero.
 - `--version` reports version `1.1.1`.
 
-# Implementation Notes
 
 File mutation must use a temporary replacement or equivalent strategy so a
 successful edit leaves a complete file. The verifier creates isolated
@@ -188,3 +209,57 @@ assert set_key(".env", "GREETING", "hello world", quote_mode="auto") == (
 )
 assert unset_key(".env", "GREETING") == (True, "GREETING")
 ```
+
+## Implementation Notes
+
+- Keep the root exports and module paths stable after installation; do not make behavior depend on the repository's current directory.
+- Preserve explicit ordering guarantees. When the contract does not promise an order, do not introduce a new observable order accidentally.
+- Propagate documented exceptions and avoid replacing them with generic errors. Validate malformed, empty, boundary, and repeated inputs as described by the API contract.
+- Keep filesystem, process, terminal, and resource effects bounded and local. Close files and other resources on both success and failure.
+- Do not copy an upstream checkout, implementation source, or evaluation-only material into the generated project. Implement the public behavior from this specification.
+
+## Examples
+
+The examples below are retained from the local task specification. They are starting points for ordinary calls and boundary/error behavior; their exact output and exception semantics remain governed by the API Usage Guide.
+
+### Example 1: ordinary usage
+```text
+dotenv_values(
+    dotenv_path=None,
+    stream=None,
+    verbose=False,
+    interpolate=True,
+    encoding="utf-8",
+) -> dict[str, str | None]
+```
+
+### Example 2: ordinary usage
+```text
+get_key(dotenv_path, key_to_get, encoding="utf-8") -> str | None
+```
+
+### Example 3: boundary or error behavior
+```text
+find_dotenv(filename=".env", raise_error_if_not_found=False, usecwd=False) -> str
+```
+
+### Example 4: boundary or error behavior
+```text
+load_dotenv(
+    dotenv_path=None,
+    stream=None,
+    verbose=False,
+    override=False,
+    interpolate=True,
+    encoding="utf-8",
+) -> bool
+```
+
+
+## Error Handling and Boundary Conditions
+
+- Empty inputs, invalid types, malformed text or paths, unavailable resources, duplicate calls, and cancellation/timeout cases must follow the exception and return-value contracts documented for the relevant API.
+- Do not silently coerce values, reorder results, swallow exceptions, or use a fallback dependency unless the API section explicitly requires that behavior.
+- File and environment operations must use caller-provided paths and documented defaults only; never read undeclared host files or network resources.
+- The implementation must remain usable in the stated NoNetwork environment. A missing optional integration should expose the documented availability or error behavior rather than attempting an online install.
+- Security-sensitive inputs must be treated as data. Do not execute strings, load untrusted code, or interpolate shell commands unless that behavior is explicitly part of the documented public API.

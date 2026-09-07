@@ -7,6 +7,18 @@ and request headers, validates repository identifiers, represents Hub metadata,
 describes commit operations, and provides local filtering and filesystem
 helpers. The evaluation never requires a live Hugging Face account or service.
 
+## Natural Language Instruction
+
+Create the `huggingface_hub` package from an empty `workspace/`. Implement the
+offline URL, header, validation, metadata, commit-operation, filtering, cache,
+and filesystem configuration APIs described below. Preserve import paths,
+exception identity, attribute values, URL quoting, mapping insertion order,
+and deterministic JSON-safe behavior.
+
+The package must be useful for local construction and inspection of Hub
+requests without making a request. Do not replace a local result with a live
+Hub call or require credentials, a service, or external metadata.
+
 ## Supports
 
 - CPython 3.12 on Linux amd64. Install from an empty workspace with
@@ -19,6 +31,30 @@ helpers. The evaluation never requires a live Hugging Face account or service.
 - All behavior tested here is offline and deterministic. Do not contact
   `huggingface.co`, a model provider, a package registry, or a metadata service
   during import or while executing the local APIs below.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml or setup.py
+├── src/
+│   └── huggingface_hub/
+│       ├── __init__.py
+│       ├── constants.py
+│       ├── hf_api.py
+│       ├── hf_file_system.py
+│       ├── hf_file_metadata.py
+│       ├── commit_operation.py
+│       └── utils/
+│           ├── __init__.py
+│           ├── _validators.py
+│           └── _http.py
+└── README.md
+```
+
+The root re-exports named in the API guide. Keep module names and exception
+locations importable, but do not add service credentials, evaluator files, or
+runtime network configuration to the generated project.
 
 ## API Usage Guide
 
@@ -103,3 +139,40 @@ Inference Providers, Xet/native acceleration, credential files, CLI network
 operations, and platform-specific Windows behavior are outside this task's
 deterministic denominator; keep their public modules importable where practical
 but do not substitute network access for a local implementation.
+
+## Examples
+
+```python
+from huggingface_hub import hf_hub_url
+
+hf_hub_url("org/model", "config.json", revision="main")
+```
+
+```python
+from huggingface_hub import build_hf_headers, validate_repo_id
+
+validate_repo_id("org/model")
+headers = build_hf_headers(token="local-token", library_name="demo",
+                           library_version="1.0")
+```
+
+```python
+from huggingface_hub import CommitOperationDelete, repo_folder_name
+
+CommitOperationDelete("weights/model.bin")
+repo_folder_name(repo_id="org/model", repo_type="model")
+```
+
+## Error Handling and Boundary Conditions
+
+- Invalid repository identifiers and unsafe repository paths raise the typed
+  validation/value errors described above; empty components and excess slashes
+  are not silently normalized.
+- Header and user-agent inputs produce a new deterministic mapping except for
+  the explicitly documented `HfApi` header-retention behavior.
+- URL construction preserves endpoint and revision semantics, while local
+  filtering preserves input order and does not mutate input objects.
+- `parse_datetime` returns aware UTC values for supported `Z` forms. Live Hub
+  requests, uploads, downloads, OAuth, and credential discovery are outside the
+  local contract and must not be used as fallbacks.
+- Agent, candidate, verifier, Oracle, and controls runs are NoNetwork.

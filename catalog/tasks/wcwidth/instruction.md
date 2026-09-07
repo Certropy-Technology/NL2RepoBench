@@ -1,5 +1,11 @@
 # Build `wcwidth`
 
+```text
+workspace/
+├── pyproject.toml
+└── wcwidth/__init__.py
+```
+
 Create an installable Python package named `wcwidth` from an empty workspace. Reproduce the pinned
 upstream package's public Unicode display-width and terminal-text layout behavior on CPython 3.12.
 Evaluation is local and deterministic. Do not fetch source code or dependencies during evaluation.
@@ -14,6 +20,13 @@ small public record types used by OSC 8 hyperlinks and Kitty OSC 66 text sizing.
 The implementation must be a normal importable package, not a script or a hard-coded answer table for
 the examples. Unicode data tables are part of the package and must be available at runtime.
 
+## Natural Language Instruction
+
+Create the package from an empty `workspace/`. Implement the documented
+Unicode display-width, grapheme, ANSI/OSC, clipping, wrapping, alignment,
+SGR propagation, and text-sizing APIs. Keep tables and behavior deterministic
+without probing a live terminal.
+
 ## Supports
 
 - Support Python 3.12 and an installable distribution named `wcwidth`, version `0.8.3`.
@@ -27,6 +40,23 @@ the examples. Unicode data tables are part of the package and must be available 
 - Keep the legacy `wcwidth.wcwidth` module importable, as well as the top-level re-exports.
 - Results must be deterministic for the same arguments. Do not depend on the host locale or terminal;
   explicit `term_program` arguments are used for correction behavior.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+└── wcwidth/
+    ├── __init__.py
+    ├── wcwidth.py
+    ├── tables.py
+    ├── grapheme.py
+    ├── escape.py
+    └── text.py
+```
+
+The root and legacy `wcwidth.wcwidth` module expose the documented public
+functions, classes, constants, and version helpers.
 
 ## API Usage Guide
 
@@ -99,6 +129,25 @@ rebuilds the complete sequence.
 the next, adding resets and restored styles where required. `list_versions() -> tuple[str, ...]`
 returns the supported Unicode versions. `list_term_programs() -> tuple[str, ...]` returns the stable
 sorted terminal profile names.
+
+## Examples
+
+```python
+from wcwidth import wcswidth, wrap, truncate
+wcswidth('表')
+wrap('alpha beta', 5)
+truncate('long text', 6)
+```
+
+ANSI sequences and combining marks do not consume terminal columns. Layout
+helpers return the documented list or string shapes.
+
+## Error Handling and Boundary Conditions
+
+Empty strings, controls, combining marks, emoji sequences, malformed escape
+sequences, and width-zero limits follow the public contract. Unsupported
+Unicode versions or terminal profiles are handled as documented without TTY
+probing.
 
 ## Implementation Notes
 

@@ -1,3 +1,64 @@
+# Project Description
+
+Build the pinned `frozenlist` Python package from an empty `workspace/`. It
+provides a list-like object mutable until permanently frozen, with a
+pure-Python implementation and optional accelerator compatibility.
+
+# Natural Language Instruction
+
+Create the installable package and implement `FrozenList`, `PyFrozenList`, and
+all sequence operations, copying, freezing, and mutation errors documented
+below. Keep the fallback usable when no accelerator is present.
+
+# Supports or Environment Configuration
+
+- Use CPython 3.12 and the exact metadata/build closure in `task.toml`.
+- Evaluation is local and deterministic; agent, candidate, verifier, Oracle,
+  and controls run with no network access.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+└── frozenlist/
+    ├── __init__.py
+    ├── _frozenlist.py
+    └── py.typed
+```
+
+# API Usage Guide
+
+The detailed API Usage Guide below is authoritative for constructors,
+sequence methods, `freeze`, accelerator selection, and exceptions.
+
+# Implementation Notes
+
+Copy an optional iterable at construction. After `freeze()`, every mutation
+must fail while reads retain normal sequence behavior.
+
+# Examples
+
+```python
+from frozenlist import FrozenList
+items = FrozenList([1, 2]); items.append(3); items.freeze()
+```
+
+```python
+from frozenlist import PyFrozenList
+list(PyFrozenList([1, 2]))
+```
+
+# Error Handling and Boundary Conditions
+
+```python
+items.append(4)  # reject mutation after freeze
+```
+
+```python
+FrozenList(None)
+```
+
 # Build `frozenlist`
 
 Create an installable Python package named `frozenlist` from an empty workspace.

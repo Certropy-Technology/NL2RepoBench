@@ -1,4 +1,4 @@
-# Build `attrs`
+# Project Description
 
 Create a complete, installable Python project named `attrs` from an empty
 workspace. The project is a pure-Python class-building library. It must expose
@@ -21,7 +21,19 @@ distribution version and the lazy `attr.__version__` and `attrs.__version__`
 values must agree, and `__version_info__` must be a comparable
 `attr.VersionInfo` object.
 
-## Supports
+# Natural Language Instruction
+
+Create the `attrs` project from an empty `workspace/`. Build an installable implementation, not a loose demonstration script. The public API guide below is the complete source of the task contract; preserve its import paths, signatures, return shapes, ordering, state changes, and exceptions.
+
+Required capabilities:
+- class and field definition: implement the documented public behavior and preserve its input/output and error contract.
+- defaults, converters, and validators: implement the documented public behavior and preserve its input/output and error contract.
+- generated comparison and representation behavior: implement the documented public behavior and preserve its input/output and error contract.
+- introspection, evolution, and compatibility aliases: implement the documented public behavior and preserve its input/output and error contract.
+
+Do not copy an upstream checkout or tests. Keep behavior deterministic and local, and make the package usable from the installation layout described below. The principal public entry points include: `field()`, `attrib()`, `Factory(f)`, `Factory(factory, takes_self=False)`.
+
+# Supports
 
 - Support CPython 3.10 and newer Python 3.x versions in the supported source
   range. Keep version-dependent behavior explicit and do not require PyPy or a
@@ -38,7 +50,28 @@ values must agree, and `__version_info__` must be a comparable
 - Preserve the public module names, aliases, exception identity, warning
   behavior, generated method metadata, and ordinary Python data-model protocol.
 
-## Public API Inventory
+
+## NoNetwork boundary
+
+Agent, candidate, verifier, Oracle, controls, and normal runtime execution are network-isolated. Do not access GitHub, package registries, Go proxies, DNS, or external services during execution; use only the frozen local build inputs.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+└── src/
+    ├── attr/
+    │   ├── __init__.py
+    │   ├── _make.py
+    │   ├── converters.py
+    │   ├── validators.py
+    │   └── exceptions.py
+    └── attrs/
+        └── __init__.py
+```
+
+# API Usage Guide
 
 The following names are required. Names beginning with an underscore are not
 part of the required application-facing API, even if upstream tests inspect
@@ -497,3 +530,52 @@ collection conversion, field introspection and metadata, evolve, inherited
 field order, make_class, ordering and hashing, forward type resolution,
 value serialization, post-init derived fields, and package aliases/version
 metadata. The verifier reconstructs classes and callback recipes from an
+
+# Implementation Notes
+
+Keep the implementation modular, deterministic, installable from the repository root, and independent of runtime network access. Do not expose private test or verifier files in the generated workspace.
+
+# Examples
+
+## Ordinary modern class
+
+```python
+from attrs import define, field
+
+@define
+class User:
+    name: str
+    age: int = field(converter=int)
+```
+
+## Ordinary evolution
+
+```python
+from attrs import asdict, evolve
+
+user = User("Ada", "30")
+older = evolve(user, age=31)
+payload = asdict(older)
+```
+
+## Boundary: frozen assignment
+
+```python
+from attrs import frozen
+
+@frozen
+class Token:
+    value: str
+Token("x").value = "y"  # raises FrozenInstanceError
+```
+
+## Boundary: validation
+
+```python
+from attrs import validators
+field(validator=validators.instance_of(int))
+```
+
+# Error Handling and Boundary Conditions
+
+Reject invalid inputs using the documented exception or error result. Preserve empty-input behavior, ordering, Unicode/encoding behavior, cancellation or timeout semantics, and local filesystem boundaries where the API specifies them. Never turn a failed local operation into a network request, subprocess, or silent success.

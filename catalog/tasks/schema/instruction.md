@@ -12,34 +12,49 @@ validation, defaults, hooks, errors, JSON input, and draft-07 JSON Schema
 generation. It excludes file/network validation, CLI behavior, static typing,
 performance, and JSON Schema features not described here.
 
-# Supports
+## Natural Language Instruction
 
-- CPython 3.12 on Debian 12 `linux/amd64`.
-- An installable distribution and import package named `schema`, version
-  `0.7.8`.
-- No required third-party runtime dependency on Python 3.12. Build tooling is
-  preinstalled and must not be fetched at runtime.
-- A local source build installable with `pip --no-deps --no-build-isolation`.
-- No runtime network, subprocess, external service, database, or native
-  extension behavior.
+Create `schema` from an empty workspace as a complete installable python project. Implement
+the public operations, data or state behavior, input validation, deterministic ordering, and
+error contracts documented below. Keep package metadata, root exports, module imports, and any
+subpath entry points consistent across files. Implement the behavior rather than hard-coding the
+examples, and do not retrieve or copy a reference implementation.
 
-`schema.__version__` is `"0.7.8"`. `schema.__all__` contains exactly these
-names, in order:
+The finished repository must install from its root, expose every documented API family, preserve
+the specified side effects and resource lifecycle, and remain usable in a fresh process.
 
-```python
-[
-    "Schema", "And", "Or", "Regex", "Optional", "Use", "Forbidden",
-    "Const", "Literal", "SchemaError", "SchemaWrongKeyError",
-    "SchemaMissingKeyError", "SchemaForbiddenKeyError",
-    "SchemaUnexpectedTypeError", "SchemaOnlyOneAllowedError",
-]
+## Supports
+
+- Package/distribution name: `schema`. Primary import or package entry: `schema`.
+- CPython 3.12.14 on debian-12-amd64 with pip.
+- Install from `workspace/` using `python -m pip install .`.
+- Declared dependency closure: setuptools==80.10.2, wheel==0.45.1. Standard-library modules are not dependencies.
+- Build requirements are supplied before execution; do not add undeclared dependencies,
+  registry overrides, download hooks, or source-fetch steps.
+- Agent, candidate, verifier, Oracle, and controls use `network_mode=no-network`. Runtime access
+  to GitHub, PyPI, npm, the Go proxy, DNS, and external services is forbidden.
+- The declared test framework is `pytest`. A fixed collection
+  contains `30` cases when that value is frozen in metadata;
+  test implementation details are not part of the package surface.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── schema/
+│   ├── __init__.py
+│   └── py.typed
+└── README.md
 ```
 
-`Hook` is also importable from `schema`, but is not in `__all__`.
+This is the required public project shape. Additional implementation modules are allowed only
+when they support the documented API; evaluation, source-fetch, and private runtime files are
+not agent-owned project files.
 
-# API Usage Guide
+## API Usage Guide
 
-## Errors
+### Errors
 
 ```python
 SchemaError(autos, errors=None)
@@ -63,7 +78,7 @@ error:` line per mapping level. A `Schema(..., error=text)` explicit message
 takes precedence in `code`; every helper accepting `error` supports `{}`
 formatting with the rejected data.
 
-## `Schema`
+### `Schema`
 
 ```python
 Schema(
@@ -127,7 +142,7 @@ assert person.validate({"name": "Ada", "age": "37"}) == {
 }
 ```
 
-## Combinators and validators
+### Combinators and validators
 
 ```python
 And(*schemas, error=None, ignore_extra_keys=False, schema=None)
@@ -162,7 +177,7 @@ and explicit error lists.
 `Const.validate` validates normally but returns the original untransformed
 input. For example, `Const(Use(int)).validate("7")` returns `"7"`.
 
-## Optional keys, defaults, and hooks
+### Optional keys, defaults, and hooks
 
 ```python
 Optional(key_schema, default=<omitted>)
@@ -193,7 +208,7 @@ The paired value schema matters: a forbidden key with a nonmatching value can
 fall through to another key schema. Forbidden matching has priority over
 ordinary and optional key schemas.
 
-## `Literal`
+### `Literal`
 
 ```python
 Literal(value, description=None, title=None)
@@ -205,7 +220,7 @@ wrapped value's string form. Its repr is
 it as its wrapped literal; JSON Schema generation also uses its title and
 description as annotations.
 
-## JSON input
+### JSON input
 
 `Use(json.loads)` composes normally with mapping and container schemas. JSON
 objects, arrays, strings, numbers, booleans, and null become their standard
@@ -213,7 +228,7 @@ Python values before subsequent validation. Decoder failures are wrapped in
 `SchemaError`; transformed results remain JSON-safe when the configured
 validators/defaults are JSON-safe.
 
-## Draft-07 JSON Schema generation
+### Draft-07 JSON Schema generation
 
 `json_schema(schema_id, use_refs=False, **kwargs)` returns a JSON-serializable
 dictionary. The root always includes:
@@ -247,46 +262,71 @@ the root `definitions` mapping. Reusing it produces the same reference.
 Callable defaults used during JSON Schema generation receive `**kwargs` under
 the same rule as validation defaults.
 
-# Frozen Scenario Leaves
+## Implementation Notes
 
-The fixed denominator is exactly 30 JSON-safe subprocess leaves:
+Preserve all public return shapes, ordering, state transitions, and exception contracts described above. Keep installation metadata and public imports consistent and deterministic.
 
-```text
-api-surface
-schema-properties
-primitive-validation
-callable-validation
-use-and-const
-and-or
-regex-validation
-iterable-validation
-mapping-validation
-mapping-errors
-ignore-extra-keys
-optional-keys
-defaults-static
-defaults-callable
-defaults-invalid
-forbidden-keys
-custom-hook
-only-one-key
-literal-metadata
-schema-error-code
-custom-errors
-callable-errors
-named-errors-and-validity
-json-input
-json-schema-basic
-json-schema-types
-json-schema-combinators
-json-schema-metadata-defaults
-json-schema-additional-properties
-json-schema-definitions
+Use the public language semantics described by each API family. Keep repeated calls deterministic
+unless state mutation is explicitly part of the contract. Public re-exports and declarations must
+match runtime behavior, and installation must not rely on a repository checkout or network access.
+
+## Examples
+
+The API-specific examples above are normative demonstrations of ordinary behavior. These four
+local snippets also provide ordinary and boundary-oriented calls without external services:
+
+```python
+SchemaError(autos, errors=None)
+SchemaWrongKeyError(SchemaError)
+SchemaMissingKeyError(SchemaError)
+SchemaForbiddenKeyError(SchemaError)
+SchemaUnexpectedTypeError(SchemaError)
+SchemaOnlyOneAllowedError(SchemaError)
 ```
 
-Every schema, predicate, converter, default, and hook callback is constructed
-inside a fresh unprivileged candidate subprocess. The trusted parent never
-imports candidate code and compares only bounded JSON observations. Stress,
-filesystem examples, hash-derived `use_refs=True` IDs, recursive references,
-custom subclass internals, and unlisted JSON Schema edge cases are outside the
-scored contract.
+```python
+Schema(
+    schema,
+    error=None,
+    ignore_extra_keys=False,
+    name=None,
+    description=None,
+    as_reference=False,
+)
+
+schema.validate(data, **kwargs)
+schema.is_valid(data, **kwargs) -> bool
+schema.json_schema(schema_id, use_refs=False, **kwargs) -> dict
+```
+
+```python
+from schema import And, Optional, Schema, Use
+
+person = Schema({
+    "name": And(str, len),
+    "age": And(Use(int), lambda n: 0 < n < 130),
+    Optional("active", default=True): bool,
+})
+assert person.validate({"name": "Ada", "age": "37"}) == {
+    "name": "Ada", "age": 37, "active": True,
+}
+```
+
+```python
+And(*schemas, error=None, ignore_extra_keys=False, schema=None)
+Or(*schemas, only_one=False, error=None, ignore_extra_keys=False, schema=None)
+Regex(pattern_str, flags=0, error=None)
+Use(callable_, error=None)
+Const(schema, ...)
+```
+
+## Error Handling and Boundary Conditions
+
+Empty values, malformed values, unsupported types, exhausted inputs, invalid options, and missing
+local resources must follow the API-specific contracts above. Preserve documented exception types
+and messages where they are stated. Do not silently coerce an unsupported value merely to produce
+a result, and do not mutate caller-owned data unless the relevant API explicitly promises it.
+
+All filesystem, process, terminal, clock, randomness, and service interactions are forbidden unless
+the API guide explicitly includes that local behavior. Even for an API that models remote or async
+work, evaluation must remain bounded, deterministic, and disconnected from public networks.

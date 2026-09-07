@@ -1,11 +1,24 @@
-# Build `pycparser`
+# Project Description
 
 Create a complete, installable pure-Python package named `pycparser` from an
 empty workspace. It parses preprocessed C source into an explicit abstract
 syntax tree and can generate readable C code from that tree. Do not depend on
 a preinstalled copy of `pycparser`, network access, or a C compiler at runtime.
 
-## Project Description
+## Natural Language Instruction
+
+Create the `pycparser` project from an empty `workspace/`. Implement the
+installable parser package, ordered AST node model, C lexer, C parser, C code
+generator, AST transforms, and local file APIs described below. Preserve public
+class identity, constructor signatures, coordinates, visitor order, parser
+scope reset, generated text, and documented exception behavior.
+
+The implementation must cover the C99 surface and the explicitly listed C11
+constructs without requiring a compiler for ordinary parsing. Keep all scored
+operations deterministic and local; a caller-selected local preprocessor is
+the only subprocess boundary documented below.
+
+## Package Scope
 
 Implement the public behavior of the frozen pycparser 3.00 source. The parser
 targets the C99 grammar with the C11 constructs covered by the API below. The
@@ -31,6 +44,25 @@ library. A source-only build must work without a `.git` directory.
   output. Do not use random values, current time, or network metadata.
 - Do not require Graphviz, external Python packages, generated parser tables,
   or the upstream `test2ref` helper.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml or setup.py
+└── pycparser/
+    ├── __init__.py
+    ├── c_ast.py
+    ├── c_lexer.py
+    ├── c_parser.py
+    ├── c_generator.py
+    ├── ast_transforms.py
+    └── _c_ast.cfg
+```
+
+The package root must export `CParser` and `__version__`; each module listed in
+the API guide is a public import path. Generated parser tables, upstream test
+helpers, evaluator adapters, and private tests are not required project files.
 
 ## API Usage Guide
 
@@ -125,3 +157,40 @@ nodes with explicit ordered fields and child discovery; do not substitute a
 generic dictionary tree. Parser state must be reset between calls. File
 operations are local and deterministic. The package metadata must remain
 consistent with `__version__ = "3.00"` and must not require SCM state.
+
+## Examples
+
+```python
+from pycparser import CParser
+
+ast = CParser().parse("int answer = 42;", filename="example.c")
+```
+
+```python
+from pycparser.c_generator import CGenerator
+
+text = CGenerator().visit(ast)
+```
+
+```python
+from pycparser.c_ast import ID, NodeVisitor
+
+class Names(NodeVisitor):
+    def visit_ID(self, node):
+        return node.name
+
+Names().visit(ID("value"))
+```
+
+## Error Handling and Boundary Conditions
+
+- Invalid C raises `ParseError` with a useful coordinate and message; parser
+  state is reset between independent `parse` calls.
+- `Node.children()` and visitor traversal preserve explicit field/source order.
+  Coordinates use the documented file, line, and optional column formatting.
+- `parse_file(..., use_cpp=False)` reads only a caller-selected local file.
+  When `use_cpp=True`, an unavailable local preprocessor is reported as
+  `RuntimeError`; no network lookup is attempted.
+- Generator output is deterministic and preserves precedence. Transform helpers
+  return the supplied object after normalizing it, while retaining coordinates.
+- Agent, candidate, verifier, Oracle, and controls runs are NoNetwork.

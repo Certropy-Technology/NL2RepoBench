@@ -22,6 +22,32 @@ resolution.
   wheels.
 - Public imports are from `dataclasses_json`.
 
+## Natural Language Instruction
+
+Create the installable `dataclasses-json` project from an empty workspace.
+Implement the decorator/mixin serialization API, field naming and exclusion,
+unknown-field policies, nested dataclass reconstruction, and the schema
+facade described below. Keep output JSON-compatible and deterministic.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── README.md
+└── dataclasses_json/
+    ├── __init__.py
+    ├── api.py
+    ├── cfg.py
+    ├── core.py
+    ├── schema.py
+    └── py.typed
+```
+
+The root package exports `dataclass_json`, `DataClassJsonMixin`, configuration
+helpers, enum policies, and `__version__`; these are the only project files an
+agent needs to create.
+
 ## API Usage Guide
 
 ### `dataclass_json`
@@ -82,3 +108,31 @@ dataclass defaults and field ordering. Raise ordinary, inspectable exceptions
 for malformed input rather than silently returning a partial object. The
 package should expose a version and type annotations, and should not require
  the upstream repository, its tests, or network access at runtime.
+
+## Examples
+
+```python
+from dataclasses import dataclass
+from dataclasses_json import dataclass_json
+
+@dataclass_json
+@dataclass
+class Point:
+    x: int
+    y: int
+
+point = Point.from_json('{"x": 1, "y": 2}')
+assert point.to_dict() == {"x": 1, "y": 2}
+```
+
+```python
+payload = Point(3, 4).to_json(sort_keys=True)
+assert Point.from_json(payload).x == 3
+```
+
+## Error Handling and Boundary Conditions
+
+Malformed JSON and a non-object top-level value passed to `from_json` must
+raise an inspectable exception. `Undefined.RAISE` rejects unknown keys,
+`Undefined.EXCLUDE` ignores them, and `Undefined.INCLUDE` requires a `CatchAll`
+field. Preserve Unicode when `ensure_ascii=False`; do not silently drop fields.

@@ -4,7 +4,15 @@ Implement `networkx`, a pure-Python library for creating, manipulating, and stud
 
 The implementation should provide a coherent graph model and algorithms rather than a collection of disconnected stubs. Preserve insertion order where the Python data model exposes it, return the documented NetworkX view/iterator types, and raise the package's documented exception classes for invalid graph operations.
 
-# Supports
+# Natural Language Instruction
+
+Build the installable `networkx` project from an empty `workspace/`. Create a
+coherent graph data model and the documented deterministic algorithms,
+constructors, conversions, attribute helpers, serialization, and exception
+classes. The implementation must be usable rather than a collection of
+disconnected stubs: graph mutations must agree with views and algorithms.
+
+# Supports or Environment Configuration
 
 The task contract covers these public areas:
 
@@ -17,7 +25,32 @@ The task contract covers these public areas:
 
 The evaluation is offline and uses small in-memory graphs. Optional NumPy, SciPy, pandas, Matplotlib, backend plugins, random fixtures, large performance tests, and external services are outside this contract.
 
+# Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml            # setuptools build metadata
+└── networkx/
+    ├── __init__.py           # exports and exception classes
+    ├── classes.py            # Graph, DiGraph, MultiGraph, MultiDiGraph
+    ├── convert.py            # edge-list and dict-of-lists conversions
+    ├── algorithms/           # paths, traversal, connectivity, DAG methods
+    ├── generators/           # path, cycle, complete, grid constructors
+    ├── relabel.py            # relabel and composition helpers
+    └── readwrite/json_graph/  # node-link serialization
+```
+
+The public import paths in the API guide must be backed by these package files.
+Do not add optional scientific, backend, or external-service dependencies.
+
 # API Usage Guide
+
+Import path: `import networkx as nx` from the installed `networkx` package.
+
+The core API is grouped into graph classes, conversion helpers, algorithms,
+generators, relabeling/operators, measures, attributes, and JSON graph I/O.
+Each group must return the documented Python value or view, preserve insertion
+order where it is observable, and avoid importing optional scientific packages.
 
 Use the package under the `networkx` import name. Examples:
 
@@ -45,4 +78,46 @@ Most graph mutators return `None`; algorithm results are ordinary Python values,
 
 Use the standard library only for the required runtime contract. The project metadata must declare the setuptools build backend, the `networkx` package, and a Python 3.12-compatible version. Keep graph mutation and algorithm behavior deterministic for the same insertion order. Do not contact the network, invoke external graph backends, or depend on optional scientific packages.
 
-The verifier calls the candidate through a separate child process and a JSON adapter. It does not import candidate modules in the trusted verifier process. Keep public imports and package metadata complete enough for the documented examples and for installation into a target directory.
+The evaluator calls the candidate through a separate child process and a JSON
+adapter. It does not import candidate modules in its own process. Keep public
+imports and package metadata complete enough for the documented examples and
+for installation into a target directory.
+
+Graph classes expose mutable graph, node, edge, and adjacency state. Mutators
+must update all related views consistently. Algorithms consume those views and
+must terminate for finite in-memory graphs. Conversion helpers should preserve
+node and edge data where their return format supports it. JSON node-link output
+must remain JSON-compatible and round-trip through the inverse helper.
+
+# Examples
+
+```python
+import networkx as nx
+g = nx.path_graph(3)
+g.add_edge(0, 2, weight=4)
+nx.shortest_path(g, 0, 2)
+```
+
+```python
+data = nx.node_link_data(g)
+round_trip = nx.node_link_graph(data)
+assert list(round_trip.nodes) == list(g.nodes)
+```
+
+```python
+dag = nx.DiGraph([('build', 'test'), ('test', 'ship')])
+list(nx.topological_sort(dag))
+```
+
+# Error Handling and Boundary Conditions
+
+- Missing nodes raise `nx.NodeNotFound`; unreachable targets raise
+  `nx.NetworkXNoPath`.
+- `nx.is_connected` on a null undirected graph raises
+  `nx.NetworkXPointlessConcept`.
+- Directed and multigraph operations preserve directedness and parallel edge
+  keys where their documented APIs expose them.
+- Empty graph constructors and conversion inputs produce valid empty graphs
+  where permitted by the API.
+- Optional NumPy, SciPy, pandas, Matplotlib, plugin backends, and large/random
+  workloads are outside this offline contract.

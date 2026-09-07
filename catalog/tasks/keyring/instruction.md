@@ -4,6 +4,52 @@ Create an installable Python project named `keyring`. It provides a process-wide
 
 The benchmark environment is headless and offline. It has no usable desktop credential service, D-Bus session, KWallet, macOS Keychain, or Windows Credential Manager. Implement the backend abstraction and platform modules, but do not replace an unavailable system keyring with a hidden process-global password dictionary. Deterministic tests use external in-memory backend subclasses through the public backend interface.
 
+## Natural Language Instruction
+
+Build the installable `keyring` project from an empty workspace. Implement its
+process-wide facade, backend discovery and priority rules, credential value
+objects, configuration selection, plugin declarations, command-line tool, and
+urllib password manager. Preserve the public import paths, root exports,
+exception types, warning behavior, file formats, and deterministic state
+transitions specified below. Platform credential services are optional
+integration points: unsupported services must remain import-safe and must not
+be replaced by an undocumented global in-memory store.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── LICENSE
+├── keyring/
+│   ├── __init__.py
+│   ├── __main__.py
+│   ├── backend.py
+│   ├── core.py
+│   ├── credentials.py
+│   ├── errors.py
+│   ├── http.py
+│   ├── cli.py
+│   ├── compat/properties.py
+│   └── backends/
+│       ├── __init__.py
+│       ├── null.py
+│       ├── fail.py
+│       ├── chainer.py
+│       ├── SecretService.py
+│       ├── kwallet.py
+│       ├── libsecret.py
+│       ├── Windows.py
+│       └── macOS.py
+└── keyring/py.typed
+```
+
+`pyproject.toml` must declare the `keyring = keyring.cli:main` console
+script and the documented backend entry points. The root package re-exports
+the six facade functions in the order specified above. `python -m keyring`
+uses the same CLI. Platform modules must exist even when their service is not
+available, and their priority checks may fail with a typed runtime error.
+
 # Supports
 
 - Support Python 3.10 and newer. Verification uses CPython 3.12.

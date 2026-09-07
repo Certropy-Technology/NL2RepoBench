@@ -1,3 +1,13 @@
+## Project Description
+
+Create an installable Python project named `cachier` that decorates Python
+functions with persistent result caching. The public behavior includes cache
+key generation, configurable expiration, concurrency coordination, local
+pickle storage, optional backend adapters, and cache-management methods. The
+source metadata currently marks dependency closure and license evidence as
+unresolved; this instruction records the intended API contract and must not be
+treated as a production-ready runtime until those source facts are frozen.
+
 ## Introduction to the Cachier Project
 
 Cachier is a persistent caching library designed specifically for Python functions. It adds intelligent caching capabilities to functions through a simple decorator syntax, significantly enhancing application performance. The core value of this library lies in providing cross-session and cross-machine caching functionality, ensuring that cached data remains valid even after the Python process is restarted. Cachier is implemented in pure Python, requiring no external dependencies. It supports Python 3.9+ and is cross-platform compatible, running stably on Linux, macOS, and Windows systems.
@@ -78,6 +88,39 @@ wheel             0.45.1
 bson              0.5.10
 ```
 
+## Project Directory Structure
+
+The intended installable project has the following public layout. Optional
+backend modules must degrade with their documented missing-client errors when
+their external clients are not installed.
+
+```text
+workspace/
+├── pyproject.toml
+├── src/
+│   └── cachier/
+│       ├── __init__.py
+│       ├── __main__.py
+│       ├── _types.py
+│       ├── _version.py
+│       ├── config.py
+│       ├── core.py
+│       ├── util.py
+│       └── cores/
+│           ├── __init__.py
+│           ├── base.py
+│           ├── memory.py
+│           ├── mongo.py
+│           ├── pickle.py
+│           ├── redis.py
+│           └── sql.py
+└── examples/
+    └── redis_example.py
+```
+
+`cachier.__init__` is the package entry point; `cachier.__main__` owns the
+CLI, `config` owns defaults, and `cores` contains the backend implementations.
+
 ## Project Framework Suggestion
 
 ```
@@ -121,6 +164,17 @@ workspace/
 
 
 ## API Usage Guide
+
+## Implementation Notes
+
+Keep the decorator and each backend deterministic for the configured inputs.
+The package must not silently claim support for an unavailable Redis, MongoDB,
+or SQL client: missing optional clients use the documented exceptions and the
+local pickle/memory behavior remains explicit. Cache files and database records
+must be isolated from the caller's mutable arguments, and concurrent calls must
+respect the documented calculation markers and timeout behavior. Runtime
+dependency closure and license evidence remain unresolved in `task.toml` and
+must be frozen before any production compile or receipt is claimed.
 
 ### 1. Import the core module
 ```python

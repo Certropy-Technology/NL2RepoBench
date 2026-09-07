@@ -2,6 +2,21 @@
 
 Create an installable Python package named `langchain` that implements a deterministic, offline-safe subset of LangChain's agent support APIs. The package must provide structured-output strategies and bindings, PII handling middleware, and model/tool call-limit middleware. Model-provider integrations, network calls, graph execution, and the full `create_agent` factory are outside this task.
 
+# Natural Language Instruction
+
+Create the `langchain` project from an empty `workspace/`. Implement the
+documented structured-output, PII middleware, model-call-limit, and
+tool-call-limit APIs under the public import paths below. The package must be
+installable with the declared metadata, expose the documented names, and use
+the installed `langchain_core`, `langgraph`, and `pydantic` types where the
+contract calls for them. Keep the implementation local and deterministic.
+
+Do not implement or require provider network calls, graph execution,
+`create_agent`, chat-model initialization, shell/file-search middleware, or
+other excluded integrations. The requested project is a package, not a copy
+of the upstream repository: create only the package modules and build metadata
+needed by the public contract and ordinary local use.
+
 # Supports
 
 - Python 3.10 or newer.
@@ -9,6 +24,34 @@ Create an installable Python package named `langchain` that implements a determi
 - Runtime dependencies compatible with `langchain-core>=1.6.0,<2.0.0`, `langgraph>=1.2.11,<1.3.0`, and `pydantic>=2.7.4,<3.0.0`.
 - Local installation with `python -m pip install .` without downloading dependencies during evaluation.
 - Public imports from `langchain.agents.structured_output` and `langchain.agents.middleware`, including the APIs described below.
+
+# Project Directory Structure
+
+Create a package with this minimum public layout. The module names in this
+tree must agree with the import paths in the API guide.
+
+```text
+workspace/
+├── pyproject.toml
+└── langchain/
+    ├── __init__.py
+    └── agents/
+        ├── __init__.py
+        ├── structured_output.py
+        └── middleware/
+            ├── __init__.py
+            ├── pii.py
+            ├── model_call_limit.py
+            └── tool_call_limit.py
+```
+
+`pyproject.toml` is the install metadata and must declare the `langchain`
+distribution. `langchain/agents/structured_output.py` owns schema strategies,
+bindings, and structured-output errors. `middleware/pii.py` owns detectors,
+PII matches, and message hooks. The two limit modules own their middleware
+classes and exception types; `middleware/__init__.py` provides the documented
+re-exports. A root `__init__.py` may expose package metadata but must not move
+the documented APIs to an undocumented import path.
 
 # API Usage Guide
 
@@ -152,3 +195,42 @@ Allowed calls increment both count maps. Blocked attempts do not increment the t
 - PII scanning and strategy application must be deterministic and must preserve match offsets relative to the original input.
 - The structured-output JSON Schema produced by Pydantic/dataclass/`TypedDict` adapters must remain compatible with Pydantic v2.
 - Runtime behavior in this task is fully local. Do not call model providers, remote APIs, package indexes, or source hosts.
+
+# Examples
+
+```python
+from dataclasses import dataclass
+from langchain.agents.structured_output import ToolStrategy
+
+@dataclass
+class Answer:
+    value: str
+
+strategy = ToolStrategy(Answer)
+assert strategy.schema_specs[0].name == "Answer"
+```
+
+```python
+from langchain.agents.middleware.pii import detect_email, PIIMiddleware
+
+matches = detect_email("send to user@example.com")
+assert matches[0]["value"] == "user@example.com"
+middleware = PIIMiddleware("email", strategy="redact")
+```
+
+# Error Handling and Boundary Conditions
+
+- Unsupported structured-output schema objects raise `ValueError`; malformed
+  JSON content and schema validation failures are also reported as
+  `ValueError` by the documented bindings.
+- Credit-card matches are accepted only when the Luhn checksum succeeds, and
+  IP detection rejects dotted candidates with out-of-range octets.
+- A PII middleware configured with `strategy="block"` raises
+  `PIIDetectionError` with the complete ordered match list; `hash` uses the
+  exact matched text and is deterministic.
+- Limit middleware constructors reject missing limits and invalid exit
+  behavior. Empty message histories and histories without relevant messages
+  return `None` from the tool-limit hooks.
+- The package must not access the network, current time, random state, or
+  external files during these operations. Preserve message IDs, names,
+  tool-call IDs, and AI tool calls when hooks return modified messages.

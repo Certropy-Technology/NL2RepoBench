@@ -5,6 +5,16 @@ It is an ESM filesystem globbing utility: callers provide one or more
 forward-slash glob patterns and receive matching paths relative to a search
 directory. The package must work without a network service or native addon.
 
+## Natural Language Instruction
+
+Create the installable `globby` package from an empty workspace. Implement the
+asynchronous and synchronous glob APIs, normalized task generation, dynamic
+pattern detection, literal path escaping, directory expansion, negation, and
+ignore-file behavior in the JSON-compatible contract below. Preserve relative
+path ordering and parity between async and sync calls. The implementation must
+perform only local filesystem reads and return deterministic results for a
+fixed directory tree.
+
 # Supports
 
 - Node.js 24.19.0 on Linux and npm 11.17.0.
@@ -15,6 +25,22 @@ directory. The package must work without a network service or native addon.
 - Ordinary files and directories, dotfiles when requested, negated patterns,
   directory expansion, and ignore-file filtering.
 
+## Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── index.js
+└── index.d.ts
+```
+
+The package root exports the documented ESM functions from `index.js`; the
+declaration file describes Promise and synchronous return types. The package
+does not require a CLI, lifecycle hook, native addon, generated cache, or
+runtime service. Files matched by a caller's `cwd` are external input and are
+never copied into the package.
+
 # API Usage Guide
 
 The scored calls cross a JSON request/response boundary. Therefore `patterns`
@@ -23,6 +49,8 @@ than `URL` objects, and do not rely on custom filesystem objects in the scored
 surface.
 
 ## `globby(patterns, options?)`
+
+Import the default function with `import globby from 'globby'`.
 
 Returns a `Promise<string[]>` of paths relative to `options.cwd` (or the
 process working directory). `patterns` is a string or an array of strings and
@@ -55,6 +83,8 @@ excluded by the active patterns or ignore files.
 
 ## `globbySync(patterns, options?)`
 
+Import `globbySync` with `import {globbySync} from 'globby'`.
+
 Synchronous counterpart of `globby`. It accepts the same patterns and
 JSON-compatible options and returns the same path set and filtering behavior.
 
@@ -79,6 +109,8 @@ patterns such as `src/**/*.js` are dynamic.
 
 ## `convertPathToPattern(path)`
 
+Import it with `import {convertPathToPattern} from 'globby'`.
+
 Returns a safe glob pattern for a literal path. Escape glob metacharacters
 such as brackets and parentheses so that the returned pattern matches the
 literal path rather than interpreting those characters as pattern syntax.
@@ -98,3 +130,33 @@ boundary used by this task, so they are not part of the scored denominator;
 do not replace the serializable APIs above with a narrower toy implementation.
 Do not add a network dependency, native addon, runtime download, arbitrary
 shell command, or lifecycle hook.
+
+## Examples
+
+```js
+import globby from 'globby';
+await globby('src/**/*.js', {cwd: 'workspace'});
+// ['src/index.js', 'src/util.js'] in deterministic glob order
+```
+
+```js
+import {globbySync} from 'globby';
+globbySync(['**/*.js', '!**/*.test.js'], {cwd: 'workspace'});
+// JavaScript files excluding test files
+```
+
+```js
+import {generateGlobTasks, convertPathToPattern} from 'globby';
+await generateGlobTasks(['lib', '!lib/vendor/**'], {cwd: 'workspace'});
+convertPathToPattern('docs/[draft].md');
+```
+
+## Error Handling and Boundary Conditions
+
+An empty pattern list returns an empty result. Patterns made only of negations
+follow `expandNegationOnlyPatterns` exactly as documented, and duplicate
+matches are removed without changing deterministic ordering. Dotfiles are
+excluded unless `dot` is true; ignored paths are removed after pattern
+matching. `cwd` must identify a directory, and non-string pattern entries
+reject with `TypeError`. Async and sync APIs report equivalent errors for the
+same invalid local input and never fall back to registry or network access.

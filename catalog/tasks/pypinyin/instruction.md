@@ -1,119 +1,36 @@
-## Introduction and Goals of the python-pingyin Project
+# pypinyin
 
-Pinyin is a Python library specifically designed for Chinese character pinyin conversion. It can accurately convert Chinese characters into pinyin and is widely used in areas such as Chinese character phonetic annotation, sorting, and retrieval. Its aim is to become a powerful and easy-to-use Chinese character processing tool, providing stable and efficient pinyin conversion support for Chinese information processing and natural language processing applications.
+## Project Description
 
-Core Features:
-- Intelligent Pinyin Conversion: It can intelligently match the most correct pinyin according to phrases and supports the polyphone mode.
-- Diverse Style Support: It supports multiple pinyin output formats, such as initials, finals, tone marks, tone numbers, as well as Bopomofo and Wade-Giles pinyin.
-- Simplified and Traditional Chinese and Tone Sandhi Handling: It supports the conversion of traditional Chinese characters and can handle continuous tone sandhi rules in words like "你好" (nǐ hǎo).
-- Highly Customizable: It allows users to load custom single-character or phrase pinyin libraries to correct or expand the default pinyin data.
+Build an installable `pypinyin` project from an empty `workspace/`. The project must reproduce the public, local behavior documented in this instruction, including its package entry points, return shapes, ordering, state changes, and documented exceptions. This is a repository-generation task: the agent creates the build metadata and source modules rather than editing an existing implementation.
 
-## Natural Language Instruction (Prompt)
+Distribution identity: `pypinyin`; public import package begins at `pypinyin`.
+The scope is the deterministic local API described below. Network services, undeclared external state, and behavior not represented by the public contract are outside the task.
 
-Please create a Python project named python-pinyin to implement a Chinese character pinyin conversion library. The project should include the following functions:
+## Natural Language Instruction
 
-1. Expression Parser: It can extract and parse Chinese character text from the input string, supporting simplified Chinese, traditional Chinese, punctuation marks, and special characters. The parsing result should be a pinyin string or an equivalent comparable form.
+Create the complete project in an empty workspace and make it installable with the command in the environment section. Implement these task-specific capability families from the local API contract:
 
-2. Equivalence Check: Implement a function (or script) to compare whether two pinyin expressions are equivalent, including tone comparison and symbol comparison. It should support approximate comparison between tone marks and numerical tones, judgment of pinyin symbol simplification, and equivalence judgment of polyphones/heteronyms.
+1. `Detailed Explanation of Core Functions`: expose the documented public entry points, signatures, inputs, outputs, and error behavior.
+2. `1. `remove_dup_items()` Function - Removing Duplicate Items from List`: preserve the documented object or module behavior, including state and side effects.
+3. `2. `get_meta()` Function - Getting Package Metadata`: preserve ordering, determinism, serialization, and boundary semantics where specified.
+4. `3. `long_description()` Function - Reading Long Description`: make the public package usable through the documented import path or command-line entry.
 
-3. Special Structure Handling: Special handling should be performed on initials, finals, tones, Bopomofo, Wade-Giles pinyin, etc. For example, "nǐ" and "ni3" should be considered equivalent, and separating initials and finals like "n" + "i" is equivalent to "ni".
+Do not add speculative APIs or substitute a different package. Keep the implementation self-contained, ensure imports work after installation, and use the exact public names and signatures in the API Usage Guide. A small implementation is acceptable only when it still satisfies every documented contract.
 
-4. Interface Design: Design independent command-line interfaces or function interfaces for each functional module (such as parsing, tone comparison, symbol comparison, style conversion, etc.) to support terminal call testing. Each module should define clear input and output formats.
+## Supports or Environment Configuration
 
-5. Examples and Evaluation Scripts: Provide example code and test cases to demonstrate how to use the parse() and convert() functions for input parsing and pinyin conversion (e.g., convert(parse("你好"), style="tone") should return ['nǐ', 'hǎo']). The above functions need to be combined to build a complete pinyin conversion toolkit. The project should ultimately include modules such as parsing, conversion, and overall verification, along with typical test cases, to form a reproducible conversion process.
+- CPython 3.10 on the pinned Linux image.
+- Distribution identity: `pypinyin`; public import package begins at `pypinyin`.
+- Install from the workspace with `python -m pip install .`; do not download packages during evaluation.
+- No third-party runtime package is declared by the local task metadata; standard-library support is sufficient unless the API section says otherwise.
+- Build metadata and package data must be present in the workspace and agree with the public import paths below.
+- Agent, candidate, evaluator, Oracle, and control execution are network-isolated. Do not access GitHub, package registries, DNS, databases, or external services at runtime.
+- Use deterministic local inputs. Do not rely on the current wall clock, host-specific absolute paths, undeclared environment variables, or an installed copy of the target package.
 
-6. Core file requirement: The project must include a complete setup. py file. This file should not only configure the project as an installable package (supporting pip installation), but also declare a complete list of dependencies (including core libraries such as  jieba==0.42.1, typing-extensions==4.12.2, chardet==5.2.0）。 The setup. py file can verify whether all functional modules are working properly. At the same time, it is necessary to provide pypinyin/__init__. py as a unified API entry point to import and export core functions, classes, etc., and provide version information so that users can access all major functions through a simple "from pypinyin import xxx, from pypinyin. xxx import xxx" statement. In converter. py, a pinyin_comvert() function is required to use multiple strategies to convert Chinese characters into pinyin.
+## Project Directory Structure
 
-## Environment Configuration
-
-### Python Version
-
-The Python version used in the current project is: Python 3.10.11
-
-### Core Dependency Library Versions
-
-```Plain
-alabaster                     1.0.0
-babel                         2.17.0
-backports.tarfile             1.2.0
-bump2version                  1.0.1
-bumpversion                   0.6.0
-cachetools                    6.1.0
-certifi                       2025.8.3
-cffi                          1.17.1
-cfgv                          3.4.0
-chardet                       5.2.0
-charset-normalizer            3.4.2
-colorama                      0.4.6
-coverage                      7.10.2
-cryptography                  45.0.5
-distlib                       0.4.0
-docutils                      0.21.2
-exceptiongroup                1.3.0
-filelock                      3.18.0
-id                            1.5.0
-identify                      2.6.12
-idna                          3.10
-imagesize                     1.4.1
-importlib_metadata            8.7.0
-iniconfig                     2.1.0
-jaraco.classes                3.4.0
-jaraco.context                6.0.1
-jaraco.functools              4.2.1
-jeepney                       0.9.0
-Jinja2                        3.1.6
-keyring                       25.6.0
-markdown-it-py                3.0.0
-MarkupSafe                    3.0.2
-mdurl                         0.1.2
-more-itertools                10.7.0
-mypy                          1.17.1
-mypy_extensions               1.1.0
-nh3                           0.3.0
-nodeenv                       1.9.1
-packaging                     25.0
-pathspec                      0.12.1
-pip                           23.0.1
-platformdirs                  4.3.8
-pluggy                        1.6.0
-pre_commit                    4.2.0
-pycparser                     2.22
-Pygments                      2.19.2
-pyproject-api                 1.9.1
-pytest                        8.4.1
-pytest-cov                    6.2.1
-pytest-random-order           1.2.0
-PyYAML                        6.0.2
-readme_renderer               44.0
-requests                      2.32.4
-requests-toolbelt             1.0.0
-rfc3986                       2.0.0
-rich                          14.1.0
-SecretStorage                 3.3.3
-setuptools                    65.5.1
-snowballstemmer               3.0.1
-Sphinx                        8.1.3
-sphinxcontrib-applehelp       2.0.0
-sphinxcontrib-devhelp         2.0.0
-sphinxcontrib-htmlhelp        2.1.0
-sphinxcontrib-jsmath          1.0.1
-sphinxcontrib-qthelp          2.0.0
-sphinxcontrib-serializinghtml 2.0.0
-tomli                         2.2.1
-tox                           4.28.4
-twine                         6.1.0
-typing_extensions             4.14.1
-urllib3                       2.5.0
-virtualenv                    20.33.0
-wheel                         0.40.0
-zipp                          3.23.0
-```
-
-## Project Architecture of python-pinyin
-
-### Project Directory Structure
-
-```Plain
+```text
 workspace/
 ├── .bumpversion.cfg
 ├── .circleci
@@ -234,10 +151,13 @@ workspace/
 ├── setup.py
 ├── tidy_phrases_dict.py
 └── tox.ini
-
 ```
 
+The tree lists agent-owned public project files only. Add additional public modules when required by the API Usage Guide, but keep their import paths consistent with package metadata. Do not create evaluator-only files, hidden fixtures, or private reports in the generated project.
+
 ## API Usage Guide
+
+The following is the task-specific public contract recovered from the local instruction and inventory. For every function, class, method, constant, export, and command named below, preserve its complete signature, accepted input domain, return type and shape, ordering, determinism, state/side effects, exceptions, and examples. When the source contract gives an optional argument or a compatibility alias, it is part of the required surface.
 
 ### Detailed Explanation of Core Functions
 #### 1. `remove_dup_items()` Function - Removing Duplicate Items from List
@@ -1712,10 +1632,10 @@ Ultimate converter that combines all conversion features including v-to-u conver
 class UltimateConverter(DefaultConverter):
     def __init__(self, v_to_u=False, neutral_tone_with_five=False, tone_sandhi=False, **kwargs)
     """Initialize the UltimateConverter with optional features."""
-    
+
     def post_convert_style(self, han, orig_pinyin, converted_pinyin, style, strict, **kwargs)
     """Post-process pinyin style conversion with support for v_to_u and neutral_tone_with_five features."""
-    
+
     def post_pinyin(self, han, heteronym, pinyin, **kwargs)
     """Post-process pinyin with support for tone_sandhi feature."""
 ```
@@ -1747,10 +1667,10 @@ Converter that handles various tone style pinyin conversions, including standard
 class ToneConverter(object):
     def to_tone(self, pinyin, **kwargs)
     """Convert to standard tone style pinyin."""
-    
+
     def to_tone2(self, pinyin, **kwargs)
     """Convert to tone2 style pinyin (numbers after vowels)."""
-    
+
     def to_tone3(self, pinyin, **kwargs)
     """Convert to tone3 style pinyin (numbers at the end)."""
 ```
@@ -1774,7 +1694,7 @@ Converter that handles Gwoyeu Romanization style pinyin conversion, a romanizati
 class GwoyeuConverter(object):
     def _pre_convert(self, pinyin)
     """Pre-process pinyin before Gwoyeu conversion."""
-    
+
     def to_gwoyeu(self, pinyin, **kwargs)
     """Convert pinyin to Gwoyeu Romanization."""
 ```
@@ -1798,10 +1718,10 @@ Converter that handles Cyrillic style pinyin conversion, including both standard
 class CyrillicfoConverter(object):
     def to_cyrillic(self, pinyin, **kwargs)
     """Convert pinyin to Cyrillic representation."""
-    
+
     def to_cyrillic_first(self, pinyin, **kwargs)
     """Convert pinyin to the first letter of Cyrillic representation."""
-    
+
     def _pre_convert(self, pinyin)
     """Pre-process pinyin before Cyrillic conversion."""
 ```
@@ -1825,13 +1745,13 @@ Converter that handles finals style pinyin conversions, including various finals
 class FinalsConverter(object):
     def to_finals(self, pinyin, **kwargs)
     """Convert to finals style pinyin without tone."""
-    
+
     def to_finals_tone(self, pinyin, **kwargs)
     """Convert to finals style pinyin with tone marks."""
-    
+
     def to_finals_tone2(self, pinyin, **kwargs)
     """Convert to finals style pinyin with tone numbers."""
-    
+
     def to_finals_tone3(self, pinyin, **kwargs)
     """Convert to finals style pinyin with tone numbers at the end."""
 ```
@@ -1855,10 +1775,10 @@ Converter that handles Bopomofo (Zhuyin) style pinyin conversion, including both
 class BopomofoConverter(object):
     def to_bopomofo(self, pinyin, **kwargs)
     """Convert pinyin to Bopomofo (Zhuyin) representation."""
-    
+
     def to_bopomofo_first(self, pinyin, **kwargs)
     """Convert pinyin to the first letter of Bopomofo (Zhuyin) representation."""
-    
+
     def _pre_convert(self, pinyin)
     """Pre-process pinyin before Bopomofo conversion."""
 ```
@@ -1882,7 +1802,7 @@ Converter that handles Mainland Chinese Braille style pinyin conversion, includi
 class BrailleMainlandConverter(object):
     def to_braille_mainland_tone(self, pinyin, **kwargs)
     """Convert pinyin to Mainland Chinese Braille with tone representation."""
-    
+
     def to_braille_mainland(self, pinyin, **kwargs)
     """Convert pinyin to Mainland Chinese Braille without tone representation."""
 ```
@@ -1906,7 +1826,7 @@ Converter that handles other style pinyin conversions, including normal style an
 class OthersConverter(object):
     def to_normal(self, pinyin, **kwargs)
     """Convert to normal style pinyin without tone marks."""
-    
+
     def to_first_letter(self, pinyin, **kwargs)
     """Convert to first letter style pinyin."""
 ```
@@ -1930,10 +1850,10 @@ A set-like class that stores prefixes of words for maximum matching segmentation
 class PrefixSet(object):
     def __init__(self)
     """Initialize an empty prefix set."""
-    
+
     def train(self, word_s)
     """Update prefix set with a list of words."""
-    
+
     def __contains__(self, key)
     """Check if a key is in the prefix set."""
 ```
@@ -1958,22 +1878,22 @@ Core class for pinyin conversion that provides complete pinyin conversion functi
 class Pinyin(object):
     def __init__(self, converter=None, **kwargs)
     """Initialize the Pinyin converter with an optional custom converter."""
-    
+
     def pinyin(self, hans, style=Style.TONE, heteronym=False, errors='default', strict=True, **kwargs)
     """Convert Chinese characters to pinyin, returning a list of pinyin for the characters."""
-    
+
     def lazy_pinyin(self, hans, style=Style.NORMAL,errors='default', strict=True, **kwargs):
     """Convert Chinese characters to pinyin, returning a flat list of pinyin."""
-    
+
     def pre_seg(self, hans, **kwargs)
     """Pre-segmentation hook that can be overridden to skip built-in segmentation."""
-    
+
     def post_seg(self, hans, seg_data, **kwargs)
     """Post-segmentation hook that can be overridden to modify segmentation results."""
-    
+
     def seg(self, hans, **kwargs)
     """Segment Chinese text into words for pinyin conversion."""
-    
+
     def get_seg(self, **kwargs)
     """Get the segmentation function to use."""
 ```
@@ -2028,19 +1948,19 @@ Default pinyin conversion implementation that serves as the basis for other conv
 class DefaultConverter(Converter):
     def __init__(self, **kwargs)
     """Initialize the default converter with optional parameters."""
-    
+
    def convert(self, words, style, heteronym, errors, strict, **kwargs):
     """Convert words to pinyin using the default conversion logic."""
-    
+
     def pre_convert_style(self, han, orig_pinyin, style, strict, **kwargs)
     """Pre-process pinyin style conversion that can be overridden by subclasses."""
-    
+
     def convert_style(self, han, orig_pinyin, style, strict, **kwargs)
     """Convert pinyin style that can be overridden by subclasses."""
 
     def post_convert_style(self, han, orig_pinyin, converted_pinyin,style, strict, **kwargs):
     """Post-process pinyin style conversion that can be overridden by subclasses."""
-    
+
     def pre_handle_nopinyin(self, chars, style, heteronym, errors, strict, **kwargs)
     """Pre-process characters without pinyin that can be overridden by subclasses."""
 
@@ -2055,10 +1975,10 @@ class DefaultConverter(Converter):
 
     def _phrase_pinyin(self, phrase, style, heteronym, errors, strict, **kwargs):
     """Convert a phrase to pinyin."""
-    
+
     def convert_styles(self, pinyin_list, phrase, style, heteronym, errors,strict, **kwargs)
     """Convert pinyin styles for a list of pinyin."""
-    
+
     def _single_pinyin(self, han, style, heteronym, errors, strict, **kwargs)
     """Convert a single Chinese character to pinyin."""
 
@@ -2067,7 +1987,7 @@ class DefaultConverter(Converter):
 
     def _convert_nopinyin_chars(self, chars, style, heteronym, errors, strict)
     """Convert characters without pinyin to the specified style."""
-        
+
 ```
 **Parameter Description**:
 - `han`: Single Chinese character or phrase.
@@ -2097,55 +2017,55 @@ Enumeration class that defines various pinyin output styles.
 class Style(IntEnum):
     NORMAL = 0
     """Normal style, without tones. Example: 中国 -> zhong guo"""
-    
+
     TONE = 1
     """Standard tone style, tone marks on the first letter of the final. Example: 中国 -> zhōng guó"""
-    
+
     TONE2 = 2
     """Tone style 2, tone numbers after vowels. Example: 中国 -> zho1ng guo2"""
-    
+
     TONE3 = 8
     """Tone style 3, tone numbers at the end of syllables. Example: 中国 -> zhong1 guo2"""
-    
+
     INITIALS = 3
     """Initials style, only return the initial part of pinyin. Example: 中国 -> zh g"""
-    
+
     FIRST_LETTER = 4
     """First letter style, only return the first letter of pinyin. Example: 中国 -> z g"""
-    
+
     FINALS = 5
     """Finals style, only return the final part without tone. Example: 中国 -> ong uo"""
-    
+
     FINALS_TONE = 6
     """Standard finals style with tone marks. Example: 中国 -> ōng uó"""
-    
+
     FINALS_TONE2 = 7
     """Finals style 2 with tone numbers. Example: 中国 -> o1ng uo2"""
-    
+
     FINALS_TONE3 = 9
     """Finals style 3 with tone numbers at the end. Example: 中国 -> ong1 uo2"""
-    
+
     BOPOMOFO = 10
     """Bopomofo (Zhuyin) style. Example: 中国 -> ㄓㄨㄥ ㄍㄨㄛˊ"""
-    
+
     BOPOMOFO_FIRST = 11
     """First letter of Bopomofo style. Example: 中国 -> ㄓ ㄍ"""
-    
+
     CYRILLIC = 12
     """Cyrillic style. Example: 中国 -> чжун1 го2"""
-    
+
     CYRILLIC_FIRST = 13
     """First letter of Cyrillic style. Example: 中国 -> ч г"""
-    
+
     WADEGILES = 14
    """Wade-Giles Romanization Style (Wade System / Wei's Romanization), No Tones"""
 
     GWOYEU = 15
     """Gwoyeu Romatzyh Style Example: "中国" (China) → jong gwo"""
-    
+
     BRAILLE_MAINLAND = 16
     """The braille style used in Mainland China has no tones. For example, "中国" (Zhōngguó, meaning "China") is written as ⠌⠲ ⠛⠕ in braille."""
-    
+
 
     BRAILLE_MAINLAND_TONE = 17
     """Braille Style in Mainland China, Without Tones Example: "中国" (China) → ⠌⠲ ⠛⠕"""
@@ -2169,10 +2089,10 @@ Implementation of the forward maximum matching segmenter.
 class Seg(object):
     def __init__(self, prefix_set)
     """Initialize the segmenter with a prefix set."""
-    
+
     def cut(self, text)
     """Segment text using the forward maximum matching algorithm."""
-    
+
     def train(self, words)
     """Train the segmenter with a list of words."""
 ```
@@ -2222,7 +2142,7 @@ Mixin class that uses 5 to represent neutral tone in number-based pinyin styles.
 class NeutralToneWith5Mixin(object):
     NUMBER_TONE = (Style.TONE2, Style.TONE3, Style.FINALS_TONE2, Style.FINALS_TONE3)
     NUMBER_AT_END = (Style.TONE3, Style.FINALS_TONE3)
-    
+
     def post_convert_style(self, han, orig_pinyin, converted_pinyin, style, strict, **kwargs)
     """Post-process pinyin style conversion to mark neutral tone with '5'."""
 ```
@@ -2575,3 +2495,235 @@ The system provides a complete error handling mechanism:
 6. **Dictionary Management**: Supports the dynamic loading of custom single-character and phrase dictionaries.
 7. **Extended Functions**: Supports extended functions such as custom converters, word segmenters, and styles.
 
+## Implementation Notes
+
+- Keep the root exports and module paths stable after installation; do not make behavior depend on the repository's current directory.
+- Preserve explicit ordering guarantees. When the contract does not promise an order, do not introduce a new observable order accidentally.
+- Propagate documented exceptions and avoid replacing them with generic errors. Validate malformed, empty, boundary, and repeated inputs as described by the API contract.
+- Keep filesystem, process, terminal, and resource effects bounded and local. Close files and other resources on both success and failure.
+- Do not copy an upstream checkout, implementation source, or evaluation-only material into the generated project. Implement the public behavior from this specification.
+
+## Examples
+
+The examples below are retained from the local task specification. They are starting points for ordinary calls and boundary/error behavior; their exact output and exception semantics remain governed by the API Usage Guide.
+
+### Example 1: ordinary usage
+```text
+alabaster                     1.0.0
+babel                         2.17.0
+backports.tarfile             1.2.0
+bump2version                  1.0.1
+bumpversion                   0.6.0
+cachetools                    6.1.0
+certifi                       2025.8.3
+cffi                          1.17.1
+cfgv                          3.4.0
+chardet                       5.2.0
+charset-normalizer            3.4.2
+colorama                      0.4.6
+coverage                      7.10.2
+cryptography                  45.0.5
+distlib                       0.4.0
+docutils                      0.21.2
+exceptiongroup                1.3.0
+filelock                      3.18.0
+id                            1.5.0
+identify                      2.6.12
+idna                          3.10
+imagesize                     1.4.1
+importlib_metadata            8.7.0
+iniconfig                     2.1.0
+jaraco.classes                3.4.0
+jaraco.context                6.0.1
+jaraco.functools              4.2.1
+jeepney                       0.9.0
+Jinja2                        3.1.6
+keyring                       25.6.0
+markdown-it-py                3.0.0
+MarkupSafe                    3.0.2
+mdurl                         0.1.2
+more-itertools                10.7.0
+mypy                          1.17.1
+mypy_extensions               1.1.0
+nh3                           0.3.0
+nodeenv                       1.9.1
+packaging                     25.0
+pathspec                      0.12.1
+pip                           23.0.1
+platformdirs                  4.3.8
+pluggy                        1.6.0
+pre_commit                    4.2.0
+pycparser                     2.22
+Pygments                      2.19.2
+pyproject-api                 1.9.1
+pytest                        8.4.1
+pytest-cov                    6.2.1
+pytest-random-order           1.2.0
+PyYAML                        6.0.2
+readme_renderer               44.0
+requests                      2.32.4
+requests-toolbelt             1.0.0
+rfc3986                       2.0.0
+rich                          14.1.0
+SecretStorage                 3.3.3
+setuptools                    65.5.1
+snowballstemmer               3.0.1
+Sphinx                        8.1.3
+sphinxcontrib-applehelp       2.0.0
+sphinxcontrib-devhelp         2.0.0
+sphinxcontrib-htmlhelp        2.1.0
+sphinxcontrib-jsmath          1.0.1
+sphinxcontrib-qthelp          2.0.0
+sphinxcontrib-serializinghtml 2.0.0
+tomli                         2.2.1
+tox                           4.28.4
+twine                         6.1.0
+typing_extensions             4.14.1
+urllib3                       2.5.0
+virtualenv                    20.33.0
+wheel                         0.40.0
+zipp                          3.23.0
+```
+
+### Example 2: ordinary usage
+```text
+workspace/
+├── .bumpversion.cfg
+├── .circleci
+│   ├── config.yml
+├── .coveragerc
+├── .devcontainer
+│   ├── devcontainer.json
+├── .editorconfig
+├── .gitignore
+├── .gitmodules
+├── .pre-commit-config.yaml
+├── .readthedocs.yaml
+├── CHANGELOG.rst
+├── CODE_OF_CONDUCT.md
+├── LICENSE.txt
+├── MANIFEST.in
+├── Makefile
+├── README.rst
+├── README_en.rst
+├── README_ru.rst
+├── gen_phrases_dict.py
+├── gen_pinyin_dict.py
+├── phrase-pinyin-data
+├── pinyin-data
+├── pypinyin
+│   ├── __init__.py
+│   ├── __init__.pyi
+│   ├── __main__.py
+│   ├── __pyinstaller
+│   │   ├── __init__.py
+│   │   ├── __init__.pyi
+│   │   ├── hook-pypinyin.py
+│   ├── compat.py
+│   ├── compat.pyi
+│   ├── constants.py
+│   ├── constants.pyi
+│   ├── contrib
+│   │   ├── __init__.py
+│   │   ├── _tone_rule.py
+│   │   ├── _tone_rule.pyi
+│   │   ├── mmseg.py
+│   │   ├── mmseg.pyi
+│   │   ├── neutral_tone.py
+│   │   ├── neutral_tone.pyi
+│   │   ├── tone_convert.py
+│   │   ├── tone_convert.pyi
+│   │   ├── tone_sandhi.py
+│   │   ├── tone_sandhi.pyi
+│   │   ├── uv.py
+│   │   ├── uv.pyi
+│   ├── converter.py
+│   ├── converter.pyi
+│   ├── core.py
+│   ├── core.pyi
+│   ├── exceptions.py
+│   ├── exceptions.pyi
+│   ├── legacy
+│   │   ├── __init__.py
+│   │   ├── phrases_dict.py
+│   │   ├── phrases_dict_tidy.py
+│   │   ├── pinyin_dict.py
+│   ├── phonetic_symbol.py
+│   ├── phonetic_symbol.pyi
+│   ├── phrases_dict.json
+│   ├── phrases_dict.py
+│   ├── phrases_dict.pyi
+│   ├── pinyin_dict.json
+│   ├── pinyin_dict.py
+│   ├── pinyin_dict.pyi
+│   ├── py.typed
+│   ├── runner.py
+│   ├── runner.pyi
+│   ├── seg
+│   │   ├── __init__.py
+│   │   ├── mmseg.py
+│   │   ├── mmseg.pyi
+│   │   ├── simpleseg.py
+│   │   ├── simpleseg.pyi
+│   ├── standard.py
+│   ├── standard.pyi
+│   ├── style
+│   │   ├── __init__.py
+│   │   ├── __init__.pyi
+│   │   ├── _constants.py
+│   │   ├── _constants.pyi
+│   │   ├── _tone_convert.py
+│   │   ├── _tone_convert.pyi
+│   │   ├── _tone_rule.py
+│   │   ├── _tone_rule.pyi
+│   │   ├── _utils.py
+│   │   ├── _utils.pyi
+│   │   ├── bopomofo.py
+│   │   ├── bopomofo.pyi
+│   │   ├── braille_mainland.py
+│   │   ├── braille_mainland.pyi
+│   │   ├── cyrillic.py
+│   │   ├── cyrillic.pyi
+│   │   ├── finals.py
+│   │   ├── finals.pyi
+│   │   ├── gwoyeu.py
+│   │   ├── gwoyeu.pyi
+│   │   ├── initials.py
+│   │   ├── initials.pyi
+│   │   ├── others.py
+│   │   ├── others.pyi
+│   │   ├── tone.py
+│   │   ├── tone.pyi
+│   │   ├── wadegiles.py
+│   │   ├── wadegiles.pyi
+│   ├── tools
+│   │   ├── __init__.py
+│   │   ├── toneconvert.py
+│   │   ├── toneconvert.pyi
+│   ├── utils.py
+│   ├── utils.pyi
+├── pytest.ini
+├── setup.cfg
+├── setup.py
+├── tidy_phrases_dict.py
+└── tox.ini
+```
+
+### Example 3: boundary or error behavior
+```text
+from gen_phrases_dict import remove_dup_items
+```
+
+### Example 4: boundary or error behavior
+```text
+def remove_dup_items(lst)
+```
+
+
+## Error Handling and Boundary Conditions
+
+- Empty inputs, invalid types, malformed text or paths, unavailable resources, duplicate calls, and cancellation/timeout cases must follow the exception and return-value contracts documented for the relevant API.
+- Do not silently coerce values, reorder results, swallow exceptions, or use a fallback dependency unless the API section explicitly requires that behavior.
+- File and environment operations must use caller-provided paths and documented defaults only; never read undeclared host files or network resources.
+- The implementation must remain usable in the stated NoNetwork environment. A missing optional integration should expose the documented availability or error behavior rather than attempting an online install.
+- Security-sensitive inputs must be treated as data. Do not execute strings, load untrusted code, or interpolate shell commands unless that behavior is explicitly part of the documented public API.

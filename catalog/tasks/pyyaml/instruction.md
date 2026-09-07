@@ -13,6 +13,16 @@ scanner, parser, composer, constructor, resolver, representer, event, token,
 and node APIs. The package also supports application-defined constructors and
 representers.
 
+## Natural Language Instruction
+
+Create the installable `PyYAML` distribution from an empty `workspace/`.
+Implement the safe and full loading APIs, deterministic dumping APIs, lazy
+multi-document iterators, parser/scanner events and tokens, composed nodes,
+registration hooks, and typed errors described below. Preserve YAML 1.1 scalar,
+sequence, mapping, alias, merge-key, Unicode, and document-boundary behavior.
+The pure-Python implementation is the required baseline; optional native
+acceleration must not change the public contract.
+
 ## Supports
 
 - Support CPython 3.10 and newer Python 3.x versions in the supported source
@@ -25,6 +35,33 @@ representers.
   extension is unavailable.
 - Keep normal parsing, dumping, event, node, and registration operations local:
   no network, subprocess, external service, or current-time behavior is allowed.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── setup.py
+└── yaml/
+    ├── __init__.py
+    ├── loader.py
+    ├── dumper.py
+    ├── parser.py
+    ├── scanner.py
+    ├── composer.py
+    ├── constructor.py
+    ├── resolver.py
+    ├── representer.py
+    ├── events.py
+    ├── tokens.py
+    ├── nodes.py
+    └── error.py
+```
+
+The `yaml` directory is the installed import package and `yaml/__init__.py`
+is the root API entry point. The project must install from the workspace root;
+do not require a preinstalled YAML package, runtime downloads, or source files
+outside this tree.
 
 ## API Usage Guide
 
@@ -112,3 +149,32 @@ input must raise these typed exceptions rather than being silently accepted.
 - Determinism matters: equivalent calls with the same input and options produce
   the same values, event/token sequences, and emitted bytes. Do not copy hidden
   tests or write verifier-owned reports from the candidate project.
+
+## Examples
+
+```python
+import yaml
+
+value = yaml.safe_load("name: Ada\nitems: [1, 2]")
+text = yaml.safe_dump(value, sort_keys=True)
+```
+
+```python
+documents = list(yaml.safe_load_all("---\nfirst\n---\nsecond\n"))
+assert documents == ["first", "second"]
+```
+
+```python
+node = yaml.compose("answer: 42\n")
+events = list(yaml.parse("- a\n- b\n"))
+tokens = list(yaml.scan("key: value\n"))
+```
+
+## Error Handling and Boundary Conditions
+
+Empty input loads as `None`; malformed YAML raises a `YAMLError` subclass and
+must not be silently repaired. `yaml.load` requires an explicit loader.
+`safe_load` rejects unsafe Python object tags, while `safe_dump` raises
+`RepresenterError` for unsupported application objects. Preserve aliases and
+merge-key precedence, insertion order when `sort_keys=False`, byte-stream
+encoding behavior, and lazy document boundaries.

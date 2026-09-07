@@ -23,6 +23,45 @@ on a network service.
   payloads are bounded: at most 64 records, keys and values up to 4096 bytes,
   and prefixes up to 4096 bytes.
 
+## Natural Language Instruction
+
+Build the bounded `github.com/dgraph-io/badger/v4` module from an empty
+workspace. Implement options, in-memory database lifecycle, transactions,
+entries, iteration, metadata, and error behavior listed below. Keep bridge
+requests bounded and deterministic.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── go.mod
+├── go.sum
+├── vendor/modules.txt
+├── db.go
+├── txn.go
+├── item.go
+└── iterator.go
+```
+
+Expose the root package at the documented module path. Private verifier and
+bridge files are not part of the requested project.
+
+## Examples
+
+```go
+db, err := Open(DefaultOptions("").WithInMemory(true)); defer db.Close()
+```
+
+```go
+err = db.Update(func(txn *Txn) error { return txn.Set([]byte("k"), []byte("v")) })
+```
+
+## Error Handling and Boundary Conditions
+
+Handle missing keys, read-only transactions, rollback callbacks, deleted
+entries, metadata, lexical iteration, empty keys/values, and closed databases
+according to the API contract. No runtime network access is allowed.
+
 ## API Usage Guide
 
 Implement the following public API at import path

@@ -12,6 +12,15 @@ The implementation must install from an empty repository and provide the
 open sockets, resolve public hosts, download an embedded server, or contact a
 Weaviate instance.
 
+## Natural Language Instruction
+
+Create the installable `weaviate-client` package from an empty workspace.
+Implement the offline authentication and connection value objects, conversion
+utilities, filter/query builders, collection configuration factories, and
+HFresh update behavior specified below. Preserve exact public imports,
+Pydantic/dataclass values, wire serialization, exception types, and deterministic
+ordering without contacting a Weaviate service.
+
 # Supports
 
 - Python 3.12 on Linux amd64.
@@ -30,11 +39,42 @@ Weaviate instance.
   `auth`, `classes`, `collections`, and `exceptions` namespaces.
 - `weaviate.classes` namespace modules named `init`, `query`, and `config`.
 
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+└── weaviate/
+    ├── __init__.py
+    ├── auth.py
+    ├── config.py
+    ├── util.py
+    ├── connect/
+    │   ├── __init__.py
+    │   └── base.py
+    └── classes/
+        ├── __init__.py
+        ├── init.py
+        ├── query.py
+        └── config.py
+```
+
+The root package and each listed namespace are public import paths. Keep
+connection helpers import-safe: importing the package must not open a socket,
+start an embedded server, or download anything.
+
 The environment already contains the exact compatible dependency closure.
 Do not implement or vendor replacements for Pydantic, HTTPX, gRPC, Protobuf,
 Authlib, or validators.
 
 # API Usage Guide
+
+Import documented APIs from their package paths:
+
+```python
+from weaviate.classes.query import Filter, MetadataQuery
+from weaviate.util import get_valid_uuid
+```
 
 ## Authentication
 

@@ -1,4 +1,4 @@
-# Build `pytest-xdist`
+# Project Description
 
 Create a complete, installable Python distribution named `pytest-xdist` from
 an empty workspace. It must provide the `xdist` pytest plugin and work with
@@ -6,7 +6,17 @@ pytest 9 on CPython 3.12 in a network-isolated runtime. Use the standard
 library plus the declared `execnet` dependency; the implementation does not
 need native code.
 
-## Project Description
+## Natural Language Instruction
+
+Create the installable `pytest-xdist` distribution from an empty workspace.
+Implement the `xdist` pytest plugin, plugin entry points, worker identity
+fixtures, option parsing, local `popen` execution, scheduler classes, and
+hook specifications described below. Preserve pytest-compatible collection,
+exit statuses, worker reports, deterministic scheduling, and the explicit
+offline boundary. External SSH/socket transports and interactive-only behavior
+are not required for the local contract.
+
+## Task Scope
 
 `pytest-xdist` extends pytest with distributed and subprocess test execution.
 The main user interface is the installed `xdist` plugin: pytest discovers it
@@ -32,6 +42,30 @@ absolute paths, or an SSH server during ordinary local execution.
 - Keep ordinary runs offline. `-n0` or no distribution option must run tests in
   the controller process; `-n1`, `-n2`, and `--tx=popen` must create the
   requested subprocess workers and return pytest's normal exit status.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── src/
+│   └── xdist/
+│       ├── __init__.py
+│       ├── plugin.py
+│       ├── newhooks.py
+│       ├── workermanage.py
+│       └── scheduler/
+│           ├── __init__.py
+│           ├── each.py
+│           ├── load.py
+│           └── worksteal.py
+└── README.rst
+```
+
+Register the plugin through the `pytest11` entry point in `pyproject.toml`.
+The module tree must match the public import paths below. Optional extras may
+remain optional; do not put evaluator or upstream test files in the generated
+workspace.
 
 ## API Usage Guide
 
@@ -128,3 +162,33 @@ Do not hard-code the host CPU count or make test ordering depend on wall-clock
 time. Keep collection deterministic and preserve pytest exit codes. A normal
 single-process run must not import optional `psutil`, `filelock`, or
 `setproctitle` unless the corresponding feature is used.
+
+## Examples
+
+```python
+from xdist.plugin import parse_numprocesses
+parse_numprocesses("2")  # 2
+parse_numprocesses("auto")  # "auto"
+```
+
+```bash
+pytest -n0 tests
+pytest -n1 --dist=load tests
+```
+
+```python
+def test_identity(worker_id, testrun_uid):
+    assert worker_id
+    assert testrun_uid
+```
+
+## Error Handling and Boundary Conditions
+
+- Invalid process counts, ramp durations, and incompatible `--pdb` usage must
+  raise pytest usage errors rather than silently changing modes.
+- `-n0` runs in the controller process; distributed modes must not duplicate a
+  test node id and must tolerate a worker exiting during a run.
+- Collection-only mode must not start workers. Local no-network execution must
+  not attempt SSH, socket, DNS, registry, or external service access.
+- Worker identity comes from pytest configuration, not machine hostname or a
+  mutable global counter.

@@ -1,65 +1,126 @@
-# Introduction and Goals of the Commons Text Project
+## Project Description
 
-Apache Commons Text is a Java library for deterministic text processing and
-similarity utilities. This task focuses on the self-contained
-`HammingDistance` value calculator in `org.apache.commons.text.similarity`.
-Create a normal single-module Maven project from an empty workspace and expose
-the documented public API without external runtime dependencies.
+Create a small, offline Java Maven project that recreates the bounded public
+contract of Apache Commons Text's Hamming-distance value calculator. The
+project is intended for callers that need a deterministic count of positional
+UTF-16 character mismatches between two equal-length text sequences.
 
-## Natural Language Instruction (Prompt)
+The deliverable is a normal Maven project rooted at `workspace/`. It has one
+production class, one public package, and no third-party runtime dependency.
+The implementation must be usable from another Java class through the exact
+package and method signatures described in the API Usage Guide.
 
-Create a Java Maven project named Commons Text. Implement the public
-`HammingDistance` class described below. The project must compile with Java 21,
-use the exact package name, and keep production code under `src/main/java`.
-Do not copy the upstream project, add unrelated Commons Text classes, or use
-network access at build or run time.
+The supported behavior is deliberately narrow. Implement the public
+`org.apache.commons.text.similarity.HammingDistance` class, its public no-arg
+constructor, and its public `apply` method. Do not add unrelated Commons Text
+classes, alternate package names, a command-line interface, persistence,
+logging, network access, or an extra dependency. The requested result is an
+`Integer` mismatch count, not a code-point-aware similarity score or a
+normalized distance.
 
-## Environment Configuration
+### Natural Language Instruction
 
-### Core Dependency Library Versions
+Starting from an empty workspace, create the Maven project shown below and
+implement the documented HammingDistance API. Use Java 21 source-compatible
+code and the exact package name. The candidate project must remain buildable
+offline: its POM is metadata-only and must not require downloading a library,
+plugin, parent, repository, profile, extension, or module.
 
-```Plain
-Temurin JDK 21.0.12+8       # compiler and runtime
-Maven 3.9.11                # offline metadata validation
-Linux amd64 / glibc         # fixed platform
-Runtime dependencies: none  # java.lang and java.lang internals only
-Network access: unavailable  # candidate and verifier execution is offline
-```
+The implementation must satisfy these capabilities:
 
-The candidate `pom.xml` is metadata only. It may contain the model version,
-coordinates, and packaging, but must not contain dependencies, plugins,
-profiles, repositories, modules, extensions, or custom build instructions.
+1. Expose `org.apache.commons.text.similarity.HammingDistance` as a public
+   class with a public no-argument constructor.
+2. Expose `public Integer apply(CharSequence left, CharSequence right)` with
+   the exact parameter and return types.
+3. Compare corresponding UTF-16 `char` values in order and return the number
+   of positions that differ.
+4. Reject null arguments and unequal lengths with
+   `IllegalArgumentException`, while accepting equal empty sequences and any
+   other equal-length `CharSequence` implementation.
 
-## Commons Text Project Architecture
+Do not copy an upstream repository or reproduce implementation source in the
+instruction. Keep production code under
+`src/main/java/org/apache/commons/text/similarity/`. A candidate `pom.xml` is
+required even though the public API has no external dependencies.
+
+## Supports
+
+### Runtime and build environment
+
+Use the following fixed environment and project identity:
+
+| Item | Required value |
+| --- | --- |
+| Language | Java |
+| Java runtime | Temurin JDK 21.0.12+8 |
+| Package manager | Maven 3.9.11 |
+| Platform | Linux amd64 with glibc |
+| Maven project | One module rooted at `workspace/` |
+| Runtime dependencies | None beyond the Java platform |
+| Network policy | No network during agent, candidate, verifier, Oracle, or control execution |
+
+The implementation may use `java.lang` and other JDK-provided types needed by
+the declared signatures. It must not add Commons Text, Apache Commons, test,
+logging, or other third-party dependencies to the candidate project. The
+metadata POM may declare ordinary coordinates such as group, artifact, and
+version, but it must not introduce a parent, dependency, repository, plugin,
+profile, extension, module, or custom build instruction.
 
 ### Project Directory Structure
 
-```Plain
+The required public project has this shape. `workspace/` is the project root,
+not an extra directory nested inside the candidate workspace.
+
+```text
 workspace/
 ├── pom.xml
-└── src/main/java/org/apache/commons/text/similarity/HammingDistance.java
+└── src/
+    └── main/
+        └── java/
+            └── org/
+                └── apache/
+                    └── commons/
+                        └── text/
+                            └── similarity/
+                                └── HammingDistance.java
 ```
 
-Use a single Maven module and the exact public class and package above. No
-generated sources or test implementation is required in the candidate project.
+`pom.xml` is the Maven project descriptor. The only public production source
+file required by this task is
+`src/main/java/org/apache/commons/text/similarity/HammingDistance.java`.
+The directory and filename are case-sensitive. Do not place the class in the
+default package, under a different `org.apache` package, or in a generated
+source tree. No CLI entry point, resource directory, service descriptor, or
+application configuration file is part of this task.
+
+### Build and installation boundary
+
+The project should be recognizable as a standard single-module Maven project
+and should validate with the available offline toolchain. A minimal POM is
+sufficient. Maven metadata must not cause a run-time download. The class is
+consumed as a library; it does not need a `main` method and must not read
+standard input or write files.
 
 ## API Usage Guide
 
-### Core APIs
+The public API surface is intentionally limited to one class and two public
+members. The exact import path and signatures below are the contract. Package
+private helpers are allowed only when they do not change this public surface;
+no additional public class or public method is required.
 
-#### HammingDistance class
+### `org.apache.commons.text.similarity.HammingDistance`
 
-Import the class as follows:
+Import the class with:
 
 ```java
 import org.apache.commons.text.similarity.HammingDistance;
 ```
 
-Construct an instance with:
+This is a stateless value calculator. Constructing it does not retain input,
+perform I/O, inspect the environment, use randomness, or mutate global state.
+Repeated calls on the same instance are independent and deterministic.
 
-```java
-HammingDistance distance = new HammingDistance();
-```
+#### Constructor
 
 Signature:
 
@@ -67,93 +128,145 @@ Signature:
 public HammingDistance()
 ```
 
-The constructor has no arguments, has no observable state, and does not
-perform I/O or mutate global state.
+The constructor accepts no parameters and returns a new
+`HammingDistance` instance. It has no checked or unchecked failure condition
+for ordinary construction and has no observable side effect. The normal use
+is:
 
-#### apply(CharSequence, CharSequence)
+```java
+HammingDistance distance = new HammingDistance();
+```
+
+An edge use is also valid because the instance has no configuration:
+
+```java
+Integer distance = new HammingDistance().apply("", "");
+// distance is 0
+```
+
+#### `apply(CharSequence, CharSequence)`
 
 Signature:
 
 ```java
-public Integer apply(CharSequence left, CharSequence right)
+public Integer apply(final CharSequence left, final CharSequence right)
 ```
 
-Both arguments must be non-null `CharSequence` values of exactly the same
-length. The method compares corresponding positions using
-`CharSequence.charAt(int)` and returns an `Integer` equal to the number of
-positions whose UTF-16 `char` values differ. Ordering is positional and
-deterministic; duplicate characters count independently. The input sequences
-are read only and never modified.
+The `left` and `right` parameters are required, non-null `CharSequence`
+values. Their `length()` values must be equal before comparison begins. The
+method accepts `String`, `StringBuilder`, `StringBuffer`, or another
+well-behaved `CharSequence` implementation; callers are not restricted to
+two `String` objects.
 
-Examples:
+The return type is the boxed type `Integer`. Its value is the number of
+indexes `i` in the range `0` inclusive through `left.length()` exclusive for
+which `left.charAt(i)` and `right.charAt(i)` are different. Equal positions do
+not contribute to the count. The result is always between zero and the common
+UTF-16 length, inclusive.
+
+Comparison is positional and deterministic. The method observes each input
+through `length()` and `charAt(int)` and does not modify either object. It
+does not trim whitespace, normalize case, apply locale rules, compare
+grapheme clusters, or compare Unicode code points. Supplementary characters
+are therefore considered through their two UTF-16 code units, as required by
+the `CharSequence.charAt` contract.
+
+For a normal one-mismatch call:
+
+```java
+HammingDistance distance = new HammingDistance();
+Integer result = distance.apply("karolin", "karnlin");
+// result is 1
+```
+
+For an equal-length `CharSequence` other than `String`:
+
+```java
+Integer result = new HammingDistance().apply(
+    new StringBuilder("abc"), new StringBuilder("axc"));
+// result is 1; neither builder is changed
+```
+
+For equal values and all differing values:
+
+```java
+new HammingDistance().apply("same", "same"); // 0
+new HammingDistance().apply("abc", "xyz");   // 3
+```
+
+For the empty boundary:
+
+```java
+new HammingDistance().apply("", ""); // 0
+```
+
+If either argument is `null`, the method throws
+`IllegalArgumentException`. Null is not treated as an empty sequence and the
+method must not return a sentinel value. If the lengths differ, the method
+also throws `IllegalArgumentException`; it must not truncate to the common
+prefix, pad either value, or silently return a partial count. For example:
+
+```java
+new HammingDistance().apply("ab", "abc"); // IllegalArgumentException
+new HammingDistance().apply(null, "abc"); // IllegalArgumentException
+```
+
+The contract does not require a particular exception message. No checked
+exception is declared by the signature. Exceptions raised by a hostile,
+custom `CharSequence` implementation while its `length()` or `charAt(int)` is
+called are not converted into a different API contract; ordinary inputs must
+follow the validation and return behavior above.
+
+### Unsupported public surface
+
+There is no task-defined static convenience method, CLI command, file format,
+serialization contract, configuration object, distance-normalization API,
+or network integration. Do not invent public methods for these concerns. A
+class or entry point not described above is not confidently bindable to this
+bounded task contract and should be omitted from the public implementation.
+
+## Implementation Notes
+
+### Contract and validation constraints
+
+Validate the two references and their lengths before attempting to count
+positions. Both null and unequal-length cases must use
+`IllegalArgumentException`. Equal empty sequences are valid. The returned
+`Integer` must represent the mismatch count without exposing a primitive-only
+replacement signature.
+
+The two arguments are read-only from the caller's perspective. In particular,
+an implementation must not call mutating methods on a mutable
+`CharSequence`, retain a reference for later calls, or cache a result in
+global state. The class should remain safe to reuse sequentially with
+different pairs of inputs.
+
+### Determinism and character semantics
+
+The result depends only on the current sequence contents and their order. Do
+not use locale, system time, randomness, filesystem state, environment
+variables, thread scheduling, or network services. Treat the sequence as
+UTF-16 code units: a supplementary Unicode character is not a special
+single-element case for this API.
+
+Small verifiable examples include:
 
 ```java
 new HammingDistance().apply("1011101", "1011111"); // 1
-new HammingDistance().apply("karolin", "kerstin"); // 3
 new HammingDistance().apply("", "");                 // 0
-new HammingDistance().apply("abc", new StringBuilder("axc")); // 1
+new HammingDistance().apply("abc", "abc");           // 0
+new HammingDistance().apply("abc", "abd");           // 1
 ```
 
-If either argument is `null`, throw `IllegalArgumentException`. If the two
-sequences have different lengths, throw `IllegalArgumentException`; do not
-truncate, pad, or compare only the common prefix. A sequence containing a
-Unicode supplementary character is compared by its UTF-16 code units, as
-required by `CharSequence.charAt`, rather than by code points.
+Boundary checks should additionally exercise a null left value, a null right
+value, and unequal lengths, confirming `IllegalArgumentException` in each
+case. An equal-length `StringBuilder` pair should produce the same positional
+count as equivalent strings and remain unchanged after the call.
 
-### Actual Usage Modes
+### Maven and repository constraints
 
-Use the instance method for equal-length identifiers, fixed-width records,
-binary-as-text samples, or any other pair of `CharSequence` values. A mutable
-implementation such as `StringBuilder` is accepted through the interface but
-must not be changed. Calling the method repeatedly on the same instance with
-the same inputs returns the same result.
-
-### Supported Function Types
-
-The supported behavior is limited to constructing `HammingDistance` and
-computing the positional mismatch count through `apply(CharSequence,
-CharSequence)`. No static helpers, collection APIs, file operations, random
-behavior, locale behavior, or network behavior are part of this task.
-
-### Error Handling
-
-Reject null arguments and unequal lengths with `IllegalArgumentException`.
-The exception type is part of the contract; do not return a sentinel or let a
-null input be treated as an empty sequence. Equal empty sequences are valid
-and return zero. Inputs of equal length, including all-equal and all-different
-values, must return an `Integer` rather than a primitive-only alternate API.
-
-## Detailed Implementation Nodes of Functions
-
-### Node 1: Exact public surface
-
-Provide the public class in
-`org.apache.commons.text.similarity.HammingDistance` with the public no-arg
-constructor and the exact `Integer apply(CharSequence, CharSequence)` method.
-
-### Node 2: Equal-length validation
-
-Validate both references and then compare their lengths before reading any
-character. Unequal lengths must fail with `IllegalArgumentException`.
-
-### Node 3: Positional comparison
-
-Visit each index from zero through `length - 1`, compare the two UTF-16 code
-units at that index, and increment the mismatch count only when they differ.
-
-### Node 4: Determinism and state
-
-Do not mutate either argument, retain input between calls, use locale or
-randomness, or perform I/O. Results depend only on the two current sequences.
-
-### Node 5: Boundary behavior
-
-Cover empty strings, one mismatch, all mismatches, equal strings, mutable
-`CharSequence` inputs, null inputs, unequal lengths, and supplementary
-characters represented by their UTF-16 units.
-
-### Node 6: Offline Maven layout
-
-Use the standard source layout, Java 21, a metadata-only candidate POM, and no
-third-party dependency. The project must remain buildable in a no-network
-environment.
+Keep `pom.xml` minimal and offline-compatible. Do not copy the upstream
+repository, add private verifier material, include test assertions in the
+candidate, or add a dependency merely to provide `CharSequence` behavior.
+The verifier and build environment supply their own checks; the candidate
+only needs the public source layout and API documented here.

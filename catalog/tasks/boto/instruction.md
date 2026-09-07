@@ -1,3 +1,13 @@
+# Project Description
+
+Create the installable `boto3` Python SDK project from an empty workspace.
+This source record is task id `boto`; the public distribution and import
+package are `boto3`. The specification below describes session and client
+construction, resource abstractions, transfer configuration, DynamoDB
+expressions, EC2 tag helpers, exceptions, and documentation utilities. The
+task is not a production AWS service: runtime behavior must be local,
+deterministic, and explicitly bounded by the frozen API contract.
+
 ## Introduction and Goals of the Boto3 Project
 
 Boto3 is the **official Python SDK for Amazon Web Services (AWS)**, providing Python developers with a comprehensive toolkit to interact with AWS cloud services. This library allows developers to write software that can utilize AWS services such as Amazon S3, Amazon EC2, and Amazon DynamoDB, supporting both resource-oriented APIs and low-level service access. Maintained and released by Amazon Web Services, Boto3 offers full coverage of AWS services, including computing, storage, databases, networking, security, artificial intelligence, and other fields. Its core features include: **Creation of AWS service clients** (supporting the instantiation of clients for all AWS services), **Resource-oriented programming** (providing high-level resource abstractions to simplify common operations), **Session management** (unified credential and configuration management), and **Automatic retry and error handling** (built-in fault tolerance mechanisms). In short, Boto3 aims to provide Python developers with a powerful, easy-to-use, and fully functional interface to access AWS cloud services. With a simple `import boto3`, developers can start using various AWS cloud services.
@@ -9152,4 +9162,44 @@ class ResourceHandler:
 # Example: Creating bucket resource from create_bucket response
 # bucket = s3.create_bucket(Bucket='my-bucket')
 # Returns a Bucket resource instance with populated identifiers and data
+
+# Implementation Notes
+
+Preserve the detailed API inventory and signatures above; do not replace
+service, resource, transfer, condition, or documenter families with a small
+stub. Package metadata and import paths must agree with the implementation.
+Client and resource calls must preserve parameter shapes, response mappings,
+exception classes, lazy behavior, and deterministic ordering. Optional CRT
+support may fall back cleanly when unavailable. Agent, candidate, verifier,
+Oracle, and controls run with NoNetwork and must not access AWS, GitHub, PyPI,
+npm, Go proxy, DNS, or external services at runtime.
+
+# Examples
+
+```python
+import boto3
+
+session = boto3.session.Session(region_name="us-east-1")
+assert session.region_name == "us-east-1"
+```
+
+```python
+from boto3.dynamodb.conditions import Attr
+
+condition = Attr("status").eq("ready")
+assert condition is not None
+```
+
+# Error Handling and Boundary Conditions
+
+- Missing credentials, unavailable services, unsupported API versions, and
+  invalid resource operations use the documented boto3 or botocore exception
+  classes rather than generic replacements.
+- Session and client configuration must not silently contact a remote service;
+  endpoint and credential inputs are caller-provided values.
+- Optional CRT transfer behavior returns the documented fallback when the
+  optional implementation is absent.
+- Condition expressions preserve operator precedence, parameter names, and
+  deterministic serialization. Resource collections preserve documented lazy
+  iteration and pagination behavior.
 ```

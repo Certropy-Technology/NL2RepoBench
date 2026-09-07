@@ -1,60 +1,36 @@
-## Introduction and Objectives of the pytest-cov Project
+# pytest-cov
 
-pytest-cov is a pytest plugin **for Python test coverage collection and reporting**. It can automatically collect code coverage data during test execution and generate reports in multiple formats. This plugin performs excellently in distributed testing environments and can achieve "the highest compatibility and the most comprehensive coverage statistics". Its core functions include: **test coverage collection** (automatically track code execution and record coverage), **multi-format report generation** (support multiple report formats such as terminal, HTML, XML, JSON, and LCOV), and **intelligent support for distributed testing and subprocesses**. In short, pytest-cov is committed to providing a robust code coverage statistics system for evaluating the test quality of Python projects (for example, specify the source code path through the `--cov` parameter and control the report format through the `--cov-report` parameter).
+## Project Description
 
-## Natural Language Instruction (Prompt)
+Build an installable `pytest-cov` project from an empty `workspace/`. The project must reproduce the public, local behavior documented in this instruction, including its package entry points, return shapes, ordering, state changes, and documented exceptions. This is a repository-generation task: the agent creates the build metadata and source modules rather than editing an existing implementation.
 
-Please create a Python project named pytest-cov to implement a test coverage collection and reporting plugin. The project should include the following functions:
+Distribution identity: `pytest-cov`; public import package begins at `pytest_cov`.
+The scope is the deterministic local API described below. Network services, undeclared external state, and behavior not represented by the public contract are outside the task.
 
-1. Coverage engine: Track code coverage during test execution, support multiple running modes (centralized, distributed master node, distributed worker node). Support branch coverage and line coverage statistics and handle coverage collection for subprocesses.
+## Natural Language Instruction
 
-2. Report generation system: Implement the generation of multiple report formats, including terminal reports (term, term-missing), HTML reports, XML reports, JSON reports, LCOV reports, and code annotation reports. Support custom report output paths and report format combinations.
+Create the complete project in an empty workspace and make it installable with the command in the environment section. Implement these task-specific capability families from the local API contract:
 
-3. Distributed testing support: Provide full support for the pytest-xdist distributed testing framework and correctly collect and merge coverage data among multiple worker processes. Handle path mapping and data transmission between different hosts.
+1. `Core API`: expose the documented public entry points, signatures, inputs, outputs, and error behavior.
+2. `1. Module Import`: preserve the documented object or module behavior, including state and side effects.
+3. `2. Coverage plugin for pytest.`: preserve ordering, determinism, serialization, and boundary semantics where specified.
+4. `3. Coverage Control Engine. (Coverage controllers for use by pytest-cov and nose-cov.)`: make the public package usable through the documented import path or command-line entry.
 
-4. Subprocess coverage collection: Automatically initialize subprocess coverage through environment variables and .pth files, support complex process tree structures and signal handling mechanisms.
+Do not add speculative APIs or substitute a different package. Keep the implementation self-contained, ensure imports work after installation, and use the exact public names and signatures in the API Usage Guide. A small implementation is acceptable only when it still satisfies every documented contract.
 
-5. Plugin interface design: Design a complete hook function interface for the pytest framework, supporting all stages of the test lifecycle. Each hook should define a clear trigger timing and processing logic.
+## Supports or Environment Configuration
 
-6. Configuration management system: Provide flexible configuration option management, supporting multiple configuration methods such as command-line parameters, configuration files, and environment variables. Include advanced functions such as coverage threshold checking, precision control, and context tracking.
+- CPython 3.12 on the pinned Linux image.
+- Distribution identity: `pytest-cov`; public import package begins at `pytest_cov`.
+- Install from the workspace with `python -m pip install .`; do not download packages during evaluation.
+- No third-party runtime package is declared by the local task metadata; standard-library support is sufficient unless the API section says otherwise.
+- Build metadata and package data must be present in the workspace and agree with the public import paths below.
+- Agent, candidate, evaluator, Oracle, and control execution are network-isolated. Do not access GitHub, package registries, DNS, databases, or external services at runtime.
+- Use deterministic local inputs. Do not rely on the current wall clock, host-specific absolute paths, undeclared environment variables, or an installed copy of the target package.
 
-7. Core file requirements: The project must include a complete pyproject.toml file, which not only configures the project as an installable package (supporting `pip install`) but also declares a complete list of dependencies (including core libraries such as `pytest>=6.2.5`, `coverage[toml]>=7.5`, `pluggy>=1.2`). The pyproject.toml can verify whether all functional modules work properly. At the same time, it is necessary to provide `src/pytest_cov/__init__.py` as a unified API entry, define exception classes such as `CoverageError`, `PytestCovWarning`, `Central`, `DistMaster`, `DistWorker`, and provide version information, enabling users to access all major functions through simple statements such as  `import pytest_cov.plugin`. In `plugin.py`, there needs to be a `CovPlugin` class as the core plugin entry for pytest, providing complete test lifecycle hook function support. The project will verify its functions through the plugin mechanism of the pytest testing framework, ensuring that coverage data can be correctly collected and reported in various test scenarios.
+## Project Directory Structure
 
-## Environment Configuration
-
-### Python Version
-
-The Python version used in the current project is: Python 3.12.4
-
-### Core Dependency Library Versions
-
-```plain
-# Core testing framework
-pytest>=6.2.5
-coverage[toml]>=7.5
-pluggy>=1.2
-
-# Development and build tools
-setuptools>=30.3.0
-virtualenv>=16.6.0
-pip>=19.1.1
-tox>=4.0.0
-twine>=4.0.0
-
-# Distributed testing support (optional)
-pytest-xdist>=2.5.0
-
-# Testing and development dependencies
-fields>=1.0.0
-hunter>=3.0.0
-process-tests>=1.0.0
-```
-
-## pytest-cov Project Architecture
-
-### Project Directory Structure
-
-```plain
+```text
 workspace/
 ├── .bumpversion.cfg
 ├── .cookiecutterrc
@@ -124,7 +100,11 @@ workspace/
 └── tox.ini
 ```
 
+The tree lists agent-owned public project files only. Add additional public modules when required by the API Usage Guide, but keep their import paths consistent with package metadata. Do not create evaluator-only files, hidden fixtures, or private reports in the generated project.
+
 ## API Usage Guide
+
+The following is the task-specific public contract recovered from the local instruction and inventory. For every function, class, method, constant, export, and command named below, preserve its complete signature, accepted input domain, return type and shape, ordering, determinism, state/side effects, exceptions, and examples. When the source contract gives an optional argument or a compatibility alias, it is part of the required surface.
 
 ### Core API
 
@@ -183,7 +163,7 @@ def validate_report(arg):
 - **Function**: `validate_report(arg)`
 - **Input Parameters**:
   - `arg`: str - The command-line argument string to validate
-- **Output**: 
+- **Output**:
   - **Type**: tuple
   - **Description**: Returns a tuple containing (report_type, modifier_or_file) or raises ArgumentTypeError on validation failure
 
@@ -202,7 +182,7 @@ def validate_fail_under(num_str):
 - **Function**: `validate_fail_under(num_str)`
 - **Input Parameters**:
   - `num_str`: str - The command-line argument string to validate as a coverage threshold
-- **Output**: 
+- **Output**:
   - **Type**: int or float
   - **Description**: Returns the parsed numeric value (int or float) representing the coverage threshold percentage
 
@@ -221,7 +201,7 @@ def validate_context(arg):
 - **Function**: `validate_context(arg)`
 - **Input Parameters**:
   - `arg`: str - The command-line argument string to validate as a coverage context
-- **Output**: 
+- **Output**:
   - **Type**: str
   - **Description**: Returns the validated context string (currently only "test")
 
@@ -308,7 +288,7 @@ def _prepare_cov_source(cov_source):
 - **Function**: `_prepare_cov_source(cov_source)`
 - **Input Parameters**:
   - `cov_source`: list - List of coverage source arguments from command line
-- **Output**: 
+- **Output**:
   - **Type**: None or list
   - **Description**: Returns None for "measure everything" or a list of specific source paths
 
@@ -552,7 +532,7 @@ def no_cover():
 - **Function**: `no_cover()`
 - **Decorator**: `@pytest.fixture` - Makes this function available as a pytest fixture
 - **Input Parameters**: None
-- **Output**: 
+- **Output**:
   - **Type**: None
   - **Description**: Returns None (the fixture itself is used for its presence, not its return value)
 
@@ -618,7 +598,7 @@ def _backup(obj, attr):
 - **Input Parameters**:
   - `obj`: Any object - The object whose attribute needs to be backed up
   - `attr`: str - The name of the attribute to backup (as a string)
-- **Output**: 
+- **Output**:
   - **Type**: Context manager generator
   - **Description**: Yields control to the code block within the `with` statement, then restores the original attribute value
   - **Return Value**: None (context manager doesn't return a value)
@@ -640,7 +620,7 @@ class _NullFile:
 - **Method**: `write(v)`
 - **Input Parameters**:
   - `v`: Any type - The value to be written (discarded)
-- **Output**: 
+- **Output**:
   - **Type**: `None`
   - **Description**: No return value, performs no operation
 
@@ -662,7 +642,7 @@ def _ensure_topdir(meth):
 - **Type**: Decorator function
 - **Input Parameters**:
   - `meth`: Callable - The method to be decorated
-- **Output**: 
+- **Output**:
   - **Type**: `ensure_topdir_wrapper` function
   - **Description**: A wrapper function that preserves the original method's metadata and behavior while adding working directory management
 
@@ -673,14 +653,14 @@ def _ensure_topdir(meth):
   - `self`: CovController instance - The instance of the coverage controller
   - `*args`: Variable positional arguments - Passed through to the original method
   - `**kwargs`: Variable keyword arguments - Passed through to the original method
-- **Output**: 
+- **Output**:
   - **Type**: Same as the decorated method's return type
   - **Description**: Returns the result of the original method execution
 
 
 #####**CovController Class** - Base Class for Coverage Controllers:
 
-**Use Method**: 
+**Use Method**:
 ```python
 from .engine import CovController
 ```
@@ -792,7 +772,7 @@ from . import engine
 # Usage: engine.Central
 ```
 ```python
-class Central(CovController):              
+class Central(CovController):
 ```
 
 **Main Methods**:
@@ -1965,3 +1945,136 @@ source = mod
     )
     assert result.ret == 0
 ```
+
+## Implementation Notes
+
+- Keep the root exports and module paths stable after installation; do not make behavior depend on the repository's current directory.
+- Preserve explicit ordering guarantees. When the contract does not promise an order, do not introduce a new observable order accidentally.
+- Propagate documented exceptions and avoid replacing them with generic errors. Validate malformed, empty, boundary, and repeated inputs as described by the API contract.
+- Keep filesystem, process, terminal, and resource effects bounded and local. Close files and other resources on both success and failure.
+- Do not copy an upstream checkout, implementation source, or evaluation-only material into the generated project. Implement the public behavior from this specification.
+
+## Examples
+
+The examples below are retained from the local task specification. They are starting points for ordinary calls and boundary/error behavior; their exact output and exception semantics remain governed by the API Usage Guide.
+
+### Example 1: ordinary usage
+```text
+# Core testing framework
+pytest>=6.2.5
+coverage[toml]>=7.5
+pluggy>=1.2
+
+# Development and build tools
+setuptools>=30.3.0
+virtualenv>=16.6.0
+pip>=19.1.1
+tox>=4.0.0
+twine>=4.0.0
+
+# Distributed testing support (optional)
+pytest-xdist>=2.5.0
+
+# Testing and development dependencies
+fields>=1.0.0
+hunter>=3.0.0
+process-tests>=1.0.0
+```
+
+### Example 2: ordinary usage
+```text
+workspace/
+├── .bumpversion.cfg
+├── .cookiecutterrc
+├── .editorconfig
+├── .gitignore
+├── .pre-commit-config.yaml
+├── .readthedocs.yml
+├── .taplo.toml
+├── AUTHORS.rst
+├── CHANGELOG.rst
+├── CONTRIBUTING.rst
+├── LICENSE
+├── README.rst
+├── SECURITY.md
+├── ci
+│   ├── bootstrap.py
+│   ├── requirements.txt
+│   ├── templates
+│   │   └── .github
+│   │       └── workflows
+│   │           └── test.yml
+├── docs
+│   ├── authors.rst
+│   ├── changelog.rst
+│   ├── conf.py
+│   ├── config.rst
+│   ├── contexts.rst
+│   ├── contributing.rst
+│   ├── debuggers.rst
+│   ├── index.rst
+│   ├── markers-fixtures.rst
+│   ├── plugins.rst
+│   ├── readme.rst
+│   ├── releasing.rst
+│   ├── reporting.rst
+│   ├── requirements.txt
+│   ├── spelling_wordlist.txt
+│   ├── subprocess-support.rst
+│   ├── tox.rst
+│   └── xdist.rst
+├── examples
+│   ├── README.rst
+│   ├── adhoc-layout
+│   │   ├── .coveragerc
+│   │   ├── example
+│   │   │   └── __init__.py
+│   │   ├── setup.py
+│   │   ├── tests
+│   │   │   └── test_example.py
+│   │   └── tox.ini
+│   ├── src-layout
+│   │   ├── .coveragerc
+│   │   ├── setup.py
+│   │   ├── src
+│   │   │   ├── example
+│   │   │   │   └── __init__.py
+│   │   ├── tests
+│   │   │   └── test_example.py
+│   │   └── tox.ini
+├── pyproject.toml
+├── pytest.ini
+├── src
+│   ├── pytest_cov
+│   │   ├── __init__.py
+│   │   ├── engine.py
+│   │   └── plugin.py
+└── tox.ini
+```
+
+### Example 3: boundary or error behavior
+```text
+import pytest_cov.plugin
+
+from . import CentralCovContextWarning
+from . import DistCovError
+
+from . import CovDisabledWarning
+from . import CovReportWarning
+from . import PytestCovWarning
+from .engine import CovController
+```
+
+### Example 4: boundary or error behavior
+```text
+COVERAGE_SQLITE_WARNING_RE = re.compile('unclosed database in <sqlite3.Connection object at', re.I)
+```
+
+
+## Error Handling and Boundary Conditions
+
+- Empty inputs, invalid types, malformed text or paths, unavailable resources, duplicate calls, and cancellation/timeout cases must follow the exception and return-value contracts documented for the relevant API.
+- Do not silently coerce values, reorder results, swallow exceptions, or use a fallback dependency unless the API section explicitly requires that behavior.
+- File and environment operations must use caller-provided paths and documented defaults only; never read undeclared host files or network resources.
+- The implementation must remain usable in the stated NoNetwork environment. A missing optional integration should expose the documented availability or error behavior rather than attempting an online install.
+- Security-sensitive inputs must be treated as data. Do not execute strings, load untrusted code, or interpolate shell commands unless that behavior is explicitly part of the documented public API.

@@ -4,7 +4,15 @@ Recreate `own-keys` version `1.0.2` as a CommonJS npm package. The package
 exports one function that returns all own property keys of an object, including
 non-enumerable string keys and symbol keys, in JavaScript property-key order.
 
-# Supports
+# Natural Language Instruction
+
+Build `own-keys` as a complete CommonJS npm package from an empty workspace.
+Expose one callable unary root function that returns all own property keys in
+modern ECMAScript order, including non-enumerable names and symbols. Preserve
+proxy behavior, getter safety, source immutability, package metadata, and the
+exact dependency closure.
+
+# Supports or Environment Configuration
 
 - Run on Node.js `24.19.0` with npm `11.17.0` on Linux x86-64.
 - Create the package in the workspace root. `package.json` must declare:
@@ -25,7 +33,26 @@ non-enumerable string keys and symbol keys, in JavaScript property-key order.
   filesystem input, network services, current time, random state, or mutable
   process-global configuration.
 
+# Project Directory Structure
+
+```text
+workspace/
+├── package.json       # CommonJS metadata, exports, and dependencies
+├── package-lock.json  # npm lockfile version 3
+├── index.js           # callable ownKeys root implementation
+└── index.d.ts         # TypeScript signature for ownKeys
+```
+
+Runtime JavaScript must be present before installation. There is no CLI,
+build step, lifecycle script, loader, or native addon.
+
 # API Usage Guide
+
+Import path: the callable package root. ESM/CommonJS interop can load it as:
+
+```js
+import ownKeys from 'own-keys';
+```
 
 ## `ownKeys(source) => Array<string | symbol>`
 
@@ -71,5 +98,36 @@ returns a fresh array.
 
 The contract is the package root on the pinned modern Node runtime. Historical
 fallback behavior on pre-ES2015 engines, browser bundling, CLI behavior, and
-source retrieval are outside the task. Do not copy or fetch the upstream
-implementation; implement the documented behavior locally.
+ source retrieval are outside the task. Do not copy or fetch the upstream
+ implementation; implement the documented behavior locally.
+
+# Examples
+
+```js
+const ownKeys = require('own-keys');
+const hidden = Symbol('hidden');
+const value = {visible: 1};
+Object.defineProperty(value, 'internal', {value: 2, enumerable: false});
+value[hidden] = 3;
+ownKeys(value); // ['visible', 'internal', hidden]
+```
+
+```js
+ownKeys(['a', 'b']); // ['0', '1', 'length']
+ownKeys(Object.create(null)); // []
+```
+
+```js
+const proxy = new Proxy({a: 1}, {ownKeys: () => ['a']});
+ownKeys(proxy); // ['a']
+```
+
+# Error Handling and Boundary Conditions
+
+- `null`, `undefined`, and primitive values throw `TypeError` on Node
+  `24.19.0`.
+- Include integer-index names first, ordinary names next, and symbols last;
+  preserve valid proxy trap order.
+- Do not invoke getters or mutate descriptors, prototypes, or the input object.
+- Invalid proxy own-key results propagate the runtime `TypeError`.
+- The package performs no filesystem, clock, random, DNS, or network access.

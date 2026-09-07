@@ -1,5 +1,12 @@
 # Build `dot-prop`
 
+```text
+workspace/
+├── package.json
+├── package-lock.json
+└── index.js
+```
+
 ## Project Description
 
 Create a complete installable npm package named `dot-prop`, version `10.2.0`,
@@ -100,8 +107,53 @@ non-object input returns a new empty object.
 - Preserve insertion order for `deepKeys`, JavaScript property semantics for
   inherited reads, and deterministic return shapes.
 - The evaluator invokes the package through a separate child process and JSON
-  adapter. Do not assume trusted verifier code can import candidate files
+  adapter. Do not assume evaluation code can import candidate files
   directly, and do not write verifier-owned reports from the package.
 - Installation is offline and lifecycle scripts are ignored. Do not run
   `npm install`, `npm ci`, `git clone`, `curl`, or `wget` as part of the package
   implementation or evaluation behavior.
+
+## Natural Language Instruction
+
+Create `dot-prop` from an empty workspace. Implement nested property access,
+mutation, deletion, path conversion, deep-key enumeration, and unflattening
+with the security and cyclic-input behavior specified below. Keep named ESM
+exports and avoid runtime dependencies.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── index.js
+└── index.d.ts
+```
+
+`index.js` is the ESM package root and exports all nine named functions.
+`index.d.ts` mirrors their JSON-facing signatures. No CLI, generated source,
+or private evaluation file belongs in the project.
+
+## Examples
+
+```js
+import {getProperty, setProperty} from 'dot-prop';
+
+const value = {user: {name: 'Ada'}};
+setProperty(value, 'user.active', true);
+getProperty(value, 'user.name');
+```
+
+```js
+import {parsePath, stringifyPath} from 'dot-prop';
+
+const parts = parsePath('users[0].name');
+stringifyPath(parts);
+```
+
+## Error Handling and Boundary Conditions
+
+Reject prototype-pollution components without mutating the object. Missing
+properties, sparse-array holes, invalid paths, primitives, cyclic graphs, and
+empty inputs follow the API contracts above. Helpers must remain deterministic
+and must not access a filesystem or network.

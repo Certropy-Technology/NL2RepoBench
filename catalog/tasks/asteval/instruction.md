@@ -1,8 +1,8 @@
-## Introduction and Goals of the asteval Project
+# Project Description
 
 asteval is a **safe expression evaluator** Python library designed to parse and execute Python expressions in a restricted and secure manner. It is based on Python's AST (Abstract Syntax Tree) module, which converts user-input expressions into ASTs and evaluates them in a custom symbol table and a controlled environment, avoiding the security risks associated with direct use of `eval` or `exec`. This tool supports most Python expression syntax, including arithmetic operations, logical operations, variable assignment, list/dictionary/set operations, function definition and call, control flow (such as if, for, while), exception handling, etc. asteval also allows for the extension of the symbol table, supports custom functions and variables, and can integrate scientific computing libraries like numpy.
 
-## Natural Language Instruction (Prompt)
+# Natural Language Instruction
 
 Please create a Python project named asteval to implement a safe expression evaluation library. The project should include the following features:
 
@@ -28,7 +28,7 @@ Please create a Python project named asteval to implement a safe expression eval
 
 11. Core File Requirements: The project must include a complete pyproject.toml file to configure the project as an installable package (supporting pip install), declare a complete list of dependencies (such as numpy>=1.20.0, numpy_financial>=1.0.0, pytest>=6.0.0, pytest-cov>=2.0.0, coverage>=5.0.0, etc.). The project should include asteval/__init__.py as a unified API entry, exporting core classes and functions such as Interpreter, make_symbol_table, NameFinder, and get_ast_names, and provide version information, allowing users to access all major functions through a simple "from asteval/asteval.astutils import **" statement.In astutilits.cy, a fallback mechanism of attempting to import and failing to downgrade is required to handle numpy errors.
 
-## Environment Configuration
+# Supports
 
 ### Python Version
 
@@ -36,52 +36,36 @@ The Python version used in the current project is: Python 3.11.7
 
 ### Core Dependency Library Versions
 
-```Plain
-iniconfig  2.1.0
-numpy      2.3.3
-packaging  25.0
-pip        23.2.1
-pluggy     1.6.0
-Pygments   2.19.2
-pytest     8.4.1
-setuptools 65.5.1
-wheel      0.42.0 
-```
+    iniconfig  2.1.0
+    numpy      2.3.3
+    packaging  25.0
+    pip        23.2.1
+    pluggy     1.6.0
+    Pygments   2.19.2
+    pytest     8.4.1
+    setuptools 65.5.1
+    wheel      0.42.0
 
 ## asteval Project Architecture
 
-### Project Directory Structure
 
-```python
+## NoNetwork boundary
+
+Agent, candidate, verifier, Oracle, controls, and normal runtime execution are network-isolated. Do not access GitHub, package registries, Go proxies, DNS, or external services during execution; use only the frozen local build inputs.
+
+# Project Directory Structure
+
+```text
 workspace/
-├── .codecov.yml
-├── .gitattributes
-├── .gitignore
-├── INSTALL
-├── LICENSE
-├── MANIFEST.in
-├── README.rst
-├── asteval
-│   ├── __init__.py
-│   ├── asteval.py
-│   ├── astutils.py
-├── doc
-│   ├── Makefile
-│   ├── _static
-│   │   ├── empty
-│   ├── _templates
-│   │   ├── indexsidebar.html
-│   ├── api.rst
-│   ├── basics.rst
-│   ├── conf.py
-│   ├── index.rst
-│   ├── installation.rst
-│   ├── motivation.rst
-└── pyproject.toml
-
+├── pyproject.toml
+└── asteval/
+    ├── __init__.py
+    ├── asteval.py
+    ├── astutils.py
+    └── version.py
 ```
 
-## API Usage Guide
+# API Usage Guide
 
 ### Core API
 
@@ -1220,7 +1204,7 @@ OPERATORS = {ast.Is: lambda a, b: a is b,
 - `ReturnedNone`: Empty() type, representing cases that return None
 - `__all__`: Module export list, containing ['Interpreter', 'NameFinder', 'valid_symbol_name', 'make_symbol_table', 'get_ast_names', '__version__']
 
-## Detailed Implementation Nodes of Functions
+# Implementation Notes
 
 ### Node 1: Basic Expression Evaluation
 
@@ -2426,3 +2410,39 @@ os.unlink(temp_file.name)
 assert execution_time < 1.0  # The execution time should be within a reasonable range
 print("Performance and resource management tests passed")
 ```
+
+# Examples
+
+## Ordinary expression evaluation
+
+```python
+from asteval import Interpreter
+
+interpreter = Interpreter()
+assert interpreter("2 + 3 * 4") == 14
+```
+
+## Ordinary symbol table
+
+```python
+interpreter = Interpreter(usersyms={"scale": 3})
+assert interpreter("scale * 5") == 15
+```
+
+## Boundary: captured error
+
+```python
+result = interpreter("1 / 0")
+assert interpreter.error
+```
+
+## Boundary: restricted attribute
+
+```python
+interpreter("().__class__.__bases__")
+assert interpreter.error
+```
+
+# Error Handling and Boundary Conditions
+
+Reject invalid inputs using the documented exception or error result. Preserve empty-input behavior, ordering, Unicode/encoding behavior, cancellation or timeout semantics, and local filesystem boundaries where the API specifies them. Never turn a failed local operation into a network request, subprocess, or silent success.

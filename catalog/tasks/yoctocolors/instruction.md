@@ -6,6 +6,19 @@ formatters. Each formatter either wraps text in a fixed ANSI SGR opening and
 closing sequence or acts as a no-op when the current process does not support
 colors.
 
+# Natural Language Instruction
+
+Create the `yoctocolors` package from an empty `workspace/`. Implement the
+dependency-free ESM formatter surface, exact ANSI opening/closing sequences,
+color capability detection, nested-style preservation, package exports, and
+TypeScript declarations described below. Preserve all 61 named formatter
+functions and the equivalent default namespace object.
+
+Formatting must be synchronous, deterministic after module evaluation, and
+free of filesystem, subprocess, clock, randomness, and network behavior. The
+runtime must honor forced color modes and preserve input coercion and style
+group boundaries.
+
 # Supports
 
 - Node.js `24.19.0`, npm `11.17.0`, Linux amd64, and ESM package semantics.
@@ -33,6 +46,22 @@ colors.
   color capability. `FORCE_COLOR=1` must enable styles in a non-TTY child;
   `FORCE_COLOR=0` must disable them. When color is disabled, every formatter is
   a no-op and returns its input unchanged.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── index.js
+├── index.d.ts
+├── base.js
+└── base.d.ts
+```
+
+The package root is the only public export path. `index.js` and `index.d.ts`
+re-export the matching runtime and declaration surfaces from `base.js` and
+`base.d.ts`; there is no CLI or public subpath.
 
 # API Usage Guide
 
@@ -140,3 +169,39 @@ underlineRed(underlineCurly('typo'));
 - The evaluator imports the installed package in bounded UID-isolated child
   processes under both forced-color modes. Candidate code is never imported
   into the trusted verifier process.
+
+# Examples
+
+```js
+import {bold, green, red} from 'yoctocolors';
+
+const message = bold(green('ready'));
+const failure = red('failed');
+```
+
+```js
+import colors from 'yoctocolors';
+
+console.log(colors.cyan('status'), colors.bgBlack('terminal'));
+```
+
+```bash
+FORCE_COLOR=1 node -e "import('yoctocolors').then(({yellow}) => console.log(yellow('on')))"
+FORCE_COLOR=0 node -e "import('yoctocolors').then(({yellow}) => console.log(yellow('off')))"
+```
+
+# Error Handling and Boundary Conditions
+
+- Every formatter accepts a string according to its TypeScript signature and
+  applies JavaScript string coercion at runtime. Empty strings are still
+  wrapped when color output is enabled.
+- When color support is disabled, every formatter returns its input unchanged;
+  `FORCE_COLOR=1` and `FORCE_COLOR=0` override the non-TTY default as specified.
+- Nested formatters preserve outer styles by reopening after an inner closing
+  sequence. Foreground, background, underline shape, and underline color close
+  with their independent SGR reset codes.
+- The default namespace and named exports must remain in exact agreement. An
+  import or formatting failure must not contact a registry or silently spawn a
+  helper process.
+- Agent, candidate, verifier, Oracle, controls, and runtime execution are
+  NoNetwork.

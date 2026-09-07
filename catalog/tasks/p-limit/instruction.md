@@ -1,54 +1,48 @@
-# Build `p-limit`
+# p-limit
 
 ## Project Description
 
-Create an installable npm package named `p-limit`, version `7.3.1`, from an
-empty workspace. The package limits the number of concurrently executing
-promise-returning or synchronous functions while preserving each call's
-result, rejection, arguments, and asynchronous execution context.
+Build an installable `p-limit` project from an empty `workspace/`. The project must reproduce the public, local behavior documented in this instruction, including its package entry points, return shapes, ordering, state changes, and documented exceptions. This is a repository-generation task: the agent creates the build metadata and source modules rather than editing an existing implementation.
 
-This task scores the complete public runtime API through deterministic,
-bounded concurrency scenarios. It does not require the upstream benchmark,
-lint configuration, AVA tests, or development dependencies. Do not copy
-upstream source or tests into the generated repository.
+Distribution/package identity: `p-limit`; root module entry is the package entry documented below.
+The scope is the deterministic local API described below. Network services, undeclared external state, and behavior not represented by the public contract are outside the task.
 
-## Supports
+## Natural Language Instruction
 
-- Run on Node `24.19.0` with npm `11.17.0` on `linux/amd64`.
-- `package.json` must name version `7.3.1`, use `"type": "module"`, and expose
-  a safe in-package ESM root entry plus its TypeScript declaration entry.
-- The root entry has a default export named `pLimit` and a named export
-  `limitFunction`.
-- Declare `yocto-queue` as the sole runtime dependency, pinned to `1.2.1` in a
-  v3 `package-lock.json`. Declare no npm scripts or development dependencies.
-- A clean verifier must be able to run:
+Create the complete project in an empty workspace and make it installable with the command in the environment section. Implement these task-specific capability families from the local API contract:
 
-  ```bash
-  npm ci --offline --ignore-scripts --no-audit --no-fund
-  ```
+1. `pLimit`: expose the documented public entry points, signatures, inputs, outputs, and error behavior.
+2. `limitFunction`: preserve the documented object or module behavior, including state and side effects.
+3. `p-limit`: preserve ordering, determinism, serialization, and boundary semantics where specified.
+4. `root exports`: make the public package usable through the documented import path or command-line entry.
 
-- Do not use lifecycle hooks, workspaces, native addons, custom loaders,
-  registry configuration, network access, browser globals, random state, or
-  wall-clock timing to determine queue behavior.
+Do not add speculative APIs or substitute a different package. Keep the implementation self-contained, ensure imports work after installation, and use the exact public names and signatures in the API Usage Guide. A small implementation is acceptable only when it still satisfies every documented contract.
 
-## Bounded Execution Contract
+## Supports or Environment Configuration
 
-The verifier never imports candidate code into its trusted test process. It
-starts a bounded child process that imports the installed package and constructs
-allowlisted task scenarios inside that child. Requests are JSON objects of at
-most 64 KiB, use at most 16 tasks, and use finite concurrency from 1 through 8
-except for the explicit positive-infinity case. Responses are JSON objects of
-at most 256 KiB.
+- Node.js 24.19.0 with npm 11.17.0.
+- Distribution/package identity: `p-limit`; root module entry is the package entry documented below.
+- Install from the workspace with `npm install --offline` using the declared lockfile.
+- Declared build/runtime packages are supplied by the frozen evaluation image: `yocto-queue==1.2.1`
+- Build metadata and package data must be present in the workspace and agree with the public import paths below.
+- Agent, candidate, evaluator, Oracle, and control execution are network-isolated. Do not access GitHub, package registries, DNS, databases, or external services at runtime.
+- Use deterministic local inputs. Do not rely on the current wall clock, host-specific absolute paths, undeclared environment variables, or an installed copy of the target package.
 
-No source text, executable strings, user callbacks, functions, symbols,
-BigInts, cyclic objects, custom prototypes, or accessors cross this boundary.
-Task values and forwarded arguments are recursively composed of JSON null,
-booleans, finite numbers, strings, arrays, and ordinary objects. The child
-constructs only identity/result functions, controlled promises, synchronous or
-asynchronous failures, arithmetic mappers, and async-context checks described
-below.
+## Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── index.js
+├── index.d.ts
+```
+
+The tree lists agent-owned public project files only. Add additional public modules when required by the API Usage Guide, but keep their import paths consistent with package metadata. Do not create evaluator-only files, hidden fixtures, or private reports in the generated project.
 
 ## API Usage Guide
+
+The following is the task-specific public contract recovered from the local instruction and inventory. For every function, class, method, constant, export, and command named below, preserve its complete signature, accepted input domain, return type and shape, ordering, determinism, state/side effects, exceptions, and examples. When the source contract gives an optional argument or a compatibility alias, it is part of the required surface.
 
 ### `pLimit`
 
@@ -136,7 +130,6 @@ function share its limiter; separate returned functions do not share state.
 Apply the same option validation, result, rejection, and async-context behavior
 as `pLimit`.
 
-## Implementation Notes
 
 Queue transitions and output ordering must be deterministic. Releasing,
 rejecting, clearing, or changing the limit must never make `activeCount`
@@ -146,3 +139,56 @@ suite. It replaces timing and randomness with controlled promises while
 retaining constructor validation, queue state, ordering, errors, mapping,
 dynamic concurrency, clear behavior, argument forwarding, `limitFunction`,
 and AsyncLocalStorage coverage.
+
+## Implementation Notes
+
+- Keep the root exports and module paths stable after installation; do not make behavior depend on the repository's current directory.
+- Preserve explicit ordering guarantees. When the contract does not promise an order, do not introduce a new observable order accidentally.
+- Propagate documented exceptions and avoid replacing them with generic errors. Validate malformed, empty, boundary, and repeated inputs as described by the API contract.
+- Keep filesystem, process, terminal, and resource effects bounded and local. Close files and other resources on both success and failure.
+- Do not copy an upstream checkout, implementation source, or evaluation-only material into the generated project. Implement the public behavior from this specification.
+
+## Examples
+
+The examples below are retained from the local task specification. They are starting points for ordinary calls and boundary/error behavior; their exact output and exception semantics remain governed by the API Usage Guide.
+
+### Example 1: ordinary usage
+```text
+npm ci --offline --ignore-scripts --no-audit --no-fund
+```
+
+### Example 2: ordinary usage
+```text
+type Options = {
+  readonly concurrency: number;
+  readonly rejectOnClear?: boolean;
+};
+
+export default function pLimit(concurrency: number | Options): LimitFunction;
+```
+
+### Example 3: boundary or error behavior
+```text
+limit(function_, ...arguments_): Promise<ReturnType>
+```
+
+### Example 4: boundary or error behavior
+```text
+readonly activeCount: number;
+readonly pendingCount: number;
+concurrency: number;
+clearQueue(): void;
+map<Input, ReturnType>(
+  iterable: Iterable<Input>,
+  mapperFunction: (input: Input, index: number) => PromiseLike<ReturnType> | ReturnType
+): Promise<ReturnType[]>;
+```
+
+
+## Error Handling and Boundary Conditions
+
+- Empty inputs, invalid types, malformed text or paths, unavailable resources, duplicate calls, and cancellation/timeout cases must follow the exception and return-value contracts documented for the relevant API.
+- Do not silently coerce values, reorder results, swallow exceptions, or use a fallback dependency unless the API section explicitly requires that behavior.
+- File and environment operations must use caller-provided paths and documented defaults only; never read undeclared host files or network resources.
+- The implementation must remain usable in the stated NoNetwork environment. A missing optional integration should expose the documented availability or error behavior rather than attempting an online install.
+- Security-sensitive inputs must be treated as data. Do not execute strings, load untrusted code, or interpolate shell commands unless that behavior is explicitly part of the documented public API.

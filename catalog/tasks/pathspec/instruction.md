@@ -5,6 +5,14 @@ using Git-style wildcard rules. It must be a real package with a PEP 517 build,
 the package layout and public behavior described below, and no network or
 external-service behavior during import or normal use.
 
+## Natural Language Instruction
+
+Create the installable `pathspec` project from an empty `workspace/`. Implement
+the root exports, pattern compilation, Git wildmatch and Git ignore precedence,
+path matching, deterministic filesystem traversal, registration helpers, and
+the documented data classes. Keep matching local and deterministic; optional
+native backends and external services are outside the required project.
+
 # Supports
 
 - Support CPython 3.9 and newer, with the evaluation runtime using Python 3.12.
@@ -14,7 +22,27 @@ external-service behavior during import or normal use.
 - Implement the always-available `simple` matching backend. Optional native
   `re2` and `hyperscan` backends are outside this task and must not be required.
 - Do not clone, download, invoke a package manager, or contact a service during
-  evaluation. Candidate dependencies are available only from the build image.
+evaluation. Candidate dependencies are available only from the build image.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+└── pathspec/
+    ├── __init__.py
+    ├── pattern.py
+    ├── patterns/
+    │   ├── __init__.py
+    │   └── gitwildmatch.py
+    ├── util.py
+    ├── spec.py
+    └── py.typed
+```
+
+The package root re-exports the names documented below. `pathspec.pattern` and
+`pathspec.patterns.gitwildmatch` provide the corresponding compiled pattern
+classes, while `pathspec.util` contains filesystem and registration helpers.
 
 # API Usage Guide
 
@@ -115,3 +143,38 @@ examples in the API must be deterministic and local. Preserve iterator laziness
 where the API returns an iterator, last-rule-wins matching, original path
 objects in result iterators, and normal Python exceptions rather than silently
 coercing invalid inputs.
+
+## Examples
+
+```python
+from pathspec import GitIgnoreSpec, PathSpec
+
+spec = PathSpec.from_lines('gitwildmatch', ['*.pyc', '!keep.py'])
+spec.match_file('build.pyc')  # True
+```
+
+```python
+from pathspec import GitIgnoreSpec
+
+ignore = GitIgnoreSpec.from_lines(['build/', '!build/keep.txt'])
+ignore.match_file('build/tmp.o')  # True
+ignore.match_file('build/keep.txt')  # False
+```
+
+```python
+from pathspec.util import normalize_file, register_pattern
+
+normalize_file('./src\\main.py')  # 'src/main.py'
+register_pattern('local', lambda value: None, override=True)
+```
+
+## Error Handling and Boundary Conditions
+
+- Invalid wildmatch syntax and unsupported pattern inputs raise the documented
+  `TypeError` or `GitWildMatchPatternError`; they are not silently treated as
+  literal matches.
+- `check_file` preserves the original path and reports the last matching rule;
+  matching methods preserve input order and lazy iterator behavior.
+- Filesystem traversal remains within the requested root. A subdirectory that
+  escapes that root raises `ValueError`, and ancestor cycles raise the public
+  `RecursionError` with its path metadata.

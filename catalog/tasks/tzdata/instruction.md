@@ -9,6 +9,13 @@ The implementation must be self-contained in the repository and install with
 the build tools already present in the environment. Runtime code must not
 download, generate, or look up time zone data from the network.
 
+# Natural Language Instruction
+
+Create the installable `tzdata` resource package from an empty workspace.
+Provide the frozen IANA zone manifest, TZif hierarchy, ancillary files, version
+constants, and standard-library `zoneinfo` fallback behavior below. Keep every
+resource local and byte-stable.
+
 # Supports
 
 - CPython 3.12 and ordinary PEP 517 installation with
@@ -37,6 +44,21 @@ download, generate, or look up time zone data from the network.
 - Standard-library fallback behavior: after `zoneinfo.reset_tzpath([])`,
   `zoneinfo.available_timezones()` equals the set of names in
   `tzdata/zones`, and `zoneinfo.ZoneInfo(key)` loads those package resources.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+└── tzdata/
+    ├── __init__.py
+    ├── zones
+    └── zoneinfo/
+        ├── __init__.py
+        ├── America/
+        ├── Europe/
+        └── tzdata.zi
+```
 
 # API Usage Guide
 
@@ -124,6 +146,28 @@ contract. Offset values are shown in seconds; `fold` is the final column.
 The 2026c-specific future rules are significant: Alberta remains at UTC-06
 after the modeled 2026-11-01 abbreviation change, while Morocco and Western
 Sahara move from UTC+01 to permanent UTC at 2026-09-20 02:00 local time.
+
+# Examples
+
+```python
+import tzdata
+
+assert tzdata.__version__ == "2026.3"
+assert tzdata.IANA_VERSION == "2026c"
+```
+
+```python
+from importlib.resources import files
+
+assert (files("tzdata") / "zones").read_text().splitlines()
+```
+
+# Error Handling and Boundary Conditions
+
+Zone names are case-sensitive slash-separated keys. Missing or malformed TZif
+resources follow normal `importlib.resources` errors, and an unknown key must
+raise `zoneinfo.ZoneInfoNotFoundError`; no fallback may silently access the
+host's zoneinfo tree.
 
 # Implementation Notes
 

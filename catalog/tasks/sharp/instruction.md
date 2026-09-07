@@ -1,6 +1,4 @@
-# Build `sharp`
-
-## Project Description
+# Project Description
 
 Create an installable npm package named `sharp`, version `0.35.3`, from an
 empty workspace. It is a CommonJS-and-ESM image processing package backed by
@@ -10,69 +8,51 @@ deterministic transforms, buffer encoders, and parameter errors.
 
 Reproduce the specified observable behavior with your own package files. This
 is repository generation, not a request to retrieve the pinned upstream source
-or hidden tests.
+
+## Natural Language Instruction
+
+Create `sharp` from an empty workspace as a complete installable node project. Implement
+the public operations, data or state behavior, input validation, deterministic ordering, and
+error contracts documented below. Keep package metadata, root exports, module imports, and any
+subpath entry points consistent across files. Implement the behavior rather than hard-coding the
+examples, and do not retrieve or copy a reference implementation.
+
+The finished repository must install from its root, expose every documented API family, preserve
+the specified side effects and resource lifecycle, and remain usable in a fresh process.
 
 ## Supports
 
-- Run on Node `24.19.0`, npm `11.17.0`, `linux/amd64`, and glibc.
-- Use `"type": "commonjs"` and expose the package root through exactly this
-  dual-mode map:
+- Package/distribution name: `sharp`. Primary import or package entry: `sharp`.
+- Node.js 24.19.0 and npm 11.17.0 on Linux amd64.
+- Install from `workspace/` using `npm ci --offline --ignore-scripts --no-audit --no-fund`.
+- Declared dependency closure: @img/colour, @img/sharp-libvips-linux-x64, @img/sharp-linux-x64, detect-libc, semver. Standard-library modules are not dependencies.
+- Build requirements are supplied before execution; do not add undeclared dependencies,
+  registry overrides, download hooks, or source-fetch steps.
+- Agent, candidate, verifier, Oracle, and controls use `network_mode=no-network`. Runtime access
+  to GitHub, PyPI, npm, the Go proxy, DNS, and external services is forbidden.
+- The declared test framework is `node:test`. A fixed collection
+  contains `31` cases when that value is frozen in metadata;
+  test implementation details are not part of the package surface.
 
-  ```json
-  {
-    "main": "./dist/index.cjs",
-    "types": "./dist/index.d.mts",
-    "exports": {
-      ".": {
-        "import": {
-          "types": "./dist/index.d.mts",
-          "default": "./dist/index.mjs"
-        },
-        "require": {
-          "types": "./dist/index.d.cts",
-          "default": "./dist/index.cjs"
-        }
-      }
-    }
-  }
-  ```
+## Project Directory Structure
 
-- Both root modes export the callable `sharp` constructor as their default
-  value. `require("sharp")` returns the function directly; ESM default import
-  returns the same API.
-- Include only `dist` in the package `files` list. Include runtime JavaScript
-  and both `.d.cts` and `.d.mts` declarations. Do not require a build step
-  after installation.
-- Set `engines.node` to `>=20.9.0`, `license` to `Apache-2.0`, and
-  `config.libvips` to `>=8.18.3`.
-- Include a v3 `package-lock.json` that agrees with `package.json`. Pin exactly
-  these five runtime dependencies:
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── index.js
+├── index.d.ts
+└── lib/
+    ├── constructor.js
+    ├── input.js
+    ├── operation.js
+    ├── output.js
+    └── utility.js
+```
 
-  ```json
-  {
-    "@img/colour": "1.1.0",
-    "@img/sharp-libvips-linux-x64": "1.3.2",
-    "@img/sharp-linux-x64": "0.35.3",
-    "detect-libc": "2.1.2",
-    "semver": "7.8.5"
-  }
-  ```
-
-  The verifier owns an integrity-checked npm cache and runs:
-
-  ```bash
-  npm ci --offline --ignore-scripts --no-audit --no-fund
-  ```
-
-- The two `@img/sharp-*` packages are the only native/platform dependencies.
-  They are fixed to Linux x64 glibc and installed by the verifier with scripts
-  disabled. Do not add a native binary, `binding.gyp`, prebuild directory,
-  install hook, download helper, or another platform package to your package.
-- Do not add `preinstall`, `install`, `postinstall`, `prepare`, `prepublish`,
-  `prepublishOnly`, `publish`, or `postpublish` scripts. Do not use workspaces,
-  custom loaders, registry configuration, or network access.
-- Do not add hidden tests, a grader, reward files, Oracle files, npm cache
-  bytes, credentials, or private verifier material to the candidate repository.
+This is the required public project shape. Additional implementation modules are allowed only
+when they support the documented API; evaluation, source-fetch, and private runtime files are
+not agent-owned project files.
 
 ## API Usage Guide
 
@@ -122,9 +102,8 @@ The constructor exposes:
 - `concurrency()` returning a positive integer; and
 - `simd()` returning a boolean.
 
-These utility calls are synchronous. The verifier starts a fresh bounded child
-process for each call, so mutable global tuning state is not transported
-between scored calls.
+These utility calls are synchronous. Keep mutable tuning state explicit and
+avoid relying on unrelated process-global state between calls.
 
 ### `metadata()`
 
@@ -230,13 +209,12 @@ Preserve the upstream distinction among `TypeError`, `RangeError`, and ordinary
 `Error` where specified by the API. Exact wording is checked only for the
 documented sharp parameter phrase, such as `Expected positive integer for width`.
 
-## JSON Boundary and Determinism
+### JSON Boundary and Determinism
 
-The verifier-owned adapter maps JSON create/raw records to real `Buffer` and
 sharp calls. Raw bytes cross as lowercase hexadecimal. Successful metadata and
-output info cross as plain JSON; encoded buffers cross only as a bounded prefix
-and SHA-256 receipt. Errors cross as bounded name/message records. The adapter
-is not a candidate CLI or export requirement.
+output information must remain representable through the documented public
+return values. Errors should retain their documented names and messages; no
+additional CLI or export is required.
 
 Inputs are limited to JSON null, booleans, finite numbers, strings, arrays, and
 plain objects. Functions, callbacks, streams, paths, URLs, BigInts, symbols,
@@ -244,7 +222,7 @@ custom prototypes, cycles, file handles, and arbitrary native handles are
 outside the scored transport. Each call runs as UID 10001 with a 30-second
 timeout, bounded output, no network, and no inherited loader/proxy settings.
 
-## Production Slice
+### Production Slice
 
 The frozen 31-leaf `node:test` slice covers package and dependency shape,
 runtime versions/capabilities, static utilities, create/raw metadata, exact raw
@@ -253,3 +231,48 @@ input behavior. The full upstream suite is authoring evidence, not the scored
 denominator: on the frozen Node/libvips runtime it collected 1,822 leaves and
 passed 1,820; its two environment-sensitive failures concern animated GIF page
 limiting and TIFF SUBIFD decoding outside this public production slice.
+
+## Implementation Notes
+
+Preserve all public return shapes, ordering, state transitions, and exception contracts described above. Keep installation metadata and public imports consistent and deterministic.
+
+Use the public language semantics described by each API family. Keep repeated calls deterministic
+unless state mutation is explicitly part of the contract. Public re-exports and declarations must
+match runtime behavior, and installation must not rely on a repository checkout or network access.
+
+## Examples
+
+The API-specific examples above are normative demonstrations of ordinary behavior. These four
+local snippets also provide ordinary and boundary-oriented calls without external services:
+
+```javascript
+const sharp = require("sharp");
+// or: import sharp from "sharp";
+```
+
+```javascript
+sharp(options?: SharpOptions): Sharp
+sharp(input?: SharpInput | SharpInput[], options?: SharpOptions): Sharp
+```
+
+```javascript
+metadata(): Promise<Metadata>
+```
+
+```javascript
+await sharp({ create: { width: 3, height: 2, channels: 3, background: "red" } }).metadata()
+// includes {format: "raw", width: 3, height: 2, space: "srgb",
+//           channels: 3, depth: "uchar", hasAlpha: false,
+//           hasProfile: false, isProgressive: false}
+```
+
+## Error Handling and Boundary Conditions
+
+Empty values, malformed values, unsupported types, exhausted inputs, invalid options, and missing
+local resources must follow the API-specific contracts above. Preserve documented exception types
+and messages where they are stated. Do not silently coerce an unsupported value merely to produce
+a result, and do not mutate caller-owned data unless the relevant API explicitly promises it.
+
+All filesystem, process, terminal, clock, randomness, and service interactions are forbidden unless
+the API guide explicitly includes that local behavior. Even for an API that models remote or async
+work, evaluation must remain bounded, deterministic, and disconnected from public networks.

@@ -6,20 +6,48 @@ lazy `six.moves` package. This task targets the Python 3 behavior of the API on
 CPython 3.12; Python 2 does not need to be available in the execution
 environment.
 
-# Supports
+## Natural Language Instruction
 
-- Python 3.12 on 64-bit Linux.
-- Root installation with `pip`. The distribution is named `six`, its version is
-  `1.17.0`, and it has no runtime dependencies.
-- A top-level `six.py` module. Importing it must also make `six` act as a package
-  so imports such as `six.moves.queue`, `six.moves.urllib_parse`, and
-  `six.moves.urllib.parse` work.
-- Deterministic, local behavior only. The module must not require network access
-  or external services.
+Create `six` from an empty workspace as a complete installable python project. Implement
+the public operations, data or state behavior, input validation, deterministic ordering, and
+error contracts documented below. Keep package metadata, root exports, module imports, and any
+subpath entry points consistent across files. Implement the behavior rather than hard-coding the
+examples, and do not retrieve or copy a reference implementation.
 
-# API Usage Guide
+The finished repository must install from its root, expose every documented API family, preserve
+the specified side effects and resource lifecycle, and remain usable in a fresh process.
 
-## Version and type constants
+## Supports
+
+- Package/distribution name: `six`. Primary import or package entry: `six`.
+- CPython 3.12 on debian-12-amd64 with pip.
+- Install from `workspace/` using `python -m pip install .`.
+- Declared dependency closure: setuptools==80.10.2. Standard-library modules are not dependencies.
+- Build requirements are supplied before execution; do not add undeclared dependencies,
+  registry overrides, download hooks, or source-fetch steps.
+- Agent, candidate, verifier, Oracle, and controls use `network_mode=no-network`. Runtime access
+  to GitHub, PyPI, npm, the Go proxy, DNS, and external services is forbidden.
+- The declared test framework is `pytest`. A fixed collection
+  contains `21` cases when that value is frozen in metadata;
+  test implementation details are not part of the package surface.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── setup.py
+├── six.py
+└── README.md
+```
+
+This is the required public project shape. Additional implementation modules are allowed only
+when they support the documented API; evaluation, source-fetch, and private runtime files are
+not agent-owned project files.
+
+## API Usage Guide
+
+### Version and type constants
 
 On Python 3.12, `six.__version__` is `"1.17.0"`; `PY2`, `PY3`, and `PY34` are
 respectively `False`, `True`, and `True`. `string_types`, `integer_types`, and
@@ -28,7 +56,7 @@ respectively `False`, `True`, and `True`. `string_types`, `integer_types`, and
 `sys.maxsize`. The module and its `moves` object expose empty `__path__` values
 so Python treats both as packages for import purposes.
 
-## Binary and text helpers
+### Binary and text helpers
 
 `b(data: str) -> bytes` encodes the input with Latin-1. `u(text: str) -> str`
 returns text unchanged. `unichr(codepoint: int) -> str` returns the Unicode
@@ -49,7 +77,7 @@ that are neither text nor bytes raise `TypeError`, and codec errors propagate.
 `StringIO` aliases `io.StringIO` and accepts text. `BytesIO` aliases
 `io.BytesIO` and accepts bytes. Writing bytes to `StringIO` raises `TypeError`.
 
-## Mapping, iterator, and callable helpers
+### Mapping, iterator, and callable helpers
 
 `iterkeys(mapping, **kwargs)`, `itervalues`, and `iteritems` return iterators
 over the corresponding mapping methods and forward keyword arguments.
@@ -61,7 +89,7 @@ return the next item and raise `StopIteration` after exhaustion. `Iterator` is
 a portable base class whose subclasses implement `__next__`. `callable(value)`
 has the same boolean behavior as the Python built-in.
 
-## Function and method accessors
+### Function and method accessors
 
 - `get_unbound_function(method)` returns the underlying function where the
   runtime has unbound methods; on Python 3 it returns the function unchanged.
@@ -75,7 +103,7 @@ has the same boolean behavior as the Python built-in.
   to the instance. `create_unbound_method(function, cls)` returns the original
   function on Python 3, so it still requires an explicit instance argument.
 
-## Execution, printing, and exceptions
+### Execution, printing, and exceptions
 
 `exec_(code, globals=None, locals=None)` executes strings or code objects. With
 one namespace it is used for both globals and locals; with two namespaces,
@@ -92,7 +120,7 @@ object. `raise_from(value, from_value)` implements `raise value from
 from_value`; passing `None` as the source sets `__cause__` to `None`, preserves
 the active exception as `__context__`, and suppresses display of that context.
 
-## Metaclasses and decorators
+### Metaclasses and decorators
 
 `with_metaclass(meta, *bases)` returns a temporary base for a class declaration.
 The resulting class uses `meta`, has exactly the requested bases, and calls the
@@ -113,14 +141,14 @@ attributes are copied, updated mappings are merged, and `__wrapped__` references
 the wrapped callable. A name listed in `updated` must exist on the wrapper;
 otherwise decoration raises `AttributeError`.
 
-## unittest compatibility aliases
+### unittest compatibility aliases
 
 `assertCountEqual(test_case, ...)`, `assertRaisesRegex`, `assertRegex`, and
 `assertNotRegex` delegate to the corresponding Python 3 `unittest.TestCase`
 methods. They preserve normal success behavior and raise `AssertionError` on a
 failed assertion.
 
-## `six.moves`
+### `six.moves`
 
 `six.moves` is a lazy module and package. The following Python 3 mappings are
 required:
@@ -153,7 +181,7 @@ available. Direct imports through `six.moves.urllib.parse` and
 standard Python 3 URL parsing, quoting, joining, request, response, and error
 objects.
 
-## Custom moves
+### Custom moves
 
 `MovedModule(name, old_mod, new_mod=None)` and
 `MovedAttribute(name, old_mod, new_mod, old_attr=None, new_attr=None)` describe
@@ -165,7 +193,7 @@ returns the chosen module or attribute. `remove_move(name)` removes either an
 unresolved descriptor or a resolved cached value. Removing an unknown name
 raises `AttributeError`.
 
-# Implementation Notes
+## Implementation Notes
 
 - Keep candidate imports isolated to the installed candidate module; do not
   depend on another copy of `six` from the environment.
@@ -175,3 +203,43 @@ raises `AttributeError`.
   returning eagerly materialized lists.
 - No behavior in this contract requires external data, a subprocess service, or
   network access.
+
+Use the public language semantics described by each API family. Keep repeated calls deterministic
+unless state mutation is explicitly part of the contract. Public re-exports and declarations must
+match runtime behavior, and installation must not rely on a repository checkout or network access.
+
+## Examples
+
+The API-specific examples above are normative demonstrations of ordinary behavior. These four
+local snippets also provide ordinary and boundary-oriented calls without external services:
+
+```python
+import six
+print(six)
+```
+
+```python
+import six
+# Invoke a documented API using an empty or boundary input.
+```
+
+```python
+import six
+print(six)
+```
+
+```python
+import six
+# Invoke a documented API using an empty or boundary input.
+```
+
+## Error Handling and Boundary Conditions
+
+Empty values, malformed values, unsupported types, exhausted inputs, invalid options, and missing
+local resources must follow the API-specific contracts above. Preserve documented exception types
+and messages where they are stated. Do not silently coerce an unsupported value merely to produce
+a result, and do not mutate caller-owned data unless the relevant API explicitly promises it.
+
+All filesystem, process, terminal, clock, randomness, and service interactions are forbidden unless
+the API guide explicitly includes that local behavior. Even for an API that models remote or async
+work, evaluation must remain bounded, deterministic, and disconnected from public networks.

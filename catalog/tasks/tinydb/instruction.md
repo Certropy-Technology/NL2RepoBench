@@ -12,6 +12,13 @@ CLI, networking, asynchronous access, schema validation, concurrency control,
 third-party serialization formats, documentation tooling, or development-only
 test dependencies.
 
+# Natural Language Instruction
+
+Create the installable `tinydb` package from an empty workspace. Implement the
+document, table, query, storage, middleware, cache, and update-operation
+contracts below. Preserve document IDs, storage order, cache invalidation,
+copy semantics, and the stated exception behavior across modules.
+
 # Supports
 
 - Python 3.12 on Linux.
@@ -28,17 +35,34 @@ test dependencies.
 The top-level package exposes `__version__ == "4.9.0"` and this exact
 `__all__` order:
 
-```python
+~~~python
 ("TinyDB", "Storage", "JSONStorage", "Query", "where")
-```
+~~~
 
 These module-level export tuples are also part of the contract:
 
-```python
+~~~python
 tinydb.storages.__all__ == ("Storage", "JSONStorage", "MemoryStorage")
 tinydb.queries.__all__ == ("Query", "QueryLike", "where")
 tinydb.table.__all__ == ("Document", "Table")
 tinydb.utils.__all__ == ("LRUCache", "freeze", "with_typehint")
+~~~
+
+# Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+└── tinydb/
+    ├── __init__.py
+    ├── database.py
+    ├── middlewares.py
+    ├── operations.py
+    ├── queries.py
+    ├── storages.py
+    ├── table.py
+    ├── utils.py
+    └── py.typed
 ```
 
 # API Usage Guide
@@ -380,3 +404,26 @@ sorted items. Item assignment/deletion, `clear`, `setdefault`, `popitem`,
 - A cached `search` returns a fresh result list, but the `Document` objects in
   it are shared with the cache. Mutating one is visible to the next identical
   cached search until a table write or `clear_cache()` invalidates the cache.
+
+# Examples
+
+```python
+from tinydb import TinyDB
+from tinydb.storages import MemoryStorage
+
+db = TinyDB(storage=MemoryStorage)
+assert db.insert({"name": "Ada"}) == 1
+assert db.all()[0]["name"] == "Ada"
+```
+
+```python
+from tinydb import Query
+
+assert db.search(Query().name == "Ada")[0].doc_id == 1
+```
+
+# Error Handling and Boundary Conditions
+
+Missing selectors raise the specified `RuntimeError`. Duplicate document IDs
+and non-mapping documents raise `ValueError`. JSON storage must truncate stale
+trailing bytes and must never write outside the path supplied by its caller.

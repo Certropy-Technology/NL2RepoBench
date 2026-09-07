@@ -20,6 +20,46 @@ constraint checks, and version collection sorting.
   workspace, an external `replace` directive, network access, or external
   services.
 
+## Natural Language Instruction
+
+Build the pure-Go `github.com/Masterminds/semver/v3` module from an empty
+workspace. Implement version parsing, normalization, comparison, mutation,
+constraints, and collection sorting according to the complete public contract
+below.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── go.mod
+├── go.sum
+├── vendor/modules.txt
+└── version.go
+```
+
+Expose package `semver` at the module root and preserve all constructors,
+methods, options, and error behavior in the API guide. Do not include
+evaluation-only files.
+
+## Examples
+
+```go
+v, err := semver.NewVersion("1.2.3-beta.1+build.4")
+text := v.String()
+```
+
+```go
+constraints, err := semver.NewConstraint(">= 1.0, < 2.0")
+ok := constraints.Check(v)
+```
+
+## Error Handling and Boundary Conditions
+
+Handle malformed core, prerelease, metadata, overflow, invalid increments,
+constraint operators, wildcard/hyphen ranges, prerelease exclusion, and empty
+collections as documented. Metadata must not alter precedence, and no network
+or mutable global state is allowed.
+
 ## API Usage Guide
 
 Implement package `semver` at import path

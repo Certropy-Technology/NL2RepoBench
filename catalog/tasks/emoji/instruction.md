@@ -1,3 +1,67 @@
+# Project Description
+
+Build the pinned `emoji` Python package from an empty `workspace/`. It converts
+the finite documented emoji name/code data, analyzes matches, and replaces
+Unicode sequences while preserving Python string indexes.
+
+# Natural Language Instruction
+
+Create the installable `emoji` distribution and implement conversion,
+demojization, analysis, replacement, token, version, and configuration APIs in
+the guide below. Preserve variation selectors, skin tones, flags, keycaps, and
+ZWJ sequence behavior from the local contract.
+
+# Supports or Environment Configuration
+
+- Use CPython 3.12, the exact version and build dependency declared in
+  `task.toml`, and no third-party runtime dependency beyond that contract.
+- Package all required conversion data inside the installed `emoji` package.
+- Agent, candidate, verifier, Oracle, and controls run with no network access.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+└── emoji/
+    ├── __init__.py
+    ├── core.py
+    ├── unicode_codes.py
+    ├── tokenizer.py
+    └── py.typed
+```
+
+# API Usage Guide
+
+The detailed API Usage Guide below is authoritative for public imports,
+signatures, match shapes, indexes, and options.
+
+# Implementation Notes
+
+Treat documented multi-codepoint sequences as one match while preserving the
+underlying Python index convention. Identical inputs and options are stable.
+
+# Examples
+
+```python
+import emoji
+emoji.emojize(':thumbs_up:')
+```
+
+```python
+emoji.demojize('I 👍')
+```
+
+# Error Handling and Boundary Conditions
+
+```python
+emoji.emojize(':missing:', strict=False)
+```
+
+```python
+emoji.analyze('👩🏽‍💻')
+```
+
 # Emoji 2.15.0
 
 ## Project Description

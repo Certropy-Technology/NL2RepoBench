@@ -30,6 +30,62 @@ not a live Google Cloud client or a transport integration.
   `TERM=dumb`, and `CI=true`. Do not sleep or depend on the current time in
   ordinary helper behavior.
 
+## Natural Language Instruction
+
+Create the installable `google-api-core` distribution from an empty workspace.
+Implement the local metadata/options, datetime and path helpers, exception and
+universe selection, retry/timeout, protobuf/page iteration, and version-header
+surfaces listed below. Preserve import paths, typed message behavior, and
+deterministic serialization.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+└── google/
+    └── api_core/
+        ├── __init__.py
+        ├── client_info.py
+        ├── client_options.py
+        ├── datetime_helpers.py
+        ├── exceptions.py
+        ├── page_iterator.py
+        ├── path_template.py
+        ├── protobuf_helpers.py
+        ├── rest_helpers.py
+        ├── retry.py
+        ├── timeout.py
+        ├── universe.py
+        ├── version_header.py
+        └── py.typed
+```
+
+Every module named in the API guide must be importable under
+`google.api_core`; optional transport dependencies must not break deterministic
+imports. Do not include private evaluation files.
+
+## Examples
+
+```python
+from google.api_core import datetime_helpers, path_template
+stamp = datetime_helpers.to_rfc3339(datetime_helpers.utcnow())
+name = path_template.expand('v1/{name=projects/*}', name='projects/demo')
+```
+
+```python
+from google.api_core import rest_helpers
+pairs = rest_helpers.flatten_query_params({'filter': {'state': ['A', 'B']}})
+```
+
+## Error Handling and Boundary Conditions
+
+Preserve UTC/offset and nanosecond handling, path traversal rejection, missing
+fields, strict flattening errors, HTTP/gRPC status mapping, universe mismatch,
+retry predicates, injected-clock timeouts, protobuf type checks, page exhaustion,
+and optional-import behavior. No runtime request, credential lookup, DNS, or
+network access is allowed.
+
 ## API Usage Guide
 
 ### Package and client metadata

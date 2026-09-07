@@ -1,46 +1,36 @@
-## FastVector Project Introduction and Objectives
+# pythonprojecttemplate
 
-FastVector is a **two-dimensional vector mathematics computation** Python library that can create, manipulate, and compute various mathematical operations on two-dimensional vectors. This tool provides comprehensive vector algebraic operation functionality, including core operations such as vector addition, subtraction, scalar multiplication, dot product, magnitude calculation, etc., supporting application scenarios such as game development, graphics, physics simulation, and more. Its core features include: vector creation and initialization (supporting various numeric types and parameter validation), **vector algebraic operations** (including addition, subtraction, scalar multiplication, dot product operations), as well as advanced mathematical operations such as vector comparison, normalization, projection, etc. In short, FastVector is committed to providing an efficient and easy-to-use two-dimensional vector mathematics computation library for handling various vector-related mathematical problems (for example, creating vectors through Vector2D(x, y), performing vector operations through operators such as +, -, *, etc.).
+## Project Description
 
-## Natural Language Instructions (Prompt)
+Build an installable `pythonprojecttemplate` project from an empty `workspace/`. The project must reproduce the public, local behavior documented in this instruction, including its package entry points, return shapes, ordering, state changes, and documented exceptions. This is a repository-generation task: the agent creates the build metadata and source modules rather than editing an existing implementation.
 
-Please create a Python project named FastVector that implements a two-dimensional vector mathematics computation library. The project should include the following features:
+Distribution identity: `pythonprojecttemplate`; public import package begins at `fastvector`.
+The scope is the deterministic local API described below. Network services, undeclared external state, and behavior not represented by the public contract are outside the task.
 
-1. **Vector Class Design**: Implement a Vector2D class that can represent two-dimensional vectors, supporting initialization with various numeric types (integers, floating-point numbers), including complete parameter validation and type checking mechanisms. The class should provide clear constructors and property access methods.
+## Natural Language Instruction
 
-2. **Vector Algebraic Operations**: Implement complete vector algebraic operations, including vector addition (+), vector subtraction (-), scalar multiplication (*), vector division (/), dot product operations (*), etc. All operations should support floating-point precision and correctly handle edge cases such as zero vectors, negative value vectors, etc.
+Create the complete project in an empty workspace and make it installable with the command in the environment section. Implement these task-specific capability families from the local API contract:
 
-3. **Vector Comparison and Special Methods**: Implement vector comparison operations (==, <, >, etc.) based on vector magnitude comparison. Also implement string representation methods (__repr__, __str__) to provide clear vector display formats. Implement magnitude calculation (abs()) and boolean value conversion.
+1. `Core API`: expose the documented public entry points, signatures, inputs, outputs, and error behavior.
+2. `1. Module Import`: preserve the documented object or module behavior, including state and side effects.
+3. `2. Vector2D Class - Two-dimensional Vector Creation`: preserve ordering, determinism, serialization, and boundary semantics where specified.
+4. `3. Vector Addition Operation - __add__ Method`: make the public package usable through the documented import path or command-line entry.
 
-4. **Error Handling and Type Safety**: Provide comprehensive error handling mechanisms for all operations, including type errors, division by zero errors, unsupported operations, and other exceptional situations. Ensure type safety and prevent operations with incompatible types.
+Do not add speculative APIs or substitute a different package. Keep the implementation self-contained, ensure imports work after installation, and use the exact public names and signatures in the API Usage Guide. A small implementation is acceptable only when it still satisfies every documented contract.
 
-5. **Examples and Test Scripts**: Provide example code and complete test cases demonstrating how to create vectors, perform various operations, handle exceptional situations, etc. Tests should cover all core functionality, edge cases, and error handling.
+## Supports or Environment Configuration
 
-6. **Core File Requirements**: The project must include a comprehensive pyproject.toml file that not only configures the project as an installable package (supporting pip install), but also declares a complete dependency list (including core libraries such as numpy). The pyproject.toml should be able to verify that all functional modules work properly, while providing fastvector/__init__.py as a unified API entry point, importing the Vector2D core class from the vector module, and providing version information, enabling users to access all major functionality through simple "from fastvector import Vector2D" statements. In vector.py, there should be a complete Vector2D class implementation, including all necessary dunder methods.
+- CPython 3.12.14 on the pinned Linux image.
+- Distribution identity: `pythonprojecttemplate`; public import package begins at `fastvector`.
+- Install from the workspace with `python -m pip install .`; do not download packages during evaluation.
+- Declared build/runtime packages are supplied by the frozen evaluation image: `setuptools==80.10.2`, `wheel==0.45.1`, `numpy==2.2.6`
+- Build metadata and package data must be present in the workspace and agree with the public import paths below.
+- Agent, candidate, evaluator, Oracle, and control execution are network-isolated. Do not access GitHub, package registries, DNS, databases, or external services at runtime.
+- Use deterministic local inputs. Do not rely on the current wall clock, host-specific absolute paths, undeclared environment variables, or an installed copy of the target package.
 
-## Environment Configuration
-### Python Version
-The Python version used in the current project is: Python 3.12.14
+## Project Directory Structure
 
-### Core Dependency Library Versions
-
-These are preinstalled in the environment; declare them in `pyproject.toml` but do not
-expect to install anything yourself.
-
-```Plain
-# Core Mathematical Calculation Library
-numpy==2.2.6                     # Numerical Calculation Foundation Library
-
-# Packaging / Build Backend
-setuptools==80.10.2              # Build backend (setuptools.build_meta)
-wheel==0.45.1                    # Wheel builder
-```
-
-## FastVector Project Architecture
-
-### Project Directory Structure
-
-```Plain
+```text
 workspace/
 ├── .editorconfig
 ├── .gitattributes
@@ -60,10 +50,13 @@ workspace/
 │   ├── version.py
 ├── mkdocs.yml
 └── pyproject.toml
-
 ```
 
+The tree lists agent-owned public project files only. Add additional public modules when required by the API Usage Guide, but keep their import paths consistent with package metadata. Do not create evaluator-only files, hidden fixtures, or private reports in the generated project.
+
 ## API Usage Guide
+
+The following is the task-specific public contract recovered from the local instruction and inventory. For every function, class, method, constant, export, and command named below, preserve its complete signature, accepted input domain, return type and shape, ordering, determinism, state/side effects, exceptions, and examples. When the source contract gives an optional argument or a compatibility alias, it is part of the required surface.
 
 ### Core API
 
@@ -390,7 +383,6 @@ The system provides comprehensive error handling mechanisms:
 4. **Comparison Basis**：Vector comparison is based on magnitude, not coordinate values
 5. **Zero Vector Handling**：The magnitude of a zero vector is 0, but all operations can be performed
 
-## Detailed Implementation Nodes
 
 ### Node 1: Vector Creation and Type Validation (Vector Creation and Type Validation)
 
@@ -902,4 +894,79 @@ rotated = rotate(Vector2D(1, 0), math.pi/2)
 assert abs(rotated.x) < 1e-10 and abs(rotated.y - 1) < 1e-10
 rotated = rotate(Vector2D(1, 1), math.pi)
 assert abs(rotated.x + 1) < 1e-10 and abs(rotated.y + 1) < 1e-10
-``` 
+```
+
+## Implementation Notes
+
+- Keep the root exports and module paths stable after installation; do not make behavior depend on the repository's current directory.
+- Preserve explicit ordering guarantees. When the contract does not promise an order, do not introduce a new observable order accidentally.
+- Propagate documented exceptions and avoid replacing them with generic errors. Validate malformed, empty, boundary, and repeated inputs as described by the API contract.
+- Keep filesystem, process, terminal, and resource effects bounded and local. Close files and other resources on both success and failure.
+- Do not copy an upstream checkout, implementation source, or evaluation-only material into the generated project. Implement the public behavior from this specification.
+
+## Examples
+
+The examples below are retained from the local task specification. They are starting points for ordinary calls and boundary/error behavior; their exact output and exception semantics remain governed by the API Usage Guide.
+
+### Example 1: ordinary usage
+```text
+# Core Mathematical Calculation Library
+numpy==2.2.6                     # Numerical Calculation Foundation Library
+
+# Packaging / Build Backend
+setuptools==80.10.2              # Build backend (setuptools.build_meta)
+wheel==0.45.1                    # Wheel builder
+```
+
+### Example 2: ordinary usage
+```text
+workspace/
+├── .editorconfig
+├── .gitattributes
+├── .gitignore
+├── .pre-commit-config.yaml
+├── LICENSE
+├── README.md
+├── codecov.yml
+├── docs
+│   ├── api.md
+│   ├── index.md
+├── examples
+│   ├── main.py
+├── fastvector
+│   ├── __init__.py
+│   ├── vector.py
+│   ├── version.py
+├── mkdocs.yml
+└── pyproject.toml
+```
+
+### Example 3: boundary or error behavior
+```text
+from fastvector import Vector2D
+```
+
+### Example 4: boundary or error behavior
+```text
+@total_ordering
+class Vector2D:
+    def __init__(self, x: float = 0.0, y: float = 0.0) -> None:
+        """Create a instance with the given x and y values.
+
+        Args:
+            x: x-Value.
+            y: y-Value.
+
+        Raises:
+            TypeError: If x or y are not a number.
+        """
+```
+
+
+## Error Handling and Boundary Conditions
+
+- Empty inputs, invalid types, malformed text or paths, unavailable resources, duplicate calls, and cancellation/timeout cases must follow the exception and return-value contracts documented for the relevant API.
+- Do not silently coerce values, reorder results, swallow exceptions, or use a fallback dependency unless the API section explicitly requires that behavior.
+- File and environment operations must use caller-provided paths and documented defaults only; never read undeclared host files or network resources.
+- The implementation must remain usable in the stated NoNetwork environment. A missing optional integration should expose the documented availability or error behavior rather than attempting an online install.
+- Security-sensitive inputs must be treated as data. Do not execute strings, load untrusted code, or interpolate shell commands unless that behavior is explicitly part of the documented public API.

@@ -1,31 +1,48 @@
-# Build `parsy`
+# parsy
 
 ## Project Description
 
-Create a complete, installable Python package named `parsy`. It is a small
-parser-combinator library: users combine parser objects to consume a complete
-string, a byte stream, or a list of tokens and produce a value. A parser must
-be reusable and composable without mutating the parser it was derived from.
+Build an installable `parsy` project from an empty `workspace/`. The project must reproduce the public, local behavior documented in this instruction, including its package entry points, return shapes, ordering, state changes, and documented exceptions. This is a repository-generation task: the agent creates the build metadata and source modules rather than editing an existing implementation.
 
-The implementation starts from an empty workspace. The public package must be
-importable as `parsy`, and the main public API is available from
-`parsy.__init__`. The package has no runtime dependency outside Python's
-standard library.
+Distribution identity: `parsy`; public import package begins at `parsy`.
+The scope is the deterministic local API described below. Network services, undeclared external state, and behavior not represented by the public contract are outside the task.
 
-## Supports
+## Natural Language Instruction
 
-- Support Python 3.9 and newer.
-- Use a `src/parsy/` package layout and provide `pyproject.toml` so
-  `pip install .` works from the project root.
-- Set the package version exposed as `parsy.__version__` to `"2.2"`.
-- Declare no third-party runtime dependencies. Test and documentation tools
-  may be development-only dependencies.
-- Include a concise README with installation, the parser model, and examples
-  of composing parsers. Do not require network access at runtime.
-- Keep public names importable from `parsy`; do not require callers to know
-  private implementation modules.
+Create the complete project in an empty workspace and make it installable with the command in the environment section. Implement these task-specific capability families from the local API contract:
+
+1. `Streams, results, and errors`: expose the documented public entry points, signatures, inputs, outputs, and error behavior.
+2. `Result`: preserve the documented object or module behavior, including state and side effects.
+3. `ParseError`: preserve ordering, determinism, serialization, and boundary semantics where specified.
+4. `Parser`: make the public package usable through the documented import path or command-line entry.
+
+Do not add speculative APIs or substitute a different package. Keep the implementation self-contained, ensure imports work after installation, and use the exact public names and signatures in the API Usage Guide. A small implementation is acceptable only when it still satisfies every documented contract.
+
+## Supports or Environment Configuration
+
+- CPython 3.12.14 on the pinned Linux image.
+- Distribution identity: `parsy`; public import package begins at `parsy`.
+- Install from the workspace with `python -m pip install .`; do not download packages during evaluation.
+- Declared build/runtime packages are supplied by the frozen evaluation image: `iniconfig==2.3.0`, `packaging==26.3`, `pluggy==1.6.0`, `pygments==2.21.0`, `pytest==9.1.1`, `setuptools==80.10.2`, `wheel==0.45.1`
+- Build metadata and package data must be present in the workspace and agree with the public import paths below.
+- Agent, candidate, evaluator, Oracle, and control execution are network-isolated. Do not access GitHub, package registries, DNS, databases, or external services at runtime.
+- Use deterministic local inputs. Do not rely on the current wall clock, host-specific absolute paths, undeclared environment variables, or an installed copy of the target package.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── an/
+│   ├── __init__.py
+│   └── (public modules documented in API Usage Guide)
+```
+
+The tree lists agent-owned public project files only. Add additional public modules when required by the API Usage Guide, but keep their import paths consistent with package metadata. Do not create evaluator-only files, hidden fixtures, or private reports in the generated project.
 
 ## API Usage Guide
+
+The following is the task-specific public contract recovered from the local instruction and inventory. For every function, class, method, constant, export, and command named below, preserve its complete signature, accepted input domain, return type and shape, ordering, determinism, state/side effects, exceptions, and examples. When the source contract gives an optional argument or a compatibility alias, it is part of the required surface.
 
 ### Streams, results, and errors
 
@@ -216,7 +233,6 @@ Expose these parser objects:
   `.become(parser)` installs the target parser exactly once; recursive and
   mutually dependent definitions must then parse using the installed behavior.
 
-## Implementation Notes
 
 - Preserve deterministic ordering in alternatives, enum values, error
   expectations, and sequence outputs.
@@ -235,3 +251,44 @@ Expose these parser objects:
 - Keep tests and examples optional and self-authored. The evaluator supplies
   its own tests; do not depend on evaluator files being present in the agent
   workspace.
+
+## Implementation Notes
+
+- Keep the root exports and module paths stable after installation; do not make behavior depend on the repository's current directory.
+- Preserve explicit ordering guarantees. When the contract does not promise an order, do not introduce a new observable order accidentally.
+- Propagate documented exceptions and avoid replacing them with generic errors. Validate malformed, empty, boundary, and repeated inputs as described by the API contract.
+- Keep filesystem, process, terminal, and resource effects bounded and local. Close files and other resources on both success and failure.
+- Do not copy an upstream checkout, implementation source, or evaluation-only material into the generated project. Implement the public behavior from this specification.
+
+## Examples
+
+The examples below are retained from the local task specification. They are starting points for ordinary calls and boundary/error behavior; their exact output and exception semantics remain governed by the API Usage Guide.
+
+### Example 1: ordinary usage
+```text
+Result(status, index, value, furthest, expected)
+```
+
+### Example 2: ordinary usage
+```text
+Parser(wrapped_fn)
+```
+
+### Example 3: boundary or error behavior
+```text
+Result(status, index, value, furthest, expected)
+```
+
+### Example 4: boundary or error behavior
+```text
+Parser(wrapped_fn)
+```
+
+
+## Error Handling and Boundary Conditions
+
+- Empty inputs, invalid types, malformed text or paths, unavailable resources, duplicate calls, and cancellation/timeout cases must follow the exception and return-value contracts documented for the relevant API.
+- Do not silently coerce values, reorder results, swallow exceptions, or use a fallback dependency unless the API section explicitly requires that behavior.
+- File and environment operations must use caller-provided paths and documented defaults only; never read undeclared host files or network resources.
+- The implementation must remain usable in the stated NoNetwork environment. A missing optional integration should expose the documented availability or error behavior rather than attempting an online install.
+- Security-sensitive inputs must be treated as data. Do not execute strings, load untrusted code, or interpolate shell commands unless that behavior is explicitly part of the documented public API.

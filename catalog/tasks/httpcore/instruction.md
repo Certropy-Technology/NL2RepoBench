@@ -116,3 +116,54 @@ The original project supports optional Trio/AnyIO backends and live integration
 tests. Those are outside this bounded deterministic contract, but importing the
 root package must remain safe when optional packages are absent. Do not use a
 VCS-derived version or require a `.git` directory for installation.
+
+## Natural Language Instruction
+
+Create `httpcore` from an empty workspace. Implement URL/origin/proxy models,
+request and response streams, mock backends, HTTP/1.1 connection and pool
+behavior, synchronous and asynchronous APIs, exception identity, and local
+top-level request helpers. Injected streams are the only I/O boundary.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── httpcore/
+│   ├── __init__.py
+│   ├── _models.py
+│   ├── _exceptions.py
+│   ├── _backends/{__init__.py,mock.py,base.py}
+│   ├── _sync/{connection.py,connection_pool.py,http11.py,interfaces.py}
+│   ├── _async/{connection.py,connection_pool.py,http11.py,interfaces.py}
+│   └── _ssl.py
+└── README.md
+```
+
+The root and documented submodules export the classes named in the API guide.
+Tests, reports, and verifier implementation files are not package files.
+
+## Examples
+
+```python
+from httpcore import URL
+url = URL("https://example.test/path")
+assert bytes(url).startswith(b"https://")
+```
+
+```python
+from httpcore import Origin
+origin = Origin(b"http", b"example.test", 80)
+assert origin.port == 80
+```
+
+## Error Handling and Boundary Conditions
+
+- URL, header, origin, and protocol violations raise documented typed
+  exceptions; malformed or incomplete responses do not become successes.
+- A response stream is one-shot. Reading or iterating it after consumption
+  raises `RuntimeError`; closing is idempotent.
+- Sync methods stay synchronous and async methods return awaitables. Pools
+  discard closed connections and enforce configured limits.
+- Mock examples perform no DNS, socket, proxy, filesystem, or network I/O.
+  All runtime phases use `network_mode=no-network`.

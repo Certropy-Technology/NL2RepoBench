@@ -1,94 +1,301 @@
-# Introduction and Goals of the Jackson Annotations Project
+## Project Description
 
-Jackson Annotations supplies small Java annotations used to declare JSON-facing
-metadata. This task recreates the deterministic creator declaration slice:
-`JsonCreator`, its nested `Mode` enum, and the `JacksonAnnotation` marker.
-It does not implement JSON parsing, serialization, object mapping, or any
-Jackson module outside this annotation metadata.
+Build a small Java Maven project that recreates the bounded annotation metadata
+surface of Jackson Annotations needed by this task. The project is a library,
+not a JSON parser or a data-binding implementation. Its observable behavior is
+the declaration metadata that Java reflection exposes for two annotation types
+and one nested enum.
 
-## Natural Language Instruction (Prompt)
+The target users are Java code that declares creator metadata and tooling that
+reads that metadata through the standard reflection API. A consumer must be
+able to compile source using the package `com.fasterxml.jackson.annotation`,
+inspect retention and target metadata, read the creator mode, and use the four
+creator-mode enum constants.
 
-Create a single-module Java Maven project that provides
-`com.fasterxml.jackson.annotation.JsonCreator` and
-`com.fasterxml.jackson.annotation.JacksonAnnotation`. Recreate the exact
-annotation metadata and nested `JsonCreator.Mode` enum described below. Keep
-implementation source under `src/main/java` and use only the Java standard
-library.
+The bounded public surface is:
 
-## Environment Configuration
+* `com.fasterxml.jackson.annotation.JacksonAnnotation`;
+* `com.fasterxml.jackson.annotation.JsonCreator`;
+* `com.fasterxml.jackson.annotation.JsonCreator.Mode`; and
+* the `mode()` member, enum constants, and standard enum lookup operations
+  described in the API Usage Guide.
 
-### Core Dependency Library Versions
+Do not implement JSON parsing, JSON generation, object mapping, creator
+selection, parameter-name discovery, annotation scanning frameworks, mix-ins,
+serialization, deserialization, or any other Jackson module. A declaration of
+an annotation is the required behavior; the annotation does not invoke a
+constructor or perform an operation when it is read.
+
+### Natural Language Instruction
+
+Create a single-module Java project rooted at `workspace/`. Put production
+source below `src/main/java/com/fasterxml/jackson/annotation/` and provide a
+minimal `pom.xml` that identifies the project as a Maven artifact without
+adding runtime dependencies. Implement the following capabilities:
+
+1. Declare `JacksonAnnotation` as a public marker annotation in the exact
+   package and with the exact runtime retention and annotation-type target
+   described below.
+2. Declare `JsonCreator` as a public annotation in the exact package, mark it
+   with `JacksonAnnotation`, and expose its single `mode()` member with the
+   exact default and return type described below.
+3. Declare the nested public enum `JsonCreator.Mode` with exactly the constants
+   `DEFAULT`, `DELEGATING`, `PROPERTIES`, and `DISABLED`, in that order.
+4. Preserve normal Java annotation and enum reflection behavior, including
+   annotation defaults, target validation by the compiler, enum ordering, and
+   `valueOf` exception behavior.
+
+Use the package names and declarations exactly as specified. Do not rename the
+types, add aliases, add custom constructors, or replace the enum with strings.
+The two annotation declarations must not depend on external libraries. Keep
+all observable behavior deterministic and free of I/O, environment reads,
+time, random numbers, processes, and network access.
+
+## Supports
+
+### Runtime and Build Boundary
+
+The target runtime is Temurin JDK 21.0.12+8 on Linux amd64 with glibc. Use
+Maven 3.9.11 for project metadata and offline validation. The project must
+compile with Java release 21 and must not require a runtime artifact other than
+the JDK.
+
+The candidate project is expected to build in a no-network environment. The
+agent, candidate build, tests, reflection probes, and any supporting scripts
+must not contact GitHub, Maven Central, DNS, or another external service.
+Do not download dependencies during a build or at runtime. The dependency
+closure for the two source files is empty: `java.lang` and
+`java.lang.annotation` are JDK packages, not Maven dependencies.
+
+### Maven Project Contract
+
+Create a single Maven project with a normal `pom.xml`. It may declare the
+project coordinates and Java 21 compiler settings needed to compile the source.
+It must not add application plugins, repositories, profiles, modules,
+extensions, or third-party runtime dependencies. Do not copy the upstream
+Jackson parent POM or introduce a dependency on a published Jackson artifact.
+
+The source tree must compile with a command equivalent to:
 
 ```text
-Temurin JDK 21.0.12+8
-Maven 3.9.11 (offline metadata validation)
-Linux amd64, glibc
-Runtime dependencies: none
-Network access: unavailable during agent, candidate, verifier, Oracle, and control execution
+mvn --offline validate
+mvn --offline -DskipTests package
 ```
 
-The candidate `pom.xml` is metadata only. It must not add dependencies,
-plugins, profiles, repositories, modules, extensions, or custom test commands.
-The verifier compiles the candidate in a separate JVM and owns all grading
-reports.
-
-## Jackson Annotations Project Architecture
+The project has no command-line interface, executable main class, service, or
+configuration file. Users consume the annotations from Java source imports.
 
 ### Project Directory Structure
+
+Use `workspace/` as the project root and keep the public structure aligned
+with the package names in the API Usage Guide:
 
 ```text
 workspace/
 ├── pom.xml
-└── src/main/java/com/fasterxml/jackson/annotation/
-    ├── JacksonAnnotation.java
-    └── JsonCreator.java
+└── src/
+    └── main/
+        └── java/
+            └── com/
+                └── fasterxml/
+                    └── jackson/
+                        └── annotation/
+                            ├── JacksonAnnotation.java
+                            └── JsonCreator.java
 ```
 
-The contract contains only annotation declarations and reflection-visible
-metadata. It does not require a filesystem, network, native library, or an
-external Maven artifact.
+`JacksonAnnotation.java` contains the marker annotation. `JsonCreator.java`
+contains the creator annotation and its nested `Mode` enum. There is no
+required resource directory, executable script, CLI entry point, database, or
+network configuration. Additional tests may exist locally, but they are not a
+public library entry point and must not change the production package layout.
+
+### Supported Function Types
+
+This task supports Java annotation declarations and standard reflection:
+
+* runtime-visible `@Retention` metadata;
+* `@Target` metadata for legal annotation locations;
+* the `@JacksonAnnotation` marker on `JsonCreator`;
+* the `mode()` annotation member and its default value;
+* explicit creator-mode values; and
+* deterministic enum constants, `values()`, and `valueOf(String)` behavior.
+
+There is no supported file format, serialization format, mutable database,
+threaded operation, callback, subprocess, shell integration, or network API.
 
 ## API Usage Guide
 
-### Core APIs
+All types below use the exact package `com.fasterxml.jackson.annotation`.
+Signatures are Java signatures, not pseudocode. The implementation must keep
+the public surface no broader than the declarations documented here.
 
-#### `JacksonAnnotation`
+### `com.fasterxml.jackson.annotation.JacksonAnnotation`
 
-```java
-package com.fasterxml.jackson.annotation;
-
-public @interface JacksonAnnotation
-```
-
-`JacksonAnnotation` is a runtime-retained marker annotation. Its target is
-only `ElementType.ANNOTATION_TYPE`. It declares no members and has no state.
-
-#### `JsonCreator`
+#### Public annotation declaration
 
 ```java
 package com.fasterxml.jackson.annotation;
 
-public @interface JsonCreator {
-    JsonCreator.Mode mode() default JsonCreator.Mode.DEFAULT;
+public @interface JacksonAnnotation {
 }
 ```
 
-`JsonCreator` is itself marked with `@JacksonAnnotation`. It has runtime
-retention and may be applied only to an annotation type, a method, or a
-constructor: `ElementType.ANNOTATION_TYPE`, `ElementType.METHOD`, and
-`ElementType.CONSTRUCTOR`. The sole member has exactly the return type
-`JsonCreator.Mode`, and its default is `Mode.DEFAULT`.
+This is a public marker annotation with no members. It has no constructor, no
+mutable state, no parameters, and no return value. Applying it to an annotation
+type marks that annotation as part of the Jackson annotation family; it does
+not cause the marked annotation to be discovered or executed.
+
+The declaration must have these Java meta-annotations:
+
+* `@Retention(RetentionPolicy.RUNTIME)`, so reflection can read the marker;
+* `@Target(ElementType.ANNOTATION_TYPE)`, so it can annotate annotation types
+  and cannot be applied directly to an ordinary class, method, field, or
+  constructor; and
+* no annotation members beyond the empty marker declaration.
+
+Normal example:
+
+```java
+@JacksonAnnotation
+public @interface CustomCreatorMetadata {
+}
+```
+
+Reflection can then observe the marker on `CustomCreatorMetadata`. The
+annotation itself does not return an object from user code and does not perform
+I/O.
+
+Edge example:
+
+```java
+// This must be rejected by Java compilation because the target is not a type
+// declaration for an annotation.
+// @JacksonAnnotation
+// final class NotAnAnnotation { }
+```
+
+Do not broaden the target merely to make this example compile. The target set
+is part of the public contract.
+
+### `com.fasterxml.jackson.annotation.JsonCreator`
+
+#### Public annotation declaration
+
+```java
+package com.fasterxml.jackson.annotation;
+
+@JacksonAnnotation
+public @interface JsonCreator {
+    public Mode mode() default Mode.DEFAULT;
+}
+```
+
+`JsonCreator` is a public annotation type. It must have runtime retention and
+exactly these targets: `ElementType.ANNOTATION_TYPE`, `ElementType.METHOD`,
+and `ElementType.CONSTRUCTOR`. It must itself be annotated with
+`@JacksonAnnotation`. It has one public annotation member, `mode()`, and no
+other members or mutable state.
+
+The annotation is metadata only. It does not call the annotated constructor or
+factory method, inspect JSON, select a creator, bind properties, or change the
+annotated class. A consumer can read the metadata later through Java
+reflection.
+
+Normal constructor example:
 
 ```java
 import com.fasterxml.jackson.annotation.JsonCreator;
 
-final class Entry {
-    @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-    Entry(String name) { }
+final class UserId {
+    private final String value;
+
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+    UserId(String value) {
+        this.value = value;
+    }
 }
 ```
 
-#### `JsonCreator.Mode`
+The declaration above stores `DELEGATING` as annotation metadata. It does not
+make the constructor callable from outside its normal Java access rules.
+
+Normal factory-method example:
+
+```java
+final class Point {
+    @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
+    public static Point create(int x, int y) {
+        return new Point(x, y);
+    }
+}
+```
+
+The annotation remains a declaration on the method. The implementation does
+not need to implement `Point`, factory invocation, or property binding.
+
+Edge example:
+
+```java
+// This target is invalid because fields are not in JsonCreator's target set.
+// @JsonCreator
+// private String value;
+```
+
+The compiler must reject an invalid target instead of the implementation
+silently accepting it. Do not add `FIELD`, `PARAMETER`, or `TYPE` to the target
+set.
+
+### `JsonCreator.mode()`
+
+#### Public annotation member
+
+The exact public member signature is:
+
+```java
+public abstract com.fasterxml.jackson.annotation.JsonCreator.Mode mode();
+```
+
+The source declaration uses the equivalent nested-type shorthand:
+
+```java
+public Mode mode() default Mode.DEFAULT;
+```
+
+The input domain is an enum constant of `JsonCreator.Mode`, supplied in an
+annotation use. The member accepts no string, integer, null, or arbitrary
+object. Its return type is exactly `JsonCreator.Mode`.
+
+When an annotation use omits `mode`, reflection must report the default
+`JsonCreator.Mode.DEFAULT`:
+
+```java
+@JsonCreator
+public UserId(String value) { }
+
+JsonCreator creator = UserId.class
+    .getDeclaredConstructor(String.class)
+    .getAnnotation(JsonCreator.class);
+JsonCreator.Mode mode = creator.mode();
+// mode is JsonCreator.Mode.DEFAULT
+```
+
+When a use supplies a constant, reflection must return that exact constant:
+
+```java
+@JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
+public Point(int x, int y) { }
+
+// Point's reflected annotation reports Mode.PROPERTIES.
+```
+
+The member has no side effects. Repeated reads of the same annotation instance
+return the same logical enum value. It must not consult environment state,
+perform conversion, or fall back from an invalid value.
+
+### `com.fasterxml.jackson.annotation.JsonCreator.Mode`
+
+#### Public nested enum declaration
 
 ```java
 public enum JsonCreator.Mode {
@@ -99,73 +306,195 @@ public enum JsonCreator.Mode {
 }
 ```
 
-The constants occur in exactly this declaration order. Standard Java enum
-behavior applies: `values()` returns a new array in declaration order;
-`valueOf(String)` returns the exact matching constant and throws
-`IllegalArgumentException` for an unknown name; null input follows normal JDK
-enum behavior. The enum has no additional public methods in this task.
+The nested enum is public and is a member of `JsonCreator`. Its constants must
+be declared in exactly this order and must not have fields, aliases, or custom
+behavior added by the task. The four constants mean:
 
-### Actual Usage Modes
+* `DEFAULT`: leave creator-mode choice to the consumer's normal heuristics;
+* `DELEGATING`: describe a single delegated creator input;
+* `PROPERTIES`: describe creator arguments matched from named properties; and
+* `DISABLED`: represent explicit disabling of a creator declaration.
 
-Use `DEFAULT` when normal creator-selection heuristics should apply,
-`DELEGATING` for a single delegated input, `PROPERTIES` for named creator
-properties, and `DISABLED` to explicitly disable a creator. This task stores
-only the metadata; it does not choose or invoke a constructor.
+These meanings are metadata documentation only. This task does not implement
+the consumer that applies the mode.
 
-### Supported Function Types
+Normal example:
 
-Supported behavior is Java annotation declaration and reflection: retention,
-target set, marker presence, a member default, enum ordering, enum lookup, and
-reading an explicitly supplied `mode`. JSON binding, annotation scanning
-frameworks, parameter-name inference, mix-ins, and serialization rules are
-outside this contract.
+```java
+JsonCreator.Mode selected = JsonCreator.Mode.PROPERTIES;
+assert selected.name().equals("PROPERTIES");
+```
 
-### Error Handling
+Edge example:
 
-`JsonCreator.Mode.valueOf` must reject a name that is not one of the four exact
-constant names with `IllegalArgumentException`. Do not add aliases, change the
-enum order, or silently coerce invalid names. Annotation use outside the
-declared Java target set must be rejected by normal Java compilation.
+```java
+// No fifth mode may be accepted or synthesized.
+JsonCreator.Mode[] modes = JsonCreator.Mode.values();
+assert modes.length == 4;
+```
 
-## Detailed Implementation Nodes of Functions
+### `JsonCreator.Mode.values()`
 
-### Node 1: Marker annotation metadata
+#### Public generated enum method
 
-Declare `JacksonAnnotation` as a no-member annotation with runtime retention
-and annotation-type-only target. Its purpose is metadata marking only.
+The Java compiler supplies this public static method:
 
-### Node 2: Creator annotation metadata
+```java
+public static JsonCreator.Mode[] values();
+```
 
-Declare `JsonCreator` with runtime retention, the three supported targets, and
-the `JacksonAnnotation` marker. It contains exactly one member named `mode`.
+It takes no parameters and returns a new array containing the four constants in
+declaration order: `DEFAULT`, `DELEGATING`, `PROPERTIES`, `DISABLED`. The array
+has length four. The ordering is deterministic and must not depend on locale,
+time, process state, or input data.
 
-### Node 3: Default creator mode
+Normal example:
 
-The `mode()` member returns `JsonCreator.Mode` and defaults to `DEFAULT` when
-an annotation use omits the member.
+```java
+JsonCreator.Mode[] modes = JsonCreator.Mode.values();
+String first = modes[0].name();
+String last = modes[3].name();
+// first is "DEFAULT" and last is "DISABLED"
+```
 
-### Node 4: Creator mode constants
+Edge example:
 
-Expose `DEFAULT`, `DELEGATING`, `PROPERTIES`, and `DISABLED` in that order.
-Do not replace the enum with strings or another type.
+```java
+JsonCreator.Mode[] first = JsonCreator.Mode.values();
+first[0] = JsonCreator.Mode.DISABLED;
+JsonCreator.Mode[] second = JsonCreator.Mode.values();
+// second[0] is still DEFAULT; callers receive an independent enum array.
+```
 
-### Node 5: Explicit mode binding
+Do not return a mutable shared array or reorder the constants.
 
-An annotation use such as `@JsonCreator(mode = Mode.PROPERTIES)` must retain
-the specified enum value so standard Java reflection reads `PROPERTIES`.
+### `JsonCreator.Mode.valueOf(String)`
 
-### Node 6: Enum lookup boundaries
+#### Public generated enum method
 
-Use normal Java enum lookup semantics. Exact names are accepted; an unknown
-name is an error instead of a fallback to `DEFAULT`.
+The Java compiler supplies this public static method:
 
-### Node 7: Determinism and state
+```java
+public static JsonCreator.Mode valueOf(String name);
+```
 
-All contract behavior is immutable declaration metadata. No API performs I/O,
-uses time, reads environment state, or contacts a network service.
+The accepted input is one exact enum name: `DEFAULT`, `DELEGATING`,
+`PROPERTIES`, or `DISABLED`. The return type is `JsonCreator.Mode`, and the
+result is the matching singleton enum constant. Matching is case-sensitive and
+does not trim whitespace or accept aliases.
 
-### Node 8: Offline build behavior
+Normal example:
 
-Keep the Maven dependency closure empty and do not download artifacts at run
-time. The trusted verifier invokes candidate code through a JSON/JVM adapter;
-it does not import candidate classes into its own process.
+```java
+JsonCreator.Mode mode = JsonCreator.Mode.valueOf("DELEGATING");
+assert mode == JsonCreator.Mode.DELEGATING;
+```
+
+Invalid-name example:
+
+```java
+try {
+    JsonCreator.Mode.valueOf("delegating");
+    throw new AssertionError("an unknown exact name must fail");
+} catch (IllegalArgumentException expected) {
+    // Normal Java enum behavior.
+}
+```
+
+For an unknown non-null name, Java enum behavior throws unchecked
+`IllegalArgumentException`. For `null`, normal Java enum behavior throws
+unchecked `NullPointerException`. Do not return `DEFAULT`, create a new enum
+value, normalize case, or convert a null input.
+
+### Standard reflection boundary
+
+The standard JDK reflection API is the observation mechanism, not an additional
+library API to implement. In particular, callers may use
+`Class.getAnnotation(JsonCreator.class)`,
+`Constructor.getAnnotation(JsonCreator.class)`, and
+`Method.getAnnotation(JsonCreator.class)` to read a runtime-retained use.
+`JsonCreator.class.getAnnotation(JacksonAnnotation.class)` must observe the
+marker. The implementation must preserve the ordinary annotation contracts for
+`annotationType()`, `equals(Object)`, `hashCode()`, and `toString()` on
+reflection-created annotation instances; do not write replacement wrappers.
+
+## Implementation Notes
+
+### Source and package constraints
+
+Keep exactly the two production source files shown in the directory tree. Use
+the package declaration `com.fasterxml.jackson.annotation` in both files.
+`JsonCreator.Mode` must be nested inside `JsonCreator`, not moved to a separate
+top-level enum. `JacksonAnnotation` must remain a marker with zero members.
+
+Use only the JDK annotation types `ElementType`, `Retention`,
+`RetentionPolicy`, and `Target` for declaration metadata. Do not add a Maven
+dependency, import a published Jackson JAR, or copy unrelated Jackson classes.
+
+### Metadata and determinism
+
+The following facts are observable and must remain exact:
+
+1. `JacksonAnnotation` has runtime retention and annotation-type-only target.
+2. `JsonCreator` has runtime retention and targets annotation types, methods,
+   and constructors only.
+3. `JsonCreator` is marked with `JacksonAnnotation`.
+4. `JsonCreator.mode()` returns `JsonCreator.Mode` and defaults to `DEFAULT`.
+5. The enum order is `DEFAULT`, `DELEGATING`, `PROPERTIES`, `DISABLED`.
+6. Java's generated enum lookup methods keep their standard signatures and
+   exception behavior.
+
+All of these results must be deterministic across repeated JVM processes. No
+method or declaration may read a file, access the network, launch a process,
+inspect an environment variable, use a clock, or use randomness.
+
+### Small verifiable examples
+
+The implementation should make these independent checks possible:
+
+```java
+assert JsonCreator.Mode.values().length == 4;
+assert JsonCreator.Mode.values()[1] == JsonCreator.Mode.DELEGATING;
+```
+
+```java
+assert JsonCreator.Mode.valueOf("DISABLED") == JsonCreator.Mode.DISABLED;
+```
+
+```java
+assert JsonCreator.class.getAnnotation(JacksonAnnotation.class) != null;
+```
+
+```java
+assert JsonCreator.class.getDeclaredMethod("mode").getDefaultValue()
+    == JsonCreator.Mode.DEFAULT;
+```
+
+The examples are behavior checks, not a request to add an application entry
+point or assertion framework to the project.
+
+### Error and boundary handling
+
+Let Java enforce annotation target errors during compilation. Let the Java
+compiler generate ordinary enum methods and preserve their standard unchecked
+exceptions. Do not catch and rewrite `IllegalArgumentException` or
+`NullPointerException`, and do not silently accept malformed annotation uses.
+
+An annotation declaration with an omitted member must use the declared default;
+an explicit member must retain the selected enum constant. Empty source files,
+extra enum constants, changed capitalization, changed target sets, source-only
+retention, and a top-level replacement for the nested enum are all outside the
+contract.
+
+### Cross-module scope
+
+No other module is required to consume these declarations. Do not implement
+`JsonProperty`, `JsonValue`, creator invocation, property binding, or a Jackson
+databind integration merely because the Javadoc describes how a larger Jackson
+system may use `JsonCreator`. The task ends at the reflection-visible metadata
+boundary documented here.
+
+Before finalizing, confirm the package paths, exact public declarations, Java
+21 compilation, offline Maven behavior, enum order, annotation retention, and
+target sets. Keep the project small, source-discoverable, and free of runtime
+network assumptions.

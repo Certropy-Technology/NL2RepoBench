@@ -6,6 +6,25 @@ mappings and memoizing decorators. It must reproduce the public behavior below
 without relying on a preinstalled `cachetools` package or on network access at
 runtime.
 
+## Natural Language Instruction
+
+Create `cachetools` from an empty workspace. Implement the cache classes,
+memoization decorators, key builders, eviction policies, and TTL behavior
+specified below. Keep mapping operations deterministic and dependency-free.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── README.md
+└── src/cachetools/
+    ├── __init__.py
+    ├── func.py
+    ├── keys.py
+    └── py.typed
+```
+
 ## Project Description
 
 The package provides cache implementations based on FIFO, LFU, LRU, random
@@ -326,3 +345,9 @@ assert square(4) == 16
 assert square(4) == 16
 assert square.cache_info().hits == 1
 ```
+
+## Error Handling and Boundary Conditions
+
+Empty caches raise `KeyError` from `popitem()`. Unhashable keys retain the
+normal mapping `TypeError`; expired TTL entries are removed lazily on access.
+User-function exceptions and lock failures propagate without being cached.

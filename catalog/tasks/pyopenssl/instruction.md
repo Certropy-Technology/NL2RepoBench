@@ -17,6 +17,16 @@ shapes, and exception families below.
 The distribution and runtime version is `26.4.0`. The package must import as
 `OpenSSL`, and `OpenSSL.__version__` must be the same string.
 
+## Natural Language Instruction
+
+Create the installable `pyOpenSSL` distribution from an empty `workspace/`.
+Expose `OpenSSL`, `OpenSSL.crypto`, `OpenSSL.SSL`, `OpenSSL.rand`,
+`OpenSSL.debug`, and `OpenSSL.version` with the contracts below. Preserve
+native-object type and shape observations through the child-side boundary,
+metadata, serialization, validation errors, and deterministic memory-backed
+TLS behavior. Do not require live sockets, certificate stores, subprocesses,
+or runtime downloads.
+
 ## Supports
 
 - Support CPython `>=3.9`; provide a normal `pyproject.toml` or `setup.py`
@@ -34,7 +44,48 @@ The distribution and runtime version is `26.4.0`. The package must import as
   `OpenSSL.version` and the package root. `OpenSSL.__all__` includes the two
   submodules and those metadata names.
 
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── OpenSSL/
+│   ├── __init__.py
+│   ├── version.py
+│   ├── crypto.py
+│   ├── SSL.py
+│   ├── rand.py
+│   └── debug.py
+└── README.md
+```
+
+The package modules are the public import paths. Native bridge details may be
+implemented privately, but do not add network services, host certificate
+files, test fixtures, or verifier code to the candidate workspace.
+
 ## API Usage Guide
+
+Import paths: `import OpenSSL`, `from OpenSSL import crypto`, and
+`from OpenSSL import SSL`. The public modules and names below are the scored
+Python API; return types and exception families must remain compatible with
+those imports.
+
+```python
+from OpenSSL import crypto
+key = crypto.PKey()
+assert key.type() == 0
+```
+
+```python
+from OpenSSL import SSL
+context = SSL.Context(SSL.TLS_METHOD)
+assert context.get_verify_mode() == SSL.VERIFY_NONE
+```
+
+```python
+from OpenSSL import rand
+assert isinstance(rand.status(), int)
+```
 
 ### `OpenSSL.crypto`
 
@@ -127,3 +178,39 @@ OpenSSL values may vary by the pinned runtime, so test stable semantic
 properties rather than host-specific version strings. The verifier runs each
 scenario in a fresh unprivileged child process; do not add a test-only entry
 point or write reward files from the candidate package.
+
+## Examples
+
+```python
+from OpenSSL import crypto
+
+key = crypto.PKey()
+key.generate_key(crypto.TYPE_RSA, 1024)
+pem = crypto.dump_privatekey(crypto.FILETYPE_PEM, key)
+```
+
+```python
+from OpenSSL import crypto
+
+certificate = crypto.X509()
+certificate.set_version(2)
+assert certificate.get_version() == 2
+```
+
+```python
+from OpenSSL import SSL
+
+context = SSL.Context(SSL.TLS_METHOD)
+connection = SSL.Connection(context, None)
+assert connection.pending() == 0
+```
+
+## Error Handling and Boundary Conditions
+
+Reject wrong argument types with `TypeError`, invalid enum or protocol values
+with `ValueError`, malformed PEM/ASN.1 input with the documented OpenSSL
+exception family, and invalid TLS state transitions with the corresponding
+`WantReadError` or state error. Native objects are observed through their
+public type and JSON-safe properties; do not depend on pointer identity,
+random bytes, host certificate stores, live peers, callbacks, or platform-
+specific OpenSSL version strings.

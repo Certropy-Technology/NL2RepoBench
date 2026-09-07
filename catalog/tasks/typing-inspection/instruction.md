@@ -15,6 +15,13 @@ Target package metadata:
 - Runtime dependency: `typing-extensions>=4.15.0`
 - Typed marker: include `typing_inspection/py.typed`
 
+# Natural Language Instruction
+
+Create the pure-Python `typing-inspection` package from an empty workspace.
+Implement runtime typing predicates and annotation inspection for the standard
+`typing` and `typing_extensions` forms described below. Preserve qualifier
+validation, metadata order, alias modes, and deterministic behavior.
+
 # Supports
 
 The implementation must provide these import modules:
@@ -31,6 +38,18 @@ or mutation of caller-owned objects.
 The package must recognize matching objects from both `typing` and
 `typing_extensions` where both expose a form. Identity checks must not
 misclassify arbitrary objects or instances.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+└── typing_inspection/
+    ├── __init__.py
+    ├── introspection.py
+    ├── typing_objects.py
+    └── py.typed
+```
 
 # API Usage Guide
 
@@ -262,3 +281,29 @@ by `id(alias)` for aliases that cannot be used reliably as equality keys.
   material.
 - Do not access the network, inspect external source trees, or depend on the
   current working directory at runtime.
+
+# Examples
+
+```python
+from typing import Literal
+from typing_inspection.introspection import get_literal_values
+
+assert list(get_literal_values(Literal[1, "x"])) == [1, "x"]
+```
+
+```python
+from typing import Annotated
+from typing_extensions import Final
+from typing_inspection.introspection import AnnotationSource, inspect_annotation
+
+result = inspect_annotation(Final[Annotated[int, "meta"]],
+                            annotation_source=AnnotationSource.ASSIGNMENT_OR_VARIABLE)
+assert result.type is int
+```
+
+# Error Handling and Boundary Conditions
+
+Predicates return `False` for unrelated objects rather than raising. Invalid
+qualifier/source combinations raise `ForbiddenQualifier`; eager unresolved
+aliases may raise `NameError`. Metadata order and duplicate elimination follow
+the API contract, including unhashable literal values.

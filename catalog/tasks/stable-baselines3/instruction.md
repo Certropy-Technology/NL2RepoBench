@@ -1,86 +1,35 @@
-## Introduction and Goals of the Stable-Baselines3 Project
+# Project Description
 
 Stable-Baselines3 is a **reinforcement learning algorithm library based on PyTorch**, providing implementations of various state-of-the-art reinforcement learning algorithms. This library is the successor to Stable-Baselines, completely rewritten to support PyTorch instead of TensorFlow, and offers better code organization, a clearer API, and more comprehensive documentation. Its core features include: implementing multiple reinforcement learning algorithms (PPO, A2C, DQN, SAC, TD3, DDPG, etc.), a **unified training and evaluation interface** (supporting vectorized environments, callback functions, model saving and loading), and full support for custom environments and policies. In short, Stable-Baselines3 is committed to providing an easy-to-use, feature-complete, and high-performance reinforcement learning toolkit for quickly implementing and deploying reinforcement learning solutions (e.g., training via `model.learn()`, inference via `model.predict()`, and model management via `model.save()` and `model.load()`).
 
-## Natural Language Instruction (Prompt)
+## Natural Language Instruction
 
-Please create a Python project named Stable-Baselines3 to implement a complete reinforcement learning algorithm library. The project should include the following features:
+Create `stable-baselines3` from an empty workspace as a complete installable python project. Implement
+the public operations, data or state behavior, input validation, deterministic ordering, and
+error contracts documented below. Keep package metadata, root exports, module imports, and any
+subpath entry points consistent across files. Implement the behavior rather than hard-coding the
+examples, and do not retrieve or copy a reference implementation.
 
-1. **Algorithm Implementation Module**: Be able to implement multiple reinforcement learning algorithms, including policy gradient methods (PPO, A2C), value function methods (DQN), actor-critic methods (SAC, TD3, DDPG), etc. Each algorithm should include complete training logic, network architecture definition, and hyperparameter configuration.
+The finished repository must install from its root, expose every documented API family, preserve
+the specified side effects and resource lifecycle, and remain usable in a fresh process.
 
-2. **Standardization of Environment Interfaces**: Implement seamless integration with Gymnasium environments, support vectorized environments to improve training efficiency, including DummyVecEnv, SubprocVecEnv, etc., and support environment wrappers such as Monitor, VecNormalize, etc.
+## Supports
 
-3. **Model Management Functions**: Provide complete model saving, loading, and parameter management functions, support model checkpoints, parameter extraction and setting, and cross-platform compatibility.
+- Package/distribution name: `stable-baselines3`. Primary import or package entry: `stable_baselines3`.
+- CPython 3.12 on debian-12 with pip.
+- Install from `workspace/` using `python -m pip install .`.
+- Declared dependency closure: no declared third-party runtime packages. Standard-library modules are not dependencies.
+- Build requirements are supplied before execution; do not add undeclared dependencies,
+  registry overrides, download hooks, or source-fetch steps.
+- Agent, candidate, verifier, Oracle, and controls use `network_mode=no-network`. Runtime access
+  to GitHub, PyPI, npm, the Go proxy, DNS, and external services is forbidden.
+- The declared test framework is `pytest`. A fixed collection
+  contains `798` cases when that value is frozen in metadata;
+  test implementation details are not part of the package surface.
 
-4. **Training Process Control**: Implement a callback function system, support training progress monitoring, model saving, early stopping, evaluation, etc., and provide flexible configuration options.
+## Project Directory Structure
 
-5. **Data Processing and Buffers**: Implement various experience replay buffers (ReplayBuffer, HerReplayBuffer, etc.), support prioritized experience replay, HER (Hindsight Experience Replay), and other technologies.
-
-6. **Evaluation and Testing Tools**: Provide tools for model evaluation, deterministic testing, environment checkers, etc., to ensure the reliability and reproducibility of training results.
-
-7. **Core File Requirements**: The project must include complete pyproject.toml and pyproject.toml files to configure the project as an installable package, declare a complete list of dependencies (including torch, gymnasium, numpy, pandas, matplotlib, tensorboard, etc.), provide stable_baselines3/__init__.py as a unified API entry, import core classes from each algorithm module, so that users can access all major functions through a simple "from stable_baselines3 import PPO, SAC, DQN" statement. In the stable_baselines3/common/base_class.py file, there should be save and load functions for serializing and deserializing models to support cross-device and breakpoint-continued training. In the stable_baselines3/common/utils.py file, there should be a set_random_seed function for setting the random seeds of numpy, random, torch, and the environment to ensure reproducibility and be verified by test_set_random_seed in tests/test_utils.py. In the stable_baselines3/common/env_checker.py file, there should be a check_env function for verifying whether a custom environment meets the Gymnasium interface and be covered by test_check_env_* series of test cases in tests/test_env_checker.py for common errors. In the stable_baselines3/common/env_util.py file, there should be a make_vec_env function for quickly creating DummyVecEnv/SubprocVecEnv and be verified by test_make_vec_env in tests/test_env_util.py for parallel and wrapping behaviors. In the stable_baselines3/common/buffers.py file, there should be a ReplayBuffer.sample function for returning training batches and be verified by test_replaybuffer_sample in tests/test_buffers.py for sampling shapes and types. In the stable_baselines3/her/her_replay_buffer.py file, there should be a HerReplayBuffer.sample_transitions function for implementing HER goal resampling and be verified by test_her_relabeling in tests/test_her.py for relabeling logic. In the stable_baselines3/common/evaluation.py file, there should be an evaluate_policy function for统计平均奖励 and standard deviation over multiple episodes and be verified by test_evaluate_policy in tests/test_evaluation.py for statistical result ranges. In the stable_baselines3/common/torch_layers.py file, there should be create_mlp and BaseFeaturesExtractor for building policy networks and be verified by test_create_mlp_output_shape in tests/test_torch_layers.py for output dimensions. In the stable_baselines3/common/logger.py file, there should be configure and Logger.record/dump functions for configuring log output and be verified by test_logger_records_and_dumps in tests/test_logger.py for file and TensorBoard output. In the stable_baselines3/common/save_util.py file, there should be save_to_pkl and load_from_pkl for persisting non-model objects and be verified by test_pkl_roundtrip in tests/test_save_util.py for serialization consistency.
-
-## Environment Configuration
-
-### Python Version
-
-The Python version used in the current project is: Python 3.12.4
-
-### Core Dependency Library Versions
-
-```Plain
-# Deep learning framework
-torch>=1.13.0                    # PyTorch deep learning framework
-torchvision>=0.14.0              # PyTorch computer vision library
-
-# Reinforcement learning environment
-gymnasium>=0.28.1                # Standard interface for reinforcement learning environments
-gymnasium[atari]>=0.28.1         # Support for Atari game environments
-gymnasium[box2d]>=0.28.1         # Support for Box2D physics environments
-gymnasium[mujoco]>=0.28.1        # Support for MuJoCo physics environments
-
-# Numerical computation library
-numpy>=1.21.0                    # Basic numerical computation library
-scipy>=1.7.0                     # Scientific computation library
-
-# Data processing and visualization
-pandas>=1.3.0                    # Data processing and analysis
-matplotlib>=3.5.0                # Data visualization
-seaborn>=0.11.0                  # Statistical visualization
-
-# Logging and monitoring
-tensorboard>=2.10.0              # Training logging and visualization
-wandb>=0.13.0                    # Experiment tracking (optional)
-
-# Testing framework
-pytest>=6.0.0                    # Unit testing framework
-pytest-cov>=3.0.0                # Test coverage
-
-# Development and building tools
-wheel>=0.37.0                    # Package distribution format
-```
-
-### System Requirements
-
-```Plain
-# Python version requirements
-Python >= 3.9                    # Minimum Python version
-
-# Operating system support
-Linux (Ubuntu 18.04+)            # Mainly supported platform
-macOS (10.15+)                   # Supported platform
-Windows (10+)                    # Supported platform
-
-# GPU support (optional)
-CUDA >= 11.0                     # NVIDIA GPU support
-cuDNN >= 8.0                     # Deep learning acceleration library
-```
-
-## Stable-Baselines3 Project Architecture
-
-### Project Directory Structure
-
-```Plain
+```text
 workspace/
 ├── .dockerignore
 ├── .gitignore
@@ -177,10 +126,14 @@ workspace/
 │   │   ├── td3.py
 │   ├── version.txt
 └── pyproject.toml
-
 ```
 
+This is the required public project shape. Additional implementation modules are allowed only
+when they support the documented API; evaluation, source-fetch, and private runtime files are
+not agent-owned project files.
+
 ## API Usage Guide
+
 ### Core API
 ####  Module Import
 
@@ -353,10 +306,10 @@ class A2C(OnPolicyAlgorithm):
         _init_setup_model: bool = True,
     ):
         ...
-    
+
     def train(self) -> None:
         ...
-    
+
     def learn(
         self: SelfA2C,
         total_timesteps: int,
@@ -845,10 +798,10 @@ class ContinuousCritic(BaseModel):
 class StickyActionEnv(gym.Wrapper[np.ndarray, int, np.ndarray, int]):
     def __init__(self, env: gym.Env, action_repeat_probability: float) -> None:
         ...
-    
+
     def reset(self, **kwargs) -> AtariResetReturn:
         ...
-    
+
     def step(self, action: int) -> AtariStepReturn:
         ...
 ```
@@ -868,7 +821,7 @@ class StickyActionEnv(gym.Wrapper[np.ndarray, int, np.ndarray, int]):
 class NoopResetEnv(gym.Wrapper[np.ndarray, int, np.ndarray, int]):
     def __init__(self, env: gym.Env, noop_max: int = 30) -> None:
         ...
-    
+
     def reset(self, **kwargs) -> AtariResetReturn:
         ...
 ```
@@ -887,7 +840,7 @@ class NoopResetEnv(gym.Wrapper[np.ndarray, int, np.ndarray, int]):
 class FireResetEnv(gym.Wrapper[np.ndarray, int, np.ndarray, int]):
     def __init__(self, env: gym.Env) -> None:
         ...
-    
+
     def reset(self, **kwargs) -> AtariResetReturn:
         ...
 ```
@@ -906,10 +859,10 @@ class FireResetEnv(gym.Wrapper[np.ndarray, int, np.ndarray, int]):
 class EpisodicLifeEnv(gym.Wrapper[np.ndarray, int, np.ndarray, int]):
     def __init__(self, env: gym.Env) -> None:
         ...
-    
+
     def step(self, action: int) -> AtariStepReturn:
         ...
-    
+
     def reset(self, **kwargs) -> AtariResetReturn:
         ...
 ```
@@ -930,7 +883,7 @@ class EpisodicLifeEnv(gym.Wrapper[np.ndarray, int, np.ndarray, int]):
 class MaxAndSkipEnv(gym.Wrapper[np.ndarray, int, np.ndarray, int]):
     def __init__(self, env: gym.Env, skip: int = 4) -> None:
         ...
-    
+
     def step(self, action: int) -> AtariStepReturn:
         ...
 ```
@@ -949,7 +902,7 @@ class MaxAndSkipEnv(gym.Wrapper[np.ndarray, int, np.ndarray, int]):
 class ClipRewardEnv(gym.RewardWrapper):
     def __init__(self, env: gym.Env) -> None:
         ...
-    
+
     def reward(self, reward: SupportsFloat) -> float:
         ...
 ```
@@ -968,7 +921,7 @@ class ClipRewardEnv(gym.RewardWrapper):
 class WarpFrame(gym.ObservationWrapper[np.ndarray, int, np.ndarray]):
     def __init__(self, env: gym.Env, width: int = 84, height: int = 84) -> None:
         ...
-    
+
     def observation(self, frame: np.ndarray) -> np.ndarray:
         ...
 ```
@@ -1030,7 +983,7 @@ def maybe_make_env(env: Union[GymEnv, str], verbose: int) -> GymEnv: ...
 ```python
 class BaseAlgorithm(ABC):
     policy_aliases: ClassVar[dict[str, type[BasePolicy]]] = {}
-    
+
     def __init__(
         self,
         policy: Union[str, type[BasePolicy]],
@@ -1775,7 +1728,7 @@ class BaseCallback(ABC):
   @property
   def training_env(self) -> VecEnv:
     ...
-  
+
   @property
   def logger(self) -> Logger:
       ...
@@ -1802,9 +1755,9 @@ class BaseCallback(ABC):
   def on_training_end(self) -> None:
       ...
 
-  def _on_rollout_start(self) -> None: 
+  def _on_rollout_start(self) -> None:
     ...
-  
+
   def on_rollout_start(self) -> None:
       ...
 
@@ -4162,7 +4115,7 @@ class VectorizedActionNoise(ActionNoise):
   def reset(self, indices: Optional[Iterable[int]] = None) -> None:
       ...
   def __repr__(self) -> str: ...
-  
+
   def __call__(self) -> np.ndarray:
       ...
   @property
@@ -4336,7 +4289,7 @@ class OnPolicyAlgorithm(BaseAlgorithm):
     - `rollout_buffer`: Buffer to fill with rollouts
     - `n_rollout_steps`: Number of experiences to collect per environment
   - **Return Value**: True if collected enough steps, False if callback terminated early
-  - **Details**: 
+  - **Details**:
     - Switches to eval mode for policy
     - Handles state-dependent exploration noise
     - Processes actions and observations
@@ -4857,7 +4810,7 @@ class RunningMeanStd:
   - **Function**: Update statistics using pre-computed batch moments.
   - **Parameters**:
     - `batch_mean`: Mean of the new batch
-    - `batch_var`: Variance of the new batch  
+    - `batch_var`: Variance of the new batch
     - `batch_count`: Number of samples in batch
   - **Details**: Implements parallel variance algorithm to combine statistics.
 
@@ -4886,7 +4839,7 @@ def recursive_getattr(obj: Any, attr: str, *args) -> Any: ...
 **Function**: Recursive version of setattr
 **Function Signature**:
 ```python
-def recursive_setattr(obj: Any, attr: str, val: Any) -> None: 
+def recursive_setattr(obj: Any, attr: str, val: Any) -> None:
   """
   Recursive version of setattr
   taken from https://stackoverflow.com/questions/31174295
@@ -7808,7 +7761,7 @@ def _patch_env(env: Union["gym.Env", gymnasium.Env]) -> gymnasium.Env:
 
 **Return Value**: Gymnasium-compatible environment
 
-**Details**: 
+**Details**:
 - Detects environment type and applies appropriate Shimmy wrapper
 - For Gym 0.26+: Uses `GymV26CompatibilityV0` wrapper
 - For Gym 0.21: Uses `GymV21CompatibilityV0` wrapper
@@ -7901,7 +7854,7 @@ class StackedObservations(Generic[TObs]):
 
 - `compute_stacking(n_stack, observation_space, channels_order)`:
   - **Function**: Calculate stacking parameters for Box observation spaces.
-  - **Parameters**: 
+  - **Parameters**:
     - `n_stack`: Number of frames to stack
     - `observation_space`: Box space to stack
     - `channels_order`: Channel ordering preference
@@ -7922,7 +7875,7 @@ class StackedObservations(Generic[TObs]):
 - Provides proper terminal observation stacking for value estimation
 
 #### 210. _worker_worker function - Environment worker loop for subprocess
-**Function**:  
+**Function**:
 A subprocess worker function that receives commands, interacts with a gym environment, and sends results back through a multiprocessing pipe.
 
 **Function Signature**:
@@ -7941,16 +7894,16 @@ def _worker(
 - `parent_remote` (mp.connection.Connection): Parent-side connection, closed in the worker.
 - `env_fn_wrapper` (CloudpickleWrapper): Wrapped environment creation function.
 
-**Return Value**:  
+**Return Value**:
 None
 
-**Details**:  
-Handles commands such as `"step"`, `"reset"`, `"render"`, `"close"`, `"get_spaces"`, `"env_method"`, `"get_attr"`, `"set_attr"`, `"has_attr"`, `"is_wrapped"`.  
+**Details**:
+Handles commands such as `"step"`, `"reset"`, `"render"`, `"close"`, `"get_spaces"`, `"env_method"`, `"get_attr"`, `"set_attr"`, `"has_attr"`, `"is_wrapped"`.
 Communicates environment states and results back to the parent process.
 
 
 #### 211. SubprocVecEnv class - Vectorized multi-process environment manager
-**Function**:  
+**Function**:
 Manage multiple gym environments running in separate subprocesses, enabling parallel simulation for reinforcement learning.
 
 **Class Definition**:
@@ -7998,61 +7951,61 @@ class SubprocVecEnv(VecEnv):
 
 **Methods**:
 
-- `__init__(env_fns, start_method=None)`  
-  - **Function**: Initialize and spawn subprocesses for each environment.  
-  - **Parameters**: `env_fns`, `start_method`.  
+- `__init__(env_fns, start_method=None)`
+  - **Function**: Initialize and spawn subprocesses for each environment.
+  - **Parameters**: `env_fns`, `start_method`.
   - **Details**: Uses multiprocessing context; sets up pipes and processes; inherits from `VecEnv`.
 
-- `step_async(actions)`  
-  - **Function**: Send asynchronous "step" commands to subprocesses.  
-  - **Parameters**: `actions` (np.ndarray).  
+- `step_async(actions)`
+  - **Function**: Send asynchronous "step" commands to subprocesses.
+  - **Parameters**: `actions` (np.ndarray).
   - **Return Value**: None.
 
-- `step_wait()`  
-  - **Function**: Wait for subprocess responses after `step_async`.  
-  - **Return Value**: `VecEnvStepReturn` (stacked observations, rewards, dones, infos).  
+- `step_wait()`
+  - **Function**: Wait for subprocess responses after `step_async`.
+  - **Return Value**: `VecEnvStepReturn` (stacked observations, rewards, dones, infos).
 
-- `reset()`  
-  - **Function**: Reset all environments in parallel.  
-  - **Return Value**: `VecEnvObs`.  
+- `reset()`
+  - **Function**: Reset all environments in parallel.
+  - **Return Value**: `VecEnvObs`.
   - **Details**: Resets seeds and options after use.
 
-- `close()`  
-  - **Function**: Gracefully terminate all subprocesses.  
-  - **Return Value**: None.  
+- `close()`
+  - **Function**: Gracefully terminate all subprocesses.
+  - **Return Value**: None.
 
-- `get_images()`  
-  - **Function**: Collect rendered images if `render_mode` is `"rgb_array"`.  
-  - **Return Value**: List of np.ndarray or None.  
+- `get_images()`
+  - **Function**: Collect rendered images if `render_mode` is `"rgb_array"`.
+  - **Return Value**: List of np.ndarray or None.
 
-- `has_attr(attr_name)`  
-  - **Function**: Check attribute existence in all subprocess environments.  
-  - **Parameters**: `attr_name` (str).  
-  - **Return Value**: bool.  
+- `has_attr(attr_name)`
+  - **Function**: Check attribute existence in all subprocess environments.
+  - **Parameters**: `attr_name` (str).
+  - **Return Value**: bool.
 
-- `get_attr(attr_name, indices=None)`  
-  - **Function**: Retrieve attribute values from environments.  
-  - **Return Value**: list[Any].  
+- `get_attr(attr_name, indices=None)`
+  - **Function**: Retrieve attribute values from environments.
+  - **Return Value**: list[Any].
 
-- `set_attr(attr_name, value, indices=None)`  
-  - **Function**: Set attribute values inside environments.  
-  - **Return Value**: None.  
+- `set_attr(attr_name, value, indices=None)`
+  - **Function**: Set attribute values inside environments.
+  - **Return Value**: None.
 
-- `env_method(method_name, *args, indices=None, **kwargs)`  
-  - **Function**: Call methods of individual environments remotely.  
-  - **Return Value**: list[Any].  
+- `env_method(method_name, *args, indices=None, **kwargs)`
+  - **Function**: Call methods of individual environments remotely.
+  - **Return Value**: list[Any].
 
-- `env_is_wrapped(wrapper_class, indices=None)`  
-  - **Function**: Check if environments are wrapped by a given wrapper class.  
-  - **Return Value**: list[bool].  
+- `env_is_wrapped(wrapper_class, indices=None)`
+  - **Function**: Check if environments are wrapped by a given wrapper class.
+  - **Return Value**: list[bool].
 
-- `_get_target_remotes(indices)`  
-  - **Function**: Get remote connections by index.  
-  - **Return Value**: list[Any].  
+- `_get_target_remotes(indices)`
+  - **Function**: Get remote connections by index.
+  - **Return Value**: list[Any].
 
 
 #### 212. _stack_obs function - Stack vectorized environment observations
-**Function**:  
+**Function**:
 Stack observations from multiple environments into a single batched structure.
 
 **Function Signature**:
@@ -8075,10 +8028,10 @@ def _stack_obs(obs_list: Union[list[VecEnvObs], tuple[VecEnvObs]], space: spaces
 - `obs_list` (list or tuple): Observations from multiple environments.
 - `space` (spaces.Space): Gym observation space defining structure (Dict, Tuple, or array).
 
-**Return Value**:  
+**Return Value**:
 Stacked observations matching the structure of `space` (dict, tuple, or np.ndarray).
 
-**Details**:  
+**Details**:
 Handles stacking for `Dict`, `Tuple`, and standard array observation spaces; validates input type and length.
 
 
@@ -8416,7 +8369,7 @@ class VecMonitor(VecEnvWrapper):
 - Replacing individual Monitor wrappers in vectorized setups
 
 #### 219. VecTransposeImage class - Transpose image channels for vectorized environments
-**Function**:  
+**Function**:
 Reorders image observation channels from HxWxC (channels last) to CxHxW (channels first), which is required for PyTorch convolutional layers.
 
 **Class Definition**:
@@ -8447,51 +8400,51 @@ class VecTransposeImage(VecEnvWrapper):
 
 **Methods**:
 
-- `__init__(venv, skip=False)`  
-  - **Function**: Initialize wrapper, detect image observation spaces, and prepare transposed observation space structure.  
-  - **Parameters**:  
-    - `venv`: Base vectorized environment.  
-    - `skip`: Whether to bypass transposition.  
-  - **Details**:  
-    - Handles both single `Box` spaces and dictionary-based observation spaces.  
-    - Modifies image-space entries only.  
+- `__init__(venv, skip=False)`
+  - **Function**: Initialize wrapper, detect image observation spaces, and prepare transposed observation space structure.
+  - **Parameters**:
+    - `venv`: Base vectorized environment.
+    - `skip`: Whether to bypass transposition.
+  - **Details**:
+    - Handles both single `Box` spaces and dictionary-based observation spaces.
+    - Modifies image-space entries only.
 
-- `transpose_space(observation_space, key="")`  
-  - **Function**: Transpose a single observation space’s shape from (H, W, C) to (C, H, W).  
-  - **Parameters**:  
-    - `observation_space` (spaces.Box): Original observation space.  
-    - `key` (str): Optional key for dictionary observation spaces.  
-  - **Return Value**: `spaces.Box` with transposed shape.  
+- `transpose_space(observation_space, key="")`
+  - **Function**: Transpose a single observation space’s shape from (H, W, C) to (C, H, W).
+  - **Parameters**:
+    - `observation_space` (spaces.Box): Original observation space.
+    - `key` (str): Optional key for dictionary observation spaces.
+  - **Return Value**: `spaces.Box` with transposed shape.
 
-- `transpose_image(image)`  
-  - **Function**: Reorder image or batch dimensions for NumPy arrays.  
-  - **Parameters**:  
-    - `image` (np.ndarray): Image array to transpose.  
-  - **Return Value**: Transposed np.ndarray.  
-  - **Details**: Handles both 3D (single image) and 4D (batched) tensors.  
+- `transpose_image(image)`
+  - **Function**: Reorder image or batch dimensions for NumPy arrays.
+  - **Parameters**:
+    - `image` (np.ndarray): Image array to transpose.
+  - **Return Value**: Transposed np.ndarray.
+  - **Details**: Handles both 3D (single image) and 4D (batched) tensors.
 
-- `transpose_observations(observations)`  
-  - **Function**: Apply channel transposition to observation data (dict or array).  
-  - **Parameters**:  
-    - `observations` (Union[np.ndarray, dict]): Observations to transform.  
-  - **Return Value**: Transposed observation structure.  
-  - **Details**: Skips operation if `self.skip` is True; deep-copies dict observations to avoid mutation.  
+- `transpose_observations(observations)`
+  - **Function**: Apply channel transposition to observation data (dict or array).
+  - **Parameters**:
+    - `observations` (Union[np.ndarray, dict]): Observations to transform.
+  - **Return Value**: Transposed observation structure.
+  - **Details**: Skips operation if `self.skip` is True; deep-copies dict observations to avoid mutation.
 
-- `step_wait()`  
-  - **Function**: Wait for environment step results and transpose all observations and terminal observations.  
-  - **Return Value**: `VecEnvStepReturn` (transposed observations, rewards, dones, infos).  
+- `step_wait()`
+  - **Function**: Wait for environment step results and transpose all observations and terminal observations.
+  - **Return Value**: `VecEnvStepReturn` (transposed observations, rewards, dones, infos).
 
-- `reset()`  
-  - **Function**: Reset the wrapped environment and transpose its observations.  
-  - **Return Value**: Transposed np.ndarray or dict.  
+- `reset()`
+  - **Function**: Reset the wrapped environment and transpose its observations.
+  - **Return Value**: Transposed np.ndarray or dict.
 
-- `close()`  
-  - **Function**: Close the wrapped vectorized environment.  
-  - **Return Value**: None.  
+- `close()`
+  - **Function**: Close the wrapped vectorized environment.
+  - **Return Value**: None.
 
 #### 220. VecVideoRecorder class - Record rendered frames from vectorized environments as videos
-**Function**:  
-A vectorized environment wrapper that records rendered frames from environments and saves them as `.mp4` videos using MoviePy.  
+**Function**:
+A vectorized environment wrapper that records rendered frames from environments and saves them as `.mp4` videos using MoviePy.
 Recording is triggered by a user-defined function based on environment step count.
 
 **Class Definition**:
@@ -8542,76 +8495,76 @@ class VecVideoRecorder(VecEnvWrapper):
 
 **Methods**:
 
-- `__init__(venv, video_folder, record_video_trigger, video_length=200, name_prefix="rl-video")`  
-  - **Function**: Initialize the video recorder wrapper.  
-  - **Parameters**:  
-    - `venv`: Wrapped environment.  
-    - `video_folder`: Output directory.  
-    - `record_video_trigger`: Step-based recording condition.  
-    - `video_length`: Max video length.  
-    - `name_prefix`: Output filename prefix.  
-  - **Details**:  
-    - Ensures `render_mode` is `"rgb_array"`.  
-    - Retrieves environment metadata (`render_fps`) for video timing.  
-    - Creates output directory if it doesn’t exist.  
-    - Checks for MoviePy installation.  
+- `__init__(venv, video_folder, record_video_trigger, video_length=200, name_prefix="rl-video")`
+  - **Function**: Initialize the video recorder wrapper.
+  - **Parameters**:
+    - `venv`: Wrapped environment.
+    - `video_folder`: Output directory.
+    - `record_video_trigger`: Step-based recording condition.
+    - `video_length`: Max video length.
+    - `name_prefix`: Output filename prefix.
+  - **Details**:
+    - Ensures `render_mode` is `"rgb_array"`.
+    - Retrieves environment metadata (`render_fps`) for video timing.
+    - Creates output directory if it doesn’t exist.
+    - Checks for MoviePy installation.
 
-- `reset()`  
-  - **Function**: Reset the environment and start recording if trigger is active.  
-  - **Return Value**: `VecEnvObs`.  
+- `reset()`
+  - **Function**: Reset the environment and start recording if trigger is active.
+  - **Return Value**: `VecEnvObs`.
 
-- `_start_video_recorder()`  
-  - **Function**: Initialize video name and path, and start frame capture.  
-  - **Return Value**: None.  
-  - **Details**:  
-    - Updates `video_name` and `video_path`.  
-    - Starts recording session and captures first frame.  
+- `_start_video_recorder()`
+  - **Function**: Initialize video name and path, and start frame capture.
+  - **Return Value**: None.
+  - **Details**:
+    - Updates `video_name` and `video_path`.
+    - Starts recording session and captures first frame.
 
-- `_video_enabled()`  
-  - **Function**: Determine whether recording should start based on trigger function.  
-  - **Return Value**: bool.  
+- `_video_enabled()`
+  - **Function**: Determine whether recording should start based on trigger function.
+  - **Return Value**: bool.
 
-- `step_wait()`  
-  - **Function**: Wait for environment steps and handle frame capture, video start/stop logic.  
-  - **Return Value**: `VecEnvStepReturn`.  
-  - **Details**:  
-    - Increments step counter.  
-    - Captures frames while recording.  
-    - Stops recording and saves video when length limit reached.  
+- `step_wait()`
+  - **Function**: Wait for environment steps and handle frame capture, video start/stop logic.
+  - **Return Value**: `VecEnvStepReturn`.
+  - **Details**:
+    - Increments step counter.
+    - Captures frames while recording.
+    - Stops recording and saves video when length limit reached.
 
-- `_capture_frame()`  
-  - **Function**: Capture one frame from environment rendering.  
-  - **Return Value**: None.  
-  - **Details**:  
-    - Appends frames as NumPy arrays to internal buffer.  
-    - Stops recording and warns if returned frame type is invalid.  
+- `_capture_frame()`
+  - **Function**: Capture one frame from environment rendering.
+  - **Return Value**: None.
+  - **Details**:
+    - Appends frames as NumPy arrays to internal buffer.
+    - Stops recording and warns if returned frame type is invalid.
 
-- `close()`  
-  - **Function**: Close the wrapper and finalize any active recording.  
-  - **Return Value**: None.  
+- `close()`
+  - **Function**: Close the wrapper and finalize any active recording.
+  - **Return Value**: None.
 
-- `_start_recording()`  
-  - **Function**: Begin a new video recording session.  
-  - **Return Value**: None.  
-  - **Details**:  
-    - Stops any existing recording before starting a new one.  
+- `_start_recording()`
+  - **Function**: Begin a new video recording session.
+  - **Return Value**: None.
+  - **Details**:
+    - Stops any existing recording before starting a new one.
 
-- `_stop_recording()`  
-  - **Function**: Finalize and save current recording using MoviePy.  
-  - **Return Value**: None.  
-  - **Details**:  
-    - Saves video to disk if frames exist.  
-    - Clears internal buffers and resets recording state.  
+- `_stop_recording()`
+  - **Function**: Finalize and save current recording using MoviePy.
+  - **Return Value**: None.
+  - **Details**:
+    - Saves video to disk if frames exist.
+    - Clears internal buffers and resets recording state.
 
-- `__del__()`  
-  - **Function**: Warn if the object is deleted while frames remain unsaved.  
-  - **Return Value**: None.  
-  - **Details**:  
-    - Emits warning through `logger.warn` if unsaved frames remain.  
+- `__del__()`
+  - **Function**: Warn if the object is deleted while frames remain unsaved.
+  - **Return Value**: None.
+  - **Details**:
+    - Emits warning through `logger.warn` if unsaved frames remain.
 
 #### 221. QNetwork class - Action-Value (Q-Value) estimator for DQN
-**Function**:  
-Implements a neural network mapping observations to Q-values for each discrete action.  
+**Function**:
+Implements a neural network mapping observations to Q-values for each discrete action.
 Used by DQN-based policies for action selection and value estimation.
 
 **Class Definition**:
@@ -8652,25 +8605,25 @@ class QNetwork(BasePolicy):
 - `normalize_images` (bool): Whether to normalize input images by 255 (default `True`).
 
 **Methods**:
-- `__init__()`:  
-  - Builds the fully connected Q-network with the provided architecture.  
+- `__init__()`:
+  - Builds the fully connected Q-network with the provided architecture.
   - Converts feature outputs into action-value predictions.
 
-- `forward(obs)`:  
-  - **Function**: Compute Q-values for all actions.  
+- `forward(obs)`:
+  - **Function**: Compute Q-values for all actions.
   - **Return**: `th.Tensor` — predicted Q-values of shape `[batch_size, n_actions]`.
 
-- `_predict(observation, deterministic=True)`:  
+- `_predict(observation, deterministic=True)`:
   - **Function**: Selects greedy action (`argmax(Q)`).
   - **Return**: `th.Tensor` — chosen action indices.
 
-- `_get_constructor_parameters()`:  
+- `_get_constructor_parameters()`:
   - **Function**: Return initialization parameters for saving/loading models.
 
 
 #### 222. DQNPolicy class - Deep Q-Network policy with target network
-**Function**:  
-Defines the core DQN policy containing two Q-networks (main and target) and their optimizer.  
+**Function**:
+Defines the core DQN policy containing two Q-networks (main and target) and their optimizer.
 Handles training/evaluation mode and model construction.
 
 **Class Definition**:
@@ -8715,45 +8668,45 @@ class DQNPolicy(BasePolicy):
 - `optimizer`: Optimizer for Q-network parameters.
 
 **Methods**:
-- `__init__()`:  
-  - Sets up architecture, feature extractor, and optimizer.  
+- `__init__()`:
+  - Sets up architecture, feature extractor, and optimizer.
   - Calls `_build()` to initialize Q-networks.
 
-- `_build(lr_schedule)`:  
-  - Creates `q_net` and `q_net_target`.  
-  - Synchronizes target parameters and sets evaluation mode.  
+- `_build(lr_schedule)`:
+  - Creates `q_net` and `q_net_target`.
+  - Synchronizes target parameters and sets evaluation mode.
   - Initializes optimizer with learning rate from schedule.
 
-- `make_q_net()`:  
+- `make_q_net()`:
   - Instantiates a new QNetwork with current policy parameters.
 
-- `forward(obs, deterministic=True)`:  
+- `forward(obs, deterministic=True)`:
   - Returns predicted actions by delegating to `_predict`.
 
-- `_predict(obs, deterministic=True)`:  
+- `_predict(obs, deterministic=True)`:
   - Computes greedy actions via main Q-network.
 
-- `_get_constructor_parameters()`:  
+- `_get_constructor_parameters()`:
   - Returns constructor parameters for saving/loading.
 
-- `set_training_mode(mode)`:  
+- `set_training_mode(mode)`:
   - Toggles between training and evaluation mode for all networks.
 
 
 
 #### 223. MlpPolicy alias
-**Definition**:  
+**Definition**:
 ```python
 MlpPolicy = DQNPolicy
 ```
-**Function**:  
+**Function**:
 Alias for `DQNPolicy` when using standard MLP (non-image) inputs.
 
 
 
 #### 224. CnnPolicy class - DQN policy for image-based inputs
-**Function**:  
-Extension of `DQNPolicy` using a CNN-based feature extractor (`NatureCNN`).  
+**Function**:
+Extension of `DQNPolicy` using a CNN-based feature extractor (`NatureCNN`).
 Optimized for visual observations.
 
 **Class Definition**:
@@ -8801,8 +8754,8 @@ class CnnPolicy(DQNPolicy):
 
 
 #### 225. MultiInputPolicy class - DQN policy for multi-modal (dict) observations
-**Function**:  
-Variant of `DQNPolicy` using `CombinedExtractor` for dict-based observation spaces.  
+**Function**:
+Variant of `DQNPolicy` using `CombinedExtractor` for dict-based observation spaces.
 Designed for environments where input includes multiple sensor modalities.
 
 **Class Definition**:
@@ -8848,8 +8801,8 @@ class MultiInputPolicy(DQNPolicy):
 - Retains all DQN training and inference functionality.
 - Suitable for multi-input (e.g., visual + vector) tasks.
 
-#### 226. unwrap_vec_wrapper function  
-**Function**:  
+#### 226. unwrap_vec_wrapper function
+**Function**:
 Recursively searches through a vectorized environment (`VecEnv`) to locate and return the first instance of a specific `VecEnvWrapper` subclass.
 
 **Definition**:
@@ -8868,17 +8821,17 @@ def unwrap_vec_wrapper(env: VecEnv, vec_wrapper_class: type[VecEnvWrapperT]) -> 
 - `env` (`VecEnv`): The vectorized environment to unwrap.
 - `vec_wrapper_class` (`type[VecEnvWrapperT]`): The wrapper class type to search for.
 
-**Returns**:  
-- `VecEnvWrapperT` — The found wrapper instance.  
+**Returns**:
+- `VecEnvWrapperT` — The found wrapper instance.
 - `None` — If the target wrapper type is not found.
 
-**Behavior**:  
+**Behavior**:
 Iteratively traverses the chain of wrappers (`env.venv`) until it either finds a wrapper matching `vec_wrapper_class` or reaches an unwrapped base environment.
 
 
 
-#### 227. unwrap_vec_normalize function  
-**Function**:  
+#### 227. unwrap_vec_normalize function
+**Function**:
 Shortcut utility to specifically locate a `VecNormalize` wrapper inside a wrapped environment.
 
 **Definition**:
@@ -8897,16 +8850,16 @@ def unwrap_vec_normalize(env: VecEnv) -> Optional[VecNormalize]:
 **Parameters**:
 - `env` (`VecEnv`): The vectorized environment to search.
 
-**Returns**:  
-- `VecNormalize` — If found.  
+**Returns**:
+- `VecNormalize` — If found.
 - `None` — If not found.
 
-**Behavior**:  
+**Behavior**:
 Internally calls `unwrap_vec_wrapper(env, VecNormalize)`.
 
 
-#### 228. is_vecenv_wrapped function  
-**Function**:  
+#### 228. is_vecenv_wrapped function
+**Function**:
 Checks whether a given vectorized environment is already wrapped by a specific wrapper class.
 
 **Definition**:
@@ -8927,17 +8880,17 @@ def is_vecenv_wrapped(env: VecEnv, vec_wrapper_class: type[VecEnvWrapper]) -> bo
 - `env` (`VecEnv`): The environment to inspect.
 - `vec_wrapper_class` (`type[VecEnvWrapper]`): The wrapper class to check for.
 
-**Returns**:  
-- `True` — If the environment is wrapped by the specified wrapper class.  
+**Returns**:
+- `True` — If the environment is wrapped by the specified wrapper class.
 - `False` — Otherwise.
 
-**Behavior**:  
+**Behavior**:
 Delegates to `unwrap_vec_wrapper` and evaluates whether a wrapper instance exists.
 
 
 
-#### 229. sync_envs_normalization function  
-**Function**:  
+#### 229. sync_envs_normalization function
+**Function**:
 Synchronizes the running normalization statistics between a training environment and an evaluation environment, assuming both are wrapped with `VecNormalize`.
 
 **Definition**:
@@ -8957,14 +8910,14 @@ def sync_envs_normalization(env: VecEnv, eval_env: VecEnv) -> None:
 - `eval_env` (`VecEnv`): Evaluation environment to be synchronized.
 
 **Behavior**:
-- Traverses both environments’ wrapper chains simultaneously.  
-- Asserts structural parity between training and evaluation wrappers.  
+- Traverses both environments’ wrapper chains simultaneously.
+- Asserts structural parity between training and evaluation wrappers.
 - When encountering a `VecNormalize` wrapper:
-  - Copies observation RMS (`obs_rms`) if available.  
+  - Copies observation RMS (`obs_rms`) if available.
   - Copies return RMS (`ret_rms`).
 - Ensures matching wrapper hierarchy for consistent normalization transfer.
-#### 230 is_image_space_channels_first Function  
-**Function**:  
+#### 230 is_image_space_channels_first Function
+**Function**:
 Checks whether the observation space of a vectorized environment is image-based with channels first (CxHxW) format.
 ```python
 def is_image_space_channels_first(observation_space: spaces.Box) -> bool:
@@ -8982,17 +8935,17 @@ def is_image_space_channels_first(observation_space: spaces.Box) -> bool:
 **Parameters**:
 - `observation_space` (`spaces.Box`): The observation space to check.
 
-**Returns**:  
-- `True` — If channels-first (CxHxW).  
+**Returns**:
+- `True` — If channels-first (CxHxW).
 - `False` — If channels-last (HxWxC).
 
-**Behavior**:  
-- Examines the shape of the observation space.  
-- Asserts that the channel dimension is the smallest.  
-- Raises an exception if the second dimension is not the smallest (no support for such layouts).  
+**Behavior**:
+- Examines the shape of the observation space.
+- Asserts that the channel dimension is the smallest.
+- Raises an exception if the second dimension is not the smallest (no support for such layouts).
 
-#### 231 maybe_transpose Function  
-**Function**:  
+#### 231 maybe_transpose Function
+**Function**:
 Handles the transposition of image observations between channels-first (CxHxW) and channels-last (HxWxC) formats, as required by PyTorch.
 
 **Definition**:
@@ -9010,7 +8963,7 @@ def maybe_transpose(observation: np.ndarray, observation_space: spaces.Space) ->
 - `observation` (`np.ndarray`): The image observation to transpose.
 - `observation_space` (`spaces.Space`): The observation space of the environment.
 
-**Returns**:  
+**Returns**:
 - `np.ndarray` — Transposed image observation if it is an image space, otherwise the original observation.
 
 #### 232. DISABLED Constants
@@ -9049,7 +9002,7 @@ The system provides a comprehensive error handling mechanism:
 4. **Vectorized Environments**: Use vectorized environments to improve training efficiency.
 5. **Callback Functions**: Use callback functions reasonably to monitor the training process.
 
-## Detailed Function Implementation Nodes
+### Detailed Function Implementation Nodes
 
 ### Node 1: Environment Monitoring and Logging Function (Monitor)
 
@@ -9085,11 +9038,11 @@ class Monitor:
     def __init__(self, env, filename=None, allow_early_resets=True, reset_keywords=()):
         # Initialize the monitor
         pass
-    
+
     def step(self, action):
         # Record step information
         pass
-    
+
     def reset(self, **kwargs):
         # Record reset information
         pass
@@ -9130,11 +9083,11 @@ class ReplayBuffer:
     def add(self, obs, next_obs, action, reward, done, infos):
         # Add experience to the buffer
         pass
-    
+
     def sample(self, batch_size):
         # Sample an experience batch
         pass
-    
+
     def __len__(self):
         # Return the buffer size
         pass
@@ -9170,7 +9123,7 @@ class BaseAlgorithm:
     def save(self, path):
         # Save the model to the specified path
         pass
-    
+
     @classmethod
     def load(cls, path, env=None, device="auto"):
         # Load the model from the specified path
@@ -9203,7 +9156,7 @@ class BaseCallback:
     def on_step(self):
         # Called at each step
         pass
-    
+
     def on_training_end(self):
         # Called when training ends
         pass
@@ -9240,11 +9193,11 @@ class VecEnv:
     def reset(self):
         # Reset all environments
         pass
-    
+
     def step(self, actions):
         # Perform actions in all environments
         pass
-    
+
     def close(self):
         # Close all environments
         pass
@@ -9923,3 +9876,282 @@ class Ensemble:
 def average_checkpoints(paths):
     pass
 ```
+
+## Implementation Notes
+
+Preserve all public return shapes, ordering, state transitions, and exception contracts described above. Keep installation metadata and public imports consistent and deterministic.
+
+Use the public language semantics described by each API family. Keep repeated calls deterministic
+unless state mutation is explicitly part of the contract. Public re-exports and declarations must
+match runtime behavior, and installation must not rely on a repository checkout or network access.
+
+## Examples
+
+The API-specific examples above are normative demonstrations of ordinary behavior. These four
+local snippets also provide ordinary and boundary-oriented calls without external services:
+
+```python
+from stable_baselines3 import (
+    PPO, A2C, DQN, SAC, TD3, DDPG,
+    HerReplayBuffer, ReplayBuffer,
+    VecNormalize, VecMonitor, DummyVecEnv, SubprocVecEnv,
+    CheckpointCallback, EvalCallback, StopTrainingOnRewardThreshold
+)
+# workspace\stable_baselines3\common\policies.py
+from stable_baselines3.common.distributions import (
+    BernoulliDistribution,
+    CategoricalDistribution,
+    DiagGaussianDistribution,
+    Distribution,
+    MultiCategoricalDistribution,
+    StateDependentNoiseDistribution,
+    make_proba_distribution,
+)
+from stable_baselines3.common.preprocessing import get_action_dim, is_image_space, maybe_transpose, preprocess_obs
+from stable_baselines3.common.torch_layers import (
+    BaseFeaturesExtractor,
+    CombinedExtractor,
+    FlattenExtractor,
+    MlpExtractor,
+    NatureCNN,
+    create_mlp,
+)
+from stable_baselines3.common.type_aliases import PyTorchObs, Schedule
+from stable_baselines3.common.utils import get_device, is_vectorized_observation, obs_as_tensor
+
+# workspace\stable_baselines3\common\base_class.py
+from stable_baselines3.common import utils
+from stable_baselines3.common.callbacks import BaseCallback, CallbackList, ConvertCallback, ProgressBarCallback
+from stable_baselines3.common.env_util import is_wrapped
+from stable_baselines3.common.logger import Logger
+from stable_baselines3.common.monitor import Monitor
+from stable_baselines3.common.noise import ActionNoise
+from stable_baselines3.common.policies import BasePolicy
+from stable_baselines3.common.preprocessing import check_for_nested_spaces, is_image_space, is_image_space_channels_first
+from stable_baselines3.common.save_util import load_from_zip_file, recursive_getattr, recursive_setattr, save_to_zip_file
+from stable_baselines3.common.type_aliases import GymEnv, MaybeCallback, Schedule, TensorDict
+from stable_baselines3.common.utils import (
+    FloatSchedule,
+    check_for_correct_spaces,
+    get_device,
+    get_system_info,
+    set_random_seed,
+    update_learning_rate,
+)
+from stable_baselines3.common.vec_env import (
+    DummyVecEnv,
+    VecEnv,
+    VecNormalize,
+    VecTransposeImage,
+    is_vecenv_wrapped,
+    unwrap_vec_normalize,
+)
+from stable_baselines3.common.vec_env.patch_gym import _convert_space, _patch_env
+
+# workspace\stable_baselines3\common\buffers.py
+from stable_baselines3.common.preprocessing import get_action_dim, get_obs_shape
+from stable_baselines3.common.type_aliases import (
+    DictReplayBufferSamples,
+    DictRolloutBufferSamples,
+    ReplayBufferSamples,
+    RolloutBufferSamples,
+)
+from stable_baselines3.common.utils import get_device
+from stable_baselines3.common.vec_env import VecNormalize
+
+# workspace\stable_baselines3\common\callbacks.py
+from stable_baselines3.common.logger import Logger
+from stable_baselines3.common.evaluation import evaluate_policy
+from stable_baselines3.common.vec_env import DummyVecEnv, VecEnv, sync_envs_normalization
+
+# workspace\stable_baselines3\common\distributions.py
+from torch.distributions import Bernoulli, Categorical, Normal
+from stable_baselines3.common.preprocessing import get_action_dim
+
+# workspace\stable_baselines3\common\env_checkr.py
+from stable_baselines3.common.preprocessing import check_for_nested_spaces, is_image_space_channels_first
+from stable_baselines3.common.vec_env import DummyVecEnv, VecCheckNan
+
+# workspace\stable_baselines3\common\on_policy_algorithm.py
+from stable_baselines3.common.base_class import BaseAlgorithm
+from stable_baselines3.common.buffers import DictRolloutBuffer, RolloutBuffer
+from stable_baselines3.common.callbacks import BaseCallback
+from stable_baselines3.common.policies import ActorCriticPolicy
+from stable_baselines3.common.type_aliases import GymEnv, MaybeCallback, Schedule
+from stable_baselines3.common.utils import obs_as_tensor, safe_mean
+from stable_baselines3.common.vec_env import VecEnv
+
+# workspace\stable_baselines3\common\off_policy_algorithm.py
+from stable_baselines3.common.base_class import BaseAlgorithm
+from stable_baselines3.common.buffers import DictReplayBuffer, NStepReplayBuffer, ReplayBuffer
+from stable_baselines3.common.callbacks import BaseCallback
+from stable_baselines3.common.noise import ActionNoise, VectorizedActionNoise
+from stable_baselines3.common.policies import BasePolicy
+from stable_baselines3.common.save_util import load_from_pkl, save_to_pkl
+from stable_baselines3.common.type_aliases import GymEnv, MaybeCallback, RolloutReturn, Schedule, TrainFreq, TrainFrequencyUnit
+from stable_baselines3.common.utils import safe_mean, should_collect_more_steps
+from stable_baselines3.common.vec_env import VecEnv
+from stable_baselines3.her.her_replay_buffer import HerReplayBuffer
+
+# workspace\stable_baselines3\vec_env\__init__.py
+from stable_baselines3.common.vec_env.base_vec_env import CloudpickleWrapper, VecEnv, VecEnvWrapper
+from stable_baselines3.common.vec_env.dummy_vec_env import DummyVecEnv
+from stable_baselines3.common.vec_env.stacked_observations import StackedObservations
+from stable_baselines3.common.vec_env.subproc_vec_env import SubprocVecEnv
+from stable_baselines3.common.vec_env.vec_check_nan import VecCheckNan
+from stable_baselines3.common.vec_env.vec_extract_dict_obs import VecExtractDictObs
+from stable_baselines3.common.vec_env.vec_frame_stack import VecFrameStack
+from stable_baselines3.common.vec_env.vec_monitor import VecMonitor
+from stable_baselines3.common.vec_env.vec_normalize import VecNormalize
+from stable_baselines3.common.vec_env.vec_transpose import VecTransposeImage
+from stable_baselines3.common.vec_env.vec_video_recorder import VecVideoRecorder
+
+# workspace\stable_baselines3\envs\__init__.py
+from stable_baselines3.common.envs.bit_flipping_env import BitFlippingEnv
+from stable_baselines3.common.envs.identity_env import (
+    FakeImageEnv,
+    IdentityEnv,
+    IdentityEnvBox,
+    IdentityEnvMultiBinary,
+    IdentityEnvMultiDiscrete,
+)
+from stable_baselines3.common.envs.multi_input_envs import SimpleMultiObsEnv
+```
+
+```python
+class A2C(OnPolicyAlgorithm):
+    policy_aliases: ClassVar[dict[str, type[BasePolicy]]] = {
+        "MlpPolicy": ActorCriticPolicy,
+        "CnnPolicy": ActorCriticCnnPolicy,
+        "MultiInputPolicy": MultiInputActorCriticPolicy,
+    }
+
+    def __init__(
+        self,
+        policy: Union[str, type[ActorCriticPolicy]],
+        env: Union[GymEnv, str],
+        learning_rate: Union[float, Schedule] = 7e-4,
+        n_steps: int = 5,
+        gamma: float = 0.99,
+        gae_lambda: float = 1.0,
+        ent_coef: float = 0.0,
+        vf_coef: float = 0.5,
+        max_grad_norm: float = 0.5,
+        rms_prop_eps: float = 1e-5,
+        use_rms_prop: bool = True,
+        use_sde: bool = False,
+        sde_sample_freq: int = -1,
+        rollout_buffer_class: Optional[type[RolloutBuffer]] = None,
+        rollout_buffer_kwargs: Optional[dict[str, Any]] = None,
+        normalize_advantage: bool = False,
+        stats_window_size: int = 100,
+        tensorboard_log: Optional[str] = None,
+        policy_kwargs: Optional[dict[str, Any]] = None,
+        verbose: int = 0,
+        seed: Optional[int] = None,
+        device: Union[th.device, str] = "auto",
+        _init_setup_model: bool = True,
+    ):
+        ...
+
+    def train(self) -> None:
+        ...
+
+    def learn(
+        self: SelfA2C,
+        total_timesteps: int,
+        callback: MaybeCallback = None,
+        log_interval: int = 100,
+        tb_log_name: str = "A2C",
+        reset_num_timesteps: bool = True,
+        progress_bar: bool = False,
+    ) -> SelfA2C:
+        ...
+```
+
+```python
+class BaseModel(nn.Module):
+    def __init__(
+        self,
+        observation_space: spaces.Space,
+        action_space: spaces.Space,
+        features_extractor_class: type[BaseFeaturesExtractor] = FlattenExtractor,
+        features_extractor_kwargs: Optional[dict[str, Any]] = None,
+        features_extractor: Optional[BaseFeaturesExtractor] = None,
+        normalize_images: bool = True,
+        optimizer_class: type[th.optim.Optimizer] = th.optim.Adam,
+        optimizer_kwargs: Optional[dict[str, Any]] = None,
+    ):
+        ...
+    def _update_features_extractor(
+        self,
+        net_kwargs: dict[str, Any],
+        features_extractor: Optional[BaseFeaturesExtractor] = None,
+    ) -> dict[str, Any]:
+        ...
+    def make_features_extractor(self) -> BaseFeaturesExtractor:
+        ...
+    def extract_features(self, obs: PyTorchObs, features_extractor: BaseFeaturesExtractor) -> th.Tensor:
+        ...
+    def _get_constructor_parameters(self) -> dict[str, Any]:
+        ...
+    @property
+    def device(self) -> th.device:
+        ...
+    def save(self, path: str) -> None:
+        ...
+    @classmethod
+    def load(cls: type[SelfBaseModel], path: str, device: Union[th.device, str] = "auto") -> SelfBaseModel:
+        ...
+    def load_from_vector(self, vector: np.ndarray) -> None:
+        ...
+    def parameters_to_vector(self) -> np.ndarray:
+        ...
+    def set_training_mode(self, mode: bool) -> None:
+        ...
+    def is_vectorized_observation(self, observation: Union[np.ndarray, dict[str, np.ndarray]]) -> bool:
+        ...
+    def obs_to_tensor(self, observation: Union[np.ndarray, dict[str, np.ndarray]]) -> tuple[PyTorchObs, bool]:
+        ...
+```
+
+```python
+class BasePolicy(BaseModel, ABC):
+    def __init__(self, *args, squash_output: bool = False, **kwargs):
+        ...
+    @staticmethod
+    def _dummy_schedule(progress_remaining: float) -> float:
+        ...
+    @property
+    def squash_output(self) -> bool:
+        ...
+    @staticmethod
+    def init_weights(module: nn.Module, gain: float = 1) -> None:
+        ...
+    @abstractmethod
+    def _predict(self, observation: PyTorchObs, deterministic: bool = False) -> th.Tensor:
+        ...
+    def predict(
+        self,
+        observation: Union[np.ndarray, dict[str, np.ndarray]],
+        state: Optional[tuple[np.ndarray, ...]] = None,
+        episode_start: Optional[np.ndarray] = None,
+        deterministic: bool = False,
+    ) -> tuple[np.ndarray, Optional[tuple[np.ndarray, ...]]]:
+        ...
+    def scale_action(self, action: np.ndarray) -> np.ndarray:
+        ...
+    def unscale_action(self, scaled_action: np.ndarray) -> np.ndarray:
+        ...
+```
+
+## Error Handling and Boundary Conditions
+
+Empty values, malformed values, unsupported types, exhausted inputs, invalid options, and missing
+local resources must follow the API-specific contracts above. Preserve documented exception types
+and messages where they are stated. Do not silently coerce an unsupported value merely to produce
+a result, and do not mutate caller-owned data unless the relevant API explicitly promises it.
+
+All filesystem, process, terminal, clock, randomness, and service interactions are forbidden unless
+the API guide explicitly includes that local behavior. Even for an API that models remote or async
+work, evaluation must remain bounded, deterministic, and disconnected from public networks.

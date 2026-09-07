@@ -1,74 +1,36 @@
-## Introduction and Goals of the Python-pathspec Project
+# python-pathspec
 
-Python-pathspec is a Python library **for file path pattern matching**, specifically designed to implement pattern matching functions similar to those in Git's `.gitignore` files. Based on Git's wildmatch pattern matching algorithm (derived from Rsync's wildmatch), this library can efficiently parse and apply file path pattern rules, enabling file inclusion, exclusion, and filtering operations. Its core features include: **Git-style pattern matching** (supporting complex patterns such as wildcards, negation patterns, and directory markers), **flexible file matching interfaces** (supporting single-file checks, batch file matching, directory tree traversal, etc.), and **full implementation of the GitIgnore specification** (accurately replicating Git's `.gitignore` behavior through the `GitIgnoreSpec` class). In short, Python-pathspec aims to provide a robust and efficient file path pattern matching system for applications that require precise control over file selection, such as file filtering, backup tools, and code analysis (for example, compiling pattern rules via `PathSpec.from_lines()` and performing file matching via the `match_files()` function).
+## Project Description
 
-## Natural Language Instruction (Prompt)
+Build an installable `python-pathspec` project from an empty `workspace/`. The project must reproduce the public, local behavior documented in this instruction, including its package entry points, return shapes, ordering, state changes, and documented exceptions. This is a repository-generation task: the agent creates the build metadata and source modules rather than editing an existing implementation.
 
-Please create a Python project named python-pathspec to implement a file path pattern matching library. The project should include the following features:
+Distribution identity: `python-pathspec`; public import package begins at `pathspec`.
+The scope is the deterministic local API described below. Network services, undeclared external state, and behavior not represented by the public contract are outside the task.
 
-1. **Core Pattern Matching Engine**: Implement a pattern matching system based on the Git wildmatch algorithm, capable of parsing and applying path pattern rules similar to those in `.gitignore` files. Support complex pattern syntax such as wildcards (e.g., `*.txt`, `**/build/`), negation patterns (e.g., `!*.tmp`), and directory markers (e.g., `src/`).
+## Natural Language Instruction
 
-2. **PathSpec Base Class**: Create the `PathSpec` class as the core interface for pattern matching, providing the `from_lines()` method to compile pattern rules from text lines, the `match_file()` method to check if a single file matches, the `match_files()` method to batch match a list of files, and the `match_tree_files()` method to traverse a directory tree for matching.
+Create the complete project in an empty workspace and make it installable with the command in the environment section. Implement these task-specific capability families from the local API contract:
 
-3. **GitIgnore Specification Implementation**: Implement the `GitIgnoreSpec` class to accurately replicate Git's `.gitignore` behavior, including pattern priority rules, directory matching logic, and negation pattern handling. This class should inherit from `PathSpec` and override the matching logic to conform to Git specifications.
+1. `1. Module Import`: expose the documented public entry points, signatures, inputs, outputs, and error behavior.
+2. `2. PathSpec Class`: preserve the documented object or module behavior, including state and side effects.
+3. `Functional Description`: preserve ordering, determinism, serialization, and boundary semantics where specified.
+4. `Basic Import`: make the public package usable through the documented import path or command-line entry.
 
-4. **Pattern Parser**: Create the `GitWildMatchPattern` class to implement the Git wildmatch algorithm, converting pattern strings into regular expressions and supporting functions such as escape characters, comment handling, and pattern negation. This class should inherit from the `RegexPattern` base class.
+Do not add speculative APIs or substitute a different package. Keep the implementation self-contained, ensure imports work after installation, and use the exact public names and signatures in the API Usage Guide. A small implementation is acceptable only when it still satisfies every documented contract.
 
-5. **Utility Function Module**: Provide utility functions for file path standardization, directory tree traversal, pattern lookup, etc., such as `normalize_file()`, `iter_tree_files()`, `lookup_pattern()`, etc., supporting cross-platform path handling.
+## Supports or Environment Configuration
 
-6. **Interface Design**: Design clear API interfaces for each functional module, supporting both command-line and programmatic calls. Each module should define clear input and output formats, providing type hints and docstrings.
+- CPython 3.10 on the pinned Linux image.
+- Distribution identity: `python-pathspec`; public import package begins at `pathspec`.
+- Install from the workspace with `python -m pip install .`; do not download packages during evaluation.
+- No third-party runtime package is declared by the local task metadata; standard-library support is sufficient unless the API section says otherwise.
+- Build metadata and package data must be present in the workspace and agree with the public import paths below.
+- Agent, candidate, evaluator, Oracle, and control execution are network-isolated. Do not access GitHub, package registries, DNS, databases, or external services at runtime.
+- Use deterministic local inputs. Do not rely on the current wall clock, host-specific absolute paths, undeclared environment variables, or an installed copy of the target package.
 
-7. **Examples**: Provide sample code to demonstrate how to use `PathSpec.from_lines()` to compile pattern rules, how to use `match_files()` to perform file matching, and how to use `GitIgnoreSpec` to implement the full `.gitignore` functionality.
+## Project Directory Structure
 
-8. **Core File Requirements**: The project must include a complete `pyproject.toml` file in order to configure the project as an installable package (supporting 'pip install') and declare a complete list of dependencies . We need to provide `pathspec/_init__. py` as a unified API entry point to information, allowing users to access all major functions through simple statements such as` from pathspec import xxx `.Import `RecursionError` exception, `check_match_file` function, `iter_tree_entries` function, `iter_tree_files` function, `match_file` function, `normalize_file` function, `CheckResult` class and `lookup_pattern` function from the `pathspec.util` module; import `GitWildMatchPattern` class, `GitWildMatchPatternError` exception, `_BYTES_ENCODING` variable and `_DIR_MARK` variable from the `pathspec.patterns.gitwildmatch` module; import `PathSpec` class from the `pathspec` module; import `GitIgnoreSpec` class from the `pathspec.gitignore` module.Version information is provided through the `pathspec/_meta.py` file, which defines the `__version__` variable to specify the version number (`__version__ = "0.12.2.dev1"`).
-
-## Environment Configuration
-
-### Python Version
-
-The Python version used in the current project is: Python 3.10.11
-
-### Core Dependency Library Versions
-
-```Plain
-alabaster                     1.0.0
-babel                         2.17.0
-certifi                       2025.8.3
-charset-normalizer            3.4.2
-docutils                      0.21.2
-exceptiongroup                1.3.0
-flit_core                     3.12.0
-idna                          3.10
-imagesize                     1.4.1
-iniconfig                     2.1.0
-Jinja2                        3.1.6
-MarkupSafe                    3.0.2
-packaging                     25.0
-pip                           23.0.1
-pluggy                        1.6.0
-Pygments                      2.19.2
-pytest                        8.4.1
-requests                      2.32.4
-setuptools                    65.5.1
-snowballstemmer               3.0.1
-Sphinx                        8.1.3
-sphinxcontrib-applehelp       2.0.0
-sphinxcontrib-devhelp         2.0.0
-sphinxcontrib-htmlhelp        2.1.0
-sphinxcontrib-jsmath          1.0.1
-sphinxcontrib-qthelp          2.0.0
-sphinxcontrib-serializinghtml 2.0.0
-tomli                         2.2.1
-typing_extensions             4.14.1
-urllib3                       2.5.0
-wheel                         0.40.0
-```
-
-## Architecture of the Python-pathspec Project
-
-### Project Directory Structure
-
-```Plain
+```text
 workspace/
 ├── .gitignore
 ├── .readthedocs.yaml
@@ -107,7 +69,11 @@ workspace/
 └── tox.ini
 ```
 
+The tree lists agent-owned public project files only. Add additional public modules when required by the API Usage Guide, but keep their import paths consistent with package metadata. Do not create evaluator-only files, hidden fixtures, or private reports in the generated project.
+
 ## API Usage Guide
+
+The following is the task-specific public contract recovered from the local instruction and inventory. For every function, class, method, constant, export, and command named below, preserve its complete signature, accepted input domain, return type and shape, ordering, determinism, state/side effects, exceptions, and examples. When the source contract gives an optional argument or a compatibility alias, it is part of the required surface.
 
 ### 1. Module Import
 
@@ -743,7 +709,7 @@ print(include) # Outputs whether matched files should be included
 class RegexMatchResult(object):
     # Restrict instance attributes to optimize memory usage
     __slots__ = ('match',)
-    
+
     match: 're.Match[Any]'
 ```
 
@@ -1085,11 +1051,11 @@ class CheckResult(Generic[TStrPath]):
 ```python
 class RecursionError(Exception):
     __slots__ = ()
-    
+
     def __init__(self, real_path: str, first_path: str, second_path: str) -> None:
         """
         Initialize a RecursionError instance.
-        
+
         :param real_path: The actual path where recursion was detected
         :param first_path: The first encountered path
         :param second_path: The second encountered path
@@ -1516,3 +1482,127 @@ included_files = {r.file for r in results if r.include}
 excluded_files = {r.file for r in results if r.include is False}
 unmatched_files = {r.file for r in results if r.include is None}
 ```
+
+## Implementation Notes
+
+- Keep the root exports and module paths stable after installation; do not make behavior depend on the repository's current directory.
+- Preserve explicit ordering guarantees. When the contract does not promise an order, do not introduce a new observable order accidentally.
+- Propagate documented exceptions and avoid replacing them with generic errors. Validate malformed, empty, boundary, and repeated inputs as described by the API contract.
+- Keep filesystem, process, terminal, and resource effects bounded and local. Close files and other resources on both success and failure.
+- Do not copy an upstream checkout, implementation source, or evaluation-only material into the generated project. Implement the public behavior from this specification.
+
+## Examples
+
+The examples below are retained from the local task specification. They are starting points for ordinary calls and boundary/error behavior; their exact output and exception semantics remain governed by the API Usage Guide.
+
+### Example 1: ordinary usage
+```text
+alabaster                     1.0.0
+babel                         2.17.0
+certifi                       2025.8.3
+charset-normalizer            3.4.2
+docutils                      0.21.2
+exceptiongroup                1.3.0
+flit_core                     3.12.0
+idna                          3.10
+imagesize                     1.4.1
+iniconfig                     2.1.0
+Jinja2                        3.1.6
+MarkupSafe                    3.0.2
+packaging                     25.0
+pip                           23.0.1
+pluggy                        1.6.0
+Pygments                      2.19.2
+pytest                        8.4.1
+requests                      2.32.4
+setuptools                    65.5.1
+snowballstemmer               3.0.1
+Sphinx                        8.1.3
+sphinxcontrib-applehelp       2.0.0
+sphinxcontrib-devhelp         2.0.0
+sphinxcontrib-htmlhelp        2.1.0
+sphinxcontrib-jsmath          1.0.1
+sphinxcontrib-qthelp          2.0.0
+sphinxcontrib-serializinghtml 2.0.0
+tomli                         2.2.1
+typing_extensions             4.14.1
+urllib3                       2.5.0
+wheel                         0.40.0
+```
+
+### Example 2: ordinary usage
+```text
+workspace/
+├── .gitignore
+├── .readthedocs.yaml
+├── CHANGES.rst
+├── DEV.md
+├── LICENSE
+├── MANIFEST.in
+├── Makefile
+├── README-dist.rst
+├── README.rst
+├── dev
+│   ├── .gitignore
+│   └── venv.sh
+├── doc
+│   ├── Makefile
+│   ├── requirements.txt
+│   ├── source
+│   │   ├── api.rst
+│   │   ├── changes.rst
+│   │   ├── conf.py
+│   │   ├── index.rst
+│   │   └── readme.rst
+├── pathspec
+│   ├── __init__.py
+│   ├── _meta.py
+│   ├── gitignore.py
+│   ├── pathspec.py
+│   ├── pattern.py
+│   ├── patterns
+│   │   ├── __init__.py
+│   │   └── gitwildmatch.py
+│   ├── py.typed
+│   └── util.py
+├── prebuild.py
+├── pyproject.toml
+└── tox.ini
+```
+
+### Example 3: boundary or error behavior
+```text
+from pathspec.util import (
+	RecursionError,
+	check_match_file,
+	iter_tree_entries,
+	iter_tree_files,
+	match_file,
+	normalize_file,
+    CheckResult,
+    lookup_pattern
+  )
+from pathspec.patterns.gitwildmatch import (
+	GitWildMatchPattern,
+	GitWildMatchPatternError,
+	_BYTES_ENCODING,
+	_DIR_MARK)
+from pathspec import (
+	PathSpec)
+from pathspec.gitignore import (
+	GitIgnoreSpec)
+```
+
+### Example 4: boundary or error behavior
+```text
+from pathspec import PathSpec
+```
+
+
+## Error Handling and Boundary Conditions
+
+- Empty inputs, invalid types, malformed text or paths, unavailable resources, duplicate calls, and cancellation/timeout cases must follow the exception and return-value contracts documented for the relevant API.
+- Do not silently coerce values, reorder results, swallow exceptions, or use a fallback dependency unless the API section explicitly requires that behavior.
+- File and environment operations must use caller-provided paths and documented defaults only; never read undeclared host files or network resources.
+- The implementation must remain usable in the stated NoNetwork environment. A missing optional integration should expose the documented availability or error behavior rather than attempting an online install.
+- Security-sensitive inputs must be treated as data. Do not execute strings, load untrusted code, or interpolate shell commands unless that behavior is explicitly part of the documented public API.

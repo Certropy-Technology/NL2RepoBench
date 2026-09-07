@@ -12,6 +12,15 @@ models requests, responses, body data, connection closure, header rules,
 wire serialization, wire parsing, and the coupled client/server state machine.
 The package contains no socket or network implementation.
 
+## Natural Language Instruction
+
+Create `h11` from an empty `workspace/`. Implement the event model, normalized
+headers, incremental HTTP/1.1 readers and writers, and the client/server state
+machine described below. The result must be an installable package rather than
+a single demonstration function. Preserve wire bytes, event order, sentinel
+identity, and protocol error classes. Keep all I/O supplied by the caller; this
+project does not open sockets or contact a service.
+
 ## Supports
 
 - `pip install .` from a clean workspace and normal imports of `h11`.
@@ -20,6 +29,29 @@ The package contains no socket or network implementation.
   `h11._state`, `h11._util`, `h11._abnf`, and `h11.py.typed`.
 - Standard-library-only runtime behavior. Do not add runtime dependencies,
   network clients, subprocesses, or generated endpoint code.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── h11/
+│   ├── __init__.py
+│   ├── _abnf.py
+│   ├── _connection.py
+│   ├── _events.py
+│   ├── _headers.py
+│   ├── _readers.py
+│   ├── _receivebuffer.py
+│   ├── _state.py
+│   ├── _util.py
+│   ├── _writers.py
+│   └── py.typed
+└── README.md
+```
+
+The metadata must map the package root to `h11`; private tests, verifier files,
+Oracle files, and reports are not part of this tree.
 
 ## API Usage Guide
 
@@ -94,3 +126,33 @@ separate UID-isolated subprocess and passes only JSON-compatible scenarios.
 Do not read hidden files or write trusted reports. The full upstream test suite
 is used as provenance; the scored denominator is the independent 24-leaf
 contract covering the deterministic local protocol surface.
+
+## Examples
+
+```python
+from h11 import CLIENT, Connection, Request
+
+conn = Connection(CLIENT)
+wire = conn.send(Request(method="GET", target="/", headers=[("Host", "example.test")]))
+assert wire.startswith(b"GET / HTTP/1.1")
+```
+
+```python
+from h11 import CLIENT, Connection, Data, EndOfMessage, Request
+
+conn = Connection(CLIENT)
+conn.send(Request(method="POST", target="/upload", headers=[("Host", "example.test")]))
+conn.send(Data(data=b"payload"))
+conn.send(EndOfMessage())
+```
+
+## Error Handling and Boundary Conditions
+
+- Invalid local headers or illegal state transitions raise `LocalProtocolError`;
+  malformed peer bytes raise `RemoteProtocolError`.
+- Conflicting `Content-Length`, unsupported transfer framing, and an HTTP/1.1
+  request without `Host` must not be silently accepted.
+- `next_event()` may return `NEED_DATA` or `PAUSED`; EOF is supplied as
+  `receive_data(b"")` and is represented by `ConnectionClosed`.
+- Keep-alive cycles may restart only after both sides are complete. All agent,
+  candidate, verifier, Oracle, and control execution is `network_mode=no-network`.

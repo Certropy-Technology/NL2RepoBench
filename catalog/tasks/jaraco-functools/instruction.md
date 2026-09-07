@@ -1,89 +1,141 @@
 # Project Description
 
-Create an installable Python package named `jaraco.functools` with an importable
-package `jaraco.functools`. It provides small, deterministic function helpers
-that complement the standard library `functools` module.
+Create an installable Python package named `jaraco.functools`. It supplies
+small deterministic helpers for composition, memoization, decorators, retries,
+throttling, argument binding, and no-op/pass-through functions. The package
+complements rather than replaces the standard `functools` module.
 
-# Supports
+# Natural Language Instruction
 
-- Python 3.10 or newer and a root `pyproject.toml` using a setuptools build backend.
-- Runtime dependency declaration for `more-itertools`.
-- Installation with `python -m pip install -e .` without network access.
-- If using setuptools-scm with a source archive, provide a deterministic
-  `SETUPTOOLS_SCM_PRETEND_VERSION_FOR_JARACO_FUNCTOOLS` build value.
-- The public functions and class listed in the API guide below.
-- Preservation of wrapped function metadata where the guide says a decorator
-  preserves it.
+From an empty workspace, implement the documented public functions and
+`Throttler` class under `jaraco.functools`. Preserve wrapped function metadata,
+Python call semantics, per-instance caches, retry cleanup, descriptor behavior,
+and deterministic output. Provide packaging metadata and the `more_itertools`
+runtime dependency. Do not copy reference source, tests, or verifier files.
+
+# Supports or Environment Configuration
+
+- Python 3.10 or newer; evaluation uses Python 3.12 on Linux.
+- Distribution/import package: `jaraco.functools`. Use a root `pyproject.toml`
+  and a deterministic build version; if using setuptools-scm, honor the
+  supplied `SETUPTOOLS_SCM_PRETEND_VERSION_FOR_JARACO_FUNCTOOLS` value.
+- Runtime dependency: `more_itertools`; build tools are build-only.
+- Installation and all agent, candidate, verifier, Oracle, and control runs
+  are offline after dependencies are prepared. No network, clock, or external
+  service may affect behavior.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── README.md
+├── LICENSE
+└── jaraco/
+    ├── __init__.py
+    └── functools/
+        ├── __init__.py
+        └── py.typed
+```
 
 # API Usage Guide
 
-All names below are imported from `jaraco.functools`.
+All APIs below are imported from `jaraco.functools`.
 
-`compose(*funcs)` returns a callable that applies the functions from right to
-left. The innermost function may receive arbitrary positional and keyword
-arguments. An empty call follows `functools.reduce` and raises `TypeError`.
+```python
+compose(*funcs)
+once(func)
+method_cache(method, cache_wrapper=functools.lru_cache())
+apply(transform)
+result_invoke(action)
+invoke(func, /, *args, **kwargs)
+passthrough(func)
+Throttler(func, max_rate=float("Inf"))
+first_invoke(func1, func2)
+method_caller(name, /, *args, **kwargs)
+retry_call(func, cleanup=lambda: None, retries=0, trap=())
+retry(*args, **kwargs)
+```
 
-`once(func)` returns a `functools.wraps`-like wrapper that calls `func` only on
-its first invocation and reuses the saved result afterwards. The wrapper exposes
-`saved_result` after the first call and a `reset()` method; deleting
-`saved_result` also resets it.
+`compose` applies functions right-to-left; the innermost accepts the original
+arguments. An empty composition follows `functools.reduce` and raises
+`TypeError`. `once` calls once, exposes `saved_result`, and resets via
+`reset()` or deleting that attribute. `method_cache` installs a per-instance
+cache and exposes `cache_clear`; special methods use an internal cache.
 
-`method_cache(method, cache_wrapper=functools.lru_cache())` installs a per-
-instance cache on the first normal method call. The cached method exposes
-`cache_clear()`. The decorator also supports `__getitem__` and `__getattr__`,
-which are special methods and therefore use an internal per-instance cache.
+`apply` transforms a return value; `result_invoke` performs a side effect and
+returns the original result; `invoke` calls immediately and returns the same
+function object; `passthrough` calls a function and returns its first argument.
+`Throttler` forwards calls while exposing `func`, `max_rate`, `last_called`, and
+`reset`; it also works as a descriptor and unwraps another `Throttler`.
 
-`apply(transform)` decorates a function and applies `transform` to its return
-value. `result_invoke(action)` decorates a function, calls `action(result)` for
-side effect, and returns the original result. `invoke(func, /, *args, **kwargs)`
-calls `func` immediately and returns the same function object. `passthrough(func)`
-calls `func` with the first argument and returns that first argument unchanged.
+`first_invoke` calls its first function and passes the result arguments to the
+second. `method_caller` wraps `operator.methodcaller` and emits
+`DeprecationWarning`. `retry_call` retries trapped failures, runs `cleanup`
+after each, and propagates the final exception; infinite retries continue until
+success. `retry` is its decorator form.
 
-`Throttler(func, max_rate=float('Inf'))` is a callable rate limiter. It exposes
-`func`, `max_rate`, `last_called`, and `reset()`, forwards calls to `func`, and
-can be used as a descriptor. Wrapping another `Throttler` unwraps its original
-function. Tests should use an infinite rate for deterministic behavior.
+```python
+print_yielded(func)
+pass_none(func)
+signed(func)
+none_as(value, replacement=None)
+assign_params(func, namespace)
+save_method_args(method)
+except_(*exceptions, replace=None, use=None)
+identity(x)
+bypass_when(check, *, _op=identity)
+bypass_unless(check)
+splat(func)
+chainable(method)
+noop(*args, **kwargs)
+```
 
-`first_invoke(func1, func2)` returns a callable that invokes `func1()` first,
-then invokes `func2` with the received arguments and returns its result.
-`method_caller(name, /, *args, **kwargs)` is the deprecated wrapper around
-`operator.methodcaller`: each construction emits `DeprecationWarning` and
-returns the constructed method caller.
-
-`retry_call(func, cleanup=lambda: None, retries=0, trap=())` retries a callable
-for the requested number of trapped failures, calling `cleanup()` after each
-trapped failure. The final call propagates its exception. `retries=float('inf')`
-means retry until success. `retry(*args, **kwargs)` is the decorator form.
-
-`print_yielded(func)` decorates a generator function and consumes it, printing
-each yielded value on its own line. `pass_none(func)` skips `func` and returns
-`None` when its first positional argument is `None`. `signed(func)` adds `+` to
-positive formatted values, leaves negative values as formatted, and leaves zero
-unsigned. `none_as(value, replacement=None)` returns `replacement` only for
-`None`.
-
-`assign_params(func, namespace)` returns a partial that supplies the entries in
-`namespace` whose names occur in `func`'s signature. Normal Python missing- and
-unexpected-argument errors remain observable. `save_method_args(method)` stores
-the most recent positional and keyword arguments on the instance as
-`_saved_<method name>.args` and `.kwargs` before calling the method.
-
-`except_(*exceptions, replace=None, use=None)` decorates a function and catches
-only the listed exception types. It returns `replace`, or evaluates the
-provided `use` expression in the wrapper call context when supplied.
-`identity(x)` returns `x`. `bypass_when(check, *, _op=identity)` returns a
-decorator that returns its first argument when `_op(check)` is truthy, otherwise
-calls the wrapped unary function. `bypass_unless(check)` is the inverse.
-
-`splat(func)` adapts a function so a tuple/list is expanded as positional
-arguments and a mapping is expanded as keyword arguments. `chainable(method)`
-requires the wrapped method to return `None` and then returns `self`.
-`noop(*args, **kwargs)` accepts anything and returns `None`.
+`print_yielded` consumes a generator and prints each item on its own line.
+`pass_none` bypasses its function for a first argument of `None`; `signed`
+formats positive numbers with `+`; `none_as` replaces only `None`.
+`assign_params` creates a partial from matching signature names, and
+`save_method_args` records the latest call as `_saved_<name>.args` and
+`.kwargs`. `except_` catches only listed exceptions and returns `replace` or
+evaluates `use`. `identity`, bypass helpers, `splat`, `chainable`, and `noop`
+retain the ordinary argument and return contracts stated by their signatures.
 
 # Implementation Notes
 
-Keep behavior local, deterministic, and compatible with ordinary Python call
-semantics. Do not add network access, external services, generated vendored
-dependencies, or hard-coded verifier-specific hooks. The private verifier runs
-the public API through a separate child process, so the implementation must be
-installable into a candidate-owned site and importable there.
+Use `functools.wraps` where metadata preservation is promised. Cache state is
+per instance, not a shared mutable default. Retry and throttling behavior must
+be deterministic in tests; callers can use an infinite rate. Do not add
+network, subprocess, generated dependency, or verifier-specific behavior.
+
+# Examples
+
+```python
+from jaraco.functools import compose, once
+
+double = lambda x: x * 2
+inc_after_double = compose(lambda x: x + 1, double)
+assert inc_after_double(3) == 7
+
+f = once(lambda: "ready")
+assert f() == f() == "ready"
+f.reset()
+```
+
+```python
+from jaraco.functools import retry_call, pass_none
+
+assert pass_none(str)(None) is None
+assert retry_call(lambda: 4, retries=2) == 4
+```
+
+# Error Handling and Boundary Conditions
+
+The task id is `jaraco-functools`; the distribution is `jaraco.functools`.
+
+- Empty `compose()` raises the normal reduction `TypeError`.
+- `retry_call` runs cleanup only after trapped failures and propagates the
+  final untrapped/final failure.
+- `chainable` requires the wrapped method to return `None`; otherwise it must
+  report the contract violation rather than silently return `self`.
+- `except_` must not catch exception classes that were not requested.
+- Avoid current time and unbounded retries in deterministic evaluation.

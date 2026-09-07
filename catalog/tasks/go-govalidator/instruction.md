@@ -7,6 +7,13 @@ root. Implement the deterministic string-validation and transformation surface
 described below. The repository is evaluated through a newline-delimited JSON
 bridge that is copied into the candidate module by the verifier.
 
+## Natural Language Instruction
+
+Create the pure-Go `github.com/asaskevich/govalidator/v12` module from an empty
+workspace. Implement the documented validators, string transformations, and
+JSON-safe converters with deterministic Unicode, regex, error, and ordering
+behavior. Keep the package free of I/O, network access, and global state.
+
 ## Supports
 
 - Linux/amd64 with Go `1.26.5`.
@@ -18,9 +25,31 @@ bridge that is copied into the candidate module by the verifier.
 - Offline builds with `GOOS=linux GOARCH=amd64 GOWORK=off GOPROXY=off
   GOSUMDB=off GOTOOLCHAIN=local` and `go build -mod=vendor`.
 
+## Project Directory Structure
+
+```text
+workspace/
+├── go.mod
+├── go.sum
+├── vendor/modules.txt
+├── validator.go
+├── transforms.go
+└── conversion.go
+```
+
+The module path is `github.com/asaskevich/govalidator/v12` and the public
+package name is `govalidator`. The JSON bridge is a transport adapter, not a
+replacement for the library implementation.
+
 ## API Usage Guide
 
 Implement these public functions in package `govalidator`.
+
+```go
+import govalidator "github.com/asaskevich/govalidator/v12"
+
+ok := govalidator.IsEmail("user@example.com")
+```
 
 ### Validators
 
@@ -117,6 +146,26 @@ The bridge rejects any string longer than 64 KiB, any line index outside the
 safe signed integer range, unknown operations, wrong argument counts, and
 malformed JSON. It emits one JSON response per input line, never diagnostics to
 stdout, and must not panic on malformed requests.
+
+## Examples
+
+```go
+if govalidator.IsIPv4("192.0.2.1") {
+    // accept the syntax-only IPv4 form
+}
+```
+
+```go
+lines := govalidator.GetLines("first\nsecond")
+line, err := govalidator.GetLine("first\nsecond", 1)
+```
+
+## Error Handling and Boundary Conditions
+
+Invalid regular expressions return the documented false/error result rather
+than panicking. Empty strings, Unicode runes, malformed JSON, unsupported
+conversions, oversized bridge strings, and out-of-range indexes follow the
+contracts above; diagnostics stay off stdout.
 
 ## Implementation Notes
 

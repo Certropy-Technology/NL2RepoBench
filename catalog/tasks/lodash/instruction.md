@@ -1,196 +1,191 @@
 # Project Description
 
 Build an installable npm package named `lodash`, version `4.18.1`, from an
-empty workspace. The package is a CommonJS utility library for deterministic
-array, object, collection, string, number, and JSON-value operations.
+empty workspace. It is a CommonJS utility library for deterministic array,
+object, collection, string, number, and JSON-value operations. This task is a
+bounded JSON-compatible slice of the frozen Lodash root API, not the complete
+upstream distribution.
 
-This task is a bounded JSON-compatible slice of the frozen Lodash root API.
-Implement the documented behavior with your own code. The package must not
-download, clone, or embed the upstream implementation or its tests.
+# Natural Language Instruction
+
+Create the `lodash` project from an empty `workspace/`. Provide a CommonJS
+root object that exposes `VERSION` and every callable listed in the API guide.
+Implement the array, object/path, collection, string, number/aggregate, and
+JSON predicate families for the stated JSON input domain. Preserve order and
+determinism wherever the contract says so, and keep the documented root API
+usable through `const _ = require('lodash')`.
+
+Do not retrieve or embed the upstream implementation or tests. Do not add
+callbacks, executable iteratees, browser or CLI behavior, wrapper chains,
+templates, mixins, FP entry points, or other excluded surfaces. The generated
+package must be self-contained and runtime-offline.
 
 # Supports
 
-- Node.js `24.19.0` and npm `11.17.0` on `linux/amd64`.
-- `package.json` must declare `"name": "lodash"`, `"version": "4.18.1"`,
-  `"main": "lodash.js"`, and `"license": "MIT"`.
-- The package root is CommonJS: `const _ = require("lodash")`. Do not set a
-  `type` field that makes `lodash.js` an ES module.
-- The root object must expose `VERSION === "4.18.1"` and every callable named
-  below.
-- Commit a matching npm v3 `package-lock.json`. The package must install using
-  `npm ci --offline --ignore-scripts --no-audit --no-fund`.
-- Do not declare `scripts`, runtime dependencies, development dependencies,
-  workspaces, native addons, loaders, registry configuration, or lifecycle
-  hooks. Runtime JavaScript must already be present in `lodash.js`.
-- Runtime network access is unavailable. Behavior must not depend on files,
-  services, the clock, random state, locale settings, or environment variables.
+- Use Node.js `24.19.0` and npm `11.17.0` on Linux amd64.
+- `package.json` must declare `name: "lodash"`, `version: "4.18.1"`,
+  `main: "lodash.js"`, and license `MIT`. The root is CommonJS and must not
+  use a `type` field that makes `lodash.js` an ES module.
+- The root object exposes `VERSION === "4.18.1"` and the 71 selected
+  functions in the API guide. Inputs are bounded JSON values; callbacks and
+  non-JSON JavaScript values are outside scope.
+- Commit a matching npm v3 `package-lock.json`. Offline installation must
+  succeed with `npm ci --offline --ignore-scripts --no-audit --no-fund`.
+- Declare no scripts, runtime or development dependencies, workspaces, native
+  addons, loaders, registry configuration, lifecycle hooks, or network access.
+  Runtime behavior must not depend on files outside the package, time,
+  randomness, locale settings, or environment variables.
 
-All scored inputs are bounded JSON values. Property paths are strings using
-dot/bracket notation or arrays of string/integer path segments. Iteratee
-arguments use only the documented property-name/path or partial-object
-shorthands; JavaScript callbacks never cross the verifier boundary.
+# Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── lodash.js
+└── LICENSE
+```
+
+`package.json` owns package identity, CommonJS entry metadata, and the empty
+dependency policy. `lodash.js` is the installed root implementation and must
+export the documented callable properties plus `VERSION`. `LICENSE` records
+the declared MIT license. No build script, test directory, browser bundle,
+per-method module, or private evaluator file is needed by the public project.
+
+The public package import is the root CommonJS `lodash` entry; consumers use
+the `_` root object rather than an internal module path.
 
 # API Usage Guide
 
-All functions below are properties of the CommonJS package root.
+All listed functions are properties of the CommonJS root object. Return values
+are observed as JSON values. Property paths are strings using dot/bracket
+notation or arrays of string/integer segments. Iteratee arguments use only the
+documented property-name/path or partial-object shorthands.
 
 ## Array utilities
 
-- `chunk(array, size = 1) => Array<Array>` splits from the start into arrays of
-  at most `size`, preserving order and a final remainder.
-- `compact(array) => Array` removes falsey JSON values: `false`, `null`, `0`,
-  and `""`.
-- `concat(array, ...values) => Array` returns a new array, appending scalar
-  arguments and flattening each array argument by one level.
-- `difference(array, values) => Array` keeps values from the first array that
-  do not occur in the second under SameValueZero equality. Preserve the first
-  array's order and duplicates that are not excluded.
-- `drop(array, n = 1)` and `dropRight(array, n = 1)` return the remaining slice
-  after removing up to `n` values from the respective end.
-- `flatten(array)` removes one nesting level; `flattenDeep(array)` recursively
-  removes all array nesting.
-- `head(array)` and `last(array)` return the first and final values.
-- `initial(array) => Array` returns all but the final value.
-- `nth(array, n = 0)` selects index `n`; negative indexes count from the end.
-- `take(array, n = 1)` and `takeRight(array, n = 1)` return up to `n` values
-  from the respective end.
-- `uniq(array) => Array` removes SameValueZero duplicates while retaining the
-  first occurrence order.
-- `zip(...arrays) => Array<Array>` groups values that have the same index.
-
-Example:
-
-```js
-_.chunk([1, 2, 3, 4, 5], 2); // [[1, 2], [3, 4], [5]]
-_.flatten([1, [2, [3]]]);     // [1, 2, [3]]
-_.uniq([2, 1, 2]);            // [2, 1]
-```
+- `chunk(array, size = 1) => Array<Array>` splits from the start into chunks of
+  at most `size`, preserving order and the final remainder.
+- `compact(array) => Array` removes JSON falsey values `false`, `null`, `0`,
+  and `""`; `concat(array, ...values) => Array` returns a new array and
+  flattens each array argument by one level.
+- `difference(array, values) => Array` removes values occurring in `values`
+  under SameValueZero equality, preserving first-array order and retained
+  duplicates. `drop`, `dropRight`, `take`, and `takeRight` use their default
+  `n = 1` and remove/retain up to `n` values from the named side.
+- `flatten(array) => Array` removes one nesting level; `flattenDeep(array) =>
+  Array` recursively removes all array nesting.
+- `head(array)`, `last(array)`, `initial(array)`, and `nth(array, n = 0)`
+  select the first, final, all-but-final, or indexed value; negative `nth`
+  indexes count from the end. `uniq(array)` removes SameValueZero duplicates
+  while retaining first occurrence order. `zip(...arrays)` groups values by
+  index.
 
 ## Object and path utilities
 
-- `get(object, path, defaultValue?)` returns the value at `path`, or
-  `defaultValue` when the resolved value is `undefined`.
-- `has(object, path) => boolean` reports whether every path segment is an own
-  property.
-- `at(object, paths) => Array` returns path values in the same order as
-  `paths`.
-- `assign(object, ...sources) => object` copies own enumerable source
-  properties from left to right; later sources overwrite earlier values.
-- `defaults(object, ...sources) => object` fills only absent or `undefined`
-  destination properties, scanning sources from left to right.
-- `merge(object, ...sources) => object` recursively merges plain objects and
-  merges arrays by index. Later scalar values replace earlier values.
-- `pick(object, paths) => object` returns the selected own deep paths while
-  preserving their nested shape.
-- `omit(object, paths) => object` returns the remaining own data after removing
-  the selected deep paths.
-- `keys(object)`, `values(object)`, and `toPairs(object)` return own enumerable
-  string keys, their values, or `[key, value]` pairs in JavaScript enumeration
-  order.
-- `invert(object) => object` converts each value to a property key whose value
-  is the original key. If values collide, the later key wins.
-
-Only the returned JSON value is observed. In-place mutation of the first
-argument by `assign`, `defaults`, or `merge` does not cross the subprocess
-boundary, but their returned result must have the behavior above.
+- `get(object, path, defaultValue?)` returns the path value or the default when
+  the resolved value is `undefined`; `has(object, path) => boolean` requires
+  every segment to be an own property; `at(object, paths) => Array` returns
+  values in path-list order.
+- `assign(object, ...sources)`, `defaults(object, ...sources)`, and
+  `merge(object, ...sources)` return the destination after left-to-right own
+  property copying, absent/undefined filling, or recursive plain-object and
+  index-wise array merging. Later scalar values replace earlier values for
+  `merge`.
+- `pick(object, paths)` and `omit(object, paths)` preserve nested shape while
+  selecting or removing own deep paths. `keys`, `values`, and `toPairs` return
+  own enumerable string keys, values, or pairs in JavaScript enumeration
+  order. `invert(object)` converts each value to a key; a collision is won by
+  the later source key.
 
 ## Collection utilities
 
-The supported collections are arrays, strings, and plain JSON objects as noted.
-
-- `map(collection, path) => Array` returns the value at the property path from
-  each array/object element.
-- `filter(collection, source) => Array` returns elements that recursively
-  contain the enumerable properties and values of the partial JSON object
-  `source`.
-- `find(collection, source)` returns the first element matching that same
-  partial-object shorthand.
-- `groupBy(collection, path) => object` groups values by the string form of the
-  property-path result, preserving encounter order within each group.
-- `keyBy(collection, path) => object` indexes values by the string form of the
-  property-path result; later entries replace earlier entries for one key.
-- `orderBy(collection, paths, orders) => Array` performs stable multi-key
-  ordering. Each order is `"asc"` or `"desc"` and corresponds to the path at
-  the same index.
-- `sortBy(collection, paths) => Array` performs stable ascending multi-key
-  ordering.
-- `includes(collection, value, fromIndex = 0) => boolean` uses SameValueZero
-  for arrays/object values and substring search for strings. Negative indexes
-  count from the end.
-- `size(collection) => number` returns an array length, JavaScript string
+- `map(collection, path) => Array` reads a property path from each array or
+  object element. `filter(collection, source) => Array` and
+  `find(collection, source)` use recursive partial JSON-object matching;
+  `find` returns the first match.
+- `groupBy(collection, path)` groups by the string form of the path result,
+  preserving encounter order. `keyBy(collection, path)` indexes similarly and
+  lets later entries replace earlier values.
+- `orderBy(collection, paths, orders)` performs stable multi-key ordering;
+  each order is `"asc"` or `"desc"`. `sortBy(collection, paths)` performs
+  stable ascending multi-key ordering.
+- `includes(collection, value, fromIndex = 0)` uses SameValueZero for arrays
+  and object values and substring search for strings; negative indexes count
+  from the end. `size(collection)` returns array length, JavaScript string
   length, or own enumerable object-key count.
-
-```js
-_.map([{ id: 1 }, { id: 2 }], "id"); // [1, 2]
-_.groupBy(["one", "two", "three"], "length");
-// { "3": ["one", "two"], "5": ["three"] }
-```
 
 ## String utilities
 
-Inputs and outputs are JavaScript strings.
-
-- `camelCase(string)`, `kebabCase(string)`, and `snakeCase(string)` split words
-  at punctuation, whitespace, and case boundaries, normalize their case, and
-  join with lower camel case, `-`, or `_` respectively.
-- `startCase(string)` joins detected words with spaces and uppercases each
-  word's first character while lowercasing the remainder.
-- `capitalize(string)` uppercases the first character and lowercases the
-  remainder. `upperFirst(string)` and `lowerFirst(string)` change only the
-  first character.
-- `pad(string, length, chars = " ")` centers a shorter string. An odd number
-  of padding characters puts the extra character on the right.
-- `padStart(string, length, chars = " ")` and `padEnd(...)` pad one side.
-  Repeat and truncate `chars` as needed. Strings already at least `length`
-  characters are unchanged.
-- `repeat(string, n = 1)` concatenates `n` copies.
-- `escape(string)` replaces `&`, `<`, `>`, `"`, and `'` with Lodash HTML
-  entities. `unescape(string)` reverses those supported entities.
-- `truncate(string, options = {})` limits the result to `options.length`
-  (default 30), including `options.omission` (default `"..."`). If a string
-  `options.separator` occurs in the retained prefix, cut back to its last
-  occurrence before appending the omission. A string no longer than the limit
-  is unchanged.
+`camelCase`, `kebabCase`, `snakeCase`, and `startCase` split words at
+punctuation, whitespace, and case boundaries and normalize case before joining
+with lower camel case, `-`, `_`, or spaces. `capitalize` uppercases the first
+character and lowercases the rest; `upperFirst` and `lowerFirst` change only
+that character. `pad`, `padStart`, and `padEnd` repeat/truncate `chars` to
+reach the requested length; `pad` centers and puts an odd extra character on
+the right. `repeat(string, n = 1)` concatenates copies. `escape` and
+`unescape` handle Lodash HTML entities for `&`, `<`, `>`, `"`, and `'`.
+`truncate(string, options = {})` honors length 30, omission `"..."`, and an
+optional separator in the retained prefix.
 
 ## Number and aggregate utilities
 
-Inputs are finite JSON numbers and arrays/objects of finite numbers.
-
-- `clamp(number, lower, upper)` limits to inclusive bounds.
-- `inRange(number, start, end) => boolean` checks `start <= number < end`; if
-  `start > end`, swap the bounds first.
-- `add(augend, addend)` returns the numeric sum.
-- `ceil(number, precision = 0)`, `floor(...)`, and `round(...)` apply the named
-  rounding mode at decimal `precision`.
-- `max(array)` and `min(array)` return the numeric extrema of a non-empty array.
-- `sum(array)` and `mean(array)` return the arithmetic sum and mean.
-- `maxBy(array, path)` and `minBy(array, path)` return the first element having
-  the largest or smallest finite value at `path`.
-- `sumBy(array, path)` and `meanBy(array, path)` aggregate finite values at
-  `path`.
+`clamp(number, lower, upper)` limits to inclusive bounds;
+`inRange(number, start, end)` checks a half-open interval and swaps reversed
+bounds. `add` sums two numbers. `ceil`, `floor`, and `round` apply their
+named decimal-precision mode. `max`, `min`, `sum`, and `mean` operate on
+finite-number arrays. `maxBy`, `minBy`, `sumBy`, and `meanBy` use a property
+path and return/select or aggregate finite values.
 
 ## JSON predicates
 
-- `isEqual(left, right) => boolean` recursively compares JSON primitives,
-  arrays in order, and plain objects independent of key insertion order.
-- `isEmpty(value) => boolean` is true for empty arrays, strings, and plain
-  objects, and false for non-empty collections.
-- `isPlainObject(value) => boolean` is true for ordinary JSON objects and false
-  for arrays, primitives, and `null`.
-- `isArray(value)`, `isNumber(value)`, and `isString(value)` distinguish the
-  corresponding JSON kinds without coercion.
+`isEqual` recursively compares JSON primitives, arrays in order, and plain
+objects independent of key insertion order. `isEmpty` recognizes empty
+arrays, strings, and plain objects. `isPlainObject`, `isArray`, `isNumber`,
+and `isString` distinguish JSON object, array, number, and string kinds without
+coercion.
 
 # Implementation Notes
 
-- Keep results deterministic and JSON-serializable for the documented input
-  domain. Values and behaviors that JSON cannot represent are outside scope.
-- JavaScript callbacks, function iteratees, regular expressions, symbols,
-  `BigInt`, `undefined`, `NaN`, infinities, sparse arrays, typed arrays,
-  buffers, dates, maps, sets, custom prototypes, accessors, class instances,
-  cycles, wrapper chains, lazy sequences, templates, mixins, FP modules,
-  per-method module entry points, browser globals, and CLI behavior are outside
-  the scored contract.
-- Property-name/path and partial-object shorthand behavior described above is
-  required; general callback iteratees are not.
-- Preserve stable ordering where specified. Do not sort object keys unless the
-  selected API explicitly orders its result.
+- Keep every result JSON-serializable and deterministic for the stated input
+  domain. Do not sort object keys unless the selected API explicitly orders a
+  result; preserve stable collection order.
+- Do not mutate caller inputs for the documented operations. Destination
+  mutation by `assign`, `defaults`, and `merge` is not observed across the
+  process boundary, but their returned values must be correct.
+- JavaScript callbacks, regular expressions, symbols, `BigInt`, `undefined`,
+  `NaN`, infinities, sparse arrays, typed arrays, buffers, dates, maps, sets,
+  custom prototypes, accessors, class instances, cycles, wrapper chains, lazy
+  sequences, templates, mixins, FP modules, per-method modules, browser
+  globals, and CLI behavior are outside this contract.
+- Property-name/path and partial-object shorthand behavior is required;
+  general executable callback iteratees are not.
+
+# Examples
+
+```js
+const _ = require('lodash');
+
+_.chunk([1, 2, 3, 4, 5], 2); // [[1, 2], [3, 4], [5]]
+_.map([{id: 1}, {id: 2}], 'id'); // [1, 2]
+```
+
+```js
+const source = {user: {name: 'Ada'}, active: true};
+_.get(source, 'user.name'); // 'Ada'
+_.filter([source, {active: false}], {active: true}); // [source]
+```
+
+# Error Handling and Boundary Conditions
+
+- Empty arrays and strings produce their documented empty selections or
+  aggregate results; `find`, `head`, `last`, `max`, and `min` retain the
+  stated `undefined`/non-empty input domain behavior.
+- Path helpers accept dotted/bracket strings and segment arrays. Missing paths
+  resolve to defaults or false without reading inherited properties.
+- Stable ties preserve encounter order in `orderBy`, `sortBy`, `groupBy`, and
+  `keyBy`; `zip` represents missing JSON values as the bounded contract
+  requires. String operations use JavaScript string semantics.
+- Do not coerce unsupported non-JSON values into scored results. Do not read
+  files or services, execute supplied code, or allow network, current time,
+  random state, locale, or environment variables to influence output.

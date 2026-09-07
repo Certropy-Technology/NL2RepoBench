@@ -9,6 +9,14 @@ CommonJS on Node 24 and must expose the same root API shape as the pinned
 release. Implement the behavior described below without copying upstream source
 or tests.
 
+## Natural Language Instruction
+
+Create the `ip-address` project from an empty workspace. Implement the complete
+CommonJS root API for IPv4 and IPv6 parsing, canonicalization, CIDR ranges,
+mask and wildcard conversion, byte and bigint conversion, embedded IPv4 forms,
+address classification, and typed parse errors. Preserve class instances,
+native `bigint` results, exact return shapes, and deterministic behavior.
+
 ## Supports
 
 - Node `24.19.0` and npm `11.17.0` on Linux amd64.
@@ -19,7 +27,26 @@ or tests.
 - A v3 `package-lock.json` whose root package agrees with `package.json`.
 - The verifier runs `npm ci --offline --ignore-scripts --no-audit --no-fund`
   before packing and loading your package. Keep the implementation under the
-  package files selected by the package metadata.
+package files selected by the package metadata.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── index.js
+├── index.d.ts
+└── lib/
+    ├── ipv4.js
+    ├── ipv6.js
+    ├── error.js
+    └── helpers.js
+```
+
+The package root is CommonJS and exports `Address4`, `Address6`,
+`AddressError`, and `v6`. The implementation may use an equivalent module
+layout, but every documented root export and helper path must remain usable.
 
 ## API Usage Guide
 
@@ -145,3 +172,35 @@ projected representations. This boundary does not reduce the required public
 JavaScript API: ordinary callers must receive real class instances and native
 `bigint` values. Do not add a CLI, network service, test-only export, or source
 checkout logic to the candidate package.
+
+## Examples
+
+```js
+const {Address4, Address6} = require('ip-address');
+
+const v4 = new Address4('192.0.2.7/24');
+console.log(v4.networkForm());
+const v6 = new Address6('2001:db8::1/64');
+console.log(v6.correctForm(), v6.toByteArray());
+```
+
+The package root import path is `require('ip-address')`; all root exports are
+available from that CommonJS module.
+
+```js
+const {Address4} = require('ip-address');
+
+const address = Address4.fromByteArray([192, 0, 2, 7]);
+console.log(address.toHex(), address.bigInt());
+```
+
+## Error Handling and Boundary Conditions
+
+- Invalid address strings, prefixes, masks, wildcard positions, and byte-array
+  lengths throw `AddressError` with `name === 'AddressError'`.
+- `Address4.isValid` and `Address6.isValid` return `false` rather than throw
+  for invalid strings; valid zero-compressed IPv6 has one `::` at most.
+- IPv4 byte values are integers from 0 through 255. IPv6 byte conversion
+  requires exactly 16 values, with signed folding only where documented.
+- CIDR range methods respect prefixes, while host classifiers inspect the host
+  value independently of its own suffix. All calls run with no network access.

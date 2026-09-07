@@ -8,6 +8,15 @@ function that calculates the visual terminal width of a string without
 truncating it. Reproduce the observable behavior of the pinned
 `fabiospampinato/fast-string-width` revision, not a generic approximation.
 
+## Natural Language Instruction
+
+Create the `fast-string-width` package from an empty `workspace/`. Implement
+the default root ESM function and its five numeric width options while
+preserving ANSI stripping, control and tab widths, combining marks, emoji
+sequences, East Asian width, deterministic floating-point totals, and the
+non-truncating behavior. Use the declared lower-level dependency rather than
+replacing the calculation with JavaScript string length.
+
 ## Supports
 
 - Node `24.19.0`, npm `11.17.0`, Linux amd64 with glibc.
@@ -28,6 +37,22 @@ truncating it. Reproduce the observable behavior of the pinned
 - The submitted package must be packable with `npm pack --ignore-scripts`.
   Do not rely on a prepare hook, a globally installed compiler, the current
   working directory, or a network service at evaluation time.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+└── dist/
+    ├── index.js
+    └── index.d.ts
+```
+
+The package root resolves to `dist/index.js` through both `exports` and `main`.
+The lockfile must describe the exact `fast-string-truncated-width` runtime
+dependency closure. No CLI, server, source checkout, lifecycle hook, or
+runtime download is required.
 
 ## API Usage Guide
 
@@ -84,13 +109,6 @@ The wrapper is intentionally non-truncating: fields named `limit`, `ellipsis`,
 or `ellipsisWidth` are not part of this function's options and must not change
 the result merely because they are present in an otherwise accepted object.
 
-### Error and boundary behavior
-
-The scored boundary supplies strings and JSON objects containing finite numeric
-options. Preserve the normal JavaScript `TypeError` behavior for a non-string
-input rather than silently coercing arbitrary values. Do not add a CLI, server,
-custom JSON protocol, or extra package export to implement the task.
-
 ## Implementation Notes
 
 - Keep the public entry point at `dist/index.js`; a declaration file at
@@ -104,3 +122,29 @@ custom JSON protocol, or extra package export to implement the task.
 - Do not include hidden tests, verifier code, Oracle files, reward files,
   credentials, private dependency cache bytes, or generated Harbor assets in
   the candidate repository.
+
+## Examples
+
+```js
+import fastStringWidth from 'fast-string-width';
+
+fastStringWidth('plain'); // 5
+fastStringWidth('\x1b[31mplain\x1b[0m'); // 5
+```
+
+```js
+fastStringWidth('A\t漢', {tabWidth: 4, wideWidth: 1}); // 6
+fastStringWidth('👩‍💻', {emojiWidth: 1}); // 1
+```
+
+```js
+const options = {regularWidth: 3, limit: 1, ellipsis: '...'};
+fastStringWidth('ab', options); // 6; no truncation is performed
+```
+
+## Error Handling and Boundary Conditions
+
+The scored boundary supplies strings and JSON objects containing finite numeric
+options. Preserve the normal JavaScript `TypeError` behavior for a non-string
+input rather than silently coercing arbitrary values. Do not add a CLI, server,
+custom JSON protocol, or extra package export to implement the task.

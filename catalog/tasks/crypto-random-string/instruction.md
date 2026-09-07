@@ -1,5 +1,13 @@
 # Build `crypto-random-string`
 
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── index.js
+└── index.d.ts
+```
+
 ## Project Description
 
 Create an installable npm package named `crypto-random-string`, version
@@ -12,6 +20,14 @@ development dependencies.
 Do not copy the upstream source or tests. The workspace must contain runnable
 JavaScript and declaration files before evaluation; the verifier has no
 TypeScript compiler and has no registry access.
+
+## Natural Language Instruction
+
+Create the `crypto-random-string` package from an empty workspace. Implement
+the default ESM generator, exact predefined and custom alphabets, Unicode code
+point lengths, cryptographic entropy, rejection sampling, and option errors
+specified below. Keep the package self-contained and deterministic except for
+the required cryptographic output.
 
 ## Supports
 
@@ -32,6 +48,16 @@ TypeScript compiler and has no registry access.
 - Randomness must come from the platform cryptographic source. Do not replace
   it with a fixed sequence, `Math.random`, current time, or a stale entropy
   pool. Large requests must be split into bounded platform calls.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── index.js
+└── index.d.ts
+```
 
 ## API Usage Guide
 
@@ -96,3 +122,21 @@ than the platform's 65,536-byte `getRandomValues` limit must be filled in
 chunks. The verifier constructs all inputs in an unprivileged child and sends
 only bounded JSON-compatible requests; it does not inspect implementation
 source or rely on probabilistic exact-output assertions.
+
+## Examples
+
+```js
+import cryptoRandomString from 'crypto-random-string';
+const token = cryptoRandomString({length: 16, type: 'alphanumeric'});
+console.log(token.length); // 16
+```
+
+```js
+cryptoRandomString({length: 4, characters: 'ab'}); // four code points
+```
+
+## Error Handling and Boundary Conditions
+
+Length must be a non-negative integer and a custom alphabet must be non-empty.
+Random output uses platform cryptographic entropy; invalid options throw an
+ordinary `TypeError` or `Error` rather than silently changing the request.

@@ -1,42 +1,52 @@
-# Build `jaraco.classes`
+# Project Description
 
-Create a complete, installable Python project named `jaraco.classes` from an
-empty workspace. The project is a small pure-Python utility package for class
-introspection, descriptors, and metaclass registries. The implementation must
-match the public behavior described here without copying the frozen reference
-source or relying on network access at runtime.
+Build an installable Python distribution named `jaraco.classes` from an empty
+workspace. The project is a small class-introspection toolkit with ancestry
+helpers, non-data and class-level descriptors, and metaclass registries. It is
+local pure-Python behavior: no command-line service, network access, or
+external state is required.
 
-## Project Description
+# Natural Language Instruction
 
-The package provides three focused modules under the `jaraco.classes` import
-package. `ancestry` exposes deterministic class hierarchy helpers,
-`properties` provides reusable descriptor implementations, and `meta` provides
-metaclasses for tracking leaf classes and registering tagged classes. The
-package is intentionally local and has no command line interface or service
-integration.
+Create the package so an installed `jaraco.classes` distribution exposes the
+`ancestry`, `properties`, and `meta` modules. Implement deterministic class
+hierarchy traversal, descriptor binding and shadowing, classproperty setters,
+leaf-class tracking, and tag registration. Preserve the public names,
+declaration order where promised, and normal Python exceptions. Include typed
+package metadata and an installable build configuration; do not copy an
+upstream checkout or tests.
 
-## Supports
+# Supports or Environment Configuration
 
-- Support CPython 3.10 or newer Python 3.x versions in the supported source
-  range, using a normal `src/` or package-root layout.
-- Install the distribution named `jaraco.classes` with a standard PEP 517
-  build backend. A source checkout is not available during candidate install,
-  so package version metadata must be deterministic without setuptools SCM
-  state.
-- Import `jaraco.classes.ancestry`, `jaraco.classes.meta`, and
-  `jaraco.classes.properties` from an empty workspace after installation.
-- Declare `more_itertools` as the only runtime dependency. It is used by
-  `iter_subclasses`; do not replace the dependency with a network lookup or a
-  vendored wheel.
-- Include the `jaraco/classes/py.typed` marker and keep runtime behavior free
-  of subprocesses, network calls, and external services.
-- Preserve declaration order where a class hierarchy or registry promises it.
-  Do not make scored results depend on hash iteration order or memory
-  addresses.
+- Use CPython 3.10 or newer; the evaluation runtime is Python 3.12 on Linux.
+- Distribution name: `jaraco.classes`; import package: `jaraco.classes`.
+- Install from the workspace with a normal PEP 517 build and the preinstalled
+  build environment. Declare `more_itertools` as the only runtime dependency.
+- Include a deterministic package version without requiring VCS metadata.
+- Runtime behavior must not use subprocesses, network services, current time,
+  or user-specific files. Agent, candidate, verifier, Oracle, and controls run
+  with no network access; dependencies are prepared before the run.
 
-## API Usage Guide
+# Project Directory Structure
 
-### `jaraco.classes.ancestry`
+```text
+workspace/
+├── pyproject.toml
+├── README.md
+├── LICENSE
+└── jaraco/
+    ├── __init__.py
+    └── classes/
+        ├── __init__.py
+        ├── py.typed
+        ├── ancestry.py
+        ├── meta.py
+        └── properties.py
+```
+
+# API Usage Guide
+
+## `jaraco.classes.ancestry`
 
 ```python
 all_bases(c: type[object]) -> list[type[object]]
@@ -44,102 +54,96 @@ all_classes(c: type[object]) -> list[type[object]]
 iter_subclasses(cls: type[object]) -> Iterator[type[object]]
 ```
 
-`all_bases` returns `c.mro()[1:]` and `all_classes` returns `c.mro()`, both as
-new lists. `iter_subclasses` yields descendants depth-first: each direct child
-is yielded before recursively visiting its descendants, and the same class is
-yielded at most once even when a diamond hierarchy reaches it through multiple
-paths. Direct subclasses retain Python's declaration order. The helper must
-also work for `type`, whose `__subclasses__` call needs the normal Python
-special case.
+`all_bases` returns a new list containing `c.mro()[1:]`; `all_classes` returns
+the complete MRO as a new list. `iter_subclasses` yields descendants
+depth-first, yielding each direct child before its descendants and never
+yielding a class twice through a diamond. Direct subclass order follows Python
+declaration order. The `type` root must work as well.
 
-### `jaraco.classes.properties.NonDataProperty`
+## `jaraco.classes.properties`
 
 ```python
 NonDataProperty(fget: Callable[[object], object])
 NonDataProperty.__get__(obj, objtype=None)
-```
-
-This is a non-data descriptor: its constructor rejects a missing or
-non-callable getter with `AssertionError`, and stores the getter as `fget`.
-Access through the class returns the descriptor itself. Access through an
-instance calls `fget(instance)`. Because it has no `__set__`, assigning an
-instance attribute with the same name shadows the descriptor for that
-instance and the value remains in the instance dictionary.
-
-### `jaraco.classes.properties.classproperty`
-
-```python
 classproperty(fget, fset=None)
 classproperty.setter(fset) -> classproperty
-classproperty.Meta
 ```
 
-`classproperty` evaluates its getter with the owning class and works through
-both the class and an instance. The getter may be an ordinary function,
-`classmethod`, or `staticmethod`; ordinary functions are bound as class
-methods. `@prop.setter` installs a setter and returns the same descriptor.
+`NonDataProperty` rejects a missing or non-callable getter with
+`AssertionError`. Class access returns the descriptor; instance access calls
+the getter. Because it has no setter, an instance attribute with the same name
+shadows it. `classproperty` evaluates its getter with the owning class,
+regardless of class or instance access. Ordinary functions, `classmethod`, and
+`staticmethod` getters are accepted. Its `setter` decorator returns the same
+descriptor. With `classproperty.Meta` as metaclass, assignment through a class
+or instance invokes the setter; without that metaclass, ordinary legacy class
+assignment behavior remains.
 
-Use `classproperty.Meta` as the metaclass when class assignment must be
-intercepted. The metaclass recognizes a descriptor stored directly in the
-class dictionary and routes `Class.prop = value` to its setter. On an instance,
-the descriptor similarly routes assignment to that instance's type. A class
-that does not use `classproperty.Meta` retains Python's legacy behavior:
-instance assignment can shadow the descriptor, while class assignment replaces
-the descriptor as a normal class attribute operation.
-
-### `jaraco.classes.meta.LeafClassesMeta`
+## `jaraco.classes.meta`
 
 ```python
-class LeafClassesMeta(type):
-    _leaf_classes: set[type[object]]
+class LeafClassesMeta(type): ...
+class TagRegistered(type): ...
 ```
 
-Every class created with this metaclass participates in a registry named
-`_leaf_classes`. The registry is shared by a base and its descendants. A newly
-created class is added and all of its direct base classes are removed, so the
-registry contains the current leaves. Independent metaclass hierarchies each
-start with their own registry. The set is intentionally a set; callers should
-sort names when a stable display is required.
+`LeafClassesMeta._leaf_classes` is shared within one metaclass hierarchy. A
+new class is added and its direct bases are removed, leaving current leaves;
+independent roots have independent sets. `TagRegistered.attr_name` defaults
+to `"tag"`, and `_registry` is inherited within one root. A truthy tag on a
+new class registers that class; a duplicate tag replaces the prior entry and a
+missing/false tag changes nothing. Registry operations are deterministic for
+fixed class definitions.
 
-### `jaraco.classes.meta.TagRegistered`
+## Package contract
+
+The package must expose the modules above, include `jaraco/classes/py.typed`,
+and remain importable from its installed target. The public contract includes
+the descriptor ownership rules and the exact registry membership behavior, not
+the names of private helpers.
+
+# Implementation Notes
+
+Use ordinary Python descriptors and metaclasses so class-vs-instance binding,
+attribute shadowing, and class construction follow the data model. Return new
+lists for MRO functions and do not expose mutable registry state through an
+undocumented alternate API. Use deterministic traversal and sort a set only
+when presenting it; the registry itself is intentionally a set for leaf
+classes.
+
+# Examples
 
 ```python
-class TagRegistered(type):
-    attr_name = "tag"
-    _registry: dict[object, type[object]]
+from jaraco.classes.ancestry import all_bases, iter_subclasses
+
+class Root: pass
+class Child(Root): pass
+
+assert all_bases(Child) == [Root, object]
+assert list(iter_subclasses(Root)) == [Child]
 ```
 
-Classes created with `TagRegistered` share an inherited `_registry` with their
-base hierarchy. If the newly created class has a truthy attribute named by the
-metaclass's `attr_name`, the value is registered to that class. A child with a
-new tag adds a new entry; a repeated tag replaces the previous entry. A class
-without a truthy tag does not add an entry. Independent roots have independent
-registries. Registry operations must not make class creation depend on network
-or filesystem state.
+```python
+from jaraco.classes.properties import NonDataProperty, classproperty
 
-### Package files and metadata
+class Item:
+    value = NonDataProperty(lambda self: 3)
 
-The import package must include `jaraco/classes/__init__.py`, the three modules
-above, and `jaraco/classes/py.typed`. The root package need not re-export the
-module contents. The installed distribution name must be `jaraco.classes`,
-must have a deterministic version, and must declare `more_itertools` without
-pulling dependencies during the evaluation run.
+item = Item()
+assert item.value == 3
+item.value = 4
+assert item.value == 4
+```
 
-## Implementation Notes
+# Error Handling and Boundary Conditions
 
-Keep the implementation modular and preserve the public import paths and
-exception behavior. Descriptor ownership, class-vs-instance binding, and
-metaclass initialization are observable Python data-model protocols, so use
-ordinary descriptors and metaclasses rather than a look-alike helper API.
+The task id is `jaraco-classes`; the distribution is `jaraco.classes`.
 
-The frozen upstream revision contains doctest examples but no tracked pytest
-suite. The task therefore uses a fixed, private, deterministic custom-json
-verification contract covering the public behaviors above. Do not add upstream
-tests, source archives, verifier code, or reference implementation text to
-the candidate project.
-
-Runtime package behavior must remain deterministic for fixed class definitions
-and values. It is acceptable for ordinary object reprs, hash values, and
-implementation-specific typing details to vary; the scored contract compares
-only explicit values, class names, registry membership, exception types, and
-stable descriptor behavior.
+- A non-callable `NonDataProperty` getter raises `AssertionError` at
+  construction.
+- A diamond hierarchy must not duplicate a shared descendant.
+- A `classproperty` without a setter raises `AttributeError` when assignment is
+  routed through `classproperty.Meta`.
+- False or absent tags do not enter `TagRegistered._registry`; independent
+  roots must not share registry entries.
+- Do not rely on hash iteration order, filesystem paths, external services, or
+  a preinstalled copy of the package.

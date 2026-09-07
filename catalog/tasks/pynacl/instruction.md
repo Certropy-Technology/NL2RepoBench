@@ -1,47 +1,48 @@
-# Build `PyNaCl`
-
-Create an installable Python distribution named `PyNaCl` whose import package
-is `nacl`. Reproduce the pinned 1.6.2 high-level cryptographic API described
-below on CPython 3.12. Evaluation is local and deterministic. Do not fetch
-source code or dependencies during the evaluation run.
+# pynacl
 
 ## Project Description
 
-PyNaCl provides Python objects over NaCl/libsodium primitives. Its high-level
-surface covers byte encodings, authenticated symmetric encryption, public-key
-boxes, sealed boxes, Ed25519 signatures, fixed and incremental hashes, and
-password-based key derivation. Keys and cryptographic messages are bytes-like;
-encoder classes provide explicit textual representations.
+Build an installable `pynacl` project from an empty `workspace/`. The project must reproduce the public, local behavior documented in this instruction, including its package entry points, return shapes, ordering, state changes, and documented exceptions. This is a repository-generation task: the agent creates the build metadata and source modules rather than editing an existing implementation.
 
-The package is expected to build a native CFFI/libsodium binding or provide a
-behaviorally equivalent local implementation of this documented surface. The
-preinstalled build closure includes CFFI and a C toolchain. Runtime operations
-must not use the network, external services, subprocesses, or persistent user
-state.
+Distribution identity: `pynacl`; public import package begins at `nacl`.
+The scope is the deterministic local API described below. Network services, undeclared external state, and behavior not represented by the public contract are outside the task.
 
-## Supports
+## Natural Language Instruction
 
-- Provide distribution version `1.6.2`, Python requirement `>=3.8`, the
-  `nacl` package, and a `nacl/py.typed` marker. `nacl.__all__` contains
-  `__email__`, `__uri__`, and `__version__`.
-- Provide `nacl.encoding`, `nacl.exceptions`, `nacl.utils`, `nacl.secret`,
-  `nacl.public`, `nacl.signing`, `nacl.hash`, `nacl.hashlib`, and
-  `nacl.pwhash` with the contracts below.
-- Preserve bytes input/output, encoder behavior, deterministic results when a
-  key, seed, nonce, salt, and parameters are supplied, and cryptographically
-  random output from `generate()`, `random()`, or omitted nonces.
-- Reject malformed key, seed, nonce, signature, digest, and salt sizes before
-  producing a result. Authentication or signature failure raises the
-  corresponding `nacl.exceptions` type rather than returning unauthenticated
-  plaintext.
-- Keep secret material available through `bytes(obj)` and `obj.encode(...)`
-  where specified. Key equality compares key identity/content and keys remain
-  hashable.
-- Keep the high-level package independent of network access. No CLI or console
-  entry point is required. Low-level `nacl.bindings` functions beyond what is
-  necessary to implement this high-level surface are not part of this task.
+Create the complete project in an empty workspace and make it installable with the command in the environment section. Implement these task-specific capability families from the local API contract:
+
+1. `Encoders and encodable objects`: expose the documented public entry points, signatures, inputs, outputs, and error behavior.
+2. `Utility byte objects and randomness`: preserve the documented object or module behavior, including state and side effects.
+3. `Symmetric authenticated encryption`: preserve ordering, determinism, serialization, and boundary semantics where specified.
+4. `Public-key boxes`: make the public package usable through the documented import path or command-line entry.
+
+Do not add speculative APIs or substitute a different package. Keep the implementation self-contained, ensure imports work after installation, and use the exact public names and signatures in the API Usage Guide. A small implementation is acceptable only when it still satisfies every documented contract.
+
+## Supports or Environment Configuration
+
+- CPython 3.12.14 on the pinned Linux image.
+- Distribution identity: `pynacl`; public import package begins at `nacl`.
+- Install from the workspace with `python -m pip install .`; do not download packages during evaluation.
+- Declared build/runtime packages are supplied by the frozen evaluation image: `cffi==2.1.1`, `packaging==26.3`, `pycparser==3.0`, `setuptools==84.0.0`, `wheel==0.48.0`
+- Build metadata and package data must be present in the workspace and agree with the public import paths below.
+- Agent, candidate, evaluator, Oracle, and control execution are network-isolated. Do not access GitHub, package registries, DNS, databases, or external services at runtime.
+- Use deterministic local inputs. Do not rely on the current wall clock, host-specific absolute paths, undeclared environment variables, or an installed copy of the target package.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── package/
+│   ├── __init__.py
+│   └── (public modules documented in API Usage Guide)
+```
+
+The tree lists agent-owned public project files only. Add additional public modules when required by the API Usage Guide, but keep their import paths consistent with package metadata. Do not create evaluator-only files, hidden fixtures, or private reports in the generated project.
 
 ## API Usage Guide
+
+The following is the task-specific public contract recovered from the local instruction and inventory. For every function, class, method, constant, export, and command named below, preserve its complete signature, accepted input domain, return type and shape, ordering, determinism, state/side effects, exceptions, and examples. When the source contract gives an optional argument or a compatibility alias, it is part of the required surface.
 
 ### Encoders and encodable objects
 
@@ -324,7 +325,6 @@ exceptions subclass those built-ins; `BadSignatureError` subclasses
 `None` when `cond` is true and otherwise raises `nacl.exceptions.AssertionError`
 using the supplied arguments.
 
-## Implementation Notes
 
 Use byte-preserving APIs throughout. Do not silently coerce `str` into key or
 message bytes. Apply an encoder at the documented API boundary, then validate
@@ -337,3 +337,81 @@ the native binding. The frozen upstream package builds its bundled libsodium,
 so no runtime system libsodium service or download is required. Do not weaken
 nonce/key/signature checks, replace authenticated encryption with reversible
 encoding, or use deterministic output for APIs that promise fresh randomness.
+
+## Implementation Notes
+
+- Keep the root exports and module paths stable after installation; do not make behavior depend on the repository's current directory.
+- Preserve explicit ordering guarantees. When the contract does not promise an order, do not introduce a new observable order accidentally.
+- Propagate documented exceptions and avoid replacing them with generic errors. Validate malformed, empty, boundary, and repeated inputs as described by the API contract.
+- Keep filesystem, process, terminal, and resource effects bounded and local. Close files and other resources on both success and failure.
+- Do not copy an upstream checkout, implementation source, or evaluation-only material into the generated project. Implement the public behavior from this specification.
+
+## Examples
+
+The examples below are retained from the local task specification. They are starting points for ordinary calls and boundary/error behavior; their exact output and exception semantics remain governed by the API Usage Guide.
+
+### Example 1: ordinary usage
+```text
+SecretBox(key: bytes, encoder: Encoder = RawEncoder)
+SecretBox.encrypt(
+    plaintext: bytes,
+    nonce: bytes | None = None,
+    encoder: Encoder = RawEncoder,
+) -> EncryptedMessage
+SecretBox.decrypt(
+    ciphertext: bytes,
+    nonce: bytes | None = None,
+    encoder: Encoder = RawEncoder,
+) -> bytes
+```
+
+### Example 2: ordinary usage
+```text
+Aead(key: bytes, encoder: Encoder = RawEncoder)
+Aead.encrypt(
+    plaintext: bytes,
+    aad: bytes = b"",
+    nonce: bytes | None = None,
+    encoder: Encoder = RawEncoder,
+) -> EncryptedMessage
+Aead.decrypt(
+    ciphertext: bytes,
+    aad: bytes = b"",
+    nonce: bytes | None = None,
+    encoder: Encoder = RawEncoder,
+) -> bytes
+```
+
+### Example 3: boundary or error behavior
+```text
+PublicKey(public_key: bytes, encoder: Encoder = RawEncoder)
+PrivateKey(private_key: bytes, encoder: Encoder = RawEncoder)
+PrivateKey.from_seed(seed: bytes, encoder: Encoder = RawEncoder) -> PrivateKey
+PrivateKey.generate() -> PrivateKey
+```
+
+### Example 4: boundary or error behavior
+```text
+Box(private_key: PrivateKey, public_key: PublicKey)
+Box.decode(encoded: bytes, encoder: Encoder = RawEncoder) -> Box
+Box.encrypt(
+    plaintext: bytes,
+    nonce: bytes | None = None,
+    encoder: Encoder = RawEncoder,
+) -> EncryptedMessage
+Box.decrypt(
+    ciphertext: bytes,
+    nonce: bytes | None = None,
+    encoder: Encoder = RawEncoder,
+) -> bytes
+Box.shared_key() -> bytes
+```
+
+
+## Error Handling and Boundary Conditions
+
+- Empty inputs, invalid types, malformed text or paths, unavailable resources, duplicate calls, and cancellation/timeout cases must follow the exception and return-value contracts documented for the relevant API.
+- Do not silently coerce values, reorder results, swallow exceptions, or use a fallback dependency unless the API section explicitly requires that behavior.
+- File and environment operations must use caller-provided paths and documented defaults only; never read undeclared host files or network resources.
+- The implementation must remain usable in the stated NoNetwork environment. A missing optional integration should expose the documented availability or error behavior rather than attempting an online install.
+- Security-sensitive inputs must be treated as data. Do not execute strings, load untrusted code, or interpolate shell commands unless that behavior is explicitly part of the documented public API.

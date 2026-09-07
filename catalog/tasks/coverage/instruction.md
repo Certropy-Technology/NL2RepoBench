@@ -1,5 +1,16 @@
 # Build `coverage`
 
+```text
+workspace/
+├── pyproject.toml
+└── coverage/
+    ├── __init__.py
+    ├── control.py
+    ├── data.py
+    ├── report.py
+    └── __main__.py
+```
+
 Create a complete, installable Python project named `coverage` from an empty
 workspace. It is a local code-coverage measurement library and command-line
 tool. The project must work without network access at runtime and must not
@@ -14,7 +25,13 @@ combines parallel data files, and renders text, JSON, XML, LCOV, HTML, and
 annotated-source reports. It also exposes plugin protocol base classes and the
 `coverage` command module.
 
-## Supports
+## Natural Language Instruction
+
+Create `coverage` from an empty workspace. Implement local Python tracing,
+SQLite-backed data, reporting, plugin protocols, and the command line API
+specified below, with deterministic ordering and no runtime services.
+
+## Supports or Environment Configuration
 
 - Support CPython 3.10 or newer on Linux. A pure-Python tracer is sufficient;
   a native extension is optional and must not be required for installation or
@@ -29,6 +46,19 @@ annotated-source reports. It also exposes plugin protocol base classes and the
   shell command from library APIs.
 - Preserve deterministic ordering of returned file names, line numbers,
   contexts, and serialized report structures.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+└── coverage/
+    ├── __init__.py
+    ├── control.py
+    ├── data.py
+    ├── report.py
+    └── __main__.py
+```
 
 ## API Usage Guide
 
@@ -116,3 +146,24 @@ and preserve the target program's stdout.
 - Generated reports must not include host-specific absolute paths in values
   that callers can reasonably compare; preserve the upstream format while
   keeping ordering stable.
+
+## Examples
+
+```python
+from coverage import Coverage
+cov = Coverage(data_file='.coverage')
+with cov.collect():
+    value = 1 + 1
+cov.save()
+```
+
+```python
+data = cov.get_data()
+files = sorted(data.measured_files())
+```
+
+## Error Handling and Boundary Conditions
+
+Missing or incompatible data files raise the package's coverage exceptions.
+Report output must be deterministic and local; unsupported native tracers or
+external plugins are outside this contract.

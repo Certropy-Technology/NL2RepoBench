@@ -22,6 +22,42 @@ implemented differently.
   external services.
 - The zero value of `ByteBuffer` must be usable.
 
+## Natural Language Instruction
+
+Build the `github.com/valyala/bytebufferpool` module from an empty workspace.
+Implement the zero-usable `ByteBuffer`, reader/writer methods, reset/release
+operations, and package pool behavior specified below.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── go.mod
+├── go.sum
+├── vendor/modules.txt
+├── bytebuffer.go
+└── pool.go
+```
+
+The root package must be importable as `bytebufferpool`; no CLI or private
+verifier files are required.
+
+## Examples
+
+```go
+var b ByteBuffer; _, _ = b.Write([]byte("hello")); text := b.String()
+```
+
+```go
+b := Get(); b.B = append(b.B, 'x'); Put(b)
+```
+
+## Error Handling and Boundary Conditions
+
+Preserve empty buffers, nil readers/writers where documented, byte counts,
+`ReadFrom`, `WriteTo`, reset, reuse, and pool release behavior. Keep operations
+local and deterministic.
+
 ## API Usage Guide
 
 Implement package `bytebufferpool` at import path
@@ -97,6 +133,6 @@ strings, short writes, and reader errors without panicking. Do not retain a
 caller-owned slice after `Set` in a way that permits external mutation.
 
 The evaluation invokes the public API through a bounded JSON subprocess bridge;
-the trusted verifier does not import candidate code. The bridge groups
+the evaluator calls the package in an isolated process. The bridge groups
 stateful buffer calls into a sequence and separately exercises reader, writer,
 and pool behavior.

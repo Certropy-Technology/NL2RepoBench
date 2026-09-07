@@ -20,16 +20,36 @@ lexical scanner utilities and bidirectional `SpanMap` API.
 - A committed npm lockfile using lockfile version 3. The package has no runtime
   dependencies and must install offline with:
 
-  ```bash
+  ~~~bash
   npm ci --offline --ignore-scripts --no-audit --no-fund
-  ```
+  ~~~
 
 - No lifecycle scripts, workspaces, native addons, registry configuration,
   runtime downloads, or network access.
 
 The candidate must submit built JavaScript and the package metadata needed by
-the exports above. Do not submit the upstream repository, hidden tests,
+  the exports above. Do not submit the upstream repository or unpublished test
 grader, reward files, npm cache, or Oracle material.
+
+## Natural Language Instruction
+
+Create the scoped ESM package `@typescript/typescript` from an empty workspace.
+Implement the bounded scanner and bidirectional `SpanMap` APIs below, including
+UTF-16 positions, token names, comments, feature filtering, and deterministic
+gap behavior. The package must remain a normal npm package rather than a
+grader-facing service.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+└── unstable/
+    └── ast/
+        ├── index.js
+        └── scanner.js
+```
 
 ## API Usage Guide
 
@@ -105,6 +125,29 @@ Gaps map to deterministic insertion points with `None` fidelity. Verbatim
 segments preserve offsets; atom segments map to their complete target range;
 cross-segment ranges are `Approximate`. Segment ordering and feature filtering
 must be deterministic.
+
+## Examples
+
+```js
+import { version } from "@typescript/typescript";
+import { computeLineStarts } from "@typescript/typescript/unstable/ast/scanner";
+
+console.log(version, computeLineStarts("a\r\nb"));
+```
+
+```js
+import { SpanMap } from "@typescript/typescript/unstable/ast";
+
+const map = new SpanMap([{ virtualStart: 0, virtualEnd: 2,
+  originalStart: 5, originalEnd: 7, kind: "Verbatim" }]);
+console.log(map.virtualToOriginalPosition(1));
+```
+
+## Error Handling and Boundary Conditions
+
+Scanner positions are UTF-16 offsets, not Unicode code-point indexes. Unterminated
+strings expose the `unterminated` flag. Unknown token spellings return `null`;
+invalid or out-of-range span inputs must not cause network or process side effects.
 
 ## JSON Boundary
 

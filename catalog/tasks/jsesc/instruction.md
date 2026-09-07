@@ -8,6 +8,15 @@ provide the `jsesc` command-line program.
 This is a behavior-focused contract derived from the pinned `jsesc` 3.1.0
 project. Do not copy upstream source or tests into the generated repository.
 
+# Natural Language Instruction
+
+From an empty workspace, build the CommonJS `jsesc` package and its executable
+CLI. Implement deterministic escaping for strings, JSON-safe values, arrays,
+objects, Unicode, numeric bases, quote modes, script contexts, and pretty
+output. Keep the callable root export and CLI behavior compatible with the
+public contract below; do not use a registry, lifecycle download, native addon,
+or source checkout at runtime.
+
 # Supports
 
 - Node `24.19.0` with npm `11.17.0` on `linux/amd64`.
@@ -20,7 +29,22 @@ project. Do not copy upstream source or tests into the generated repository.
 - Do not use network access, lifecycle hooks, native addons, workspaces, or
   current time/random state.
 
+# Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── README.md
+├── jsesc.js
+└── bin/
+    └── jsesc
+```
+
 # API Usage Guide
+
+Import path: `require('jsesc')`.
+Use `import jsesc from 'jsesc'` when an import-path example is needed.
 
 ## `jsesc`
 
@@ -94,3 +118,25 @@ boundary. The hidden collection contains 48 deterministic leaves covering
 package shape, strings, Unicode, option interactions, numbers, JSON-safe
 recursive values, and CLI behavior. Keep the package self-contained and do not
 fetch dependencies or source files at install or runtime.
+
+# Examples
+
+```js
+const jsesc = require('jsesc')
+jsesc('föo ♥ 𝌆', { wrap: true, es6: true })
+jsesc({ answer: 42 }, { json: true, compact: false })
+```
+
+```sh
+printf '%s\n' 'a𝌆b' | ./bin/jsesc --es6
+./bin/jsesc --object '{"answer":42}'
+```
+
+# Error Handling and Boundary Conditions
+
+- Lone surrogates, NUL followed by a digit, astral code points, and script
+  terminators must use the documented escape forms.
+- Invalid quote or number options follow the documented fallback/error rules;
+  malformed `--object` JSON exits nonzero.
+- Output is deterministic and must not depend on clock, randomness, filesystem
+  configuration, or network access.

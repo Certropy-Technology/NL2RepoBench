@@ -5,6 +5,17 @@ is a decorator and object-proxy library whose public behavior must remain
 transparent to callers: wrapped objects keep their normal operations,
 introspection, attribute semantics, and binding behavior.
 
+# Natural Language Instruction
+
+Create the `wrapt` project from an empty workspace. Implement transparent
+object proxies, callable and lazy proxies, function wrappers and decorators,
+signature overlays, reversible patching and wrapper chains, caching and
+synchronization, coroutine conversion, lazy imports, and post-import hooks.
+Preserve special-method dispatch, descriptor binding, object identity,
+exception identity, and the separation between proxy-only and wrapped state.
+The pure-Python implementation must remain correct when optional acceleration
+is disabled.
+
 # Supports
 
 - CPython 3.12 on Linux amd64, installed with `python -m pip install .`.
@@ -16,6 +27,30 @@ introspection, attribute semantics, and binding behavior.
   or `WRAPT_DISABLE_EXTENSIONS=1`.
 - Deterministic local operation only. Do not require a network, service,
   database, subprocess, or files outside the package and the caller's objects.
+- Agent, candidate, verifier, Oracle, and controls are NoNetwork. They must
+  not access GitHub, package indexes, DNS, external services, or downloads.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── setup.py
+├── src/
+│   └── wrapt/
+│       ├── __init__.py
+│       ├── decorators.py
+│       ├── wrappers.py
+│       ├── patch.py
+│       ├── import_hooks.py
+│       ├── exceptions.py
+│       └── py.typed
+└── README.md
+```
+
+The source layout may use an equivalent build configuration, but the installed
+distribution must expose every documented `wrapt` import path. Evaluator files,
+reference source, private reports, and dependency caches are not project files.
 
 # API Usage Guide
 
@@ -88,3 +123,40 @@ optional implementation detail, not a license to change observable behavior.
 The upstream suite's mypy snapshots, probabilistic stress programs, platform
 specific cases, and extension-only error propagation are inventoried but are
 outside this fixed deterministic score.
+
+# Examples
+
+```python
+from wrapt import ObjectProxy, CallableObjectProxy
+
+value = ObjectProxy({"key": 3})
+assert value["key"] == 3
+callable_value = CallableObjectProxy(lambda x: x + 1)
+assert callable_value(2) == 3
+```
+
+```python
+from wrapt import decorator
+
+@decorator
+def around(wrapped, instance, args, kwargs):
+    return wrapped(*args, **kwargs)
+
+@around
+def add(a, b):
+    return a + b
+
+assert add(2, 3) == 5
+```
+
+# Error Handling and Boundary Conditions
+
+- Proxy-only `_self_` attributes must not be written to the wrapped object;
+  `__wrapped__` remains read-only and `repr` identifies the proxy.
+- Wrapper methods that are not callable are skipped only where the contract
+  permits it; exceptions raised by user functions propagate unchanged.
+- Unwrapping a missing or mismatched handle raises the documented public
+  exception unless `missing_ok=True` applies.
+- Limits on wrapper-chain traversal are bounded and deterministic. Repeated
+  hook, cache, synchronization, and lazy-resolution calls must preserve order,
+  state transitions, and return values without external services.

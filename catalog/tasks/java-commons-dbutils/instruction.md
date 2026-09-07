@@ -1,66 +1,99 @@
-# Introduction and Goals of the Commons DbUtils Project
+## Project Description
 
-Apache Commons DbUtils is a Java library that reduces boilerplate when a
-`java.sql.ResultSet` is converted into application values. This task focuses
-on a small, deterministic handler slice: row-to-array and row-to-map
-conversion, first-row handlers, scalar column access, and collection of one
-column across rows. The implementation must use the public DbUtils packages
-and work without a database, network connection, or third-party runtime
-dependency.
+Create an offline Java Maven project that recreates the bounded, public
+Apache Commons DbUtils row-handler contract described below. The project is
+for application developers who need to turn an existing JDBC `ResultSet`
+into arrays, maps, scalar values, or an ordered list of values without
+writing query-specific conversion code.
 
-## Natural Language Instruction (Prompt)
+The implementation boundary is deliberately small. It covers the public
+`BasicRowProcessor` row conversion methods and the first-row or column-list
+handlers in `org.apache.commons.dbutils.handlers`. It does not require a
+database connection, query execution, connection pooling, bean mapping,
+asynchronous work, filesystem access, or network access.
 
-Please create a Java Maven project named Commons DbUtils that implements the
-following public behavior:
+The candidate must be a normal Maven project rooted at `workspace/`. Its
+source package is `org.apache.commons.dbutils`, with handler classes below
+`org.apache.commons.dbutils.handlers`. Keep the public names and generic
+return shapes stable. Use only JDK modules at runtime, especially
+`java.sql`, `java.util`, and `java.lang`.
 
-1. Convert the current `ResultSet` row to an ordered `Object[]` with
-   `BasicRowProcessor.toArray(ResultSet)`.
-2. Convert the current row to an insertion-ordered, case-insensitive map with
-   `BasicRowProcessor.toMap(ResultSet)`. Use the column label when available,
-   then the column name, and finally the one-based column number as the key.
-3. Implement `ArrayHandler`, `MapHandler`, and `ScalarHandler` first-row
-   behavior, including their documented empty-result values.
-4. Implement `ColumnListHandler` for an indexed column and a named column,
-   preserving row order and SQL NULL values.
-5. Preserve `SQLException` propagation and the exact public generic return
-   shapes.
-6. Keep source files in the normal Maven layout under `src/main/java` and do
-   not add runtime dependencies, plugins, repositories, profiles, modules, or
-   custom build extensions to control verification.
+The caller supplies a `ResultSet` that is already positioned or can be
+advanced by a handler. A row processor reads the current row; a first-row
+handler advances to the first row; a column-list handler advances through all
+rows. SQL `NULL` must remain Java `null` in returned values.
 
-## Environment Configuration
+The supplied source inventory identifies this bounded contract:
 
-### Core Dependency Library Versions
+* `BasicRowProcessor.toArray(ResultSet)`
+* `BasicRowProcessor.toMap(ResultSet)`
+* `ArrayHandler.handle(ResultSet)`
+* `MapHandler.handle(ResultSet)`
+* `ScalarHandler.handle(ResultSet)`
+* `ColumnListHandler.handle(ResultSet)`
 
-```Plain
-Temurin JDK 21.0.12+8       # Java compilation and execution
-Maven 3.9.11                # Project metadata and offline smoke only
-Linux amd64                 # Fixed execution platform
-Runtime dependencies: none  # java.sql and java.util are JDK modules
-Network access: unavailable # Agent, candidate, verifier, and controls
+Other upstream DbUtils APIs, including query runners, bean processors,
+wrappers, connection behavior, and external/process paths, are outside this
+task. Do not add them merely because they exist in the upstream project.
+
+## Supports
+
+### Natural Language Instruction
+
+Implement the bounded Commons DbUtils API as a Java Maven project. Preserve
+the exact package names, public signatures, checked exception behavior,
+generic return types, row ordering, and empty-result behavior specified in
+the API Usage Guide.
+
+The project must support these capabilities:
+
+1. Convert the current `ResultSet` row to an ordered `Object[]`.
+2. Convert the current row to an insertion-ordered, case-insensitive map.
+3. Read the first row through array, map, and scalar handlers.
+4. Collect one indexed or named column from every row in source order.
+5. Preserve SQL `NULL` values and propagate `SQLException` without replacing
+   it with fabricated values.
+6. Compile from the standard Maven layout with no runtime dependency beyond
+   the Java platform.
+
+### Runtime and Build Configuration
+
+Use the following fixed environment:
+
+```text
+Language: Java
+JDK: Temurin 21.0.12+8
+Maven: 3.9.11
+Platform: Linux amd64, glibc
+Runtime dependencies: none beyond JDK modules
+Network: unavailable during agent, candidate, verifier, Oracle, and control runs
 ```
 
-The candidate `pom.xml` is metadata only. The verifier compiles the public
-contract in a separate JVM and does not trust candidate Maven configuration.
-
-## Commons DbUtils Project Architecture
+The project may include a minimal `pom.xml` for Maven metadata, but the POM
+must not add repositories, plugins, profiles, modules, custom extensions, or
+runtime libraries to control verification. Do not depend on H2, Mockito,
+Maven Central, a JDBC driver, a database server, DNS, or any external
+service. `java.sql.ResultSet` and `java.sql.ResultSetMetaData` are the only
+database-facing types needed by this contract.
 
 ### Project Directory Structure
 
-```Plain
+Create the following public structure. The tree is rooted at `workspace/`.
+
+```text
 workspace/
 ├── pom.xml
-└── src
-    └── main
-        └── java
-            └── org
-                └── apache
-                    └── commons
-                        └── dbutils
+└── src/
+    └── main/
+        └── java/
+            └── org/
+                └── apache/
+                    └── commons/
+                        └── dbutils/
                             ├── BasicRowProcessor.java
                             ├── ResultSetHandler.java
                             ├── RowProcessor.java
-                            └── handlers
+                            └── handlers/
                                 ├── AbstractListHandler.java
                                 ├── ArrayHandler.java
                                 ├── ColumnListHandler.java
@@ -68,200 +101,316 @@ workspace/
                                 └── ScalarHandler.java
 ```
 
-The verifier supplies a controlled `ResultSet` adapter. Do not implement a
-real database driver, connect to H2, or use external services.
+The public contract exercised by this task is limited to the classes and
+methods listed below. Supporting types may be minimal and must not expose
+invented behavior. Do not add a CLI: this task has no command-line entry
+point.
 
 ## API Usage Guide
 
-### Core APIs
+### `org.apache.commons.dbutils.ResultSetHandler<T>`
 
-#### 1. Module Import
+This public interface represents a handler that consumes a JDBC result set.
+The bounded contract uses its result shape as the common handler boundary.
+
+```java
+package org.apache.commons.dbutils;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public interface ResultSetHandler<T> {
+    T handle(ResultSet rs) throws SQLException;
+}
+```
+
+`rs` must be a non-null result-set object supplied by the caller. The method
+returns the handler-specific value and may advance the cursor according to
+the concrete handler. It has no filesystem or network side effect. JDBC
+failures from cursor movement, metadata, or value access are checked
+`SQLException` failures and must cross the boundary unchanged. A normal
+caller invokes `new MapHandler().handle(resultSet)`; an empty result is
+interpreted by the concrete handler, not by this interface.
+
+### `org.apache.commons.dbutils.BasicRowProcessor`
+
+Construct the processor with its public no-argument constructor:
+
+```java
+BasicRowProcessor processor = new BasicRowProcessor();
+```
+
+The processor operates on the current row and must not call `ResultSet.next()`
+for either conversion method. It is deterministic for a fixed result-set
+state and has no mutable global state.
+
+#### `toArray`
+
+```java
+public Object[] toArray(ResultSet rs) throws SQLException
+```
+
+`rs` must expose metadata and a current row. Read the column count and return
+one value for each JDBC column in one-based column order. The returned array
+has length equal to the metadata column count; element zero corresponds to
+JDBC column 1. Preserve each `getObject` result, including Java `null` for
+SQL `NULL`. Do not advance the cursor.
+
+Normal example:
+
+```java
+Object[] row = new BasicRowProcessor().toArray(resultSet);
+// A two-column row is represented as [firstValue, secondValue].
+```
+
+Edge example:
+
+```java
+Object[] emptyRow = new BasicRowProcessor().toArray(zeroColumnResultSet);
+// A current row with zero columns produces an array of length zero.
+```
+
+If metadata access or a column read fails, propagate its `SQLException`.
+Do not convert a failure into an empty array or a runtime-only exception.
+
+#### `toMap`
+
+```java
+public Map<String, Object> toMap(ResultSet rs) throws SQLException
+```
+
+Read the current row without calling `next()`. Return a map whose entries
+are inserted in JDBC column order. Resolve each key from the column label
+when it is available, otherwise from the column name, and finally from the
+one-based column number when neither name is usable. Preserve the original
+key spelling during iteration and provide case-insensitive key semantics.
+The map value is the corresponding `getObject` result, including `null`.
+
+Normal example:
+
+```java
+Map<String, Object> row = new BasicRowProcessor().toMap(resultSet);
+Object id = row.get("ID");
+// "ID" and "id" address the same case-insensitive column key.
+```
+
+Edge example:
+
+```java
+Map<String, Object> row = new BasicRowProcessor().toMap(resultSetWithNull);
+// A SQL NULL is retained as a map entry whose value is Java null.
+```
+
+Metadata, key-resolution, or value-access failures must propagate as
+`SQLException`. Do not silently drop duplicate or null-valued columns.
+
+### `org.apache.commons.dbutils.handlers.ArrayHandler`
+
+Use the public no-argument constructor:
+
+```java
+public ArrayHandler()
+```
+
+The handler implements `ResultSetHandler<Object[]>` and exposes:
+
+```java
+public Object[] handle(ResultSet rs) throws SQLException
+```
+
+Call `next()` to inspect only the first row. If a row exists, convert that
+row using the same ordered array behavior as `BasicRowProcessor.toArray`.
+For an empty result set, return an empty `Object[]`. Do not inspect later
+rows. A cursor failure, metadata failure, or value failure propagates as
+`SQLException`.
+
+Normal example:
+
+```java
+Object[] first = new ArrayHandler().handle(resultSet);
+// Only the first row is returned, even when more rows are available.
+```
+
+Edge example:
+
+```java
+Object[] none = new ArrayHandler().handle(emptyResultSet);
+// `none.length` is zero and no placeholder value is fabricated.
+```
+
+### `org.apache.commons.dbutils.handlers.MapHandler`
+
+Use the public no-argument constructor:
+
+```java
+public MapHandler()
+```
+
+The handler exposes:
+
+```java
+public Map<String, Object> handle(ResultSet rs) throws SQLException
+```
+
+Advance to the first row only. Convert it with the same ordered,
+case-insensitive map behavior as `BasicRowProcessor.toMap`. Return `null`
+when `next()` reports that there is no row. Preserve SQL `NULL` values in a
+present row. Cursor, metadata, and value failures remain `SQLException`.
+
+Normal example:
+
+```java
+Map<String, Object> first = new MapHandler().handle(resultSet);
+Object name = first.get("name");
+```
+
+Edge example:
+
+```java
+Map<String, Object> none = new MapHandler().handle(emptyResultSet);
+// `none` is null for an empty result set.
+```
+
+### `org.apache.commons.dbutils.handlers.ScalarHandler<T>`
+
+The generic scalar handler has these public constructors:
+
+```java
+public ScalarHandler()
+public ScalarHandler(int columnIndex)
+public ScalarHandler(String columnName)
+```
+
+Its public operation is:
+
+```java
+public T handle(ResultSet rs) throws SQLException
+```
+
+The no-argument form selects one-based column 1. The integer form selects
+the requested one-based JDBC column index. The string form selects the
+named column using the result-set column-name contract. Each form advances
+to the first row only and returns that cell, including Java `null` for SQL
+`NULL`. If there is no row, return `null`. Invalid indexes, missing names,
+cursor movement failures, and value-access failures follow JDBC behavior and
+are reported as `SQLException`; do not select a different column silently.
+
+Normal example:
+
+```java
+String firstName = new ScalarHandler<String>("name").handle(resultSet);
+Integer firstId = new ScalarHandler<Integer>(1).handle(resultSet);
+```
+
+Edge example:
+
+```java
+Object absent = new ScalarHandler<Object>().handle(emptyResultSet);
+// `absent` is null when there is no first row.
+```
+
+### `org.apache.commons.dbutils.handlers.ColumnListHandler<T>`
+
+The generic column-list handler has these public constructors:
+
+```java
+public ColumnListHandler()
+public ColumnListHandler(int columnIndex)
+public ColumnListHandler(String columnName)
+```
+
+Its public operation is:
+
+```java
+public List<T> handle(ResultSet rs) throws SQLException
+```
+
+The no-argument form selects one-based column 1. The integer form selects
+the requested index, and the string form selects the requested column name.
+Advance through every row exactly once, append one selected value per row,
+and preserve source-row order. Preserve SQL `NULL` as a list element whose
+value is Java `null`; do not filter or compact the list. Return an empty list
+when there are no rows. Invalid indexes, missing names, cursor failures, and
+value failures must follow the checked `SQLException` contract.
+
+Normal example:
+
+```java
+List<String> names = new ColumnListHandler<String>("name").handle(resultSet);
+// Names appear in the same order as their rows.
+```
+
+Edge example:
+
+```java
+List<Object> values = new ColumnListHandler<Object>(2).handle(resultSetWithNull);
+// A middle SQL NULL remains a middle Java null list element.
+```
+
+### Import and Usage Boundary
+
+Use these imports in client code:
 
 ```java
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
 import org.apache.commons.dbutils.BasicRowProcessor;
+import org.apache.commons.dbutils.ResultSetHandler;
+import org.apache.commons.dbutils.RowProcessor;
 import org.apache.commons.dbutils.handlers.ArrayHandler;
 import org.apache.commons.dbutils.handlers.ColumnListHandler;
 import org.apache.commons.dbutils.handlers.MapHandler;
 import org.apache.commons.dbutils.handlers.ScalarHandler;
 ```
 
-#### 2. BasicRowProcessor.toArray() - Convert the Current Row
+`RowProcessor` and `AbstractListHandler` are supporting public types in the
+source layout, but no additional methods on them are confidently bindable
+to this bounded task contract. Do not invent or implement extra API surface
+for them solely from their names. The six operations documented above are
+the required behavior.
 
-```java
-Object[] values = new BasicRowProcessor().toArray(resultSet);
-```
+## Implementation Notes
 
-Signature:
+Keep all implementation files under the Maven source tree shown above and
+keep package declarations synchronized with their paths. The candidate POM
+is metadata only; it must not control how the contract is verified.
 
-```java
-Object[] toArray(ResultSet resultSet) throws SQLException
-```
+The implementation must satisfy these cross-module constraints:
 
-Read the metadata column count and return values in one-based JDBC column
-order. The method reads the current row; it does not call `next()`.
+1. `ArrayHandler` and `MapHandler` must use the same row ordering and value
+   conversion semantics as `BasicRowProcessor`.
+2. `ScalarHandler` and `ColumnListHandler` must use one-based JDBC indexes,
+   named-column access, and the same SQL `NULL` preservation rule.
+3. First-row handlers stop after the first row; `ColumnListHandler` consumes
+   all rows. Do not share cursor state across handler instances.
+4. Returned arrays, maps, and lists must be deterministic for a fixed
+   `ResultSet` sequence. Do not use unordered iteration to determine output
+   order.
+5. Propagate checked `SQLException` from `ResultSet.next()`, metadata, and
+   value access. Do not catch it merely to return a default value.
+6. Do not read environment variables, write files, open sockets, load a
+   database driver, or invoke an external process.
 
-#### 3. BasicRowProcessor.toMap() - Convert the Current Row to a Map
+Small verifiable examples include:
 
-```java
-Map<String, Object> values = new BasicRowProcessor().toMap(resultSet);
-```
+* A two-column current row becomes an array with values in columns 1 then 2.
+* A first-row map retains its column insertion order and accepts a lookup
+  using a different key case.
+* An empty result gives an empty array, `null` map, `null` scalar, and empty
+  column list according to the selected handler.
+* A three-row column list retains a SQL `NULL` in its original middle
+  position rather than dropping it.
 
-Signature:
+Do not copy a reference implementation or encode a hidden test fixture in
+the project. Implement the public behavior using ordinary Java types and
+the JDK JDBC interfaces. Keep behavior stable across repeated calls with
+equivalent result-set inputs, and preserve the exact generic shapes
+`Object[]`, `Map<String,Object>`, `T`, and `List<T>` described above.
 
-```java
-Map<String, Object> toMap(ResultSet resultSet) throws SQLException
-```
-
-The returned map preserves column insertion order. Lookup is case-insensitive
-while the original column label spelling remains the iteration key.
-
-#### 4. ArrayHandler - Read the First Row
-
-```java
-Object[] values = new ArrayHandler().handle(resultSet);
-```
-
-Signature:
-
-```java
-Object[] handle(ResultSet resultSet) throws SQLException
-```
-
-The handler calls `next()` once. It returns the current row as an array, or an
-empty array when there are no rows.
-
-#### 5. MapHandler - Read the First Row as a Map
-
-```java
-Map<String, Object> values = new MapHandler().handle(resultSet);
-```
-
-Signature:
-
-```java
-Map<String, Object> handle(ResultSet resultSet) throws SQLException
-```
-
-The handler returns the first row as a map, or `null` for an empty result set.
-
-#### 6. ScalarHandler - Read One Value from the First Row
-
-```java
-Object first = new ScalarHandler<>().handle(resultSet);
-Object named = new ScalarHandler<>("name").handle(resultSet);
-Object indexed = new ScalarHandler<>(2).handle(resultSet);
-```
-
-Signatures:
-
-```java
-ScalarHandler()
-ScalarHandler(int columnIndex)
-ScalarHandler(String columnName)
-T handle(ResultSet resultSet) throws SQLException
-```
-
-The default selects column 1. An indexed or named handler selects that column
-from the first row and returns `null` when the result set is empty.
-
-#### 7. ColumnListHandler - Collect One Column
-
-```java
-List<Object> values = new ColumnListHandler<>(2).handle(resultSet);
-List<Object> named = new ColumnListHandler<>("name").handle(resultSet);
-```
-
-Signatures:
-
-```java
-ColumnListHandler()
-ColumnListHandler(int columnIndex)
-ColumnListHandler(String columnName)
-List<T> handle(ResultSet resultSet) throws SQLException
-```
-
-The default selects column 1. The result contains one value per row in source
-order, including `null` values. An empty result set produces an empty list.
-
-### Actual Usage Modes
-
-#### Basic Row Processing
-
-```java
-ResultSet resultSet = obtainResultSetFromTheCaller();
-Object[] row = new BasicRowProcessor().toArray(resultSet);
-Map<String, Object> map = new BasicRowProcessor().toMap(resultSet);
-```
-
-#### First-Row Handlers
-
-```java
-Object[] firstRow = new ArrayHandler().handle(resultSet);
-Map<String, Object> firstMap = new MapHandler().handle(resultSet);
-Object firstValue = new ScalarHandler<>("name").handle(resultSet);
-```
-
-#### All-Row Column Collection
-
-```java
-List<Object> names = new ColumnListHandler<>("name").handle(resultSet);
-```
-
-### Supported Function Types
-
-The supported functions are deterministic `ResultSet` row conversion, first
-row extraction, indexed or named scalar access, and indexed or named column
-collection. Query execution, JDBC connection management, bean mapping,
-asynchronous runners, database drivers, and wrapper classes are outside this
-contract.
-
-### Error Handling
-
-Propagate `SQLException` from metadata, cursor movement, and value access.
-Preserve SQL NULL as Java `null`. Invalid indexes or missing names must follow
-the underlying JDBC exception behavior; do not silently substitute another
-column. Do not swallow errors or fabricate values.
-
-## Detailed Implementation Nodes of Functions
-
-### Node 1: Ordered Array Conversion
-
-Read `ResultSetMetaData.getColumnCount()` and call `getObject(1)` through
-`getObject(count)` in order for the current row.
-
-### Node 2: Case-Insensitive Map Conversion
-
-Resolve each column key from label, name, or one-based index, preserve original
-key spelling and insertion order, and make lookups case-insensitive.
-
-### Node 3: First-Row Array and Map Handlers
-
-Advance exactly as required by the handler contract, process only the first
-row, and return the documented empty array or `null` for no rows.
-
-### Node 4: Scalar Selection
-
-Select the configured one-based index or column name from the first row. Keep
-generic return behavior and preserve SQL NULL.
-
-### Node 5: Column List Selection
-
-Iterate all rows, select the configured index or name, and append values in
-source order without filtering nulls.
-
-### Node 6: JDBC Exception Behavior
-
-Let `SQLException` cross the public method boundary unchanged. Do not replace
-it with a generic runtime exception or use a database-specific workaround.
-
-### Node 7: Maven Project Layout
-
-Use the exact packages and signatures above, compile with Java 21, and keep
-the runtime closure empty. Candidate Maven metadata must not control tests.
-
-### Node 8: Offline and Deterministic Execution
-
-Do not access a network, filesystem database, environment service, H2,
-Mockito, or Maven Central. The verifier uses only a JDK dynamic-proxy fixture
-for `ResultSet` and `ResultSetMetaData`.
+There is no CLI, web service, database schema, asynchronous API, or command
+to document. A normal build is an offline Maven validation/build using JDK
+21. Runtime dependency closure must remain empty. Any unsupported upstream
+feature should remain absent rather than being represented by a guessed
+signature or a no-op placeholder.

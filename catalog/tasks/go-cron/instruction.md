@@ -20,6 +20,46 @@ wall-clock service operation is not required by the bridge contract.
 - No cgo, plugins, `unsafe`, generated code, workspace files, network services,
   or external state.
 
+## Natural Language Instruction
+
+Create the pure-Go `github.com/robfig/cron/v3` module from an empty workspace.
+Implement cron parsing, deterministic next-time calculation, scheduler
+entries, and standard job wrappers listed below; live wall-clock service
+operation is outside the evaluated bridge contract.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── go.mod
+├── go.sum
+├── vendor/modules.txt
+├── parser.go
+├── cron.go
+├── chain.go
+└── wrappers.go
+```
+
+Expose package `cron` at the exact module root. Do not add private verifier
+files or external services.
+
+## Examples
+
+```go
+schedule, err := ParseStandard("0 * * * *")
+next := schedule.Next(time.Unix(0, 0))
+```
+
+```go
+c := New(WithSeconds()); c.AddFunc("*/5 * * * * *", func() {})
+```
+
+## Error Handling and Boundary Conditions
+
+Preserve malformed expression errors, field descriptors, timezone behavior,
+next-time boundaries, job wrapper errors, and deterministic entry ordering.
+Avoid requiring a running scheduler or network access.
+
 ## API Usage Guide
 
 Implement package `cron` at import path `github.com/robfig/cron/v3` with these

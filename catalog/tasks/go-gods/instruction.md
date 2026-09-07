@@ -19,6 +19,47 @@ empty workspace; do not assume any source files are provided.
 - Do not use cgo, plugins, external services, workspace files, or external
   `replace` directives. Keep the public package import paths described below.
 
+## Natural Language Instruction
+
+Create the generic `github.com/emirpasic/gods/v2` module from an empty
+workspace. Implement the listed lists, stacks, queues, maps, sets, and heap
+containers with their constructors, mutation, lookup, iteration, and ordering
+contracts.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── go.mod
+├── go.sum
+├── vendor/modules.txt
+├── lists/
+├── stacks/
+├── queues/
+├── maps/
+├── sets/
+└── trees/
+```
+
+Preserve every import path explicitly listed in the API guide and use Go
+generics where required. Do not include private verifier files.
+
+## Examples
+
+```go
+list := arraylist.New[int](); list.Add(1); value, ok := list.Get(0)
+```
+
+```go
+queue := linkedlistqueue.New[int](); queue.Enqueue(2); item, ok := queue.Dequeue()
+```
+
+## Error Handling and Boundary Conditions
+
+Honor empty-container behavior, absent keys/indexes, duplicate set values,
+heap ordering, iterator exhaustion, nil values, and deterministic traversal
+contracts. Container methods must remain local and offline.
+
 ## API Usage Guide
 
 All imports use the module prefix `github.com/emirpasic/gods/v2`.

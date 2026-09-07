@@ -1,8 +1,21 @@
-## Introduction and Objectives of the Cookiecutter Project
+## Project Description
+
+```text
+workspace/
+├── pyproject.toml
+├── cookiecutter/
+│   ├── __init__.py
+│   ├── generate.py
+│   ├── prompt.py
+│   ├── hooks.py
+│   ├── repository.py
+│   └── config.py
+└── tests/
+```
 
 Cookiecutter is a **Python command-line tool for project template generation** that can quickly create standardized project structures from predefined project templates (cookiecutters). This tool performs excellently in the Python ecosystem and cross-language project development, achieving "the highest development efficiency and optimal project standardization." Its core functions include: templated project generation (supporting templates from local directories, remote Git repositories, and ZIP files), **intelligent variable substitution and user interaction** (using the Jinja2 template engine to generate dynamic content and allow user-defined configurations), and the complete replication and customization of complex project structures (including nested directories, preservation of file permissions, and handling of binary files). In short, Cookiecutter aims to provide a powerful and flexible project scaffolding system for quickly generating standardized project structures (for example, generating projects from templates using the `cookiecutter()` function, defining user interaction variables through `cookiecutter.json`, and implementing custom logic before and after generation using the hooks system).
 
-## Natural Language Instructions (Prompt) 
+## Natural Language Instruction
 
 Please create a Python project named Cookiecutter to implement a project template generation tool. The project should include the following functions:
 
@@ -29,7 +42,7 @@ Please create a Python project named Cookiecutter to implement a project templat
 11. **Core File Requirements**: The project must include a complete `pyproject.toml` file. This file should not only configure the project as an installable package (supporting `pip install`) but also declare a complete list of dependencies (including core libraries such as `jinja2>=3.0.0`, `click>=8.0.0`, `binaryornot>=0.4.4`, `rich>=10.0.0`, `pytest>=6.0.0`, `pytest-cov>=2.0.0`). The `pyproject.toml` file can verify whether all functional modules work properly. Additionally, 'cookiecutter/__init__.py' needs to serve as a unified API entry point to import and export core functions, classes, etc. from the 'cookiecutter' module, and provide version information, allowing users to access all major functions through simple statements such as 'from cookiecutter import xxx'. In `generate.py`, the `generate_context()` function is required to generate the template context, and the `generate_files()` function is required to render and generate project files. In `prompt.py`, the `prompt_for_config()` function is required to handle user interaction, and functions such as `read_user_variable()`, `read_user_choice()`, `read_user_yes_no()` are required to handle different types of user inputs. In `hooks.py`, the `run_hook()` function is required to execute hook scripts, and the `find_hook()` function is required to discover hook files. In `repository.py`, the `determine_repo_dir()` function is required to determine the template repository directory, supporting multiple template sources such as local paths, Git URLs, and ZIP files. In the `config.py` file, the DEFAULT configuration must be included.
 
 
-## Environment Configuration
+## Supports or Environment Configuration
 
 ### Python Version
 
@@ -111,7 +124,20 @@ urllib3               2.5.0
 virtualenv            20.34.0
 ```
 
-## Cookiecutter Project Architecture
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── cookiecutter/
+│   ├── __init__.py
+│   ├── generate.py
+│   ├── prompt.py
+│   ├── hooks.py
+│   ├── repository.py
+│   └── config.py
+└── tests/
+```
 
 ### Project Directory Structure
 
@@ -3018,3 +3044,28 @@ def test_performance(benchmark):
     result = benchmark(generate_template)
     assert result is not None
 ```
+
+## Implementation Notes
+
+Keep template generation local and deterministic. Separate configuration,
+prompting, repository resolution, rendering, hooks, and CLI concerns. Runtime
+network and unverified remote material are outside the frozen local contract.
+
+## Examples
+
+```python
+from cookiecutter.generate import generate_context, generate_files
+context = generate_context('template/cookiecutter.json')
+generate_files(context, 'template')
+```
+
+```python
+from cookiecutter.prompt import prompt_for_config
+config = prompt_for_config({'project_name': 'demo'}, no_input=True)
+```
+
+## Error Handling and Boundary Conditions
+
+Missing templates, malformed configuration, render failures, and hook failures
+must raise documented exceptions or return the established non-zero CLI status.
+Do not hide failed generation behind partial success.

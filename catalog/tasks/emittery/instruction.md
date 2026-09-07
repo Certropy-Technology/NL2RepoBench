@@ -1,3 +1,67 @@
+# Project Description
+
+Build the pinned ESM npm package `emittery` from an empty `workspace/`. It is an
+asynchronous event emitter with direct and any-event listeners, one-shot
+subscriptions, serial/parallel emission, and buffered async iterators.
+
+# Natural Language Instruction
+
+Create the package root and implement the `Emittery` default export plus every
+static and instance member documented below. Preserve listener order, event
+payload shape, iterator buffering, lifecycle cleanup, and deterministic errors.
+
+# Supports or Environment Configuration
+
+- Use Node.js 24.19.0 and npm 11.17.0 with the exact ESM package metadata in
+  `task.toml`; install the closed npm lockfile offline.
+- Do not use lifecycle downloads, workspaces, native addons, or runtime
+  services. Agent, candidate, verifier, Oracle, and controls use no network.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── index.js
+└── index.d.ts
+```
+
+# API Usage Guide
+
+The API Usage Guide below is authoritative for the constructor, static exports,
+subscription/emission methods, iterator contracts, and listener lifecycle.
+
+# Implementation Notes
+
+Preserve registration order and remove listeners exactly once. Async iteration
+must be bounded and deterministic without timers or external services.
+
+# Examples
+
+```js
+import Emittery from 'emittery';
+const emitter = new Emittery();
+const stop = emitter.on('ready', value => value);
+await emitter.emit('ready', {ok: true});
+stop();
+```
+
+```js
+const events = emitter.events('message');
+await emitter.emit('message', 'hello');
+```
+
+# Error Handling and Boundary Conditions
+
+```js
+await emitter.emitSerial('empty', undefined);
+```
+
+```js
+emitter.off('missing', () => {}); // retain documented no-op behavior
+```
+
 # Build `emittery`
 
 ## Project Description

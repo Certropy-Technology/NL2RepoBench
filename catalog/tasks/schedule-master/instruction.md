@@ -12,26 +12,48 @@ independent `Scheduler` instances and a module-level default scheduler, and
 handle ordinary intervals, randomized ranges, fixed wall-clock times, weekdays,
 deadlines, tags, cancellation, and timezone-aware wall-clock scheduling.
 
-# Supports
+## Natural Language Instruction
 
-- Python 3.7 or newer. Evaluation uses CPython 3.12.14 on Debian 12 Linux.
-- A `pyproject.toml` that lets the `schedule` distribution be installed with
-  standard Python packaging tools. Use distribution version `1.2.2`.
-- An importable `schedule` package. A root package layout or a `src/` layout is
-  acceptable. Include `schedule/py.typed`.
-- No required third-party dependency for timezone-free scheduling. Timezone
-  arguments require `pytz`; expose it as an optional `timezone` dependency.
-  Evaluation preinstalls `pytz` 2025.2 and runs the suite with `pytest` 8.4.1.
-- Naive `datetime` values for the public `last_run`, `next_run`, and
-  `cancel_after` state. Timezone-aware calculations are internal and are
-  converted back to naive local-system time for compatibility.
-- The public API is available directly from `schedule`. `from schedule import
-  *` must expose the core scheduler functions, classes, and exceptions listed
-  below.
+Create `schedule-master` from an empty workspace as a complete installable python project. Implement
+the public operations, data or state behavior, input validation, deterministic ordering, and
+error contracts documented below. Keep package metadata, root exports, module imports, and any
+subpath entry points consistent across files. Implement the behavior rather than hard-coding the
+examples, and do not retrieve or copy a reference implementation.
 
-# API Usage Guide
+The finished repository must install from its root, expose every documented API family, preserve
+the specified side effects and resource lifecycle, and remain usable in a fresh process.
 
-## Exceptions and cancellation marker
+## Supports
+
+- Distribution name and primary import package: `schedule`.
+- CPython 3.12.14 on debian-12 with pip.
+- Install from `workspace/` using `python -m pip install .`.
+- Declared dependency closure: pytest==8.4.1, pytz==2025.2, setuptools==75.8.0, wheel==0.45.1. Standard-library modules are not dependencies.
+- Build requirements are supplied before execution; do not add undeclared dependencies,
+  registry overrides, download hooks, or source-fetch steps.
+- Agent, candidate, verifier, Oracle, and controls use `network_mode=no-network`. Runtime access
+  to GitHub, PyPI, npm, the Go proxy, DNS, and external services is forbidden.
+- The declared test framework is `pytest`. A fixed collection
+  contains `81` cases when that value is frozen in metadata;
+  test implementation details are not part of the package surface.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── schedule/
+│   └── __init__.py
+└── README.md
+```
+
+This is the required public project shape. Additional implementation modules are allowed only
+when they support the documented API; evaluation, source-fetch, and private runtime files are
+not agent-owned project files.
+
+## API Usage Guide
+
+### Exceptions and cancellation marker
 
 Provide this hierarchy:
 
@@ -45,7 +67,7 @@ class CancelJob: ...
 `CancelJob` is a marker. If a job function returns either the `CancelJob` class
 or an instance of it, the scheduler that ran the job removes that job.
 
-## `Scheduler`
+### `Scheduler`
 
 ```python
 class Scheduler:
@@ -90,7 +112,7 @@ with the requested tag. It returns `None` if that selection is empty.
 of seconds between local `datetime.datetime.now()` and `next_run`, or `None`
 when no job is scheduled.
 
-## `Job`
+### `Job`
 
 ```python
 class Job:
@@ -232,7 +254,7 @@ missing run times. Lambda functions and `functools.partial` callables must not
 break either representation; partial representations retain their bound and
 keyword argument information.
 
-## Module-level scheduler API
+### Module-level scheduler API
 
 Create one `default_scheduler = Scheduler()` and expose `jobs` as the exact
 same mutable list object as `default_scheduler.jobs`. Provide these delegating
@@ -258,7 +280,7 @@ def repeat(job: Job, *args, **kwargs): ...
 It registers the decorated function on `job` with the supplied arguments and
 returns the original function, so normal direct calls still work.
 
-## Date and timezone calculation contract
+### Date and timezone calculation contract
 
 All ordinary intervals are calendar calculations from the current local
 datetime. A job without `at_time` gets its first run one complete chosen period
@@ -313,7 +335,7 @@ normalization. If `fixate_time` is true, first try to retain the original wall
 clock components; if those components are in a DST gap, use the first valid
 time displaced forward by that gap.
 
-# Implementation Notes
+## Implementation Notes
 
 - Keep scheduler instances independent. Module shortcuts operate only on
   `default_scheduler`; jobs created by another `Scheduler` stay there.
@@ -334,3 +356,66 @@ schedule.run_all()
 assert runs == ["done"]
 schedule.cancel_job(job)
 ```
+
+Use the public language semantics described by each API family. Keep repeated calls deterministic
+unless state mutation is explicitly part of the contract. Public re-exports and declarations must
+match runtime behavior, and installation must not rely on a repository checkout or network access.
+
+## Examples
+
+The API-specific examples above are normative demonstrations of ordinary behavior. These four
+local snippets also provide ordinary and boundary-oriented calls without external services:
+
+```python
+class ScheduleError(Exception): ...
+class ScheduleValueError(ScheduleError): ...
+class IntervalError(ScheduleValueError): ...
+class CancelJob: ...
+```
+
+```python
+class Scheduler:
+    def __init__(self) -> None: ...
+    def every(self, interval: int = 1) -> "Job": ...
+    def run_pending(self) -> None: ...
+    def run_all(self, delay_seconds: int = 0) -> None: ...
+    def get_jobs(self, tag: Hashable | None = None) -> list["Job"]: ...
+    def clear(self, tag: Hashable | None = None) -> None: ...
+    def cancel_job(self, job: "Job") -> None: ...
+    def get_next_run(self, tag: Hashable | None = None) -> datetime.datetime | None: ...
+
+    next_run: datetime.datetime | None
+    idle_seconds: float | None
+```
+
+```python
+class Job:
+    def __init__(self, interval: int, scheduler: Scheduler | None = None): ...
+    def tag(self, *tags: Hashable) -> "Job": ...
+    def at(self, time_str: str, tz: str | pytz.BaseTzInfo | None = None) -> "Job": ...
+    def to(self, latest: int) -> "Job": ...
+    def until(
+        self,
+        until_time: datetime.datetime | datetime.timedelta | datetime.time | str,
+    ) -> "Job": ...
+    def do(self, job_func: Callable, *args, **kwargs) -> "Job": ...
+    def run(self): ...
+
+    should_run: bool
+```
+
+```python
+Scheduling .<weekday>() jobs is only allowed for weekly jobs. Using
+.<weekday>() on a job scheduled to run every 2 or more weeks is not supported.
+```
+
+## Error Handling and Boundary Conditions
+
+Empty values, malformed values, unsupported types, exhausted inputs, invalid options, and missing
+local resources must follow the API-specific contracts above. Preserve documented exception types
+and messages where they are stated. Do not silently coerce an unsupported value merely to produce
+a result, and do not mutate caller-owned data unless the relevant API explicitly promises it.
+
+All filesystem, process, terminal, clock, randomness, and service interactions are forbidden unless
+the API guide explicitly includes that local behavior. Even for an API that models remote or async
+work, evaluation must remain bounded, deterministic, and disconnected from public networks.

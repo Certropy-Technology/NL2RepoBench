@@ -6,6 +6,14 @@ provides an IRI encoder plus a small builder and `urlparse` compatibility API.
 The implementation must be local and deterministic; do not fetch source code
 or dependencies during evaluation.
 
+## Natural Language Instruction
+
+Build the installable `rfc3986` library from an empty workspace. Implement URI
+and IRI parsing, normalization, resolution, validation, persistent URI builders,
+and standard-library-compatible parse result objects described below. Preserve
+component presence distinctions and exception behavior exactly. This is a
+local pure-Python API: parsing and validation never make network requests.
+
 ## Project Description
 
 The package accepts URI/IRI strings or bytes, exposes their components, can
@@ -27,10 +35,38 @@ functions for component normalization.
   `is_valid_uri`, `normalize_uri`, `uri_reference`, `iri_reference`,
   `urlparse`, and the release metadata constants.
 - Preserve component order and deterministic string/bytes behavior. Parsed
-  objects are immutable named-tuple-like values with components
+objects are immutable named-tuple-like values with components
   `scheme`, `authority`, `path`, `query`, and `fragment`.
 
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+└── src/
+    └── rfc3986/
+        ├── __init__.py
+        ├── api.py
+        ├── uri.py
+        ├── iri.py
+        ├── parseresult.py
+        ├── builder.py
+        ├── normalizers.py
+        ├── validators.py
+        ├── misc.py
+        └── exceptions.py
+```
+
+The distribution is installed from the workspace root and public imports
+resolve from `src/rfc3986`. Keep package metadata and the standard-library-only
+runtime boundary consistent with this tree.
+
 ## API Usage Guide
+
+Public functional imports include `from rfc3986.api import uri_reference,
+iri_reference, is_valid_uri, normalize_uri, urlparse`; classes are imported
+from `rfc3986.uri`, `rfc3986.iri`, `rfc3986.parseresult`, and
+`rfc3986.builder` as specified below.
 
 ### Functional API
 
@@ -141,3 +177,35 @@ operations are persistent: each `add_*` call returns a new builder and leaves
 the original unchanged. Deprecated convenience methods may emit the standard
 warnings but must retain their return values. Do not expose the hidden
 verifier, its scenarios, or any reward/report files in the generated project.
+
+## Examples
+
+```python
+from rfc3986.api import uri_reference, normalize_uri
+reference = uri_reference('HTTP://Example.COM/a/../b?x=1')
+assert reference.normalize().unsplit() == 'http://example.com/b?x=1'
+assert normalize_uri('HTTP://Example.COM/a') == 'http://example.com/a'
+```
+
+```python
+from rfc3986.builder import URIBuilder
+uri = (URIBuilder().add_scheme('https').add_host('example.com')
+       .add_path('/docs').add_query(foo='bar').finalize())
+assert uri.unsplit() == 'https://example.com/docs?foo=bar'
+```
+
+```python
+from rfc3986.api import is_valid_uri
+assert is_valid_uri('https://example.com', require_scheme=True)
+assert not is_valid_uri('relative/path', require_scheme=True)
+```
+
+## Error Handling and Boundary Conditions
+
+`None` and empty query or fragment components remain distinguishable during
+round trips. Invalid ports, malformed IPv6 authorities, forbidden password
+usage, missing required components, and an unresolved base scheme raise the
+documented exceptions rather than returning an altered URI. Builder calls are
+persistent and do not mutate earlier builders. Bytes inputs preserve the
+requested encoding and bytes result type. All operations run without DNS or
+external-service access.

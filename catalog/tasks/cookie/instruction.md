@@ -7,6 +7,15 @@ empty workspace. It parses and serializes HTTP `Cookie` and `Set-Cookie`
 header values. The package is ESM and exposes four named functions from its
 root entry point.
 
+## Natural Language Instruction
+
+Create the `cookie` ESM package from an empty `workspace/`. Implement the four
+named root exports for parsing and serializing HTTP `Cookie` and `Set-Cookie`
+headers. Preserve pair splitting, percent-decoding fallback, duplicate-key
+handling, attribute order, validation errors, JSON-safe value boundaries, and
+deterministic output. The package is synchronous, stateless, and independent of
+network, time, browser globals, and filesystem state.
+
 This task scores a deterministic JSON-compatible subset of the pinned public
 API. It is a bounded rescope of the upstream project, not a claim of complete
 upstream test or behavioral parity. Do not copy upstream source or tests into
@@ -30,6 +39,21 @@ the generated repository.
 - Do not use lifecycle hooks, workspaces, native addons, custom loaders,
   registry configuration, network access, browser globals, current time, or
   random state.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── index.js
+└── index.d.ts
+```
+
+`index.js` is the ESM package root and exports `parseCookie`, `parseSetCookie`,
+`stringifyCookie`, and `stringifySetCookie`; `index.d.ts` describes the public
+signatures. The lockfile must agree with the package metadata and no tests,
+verifier files, cache, or generated evaluator assets belong in the workspace.
 
 ## JSON Boundary
 
@@ -68,6 +92,12 @@ not observable through the response.
 import {parseCookie} from 'cookie';
 parseCookie(header)
 ```
+
+The public module can also be loaded as `import * as cookie from 'cookie'`;
+the four named exports are available on that namespace.
+For tools that display import paths in language-neutral form, the root path is
+`from cookie import parseCookie`; the executable JavaScript form is the ESM
+named import shown above.
 
 `header` is a string. Return an object whose own keys are cookie names and
 whose values are strings.

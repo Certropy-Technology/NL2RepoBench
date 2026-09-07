@@ -4,6 +4,16 @@ Build an installable CommonJS npm package named `pg-connection-string` from an
 empty workspace. It parses PostgreSQL-style connection strings into connection
 option objects and converts those objects into client-ready configuration.
 
+## Natural Language Instruction
+
+Create the `pg-connection-string` package from an empty workspace. Implement
+the callable CommonJS root export and its `parse`, `toClientConfig`, and
+`parseIntoClientConfig` properties. Preserve PostgreSQL URL, relative database,
+and Unix-socket parsing, percent decoding, query precedence, SSL mode policy,
+null-prototype result objects, and the exact error-safety boundary described in
+the API guide. The implementation is a parser only: it must never connect to a
+database or resolve a host.
+
 # Supports
 
 - Node.js 24.19.0 and npm 11.17.0 on Linux amd64 with glibc.
@@ -16,7 +26,26 @@ option objects and converts those objects into client-ready configuration.
 - Evaluation invokes each documented function in a separate unprivileged JSON
   child process. It does not require a CLI or a PostgreSQL server.
 
+## Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+└── index.js
+```
+
+`index.js` is the CommonJS package root and must export the callable `parse`
+function with the named function properties documented below. The lockfile
+must describe the same package name and version. No CLI, server, database
+driver, test fixture, or runtime download is required.
+
 # API Usage Guide
+
+```js
+import pgConnectionString from 'pg-connection-string';
+const parse = pgConnectionString;
+```
 
 Export a callable root value and set these callable properties on it:
 
@@ -76,3 +105,31 @@ under `TZ=UTC`. The package is evaluated offline and installed with lifecycle
 scripts disabled. The evaluator observes JSON-serializable returned values and
 error messages through an isolated child process; private test details and the
 Oracle implementation are not part of the package to implement.
+
+## Examples
+
+```js
+const parse = require('pg-connection-string');
+parse('postgres://alice:secret@db.example.test:5432/app?sslmode=require');
+```
+
+```js
+const parse = require('pg-connection-string');
+parse.toClientConfig({host: 'db.example.test', port: '5432', ssl: {rejectUnauthorized: false}});
+```
+
+```js
+const parse = require('pg-connection-string');
+parse.parseIntoClientConfig('postgres://user%40example.test/db');
+```
+
+## Error Handling and Boundary Conditions
+
+- Invalid URL syntax raises an error without echoing credentials or the full
+  connection string in the error object.
+- Empty ports are omitted; non-numeric ports raise `Error("Invalid port: <value>")`.
+- Repeated query keys use the final value, while URL fields are overridden by
+  query values where the API guide says so.
+- Compatibility cannot be enabled through both the query and options object.
+- SSL file paths and PostgreSQL network connections are outside the local,
+  JSON-safe contract and must not be accessed as a fallback.

@@ -1,194 +1,446 @@
-## Introduction and Goals of the Apache Commons BCEL Project
+## Project Description
 
-Apache Commons BCEL is a Java library for inspecting and manipulating Java
-class files and bytecode. This task focuses on a small, deterministic public
-slice of the library: `org.apache.bcel.util.ByteSequence`, a byte-array-backed
-input stream used while reading class-file data. The implementation must
-preserve Java `DataInputStream` behavior while exposing the BCEL-specific
-cursor index.
+Create a small, installable Java Maven project named Apache Commons BCEL.
+The project recreates the bounded byte-sequence behavior required by this task.
+It is intended for code that reads class-file or other binary data in a stable,
+forward-only cursor while retaining the ordinary Java data-input contracts.
 
-## Natural Language Instruction (Prompt)
+The public package is `org.apache.bcel.util`.
+The public type required by this task is `ByteSequence`.
+`ByteSequence` is a final stream-like class backed by a caller-provided byte
+array and exposes the number of bytes consumed through `getIndex()`.
 
-Please create a Java Maven project named Commons BCEL that implements the
-following public behavior:
+The implementation must preserve byte values and their array order.
+Multi-byte values must use the big-endian behavior of `DataInputStream`.
+Successful reads advance the cursor by exactly the number of bytes consumed.
+Reads that cannot obtain all required bytes must report the normal checked
+`IOException` contract rather than returning fabricated data.
 
-1. Provide the public class `org.apache.bcel.util.ByteSequence`.
-2. Construct a sequence from a byte array without changing byte order or byte
-   values.
-3. Expose the current byte cursor through `getIndex()`.
-4. Preserve the inherited `DataInputStream` read methods, including
-   `readByte()`, `readUnsignedByte()`, `readUnsignedShort()`, `readInt()`, and
-   `readFully(byte[])`.
-5. Advance the cursor exactly by the number of bytes consumed and report EOF
-   through the normal `IOException` behavior of Java input streams.
-6. Keep the implementation under `src/main/java` in a single-module Maven
-   project. Do not add external runtime dependencies or candidate-controlled
-   build behavior.
+This is a bounded library task, not a request to recreate every Apache BCEL
+package or every class-file manipulation feature.
+Do not add unrelated BCEL classes, a command-line application, a network
+client, a bytecode optimizer, or a custom serialization format.
+Do not copy a complete upstream source tree into the candidate workspace.
 
-## Environment Configuration
+The candidate starts from an empty `workspace/` directory.
+It must create a compilable single-module Maven project whose source layout,
+package name, constructor, cursor method, and inherited read behavior match
+the contract in this document.
 
-### Core Dependency Library Versions
+## Supports
 
-```Plain
-Temurin JDK 21.0.12+8       # Java compilation and execution
-Maven 3.9.11                # Offline project metadata validation
-Linux amd64                 # Fixed execution platform
-Runtime dependencies: none  # ByteSequence uses the Java standard library
-Network access: unavailable # Agent and verifier are offline
-```
+### Natural Language Instruction
 
-## Apache Commons BCEL Project Architecture
+Implement the following observable capabilities.
+
+1. Create `org.apache.bcel.util.ByteSequence` as a public final Java class.
+2. Make the class extend `java.io.DataInputStream` so its standard data-input
+   methods remain available with their normal signatures and checked errors.
+3. Accept a `byte[]` in the public constructor and read it in its original
+   order without converting bytes through characters or text encodings.
+4. Expose the current zero-based byte position through `public int getIndex()`.
+5. Preserve signed-byte, unsigned-byte, unsigned-short, and signed-integer
+   `DataInputStream` semantics, including big-endian multi-byte decoding.
+6. Preserve complete-read behavior for `readFully`, including its EOF error
+   and cursor behavior when the requested range is truncated.
+7. Keep the build deterministic and offline with no runtime dependencies.
+
+The Java package declaration must be exactly `org.apache.bcel.util`.
+The public class name and constructor must be exactly `ByteSequence`.
+The Maven coordinates may identify the project as Commons BCEL, but the POM
+must remain metadata for a single module and must not install build behavior
+that bypasses the verifier.
+
+### Environment Configuration
+
+Use the fixed environment below when compiling and checking the project.
+
+| Component | Required value |
+| --- | --- |
+| Operating system | Debian Bookworm, Linux amd64 |
+| Java runtime | Temurin JDK 21.0.12+8 |
+| Java language level | `--release 21` / Java 21 |
+| Package manager | Maven 3.9.11 |
+| Runtime dependencies | None; use the Java standard library |
+| Network policy | No network during agent, candidate, verifier, or Oracle execution |
+
+Use Maven's offline mode for validation:
+`mvn --offline validate`.
+Do not access GitHub, Maven Central, DNS, or any other external service at
+build or runtime.
+Do not add repositories, plugins, profiles, modules, or dependencies merely
+to make the candidate reach the verifier.
 
 ### Project Directory Structure
 
-```Plain
+```text
 workspace/
 ├── pom.xml
-└── src
-    └── main
-        └── java
-            └── org
-                └── apache
-                    └── bcel
-                        └── util
+└── src/
+    └── main/
+        └── java/
+            └── org/
+                └── apache/
+                    └── bcel/
+                        └── util/
                             └── ByteSequence.java
 ```
 
-The public package is `org.apache.bcel.util`. A candidate POM is metadata only:
-do not add plugins, dependencies, profiles, repositories, modules, or custom
-extensions to control compilation or verification.
+The directory tree is intentionally small.
+The package path must correspond to the import path in the API guide.
+No CLI entry point is required for this library task.
+No resource directory, service loader, shell script, or network configuration
+is required.
 
 ## API Usage Guide
 
-### Core APIs
+### `org.apache.bcel.util.ByteSequence`
 
-#### 1. Module Import
+Import the class with:
 
 ```java
 import org.apache.bcel.util.ByteSequence;
 ```
 
-#### 2. ByteSequence Constructor - Create a Cursor
+The class is public and final.
+It extends `java.io.DataInputStream`.
+The underlying input is a byte-array cursor, not a file, socket, or text
+reader.
+The cursor starts at zero and is shared by all reads on the object.
+
+#### Constructor: `ByteSequence(byte[] bytes)`
+
+Full declaration:
 
 ```java
-ByteSequence sequence = new ByteSequence(new byte[] {0x01, (byte) 0xff});
+public ByteSequence(byte[] bytes)
 ```
 
-Signature:
+`bytes` is the source byte array.
+Every element is consumed as its eight-bit byte value.
+The first element is read first, the second element second, and so on.
+The constructor has no network, filesystem, or process side effect.
+It does not decode the array as UTF-8, Latin-1, or any other character set.
+The initial cursor index is zero, including for an empty array.
+
+Normal example:
 
 ```java
-ByteSequence(byte[] bytes)
+ByteSequence sequence = new ByteSequence(
+    new byte[] {0x01, 0x02, 0x03, (byte) 0xff});
+int initial = sequence.getIndex(); // 0
 ```
 
-The sequence reads from the supplied bytes in array order. The constructor
-must not reinterpret bytes as characters or reorder them.
-
-#### 3. getIndex() - Read the Cursor
+Edge example:
 
 ```java
-int index = sequence.getIndex();
+ByteSequence empty = new ByteSequence(new byte[0]);
+int initial = empty.getIndex(); // 0
 ```
 
-Signature:
+An empty array is valid and has no readable bytes.
+A null array is invalid and is rejected by the underlying byte-array stream
+construction with an unchecked null-related failure; it must not be treated
+as an empty array.
+
+#### Cursor inspection: `getIndex()`
+
+Full declaration:
 
 ```java
-int getIndex()
+public int getIndex()
 ```
 
-The initial index is zero. After a successful read, the index equals the
-number of bytes consumed. Reading beyond the end does not advance the index
-past the available data.
+The method returns the zero-based number of bytes consumed from the original
+array.
+Its return type is `int`.
+It has no arguments and no external side effect.
+It is deterministic for a given sequence of successful and attempted reads.
+Immediately after construction it returns `0`.
+After a successful one-byte read it returns `1`.
+After a successful four-byte read it increases by `4`.
+It must never report a position beyond the source array length.
 
-#### 4. Inherited DataInputStream Reads
+Normal example:
 
 ```java
-int unsignedByte = sequence.readUnsignedByte();
-int unsignedShort = sequence.readUnsignedShort();
-int value = sequence.readInt();
-byte signedByte = sequence.readByte();
+ByteSequence sequence = new ByteSequence(new byte[] {10, 20});
+sequence.readUnsignedByte();
+int position = sequence.getIndex(); // 1
 ```
 
-The inherited methods use Java big-endian `DataInputStream` semantics. The
-unsigned methods return non-negative integer values. `readFully(byte[])`
-consumes exactly the destination length or throws `IOException` at EOF.
+Boundary example:
 
-### Actual Usage Modes
+```java
+ByteSequence sequence = new ByteSequence(new byte[] {10});
+sequence.readUnsignedByte();
+int position = sequence.getIndex(); // 1
+```
 
-#### Basic Sequential Reads
+An unsuccessful read at end of input must not move the index past the end.
+
+#### Inherited signed byte read: `readByte()`
+
+Full declaration inherited from `DataInputStream`:
+
+```java
+public final byte readByte() throws IOException
+```
+
+Add `import java.io.IOException;` when handling the checked exception.
+The method consumes exactly one byte and returns it as a signed Java `byte`.
+For example, the byte value `0xFF` is returned as `-1`.
+It advances the cursor by one only when a byte is available.
+
+Normal example:
+
+```java
+ByteSequence sequence = new ByteSequence(new byte[] {(byte) 0xff});
+byte value = sequence.readByte(); // -1
+int position = sequence.getIndex(); // 1
+```
+
+Edge example:
+
+```java
+ByteSequence sequence = new ByteSequence(new byte[0]);
+try {
+    sequence.readByte();
+    throw new AssertionError("expected EOF");
+} catch (IOException expected) {
+    // The index remains 0.
+}
+```
+
+#### Inherited unsigned byte read: `readUnsignedByte()`
+
+Full declaration inherited from `DataInputStream`:
+
+```java
+public final int readUnsignedByte() throws IOException
+```
+
+The method consumes exactly one byte and returns an `int` in the range
+`0` through `255`.
+The high bit is not interpreted as a sign bit.
+It is deterministic and advances the cursor by one on success.
+At EOF it throws `IOException` and does not fabricate a value.
+
+Normal example:
+
+```java
+ByteSequence sequence = new ByteSequence(new byte[] {(byte) 0xff});
+int value = sequence.readUnsignedByte(); // 255
+```
+
+Edge example:
+
+```java
+ByteSequence sequence = new ByteSequence(new byte[] {7});
+sequence.readUnsignedByte();
+try {
+    sequence.readUnsignedByte();
+    throw new AssertionError("expected EOF");
+} catch (IOException expected) {
+    // The index remains 1.
+}
+```
+
+#### Inherited unsigned short read: `readUnsignedShort()`
+
+Full declaration inherited from `DataInputStream`:
+
+```java
+public final int readUnsignedShort() throws IOException
+```
+
+The method requires two bytes.
+It interprets them in network order, which is Java `DataInputStream`
+big-endian order: the first byte is the high eight bits.
+The return type is `int` with a value from `0` through `65535`.
+On success the cursor advances by two.
+If fewer than two bytes remain, it throws `IOException` and must not claim a
+successful two-byte value.
+
+Normal example:
+
+```java
+ByteSequence sequence = new ByteSequence(new byte[] {0x01, 0x02});
+int value = sequence.readUnsignedShort(); // 258 (0x0102)
+int position = sequence.getIndex(); // 2
+```
+
+Edge example:
+
+```java
+ByteSequence sequence = new ByteSequence(new byte[] {0x01});
+try {
+    sequence.readUnsignedShort();
+    throw new AssertionError("expected EOF");
+} catch (IOException expected) {
+    // The request was not satisfied; do not invent the missing low byte.
+}
+```
+
+#### Inherited signed integer read: `readInt()`
+
+Full declaration inherited from `DataInputStream`:
+
+```java
+public final int readInt() throws IOException
+```
+
+The method requires four bytes and decodes them in big-endian order.
+The returned value is a signed Java `int` using the standard two's-complement
+interpretation.
+On success the cursor advances by four.
+It throws `IOException` when fewer than four bytes remain.
+There is no rounding, text conversion, locale behavior, or byte swapping.
+
+Normal example:
+
+```java
+ByteSequence sequence = new ByteSequence(
+    new byte[] {0x01, 0x02, 0x03, 0x04});
+int value = sequence.readInt(); // 0x01020304
+int position = sequence.getIndex(); // 4
+```
+
+Edge example:
+
+```java
+ByteSequence sequence = new ByteSequence(
+    new byte[] {(byte) 0xff, (byte) 0xff, (byte) 0xff});
+try {
+    sequence.readInt();
+    throw new AssertionError("expected EOF");
+} catch (IOException expected) {
+    // A three-byte prefix is not an integer.
+}
+```
+
+#### Inherited complete read: `readFully(byte[] b)`
+
+Full declaration inherited from `DataInputStream`:
+
+```java
+public final void readFully(byte[] b) throws IOException
+```
+
+The destination array `b` receives exactly `b.length` bytes.
+The method returns `void` and advances the source cursor by that length on a
+successful call.
+It does not append a terminator or stop at a zero byte.
+If the source ends before the destination is full, it throws `IOException`.
+The implementation must preserve the standard `DataInputStream` behavior for
+the destination reference and the available byte count.
+
+Normal example:
 
 ```java
 ByteSequence sequence = new ByteSequence(new byte[] {1, 2, 3});
-int first = sequence.readUnsignedByte();
-int second = sequence.readUnsignedByte();
-int position = sequence.getIndex();
+byte[] destination = new byte[2];
+sequence.readFully(destination);
+// destination is {1, 2}; sequence.getIndex() is 2.
 ```
 
-#### Multi-byte Values
-
-```java
-ByteSequence sequence = new ByteSequence(new byte[] {0x01, 0x02, 0x03, 0x04});
-int shortValue = sequence.readUnsignedShort(); // 0x0102
-int intValue = sequence.readUnsignedShort();   // 0x0304
-```
-
-#### EOF Handling
+Edge example:
 
 ```java
 ByteSequence sequence = new ByteSequence(new byte[] {1});
-sequence.readUnsignedByte();
-// A further read follows DataInputStream's EOF IOException contract.
+byte[] destination = new byte[2];
+try {
+    sequence.readFully(destination);
+    throw new AssertionError("expected EOF");
+} catch (IOException expected) {
+    // The call reports a truncated complete-read request.
+}
 ```
 
-### Supported Function Types
+#### Inherited ranged complete read: `readFully(byte[], int, int)`
 
-The supported function types are byte-array construction, cursor inspection,
-signed and unsigned byte reads, unsigned short reads, signed integer reads,
-bulk reads, sequential cursor updates, and bounded EOF behavior.
+Full declaration inherited from `DataInputStream`:
 
-### Error Handling
+```java
+public final void readFully(byte[] b, int off, int len) throws IOException
+```
 
-Null input, empty input, short input, and reads after exhaustion must follow
-normal Java stream behavior. Do not return fabricated bytes, silently wrap the
-cursor, or convert checked `IOException` failures into unrelated values.
+The method fills `len` destination elements beginning at `off`.
+`off` and `len` must describe a valid range in `b`.
+The source cursor advances by `len` only for bytes successfully consumed.
+An invalid destination range follows the standard unchecked argument/index
+failure of the JDK method; a truncated source follows `IOException`.
 
-## Detailed Implementation Nodes of Functions
+Normal example:
 
-### Node 1: Byte-array Construction
+```java
+ByteSequence sequence = new ByteSequence(new byte[] {4, 5, 6});
+byte[] destination = new byte[] {0, 0, 0, 0};
+sequence.readFully(destination, 1, 2);
+// destination is {0, 4, 5, 0}; index is 2.
+```
 
-Wrap the supplied byte array in a stream that starts at index zero and keeps
-the original byte order.
+Zero-length example:
 
-### Node 2: Cursor Tracking
+```java
+ByteSequence sequence = new ByteSequence(new byte[0]);
+byte[] destination = new byte[2];
+sequence.readFully(destination, 1, 0);
+// No source byte is consumed and index remains 0.
+```
 
-Expose the current position through `getIndex()` and keep it synchronized with
-successful stream reads.
+### Not confidently bindable
 
-### Node 3: Signed and Unsigned Reads
+The complete upstream BCEL source contains many additional public symbols.
+This task's frozen solution and selected contract do not bind those symbols.
+Do not invent or implement additional BCEL classes such as class-file
+parsers, constant-pool entries, instruction visitors, or repository CLIs.
+The only confidently bindable class is `ByteSequence`; all other upstream
+public symbols are intentionally not confidently bindable for this task.
 
-Preserve Java signed-byte and unsigned-byte return semantics, including values
-whose high bit is set.
+## Implementation Notes
 
-### Node 4: Big-endian Multi-byte Reads
+Keep the implementation in one Maven module with the exact package path shown
+above.
+Use Java standard-library stream composition or an equivalent implementation
+that preserves the documented `DataInputStream` contract.
+The cursor must be derived from successful consumption of the backing byte
+stream, not from a second counter that can diverge from the actual stream.
 
-Implement unsigned-short and integer reads with `DataInputStream` big-endian
-behavior and exact cursor advancement.
+Do not mutate the byte values or reinterpret them according to the platform
+endianness.
+The observable multi-byte order is always big-endian.
+Repeated calls on the same object continue from the current cursor.
+Separate `ByteSequence` objects have independent cursor state.
 
-### Node 5: Bulk Reads
+A successful one-byte operation moves the cursor by one.
+A successful unsigned-short operation moves it by two.
+A successful integer operation moves it by four.
+A successful complete read moves it by the requested length.
+An EOF operation must never report bytes that were not present.
 
-Implement `readFully(byte[])` behavior for complete and truncated input,
-including the corresponding cursor and exception results.
+The implementation must remain deterministic for identical byte arrays and
+identical method-call sequences.
+It must not consult the clock, locale, default charset, environment, network,
+filesystem, or random-number generator.
 
-### Node 6: Empty and Boundary Inputs
+The POM must compile this source with Java 21.
+It must not require a third-party runtime dependency.
+Maven validation must work offline using the fixed environment.
+Do not add a main method as a substitute for the library API.
 
-Handle empty arrays and one-byte arrays deterministically. Do not read beyond
-the available sequence or mutate the caller's expected data representation.
+Use small checks such as the following to verify the public behavior:
 
-### Node 7: Maven Project Layout
+1. Construct `{1, 2}`, confirm index `0`, read one unsigned byte, and confirm
+   the value is `1` and the index is `1`.
+2. Construct `{0x01, 0x02}`, read an unsigned short, and confirm the value is
+   `0x0102` and the index is `2`.
+3. Construct `{0x01, 0x02, 0x03, 0x04}`, read an integer, and confirm the
+   value is `0x01020304` and the index is `4`.
+4. Construct an empty sequence, attempt `readByte()`, and confirm a checked
+   `IOException` is observed without a fabricated byte.
 
-Use the exact public package and standard Maven source layout. Compile with
-Java 21 and no external runtime dependency.
-
-### Node 8: Offline Build Behavior
-
-Do not access the network or rely on candidate-controlled Maven configuration;
-the implementation must work in the fixed offline verifier.
+Do not copy verifier-owned test identifiers or private assertion text into the
+project.
+Do not make the candidate write grading, reward, JUnit, or verifier reports.
+Do not add network fallback behavior when Maven or a read operation fails.

@@ -12,6 +12,15 @@ verifier checks the public package boundary and deterministic behavior; it does
 not require the upstream repository, its development tooling, or its tests to
 be copied into the generated workspace.
 
+## Natural Language Instruction
+
+Build the package from an empty workspace. Implement the named `whitespace`
+export, its exact HTML five-character predicate, and the distinction between a
+string input and a HAST text node. Preserve the package's ESM export shape and
+avoid broad Unicode or JavaScript truthiness rules. The implementation is a
+small pure utility: it must not add parsers, loaders, filesystem behavior, or
+network fallbacks.
+
 ## Supports
 
 - Run on Node `24.19.0` with npm `11.17.0` on `linux/amd64`.
@@ -26,6 +35,21 @@ be copied into the generated workspace.
 
 - Do not use lifecycle hooks, workspaces, native addons, custom loaders,
   browser globals, random state, current time, or network access.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── index.js
+└── index.d.ts
+```
+
+The package root is `index.js`, loaded as ESM according to `package.json`; it
+exports only the named `whitespace` function. The declaration file may describe
+the `Nodes | string` input type. No runtime dependency, test file, fixture, or
+generated data file is needed in the candidate project.
 
 ## API Usage Guide
 
@@ -76,3 +100,24 @@ nodes and all other node types, and use the exact five-character ASCII set
 above rather than a broad Unicode whitespace predicate. The package should
 remain deterministic for repeated calls and should not require any filesystem,
 TTY, callback, asynchronous, or external-service behavior.
+
+## Examples
+
+```js
+import {whitespace} from 'hast-util-whitespace';
+whitespace('  \t\n'); // true
+```
+
+```js
+whitespace({type: 'text', value: ' \r\f'}); // true
+whitespace({type: 'element', value: ' '});  // false
+```
+
+## Error Handling and Boundary Conditions
+
+The empty string is whitespace because it contains no disallowed code units.
+Only U+0020, U+0009, U+000A, U+000C, and U+000D count; non-breaking space,
+vertical tab, and other Unicode whitespace return false. A node is accepted
+only when `type === 'text'` and its `value` is a string satisfying the same
+predicate. Inputs are not mutated. Agent, candidate, verifier, Oracle,
+controls, and runtime are NoNetwork and must not resolve packages at runtime.

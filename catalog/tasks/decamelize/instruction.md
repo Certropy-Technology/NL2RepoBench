@@ -1,5 +1,13 @@
 # Build `decamelize`
 
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── index.js
+└── index.d.ts
+```
+
 Create a complete, installable npm package named `decamelize` from an empty
 workspace. It converts camelized text into lowercased text with a configurable
 separator while handling acronym boundaries and Unicode letters.
@@ -100,3 +108,42 @@ additional validation errors. JSON values only are used by the verifier.
   thresholds, declaration checking, and unsupported non-JSON values are outside
   the production boundary. This is an explicit deterministic scope, not a
   claim of complete upstream test parity.
+
+## Natural Language Instruction
+
+Build `decamelize` from an empty workspace. Provide the default ESM root export
+with configurable separators, acronym handling, Unicode case boundaries, and
+the exact type-error behavior below. Preserve punctuation, whitespace, and
+caller-owned input values.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── index.js
+└── index.d.ts
+```
+
+`package.json` is the install metadata and `index.js` is the root ESM entry.
+The declaration file describes the same default export and no test-only entry
+points are public.
+
+## Examples
+
+```js
+import decamelize from 'decamelize';
+decamelize('helloWorld', {separator: '-'});
+```
+
+```js
+decamelize('myURLString', {preserveConsecutiveUppercase: true});
+```
+
+## Error Handling and Boundary Conditions
+
+Non-string text and a non-string separator throw the specified `TypeError`.
+Empty strings, digits, punctuation, acronym runs, and Unicode uppercase
+letters remain deterministic. The package performs no I/O, network access, or
+mutation of options.

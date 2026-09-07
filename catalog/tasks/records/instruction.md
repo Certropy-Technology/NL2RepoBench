@@ -1,4 +1,4 @@
-## Records Project Introduction and Goals
+## Project Description
 
 Records is a Python library for human-friendly SQL queries. It aims to enable developers to execute native SQL queries on mainstream relational databases (such as RedShift, Postgres, MySQL, SQLite, Oracle, MS-SQL, etc.) in the simplest and most intuitive way, and elegantly handle and export query results. Its core goal is to simplify the execution process of SQL queries, avoid cumbersome ORM configurations or complex database operations, allowing users to "just write SQL" to efficiently complete data retrieval and analysis.
 
@@ -487,3 +487,39 @@ db.query('SELECT * FROM users WHERE id = :user', user=user_id)
 params = [(1,), (2,), (3,)]
 db.bulk_query('INSERT INTO users (id) VALUES (?)', *params)
 ```
+
+## Implementation Notes
+
+Keep `records.py` as the stable public entry point and preserve the separation
+between `Database`, `Connection`, `RecordCollection`, and `Record`. SQLite is
+the deterministic local integration target; other SQLAlchemy dialects may be
+declared but must not be contacted during evaluation. Query parameters must be
+bound values rather than string interpolation. Result iteration, slicing,
+export ordering, transaction commit/rollback, and `DATABASE_URL` resolution
+must remain deterministic and release connections on close.
+
+## Examples
+
+```python
+import records
+
+db = records.Database('sqlite:///:memory:')
+db.query('create table users (id integer, name text)')
+db.bulk_query('insert into users values (:id, :name)',
+              {'id': 1, 'name': 'Ada'})
+rows = db.query('select * from users')
+assert rows.first().name == 'Ada'
+```
+
+```console
+$ records "select * from users" csv --url=sqlite:///users.db
+```
+
+## Error Handling and Boundary Conditions
+
+Invalid SQL and unavailable database URLs must propagate a database error and
+must not be silently converted to an empty result. Parameter values are bound
+through the database driver, so query text is never assembled by string
+interpolation. `first(default=...)` handles an empty result; `one()` reports
+zero or multiple rows unless its default behavior is explicitly requested.
+Transactions commit on normal context exit and roll back when the body raises.

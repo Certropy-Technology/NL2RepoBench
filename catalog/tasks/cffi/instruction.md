@@ -14,7 +14,14 @@ and accesses a small set of local process symbols. The implementation may use
 the real native backend or a faithful compatible implementation, but all
 observable behavior in this specification must be deterministic and bounded.
 
-## Supports
+## Natural Language Instruction
+
+Create `cffi` from an empty workspace. Implement the bounded FFI API below for
+declaration parsing, C-like values, callbacks, opaque handles, local symbols,
+and deterministic code-generation metadata. Keep native objects and callbacks
+inside the local implementation boundary.
+
+## Supports or Environment Configuration
 
 - Support CPython 3.12 and provide an installable distribution named `cffi`,
   version `2.2.0.dev0`, requiring Python 3.10 or newer.
@@ -25,6 +32,18 @@ observable behavior in this specification must be deterministic and bounded.
   calls. Temporary files created by explicit C-generation methods are allowed.
 - Use only the standard library at runtime except for the declared `pycparser`
   dependency. Build tools and native libraries are supplied by the environment.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+└── cffi/
+    ├── __init__.py
+    ├── api.py
+    ├── error.py
+    └── model.py
+```
 
 ## API Usage Guide
 
@@ -81,5 +100,27 @@ Keep the package layout compatible with direct imports of `cffi.api`,
 `cffi.error`, and `cffi.model`. Preserve the native-vs-pure implementation
 boundary and typed exception relationships. The hidden verifier invokes the
 candidate only through a UID-isolated JSON adapter, so native objects never
-cross into the trusted process. Do not add hidden tests, fake reward reports,
+cross into the evaluation process. Do not add extra test suites, fake reward reports,
 vendored wheels, or network fallbacks.
+
+## Examples
+
+```python
+from cffi import FFI
+ffi = FFI()
+ffi.cdef('int abs(int);')
+value = ffi.new('int *', 3)
+assert value[0] == 3
+```
+
+```python
+ffi.cdef('size_t strlen(const char *);')
+lib = ffi.dlopen(None)
+assert lib.strlen(ffi.new('char[]', b'abc')) == 3
+```
+
+## Error Handling and Boundary Conditions
+
+Invalid C declarations raise `CDefError` or a compatible `FFIError`. Only
+local process symbols and bounded declarations are required; arbitrary shared
+libraries and unsupported platform ABI behavior remain outside this project.

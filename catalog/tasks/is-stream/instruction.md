@@ -12,6 +12,15 @@ objects and functions cannot cross the separate verifier process boundary.
 Implement the behavior with your own source files. Do not retrieve the
 reference repository or hidden tests.
 
+## Natural Language Instruction
+
+Create the `is-stream` package from an empty `workspace/`. Implement all five
+synchronous structural predicates and the bounded `run` adapter. Preserve
+open-state checks, native stream construction, plain-object structural shapes,
+duplex/transform relationships, deterministic booleans, and actionable
+adapter validation errors. Do not rely only on `instanceof`, because ordinary
+stream-like objects are part of the public behavior.
+
 ## Supports
 
 - Node.js `24.19.0`, npm `11.17.0`, ESM, `linux/amd64`, and glibc.
@@ -31,10 +40,29 @@ reference repository or hidden tests.
   addons, lifecycle hooks, custom loaders, registry overrides, subprocess
   helpers, generated downloads, or network access.
 
+## Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── index.js
+└── index.d.ts
+```
+
+The package root is the ESM entry and exports the five predicates plus `run`.
+The adapter may use `node:stream` internally to build allowlisted native
+descriptors, but the generated package needs no CLI or runtime dependency.
+
 ## API Usage Guide
 
 All five predicates are synchronous, deterministic, side-effect free, and
 return a boolean. They accept any JavaScript value without throwing.
+
+**Import path:** `import * as streamApi from 'is-stream'`.
+Named callers may also write `import {isStream} from 'is-stream'`.
+The named import is exposed as `import isStream` from the package root.
+Named callers may also write `import {isStream} from 'is-stream'`.
 
 ```ts
 export type Options = {
@@ -143,3 +171,41 @@ structural and includes stream-like plain objects. Do not mutate caller-owned
 values in the predicates. File streams, HTTP messages, sockets, browser
 streams, TypeScript compiler execution, and exact error wording are outside
 the fixed denominator.
+
+## Examples
+
+```js
+import {isStream, isReadableStream} from 'is-stream';
+import {Readable} from 'node:stream';
+
+const stream = new Readable({read() {}});
+isStream(stream); // true
+isReadableStream(stream); // true
+```
+
+```js
+const request = {
+  op: 'check', predicate: 'transform',
+  value: {kind: 'shape', readable: true, writable: true,
+    readableObjectMode: false, writableObjectMode: false,
+    destroyed: false, methods: ['pipe', 'read', 'write', 'end', 'destroy', '_transform']}
+};
+// run(request) resolves to true when the shape satisfies the predicate.
+```
+
+```js
+isStream(null); // false
+isStream({pipe() {}, readable: false, writable: false}, {checkOpen: false}); // true
+```
+
+## Error Handling and Boundary Conditions
+
+- The five predicates accept primitives, null, malformed objects, and missing
+  options without throwing; they return `false` unless the structural contract
+  is satisfied. They must not mutate input objects or inspect external state.
+- `run` rejects malformed requests, unknown descriptor kinds, unknown methods,
+  invalid native types, and non-boolean `checkOpen` values with an Error. It
+  must not accept executable strings, paths, URLs, or arbitrary property names.
+- Destroyed native descriptors and closed structural descriptors are rejected
+  by default and classified structurally when `checkOpen: false`. All agent,
+  candidate, verifier, Oracle, and control phases are NoNetwork.

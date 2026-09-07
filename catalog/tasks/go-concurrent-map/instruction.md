@@ -17,6 +17,47 @@ usable on Linux/amd64 with Go 1.26.5 and no network access.
   constructor permits them.
 - Safe concurrent reads and writes to distinct keys.
 
+## Natural Language Instruction
+
+Create the generic `github.com/orcaman/concurrent-map/v2` module from an empty
+workspace. Implement constructors, sharded map mutation, lookup, iteration,
+counting, and deterministic serialization behavior in the API guide.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── go.mod
+├── go.sum
+├── vendor/modules.txt
+├── concurrent_map.go
+├── concurrent_map_shard.go
+└── concurrent_map_shared.go
+```
+
+Keep the root package name `cmap` and all generic signatures. No verifier files
+or runtime network access are part of this project.
+
+## Examples
+
+```go
+m := New[int](); m.Set("count", 1); value, ok := m.Get("count")
+```
+
+```go
+added := m.SetIfAbsent("count", 2); keys := m.Keys()
+```
+
+## Error Handling and Boundary Conditions
+
+Preserve absent-key zero values, duplicate insertion, empty maps, comparable
+key restrictions, concurrent distinct-key operations, stable returned slices,
+and JSON/iteration order contracts. Do not introduce global mutable state.
+
+```go
+import cmap "github.com/orcaman/concurrent-map/v2"
+```
+
 ## API Usage Guide
 
 Implement these public declarations in package `cmap`:
@@ -66,6 +107,10 @@ JSON marshaling uses the underlying map's JSON object representation for keys
 that JSON supports; unmarshaling adds decoded entries to the map.
 
 ## Implementation Notes
+
+Methods returning keys or values provide the documented snapshot semantics, so
+callers can inspect results after a map change. Hashing and shard selection are
+implementation details; lookup and mutation results remain deterministic.
 
 Use sharding and locks to prevent concurrent map read/write races. Preserve
 zero values for missing keys, avoid exposing internal mutable maps through

@@ -14,6 +14,14 @@ flow-control, and server-state behavior. The scored contract uses in-memory
 ASGI scopes and transport doubles. It does not start listening sockets or
 process supervisors.
 
+## Natural Language Instruction
+
+Create the installable `uvicorn` package from an empty workspace. Implement
+the deterministic configuration, import, logging, middleware, protocol helper,
+WSGI adaptation, flow-control, lifespan, and server-state behavior below.
+Preserve ASGI message shapes and process-free local behavior; do not build a
+real listener for this contract.
+
 ## Supports
 
 - A normal installable project with `pyproject.toml` or `setup.py`, a
@@ -25,6 +33,26 @@ process supervisors.
 - Deterministic behavior only. No source checkout, package download, external
   network request, real listener, signal delivery, subprocess supervision,
   TLS file access, or reload watcher is part of the scored contract.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+└── uvicorn/
+    ├── __init__.py
+    ├── config.py
+    ├── importer.py
+    ├── logging.py
+    ├── server.py
+    ├── protocols/
+    │   ├── utils.py
+    │   └── http/flow_control.py
+    └── middleware/
+        ├── asgi2.py
+        ├── proxy_headers.py
+        └── wsgi.py
+```
 
 ## API Usage Guide
 
@@ -240,6 +268,29 @@ dictionary, and async no-op `startup()` and `shutdown()` methods.
 to standard logging levels plus trace level `5`. `INTERFACES` is
 `["auto", "asgi3", "asgi2", "wsgi"]`; `TRACE_LOG_LEVEL` is `5`.
 
+## Examples
+
+```python
+from uvicorn.importer import import_from_string
+
+assert import_from_string("json:dumps") is not None
+```
+
+```python
+from uvicorn.config import Config
+
+config = Config("example:app", loop="none")
+assert config.loaded is False
+assert config.get_loop_factory() is None
+```
+
+## Error Handling and Boundary Conditions
+
+Malformed import strings raise `ImportFromStringError`; missing modules or
+attributes retain descriptive failures. Flow-control pause and resume are
+idempotent, untrusted proxy peers cannot rewrite scopes, and no protocol
+helper may open a real listener or perform external network I/O.
+
 ## Implementation Notes
 
 Keep module paths and distribution metadata compatible with the imports above.
@@ -247,8 +298,8 @@ Preserve normal Python exception classes, message text, ASGI message shapes,
 bytes-versus-text boundaries, and deterministic ordering where specified.
 Include any package marker files needed by your build backend.
 
-The verifier invokes the candidate only through UID-isolated subprocesses. The
-trusted verifier does not import candidate modules. Live HTTP/WebSocket
+Evaluation invokes the candidate only through UID-isolated subprocesses. The
+evaluation harness does not import candidate modules. Live HTTP/WebSocket
 protocol engines, real sockets, TLS certificates, signal capture, workers,
 reload polling, native `httptools`/`uvloop`, optional WebSocket libraries, and
 Gunicorn integration are intentionally outside the scored contract.

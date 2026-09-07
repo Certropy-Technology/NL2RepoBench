@@ -235,3 +235,52 @@ assert filename.startswith("demo_package-1.2.0-")
 - Binary application builds, third-party plugin implementations, live package
   indexes, platform-specific macOS compatibility rewriting, and arbitrary
   custom build scripts are outside the frozen evaluation slice.
+
+## Natural Language Instruction
+
+Create the `hatchling` distribution and import package from an empty workspace.
+Implement PEP 517 wheel and sdist hooks, PEP 660 editable hooks, project
+metadata parsing, version-file updates, plugin lookup, and reproducible archive
+output. Keep the `hatchling.build` backend local and deterministic.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── hatchling/
+│   ├── __init__.py
+│   ├── __about__.py
+│   ├── build.py
+│   ├── builders/{__init__.py,config.py,utils.py,wheel.py,sdist.py}
+│   ├── metadata/{__init__.py,core.py,spec.py,utils.py}
+│   ├── plugin/{__init__.py,manager.py,interface.py}
+│   └── version/{__init__.py,core.py,scheme/standard.py}
+└── README.md
+```
+
+The listed modules correspond to public imports in the API guide; verifier code
+and generated artifacts are not workspace files.
+
+## Examples
+
+```python
+from hatchling.build import build_wheel
+filename = build_wheel("dist")
+assert filename.endswith(".whl")
+```
+
+```python
+from hatchling.metadata.utils import normalize_project_name
+assert normalize_project_name("Demo_Package") == "demo-package"
+```
+
+## Error Handling and Boundary Conditions
+
+- Missing project name/version, invalid metadata types, unknown targets, and
+  ambiguous package selection raise `TypeError` or `ValueError`.
+- Wheel `RECORD` leaves its own digest empty; archive paths use forward slashes
+  and normalized permissions.
+- `SOURCE_DATE_EPOCH` controls reproducible timestamps. Builds must not fetch
+  indexes or depend on a VCS checkout.
+- Agent, candidate, verifier, Oracle, and controls use `network_mode=no-network`.

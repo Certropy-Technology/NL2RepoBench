@@ -1,8 +1,8 @@
-# Introduction and Goals of the FastAPI Users Project
+# Project Description
 
 **FastAPI Users** is a user management system library specifically designed for the FastAPI framework, offering ready-to-use and customizable user authentication and authorization solutions. The project aims to simplify the development of user management functions in FastAPI applications, enabling developers to quickly integrate a complete user system without building from scratch.
 
-# Natural Language Instruction (Prompt)
+# Natural Language Instruction
 
 Please create a Python project named FastAPI-Users-Auth to implement a complete user authentication and authorization management system. The project should include the following features:
 
@@ -24,7 +24,7 @@ Please create a Python project named FastAPI-Users-Auth to implement a complete 
 
 9. Core File Requirements: The project must include a complete pyproject.toml file, which should configure the project as an installable package (supporting `pip install`) and declare a complete list of dependencies (such as `fastapi >= 0.65.2`, `pwdlib[argon2,bcrypt] == 0.2.1`, `email-validator >= 1.1.0, < 2.3`, `pyjwt[crypto] == 2.10.1`, `python-multipart == 0.0.20`, `makefun >= 1.11.2, < 2.0.0`, etc., the actual core libraries used). The pyproject.toml should ensure that all core functional modules can work properly. At the same time, it is necessary to provide `fastapi_users/__init__.py` as a unified API entry, importing and exporting `Depends`, `FastAPI`, `Request`, `Response`, `status`, `OAuth2PasswordRequestForm`, `SecurityBase`, `BaseUserDatabase`, and the main import and export functions, and provide version information, allowing users to access all main functions through simple statements such as `from fastapi import *` and `from fastapi_users.responses/security/authentication/exceptions/jwt/manager/router import *`.
 
-# Environment Configuration
+# Supports
 
 ## Python Version
 
@@ -95,7 +95,7 @@ fastapi_users_db_sqlalchemy  7.0.0
 
 ## fastapi-users Project Architecture
 
-### Project Directory Structure
+## Project Directory Structure
 
 ```
 workspace/
@@ -1717,4 +1717,63 @@ The system provides a complete error handling mechanism:
 3. **Extensibility**: Support custom user models, authentication strategies, and transport methods.
 4. **Security**: Built-in multiple security mechanisms, such as token expiration and password hashing.
 5. **Compatibility**: Fully compatible with the FastAPI ecosystem, supporting dependency injection.
+
+## Implementation Notes
+
+Keep the package importable as `fastapi_users` from a standard Python
+installation and preserve the public module paths and signatures documented in
+the API sections above. The revision metadata currently records Python 3.10
+compatibility and a no-network runtime, but the task is still in discovery:
+the dependency closure, license authority, and frozen test denominator are not
+complete. Do not invent package versions, test counts, database credentials,
+OAuth secrets, or external service behavior to fill those gaps. Use async
+interfaces where the signatures above require them, keep user and token state
+behind the documented protocols, and make errors explicit rather than silently
+falling back to network access.
+
+## Examples
+
+```python
+from fastapi_users.authentication import AuthenticationBackend
+from fastapi_users.authentication.strategy import JWTStrategy
+from fastapi_users.authentication.transport import BearerTransport
+
+transport = BearerTransport(tokenUrl="auth/jwt/login")
+backend = AuthenticationBackend(
+    name="jwt", transport=transport,
+    get_strategy=lambda: JWTStrategy(secret="local-secret", lifetime_seconds=3600),
+)
+```
+
+```python
+from fastapi_users import FastAPIUsers
+
+fastapi_users = FastAPIUsers(get_user_manager, [backend])
+current_user = fastapi_users.current_user(active=True, verified=False)
+```
+
+```python
+from fastapi_users.authentication.transport import CookieTransport
+
+browser_transport = CookieTransport(
+    cookie_name="session", cookie_secure=False, cookie_samesite="lax"
+)
+```
+
+## Error Handling and Boundary Conditions
+
+User-manager methods must preserve asynchronous behavior and raise the
+documented user, authentication, and OAuth exceptions for missing, inactive,
+unverified, duplicate, or unauthorized users. A strategy must reject invalid,
+expired, malformed, or revoked tokens according to its contract; JWT token
+destruction is unsupported and must raise its dedicated exception. Bearer
+logout is unsupported and must raise its transport exception, while cookie
+logout clears the configured cookie. Router factories must preserve FastAPI
+dependency injection and response status behavior.
+
+OAuth providers, Redis, SQLAlchemy, Beanie, email delivery, and password
+hashing backends are integration boundaries. Do not perform network calls or
+assume credentials in the package itself. Invalid configuration, invalid
+schemas, and unsupported protocol implementations should fail with explicit
+Python exceptions. Public examples intentionally use local values only.
 

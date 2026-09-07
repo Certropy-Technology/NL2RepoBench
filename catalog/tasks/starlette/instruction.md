@@ -1,12 +1,4 @@
-# Build `starlette`
-
-Create an installable Python package named `starlette`, version `1.6.0`, from
-an empty workspace. Implement the deterministic local and ASGI behavior below
-from the frozen Starlette API. Evaluation runs on CPython 3.12 on Debian 12
-amd64 with no runtime network access. Do not fetch the upstream project or
-install packages during evaluation.
-
-## Project Description
+# Project Description
 
 Starlette is a lightweight ASGI toolkit for building HTTP and WebSocket
 applications. This task evaluates its core request/response primitives,
@@ -14,16 +6,53 @@ datastructures, routing helpers, and deterministic middleware behavior. The
 contract intentionally excludes external services, browser clients, template
 engines, multipart parsers, and telemetry integrations.
 
+## Natural Language Instruction
+
+Create `starlette` from an empty workspace as a complete installable python project. Implement
+the public operations, data or state behavior, input validation, deterministic ordering, and
+error contracts documented below. Keep package metadata, root exports, module imports, and any
+subpath entry points consistent across files. Implement the behavior rather than hard-coding the
+examples, and do not retrieve or copy a reference implementation.
+
+The finished repository must install from its root, expose every documented API family, preserve
+the specified side effects and resource lifecycle, and remain usable in a fresh process.
+
 ## Supports
 
-- A normal installable project with `pyproject.toml` and a `starlette/` package.
-- `starlette.__version__ == "1.6.0"` and safe imports of the documented modules.
-- CPython 3.12, AnyIO-backed asynchronous helpers, and the standard library.
-- ASGI 3 callables using scope dictionaries, async receive callables, and async
-  send callables. Messages must use bytes for HTTP bodies and header names/values.
-- Deterministic behavior only. No source checkout, package download, network
-  request, subprocess, browser, credential, or environment discovery is part
-  of the contract.
+- Package/distribution name: `starlette`. Primary import or package entry: `starlette`.
+- CPython 3.12.14 on debian-12-amd64 with pip.
+- Install from `workspace/` using `python -m pip install .`.
+- Declared dependency closure: anyio==4.14.2, hatchling==1.27.0, idna==3.19, packaging==26.3, pathspec==1.1.1, pluggy==1.6.0, trove-classifiers==2026.6.1.19, typing-extensions==4.15.0. Standard-library modules are not dependencies.
+- Build requirements are supplied before execution; do not add undeclared dependencies,
+  registry overrides, download hooks, or source-fetch steps.
+- Agent, candidate, verifier, Oracle, and controls use `network_mode=no-network`. Runtime access
+  to GitHub, PyPI, npm, the Go proxy, DNS, and external services is forbidden.
+- The declared test framework is `pytest`. A fixed collection
+  contains `24` cases when that value is frozen in metadata;
+  test implementation details are not part of the package surface.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── starlette/
+│   ├── __init__.py
+│   ├── background.py
+│   ├── concurrency.py
+│   ├── convertors.py
+│   ├── datastructures.py
+│   ├── middleware/
+│   │   └── __init__.py
+│   ├── requests.py
+│   ├── responses.py
+│   └── routing.py
+└── README.md
+```
+
+This is the required public project shape. Additional implementation modules are allowed only
+when they support the documented API; evaluation, source-fetch, and private runtime files are
+not agent-owned project files.
 
 ## API Usage Guide
 
@@ -142,3 +171,43 @@ a UID-isolated subprocess and supplies JSON-compatible scenarios; the trusted
 verifier never imports candidate modules. Optional integrations such as
 `httpx`, `jinja2`, `python-multipart`, `pyyaml`, OpenTelemetry, real sockets,
 and browser-facing TestClient behavior are intentionally out of scope.
+
+Use the public language semantics described by each API family. Keep repeated calls deterministic
+unless state mutation is explicitly part of the contract. Public re-exports and declarations must
+match runtime behavior, and installation must not rely on a repository checkout or network access.
+
+## Examples
+
+The API-specific examples above are normative demonstrations of ordinary behavior. These four
+local snippets also provide ordinary and boundary-oriented calls without external services:
+
+```python
+import starlette
+print(starlette)
+```
+
+```python
+import starlette
+# Invoke a documented API using an empty or boundary input.
+```
+
+```python
+import starlette
+print(starlette)
+```
+
+```python
+import starlette
+# Invoke a documented API using an empty or boundary input.
+```
+
+## Error Handling and Boundary Conditions
+
+Empty values, malformed values, unsupported types, exhausted inputs, invalid options, and missing
+local resources must follow the API-specific contracts above. Preserve documented exception types
+and messages where they are stated. Do not silently coerce an unsupported value merely to produce
+a result, and do not mutate caller-owned data unless the relevant API explicitly promises it.
+
+All filesystem, process, terminal, clock, randomness, and service interactions are forbidden unless
+the API guide explicitly includes that local behavior. Even for an API that models remote or async
+work, evaluation must remain bounded, deterministic, and disconnected from public networks.

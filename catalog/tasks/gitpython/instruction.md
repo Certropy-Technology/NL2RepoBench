@@ -25,6 +25,49 @@ remote service are outside this task.
 - Keep candidate code and its dependency installation local. Do not clone, download, or
   install packages at evaluation time.
 
+## Natural Language Instruction
+
+Build the installable `GitPython` distribution from an empty workspace. Expose
+the local `git` repository, object, reference, configuration, actor, and error
+APIs listed below, using the available Git executable and deterministic local
+repository behavior.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── setup.py
+├── pyproject.toml
+└── git/
+    ├── __init__.py
+    ├── repo/
+    ├── objects/
+    ├── refs/
+    ├── config.py
+    ├── actor.py
+    └── exc.py
+```
+
+The concrete modules and re-exports must match the API guide. Do not add a
+remote-service dependency or private verifier files.
+
+## Examples
+
+```python
+from git import Repo
+repo = Repo.init('/tmp/example-repo')
+```
+
+```python
+repo.index.add(['README']); commit = repo.index.commit('initial')
+```
+
+## Error Handling and Boundary Conditions
+
+Preserve behavior for empty repositories, missing refs/objects, invalid paths,
+uncommitted changes, local config values, and deterministic commit/status/diff
+ordering. Remote URLs and network operations are outside this task.
+
 ## API Usage Guide
 
 ### `git.Repo`

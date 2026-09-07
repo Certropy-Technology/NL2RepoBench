@@ -11,6 +11,15 @@ stateful, generator, and solver objects locally from fixed scenario names. Do
 not send Python source, callbacks, pickles, object handles, or executable code
 through JSON.
 
+## Natural Language Instruction
+
+Create an installable `python-constraint2` project from an empty workspace,
+exposing the import package `constraint`. Implement finite-domain variables,
+stateful domains, problems, solver families, numeric/set constraints, string
+constraints, and parser helpers with the deterministic behavior specified below.
+Preserve public imports and caller-owned state without network or external
+services.
+
 # Supports
 
 - Python 3.11 or newer; the Harbor image uses CPython 3.12.14.
@@ -19,7 +28,26 @@ through JSON.
 - No third-party runtime dependencies. Cython compilation is performed during installation when the build tools are available; pure-Python behavior must remain available.
 - A standards-compliant `pyproject.toml` and BSD-2-Clause license metadata.
 
-# API Usage Guide
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── LICENSE
+└── constraint/
+    ├── __init__.py
+    ├── domain.py
+    ├── problem.py
+    ├── constraints.py
+    ├── solvers.py
+    └── parser.py
+```
+
+The package root is `constraint`; the modules above correspond to the direct
+imports in the API guide. Install from `workspace/` without an upstream
+checkout or evaluator-only file.
+
+## API Usage Guide
 
 Implement the public `Variable`, `Domain`, `Problem`, `Constraint`,
 `FunctionConstraint`, `CompilableFunctionConstraint`, the backtracking solver
@@ -61,6 +89,45 @@ impossible domains without mutating caller-owned domain objects.
 `extract_operators` parse Python-style arithmetic/comparison expressions,
 recognize supported specialized numeric constraints, preserve strict bounds,
 and support `picklable=True` fallback constraints.
+
+Import the public surface from the installed package:
+
+```python
+from constraint import Problem, Domain, AllDifferentConstraint
+from constraint.parser import parse_restrictions
+```
+
+## Implementation Notes
+
+Keep solver results deterministic for equivalent inputs and preserve requested
+variable order in ordered helper methods. Domain state stacks must be balanced
+when a constraint rejects a partial assignment. Construct callable and solver
+objects inside the local package process rather than serializing them.
+
+## Examples
+
+```python
+problem = Problem()
+problem.addVariable("x", [1, 2])
+problem.addVariable("y", [1, 2])
+problem.addConstraint(AllDifferentConstraint(), ("x", "y"))
+print(problem.getSolutions())
+```
+
+```python
+domain = Domain(["red", "blue"])
+domain.pushState()
+domain.hideValue("red")
+domain.popState()
+assert list(domain) == ["red", "blue"]
+```
+
+## Error Handling and Boundary Conditions
+
+Reject duplicate variables, empty domains, malformed expressions, and
+unsupported process-mode callable constraints with the documented exception
+types. Unsatisfiable and empty problems return their specified empty forms;
+repeated solves do not leak domain mutations.
 
 # Frozen scenario leaves
 

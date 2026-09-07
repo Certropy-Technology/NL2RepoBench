@@ -9,6 +9,13 @@ The benchmark is offline. The package is a static-data library: importing it mus
 contact PyPI, GitHub, a database, or any other service. Implement the catalog and
 packaging behavior described below from the public contract.
 
+# Natural Language Instruction
+
+Create the installable `trove-classifiers` package from an empty workspace.
+Implement the frozen classifier containers, relationships, ordering,
+deprecation map, package metadata, and local command-line output below. Keep
+the catalog static and deterministic; no online synchronization is required.
+
 # Supports
 
 - Support Python 3.9 and newer. Verification uses CPython 3.12.14 on Debian 13
@@ -25,6 +32,19 @@ packaging behavior described below from the public contract.
   arguments and print the same output.
 - Include an Apache-2.0 `LICENSE` file in the project root.
 - Do not download or vendor dependencies, classifier data, or source code at runtime.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── LICENSE
+└── src/
+    └── trove_classifiers/
+        ├── __init__.py
+        ├── __main__.py
+        └── py.typed
+```
 
 # API Usage Guide
 
@@ -285,8 +305,28 @@ trove-classifiers
   the project may declare the required version directly. Do not derive a changing
   version from the current clock.
 - The verifier installs the candidate into an isolated target, then executes every
-  import and CLI operation in bounded unprivileged child processes. Trusted verifier
+  import and CLI operation in bounded unprivileged child processes. Evaluation
   code does not import candidate modules.
 - Exact unlisted classifier bytes are not a hidden requirement. Scoring covers the
   documented counts, grammar, hierarchy, relationships, ordering boundaries,
   deprecation map, and representative frozen values above.
+
+# Examples
+
+```python
+from trove_classifiers import classifiers, sorted_classifiers
+
+assert "License :: OSI Approved" in classifiers
+assert sorted_classifiers[0] == "Development Status :: 1 - Planning"
+```
+
+```bash
+python -m trove_classifiers
+```
+
+# Error Handling and Boundary Conditions
+
+The four exported containers are ordinary mutable built-ins with the exact
+relationships specified above. Import and CLI execution must not contact a
+registry or read caller-specific files. Deprecated keys stay out of
+`classifiers`; unknown classifier strings are ordinary membership misses.

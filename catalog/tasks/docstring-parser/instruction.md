@@ -1,5 +1,15 @@
 # Build `docstring_parser`
 
+```text
+workspace/
+├── pyproject.toml
+├── README.md
+└── docstring_parser/
+    ├── __init__.py
+    ├── common.py
+    └── py.typed
+```
+
 Create a complete, installable Python project from an empty workspace. The
 distribution name and import package are both `docstring_parser`, and the
 package version is `0.18.0`. Implement the project as a normal package from
@@ -129,3 +139,73 @@ doc = parse(
 )
 assert doc.params[0].arg_name == "count"
 ```
+
+# Project Description
+
+Create the `docstring_parser` distribution and import package from an empty
+workspace. Parse and compose the documented ReST, Google, Numpydoc, and Epydoc
+metadata models with deterministic ordering and preserved descriptions.
+
+# Natural Language Instruction
+
+Implement `docstring-parser` as a standard-library Python package. Keep the
+root exports, dialect modules, model attributes, optional/default markers,
+composition styles, and malformed-input behavior specified above. Do not
+bundle an upstream checkout or require an adapter-specific entry point.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── README.md
+└── docstring_parser/
+    ├── __init__.py
+    ├── common.py
+    ├── rest.py
+    ├── google.py
+    ├── numpydoc.py
+    ├── epydoc.py
+    └── py.typed
+```
+
+The package root exports `parse`, `compose`, model classes, and enum aliases;
+the four dialect modules expose their corresponding parse/compose functions.
+
+# API Usage Guide
+
+```python
+from docstring_parser import compose, parse, DocstringStyle
+
+doc = parse("Brief.\n\nArgs:\n    n (int): count", DocstringStyle.GOOGLE)
+text = compose(doc, DocstringStyle.GOOGLE)
+```
+
+# Implementation Notes
+
+Normalize indentation without changing meaningful description text. Preserve
+metadata order and blank flags, choose `AUTO` deterministically, and keep all
+runtime behavior local and standard-library-only.
+
+# Examples
+
+```python
+from docstring_parser import parse
+
+doc = parse(":param path: a file\n:type path: str")
+assert doc.params[0].arg_name == "path"
+```
+
+```python
+from docstring_parser import DocstringStyle, parse
+
+doc = parse("@return: value\n@rtype: int", DocstringStyle.EPYDOC)
+assert doc.returns[0].type_name == "int"
+```
+
+# Error Handling and Boundary Conditions
+
+`None` and empty text produce an empty `Docstring`. Malformed fields in an
+explicit dialect raise `ParseError`; unknown ReST fields remain metadata.
+Composition has no trailing blank line, preserves Unicode, and never accesses
+the network or filesystem.

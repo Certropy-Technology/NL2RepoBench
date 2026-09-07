@@ -1,10 +1,18 @@
+## Project Description
+
+Build an installable Python package named `xlrd` that reads legacy Microsoft
+Excel `.xls` workbooks locally. The public contract covers BIFF workbook
+opening, sheet and cell access, dates, formatting metadata, file-format
+inspection, and the documented compatibility constants. `.xlsx` parsing,
+network access, and external services are outside the task.
+
 ## Introduction and Goals of the xlrd Project
 
 It is a mature Python library designed specifically for reading historical .xls format files of Microsoft Excel. It supports the parsing of the BIFF (Binary Interchange File Format), workbook management, worksheet data extraction, reading of format information, and obtaining formula results. It has cross - platform compatibility and runs on Python versions 2.7+ and 3.6+. It is easy to install. Through professional binary file parsing technology, this library provides developers with a reliable and efficient solution for reading Excel files.
 Goal: To become the standard library for reading .xls files in the Python ecosystem. By providing a concise API, complete format support, and high - performance parsing capabilities, it supports application development in multiple fields such as data analysis, office automation, and report processing. It has been adopted by thousands of projects and processes a large amount of Excel data every month.
 
 
-## Natural Language Instruction (Prompt)
+## Natural Language Instruction
 
 Please create a Python project named `Excel - Reader` to implement a library for reading Excel file data. The project should include the following functions:
 
@@ -1192,3 +1200,49 @@ print("Number of sheets:", len(all_sheets))
 ```
 
 ---
+
+## Implementation Notes
+
+Keep workbook parsing local and deterministic. The candidate must expose the
+documented `xlrd` package modules and install from the workspace root without
+fetching a source tree or dependency at runtime. Preserve BIFF record order,
+zero-based row and column indexes, `None` versus empty values, date-mode
+conversion, and the distinction between a workbook, sheet, and cell object.
+Unsupported workbook features such as macros, charts, embedded objects, and
+`.xlsx` input must follow the documented safe-ignore or error behavior rather
+than being silently interpreted as ordinary cell data.
+
+## Examples
+
+```python
+import xlrd
+
+book = xlrd.open_workbook("example.xls", on_demand=True)
+sheet = book.sheet_by_index(0)
+print(sheet.name, sheet.nrows, sheet.ncols)
+```
+
+```python
+sheet = book.sheet_by_name("Sheet1")
+values = sheet.row_values(0, start_colx=0, end_colx=sheet.ncols)
+cell = sheet.cell(0, 0)
+print(values, cell.ctype, cell.value)
+```
+
+```python
+from xlrd.xldate import xldate_as_tuple
+
+date_parts = xldate_as_tuple(44927.0, book.datemode)
+assert len(date_parts) == 6
+```
+
+## Error Handling and Boundary Conditions
+
+`open_workbook` accepts a filename or in-memory `file_contents`, but at least
+one must be supplied. Missing files, malformed BIFF streams, unsupported
+formats, invalid sheet indexes, and invalid cell indexes raise the documented
+`XLRDError` or standard exception instead of returning fabricated data.
+`formatting_info=True` may expose XF indexes and blank formatted cells, while
+`ragged_rows=True` avoids padding trailing empty cells. Date conversion uses
+the workbook's `datemode`; it must not depend on local timezone or network
+state. Runtime reads and all command examples are NoNetwork.

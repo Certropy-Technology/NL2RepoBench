@@ -18,6 +18,30 @@ array of original chunks.
   with deterministic Node streams, Web streams, async iterables, and serializable
   chunks. Do not add a CLI or fetch external data.
 
+# Natural Language Instruction
+
+Create the installable `get-stream` ESM package from an empty workspace. Keep
+the four documented stream-to-value exports, their option handling, UTF-8 and
+binary behavior, and bounded asynchronous completion semantics.
+
+# Supports or Environment Configuration
+
+Use the exact Node.js/npm and dependency policy already specified above. Agent,
+candidate, verifier, Oracle, and controls run with no network access; package
+installation uses only the frozen lock/cache closure.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+└── index.js
+```
+
+The root ESM entry must expose the documented functions and class. Do not add
+private verifier or hidden-test files.
+
 # API Usage Guide
 
 The package root must export the following functions and class from ESM:
@@ -66,9 +90,33 @@ ended Node or Web stream must return its empty or accumulated contents.
 
 # Implementation Notes
 
+# Examples
+
+```js
+import getStream, {getStreamAsBuffer} from 'get-stream';
+const text = await getStream(Readable.from(['a', 'b']));
+const bytes = await getStreamAsBuffer(Readable.from([Buffer.from('ok')]));
+```
+
+```js
+await getStream(Readable.from([]), {encoding: 'utf8'});
+```
+
+# Error Handling and Boundary Conditions
+
+Preserve the documented handling for empty streams, strings, buffers,
+ArrayBuffers, object mode, encoding options, stream errors, and abort/size
+limits. The implementation must not fetch data or write diagnostics to stdout.
+
 Use ESM (`"type": "module"`) with a package-root `exports` map that exposes the
 default function, named functions, and `MaxBufferError`. Keep the public package
 free of tests and verifier files. The evaluator runs with `TZ=UTC`, one CPU,
 no network, and a bounded workspace. Do not rely on the upstream repository,
 GitHub, npm registry, a custom loader, or a development-only test framework at
-runtime.
+ runtime.
+
+The package entrypoint must remain importable in a clean Node process before any
+stream is consumed, and asynchronous completion must settle each request once.
+
+The package entrypoint must remain importable in a clean Node process before any
+stream is consumed, and asynchronous completion must settle each request once.

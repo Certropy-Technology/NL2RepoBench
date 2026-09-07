@@ -20,7 +20,43 @@ entrypoint are outside this task.
   `go.sum` entries and no `replace` directive, workspace file, network fetch,
   cgo, plugin, or external service.
 
+## Natural Language Instruction
+
+Create the frozen utility subset from an empty workspace. Implement the two
+library functions at the exact import paths below, preserve shell quoting and
+Unicode display-width semantics, and include the bounded JSON-lines bridge.
+The bridge is only a transport for these public behaviors; it must not change
+their return values or add terminal, filesystem, clock, random, or network
+dependencies.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── go.mod
+├── go.sum
+├── vendor/modules.txt
+├── internal/shlex/shlex.go
+├── internal/fuzzy/fuzzy.go
+└── cmd/bridge/main.go
+```
+
+The module path is `github.com/antonmedv/fx`. The bridge imports the internal
+packages from within this module, reads one bounded JSON request per line, and
+writes one JSON response per line. Diagnostics belong on stderr. Do not add
+test, verifier, Oracle, or private-artifact files to the generated workspace.
+
 ## API Usage Guide
+
+The exact Go import paths are `github.com/antonmedv/fx/internal/shlex` and
+`github.com/antonmedv/fx/internal/fuzzy`:
+
+```go
+import "github.com/antonmedv/fx/internal/shlex"
+import "github.com/antonmedv/fx/internal/fuzzy"
+
+func main() { /* bridge entrypoint */ }
+```
 
 Implement these functions at the exact import paths and signatures:
 
@@ -49,6 +85,43 @@ handled deterministically and must not panic.
 Both functions are pure from the evaluator's perspective: repeated calls
 with the same input produce the same output and do not read files, use the
 network, or depend on terminal state.
+
+The bridge accepts objects such as these and returns a JSON result object:
+
+```json
+{"operation":"parse","value":"echo 'a b' # comment"}
+```
+
+```json
+{"operation":"string_width","value":"日本語"}
+```
+
+Unknown operations, missing values, malformed JSON, and non-string values must
+produce a bounded error response rather than panic or arbitrary stdout.
+
+## Examples
+
+```go
+shlex.Parse(`echo "two words"`)
+// "echotwo words"
+```
+
+```go
+fuzzy.StringWidth("a\u0301")
+// 1
+```
+
+## Error Handling and Boundary Conditions
+
+- An unfinished quoted string is accepted through end of input. An unquoted
+  `#` starts a comment, but `#` inside single or double quotes is data.
+- Backslash escapes the next rune outside quotes and inside double quotes;
+  single-quoted contents do not process backslashes.
+- Combining marks add no display width, while wide East Asian and emoji
+  graphemes follow the pinned `uniseg` package. Invalid UTF-8 is deterministic
+  and must never panic.
+- Empty input returns an empty parse result and width zero. Long input remains
+  bounded by input size and never needs a TTY, service, or network.
 
 ## Implementation Notes
 

@@ -26,6 +26,61 @@ flows, or network access. Do not contact any service during tests.
   `google.auth._cache`, `google.oauth2`, `google.oauth2.credentials`,
   `google.oauth2.service_account`, and `google.auth.jwt`.
 
+## Natural Language Instruction
+
+Build the installable `google-auth` package from an empty workspace. Implement
+the deterministic helpers, credential base classes, OAuth and service-account
+credentials, JWT/signing, API-key/downscoped/cache, and transport interfaces
+listed below. Keep all namespace imports and copy/factory behavior exact.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── google/
+│   ├── auth/
+│   │   ├── __init__.py
+│   │   ├── _helpers.py
+│   │   ├── credentials.py
+│   │   ├── exceptions.py
+│   │   ├── jwt.py
+│   │   ├── crypt/
+│   │   ├── transport/
+│   │   ├── downscoped/
+│   │   └── api_key.py
+│   └── oauth2/
+│       ├── __init__.py
+│       ├── credentials.py
+│       └── service_account.py
+└── py.typed
+```
+
+The public import paths in the API guide must be real packages. Optional
+transport modules may fail clearly only when used; do not include evaluation
+or credential fixtures.
+
+## Examples
+
+```python
+from google.auth import credentials
+class LocalCredentials(credentials.Credentials):
+    def refresh(self, request): self.token = 'token'
+```
+
+```python
+from google.auth.api_key import Credentials
+headers = {}; Credentials('local-key').apply(headers)
+```
+
+## Error Handling and Boundary Conditions
+
+Preserve invalid value/type and malformed JWT errors, token state transitions,
+copy isolation, non-default-universe refresh rejection, signer verification,
+cache eviction, ten-rule access boundaries, and transport status constants.
+No metadata server, browser flow, credentials file, DNS, or network request is
+permitted during scored execution.
+
 # API Usage Guide
 
 ## Common helpers

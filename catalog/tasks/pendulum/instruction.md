@@ -1,39 +1,48 @@
-# Build `pendulum`
+# pendulum
 
 ## Project Description
 
-Create a complete, installable Python distribution named `pendulum`, version
-`3.2.0`, from an empty workspace. The package provides timezone-aware date,
-time, datetime, duration, interval, parsing, formatting, localization, and
-controlled time-travel APIs while remaining compatible with the standard
-library's `date`, `time`, `datetime`, `timedelta`, `tzinfo`, and `zoneinfo`
-types.
+Build an installable `pendulum` project from an empty `workspace/`. The project must reproduce the public, local behavior documented in this instruction, including its package entry points, return shapes, ordering, state changes, and documented exceptions. This is a repository-generation task: the agent creates the build metadata and source modules rather than editing an existing implementation.
 
-The implementation must be self-contained. Do not depend on a preinstalled
-copy of Pendulum, fetch source code, or contact a network service at runtime.
-A pure-Python implementation is acceptable; the upstream native parser is an
-implementation detail, not a required public interface.
+Distribution identity: `pendulum`; public import package begins at `pendulum`.
+The scope is the deterministic local API described below. Network services, undeclared external state, and behavior not represented by the public contract are outside the task.
 
-## Supports
+## Natural Language Instruction
 
-- CPython 3.12 on Linux, with support for Python 3.10 and newer where practical.
-- An installable project exposing the `pendulum` package and distribution
-  metadata version `3.2.0`.
-- Exact runtime dependencies `python-dateutil==2.9.0.post0`, `six==1.17.0`, and
-  `tzdata==2026.3`; they are preinstalled by the evaluation image.
-- Standard IANA timezone names through `zoneinfo`, including daylight-saving
-  transitions. `UTC` is the default timezone for constructed datetimes.
-- Locale-backed formatting and humanized differences for the documented locale
-  codes. At minimum, English, French, and Ukrainian behavior described below
-  must work.
-- Deterministic, offline operation. Ordinary package APIs must not spawn
-  subprocesses, open sockets, or write outside application-requested paths.
-- `pyproject.toml` or an equivalent standards-compliant build configuration.
-  Installation is performed with build isolation disabled and without
-  dependency resolution, so every build backend must come from the declared
-  closure.
+Create the complete project in an empty workspace and make it installable with the command in the environment section. Implement these task-specific capability families from the local API contract:
+
+1. `Constructors and conversion`: expose the documented public entry points, signatures, inputs, outputs, and error behavior.
+2. `Current time and parsing`: preserve the documented object or module behavior, including state and side effects.
+3. `Date`, `Time`, and `DateTime`: preserve ordering, determinism, serialization, and boundary semantics where specified.
+4. `Durations and intervals`: make the public package usable through the documented import path or command-line entry.
+
+Do not add speculative APIs or substitute a different package. Keep the implementation self-contained, ensure imports work after installation, and use the exact public names and signatures in the API Usage Guide. A small implementation is acceptable only when it still satisfies every documented contract.
+
+## Supports or Environment Configuration
+
+- CPython 3.12.14 on the pinned Linux image.
+- Distribution identity: `pendulum`; public import package begins at `pendulum`.
+- Install from the workspace with `python -m pip install .`; do not download packages during evaluation.
+- Declared build/runtime packages are supplied by the frozen evaluation image: `packaging==26.3`, `python-dateutil==2.9.0.post0`, `setuptools==84.0.0`, `six==1.17.0`, `time-machine==3.5.0`, `tzdata==2026.3`, `wheel==0.46.3`
+- Build metadata and package data must be present in the workspace and agree with the public import paths below.
+- Agent, candidate, evaluator, Oracle, and control execution are network-isolated. Do not access GitHub, package registries, DNS, databases, or external services at runtime.
+- Use deterministic local inputs. Do not rely on the current wall clock, host-specific absolute paths, undeclared environment variables, or an installed copy of the target package.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── an/
+│   ├── __init__.py
+│   └── (public modules documented in API Usage Guide)
+```
+
+The tree lists agent-owned public project files only. Add additional public modules when required by the API Usage Guide, but keep their import paths consistent with package metadata. Do not create evaluator-only files, hidden fixtures, or private reports in the generated project.
 
 ## API Usage Guide
+
+The following is the task-specific public contract recovered from the local instruction and inventory. For every function, class, method, constant, export, and command named below, preserve its complete signature, accepted input domain, return type and shape, ordering, determinism, state/side effects, exceptions, and examples. When the source contract gives an optional argument or a compatibility alias, it is part of the required surface.
 
 The package root re-exports `Date`, `Time`, `DateTime`, `Duration`, `Interval`,
 `Timezone`, `FixedTimezone`, `Formatter`, `WeekDay`, `UTC`, weekday constants
@@ -195,7 +204,6 @@ that optional dependency is installed. It affects `pendulum.now()` only for
 the context's lifetime and restores the previous clock even when the body
 raises. Without `time-machine`, entering the context raises `NotImplementedError`.
 
-## Implementation Notes
 
 Keep locale and timezone data available from the installed distribution; do
 not assume the source tree remains present. Avoid host locale settings and
@@ -209,3 +217,74 @@ scored boundary.
 
 Do not include upstream tests, verifier code, reference source, or build caches
 in the generated repository.
+
+## Implementation Notes
+
+- Keep the root exports and module paths stable after installation; do not make behavior depend on the repository's current directory.
+- Preserve explicit ordering guarantees. When the contract does not promise an order, do not introduce a new observable order accidentally.
+- Propagate documented exceptions and avoid replacing them with generic errors. Validate malformed, empty, boundary, and repeated inputs as described by the API contract.
+- Keep filesystem, process, terminal, and resource effects bounded and local. Close files and other resources on both success and failure.
+- Do not copy an upstream checkout, implementation source, or evaluation-only material into the generated project. Implement the public behavior from this specification.
+
+## Examples
+
+The examples below are retained from the local task specification. They are starting points for ordinary calls and boundary/error behavior; their exact output and exception semantics remain governed by the API Usage Guide.
+
+### Example 1: ordinary usage
+```text
+pendulum.datetime(
+    year: int, month: int, day: int, hour: int = 0, minute: int = 0,
+    second: int = 0, microsecond: int = 0,
+    tz: str | float | datetime.tzinfo | Timezone | FixedTimezone | None = UTC,
+    fold: int = 1, raise_on_unknown_times: bool = False,
+) -> DateTime
+pendulum.local(year, month, day, hour=0, minute=0, second=0, microsecond=0) -> DateTime
+pendulum.naive(year, month, day, hour=0, minute=0, second=0, microsecond=0, fold=1) -> DateTime
+pendulum.date(year: int, month: int, day: int) -> Date
+pendulum.time(hour: int, minute: int = 0, second: int = 0, microsecond: int = 0) -> Time
+pendulum.instance(obj: datetime | date | time, tz=UTC) -> DateTime | Date | Time
+pendulum.from_timestamp(timestamp: int | float, tz=UTC) -> DateTime
+pendulum.from_format(string: str, fmt: str, tz=UTC, locale: str | None = None) -> DateTime
+```
+
+### Example 2: ordinary usage
+```text
+>>> pendulum.datetime(2024, 2, 29, 12, 30, tz="Europe/Paris").to_iso8601_string()
+'2024-02-29T12:30:00+01:00'
+>>> pendulum.datetime(2013, 3, 31, 2, 30, tz="Europe/Paris")
+DateTime(2013, 3, 31, 3, 30, 0, tzinfo=Timezone('Europe/Paris'))
+```
+
+### Example 3: boundary or error behavior
+```text
+pendulum.now(tz: str | Timezone | None = None) -> DateTime
+pendulum.today(tz: str | Timezone = "local") -> DateTime
+pendulum.tomorrow(tz: str | Timezone = "local") -> DateTime
+pendulum.yesterday(tz: str | Timezone = "local") -> DateTime
+pendulum.parse(text: str, **options) -> Date | Time | DateTime | Duration | Interval
+```
+
+### Example 4: boundary or error behavior
+```text
+value.add(years=0, months=0, weeks=0, days=0, hours=0, minutes=0,
+          seconds=0, microseconds=0)
+value.subtract(years=0, months=0, weeks=0, days=0, hours=0, minutes=0,
+               seconds=0, microseconds=0)
+value.set(**components)
+value.start_of(unit: str)
+value.end_of(unit: str)
+value.next(day_of_week: WeekDay | None = None, keep_time: bool = False)
+value.previous(day_of_week: WeekDay | None = None, keep_time: bool = False)
+value.diff(other=None, abs: bool = True) -> Interval | Duration
+value.diff_for_humans(other=None, absolute=False, locale=None, separator=" ") -> str
+value.format(fmt: str, locale: str | None = None) -> str
+```
+
+
+## Error Handling and Boundary Conditions
+
+- Empty inputs, invalid types, malformed text or paths, unavailable resources, duplicate calls, and cancellation/timeout cases must follow the exception and return-value contracts documented for the relevant API.
+- Do not silently coerce values, reorder results, swallow exceptions, or use a fallback dependency unless the API section explicitly requires that behavior.
+- File and environment operations must use caller-provided paths and documented defaults only; never read undeclared host files or network resources.
+- The implementation must remain usable in the stated NoNetwork environment. A missing optional integration should expose the documented availability or error behavior rather than attempting an online install.
+- Security-sensitive inputs must be treated as data. Do not execute strings, load untrusted code, or interpolate shell commands unless that behavior is explicitly part of the documented public API.

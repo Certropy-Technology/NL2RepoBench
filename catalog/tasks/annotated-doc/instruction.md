@@ -9,6 +9,18 @@ real package rather than a single loose script. The implementation must expose
 the documented package metadata, preserve the value supplied by callers, and
 work with Python's normal annotation introspection and pickle mechanisms.
 
+# Natural Language Instruction
+
+Create the `annotated-doc` project from an empty `workspace/`. Build an installable implementation, not a loose demonstration script. The public API guide below is the complete source of the task contract; preserve its import paths, signatures, return shapes, ordering, state changes, and exceptions.
+
+Required capabilities:
+- Doc metadata construction: implement the documented public behavior and preserve its input/output and error contract.
+- public package/version exports: implement the documented public behavior and preserve its input/output and error contract.
+- value equality and hashing: implement the documented public behavior and preserve its input/output and error contract.
+- Annotated introspection and pickle behavior: implement the documented public behavior and preserve its input/output and error contract.
+
+Do not copy an upstream checkout or tests. Keep behavior deterministic and local, and make the package usable from the installation layout described below. The principal public entry points include: `repr(doc)`, `Doc(<repr of documentation>)`, `an`, `typing`.
+
 # Supports
 
 - Support CPython `>=3.9`.
@@ -24,6 +36,21 @@ work with Python's normal annotation introspection and pickle mechanisms.
   for import or normal object use.
 - The repository may include development scripts and tests, but they are not
   part of the runtime API or its dependency set.
+
+
+## NoNetwork boundary
+
+Agent, candidate, verifier, Oracle, controls, and normal runtime execution are network-isolated. Do not access GitHub, package registries, Go proxies, DNS, or external services during execution; use only the frozen local build inputs.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+└── src/annotated_doc/
+    ├── __init__.py
+    └── py.typed
+```
 
 # API Usage Guide
 
@@ -87,3 +114,42 @@ must not require callers to import a private module first.
 - The hidden verifier uses a separate child process and only checks behavior
   described above. It does not require the upstream repository layout or
   release automation scripts.
+
+# Examples
+
+## Ordinary metadata
+
+```python
+from annotated_doc import Doc
+
+title = Doc("Human-readable title")
+assert title.documentation == "Human-readable title"
+```
+
+## Ordinary Annotated use
+
+```python
+from typing import Annotated, get_args
+from annotated_doc import Doc
+
+annotation = Annotated[int, Doc("item count")]
+metadata = get_args(annotation)[1]
+```
+
+## Boundary: Unicode and empty text
+
+```python
+from annotated_doc import Doc
+assert Doc("") == Doc("")
+assert Doc("文档").documentation == "文档"
+```
+
+## Boundary: positional-only construction
+
+```python
+Doc(documentation="text")  # raises TypeError
+```
+
+# Error Handling and Boundary Conditions
+
+Reject invalid inputs using the documented exception or error result. Preserve empty-input behavior, ordering, Unicode/encoding behavior, cancellation or timeout semantics, and local filesystem boundaries where the API specifies them. Never turn a failed local operation into a network request, subprocess, or silent success.

@@ -16,6 +16,12 @@ files and return ordinary Python dictionaries and TOML-native scalar values.
 It must reject malformed TOML with a structured `TOMLDecodeError` rather than
 silently accepting ambiguous input.
 
+## Natural Language Instruction
+
+Create the installable `tomli` project from an empty workspace. Implement the
+TOML 1.0 parser and typed public API below, preserving source order, TOML
+native scalar types, structured decode locations, and binary-file behavior.
+
 ## Supports
 
 - Support Python 3.8 and newer CPython versions.
@@ -27,6 +33,20 @@ silently accepting ambiguous input.
   version `2.4.1`.
 - Use the `src/tomli` package layout; do not put the implementation in a
   top-level module that only works from the repository root.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+└── src/
+    └── tomli/
+        ├── __init__.py
+        ├── _parser.py
+        ├── _re.py
+        ├── _types.py
+        └── py.typed
+```
 
 ## API Usage Guide
 
@@ -81,3 +101,25 @@ containers should be ordinary mutable Python containers and should be safe to
 deep-copy. Keep public exports limited to `loads`, `load`, and
 `TOMLDecodeError`, while compatibility with importing `tomli._types` and the
 package version metadata must remain intact.
+
+## Examples
+
+```python
+import tomli
+
+assert tomli.loads("title = 'demo'\ncount = 2") == {"title": "demo", "count": 2}
+```
+
+```python
+from io import BytesIO
+import tomli
+
+assert tomli.load(BytesIO(b"enabled = true"))["enabled"] is True
+```
+
+## Error Handling and Boundary Conditions
+
+Non-string input to `loads` raises `TypeError`; `load` rejects text-mode
+streams. Duplicate keys, malformed numbers, invalid escapes, and invalid dates
+raise `TOMLDecodeError`. A `parse_float` callback returning a list or mapping
+raises `ValueError`.

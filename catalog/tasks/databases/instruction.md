@@ -1,8 +1,8 @@
-## Databases Project Dependency Library Configuration
+## Project Description
 
 Databases is an **asynchronous database library** that provides simple yet powerful asynchronous database support. It supports PostgreSQL, MySQL, and SQLite, and integrates with SQLAlchemy Core to provide type-safe query building and execution.
 
-## Natural Language Instructions (Prompt)
+## Natural Language Instruction
 
 Please create a Python project named Databases that implements an asynchronous database operations library. The project should include the following features:
 
@@ -3856,5 +3856,52 @@ async def test_error_handling():
 if __name__ == "__main__":
     asyncio.run(test_error_handling())
 ```
+
+## Implementation Notes
+
+Keep `Database`, `Connection`, `Transaction`, and `DatabaseURL` importable from
+their documented modules and preserve asynchronous context-manager semantics.
+Connection ownership is task-local, transaction exit commits only on success,
+and exceptions trigger rollback and cleanup. Backend adapters may be selected
+by URL scheme, but local SQLite behavior must not depend on an external service.
+
+## Examples
+
+```python
+from databases import Database
+
+database = Database("sqlite:///example.db")
+await database.connect()
+try:
+    await database.execute("CREATE TABLE items (id INTEGER)")
+finally:
+    await database.disconnect()
+```
+
+```python
+from databases import DatabaseURL
+
+url = DatabaseURL("postgresql://user:pass@host/app")
+assert url.dialect == "postgresql"
+```
+
+```python
+async with database.transaction():
+    await database.execute("INSERT INTO items (id) VALUES (:id)", {"id": 1})
+```
+
+## Error Handling and Boundary Conditions
+
+- Operations attempted before connection, after disconnect, or against an
+  unsupported URL scheme raise the library's documented connection/configuration
+  error rather than silently succeeding.
+- A failed transaction rolls back and releases its connection. Nested
+  transactions preserve outer task-local state and do not leak connections to
+  another asyncio task.
+- Query parameters are bound through the backend interface; do not interpolate
+  untrusted values into SQL. Result methods preserve row order and their
+  documented empty-result behavior.
+- Agent, candidate, verifier, Oracle, controls, and runtime execution are
+  NoNetwork; tests use only frozen local dependencies and database fixtures.
 
 

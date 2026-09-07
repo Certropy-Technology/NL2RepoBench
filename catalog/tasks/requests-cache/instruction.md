@@ -8,6 +8,21 @@ The task targets the deterministic local behavior of requests-cache 1.3.4 at the
 revision. The implementation must be usable from an empty workspace and must not require a live
 HTTP server for its core behavior.
 
+## Natural Language Instruction
+
+Create an installable `requests-cache` distribution from an empty
+`workspace/`. Implement deterministic request normalization and cache-key
+generation, expiration and cache-control policy, in-memory response storage,
+serialized response models, cached sessions, and temporary `requests` patching.
+Preserve the import paths, method signatures, copy semantics, ordering,
+time-zone handling, and error contracts specified below. The scored project
+uses local request adapters and must not turn a cache miss into a live request.
+
+Provide the `requests_cache` package and its root re-exports. Keep cache keys,
+policy, backends, models, serializers, session behavior, and patcher behavior
+separate so settings and caller-owned requests are not mutated by another
+operation.
+
 ## Supports
 
 - CPython 3.12 on Linux.
@@ -17,6 +32,35 @@ HTTP server for its core behavior.
   and `url-normalize`. The verifier provides the locked closure during image construction.
 - Deterministic local operation without databases, Redis, MongoDB, DynamoDB, browser automation,
   external HTTP services, wall-clock assertions, or access to the upstream repository.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── requests_cache/
+│   ├── __init__.py
+│   ├── cache_keys.py
+│   ├── session.py
+│   ├── patcher.py
+│   ├── policy/
+│   │   ├── __init__.py
+│   │   └── expiration.py
+│   ├── backends/
+│   │   ├── __init__.py
+│   │   └── base.py
+│   ├── models/
+│   │   ├── __init__.py
+│   │   ├── request.py
+│   │   └── response.py
+│   └── serializers/
+│       └── __init__.py
+└── README.md
+```
+
+The root package and modules named in the API guide are public import paths.
+Service backends, live HTTP fixtures, browser integrations, and test or
+verifier files are outside the generated project.
 
 ## API Usage Guide
 
@@ -97,3 +141,39 @@ keys and serialized response content as deterministic data. Optional database ba
 present as importable placeholder classes, but they are outside the scored contract and must not
 be required to import the core package. Do not contact the network from library code during the
 local scenarios.
+
+## Examples
+
+```python
+from requests_cache import CachedSession
+
+session = CachedSession(backend="memory")
+# A local adapter supplies the origin response for this URL in scored use.
+response = session.get("https://example.invalid/data")
+```
+
+A repeated equivalent request uses the cached response and exposes
+`response.from_cache` without changing the response body or request method.
+
+```python
+from requests_cache.cache_keys import normalize_url, create_key
+
+normalized = normalize_url("https://example.test/items?b=2&a=1")
+key = create_key(request)
+```
+
+Equivalent query pairs normalize deterministically, while a changed method or
+selected header produces a different key when header matching is enabled.
+
+## Error Handling and Boundary Conditions
+
+- `None` and `-1` expiration mean no expiry; `0` expires immediately, and
+  invalid HTTP-date strings raise `ValueError` unless the documented ignore
+  option is enabled.
+- Normalization preserves duplicate query values and key-only parameters,
+  redacts configured keys, and never mutates a caller's request.
+- A cache miss with `only_if_cached` returns a local 504 response. Optional
+  Redis, MongoDB, DynamoDB, and GridFS integrations are not required for the
+  in-memory core and must not be imported to use it.
+- Context managers restore patched session factories even when their body
+  raises; `close()` releases the configured local backend.

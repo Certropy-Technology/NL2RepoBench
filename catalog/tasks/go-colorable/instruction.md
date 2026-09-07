@@ -22,6 +22,42 @@ or mutable global state.
 - Standard-library `io`, `os`, and `bytes` are sufficient for the evaluated
   Linux behavior. Do not add a runtime service or a CLI entry point.
 
+## Natural Language Instruction
+
+Build the pure-Go `github.com/mattn/go-colorable` module from an empty
+workspace. Implement Unix pass-through, non-colorable ANSI filtering, and the
+documented constructors and helper while preserving `io.Writer` behavior.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── go.mod
+├── go.sum
+├── vendor/modules.txt
+├── colorable.go
+└── colorable_windows.go
+```
+
+Use the root package import path and platform build constraints described in
+the API guide. No private verifier files belong in the project.
+
+## Examples
+
+```go
+clean := NewNonColorable(&buffer); _, _ = clean.Write([]byte("\x1b[31mred\x1b[0m"))
+```
+
+```go
+writer := NewColorableStdout(); _, err := writer.Write([]byte("text"))
+```
+
+## Error Handling and Boundary Conditions
+
+Preserve partial writes, ordinary bytes, ANSI sequences, nil/failed underlying
+writers, platform constructors, and close behavior as documented. Do not use
+network services or global mutable state.
+
 ## API Usage Guide
 
 ### `NewNonColorable`
@@ -94,6 +130,6 @@ Use build constraints only when needed for the Linux target. Keep the writer
 boundary based on `io.Writer`, preserve input byte counts, and propagate a
 deterministic result for repeated calls. The evaluator calls the public API
 through a separate typed subprocess bridge using bounded JSON values; it does
-not import candidate code into the trusted verifier. Do not hard-code the
+not import candidate code into the evaluator. Do not hard-code the
 evaluator's private request cases or write verifier reports, rewards, or test
 results from candidate code.

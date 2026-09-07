@@ -9,6 +9,27 @@ root package through a typed JSON subprocess bridge. Implement the package
 from an empty workspace; do not assume that source files or a bridge are
 provided.
 
+## Natural Language Instruction
+
+Create the pure-Go module `dario.cat/mergo` from an empty workspace. Implement
+the public merge and map APIs, option functions, configuration type,
+transformer interface, and stable exported errors described below. The package
+must work for typed callers using `reflect.Value` and for bounded bridge inputs
+that represent JSON-compatible structs, maps, and slices.
+
+The required capability groups are:
+
+1. Zero-value struct, map, slice, pointer, and nested-value merging.
+2. Overwrite, empty-value, append, deep-copy, dereference, type-check, and
+   transformer options with order-sensitive configuration.
+3. Struct-to-map and map-to-struct conversion with deterministic key naming.
+4. Stable error values for nil, type, destination-kind, and unsupported cases.
+5. A module-root package that builds offline with the specified Go toolchain.
+
+Do not add a second public package, a command-line interface, a network
+client, cgo, or mutable process-global state. The evaluator supplies its own
+bridge; the library itself remains the root importable package.
+
 ## Supports
 
 - Linux/amd64 with Go `1.26.5`, one root `go.mod`, and module path
@@ -21,6 +42,28 @@ provided.
   generated code, external services, or a workspace file.
 - The public package is imported as `dario.cat/mergo`. Keep the exported root
   API and error values compatible with the guide below.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── go.mod
+├── go.sum
+├── merge.go
+├── map.go
+├── config.go
+├── errors.go
+└── internal/
+    └── reflection.go
+```
+
+The module path in `go.mod` is `dario.cat/mergo`; callers import the root
+package from that path. This is a concrete target layout. The implementation
+may combine files, but exported declarations remain in the root package and
+reflection helpers must not become a new public API. The evaluator bridge is
+not part of the generated project. A vendor directory is optional for this
+zero-dependency module, but the specified offline build command must continue
+to work.
 
 ## API Usage Guide
 
@@ -128,3 +171,53 @@ not overwritten, copy slices only according to the selected option, and do
 not write unexported fields. The bridge uses bounded newline-delimited JSON
 requests and serializes only values that are representable without callbacks
 or native reflection objects.
+
+## Examples
+
+```go
+package main
+
+import mergo "dario.cat/mergo"
+
+type Destination struct { Name string; Count int }
+dst := &Destination{Name: "old"}
+src := Destination{Count: 3}
+err := mergo.Merge(dst, src)
+```
+
+```go
+package main
+
+import mergo "dario.cat/mergo"
+
+dst := map[string]interface{}{"keep": 1}
+src := map[string]interface{}{"new": 2}
+err := mergo.Map(&dst, src, mergo.WithOverwriteWithEmptyValue)
+```
+
+```go
+package main
+
+import mergo "dario.cat/mergo"
+
+dst := []int{1}
+src := []int{2, 3}
+err := mergo.Merge(&dst, src, mergo.WithAppendSlice)
+```
+
+## Error Handling and Boundary Conditions
+
+- A nil source or destination returns `ErrNilArguments`; a destination that
+  is not a non-nil pointer returns `ErrNonPointerArgument` without mutation.
+- Different source and destination types return `ErrDifferentArgumentsTypes`.
+  Unsupported kinds and invalid map/struct destination directions return the
+  documented stable error variables rather than a reflection panic.
+- Without overwrite, existing non-empty destination values and map entries
+  remain unchanged. Empty source values are ignored unless the matching empty
+  overwrite option is present.
+- Slice append and deep-copy options preserve element order and reject
+  incompatible slice types. Options are applied in the order supplied by the
+  caller.
+- Unexported struct fields are never written. Calls with the same typed inputs
+  and options produce the same destination and error result; no clock,
+  randomness, process state, or network is consulted.

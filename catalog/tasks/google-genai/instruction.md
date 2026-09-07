@@ -27,6 +27,55 @@ Network-facing client methods are outside the scored contract.
   importable SDK surface for this offline task; no remote request behavior is
   scored.
 
+## Natural Language Instruction
+
+Create the installable `google-genai` distribution from an empty workspace.
+Implement typed parts/content and coercion, local HTTP/common helpers, API
+errors, response accessors, chat history, and synchronous/asynchronous pagers
+using the exact imports and signatures below. Network-facing client behavior is
+excluded.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+└── google/
+    └── genai/
+        ├── __init__.py
+        ├── types.py
+        ├── errors.py
+        ├── chats.py
+        ├── pagers.py
+        ├── _transformers.py
+        ├── _api_client.py
+        └── _common.py
+```
+
+Preserve Pydantic-compatible models, root exports, and module paths. Do not
+include replay data, internal tests, credentials, or remote-service code.
+
+## Examples
+
+```python
+from google.genai import types
+part = types.Part.from_text(text='hello')
+content = types.UserContent(parts=part)
+```
+
+```python
+from google.genai._common import recursive_dict_update
+target = {'Timeout': {'seconds': 1}}
+recursive_dict_update(target, {'timeout': {'nanos': 5}})
+```
+
+## Error Handling and Boundary Conditions
+
+Preserve positional/keyword part conflicts, unsupported coercion types, enum
+case handling, base64 serialization, missing response candidates, pickle-safe
+API errors, invalid chat roles, pager exhaustion, deep-copy configuration, and
+async ordering. Imports and all scored operations must remain offline.
+
 # API Usage Guide
 
 ## Typed parts and content
@@ -197,7 +246,7 @@ uses awaitable requests and asynchronous iteration with the same semantics.
 # Implementation Notes
 
 - Keep namespace/package metadata conventional and include all modules needed
-  by the imports above. Do not include hidden tests, grading code, reward files,
+  by the imports above. Do not include internal tests, grading code, reward files,
   or a source archive.
 - Preserve deterministic ordering in lists and serialized mappings. Do not
   contact remote services or read credentials as part of import or the scored

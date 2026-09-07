@@ -1,3 +1,73 @@
+# Build `more-Itertools`
+
+## Project Description
+
+Create the `more_itertools` project from an empty workspace. This is a repository-generation task for the frozen `python` package contract, task specification version `0.1.0`, at source revision `f7134fa18cdf30b9b39545104d9f75aab38818a0`. Implement the public behavior described by the local inventories and the task-specific detail below; do not copy upstream source or tests. The supported scope is python, repository-generation.
+
+## Natural Language Instruction
+
+Starting with an empty `workspace/`, create an installable `more_itertools` project. Implement every public/core API named in the API Usage Guide, its package exports, and its documented integration points. Preserve observable input types, return shapes, ordering, determinism, state changes, and documented exception behavior. The project must be usable through its declared `more_itertools` import path (or the package root for this Node task), and all required modules must be present in the directory structure below.
+
+The task-specific specification retained below supplies the detailed behavior for each API family. Treat it as the contract: do not add unrelated APIs, replace deterministic behavior with randomized or time-dependent behavior, or weaken error handling.
+
+## Supports
+
+- Language/runtime: `python` on `3.12`; target environment metadata declares `debian-12`.
+- Distribution/package: `more_itertools`; import/root name: `more_itertools`. Package manager: `pip`.
+- Install from the repository root with `python -m pip install . --no-deps`. Build metadata must be complete and agree with the package entry point.
+- Dependency status in the frozen source metadata is `unknown`. Use only dependencies declared by the task and available in the preinstalled build image; standard-library modules are not third-party runtime dependencies.
+- NoNetwork boundary: agent, candidate, verifier, Oracle, and controls run with `network_mode=no-network`. Do not access GitHub, PyPI, npm registries, Go proxy, DNS, or external services at runtime. Do not fetch source or dependencies during implementation or package use.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── more_itertools/
+│   ├── conf.py
+│   ├── __init__.py
+│   ├── more.py
+│   └── recipes.py
+└── README.md
+```
+
+The tree is the minimum public project layout. Add a module only when it corresponds to a documented import path or package resource. Do not place publicly unavailable evaluator code, non-public evaluation material, Oracle payloads, dependency caches, or trusted reports in this workspace.
+
+## API Usage Guide
+
+The public/core API families recorded in the local inventory are: Introduction and Goals of the More-Itertools Project, Natural Language Instruction (Prompt), Environment Configuration, Python Version, Core Dependency Library Versions, More-Itertools Project Architecture, Project Directory Structure, 1. Module Import, 2. `chunked()` Function - Data Chunking, 3. `windowed()` Function - Sliding Window, 4. `peekable` Class - Previewable Iterator, 5. `spy()` Function - Iterator Preview, 6. `seekable` Class - Seekable Iterator, 7. `chunked` Function, 8.: `first` Function, 9.: `last` Function, 10: `nth_or_last` Function, 11: `distinct_permutations` Function, 12: `split_at` Function, 13: `split_before` Function, 14: `split_after` Function, 15: `split_into` Function, 16: `padded` Function, 17: `repeat_each` Function, 18: `distribute` Function, 19: `stagger` Function, 20: `zip_offset` Function, 21: `unzip` Function, 22: `sort_together` Function, 23: `always_iterable` Function, 24: `adjacent` Function, 25: `groupby_transform` Function, 26: `interleave` Function, 27: `interleave_longest` Function, 28: `collapse` Function.
+
+For each listed family, the detailed contract below defines the import path or CLI entry, signature, accepted inputs, return type/shape, ordering and determinism, state or I/O side effects, errors, and examples. Implement the complete public surface, including root re-exports and aliases where the specification names them. If an API is stateful, preserve mutation and repeated-call behavior; if it is pure, do not introduce global state.
+
+## Implementation Notes
+
+Keep the implementation self-contained and deterministic under the declared runtime. The candidate repository must install from the workspace root, import through the documented public path, and run without external services. Preserve package metadata, module semantics (ESM/CommonJS or Python import behavior), serialization formats, resource cleanup, and boundary behavior described below. publicly unavailable evaluator adapters and non-public evaluation details are not part of the implementation.
+
+## Examples
+
+Ordinary project examples:
+
+```bash
+cd workspace
+python -m pip install . --no-deps
+```
+
+```python
+# Import the public package and use the task-specific APIs documented below.
+import_or_require = "more_itertools"
+```
+
+The retained task-specific examples below provide ordinary API calls and combinations grounded in the frozen inventory. Keep their result shapes and ordering exact.
+
+## Error Handling and Boundary Conditions
+
+- Empty inputs, malformed values, missing resources, duplicate values, and unsupported options must follow the task-specific error contracts below; do not silently coerce or discard information unless explicitly specified.
+- Repeated calls must remain deterministic. Filesystem, process, clock, random, native, callback, and serialization boundaries are supported only where the local specification documents them.
+- Network attempts are prohibited and must not be used as a fallback. Installation failures, missing offline dependencies, or unsupported external capabilities are environment/source concerns, not reasons to invent behavior.
+
+
+## Source-derived task detail
+
 ## Introduction and Goals of the More-Itertools Project
 
 More-Itertools is a Python library **aimed at enhancing Python iterators**. It extends the standard library's `itertools` module and provides over 100 powerful iterator utility functions. This tool performs excellently in scenarios such as data processing, algorithm implementation, and stream processing, achieving "the highest memory efficiency and optimal performance." Its core functions include: grouping and chunking iterators (automatically splitting large datasets into manageable chunks), **lookahead and lookbehind capabilities** (supporting iterator preview and backtracking), and intelligent handling of special functions such as sliding windows, data augmentation, combinatorial mathematics, and mathematical operations. In short, More-Itertools is dedicated to providing a powerful iterator tool system to enhance Python's iterator processing capabilities (e.g., chunking large datasets using `chunked()`, previewing iterators using `peekable()`, etc.).

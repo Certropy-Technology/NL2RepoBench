@@ -1,53 +1,48 @@
-# Build `prettier`
+# prettier
 
 ## Project Description
 
-Create an installable npm package named `prettier`, version `3.10.0-dev`, from
-an empty workspace. This task is a deterministic, dependency-free formatter
-slice for JavaScript, TypeScript, JSON, CSS, Markdown, YAML, HTML, and GraphQL.
-It reproduces the root formatting behavior described below; configuration
-files, filesystem discovery, plugins, a CLI, and the rest of the full upstream
-project are outside the scored surface.
+Build an installable `prettier` project from an empty `workspace/`. The project must reproduce the public, local behavior documented in this instruction, including its package entry points, return shapes, ordering, state changes, and documented exceptions. This is a repository-generation task: the agent creates the build metadata and source modules rather than editing an existing implementation.
 
-Implement the behavior in your own package files. This is repository
-generation, not a request to retrieve the pinned upstream implementation or
-private verifier assets.
+Distribution/package identity: `prettier`; root module entry is the package entry documented below.
+The scope is the deterministic local API described below. Network services, undeclared external state, and behavior not represented by the public contract are outside the task.
 
-## Supports
+## Natural Language Instruction
 
-- Run on Node `24.19.0` with npm `11.17.0` on `linux/amd64`.
-- `package.json` must use name `prettier`, version `3.10.0-dev`, and
-  `"type": "commonjs"`.
-- The package root export must include at least this mapping (additional export
-  conditions and subpaths are allowed):
+Create the complete project in an empty workspace and make it installable with the command in the environment section. Implement these task-specific capability families from the local API contract:
 
-  ```json
-  {
-    "exports": {
-      ".": {
-        "types": "./index.d.ts",
-        "default": "./index.mjs"
-      }
-    }
-  }
-  ```
+1. `format`: expose the documented public entry points, signatures, inputs, outputs, and error behavior.
+2. `check`: preserve the documented object or module behavior, including state and side effects.
+3. `formatWithCursor`: preserve ordering, determinism, serialization, and boundary semantics where specified.
+4. `Errors and JSON boundary`: make the public package usable through the documented import path or command-line entry.
 
-- Both entry files must exist. The runtime entry is ESM and must export
-  `format`, `check`, `formatWithCursor`, and the string `version`. Additional
-  exports are allowed. `version` must equal `"3.10.0-dev"`.
-- Include a v3 `package-lock.json` that agrees with `package.json`. The package
-  must declare no runtime dependencies, optional dependencies, peer
-  dependencies, or npm workspaces. A clean verifier runs `npm ci`, `npm pack`,
-  and installation from the packed tarball with npm's offline mode enabled.
-- Do not add `preinstall`, `install`, `postinstall`, `prepare`, `prepublish`,
-  `prepublishOnly`, `publish`, or `postpublish` scripts. Do not use native
-  addons, custom loaders, registry configuration, package-manager caches, or
-  network access.
-- The installed package must work without a build step. Do not include hidden
-  tests, graders, reward files, Oracle files, credentials, or private verifier
-  material.
+Do not add speculative APIs or substitute a different package. Keep the implementation self-contained, ensure imports work after installation, and use the exact public names and signatures in the API Usage Guide. A small implementation is acceptable only when it still satisfies every documented contract.
+
+## Supports or Environment Configuration
+
+- Node.js 24.19.0 with npm 11.17.0.
+- Distribution/package identity: `prettier`; root module entry is the package entry documented below.
+- Install from the workspace with `npm install --offline` using the declared lockfile.
+- No third-party runtime package is declared by the local task metadata; standard-library support is sufficient unless the API section says otherwise.
+- Build metadata and package data must be present in the workspace and agree with the public import paths below.
+- Agent, candidate, evaluator, Oracle, and control execution are network-isolated. Do not access GitHub, package registries, DNS, databases, or external services at runtime.
+- Use deterministic local inputs. Do not rely on the current wall clock, host-specific absolute paths, undeclared environment variables, or an installed copy of the target package.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── index.js
+├── index.d.ts
+```
+
+The tree lists agent-owned public project files only. Add additional public modules when required by the API Usage Guide, but keep their import paths consistent with package metadata. Do not create evaluator-only files, hidden fixtures, or private reports in the generated project.
 
 ## API Usage Guide
+
+The following is the task-specific public contract recovered from the local instruction and inventory. For every function, class, method, constant, export, and command named below, preserve its complete signature, accepted input domain, return type and shape, ordering, determinism, state/side effects, exceptions, and examples. When the source contract gives an optional argument or a compatibility alias, it is part of the required surface.
 
 All three functions are asynchronous and stateless. They accept JSON-safe
 arguments and must not read files, environment configuration, clocks, random
@@ -190,7 +185,6 @@ await formatWithCursor("const value={alpha:1,beta:2}", {
 - The verifier-owned adapter invokes only the installed package root in a
   bounded subprocess. It is not a candidate CLI requirement.
 
-## Implementation Notes
 
 - Keep parser dispatch deterministic and isolate parser-specific formatting
   rules. A small tokenizer/state machine is preferable to substitutions that
@@ -203,3 +197,75 @@ await formatWithCursor("const value={alpha:1,beta:2}", {
 - The fixed private denominator is 20 `node:test` leaves: package/API shape,
   the eight parser families, formatting options and wrapping, idempotence,
   `check`, cursor translation, and both parser error contracts.
+
+## Implementation Notes
+
+- Keep the root exports and module paths stable after installation; do not make behavior depend on the repository's current directory.
+- Preserve explicit ordering guarantees. When the contract does not promise an order, do not introduce a new observable order accidentally.
+- Propagate documented exceptions and avoid replacing them with generic errors. Validate malformed, empty, boundary, and repeated inputs as described by the API contract.
+- Keep filesystem, process, terminal, and resource effects bounded and local. Close files and other resources on both success and failure.
+- Do not copy an upstream checkout, implementation source, or evaluation-only material into the generated project. Implement the public behavior from this specification.
+
+## Examples
+
+The examples below are retained from the local task specification. They are starting points for ordinary calls and boundary/error behavior; their exact output and exception semantics remain governed by the API Usage Guide.
+
+### Example 1: ordinary usage
+```text
+{
+    "exports": {
+      ".": {
+        "types": "./index.d.ts",
+        "default": "./index.mjs"
+      }
+    }
+  }
+```
+
+### Example 2: ordinary usage
+```text
+format(text: string, options: FormatOptions): Promise<string>
+```
+
+### Example 3: boundary or error behavior
+```text
+interface FormatOptions {
+  parser: "babel" | "typescript" | "json" | "css" |
+          "markdown" | "yaml" | "html" | "graphql";
+  printWidth?: number;                 // default 80
+  semi?: boolean;                      // default true
+  singleQuote?: boolean;               // default false
+  arrowParens?: "always" | "avoid";   // default "always"
+  useTabs?: boolean;                   // default false
+  proseWrap?: "always" | "never" | "preserve"; // default "preserve"
+  cursorOffset?: number;               // formatWithCursor only
+}
+```
+
+### Example 4: boundary or error behavior
+```text
+await format("const x={a:1,b:[2,3]}", { parser: "babel" });
+// "const x = { a: 1, b: [2, 3] };\n"
+
+await format('{"b":2,"a":[1,2]}', { parser: "json" });
+// '{ "b": 2, "a": [1, 2] }\n'
+
+await format("type User={name:string;age?:number};", {
+  parser: "typescript"
+});
+// "type User = { name: string; age?: number };\n"
+
+await format("query User($id:ID!){user(id:$id){id name email}}", {
+  parser: "graphql"
+});
+// "query User($id: ID!) {\n  user(id: $id) {\n    id\n    name\n    email\n  }\n}\n"
+```
+
+
+## Error Handling and Boundary Conditions
+
+- Empty inputs, invalid types, malformed text or paths, unavailable resources, duplicate calls, and cancellation/timeout cases must follow the exception and return-value contracts documented for the relevant API.
+- Do not silently coerce values, reorder results, swallow exceptions, or use a fallback dependency unless the API section explicitly requires that behavior.
+- File and environment operations must use caller-provided paths and documented defaults only; never read undeclared host files or network resources.
+- The implementation must remain usable in the stated NoNetwork environment. A missing optional integration should expose the documented availability or error behavior rather than attempting an online install.
+- Security-sensitive inputs must be treated as data. Do not execute strings, load untrusted code, or interpolate shell commands unless that behavior is explicitly part of the documented public API.

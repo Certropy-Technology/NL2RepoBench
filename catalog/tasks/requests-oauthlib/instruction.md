@@ -1,19 +1,45 @@
-# Build `requests-oauthlib`
+# Project Description
 
 Create a complete, installable Python package named `requests-oauthlib` from an empty workspace. It must provide deterministic, offline OAuth request preparation and local token-processing behavior compatible with requests-oauthlib 2.0.0. Do not copy upstream source or tests into the workspace.
 
-## Project Description
-
 Implement the Python package `requests_oauthlib` for CPython 3.12 on Linux. It adapts the installed `requests` and `oauthlib` libraries with OAuth 1 request signing, OAuth 2 session helpers, local token parsing, and provider compliance hooks. No authorization server, browser, credential service, or protected-resource endpoint exists.
 
-## Supports
+# Supports or Environment Configuration
 
 - Source-only installation with `pip install .`, without a `.git` directory or downloading build dependencies.
 - CPython 3.12 on Linux amd64. The environment provides `requests 2.31.0`, `oauthlib 3.3.0` with signed-token support, and setuptools.
 - Offline creation and mutation of requests, URLs, headers, bodies, token dictionaries, and response-like values. Runtime code must not invoke `git`, `curl`, `wget`, browser automation, or a network endpoint.
 - Public modules `requests_oauthlib`, `oauth1_auth`, `oauth1_session`, `oauth2_auth`, `oauth2_session`, and the documented `compliance_fixes` modules.
 
-## API Usage Guide
+# Natural Language Instruction
+
+Build `requests-oauthlib` from an empty workspace. Implement the documented
+OAuth 1 and OAuth 2 request preparation, token parsing, session, and compliance
+fix APIs over installed `requests` and `oauthlib`. Keep provider traffic lazy
+and use local request adapters for deterministic behavior.
+
+# Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── README.md
+├── LICENSE
+└── requests_oauthlib/
+    ├── __init__.py
+    ├── oauth1_auth.py
+    ├── oauth1_session.py
+    ├── oauth2_auth.py
+    ├── oauth2_session.py
+    └── compliance_fixes/
+        ├── __init__.py
+        └── provider modules
+```
+
+The root exports the documented classes and version; the module paths above
+remain importable after installation.
+
+# API Usage Guide
 
 ### Package exports
 
@@ -35,6 +61,68 @@ Implement the Python package `requests_oauthlib` for CPython 3.12 on Linux. It a
 
 The following functions accept an `OAuth2Session`, register their documented hook(s), and return that same session: `facebook_compliance_fix`, `fitbit_compliance_fix`, `mailchimp_compliance_fix`, `weibo_compliance_fix`, `slack_compliance_fix`, `instagram_compliance_fix`, `ebay_compliance_fix`, and `plentymarkets_compliance_fix`. They only transform local OAuth response data or outgoing request parameters; they do not contact the named provider.
 
-## Implementation Notes
+# Implementation Notes
 
 Preserve requests and oauthlib exception identity rather than replacing typed errors with generic exceptions. Observable token dictionaries and URL query parameters must use standard URL encoding. OAuth signing can use oauthlib nonce and timestamp generation; callers should rely on the presence and shape of OAuth parameters rather than a fixed signature string. Network-capable methods must remain lazy until a caller supplies a request implementation.
+
+# Examples
+
+```python
+from requests_oauthlib import OAuth2Session
+session = OAuth2Session(client_id="client", token={"access_token": "token"})
+```
+
+```python
+from requests_oauthlib import OAuth1
+auth = OAuth1("client-key", client_secret="client-secret")
+```
+
+```python
+session = OAuth2Session(client_id="client", pkce="S256")
+url, state = session.authorization_url("https://example.test/authorize")
+```
+
+# Error Handling and Boundary Conditions
+
+Non-HTTPS OAuth 2 requests raise the insecure-transport error. Missing tokens,
+verifiers, or denied token responses preserve `TokenMissing`, `VerifierMissing`,
+and `TokenRequestDenied`. Invalid PKCE or compliance names raise `ValueError`.
+No function may contact a provider implicitly.
+
+## Detailed Implementation Nodes
+
+Keep OAuth request preparation separate from transport execution. OAuth 1 must
+preserve the prepared request method, URL, headers, and body while adding the
+signature in the selected signature location. OAuth 2 must validate transport
+security before applying a token and leave the request unchanged when
+`withhold_token=True`. Token dictionaries are ordinary mappings at the public
+boundary; sessions expose updates through their documented properties without
+leaking private client objects into JSON responses.
+
+Compliance helpers register transformations on the supplied session and return
+that same object. Their transformations operate on local request or response
+values and preserve unrelated parameters. Missing optional token fields, empty
+scopes, repeated authorization calls, and provider response fields follow the
+API contract rather than being silently discarded.
+
+## Additional Examples and Boundaries
+
+```python
+from requests_oauthlib import OAuth1Session
+
+session = OAuth1Session('client', client_secret='secret')
+prepared = session.prepare_request(request)
+```
+
+```python
+from requests_oauthlib import OAuth2Session
+
+session = OAuth2Session(client_id='client', token={'access_token': 'token'})
+session.request('GET', 'https://example.test/resource', withhold_token=True)
+```
+
+The examples use caller-supplied local request objects or patched transport
+implementations. No authorization endpoint, browser, callback listener, DNS
+lookup, proxy, TLS service, or protected resource is contacted implicitly.
+Typed oauthlib errors remain observable for insecure transport, missing token,
+denied token, verifier, and invalid compliance-hook cases.

@@ -6,32 +6,55 @@ and mapping types through the top-level `sortedcontainers` import. Containers
 must remain ordered after mutation and must expose the sequence, range, set,
 mapping, and live-view behavior described below.
 
-This task uses a bounded **sorted-container scenario contract v1**. The private
-verifier starts a fresh unprivileged candidate subprocess for every scenario.
-All containers, key functions, and mutations are constructed inside that child;
-the trusted verifier never imports candidate code and receives only a JSON
-verdict.
+This task uses a bounded **sorted-container scenario contract v1**. The public
+container behavior is evaluated with deterministic local values and JSON-safe
+scenario inputs.
 
-# Supports
+## Natural Language Instruction
 
-- CPython 3.12; the frozen environment is CPython 3.12.14 on Debian 12
-  `linux/amd64`.
-- Distribution and import package name `sortedcontainers`, version `2.4.0`.
-- A complete installable project using `setup.py`, `pyproject.toml`, or another
-  standards-compliant local Python build configuration.
-- No third-party runtime dependencies and no runtime network, service,
-  subprocess, database, or native-extension requirement.
-- Apache-2.0 package metadata.
-- The package root exports `SortedList`, `SortedKeyList`,
-  `SortedListWithKey`, `SortedSet`, `SortedDict`, `SortedKeysView`,
-  `SortedItemsView`, and `SortedValuesView`. `SortedListWithKey` is an alias
-  of `SortedKeyList`. The metadata values are `__title__ ==
-  "sortedcontainers"`, `__version__ == "2.4.0"`, and `__license__ ==
-  "Apache 2.0"`.
+Create `sortedcontainers` from an empty workspace as a complete installable python project. Implement
+the public operations, data or state behavior, input validation, deterministic ordering, and
+error contracts documented below. Keep package metadata, root exports, module imports, and any
+subpath entry points consistent across files. Implement the behavior rather than hard-coding the
+examples, and do not retrieve or copy a reference implementation.
 
-# API Usage Guide
+The finished repository must install from its root, expose every documented API family, preserve
+the specified side effects and resource lifecycle, and remain usable in a fresh process.
 
-## `SortedList` and `SortedKeyList`
+## Supports
+
+- Package/distribution name: `sortedcontainers`. Primary import or package entry: `sortedcontainers`.
+- CPython 3.12.14 on debian-12-amd64 with pip.
+- Install from `workspace/` using `python -m pip install .`.
+- Declared dependency closure: setuptools==84.0.0. Standard-library modules are not dependencies.
+- Build requirements are supplied before execution; do not add undeclared dependencies,
+  registry overrides, download hooks, or source-fetch steps.
+- Agent, candidate, verifier, Oracle, and controls use `network_mode=no-network`. Runtime access
+  to GitHub, PyPI, npm, the Go proxy, DNS, and external services is forbidden.
+- The declared test framework is `pytest`. A fixed collection
+  contains `30` cases when that value is frozen in metadata;
+  test implementation details are not part of the package surface.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+├── sortedcontainers/
+│   ├── __init__.py
+│   ├── sortedlist.py
+│   ├── sortedset.py
+│   └── sorteddict.py
+└── README.md
+```
+
+This is the required public project shape. Additional implementation modules are allowed only
+when they support the documented API; evaluation, source-fetch, and private runtime files are
+not agent-owned project files.
+
+## API Usage Guide
+
+### `SortedList` and `SortedKeyList`
 
 ```python
 SortedList(iterable=None, key=None)
@@ -87,7 +110,7 @@ argument's key and delimit its complete equal-key group; the explicit key-range
 and key-bisect methods operate directly on keys. Both include every equal-key
 value in stable order.
 
-## `SortedSet`
+### `SortedSet`
 
 ```python
 SortedSet(iterable=None, key=None)
@@ -112,7 +135,7 @@ Adding an existing value has no effect. `discard` ignores an absent value;
 `remove` raises `KeyError`. `pop` removes and returns the value at the sorted
 position and raises `IndexError` for an empty or invalid position.
 
-## `SortedDict` and views
+### `SortedDict` and views
 
 ```python
 SortedDict(*args, **kwargs)
@@ -157,46 +180,59 @@ updates are reflected in their length, membership, order, indexing, slicing,
 and reversed iteration. Keys and items views also implement the ordinary
 set-view comparisons and `&`, `|`, `-`, and `^` operations.
 
-# Frozen Scenario Leaves
+## Implementation Notes
 
-The fixed denominator is exactly 30 leaves:
+Preserve all public return shapes, ordering, state transitions, and exception contracts described above. Keep installation metadata and public imports consistent and deterministic.
 
-```text
-api-surface
-sorted-list-init-order
-sorted-list-mutations
-sorted-list-sequence
-sorted-list-delete-pop
-sorted-list-bisect-count-index
-sorted-list-islice
-sorted-list-irange
-sorted-list-operators-copy
-sorted-key-list-init-stability
-sorted-key-list-mutations
-sorted-key-list-key-range
-sorted-key-list-value-queries
-sorted-set-init-sequence
-sorted-set-mutations
-sorted-set-delete-pop
-sorted-set-range-bisect
-sorted-set-algebra
-sorted-set-inplace-operations
-sorted-set-key-order
-sorted-dict-init-order
-sorted-dict-mutations
-sorted-dict-pop-peek
-sorted-dict-range-bisect
-sorted-dict-key-order
-sorted-dict-live-views
-sorted-dict-view-set-operations
-sorted-dict-union
-copy-independence
-error-contracts
+Use the public language semantics described by each API family. Keep repeated calls deterministic
+unless state mutation is explicitly part of the contract. Public re-exports and declarations must
+match runtime behavior, and installation must not rely on a repository checkout or network access.
+
+## Examples
+
+The API-specific examples above are normative demonstrations of ordinary behavior. These four
+local snippets also provide ordinary and boundary-oriented calls without external services:
+
+```python
+SortedList(iterable=None, key=None)
+SortedKeyList(iterable=None, key=identity)
 ```
 
-The slice adapts deterministic assertions from the frozen upstream collection
-for list/set/dict ordering, mutation, range, bisect, operators, keyed ordering,
-and views. It deliberately excludes stress loops, timing and memory claims,
-pickle internals, private load/index-tree methods, recursive `repr`, CPython
-reference counts, Python 2 compatibility, docs, and benchmarks. Those excluded
-areas are not hidden requirements.
+```python
+add(value)
+update(iterable)
+clear()
+discard(value)
+remove(value)
+pop(index=-1)
+count(value)
+index(value, start=None, stop=None)
+bisect_left(value)
+bisect_right(value)
+bisect(value)                 # alias of bisect_right
+islice(start=None, stop=None, reverse=False)
+irange(minimum=None, maximum=None, inclusive=(True, True), reverse=False)
+copy()
+```
+
+```python
+irange_key(min_key=None, max_key=None, inclusive=(True, True), reverse=False)
+bisect_key_left(key)
+bisect_key_right(key)
+bisect_key(key)               # alias of bisect_key_right
+```
+
+```python
+SortedSet(iterable=None, key=None)
+```
+
+## Error Handling and Boundary Conditions
+
+Empty values, malformed values, unsupported types, exhausted inputs, invalid options, and missing
+local resources must follow the API-specific contracts above. Preserve documented exception types
+and messages where they are stated. Do not silently coerce an unsupported value merely to produce
+a result, and do not mutate caller-owned data unless the relevant API explicitly promises it.
+
+All filesystem, process, terminal, clock, randomness, and service interactions are forbidden unless
+the API guide explicitly includes that local behavior. Even for an API that models remote or async
+work, evaluation must remain bounded, deterministic, and disconnected from public networks.

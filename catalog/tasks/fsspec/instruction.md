@@ -13,6 +13,14 @@ local in-memory backend, `FSMap` exposes a filesystem as a mutable byte mapping,
 and the core helpers open files through protocol URLs. The package also includes
 deterministic path utilities and byte-range caches.
 
+## Natural Language Instruction
+
+Create the installable `fsspec` project from an empty `workspace/`. Implement
+the local filesystem abstraction, shared memory backend, mutable byte mapping,
+URL opening helpers, deterministic utilities, protocol registry, and byte-range
+caches described below. Keep remote backends and optional integrations out of
+the scored local contract; no API may use a live service as a fallback.
+
 ## Supports
 
 - Support CPython 3.10 and newer Python 3.x versions in the supported source
@@ -27,6 +35,31 @@ deterministic path utilities and byte-range caches.
 - Implement normal Python file-like and mapping protocols, preserve callback
   ordering where applicable, and raise ordinary documented exceptions rather
   than swallowing errors.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── pyproject.toml
+└── fsspec/
+    ├── __init__.py
+    ├── core.py
+    ├── spec.py
+    ├── registry.py
+    ├── mapping.py
+    ├── caching.py
+    ├── compression.py
+    ├── utils.py
+    ├── json.py
+    └── implementations/
+        ├── __init__.py
+        ├── memory.py
+        └── local.py
+```
+
+The root package exports the canonical objects listed in the API guide. Keep
+the memory and local implementations under `fsspec.implementations`; do not
+invent cloud credentials, service configuration, or external source trees.
 
 ## API Usage Guide
 
@@ -120,3 +153,39 @@ filesystem instance caching behavior, byte ranges, sorted path results, and
 standard exception types. Optional backends may be present as importable
 modules only when their imports fail gracefully without optional dependencies;
 the scored contract is the local, dependency-free surface described above.
+
+## Examples
+
+```python
+from fsspec.implementations.memory import MemoryFileSystem
+
+fs = MemoryFileSystem(skip_instance_cache=True)
+fs.pipe_file('/notes.txt', b'local bytes')
+fs.cat_file('/notes.txt')  # b'local bytes'
+```
+
+```python
+from fsspec.mapping import FSMap
+
+mapping = FSMap('/cache', fs, create=True)
+mapping['answer'] = b'42'
+bytes(mapping['answer'])  # b'42'
+```
+
+```python
+from fsspec.core import open as fs_open
+
+with fs_open('memory:///notes.txt', 'rb', fs=fs) as handle:
+    handle.read()  # b'local bytes'
+```
+
+## Error Handling and Boundary Conditions
+
+- Missing files raise `FileNotFoundError`; opening a directory raises
+  `IsADirectoryError`; creating an existing path raises `FileExistsError`.
+- URL and protocol helpers preserve normalized paths and deterministic ordering.
+  Unknown compression codecs raise `ValueError` rather than contacting a
+  registry or silently selecting a codec.
+- Cache fetchers use half-open byte ranges. Repeated reads return the same bytes
+  and update only documented cache state; no clock, randomness, or remote I/O is
+  required.

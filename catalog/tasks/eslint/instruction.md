@@ -1,4 +1,4 @@
-# Project Description
+## Project Description
 
 Create a distributable npm package named `eslint` at version `10.9.0`. The
 package implements a deterministic, flat-config JavaScript linting API that is
@@ -12,7 +12,73 @@ packs it, and installs that tarball into an isolated consumer before testing.
 Do not depend on network access, lifecycle scripts, globally installed modules,
 or paths outside the installed package.
 
-# Supports
+## Natural Language Instruction
+
+Create the CommonJS `eslint` package from an empty workspace. Implement the
+public `Linter`, `ESLint`, `SourceCode`, config, result, parser, and helper
+surfaces below, preserving diagnostics, locations, fixes, and export shape.
+
+## Supports or Environment Configuration
+
+- Use Node.js 24.19.0 and npm 11.17.0 on Linux amd64 with the exact package
+  version, exports, and v3 lockfile in `task.toml`.
+- Install the frozen dependency closure offline with lifecycle scripts disabled;
+  no global modules, reference checkout, or runtime network access.
+- Agent, candidate, verifier, Oracle, and controls run with no network access.
+
+## Project Directory Structure
+
+```text
+workspace/
+├── package.json
+├── package-lock.json
+├── index.js
+└── lib/
+    ├── api.js
+    ├── linter/linter.js
+    └── source-code/source-code.js
+```
+
+## API Usage Guide
+
+**Import paths:** load the main CommonJS API with `require("eslint")`, the
+flat-config helpers with `require("eslint/config")`, and the risk-scoped map
+with `require("eslint/use-at-your-own-risk")`. These are package subpaths,
+not filesystem paths, and must work after a clean `npm pack` installation.
+For source-level module terminology, `import eslint` refers to the package
+name only; the scored loader remains CommonJS `require("eslint")`.
+
+The API Usage Guide below is authoritative for every public class, method,
+configuration shape, parser option, result field, and error.
+
+## Implementation Notes
+
+Keep diagnostics deterministic for identical input. Autofix must preserve the
+documented output and remaining-message behavior.
+
+## Examples
+
+```js
+const {Linter} = require('eslint');
+const linter = new Linter();
+linter.verify('const x = 1;', {languageOptions: {ecmaVersion: 2022}});
+```
+
+```js
+linter.verifyAndFix('var x = 1;', config);
+```
+
+## Error Handling and Boundary Conditions
+
+```js
+linter.verify('', config, {filename: 'input.js'});
+```
+
+```js
+linter.verify('let =', config); // structured parse diagnostic
+```
+
+## Supports
 
 - Node.js 24.19.0 and npm 11.17.0 on Linux amd64 with glibc.
 - A regular CommonJS npm package with a v3 `package-lock.json`.
