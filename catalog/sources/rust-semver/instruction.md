@@ -1,14 +1,26 @@
-# Semantic Versioning Library - Complete Documentation
-
-## Introduction and Goals of the Semver Project
+## Project Description
 
 `semver` is a Rust library implementing Cargo's interpretation of Semantic
 Versioning. It parses and displays versions, compares release and pre-release
 identifiers, and evaluates version requirements such as `^1.2` or
-`>=1.0.0, <2.0.0`. The goal is a complete, deterministic library package, not a
-command-line imitation or a collection of hard-coded examples.
+`>=1.0.0, <2.0.0`. The target users are Rust applications that need a strict,
+deterministic version value and requirement matcher without a network service or
+external runtime state.
 
-## Natural Language Instruction (Prompt)
+The candidate must build a normal Cargo library crate named `semver`, with the
+public API available from the crate root (`use semver::{...}`). It must support
+strict parsing, canonical formatting, equality and ordering, requirement
+normalisation and matching, exact parse-error reporting, and compilation both
+with the default `std` feature and with `--no-default-features`.
+
+In scope are the root exports `Version`, `VersionReq`, `Comparator`, `Op`,
+`Prerelease`, `BuildMetadata`, and `Error`, their documented constructors and
+methods, their trait implementations, and the Cargo package shape described
+below. Out of scope are binaries, network clients, persistence, build-time
+downloads, generated files with absolute paths, candidate-side verifier code,
+and undocumented upstream internals. Do not add runtime dependencies.
+
+### Natural Language Instruction
 
 Please create a Rust library package named `semver` from an empty workspace.
 Implement the following public behaviour:
@@ -38,7 +50,7 @@ Do not copy upstream source or tests. Do not add network clients, binaries,
 build-time downloads, or generated files that depend on absolute paths. There
 are no runtime dependencies.
 
-## Environment Configuration
+## Supports
 
 ### Rust Version and Build Mode
 
@@ -49,7 +61,7 @@ Cargo network mode: offline
 Runtime dependencies: none
 ```
 
-### Core File Requirements
+### Project Directory Structure
 
 Start from this working package shape:
 
@@ -62,23 +74,36 @@ workspace/
 ```
 
 `src/lib.rs` is the library crate root. A directory of disconnected parser or
-module files without a crate root is incomplete. Run:
+module files without a crate root is incomplete. The package has no CLI entry
+point, service, runtime data directory, or verifier directory. The upstream
+source may contain a small `build.rs`; if you include it, it may only inspect
+the compiler for conditional configuration and must not fetch resources or
+write outside Cargo's declared build output.
+
+Run:
 
 ```bash
 cargo check --locked --offline
 cargo check --locked --offline --no-default-features
 ```
 
-## Semver Project Architecture
+### Environment and Package Boundary
 
 Internal module names are your choice. The public boundary is a normal Cargo
 library imported as `use semver::{...}`. The `std` feature is on by default;
 with `--no-default-features` the crate must still compile as `no_std`. No
-verifier file belongs in the candidate workspace.
+verifier file belongs in the candidate workspace. The package manager is Cargo;
+the dependency set is empty for this task. The agent, candidate, verifier,
+Oracle, and controls run with no network access: do not contact GitHub, crates.io,
+DNS, or another external service during setup, compilation, or execution.
 
 ## API Usage Guide
 
 ### Module Import
+
+The package import path is the crate-root module `semver`; in the validator's
+language-neutral notation this is `import semver`, and the Rust spelling is the
+`use semver::{...}` statement below.
 
 ```rust
 use semver::{BuildMetadata, Comparator, Error, Op, Prerelease, Version, VersionReq};
@@ -229,6 +254,41 @@ comparator, independently of `VersionReq`:
 "1.x" accepts 1.9.9 and rejects 2.0.0
 ```
 
+### Comparator and Op
+
+The crate-root `Comparator` type represents one requirement clause:
+
+```rust
+pub struct Comparator {
+    pub op: Op,
+    pub major: u64,
+    pub minor: Option<u64>,
+    pub patch: Option<u64>,
+    pub pre: Prerelease,
+}
+
+impl Comparator {
+    pub fn parse(text: &str) -> Result<Comparator, Error>;
+    pub fn matches(&self, version: &Version) -> bool;
+}
+```
+
+`Comparator::parse` accepts one exact, relational, tilde, caret, or wildcard
+clause such as `"=1.2.3"`, `">=1.2.3"`, `"^0.2"`, or `"1.x"`. The result
+retains wildcard components as `None`; it does not trim arbitrary characters or
+coerce malformed input. Empty clauses, unknown operators, missing numbers,
+invalid identifiers, and trailing characters return `Error`. Parsing is pure
+and has no filesystem or global-state effect. For an ordinary case,
+`Comparator::parse(">=1.2.3")?.matches(&Version::new(1, 2, 4))` is `true` and
+the same comparator rejects `1.2.2`. For an edge case, `Comparator::parse("1.x")`
+accepts `1.9.9` and rejects `2.0.0`.
+
+`Op` is a crate-root enum marked `#[non_exhaustive]` with variants `Exact`,
+`Greater`, `GreaterEq`, `Less`, `LessEq`, `Tilde`, `Caret`, and `Wildcard`.
+It derives `Copy`, `Clone`, `Eq`, `PartialEq`, `Hash`, and `Debug`. When several
+comparators are held by `VersionReq`, all must match; an impossible
+intersection returns `false` rather than panicking or inventing a version.
+
 ### Prerelease and BuildMetadata
 
 ```rust
@@ -316,3 +376,17 @@ The verifier calls the candidate through a separate Rust adapter and keeps all
 expected values in a distinct root-only checker, so hidden assertions are not
 part of the candidate workspace. Do not add a candidate-side test server, do not
 read verifier files, and do not attempt to influence grading output.
+
+Small public-spec examples to keep verifiable while implementing:
+
+```rust
+assert_eq!(Version::new(1, 2, 3).to_string(), "1.2.3");
+assert!(VersionReq::parse("^1.2")?.matches(&Version::new(1, 9, 0)));
+assert!(!VersionReq::parse("=1.2.3")?.matches(&Version::new(1, 2, 4)));
+assert!(Version::parse("1.0.0+build").is_ok());
+```
+
+These examples describe the public boundary only. Keep parsing deterministic,
+avoid unbounded input processing, preserve the documented distinction between
+`Ord` and `cmp_precedence`, and propagate malformed input as the documented
+`Error` rather than accepting a best-effort interpretation.

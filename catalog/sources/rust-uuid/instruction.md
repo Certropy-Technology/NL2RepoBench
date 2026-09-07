@@ -1,6 +1,6 @@
 # Anywhere UUID Library — Complete Documentation
 
-## Introduction and Goals of the uuid Project
+## Project Description
 
 `uuid` is a Rust library for the Universally Unique Identifier (UUID) types
 defined by RFC 9562 (formerly RFC 4122). It gives a program one owned,
@@ -16,7 +16,7 @@ be able to add the crate as a dependency, `use uuid::{Uuid, Builder, ...}`, and
 compile it without network access, without upstream sources, and without any
 test or verifier files being present in the workspace.
 
-## Natural Language Instruction (Prompt)
+## Natural Language Instruction
 
 Please create a Rust library package named `uuid` from an empty workspace that
 implements the public behaviour described below. The project should include:
@@ -55,7 +55,7 @@ add build scripts, binaries, examples, benchmarks, or fuzz targets. The frozen
 upstream revision is the behaviour reference; the contracts written below are
 the implementation target.
 
-## Environment Configuration
+## Supports
 
 ### Rust Version and Build Mode
 
@@ -150,7 +150,7 @@ else can be resolved: declaring any other dependency, a `[patch]` section, or a
 submission. `sha1_smol` must be declared exactly as above: `optional = true`
 and `default-features = false`, so the `no_std` profile never needs it.
 
-## Project Architecture
+## Project Directory Structure
 
 Internal file names are your choice, but the public boundary must look like
 this:
@@ -163,6 +163,35 @@ workspace/
     ├── lib.rs            # required crate root: types, constants, re-exports
     └── <internal>.rs     # optional parsing, formatting, builder, timestamp modules
 ```
+
+The agent creates this layout from an empty `workspace/` directory. `Cargo.toml`
+is the installation and library metadata entry point, `Cargo.lock` records the
+offline dependency resolution, and `src/lib.rs` is the required public crate
+root. The crate root must define or re-export every public name listed in the
+API guide; callers must not need to import private modules. Internal files may
+split parsing, formatting, builders, timestamps, errors, and macros into
+separate modules, but those files remain implementation details.
+
+There is no required binary or command-line entry point for this library. The
+harness performs Cargo setup and invokes the library through a separate bridge.
+The candidate must not require an upstream checkout, network access, generated
+reports, or verifier files. A valid implementation may use this more explicit
+internal layout, while preserving the same root exports:
+
+```text
+workspace/
+├── Cargo.toml              # package uuid, features, and sha1_smol dependency
+├── Cargo.lock              # locked offline resolution
+└── src/
+    ├── lib.rs              # Uuid, Builder, Timestamp, errors, root exports
+    ├── fmt.rs               # optional formatting wrappers and encoders
+    ├── builder.rs           # optional Builder and explicit layouts
+    ├── timestamp.rs         # optional Timestamp and ClockSequence support
+    └── error.rs             # optional parsing and conversion errors
+```
+
+The optional filenames above are examples, not additional required imports;
+only the crate-root paths and public names in the API guide are contractual.
 
 The library target is imported as `uuid` and must export, at the crate root:
 `Uuid`, `Bytes`, `Version`, `Variant`, `Builder`, `Error`, `NonNilUuid`,
