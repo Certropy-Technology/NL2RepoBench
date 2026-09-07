@@ -5,12 +5,13 @@ set -euo pipefail
 # Extracts frozen source archive and installs into /workspace
 
 EXPECTED_REVISION="0980eb52aa867fc32f70859a61c0609501b73a99"
-EXPECTED_SHA256="c43f9ad2ed38f168bb84666a70ac8c645b648eac1cab10b79438971af48f2290"
+EXPECTED_SHA256="fc240374ab920ec50c6b1512c1eaa38f3e99c97059c29617dda240caf083bdc1"
 
 echo "=== Oracle: Installing termcolor from frozen source ==="
 
 # The source archive should be bundled in the Oracle artifact
-SOURCE_ARCHIVE="/oracle/source-${EXPECTED_REVISION}.tar.gz"
+BUNDLE_DIR="$(cd "$(dirname "$0")" && pwd)"
+SOURCE_ARCHIVE="${BUNDLE_DIR}/source-${EXPECTED_REVISION}.tar.gz"
 
 if [ ! -f "$SOURCE_ARCHIVE" ]; then
     echo "ERROR: Source archive not found at $SOURCE_ARCHIVE"
@@ -35,19 +36,14 @@ trap "rm -rf '$TEMP_DIR'" EXIT
 cd "$TEMP_DIR"
 tar -xzf "$SOURCE_ARCHIVE"
 
-# The archive contains a single directory termcolor-<revision>
-SOURCE_DIR=$(find . -maxdepth 1 -type d -name "termcolor-*" | head -1)
-if [ -z "$SOURCE_DIR" ]; then
-    echo "ERROR: Could not find extracted source directory"
-    exit 1
-fi
-
+# The archive has no top-level directory prefix; contents are at the archive root
+SOURCE_DIR="$TEMP_DIR"
 echo "Extracted source to: $SOURCE_DIR"
 
 # Copy contents to /workspace (the package root should be at /workspace/)
 cd "$SOURCE_DIR"
 cp -r * /workspace/
-cp -r .* /workspace/ 2>/dev/null || true
+cp -r .[!.]* /workspace/ 2>/dev/null || true
 
 cd /workspace
 

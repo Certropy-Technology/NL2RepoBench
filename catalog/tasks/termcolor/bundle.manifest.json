@@ -1,9 +1,9 @@
 {
-  "canonical_manifest_digest": "sha256:81bc75adc0bf791ba17d600edf4364dcaa95bdc72a5495305f0996586c33c6f4",
+  "canonical_manifest_digest": "sha256:fce4430d681faeb1c591e0ff5d2b6a04316d02548b9a920c39f8782b8205d7c2",
   "files": [
     {
       "path": "README.md",
-      "sha256": "bda3cb5650d9decf0ddb91f21dd7993aacb57c4a85866331f65fbfa2fd8f05dd",
+      "sha256": "0bcd7cbced4f06d7bece603bac6304d49909072e242d8671d36c382b92cece70",
       "size_bytes": 514
     },
     {
@@ -58,8 +58,8 @@
     },
     {
       "path": "environment/candidate-requirements.lock.txt",
-      "sha256": "9ef2fd84a170d6ff079df4de6eac70a6178837eae14030115133c88663f4ab0c",
-      "size_bytes": 150
+      "sha256": "5a0f09d5bdebd78ce385385ec31937bdd72315cbf5fc728252bee821f983f3c2",
+      "size_bytes": 1142
     },
     {
       "path": "instruction.md",
@@ -68,17 +68,17 @@
     },
     {
       "path": "solution/solve.sh",
-      "sha256": "a2a78bcbe3fcf5a7f799fbb20eb7e7115a31cb61f3ade50ca5f31aa4f55febe9",
-      "size_bytes": 2536
+      "sha256": "88213e446e5210bfe40850076cbc630e3ee9dbc718308fe70168295589643f3d",
+      "size_bytes": 2360
     },
     {
-      "path": "solution/source.tar.gz",
-      "sha256": "c43f9ad2ed38f168bb84666a70ac8c645b648eac1cab10b79438971af48f2290",
-      "size_bytes": 14194
+      "path": "solution/source-0980eb52aa867fc32f70859a61c0609501b73a99.tar.gz",
+      "sha256": "fc240374ab920ec50c6b1512c1eaa38f3e99c97059c29617dda240caf083bdc1",
+      "size_bytes": 14063
     },
     {
       "path": "task.toml",
-      "sha256": "a8b055ca951fd23508bb4f3231d34a089f76210c2d83d1774547a1aabea2d45e",
+      "sha256": "cad2987a9a11f1c2d2dcfd761a8c267a1df0a9e482d45f8c862ddb9c7d668b57",
       "size_bytes": 1149
     },
     {
@@ -88,8 +88,8 @@
     },
     {
       "path": "tests/candidate-requirements.lock.txt",
-      "sha256": "9ef2fd84a170d6ff079df4de6eac70a6178837eae14030115133c88663f4ab0c",
-      "size_bytes": 150
+      "sha256": "5a0f09d5bdebd78ce385385ec31937bdd72315cbf5fc728252bee821f983f3c2",
+      "size_bytes": 1142
     },
     {
       "path": "tests/command-plan.json",
@@ -363,13 +363,13 @@
     },
     {
       "path": "tests/test.sh",
-      "sha256": "64f3168e162d9d22e1e33655af5740de88074587baa92e0f23a6070e391e8c21",
-      "size_bytes": 2240
+      "sha256": "651252b50e8614bf2b670ba6d97cd0bfceb0b34d78ce8924ab28cf68ca448e12",
+      "size_bytes": 2331
     },
     {
       "path": "tests/verifier/run.py",
-      "sha256": "d134b772700b555706fb078b3b276de4a677698e77f512fd3fab8553cdad9496",
-      "size_bytes": 17067
+      "sha256": "cd4cebe4c6f2d8ce20028e54a44e5643e28a02bac71c734514f3e115e3381897",
+      "size_bytes": 16972
     }
   ],
   "mode": "production",

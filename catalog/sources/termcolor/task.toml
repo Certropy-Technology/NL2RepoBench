@@ -37,7 +37,7 @@ reason = "The hatchling build backend (hatchling, hatch-vcs) is preinstalled int
 status = "known"
 installer = "pip"
 packages = []
-lock_artifact = { digest = "sha256:9ef2fd84a170d6ff079df4de6eac70a6178837eae14030115133c88663f4ab0c", size_bytes = 150, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:9ef2fd84a170d6ff079df4de6eac70a6178837eae14030115133c88663f4ab0c", visibility = "private" }
+lock_artifact = { digest = "sha256:5a0f09d5bdebd78ce385385ec31937bdd72315cbf5fc728252bee821f983f3c2", size_bytes = 1142, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:5a0f09d5bdebd78ce385385ec31937bdd72315cbf5fc728252bee821f983f3c2", visibility = "private" }
 
 [tests]
 framework = "pytest"
@@ -56,7 +56,8 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 [verifier]
 protocol = "custom-json-v1"
 entrypoint = "run.py"
-bundle = { digest = "sha256:de2cb7d1545d509056f66043a825876b55c6dedb52a63a26d4175c8c6743fff5", size_bytes = 2582, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:de2cb7d1545d509056f66043a825876b55c6dedb52a63a26d4175c8c6743fff5", visibility = "private" }
+bundle = { digest = "sha256:31aab016eab2a4aefbffb7f55b427dd215531726707fd9d07f403a25bb954f2b", size_bytes = 2576, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:31aab016eab2a4aefbffb7f55b427dd215531726707fd9d07f403a25bb954f2b", visibility = "private" }
+environment = { SETUPTOOLS_SCM_PRETEND_VERSION = "3.3.0" }
 
 [harbor]
 description = "Build a Python ANSI color formatting library with terminal detection and environment variable support."
@@ -73,12 +74,13 @@ storage_mb = 4096
 workspace_artifact = "/workspace"
 
 [oracle_bundle]
-digest = "sha256:bda37dfd3d13a67600b4f38fa19af8e99e66d6de06a9e2fdec8257645fee3d4e"
-size_bytes = 15649
+digest = "sha256:d2509e923d2732c53760499a577dd9f6b6e8ce8c9623d7a68ecac2bbfe370a3a"
+size_bytes = 15565
 media_type = "application/vnd.nl2repobench.private-bundle+tar"
-uri = "artifact://private/sha256:bda37dfd3d13a67600b4f38fa19af8e99e66d6de06a9e2fdec8257645fee3d4e"
+uri = "artifact://private/sha256:d2509e923d2732c53760499a577dd9f6b6e8ce8c9623d7a68ecac2bbfe370a3a"
 visibility = "private"
 
 [lifecycle]
-status = "packaged"
-reason = "Source frozen, instruction authored, verifier rewritten to custom-json-v1 contract with 85 test scenarios, artifacts registered in CAS. Ready for compilation and Oracle/controls execution."
+status = "controls-passed"
+owner = "python-wave2-parent-termcolor"
+reason = "Oracle 85/85 reward 1.0. Controls: empty 0.0(0), stub 0.071(85), forgery 0.153(85), install-failure 0.0(85), panic 0.0(85), oversized-output 0.059(85), background-process 0.118(85); all valid. hang excluded by owner decision (not a gate). offline verified via oracle network.json."

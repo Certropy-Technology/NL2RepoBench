@@ -242,7 +242,7 @@ CASES: list[tuple[str, str, object]] = [
     (
         "reset-constant",
         'from termcolor import RESET\nresult = RESET',
-        {"ok": True, "value": "\\033[0m"},
+        {"ok": True, "value": "\033[0m"},
     ),
     # can_colorize function
     (
@@ -264,100 +264,100 @@ CASES: list[tuple[str, str, object]] = [
     (
         "colored-red",
         'from termcolor import colored\nresult = colored("text", "red", force_color=True)',
-        {"ok": True, "value": "\\033[31mtext\\033[0m"},
+        {"ok": True, "value": "\033[31mtext\033[0m"},
     ),
     (
         "colored-green",
         'from termcolor import colored\nresult = colored("text", "green", force_color=True)',
-        {"ok": True, "value": "\\033[32mtext\\033[0m"},
+        {"ok": True, "value": "\033[32mtext\033[0m"},
     ),
     (
         "colored-blue",
         'from termcolor import colored\nresult = colored("text", "blue", force_color=True)',
-        {"ok": True, "value": "\\033[34mtext\\033[0m"},
+        {"ok": True, "value": "\033[34mtext\033[0m"},
     ),
     (
         "colored-yellow",
         'from termcolor import colored\nresult = colored("text", "yellow", force_color=True)',
-        {"ok": True, "value": "\\033[33mtext\\033[0m"},
+        {"ok": True, "value": "\033[33mtext\033[0m"},
     ),
     (
         "colored-black",
         'from termcolor import colored\nresult = colored("text", "black", force_color=True)',
-        {"ok": True, "value": "\\033[30mtext\\033[0m"},
+        {"ok": True, "value": "\033[30mtext\033[0m"},
     ),
     (
         "colored-magenta",
         'from termcolor import colored\nresult = colored("text", "magenta", force_color=True)',
-        {"ok": True, "value": "\\033[35mtext\\033[0m"},
+        {"ok": True, "value": "\033[35mtext\033[0m"},
     ),
     (
         "colored-cyan",
         'from termcolor import colored\nresult = colored("text", "cyan", force_color=True)',
-        {"ok": True, "value": "\\033[36mtext\\033[0m"},
+        {"ok": True, "value": "\033[36mtext\033[0m"},
     ),
     (
         "colored-white",
         'from termcolor import colored\nresult = colored("text", "white", force_color=True)',
-        {"ok": True, "value": "\\033[97mtext\\033[0m"},
+        {"ok": True, "value": "\033[97mtext\033[0m"},
     ),
     (
         "colored-light-colors",
         'from termcolor import colored\nresult = colored("text", "light_blue", force_color=True)',
-        {"ok": True, "value": "\\033[94mtext\\033[0m"},
+        {"ok": True, "value": "\033[94mtext\033[0m"},
     ),
     # colored function - backgrounds
     (
         "colored-on-red",
         'from termcolor import colored\nresult = colored("text", on_color="on_red", force_color=True)',
-        {"ok": True, "value": "\\033[41mtext\\033[0m"},
+        {"ok": True, "value": "\033[41mtext\033[0m"},
     ),
     (
         "colored-on-green",
         'from termcolor import colored\nresult = colored("text", on_color="on_green", force_color=True)',
-        {"ok": True, "value": "\\033[42mtext\\033[0m"},
+        {"ok": True, "value": "\033[42mtext\033[0m"},
     ),
     (
         "colored-on-blue",
         'from termcolor import colored\nresult = colored("text", on_color="on_blue", force_color=True)',
-        {"ok": True, "value": "\\033[44mtext\\033[0m"},
+        {"ok": True, "value": "\033[44mtext\033[0m"},
     ),
     # colored function - attributes
     (
         "colored-bold",
         'from termcolor import colored\nresult = colored("text", attrs=["bold"], force_color=True)',
-        {"ok": True, "value": "\\033[1mtext\\033[0m"},
+        {"ok": True, "value": "\033[1mtext\033[0m"},
     ),
     (
         "colored-underline",
         'from termcolor import colored\nresult = colored("text", attrs=["underline"], force_color=True)',
-        {"ok": True, "value": "\\033[4mtext\\033[0m"},
+        {"ok": True, "value": "\033[4mtext\033[0m"},
     ),
     (
         "colored-italic",
         'from termcolor import colored\nresult = colored("text", attrs=["italic"], force_color=True)',
-        {"ok": True, "value": "\\033[3mtext\\033[0m"},
+        {"ok": True, "value": "\033[3mtext\033[0m"},
     ),
     # colored function - RGB tuples
     (
         "colored-rgb-foreground",
         'from termcolor import colored\nresult = colored("text", color=(255, 100, 50), force_color=True)',
-        {"ok": True, "value": "\\033[38;2;255;100;50mtext\\033[0m"},
+        {"ok": True, "value": "\033[38;2;255;100;50mtext\033[0m"},
     ),
     (
         "colored-rgb-background",
         'from termcolor import colored\nresult = colored("text", on_color=(50, 60, 70), force_color=True)',
-        {"ok": True, "value": "\\033[48;2;50;60;70mtext\\033[0m"},
+        {"ok": True, "value": "\033[48;2;50;60;70mtext\033[0m"},
     ),
     # colored function - combinations
     (
         "colored-color-and-background",
-        'from termcolor import colored\nr = colored("text", "red", "on_blue", force_color=True)\nresult = ("\\\\033[31m" in r, "\\\\033[44m" in r, r.endswith("\\\\033[0m"))',
+        'from termcolor import colored\nr = colored("text", "red", "on_blue", force_color=True)\nresult = ("\033[31m" in r, "\033[44m" in r, r.endswith("\033[0m"))',
         {"ok": True, "value": [True, True, True]},
     ),
     (
         "colored-multiple-attrs",
-        'from termcolor import colored\nr = colored("text", attrs=["bold", "underline"], force_color=True)\nresult = ("\\\\033[1m" in r, "\\\\033[4m" in r)',
+        'from termcolor import colored\nr = colored("text", attrs=["bold", "underline"], force_color=True)\nresult = ("\033[1m" in r, "\033[4m" in r)',
         {"ok": True, "value": [True, True]},
     ),
     # colored function - no_color override
@@ -370,22 +370,22 @@ CASES: list[tuple[str, str, object]] = [
     (
         "colored-empty-string",
         'from termcolor import colored\nresult = colored("", "red", force_color=True)',
-        {"ok": True, "value": "\\033[31m\\033[0m"},
+        {"ok": True, "value": "\033[31m\033[0m"},
     ),
     (
         "colored-none-color",
         'from termcolor import colored\nresult = colored("text", force_color=True)',
-        {"ok": True, "value": "text\\033[0m"},
+        {"ok": True, "value": "text\033[0m"},
     ),
     (
         "colored-empty-attrs",
         'from termcolor import colored\nresult = colored("text", "red", attrs=[], force_color=True)',
-        {"ok": True, "value": "\\033[31mtext\\033[0m"},
+        {"ok": True, "value": "\033[31mtext\033[0m"},
     ),
     # colored function - type conversion
     (
         "colored-integer-input",
-        'from termcolor import colored\nr = colored(42, "blue", force_color=True)\nresult = ("42" in r, r.startswith("\\\\033[34m"))',
+        'from termcolor import colored\nr = colored(42, "blue", force_color=True)\nresult = ("42" in r, r.startswith("\033[34m"))',
         {"ok": True, "value": [True, True]},
     ),
     (
@@ -397,43 +397,43 @@ CASES: list[tuple[str, str, object]] = [
     (
         "colored-strike",
         'from termcolor import colored\nresult = colored("text", attrs=["strike"], force_color=True)',
-        {"ok": True, "value": "\\033[9mtext\\033[0m"},
+        {"ok": True, "value": "\033[9mtext\033[0m"},
     ),
     (
         "colored-blink",
         'from termcolor import colored\nresult = colored("text", attrs=["blink"], force_color=True)',
-        {"ok": True, "value": "\\033[5mtext\\033[0m"},
+        {"ok": True, "value": "\033[5mtext\033[0m"},
     ),
     (
         "colored-concealed",
         'from termcolor import colored\nresult = colored("text", attrs=["concealed"], force_color=True)',
-        {"ok": True, "value": "\\033[8mtext\\033[0m"},
+        {"ok": True, "value": "\033[8mtext\033[0m"},
     ),
     (
         "colored-dark",
         'from termcolor import colored\nresult = colored("text", attrs=["dark"], force_color=True)',
-        {"ok": True, "value": "\\033[2mtext\\033[0m"},
+        {"ok": True, "value": "\033[2mtext\033[0m"},
     ),
     (
         "colored-reverse",
         'from termcolor import colored\nresult = colored("text", attrs=["reverse"], force_color=True)',
-        {"ok": True, "value": "\\033[7mtext\\033[0m"},
+        {"ok": True, "value": "\033[7mtext\033[0m"},
     ),
     # colored function - more light colors
     (
         "colored-light-red",
         'from termcolor import colored\nresult = colored("text", "light_red", force_color=True)',
-        {"ok": True, "value": "\\033[91mtext\\033[0m"},
+        {"ok": True, "value": "\033[91mtext\033[0m"},
     ),
     (
         "colored-light-green",
         'from termcolor import colored\nresult = colored("text", "light_green", force_color=True)',
-        {"ok": True, "value": "\\033[92mtext\\033[0m"},
+        {"ok": True, "value": "\033[92mtext\033[0m"},
     ),
     (
         "colored-grey-alias",
         'from termcolor import colored\nresult = colored("text", "grey", force_color=True)',
-        {"ok": True, "value": "\\033[30mtext\\033[0m"},
+        {"ok": True, "value": "\033[30mtext\033[0m"},
     ),
     # cprint function
     (
@@ -445,22 +445,22 @@ CASES: list[tuple[str, str, object]] = [
     (
         "colored-rgb-zeros",
         'from termcolor import colored\nresult = colored("text", color=(0, 0, 0), force_color=True)',
-        {"ok": True, "value": "\\033[38;2;0;0;0mtext\\033[0m"},
+        {"ok": True, "value": "\033[38;2;0;0;0mtext\033[0m"},
     ),
     (
         "colored-rgb-max",
         'from termcolor import colored\nresult = colored("text", color=(255, 255, 255), force_color=True)',
-        {"ok": True, "value": "\\033[38;2;255;255;255mtext\\033[0m"},
+        {"ok": True, "value": "\033[38;2;255;255;255mtext\033[0m"},
     ),
     # Additional RGB and combination tests
     (
         "colored-rgb-mid-range",
         'from termcolor import colored\nresult = colored("text", color=(128, 128, 128), force_color=True)',
-        {"ok": True, "value": "\\033[38;2;128;128;128mtext\\033[0m"},
+        {"ok": True, "value": "\033[38;2;128;128;128mtext\033[0m"},
     ),
     (
         "colored-all-features-combined",
-        'from termcolor import colored\nr = colored("test", "red", "on_blue", ["bold", "underline"], force_color=True)\nresult = ("\\\\033[31m" in r, "\\\\033[44m" in r, "\\\\033[1m" in r, "\\\\033[4m" in r, r.endswith("\\\\033[0m"))',
+        'from termcolor import colored\nr = colored("test", "red", "on_blue", ["bold", "underline"], force_color=True)\nresult = ("\033[31m" in r, "\033[44m" in r, "\033[1m" in r, "\033[4m" in r, r.endswith("\033[0m"))',
         {"ok": True, "value": [True, True, True, True, True]},
     ),
 ]

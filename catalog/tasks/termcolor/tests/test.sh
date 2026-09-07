@@ -3,7 +3,7 @@ set -uo pipefail
 rm -rf /tmp/candidate /tmp/candidate-build /tmp/candidate-site
 mkdir -p /logs/verifier /tmp/trusted-results /tmp/candidate-site
 chmod 0700 /logs/verifier /tmp/trusted-results
-
+export SETUPTOOLS_SCM_PRETEND_VERSION=3.3.0
 export NL2REPO_CANDIDATE_DEPENDENCIES=/opt/candidate-dependencies/site
 export NL2REPO_CANDIDATE_DEPENDENCY_BIN=/opt/candidate-dependencies/bin
 python -I -m nl2repobench.verification.network_check   --output /logs/verifier/network.json
@@ -17,7 +17,7 @@ if [[ "$?" -ne 0 ]]; then
   exit 0
 fi
 chown -R candidate:candidate /tmp/candidate /tmp/candidate-site
-python -I -B -m nl2repobench.verification.candidate_install   --source /tmp/candidate --target /tmp/candidate-site   --timeout-sec 30.0   --address-space-bytes 1073741824   --cflags '-O0 -g0'      --status /logs/verifier/candidate-install.json
+python -I -B -m nl2repobench.verification.candidate_install   --source /tmp/candidate --target /tmp/candidate-site   --timeout-sec 30.0   --address-space-bytes 1073741824   --cflags '-O0 -g0'   --build-env SETUPTOOLS_SCM_PRETEND_VERSION=3.3.0   --status /logs/verifier/candidate-install.json
 if [[ "$?" -ne 0 ]]; then
   python -I -m nl2repobench.verification.cli     --expected 85 --runtime python --metric-contract fixed-test-pass-rate-v1     --reason candidate-installation-failed
   exit 0
