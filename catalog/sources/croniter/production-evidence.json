@@ -1,5 +1,10 @@
 {
   "controls": {
+    "background-process": {
+      "collected": 0,
+      "reward": 0.0,
+      "valid": true
+    },
     "empty": {
       "collected": 0,
       "reward": 0.0,
@@ -15,6 +20,11 @@
       "reward": 0.0,
       "valid": true
     },
+    "oversized-output": {
+      "collected": 0,
+      "reward": 0.0,
+      "valid": true
+    },
     "panic": {
       "collected": 0,
       "reward": 0.0,
@@ -22,11 +32,18 @@
     },
     "stub": {
       "collected": 15,
-      "reward": 0.133,
+      "reward": 0.13333333333333333,
       "valid": true
     }
   },
+  "controls_notes": {
+    "hang": "trial cancelled by agent budget; no grading emitted; candidate hang burns own budget, verifier unaffected"
+  },
   "evidence_files": [
+    {
+      "path": "evidence/gates-20260907/control-background-process-grading.json",
+      "sha256": "sha256:887b9680e4680f733abdbbcec54cafa6e45845a03cc4ddce557f6a36aefbb4ef"
+    },
     {
       "path": "evidence/gates-20260907/control-empty-grading.json",
       "sha256": "sha256:887b9680e4680f733abdbbcec54cafa6e45845a03cc4ddce557f6a36aefbb4ef"
@@ -37,6 +54,10 @@
     },
     {
       "path": "evidence/gates-20260907/control-install-failure-grading.json",
+      "sha256": "sha256:887b9680e4680f733abdbbcec54cafa6e45845a03cc4ddce557f6a36aefbb4ef"
+    },
+    {
+      "path": "evidence/gates-20260907/control-oversized-output-grading.json",
       "sha256": "sha256:887b9680e4680f733abdbbcec54cafa6e45845a03cc4ddce557f6a36aefbb4ef"
     },
     {
@@ -57,6 +78,7 @@
     }
   ],
   "license_spdx": "MIT",
+  "offline": "oracle network.json public_network_available=false",
   "oracle": {
     "collected": 15,
     "reward": 1.0,

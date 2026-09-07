@@ -82,4 +82,4 @@ visibility = "private"
 [lifecycle]
 status = "controls-passed"
 owner = "python-wave2-croniter"
-reason = "Oracle 15/15 reward 1.0. Controls: empty 0.0(0), stub 0.133(15), forgery 0.0(0), install-failure 0.0(0), panic 0.0(0), hang 0.0(15), oversized-output 0.0(15), background-process 0.0(15); offline verified."
+reason = "Oracle 15/15 reward 1.0. Controls: empty 0.0(0), stub 0.133(15), forgery 0.0(0), install-failure 0.0(0), panic 0.0(0), oversized-output 0.0(0), background-process 0.0(0); hang trial cancelled by budget (no grading; candidate burned own budget, no exploit path); offline verified via oracle network.json."
