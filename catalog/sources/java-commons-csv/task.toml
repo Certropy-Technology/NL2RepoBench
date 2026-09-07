@@ -1,0 +1,119 @@
+schema_version = "1.0"
+task_id = "java-commons-csv"
+version = "1.3.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "easy"
+category = "java-library"
+tags = ["java", "maven", "commons-csv", "csv", "parser"]
+language = "java"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/apache/commons-csv"
+revision = "5b99c860986a87f9da664bf47a3a7c0026673123"
+license_spdx = "Apache-2.0"
+source_digest = "sha256:a1c7ff981e195c01797f44a3bf87db07f9759ec803f1c76abdff6462411c7c37"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "nl2repobench/java-runtime@sha256:9f4180fc607186b2cdc958049cd1f230d3cbf5a887eeb5106253a4287260e3ef"
+base_image_digest = "sha256:9f4180fc607186b2cdc958049cd1f230d3cbf5a887eeb5106253a4287260e3ef"
+network_mode = "no-network"
+
+[environment.runtime]
+language = "java"
+runtime = "jdk"
+version = "temurin-21.0.12+8"
+package_manager = "maven"
+package_manager_version = "3.9.11"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "The candidate and verifier use a private empty Maven closure; only the trusted Oracle fetches the pinned source revision."
+
+[dependencies]
+status = "known"
+package_manager = "maven"
+packages = []
+
+[dependencies.lock]
+digest = "sha256:504e9112c6eb63830825505e945155fefa7e43e47774cdbccba627c3e84b2524"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:504e9112c6eb63830825505e945155fefa7e43e47774cdbccba627c3e84b2524"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:84ff92691f909a05b224e1c56abb4864f01b4f8e3c854e4bb4c7baf1d3f6d652"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:de8c81a2d5131ca4b4f75b0471f2db041371644cff2948d4a5c800bf92e73abb"
+size_bytes = 978
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:de8c81a2d5131ca4b4f75b0471f2db041371644cff2948d4a5c800bf92e73abb"
+visibility = "private"
+
+[tests]
+framework = "junit-platform"
+report_format = "junit-open-test-report-xml-v1"
+expected_total = 4
+expected_total_source = "frozen-collection"
+commands = ["mvn --offline validate", "javac verifier-owned contract"]
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.sh"
+contract_sha256 = "sha256:38e606c41fa94f9a9994abb65131e58d9562d8684d39967f7b5811d17b83d7cb"
+
+[verifier.bundle]
+digest = "sha256:171083f5625a73ff0d65817847e061cc5a5c8e7ba2acf96a055c53e17d9ad50f"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.verifier+tar"
+uri = "artifact://private/sha256:171083f5625a73ff0d65817847e061cc5a5c8e7ba2acf96a055c53e17d9ad50f"
+visibility = "private"
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Recreate Apache Commons CSV parsing, field access, and default formatting behavior."
+keywords = ["java", "maven", "commons-csv", "csv", "parser"]
+agent_timeout_sec = 1200.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "piloted"
+owner = "java-maven-authoring-20260902"
+reason = "Immutable source freeze, offline Maven closure, separate verifier, Oracle, six controls, no-network replay, independent spec/security review, and bounded Sol/Opus model pilot evidence passed; release remains pilot-only pending publication approval."
+
+[oracle_bundle]
+digest = "sha256:8441510ad623e42838efa861918997eef3aaec502bb3d4173d1aa02a87c31c72"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:8441510ad623e42838efa861918997eef3aaec502bb3d4173d1aa02a87c31c72"
+visibility = "private"

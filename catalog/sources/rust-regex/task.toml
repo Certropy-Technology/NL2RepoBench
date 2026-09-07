@@ -1,0 +1,59 @@
+schema_version = "1.0"
+task_id = "rust-regex"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "rust-regex-engine"
+tags = ["rust", "cargo", "regex", "automata", "unicode", "captures", "replace"]
+language = "rust"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/rust-lang/regex"
+revision = "7c28ee4dc4aef53571c96757f4825c51ac0c3d44"
+license_spdx = "MIT OR Apache-2.0"
+source_digest = "sha256:e7d7355ac15b772b23be856ebd317b99f1a5b8c943f91911becbb1cea2c145ae"
+submodules = []
+
+[environment]
+status = "known"
+runtime_version = "1.97.1"
+os_name = "debian-12-amd64"
+base_image = "docker.io/library/rust@sha256:2775a09d208ff0d7c1f50490c45b62db929e87ba1dcbc3f2132ac71a704bcdd3"
+base_image_digest = "sha256:2775a09d208ff0d7c1f50490c45b62db929e87ba1dcbc3f2132ac71a704bcdd3"
+system_packages = ["build-essential"]
+build_command = "cargo build --all-targets --locked --offline"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "missing"
+reference_source_fetch = "forbidden"
+reason = "The source freeze is complete. A production-safe Cargo closure and task-local verifier bundle must be created before compilation, but the required closure is structurally unauthorable in this lane (see [lifecycle] reason and evidence/remediation.log)."
+
+[dependencies]
+status = "unknown"
+installer = "cargo"
+packages = ["regex-automata 0.4.16 (non-optional engine: the substance to reimplement, so it must NOT be in the candidate closure)", "regex-syntax 0.8.11 (non-optional parser/HIR with committed generated Unicode tables)", "aho-corasick + memchr (optional, gated behind regex features)"]
+
+[tests]
+framework = "cargo"
+expected_total = 0
+expected_total_source = "unknown"
+commands = ["cargo build --all-targets --locked --offline (authoring baseline only; NOT RUN because the reference engine cannot be supplied without contaminating the candidate)"]
+protected_paths = []
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[lifecycle]
+status = "blocked"
+owner = "rust-cargo-wave3-rust-regex"
+reason = "Source freeze is healthy (regex 1.13.1 revision 7c28ee4dc4aef53571c96757f4825c51ac0c3d44; archive and MIT/Apache license digests captured in evidence/). But regex cannot be authored as a from-scratch rebuild in the Rust/Cargo production lane: the reference requires the non-optional regex-automata and regex-syntax crates just to compile (cargo check --offline fails with 'no matching package named regex-automata', evidence/remediation.log STEP 3), and regex-syntax additionally ships committed machine-generated Unicode Character Database tables. Because this lane materialises ONE shared offline Cargo closure (environment/cargo-bundle copied verbatim into the verifier image and reused to resolve a candidate's dependencies), supplying those crates for the Oracle build also hands the candidate the entire matching engine and parser, reducing the task to a `pub use` facade over upstream regex and shipping generated reference data. Unlike aho-corasick (whose only mandatory dep is the leaf primitive memchr) or smallvec (std-only), the substitution cannot be narrowed away: removing the unicode feature does not remove the mandatory engine crates. Unblocking requires a parent-owned runtime capability (reference-only engine closure absent from the candidate plus a candidate-safe way to provide generated Unicode tables), which is out of this writer's scope. No Harbor runtime, Oracle, controls, reward, or production validity is claimed."
+approval_refs = []

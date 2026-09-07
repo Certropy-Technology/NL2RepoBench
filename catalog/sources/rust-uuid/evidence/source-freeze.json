@@ -1,0 +1,34 @@
+{
+  "archive_command": "git init && git remote add origin <url> && git fetch --depth 1 origin <revision> && git archive --format=tar --prefix=uuid/ FETCH_HEAD",
+  "build_script": {
+    "note": "no build.rs and no [build-dependencies] in the published package (include = src, README, licences); rng/, tests/, examples/ and fuzz/ are separate workspace crates the Oracle never installs",
+    "present": false
+  },
+  "crate_version": "1.26.0",
+  "instruction_sha256": "sha256:cd563ffecc28561b97e22997f969967a29fac23ed42d5bc62da939cfc34bb429",
+  "license_files": [
+    {
+      "path": "LICENSE-MIT",
+      "sha256": "sha256:436bc5a105d8e57dcd8778730f3754f7bf39c14d2f530e4cde4bd2d17a83ec3d",
+      "size_bytes": 1157
+    },
+    {
+      "path": "LICENSE-APACHE",
+      "sha256": "sha256:a60eea817514531668d7e00765731449fe14d059d3249e0bc93b36de45f759f2",
+      "size_bytes": 10847
+    },
+    {
+      "path": "COPYRIGHT",
+      "sha256": "sha256:b4b2c0de2a05de3372d5c828128413ce82bb7dba2272487b7729f09cc3d3519d",
+      "size_bytes": 432
+    }
+  ],
+  "license_spdx": "Apache-2.0 OR MIT",
+  "revision": "cdc96a87bddc38d0eb8f894c764e151d2299b4b3",
+  "source_digest": "sha256:38fe6ae37eee2f679a0490224c2bf413703dc7877ce35cc0bf11f2999d412590",
+  "source_size_bytes": 450560,
+  "tag": "v1.26.0",
+  "tag_peel": "refs/tags/v1.26.0 resolves directly to the frozen commit (lightweight tag: v1.26.0^{} returns no peeled object)",
+  "task_id": "rust-uuid",
+  "upstream_url": "https://github.com/uuid-rs/uuid"
+}

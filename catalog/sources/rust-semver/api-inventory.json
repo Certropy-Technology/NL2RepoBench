@@ -1,0 +1,169 @@
+{
+  "excluded": [
+    "serde integration feature",
+    "build.rs internal cfg probe",
+    "upstream tests/node JavaScript cross-check harness",
+    "documentation-only metadata"
+  ],
+  "notes": "Error exposes no Clone/Eq/Hash and Op is non_exhaustive; both were corrected after compiling against the frozen revision.",
+  "public_items": [
+    {
+      "functions": [
+        "new",
+        "parse",
+        "cmp_precedence"
+      ],
+      "kind": "struct",
+      "members": [
+        "major",
+        "minor",
+        "patch",
+        "pre",
+        "build"
+      ],
+      "path": "semver::Version",
+      "traits": [
+        "Clone",
+        "Eq",
+        "PartialEq",
+        "Ord",
+        "PartialOrd",
+        "Hash",
+        "Debug",
+        "Display",
+        "FromStr"
+      ]
+    },
+    {
+      "consts": [
+        "STAR"
+      ],
+      "functions": [
+        "parse",
+        "matches"
+      ],
+      "kind": "struct",
+      "members": [
+        "comparators"
+      ],
+      "path": "semver::VersionReq",
+      "traits": [
+        "Clone",
+        "Eq",
+        "PartialEq",
+        "Hash",
+        "Debug",
+        "Display",
+        "Default"
+      ]
+    },
+    {
+      "functions": [
+        "parse",
+        "matches"
+      ],
+      "kind": "struct",
+      "members": [
+        "op",
+        "major",
+        "minor",
+        "patch",
+        "pre"
+      ],
+      "path": "semver::Comparator",
+      "traits": [
+        "Clone",
+        "Eq",
+        "PartialEq",
+        "Hash",
+        "Debug",
+        "Display"
+      ]
+    },
+    {
+      "kind": "enum",
+      "non_exhaustive": true,
+      "path": "semver::Op",
+      "traits": [
+        "Copy",
+        "Clone",
+        "Eq",
+        "PartialEq",
+        "Hash",
+        "Debug"
+      ],
+      "variants": [
+        "Exact",
+        "Greater",
+        "GreaterEq",
+        "Less",
+        "LessEq",
+        "Tilde",
+        "Caret",
+        "Wildcard"
+      ]
+    },
+    {
+      "consts": [
+        "EMPTY"
+      ],
+      "functions": [
+        "new",
+        "as_str",
+        "is_empty"
+      ],
+      "kind": "struct",
+      "path": "semver::Prerelease",
+      "traits": [
+        "Default",
+        "Clone",
+        "Eq",
+        "PartialEq",
+        "Hash",
+        "Ord",
+        "PartialOrd",
+        "Debug",
+        "Display"
+      ]
+    },
+    {
+      "consts": [
+        "EMPTY"
+      ],
+      "functions": [
+        "new",
+        "as_str",
+        "is_empty"
+      ],
+      "kind": "struct",
+      "path": "semver::BuildMetadata",
+      "traits": [
+        "Default",
+        "Clone",
+        "Eq",
+        "PartialEq",
+        "Hash",
+        "PartialOrd",
+        "Debug",
+        "Display"
+      ]
+    },
+    {
+      "kind": "struct",
+      "not_implemented": [
+        "Clone",
+        "Eq",
+        "Hash"
+      ],
+      "path": "semver::Error",
+      "traits": [
+        "Debug",
+        "Display",
+        "std::error::Error (std feature only)"
+      ]
+    }
+  ],
+  "revision": "6ed8561154715b2c34df417a2052597d586f2c43",
+  "schema_version": "1.0",
+  "task_id": "rust-semver"
+}

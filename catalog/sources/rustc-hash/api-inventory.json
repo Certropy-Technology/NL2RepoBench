@@ -1,0 +1,8 @@
+{
+  "schema_version": "1.0",
+  "task_id": "rustc-hash",
+  "public_types": ["FxHasher", "FxBuildHasher", "FxSeededState", "FxHashMap", "FxHashSet", "FxHashMapSeed", "FxHashSetSeed"],
+  "public_methods": ["FxHasher::default", "FxHasher::with_seed", "FxSeededState::with_seed", "BuildHasher::build_hasher", "Hasher::finish", "Hasher::write"],
+  "excluded": ["rand feature and FxRandomState", "nightly-only Hasher extensions"],
+  "adapter_boundary": "Candidate adapter runs in a separate process; hidden checker receives only bounded operation results."
+}

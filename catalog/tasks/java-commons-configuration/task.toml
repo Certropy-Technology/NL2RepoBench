@@ -1,0 +1,53 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/java-commons-configuration"
+version = "0.2.0"
+description = "Recreate the bounded public ConfigurationException behavior of Apache Commons Configuration."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "java",
+    "maven",
+    "commons-configuration",
+    "exception",
+    "offline",
+]
+
+[metadata]
+difficulty = "easy"
+category = "java-library"
+tags = [
+    "java",
+    "maven",
+    "commons-configuration",
+    "exception",
+    "offline",
+]
+language = "java"
+runtime = "jdk"
+runtime_version = "temurin-21.0.12+8"
+package_manager = "maven"
+package_manager_version = "3.9.11"
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 8
+canonical_manifest_digest = "sha256:7f075cf15ffe1fa244b6978f2b5f77c884d024916f2b2d3b0e785edf0dfd6a75"
+toolchain_lock_digest = "sha256:d2f9d182875c4f98dd3625d6fd280894104006b6e64611e68ce67e7a74605517"
+
+[agent]
+timeout_sec = 1200.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[environment]
+network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096

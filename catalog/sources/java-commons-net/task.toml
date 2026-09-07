@@ -1,0 +1,119 @@
+schema_version = "1.0"
+task_id = "java-commons-net"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "java-library"
+tags = ["java", "maven", "commons-net", "subnet", "ipv4", "cidr"]
+language = "java"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/apache/commons-net"
+revision = "d46aaece2329cbc4aec707cc22e0183259b48f8e"
+license_spdx = "Apache-2.0"
+source_digest = "sha256:6e0ae67d46832a05389d5bf1dc488a491613ee6d94e5eb40bfcecbc8fc40eaa8"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "nl2repobench/java-runtime@sha256:9f4180fc607186b2cdc958049cd1f230d3cbf5a887eeb5106253a4287260e3ef"
+base_image_digest = "sha256:9f4180fc607186b2cdc958049cd1f230d3cbf5a887eeb5106253a4287260e3ef"
+network_mode = "no-network"
+
+[environment.runtime]
+language = "java"
+runtime = "jdk"
+version = "temurin-21.0.12+8"
+package_manager = "maven"
+package_manager_version = "3.9.11"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "The bounded candidate and verifier use a standard-library-only empty Maven closure; the Oracle source is preloaded in a role-scoped private artifact."
+
+[dependencies]
+status = "known"
+package_manager = "maven"
+packages = []
+
+[dependencies.lock]
+digest = "sha256:8816f5b51c8b29a79ee9538f366b247e361b64e850b324ae2588cf9f274af722"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:8816f5b51c8b29a79ee9538f366b247e361b64e850b324ae2588cf9f274af722"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:83360dfb14f65b79a824967eaf40bed9933967c1b1099120fe1d4a473bf83565"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:83360dfb14f65b79a824967eaf40bed9933967c1b1099120fe1d4a473bf83565"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:9426c0f87d036124f3ed93218695533d3f79e42ac8245f27a0f5067997d564b9"
+size_bytes = 1048
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:9426c0f87d036124f3ed93218695533d3f79e42ac8245f27a0f5067997d564b9"
+visibility = "private"
+
+[tests]
+framework = "junit-platform"
+report_format = "junit-open-test-report-xml-v1"
+expected_total = 10
+expected_total_source = "frozen-collection"
+commands = ["mvn --offline validate", "javac --release 21 verifier-owned contract"]
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.sh"
+contract_sha256 = "sha256:674845237b50023f01a8e0256b8712c66edbf6c5761d19120cdb4582de5bd671"
+
+[verifier.bundle]
+digest = "sha256:ea9385e0a6045c2246bd326c2636a81308e437d130e9c7f356d4bad94d7ebb49"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.verifier+tar"
+uri = "artifact://private/sha256:ea9385e0a6045c2246bd326c2636a81308e437d130e9c7f356d4bad94d7ebb49"
+visibility = "private"
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Recreate the deterministic Apache Commons Net SubnetUtils IPv4 CIDR calculation API."
+keywords = ["java", "maven", "commons-net", "subnet", "cidr", "typed-bridge"]
+agent_timeout_sec = 1200.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 300.0
+candidate_total_timeout_sec = 60.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "inventoried"
+owner = "java-maven-authoring-20260902"
+reason = "Awaiting integrator: immutable source and license freeze, bounded public API, separate verifier, empty Maven closure, controls, and task-local artifact staging are complete; parent CAS registration, generated runtime, Oracle, and controls gates remain pending."
+
+[oracle_bundle]
+digest = "sha256:0ff76074c6027fdc4daeab2bf4efaac6fcf2af47faf9ed356d3b604de8479090"
+size_bytes = 3102720
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:0ff76074c6027fdc4daeab2bf4efaac6fcf2af47faf9ed356d3b604de8479090"
+visibility = "private"

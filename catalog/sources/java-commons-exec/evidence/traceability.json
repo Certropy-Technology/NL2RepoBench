@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0",
+  "task_id": "java-commons-exec",
+  "api_inventory": {
+    "path": ".nl2repo/authoring-work/java-commons-exec/java-inventory.json",
+    "sha256": "sha256:55bcf233eb7df8ca398c3011c56e2cc7966047e9c423c25392e2400736dc648a",
+    "selected_symbols": [
+      "org.apache.commons.exec.CommandLine.parse(String)",
+      "org.apache.commons.exec.CommandLine(String)",
+      "org.apache.commons.exec.CommandLine.addArgument(String)",
+      "org.apache.commons.exec.CommandLine.getExecutable()",
+      "org.apache.commons.exec.CommandLine.getArguments()",
+      "org.apache.commons.exec.CommandLine.toStrings()",
+      "org.apache.commons.exec.util.StringUtils.quoteArgument(String)",
+      "org.apache.commons.exec.util.StringUtils.isQuoted(String)",
+      "org.apache.commons.exec.util.StringUtils.split(String, String)",
+      "org.apache.commons.exec.util.StringUtils.toString(String[], String)",
+      "org.apache.commons.exec.util.StringUtils.stringSubstitution(String, Map, boolean)",
+      "org.apache.commons.exec.util.StringUtils.fixFileSeparatorChar(String)"
+    ]
+  },
+  "contract_leaf": {
+    "frozen_total": 10,
+    "ids": [
+      "parse-executable",
+      "parse-argument",
+      "construct",
+      "quote",
+      "is-quoted",
+      "split",
+      "join",
+      "substitute-strict",
+      "substitute-lenient",
+      "separator"
+    ],
+    "public_behavior_refs": {
+      "parse-executable": "CommandLine.parse(String) and getExecutable()",
+      "parse-argument": "CommandLine.parse(String) and getArguments()",
+      "construct": "CommandLine(String), addArgument(String), and toStrings()",
+      "quote": "StringUtils.quoteArgument(String)",
+      "is-quoted": "StringUtils.isQuoted(String)",
+      "split": "StringUtils.split(String, String)",
+      "join": "StringUtils.toString(String[], String)",
+      "substitute-strict": "StringUtils.stringSubstitution(String, Map, boolean)",
+      "substitute-lenient": "StringUtils.stringSubstitution(String, Map, boolean)",
+      "separator": "StringUtils.fixFileSeparatorChar(String)"
+    }
+  }
+}

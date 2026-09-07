@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0",
+  "task_id": "rust-regex",
+  "status": "known",
+  "upstream_url": "https://github.com/rust-lang/regex",
+  "tag": "1.13.1",
+  "revision": "7c28ee4dc4aef53571c96757f4825c51ac0c3d44",
+  "license_spdx": "MIT OR Apache-2.0",
+  "license_files": [
+    {
+      "path": "LICENSE-MIT",
+      "sha256": "sha256:6485b8ed310d3f0340bf1ad1f47645069ce4069dcc6bb46c7d5c6faf41de1fdb"
+    },
+    {
+      "path": "LICENSE-APACHE",
+      "sha256": "sha256:a60eea817514531668d7e00765731449fe14d059d3249e0bc93b36de45f759f2"
+    }
+  ],
+  "archive": {
+    "method": "git archive --format=tar --prefix=regex/ 1.13.1",
+    "sha256": "sha256:fcbec4c07506284906d64ee8e31be8aa9bdfd0ae38fc045a610cfc7bd31ec571"
+  },
+  "mandatory_runtime_dependencies": [
+    {
+      "name": "regex-automata",
+      "version": "0.4.16",
+      "optional": false,
+      "role": "finite-automaton engines (NFA/PikeVM/DFAs/meta) - the substance to be reimplemented"
+    },
+    {
+      "name": "regex-syntax",
+      "version": "0.8.11",
+      "optional": false,
+      "role": "regex parser + HIR + committed generated Unicode Character Database tables"
+    }
+  ],
+  "default_features": ["std", "perf", "unicode", "regex-syntax/default"],
+  "generated_data_note": "regex-syntax/src/unicode_tables/*.rs are machine-generated UCD-derived tables (property_bool.rs 266293B, general_category.rs 158564B, case_folding_simple.rs 67576B, ...) that cannot be re-derived from a public instruction.",
+  "authority": "authoritative for this run; documented in catalog/sources/rust-regex/evidence/remediation.log"
+}

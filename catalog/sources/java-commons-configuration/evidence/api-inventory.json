@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "task_id": "java-commons-configuration",
+  "upstream_revision": "8660301dda712033e27adacae418c23f722ac3ff",
+  "source_archive_sha256": "sha256:ed7899204ba28dcfc7efc3f4c01d12c087b3cc5b137944c6aee6a1638c93e254",
+  "scanner": "nl2repobench-java-static-inventory",
+  "full_inventory_sha256": "sha256:6307499f23374980686fa8bd592ec3dc5ce9e43f2320dfcb0699adb847be17f7",
+  "metrics": {
+    "implementation_loc": 50606,
+    "test_loc": 46751,
+    "java_files": 477,
+    "test_files": 210,
+    "public_symbol_count": 8308,
+    "test_count": 2675,
+    "import_count": 4506
+  },
+  "selected_public_api": [
+    "org.apache.commons.configuration2.ex.ConfigurationException()",
+    "org.apache.commons.configuration2.ex.ConfigurationException(String)",
+    "org.apache.commons.configuration2.ex.ConfigurationException(String,Object...)",
+    "org.apache.commons.configuration2.ex.ConfigurationException(String,Throwable)",
+    "org.apache.commons.configuration2.ex.ConfigurationException(Throwable)",
+    "org.apache.commons.configuration2.ex.ConfigurationException(Throwable,String,Object...)"
+  ],
+  "risk_flags": ["native-extension", "runtime-or-external-io"],
+  "contract_boundary": "Only the standalone exception type is in scope; optional integrations and external I/O are excluded."
+}

@@ -1,0 +1,55 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/java-commons-net"
+version = "1.0.0"
+description = "Recreate the deterministic Apache Commons Net SubnetUtils IPv4 CIDR calculation API."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "java",
+    "maven",
+    "commons-net",
+    "subnet",
+    "cidr",
+    "typed-bridge",
+]
+
+[metadata]
+difficulty = "medium"
+category = "java-library"
+tags = [
+    "java",
+    "maven",
+    "commons-net",
+    "subnet",
+    "ipv4",
+    "cidr",
+]
+language = "java"
+runtime = "jdk"
+runtime_version = "temurin-21.0.12+8"
+package_manager = "maven"
+package_manager_version = "3.9.11"
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 10
+canonical_manifest_digest = "sha256:af46e5fc950c1d515fd3e39b47869a8484a35975cd8d6cb4c1a765c97e8e5cbc"
+toolchain_lock_digest = "sha256:d2f9d182875c4f98dd3625d6fd280894104006b6e64611e68ce67e7a74605517"
+
+[agent]
+timeout_sec = 1200.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[environment]
+network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096

@@ -1,0 +1,119 @@
+schema_version = "1.0"
+task_id = "java-classgraph"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "java-library"
+tags = ["java", "maven", "classgraph", "graphviz", "fluent-api", "configuration"]
+language = "java"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/classgraph/classgraph"
+revision = "f6bb003e139d0ba1db9eee7ad273899048d6d2cf"
+license_spdx = "MIT"
+source_digest = "sha256:3a1db1e5fed09f406aeecbea04d661ba5a47eb46cd9691bc676bb610ee1515f2"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "nl2repobench/java-runtime@sha256:9f4180fc607186b2cdc958049cd1f230d3cbf5a887eeb5106253a4287260e3ef"
+base_image_digest = "sha256:9f4180fc607186b2cdc958049cd1f230d3cbf5a887eeb5106253a4287260e3ef"
+network_mode = "no-network"
+
+[environment.runtime]
+language = "java"
+runtime = "jdk"
+version = "temurin-21.0.12+8"
+package_manager = "maven"
+package_manager_version = "3.9.11"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The bounded verifier and candidate use an empty Maven closure; the Oracle source is preloaded in a role-scoped private artifact."
+
+[dependencies]
+status = "known"
+package_manager = "maven"
+packages = []
+
+[dependencies.lock]
+digest = "sha256:0847ec83a5b3185ea6dee438254fa1bf50f23fc0999768dafa314a381243a41e"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:0847ec83a5b3185ea6dee438254fa1bf50f23fc0999768dafa314a381243a41e"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:83360dfb14f65b79a824967eaf40bed9933967c1b1099120fe1d4a473bf83565"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:83360dfb14f65b79a824967eaf40bed9933967c1b1099120fe1d4a473bf83565"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:caa451803b6f108399ea511ab1dc726c866b4461ac9a61b3785ac502db7f5268"
+size_bytes = 1048
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:caa451803b6f108399ea511ab1dc726c866b4461ac9a61b3785ac502db7f5268"
+visibility = "private"
+
+[tests]
+framework = "junit-platform"
+report_format = "junit-open-test-report-xml-v1"
+expected_total = 10
+expected_total_source = "frozen-collection"
+commands = ["mvn --offline validate", "javac --release 21 verifier-owned contract"]
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.sh"
+contract_sha256 = "sha256:de036d61c3c278b1412cd7bd148833dbd2955b7e67a500db236ac66fba74419b"
+
+[verifier.bundle]
+digest = "sha256:26e99f5602f76ee549fc7fa8e69940f9d882bca43cca1fb40604e5ed7afd6f89"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.verifier+tar"
+uri = "artifact://private/sha256:26e99f5602f76ee549fc7fa8e69940f9d882bca43cca1fb40604e5ed7afd6f89"
+visibility = "private"
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Recreate the deterministic ClassGraph GraphVizDotFileOptions fluent configuration API."
+keywords = ["java", "maven", "classgraph", "graphviz", "options", "fluent-api"]
+agent_timeout_sec = 1200.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 300.0
+candidate_total_timeout_sec = 60.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "inventoried"
+owner = "java-maven-authoring-20260902"
+reason = "awaiting-integrator: task-local staging complete; parent CAS registration pending"
+
+[oracle_bundle]
+digest = "sha256:197637fa0d14f8c54b79989a8c46d9fbc932906feb7a6a057625d6a452fabab2"
+size_bytes = 30556160
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:197637fa0d14f8c54b79989a8c46d9fbc932906feb7a6a057625d6a452fabab2"
+visibility = "private"

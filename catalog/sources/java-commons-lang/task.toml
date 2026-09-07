@@ -1,0 +1,121 @@
+schema_version = "1.0"
+task_id = "java-commons-lang"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "java-library"
+tags = ["java", "maven", "commons-lang", "string-utils", "text-processing"]
+language = "java"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/apache/commons-lang"
+revision = "f13aa3d80272db38bbf9e4a35a4945e7c91a9d6b"
+license_spdx = "Apache-2.0"
+source_digest = "sha256:b0a616effdb8a22ebc074a58571ef49f25758105716e9bc497963bc586c02e6d"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm-amd64"
+base_image = "nl2repobench/java-runtime@sha256:9f4180fc607186b2cdc958049cd1f230d3cbf5a887eeb5106253a4287260e3ef"
+base_image_digest = "sha256:9f4180fc607186b2cdc958049cd1f230d3cbf5a887eeb5106253a4287260e3ef"
+network_mode = "no-network"
+
+[environment.runtime]
+language = "java"
+runtime = "jdk"
+version = "temurin-21.0.12+8"
+package_manager = "maven"
+package_manager_version = "3.9.11"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "The bounded StringUtils contract uses an empty Maven closure; candidate, verifier, Oracle, and controls execute without network access."
+
+[dependencies]
+status = "known"
+package_manager = "maven"
+packages = []
+
+[dependencies.lock]
+digest = "sha256:a068e3e7fdb984e0757a2805edd25a2442813e13bcc0dbd43fbb476fe65a8351"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:a068e3e7fdb984e0757a2805edd25a2442813e13bcc0dbd43fbb476fe65a8351"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:83360dfb14f65b79a824967eaf40bed9933967c1b1099120fe1d4a473bf83565"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:83360dfb14f65b79a824967eaf40bed9933967c1b1099120fe1d4a473bf83565"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:d074abe19d426da196e6dd3981ba7580ec7ee7557b9852970264441046183026"
+size_bytes = 1048
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:d074abe19d426da196e6dd3981ba7580ec7ee7557b9852970264441046183026"
+visibility = "private"
+
+
+[tests]
+framework = "junit-platform"
+report_format = "junit-open-test-report-xml-v1"
+expected_total = 16
+expected_total_source = "frozen-collection"
+commands = ["mvn --offline validate", "javac --release 21 verifier-owned ContractMain"]
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.sh"
+contract_sha256 = "sha256:794bf3d4a5dab2bbe05eb975a334a9295180f02d8cf9e2913d1c2914117d5f63"
+
+[verifier.bundle]
+digest = "sha256:12db17b0d3630a5833f5ac07476e1affa244458b81edc5574617cd948e987f1f"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.verifier+tar"
+uri = "artifact://private/sha256:12db17b0d3630a5833f5ac07476e1affa244458b81edc5574617cd948e987f1f"
+visibility = "private"
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Recreate a bounded, null-safe Apache Commons Lang StringUtils API slice."
+keywords = ["java", "maven", "commons-lang", "string-utils", "offline"]
+agent_timeout_sec = 1200.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 300.0
+candidate_total_timeout_sec = 60.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "inventoried"
+owner = "java-maven-authoring-20260902"
+reason = "Immutable source/license freeze, bounded StringUtils contract, empty Maven closure, and task-local verifier/Oracle/control staging are being prepared; parent integration must register CAS refs and run Harbor gates."
+
+[oracle_bundle]
+digest = "sha256:6ddc4538f2b27c9650560b1dcc58b821afe318628095f5a13d1e11138caf1654"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:6ddc4538f2b27c9650560b1dcc58b821afe318628095f5a13d1e11138caf1654"
+visibility = "private"
+

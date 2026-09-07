@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0",
+  "task_id": "java-commons-exec",
+  "terminal_kind": "blocked",
+  "blocked": {
+    "failure_class": "source",
+    "next_step": "Stage the exact Maven lock, offline repository, inventory, verifier contract/bundle, and Oracle bundle in task-scoped private CAS; then compile a closed-world runtime and run fresh Oracle, empty, stub, forgery, timeout, install-failure, and offline controls.",
+    "source_freeze": {
+      "status": "known",
+      "revision": "72e67549226fbf7a93b04241c6a64f3dd61a8388",
+      "source_digest": "sha256:ab9cc9498250b470b22531751e120f7db9598737e21d70be5bd38aed7be59ba8",
+      "license_spdx": "Apache-2.0",
+      "license_digest": "sha256:b1d2870f1a00e4d7f56576e5f0870cba109e041f8af66866cf5b499478e654e7",
+      "submodules": []
+    },
+    "commands": [
+      {
+        "command": "sha256sum .nl2repo/authoring-inputs/java-maven-wave1/java-commons-exec/source.tar",
+        "tool_version": "coreutils sha256sum; staged source archive",
+        "exit_code": 0,
+        "log": {"path": "catalog/sources/java-commons-exec/evidence/source-archive-verification.log", "sha256": "sha256:ab10eb9a8d996526a761f93c71f301bd19810b2a918935d4e49ed40c10ccc086"}
+      },
+      {
+        "command": "sha256sum LICENSE.txt NOTICE.txt and scan_java_source(source)",
+        "tool_version": "Python 3.14.6; NL2RepoBench Java inventory scanner",
+        "exit_code": 0,
+        "log": {"path": "catalog/sources/java-commons-exec/evidence/license-and-inventory.log", "sha256": "sha256:bd2bafe8df21d3e7ac60529fbfeeabd6a3ac4b97d58d1bdbfc192ce2e451a0e9"}
+      },
+      {
+        "command": "mvn --offline --batch-mode --no-transfer-progress -DskipTests dependency:tree -DoutputType=text",
+        "tool_version": "Apache Maven 3.9.11; Temurin JDK 21.0.12+8",
+        "exit_code": 0,
+        "log": {"path": "catalog/sources/java-commons-exec/evidence/dependency-probe.log", "sha256": "sha256:4427b2deeb5ac5121cca7dba36f100883aa4de295de5d4d96cb38e476763dfc5"}
+      },
+      {
+        "command": "find .nl2repo/artifacts/private -type f | grep -i commons-exec",
+        "tool_version": "findutils; private CAS audit",
+        "exit_code": 1,
+        "log": {"path": "catalog/sources/java-commons-exec/evidence/private-cas-audit.log", "sha256": "sha256:8999b9746d52291a84bebc1d19d9c3296a551de193645036966a7296fe6f249d"}
+      },
+      {
+        "command": "uv run nl2repo harbor compile catalog/sources/java-commons-exec --output /tmp/java-commons-exec-compile --toolchain toolchain.java.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+        "tool_version": "NL2RepoBench current checkout; JavaHarborCompiler",
+        "exit_code": 1,
+        "log": {"path": "catalog/sources/java-commons-exec/evidence/production-gate.log", "sha256": "sha256:d8ed3fafe5e58880d1fff9dee6781c65d7b381592f23fdf949d6f68e264d5419"}
+      }
+    ]
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "language": "java",
+  "source_root": "src/main/java/org/apache/commons/imaging/PixelDensity.java",
+  "source_digest": "sha256:a89b7e7a4b9066e98dea66e8e8e73c128d542979b2a254382564495343eb58c5",
+  "scanner_identity": "java-static-public-api-v1",
+  "public_class": "org.apache.commons.imaging.PixelDensity",
+  "public_methods": [
+    "createFromPixelsPerCentimetre(double,double)",
+    "createFromPixelsPerInch(double,double)",
+    "createFromPixelsPerMetre(double,double)",
+    "createUnitless(double,double)",
+    "getRawHorizontalDensity()",
+    "getRawVerticalDensity()",
+    "horizontalDensityCentimetres()",
+    "horizontalDensityInches()",
+    "horizontalDensityMetres()",
+    "isInCentimetres()",
+    "isInInches()",
+    "isInMetres()",
+    "isUnitless()",
+    "verticalDensityCentimetres()",
+    "verticalDensityInches()",
+    "verticalDensityMetres()"
+  ],
+  "risk_flags": ["upstream-custom-build-excluded", "image-io-out-of-scope"],
+  "contract_leaf_ids": ["inch-raw", "cm-raw", "metre-raw", "unitless-raw", "predicates", "conversions", "cm-conversions", "metre-conversions", "unitless-predicates", "factory-independence"]
+}

@@ -1,0 +1,53 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/java-commons-csv"
+version = "1.3.0"
+description = "Recreate Apache Commons CSV parsing, field access, and default formatting behavior."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "java",
+    "maven",
+    "commons-csv",
+    "csv",
+    "parser",
+]
+
+[metadata]
+difficulty = "easy"
+category = "java-library"
+tags = [
+    "java",
+    "maven",
+    "commons-csv",
+    "csv",
+    "parser",
+]
+language = "java"
+runtime = "jdk"
+runtime_version = "temurin-21.0.12+8"
+package_manager = "maven"
+package_manager_version = "3.9.11"
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 4
+canonical_manifest_digest = "sha256:b087065ba0e91005192feb404897bfd3f94bcca47523d2a137dbc11e2b9d63eb"
+toolchain_lock_digest = "sha256:d2f9d182875c4f98dd3625d6fd280894104006b6e64611e68ce67e7a74605517"
+
+[agent]
+timeout_sec = 1200.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[environment]
+network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096

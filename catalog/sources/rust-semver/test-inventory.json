@@ -1,0 +1,43 @@
+{
+  "collection": "automatic: the checker always emits all 26 leaves, and run.py rebuilds the full set on every failure path",
+  "excluded_upstream": [
+    "tests/node (requires node)",
+    "benches",
+    "serde gated tests",
+    "upstream doctests"
+  ],
+  "framework": "cargo",
+  "frozen_total": 26,
+  "leaf_ids": [
+    "semver.version-parse-canonical",
+    "semver.version-leading-zero-and-structure-errors",
+    "semver.version-whitespace-and-empty-segment-errors",
+    "semver.version-overflow-and-charset-errors",
+    "semver.prerelease-and-build-metadata-acceptance",
+    "semver.ord-versus-precedence-with-build",
+    "semver.semver-precedence-chain",
+    "semver.constructors-traits-and-debug",
+    "semver.requirement-parse-canonical",
+    "semver.requirement-parse-errors",
+    "semver.comparator-normalization-projection",
+    "semver.caret-semantics",
+    "semver.tilde-semantics",
+    "semver.wildcard-and-exact-semantics",
+    "semver.comparison-operators-and-intersection",
+    "semver.prerelease-matching-rule",
+    "semver.build-metadata-ignored-in-matching",
+    "semver.prerelease-validation",
+    "semver.build-metadata-validation",
+    "semver.requirement-default-and-star",
+    "semver.error-trait-contract",
+    "semver.display-roundtrip-stability",
+    "semver.auto-trait-surface",
+    "semver.identifier-ordering",
+    "semver.comparator-level-matching",
+    "semver.feature-compatibility"
+  ],
+  "report_format": "rust-semver-bridge-v1",
+  "schema_version": "1.0",
+  "task_id": "rust-semver",
+  "upstream_offline_baseline": "cargo test --lib --tests --locked --offline: 34 passed, 0 failed"
+}

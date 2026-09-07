@@ -1,0 +1,38 @@
+{
+  "schema_version": "1.0",
+  "task_id": "java-commons-codec",
+  "source_revision": "20a5d22bc05933e2ff7a8f2cb3bce5cee8db64c1",
+  "package": "org.apache.commons:commons-codec",
+  "source_archive": {
+    "sha256": "sha256:f16fa9afe46850f2cafa8526473dc4aed347e4469ffc99ed5afab18c866ed59b",
+    "license_file": "LICENSE.txt",
+    "license_spdx": "Apache-2.0",
+    "license_sha256": "sha256:b1d2870f1a00e4d7f56576e5f0870cba109e041f8af66866cf5b499478e654e7"
+  },
+  "api_inventory": {
+    "main_java_files": 99,
+    "selected_symbols": [
+      "org.apache.commons.codec.binary.Base64.encodeBase64String",
+      "org.apache.commons.codec.binary.Base64.decodeBase64",
+      "org.apache.commons.codec.binary.Hex.encodeHexString"
+    ],
+    "excluded_behavior": [
+      "streaming codecs",
+      "language and digest codecs",
+      "CLI entry points",
+      "Maven release, profile, plugin, and publishing configuration"
+    ]
+  },
+  "contract_leaf": {
+    "frozen_total": 4,
+    "framework": "trusted synthetic ContractMain",
+    "ids": ["encode", "decode", "hex", "empty"],
+    "instruction_sections": ["Supports", "API Usage Guide", "Implementation Notes"]
+  },
+  "environment_adaptation": {
+    "non_java_source_payload": "src/main/java/doc-files/leaf.svg is excluded by the Oracle adapter",
+    "candidate_build": "verifier-owned javac with --release 21",
+    "dependency_closure": "empty private Maven repository",
+    "upstream_pom": "not executed; metadata-only static validation"
+  }
+}

@@ -1,0 +1,6 @@
+sha256sum .nl2repo/authoring-inputs/java-maven-wave2/java-commons-logging/source.tar
+tar -xf <source.tar> -C .nl2repo/authoring-work/java-commons-logging/source
+javac --release 21 -d <task-local-output> oracle-bundle/source/Log.java oracle-bundle/source/NoOpLog.java
+javac --release 21 -cp <task-local-output> -d <task-local-output> harbor/tests/private/harness/src/main/java/nl2repobench/harness/*.java
+bash -n harbor/solution/solve.sh harbor/tests/test.sh harbor/controls/*.sh oracle/solve.sh
+uv run nl2repo task validate-source catalog/sources/java-commons-logging

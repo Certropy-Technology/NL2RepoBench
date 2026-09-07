@@ -1,0 +1,119 @@
+schema_version = "1.0"
+task_id = "java-jsoup"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "java-library"
+tags = ["java", "maven", "jsoup", "html", "attributes"]
+language = "java"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/jhy/jsoup"
+revision = "7860d088e044236e288c1f88a743b68b2a0edece"
+license_spdx = "MIT"
+source_digest = "sha256:303ae502e60ad4eabdfd83f7eb73b06f25c83e9dbc43aa6755b59b085c957488"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm-amd64"
+base_image = "nl2repobench/java-runtime@sha256:9f4180fc607186b2cdc958049cd1f230d3cbf5a887eeb5106253a4287260e3ef"
+base_image_digest = "sha256:9f4180fc607186b2cdc958049cd1f230d3cbf5a887eeb5106253a4287260e3ef"
+network_mode = "no-network"
+
+[environment.runtime]
+language = "java"
+runtime = "jdk"
+version = "temurin-21.0.12+8"
+package_manager = "maven"
+package_manager_version = "3.9.11"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The bounded Attribute value-object contract uses only JDK APIs; Maven, candidate, verifier, Oracle, and controls execute without network access."
+
+[dependencies]
+status = "known"
+package_manager = "maven"
+packages = []
+
+[dependencies.lock]
+digest = "sha256:39b9970146f386fe37ac588cef969031ebc4e406c56d445af3ccb5b34348750f"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:39b9970146f386fe37ac588cef969031ebc4e406c56d445af3ccb5b34348750f"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:83360dfb14f65b79a824967eaf40bed9933967c1b1099120fe1d4a473bf83565"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:83360dfb14f65b79a824967eaf40bed9933967c1b1099120fe1d4a473bf83565"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:c05b6f5cb449ba72d0e63a36fb2c37c8cb69d1598b29eefac4d356122bc328ac"
+size_bytes = 1048
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:c05b6f5cb449ba72d0e63a36fb2c37c8cb69d1598b29eefac4d356122bc328ac"
+visibility = "private"
+
+[tests]
+framework = "junit-platform"
+report_format = "junit-open-test-report-xml-v1"
+expected_total = 10
+expected_total_source = "frozen-collection"
+commands = ["mvn --offline validate", "javac --release 21 verifier-owned ContractMain"]
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.sh"
+contract_sha256 = "sha256:1b966ed70d5af3fbd5980cbc11ec9a02409b137facbc8ce506a757cf04e09423"
+
+[verifier.bundle]
+digest = "sha256:9e51bf8caf7b4676bea126252a4d6ae8e5888d8781f2a3e90ca6f748f9b8354f"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.verifier+tar"
+uri = "artifact://private/sha256:9e51bf8caf7b4676bea126252a4d6ae8e5888d8781f2a3e90ca6f748f9b8354f"
+visibility = "private"
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Recreate the deterministic jsoup Attribute public value-object API slice."
+keywords = ["java", "maven", "jsoup", "html", "attribute"]
+agent_timeout_sec = 1200.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 300.0
+candidate_total_timeout_sec = 60.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "inventoried"
+owner = "java-maven-authoring-20260902"
+reason = "awaiting-integrator: immutable jsoup source and MIT license are frozen; bounded ten-leaf Attribute contract and task-local Maven/verifier/Oracle/control staging are complete pending parent CAS registration."
+
+[oracle_bundle]
+digest = "sha256:8228691697517f9971089f35d5998d245b7f5332197a4a26510be1fd6df84cef"
+size_bytes = 3348480
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:8228691697517f9971089f35d5998d245b7f5332197a4a26510be1fd6df84cef"
+visibility = "private"

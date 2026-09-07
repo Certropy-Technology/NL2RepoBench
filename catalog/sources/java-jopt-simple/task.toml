@@ -1,0 +1,119 @@
+schema_version = "1.0"
+task_id = "java-jopt-simple"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "easy"
+category = "java-library"
+tags = ["java", "maven", "jopt-simple", "command-line", "value-object"]
+language = "java"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/jopt-simple/jopt-simple"
+revision = "1f80fe268d2b038b44702ac12cdc95e5060a92b1"
+license_spdx = "MIT"
+source_digest = "sha256:4c81431c0f47f97a23933a487d596c0f102ede9b8ea613bd8076e6dbc4842767"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm-amd64"
+base_image = "nl2repobench/java-runtime@sha256:9f4180fc607186b2cdc958049cd1f230d3cbf5a887eeb5106253a4287260e3ef"
+base_image_digest = "sha256:9f4180fc607186b2cdc958049cd1f230d3cbf5a887eeb5106253a4287260e3ef"
+network_mode = "no-network"
+
+[environment.runtime]
+language = "java"
+runtime = "jdk"
+version = "temurin-21.0.12+8"
+package_manager = "maven"
+package_manager_version = "3.9.11"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "The bounded KeyValuePair contract uses only JDK APIs; Maven, candidate, verifier, Oracle, and controls execute with no network access."
+
+[dependencies]
+status = "known"
+package_manager = "maven"
+packages = []
+
+[dependencies.lock]
+digest = "sha256:a22f792d0ad1aa3009ad00531b3e6c29f6e2775a6e681327718c1d5d11117064"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:a22f792d0ad1aa3009ad00531b3e6c29f6e2775a6e681327718c1d5d11117064"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:6c76ad57f9daaa80a361928daa69c8141df8e49522b2d631b1e59d243ea14c15"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:6c76ad57f9daaa80a361928daa69c8141df8e49522b2d631b1e59d243ea14c15"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:652d5a6d5c02419112ce94916a32946e8562a9e97845661da26e8a9d9dc03004"
+size_bytes = 1048
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:652d5a6d5c02419112ce94916a32946e8562a9e97845661da26e8a9d9dc03004"
+visibility = "private"
+
+[tests]
+framework = "junit-platform"
+report_format = "junit-open-test-report-xml-v1"
+expected_total = 10
+expected_total_source = "frozen-collection"
+commands = ["mvn --offline validate", "javac --release 21 verifier-owned ContractMain"]
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.sh"
+contract_sha256 = "sha256:0f20c0d4505dbc99ea28df6a72f38d538f045f796f37c10f5e359351e858e226"
+
+[verifier.bundle]
+digest = "sha256:1b895db7248ba4590b41c221f065b8ef5cb51f0a5ddd125b841507ca37658c7d"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.verifier+tar"
+uri = "artifact://private/sha256:1b895db7248ba4590b41c221f065b8ef5cb51f0a5ddd125b841507ca37658c7d"
+visibility = "private"
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Recreate the deterministic jopt-simple KeyValuePair parsing value object."
+keywords = ["java", "maven", "jopt-simple", "key-value", "parser"]
+agent_timeout_sec = 1200.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 300.0
+candidate_total_timeout_sec = 60.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "inventoried"
+owner = "java-maven-authoring-20260902"
+reason = "awaiting-integrator: immutable source/license freeze, bounded KeyValuePair contract, empty Maven closure, and task-local verifier/Oracle/control staging are complete; parent CAS registration and gates remain pending."
+
+[oracle_bundle]
+digest = "sha256:3afdfe3357b032417d4bf8c7753ef1e78c5aad63b8dac6339dc1635e249f2ed1"
+size_bytes = 1075200
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:3afdfe3357b032417d4bf8c7753ef1e78c5aad63b8dac6339dc1635e249f2ed1"
+visibility = "private"

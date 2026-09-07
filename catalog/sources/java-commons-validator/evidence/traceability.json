@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "task_id": "java-commons-validator",
+  "contract_leaf_ids": [
+    "valid-full",
+    "invalid-full",
+    "match-groups",
+    "validate-groups",
+    "validate-empty-group",
+    "case-insensitive",
+    "patterns-copy",
+    "to-string",
+    "invalid-pattern",
+    "null-input"
+  ],
+  "leaves": [
+    {"id":"valid-full","instruction":"Node 2 / Boolean validation","source":"RegexValidator.java:166-175","api":"isValid(String)"},
+    {"id":"invalid-full","instruction":"Node 2 / Complete validation","source":"RegexValidator.java:166-175","api":"isValid(String)"},
+    {"id":"match-groups","instruction":"Node 3 / Capturing-group extraction","source":"RegexValidator.java:184-199","api":"match(String)"},
+    {"id":"validate-groups","instruction":"Node 4 / Group aggregation","source":"RegexValidator.java:227-249","api":"validate(String)"},
+    {"id":"validate-empty-group","instruction":"Node 4 / Group aggregation","source":"RegexValidator.java:235-238","api":"validate(String)"},
+    {"id":"case-insensitive","instruction":"Node 1 / Pattern compilation","source":"RegexValidator.java:136-147","api":"RegexValidator(String,boolean)"},
+    {"id":"patterns-copy","instruction":"Node 5 / Defensive pattern inspection","source":"RegexValidator.java:156-158","api":"getPatterns()"},
+    {"id":"to-string","instruction":"Node 6 / Deterministic representation","source":"RegexValidator.java:207-218","api":"toString()"},
+    {"id":"invalid-pattern","instruction":"Node 1 / Pattern compilation and boundaries","source":"RegexValidator.java:89-100","api":"RegexValidator(String)"},
+    {"id":"null-input","instruction":"Node 2 / Complete validation and null boundary","source":"RegexValidator.java:166-169","api":"isValid(String)"}
+  ]
+}
