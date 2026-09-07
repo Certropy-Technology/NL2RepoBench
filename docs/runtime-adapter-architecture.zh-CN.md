@@ -36,12 +36,15 @@ authoring/compiler.py         # pure manifest + artifact/state orchestration
     ├── runtimes/registry.py  # (language, package_manager) -> RuntimeAdapter
     │       ├── runtimes/python.py
     │       ├── runtimes/node.py
-    │       └── future runtimes/rust.py ...
+    │       ├── runtimes/go.py
+    │       └── runtimes/ruby.py
     │
     ├── package_managers/registry.py
     │       ├── package_managers/uv.py
     │       ├── package_managers/npm.py
     │       ├── package_managers/pnpm.py
+    │       ├── package_managers/go_modules.py
+    │       ├── package_managers/bundler.py
     │       └── future package_managers/cargo.py ...
     │
     ▼
@@ -93,8 +96,8 @@ class RuntimeAdapter(Protocol):
 ```
 
 The adapter owns runtime-specific details such as Python import/install behavior, Node module
-format, or a future compiled language's binary entrypoint. It does not own state transitions,
-score calculation, artifact authorization, or Harbor process supervision.
+format, Ruby load paths, or a future compiled language's binary entrypoint. It does not own state
+transitions, score calculation, artifact authorization, or Harbor process supervision.
 
 ### Package-manager adapter
 
@@ -111,7 +114,22 @@ class PackageManagerAdapter(Protocol):
 ```
 
 No adapter may fall back to another manager. For example, a pnpm task cannot be silently changed
-to npm because both are Node package managers.
+to npm because both are Node package managers. Ruby uses Bundler only; its cache is validated
+separately from Python locks and Go module closures.
+
+### Ruby/Bundler profile
+
+The current Ruby profile is `ruby + bundler` and targets MRI `3.4.10` with Bundler `2.6.9` on
+Linux/amd64. It is a development/synthetic lane until a real Gem source freeze, private
+`gem_bundle`, Oracle bundle, and controls receipt are available. The profile accepts a regular
+`Gemfile`/`Gemfile.lock`, only the official RubyGems remote, no `GIT`/`PATH`/`PLUGIN` sources,
+and a hash-inventoried `vendor/cache` directory. Candidate API calls run through a Ruby
+JSON-lines bridge in a UID-isolated subprocess; trusted tests produce
+`ruby-contract-json-v1`, which is normalized into the common leaf report.
+
+The first profile intentionally supports one verifier-owned leaf and pure Ruby projects. Native
+extensions, FFI, platform-specific gems, Rails applications, and arbitrary Bundler plugins stay
+outside this lane until they have a separate reviewed runtime contract.
 
 ## Control flow
 

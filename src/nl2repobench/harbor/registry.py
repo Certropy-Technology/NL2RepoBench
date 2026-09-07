@@ -96,6 +96,13 @@ class HarborCompilerRegistry:
 
             return GoHarborCompiler(toolchain, artifact_resolver=resolver)
 
+        def ruby_bundler_factory(
+            toolchain: Path, resolver: LocalArtifactResolver | None
+        ) -> HarborRuntimeCompiler:
+            from nl2repobench.harbor.ruby_compiler import RubyHarborCompiler
+
+            return RubyHarborCompiler(toolchain, artifact_resolver=resolver)
+
         python_keys = {
             (RuntimeLanguage.PYTHON, PackageManager.UV),
             (RuntimeLanguage.PYTHON, PackageManager.PIP),
@@ -105,6 +112,7 @@ class HarborCompilerRegistry:
         factories[(RuntimeLanguage.NODE, PackageManager.NPM)] = node_npm_factory
         factories[(RuntimeLanguage.NODE, PackageManager.PNPM)] = node_pnpm_factory
         factories[(RuntimeLanguage.GO, PackageManager.GO_MODULES)] = go_modules_factory
+        factories[(RuntimeLanguage.RUBY, PackageManager.BUNDLER)] = ruby_bundler_factory
         return cls(factories=factories)
 
     def resolve(self, identity: RuntimeDiscriminator) -> CompilerFactory:

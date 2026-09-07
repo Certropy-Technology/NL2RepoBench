@@ -10,7 +10,7 @@ from nl2repobench.domain.runtime import (
 )
 
 
-def test_runtime_discriminator_accepts_python_and_node_package_managers() -> None:
+def test_runtime_discriminator_accepts_python_node_and_ruby_package_managers() -> None:
     assert RuntimeDiscriminator(
         language=RuntimeLanguage.PYTHON,
         package_manager=PackageManager.UV,
@@ -19,6 +19,10 @@ def test_runtime_discriminator_accepts_python_and_node_package_managers() -> Non
         language=RuntimeLanguage.NODE,
         package_manager=PackageManager.PNPM,
     ).language is RuntimeLanguage.NODE
+    assert RuntimeDiscriminator(
+        language=RuntimeLanguage.RUBY,
+        package_manager=PackageManager.BUNDLER,
+    ).language is RuntimeLanguage.RUBY
 
 
 def test_runtime_discriminator_rejects_cross_ecosystem_manager() -> None:
@@ -60,6 +64,19 @@ def test_runtime_discriminator_reads_explicit_node_source() -> None:
     )
 
 
+def test_runtime_discriminator_reads_explicit_ruby_source() -> None:
+    result = RuntimeDiscriminator.from_catalog_source(
+        {
+            "metadata": {"language": "ruby"},
+            "dependencies": {"installer": "bundler"},
+        }
+    )
+    assert result == RuntimeDiscriminator(
+        language=RuntimeLanguage.RUBY,
+        package_manager=PackageManager.BUNDLER,
+    )
+
+
 @pytest.mark.parametrize(
     ("source", "message"),
     [
@@ -74,7 +91,7 @@ def test_runtime_discriminator_reads_explicit_node_source() -> None:
             },
             "must explicitly match",
         ),
-        ({"metadata": {"language": "ruby"}}, "metadata.language"),
+        ({"metadata": {"language": "ruby"}}, "dependencies"),
     ],
 )
 def test_runtime_discriminator_fails_closed(source: dict[str, object], message: str) -> None:

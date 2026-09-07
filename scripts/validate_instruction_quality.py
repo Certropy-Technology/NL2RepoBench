@@ -43,7 +43,10 @@ IMPORT = re.compile(
     r"from\s+[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)*\s+import|"
     r"import\s+[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)*|"
     r"import\s+(?:\{[^}\n]+\}|\*\s+as\s+[A-Za-z_$][\w$]*)\s+from\s+['\"]|"
-    r"import\s+['\"][^'\"\n]+['\"]"
+    r"import\s+['\"][^'\"\n]+['\"]|"
+    # Ruby loads a public API through require/require_relative; it has no
+    # `import` keyword, so the Python/JS/Go forms above can never match.
+    r"(?:require|require_relative|load)\s+['\"][^'\"\n]+['\"]"
     r")"
 )
 
