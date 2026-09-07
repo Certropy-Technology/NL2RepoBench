@@ -1,0 +1,107 @@
+{
+  "controls": {
+    "background-process": {
+      "collected": 153,
+      "failed": 153,
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "empty": {
+      "collected": 0,
+      "failed": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "forgery": {
+      "collected": 153,
+      "failed": 153,
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "install-failure": {
+      "collected": 0,
+      "failed": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "oversized-output": {
+      "collected": 153,
+      "failed": 153,
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "panic": {
+      "collected": 153,
+      "failed": 153,
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "stub": {
+      "collected": 153,
+      "failed": 153,
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    }
+  },
+  "controls_notes": {
+    "hang": "excluded by owner decision; not a gate"
+  },
+  "evidence_files": [
+    {
+      "path": "evidence/gates-20260908/control-background-process-grading.json",
+      "sha256": "sha256:5186fb2785b3f0332e631ed4e9a9256c7274c88f76ddaca7fda3594783cf0f2a"
+    },
+    {
+      "path": "evidence/gates-20260908/control-empty-grading.json",
+      "sha256": "sha256:3ea1ba3c2fdf5a98eeadef645f33ba3131df1c334696d920c54b24767159c724"
+    },
+    {
+      "path": "evidence/gates-20260908/control-forgery-grading.json",
+      "sha256": "sha256:5186fb2785b3f0332e631ed4e9a9256c7274c88f76ddaca7fda3594783cf0f2a"
+    },
+    {
+      "path": "evidence/gates-20260908/control-install-failure-grading.json",
+      "sha256": "sha256:3ea1ba3c2fdf5a98eeadef645f33ba3131df1c334696d920c54b24767159c724"
+    },
+    {
+      "path": "evidence/gates-20260908/control-oversized-output-grading.json",
+      "sha256": "sha256:5186fb2785b3f0332e631ed4e9a9256c7274c88f76ddaca7fda3594783cf0f2a"
+    },
+    {
+      "path": "evidence/gates-20260908/control-panic-grading.json",
+      "sha256": "sha256:5186fb2785b3f0332e631ed4e9a9256c7274c88f76ddaca7fda3594783cf0f2a"
+    },
+    {
+      "path": "evidence/gates-20260908/control-stub-grading.json",
+      "sha256": "sha256:5186fb2785b3f0332e631ed4e9a9256c7274c88f76ddaca7fda3594783cf0f2a"
+    },
+    {
+      "path": "evidence/gates-20260908/oracle-grading.json",
+      "sha256": "sha256:4f6003141b7e58798e85913ae1df4d569826737352d4a1c46bf580a12aa278d6"
+    },
+    {
+      "path": "evidence/gates-20260908/oracle-network.json",
+      "sha256": "sha256:6c8ffa51daac017ce3a6fbadbaa51d2900657340043c4379c77c71fda0926d5e"
+    }
+  ],
+  "license_spdx": "MIT",
+  "offline": "oracle network.json public_network_available=false",
+  "oracle": {
+    "collected": 153,
+    "failed": 0,
+    "passed": 153,
+    "reward": 1.0,
+    "valid": true
+  },
+  "revision": "dd93ccfda79214725293e95f1fa6e00cb4a64adc",
+  "schema_version": "1.0",
+  "task_id": "pyperf",
+  "terminal_kind": "valid"
+}

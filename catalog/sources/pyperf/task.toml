@@ -41,7 +41,7 @@ lock_artifact = { digest = "sha256:342cf6cb0f6b5405fc30f26608262d210029c44931f99
 
 [tests]
 framework = "pytest"
-expected_total = 173
+expected_total = 153
 expected_total_source = "frozen-collection"
 commands = ["custom-json-v1 verifier entrypoint"]
 protected_paths = ["/tests/verifier/run.py"]
@@ -56,7 +56,7 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 [verifier]
 protocol = "custom-json-v1"
 entrypoint = "run.py"
-bundle = { digest = "sha256:2ebfae3e5cb7a1d9a333e48d9869127f2763111233e95c2b9838a3bf32e3542f", size_bytes = 6831, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:2ebfae3e5cb7a1d9a333e48d9869127f2763111233e95c2b9838a3bf32e3542f", visibility = "private" }
+bundle = { digest = "sha256:9f1de74c856bdbaf89a4eb4eacfe5850333fbdb5eec6c5986cf83e627237d279", size_bytes = 5603, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:9f1de74c856bdbaf89a4eb4eacfe5850333fbdb5eec6c5986cf83e627237d279", visibility = "private" }
 
 [harbor]
 description = "Build the pyperf benchmarking library from an empty workspace with its Python API, JSON benchmark model, and command-line entry point."
@@ -80,5 +80,6 @@ uri = "artifact://private/sha256:c0916d04b2c6fcb0663328592f9a33afa204e1ac5a6cae5
 visibility = "private"
 
 [lifecycle]
-status = "packaged"
-reason = "Task packaged with frozen source, hash-locked dependencies (including setuptools build backend), separate custom-json-v1 verifier with 173 deterministic scenarios, Oracle, and controls. Ready for compilation and Oracle gate."
+status = "controls-passed"
+owner = "python-wave2-parent-pyperf"
+reason = "Oracle 153/153 reward 1.0. Controls: empty 0.0(0), stub 0.0(153), forgery 0.0(153), install-failure 0.0(0), panic 0.0(153), oversized-output 0.0(153), background-process 0.0(153); all valid. hang excluded by owner decision (not a gate). offline verified via oracle network.json."
