@@ -1,0 +1,82 @@
+schema_version = "1.0"
+task_id = "chronic_duration"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "easy"
+category = "ruby-duration-parser"
+tags = ["ruby", "bundler", "chronic-duration", "natural-language", "parsing", "json-bridge"]
+language = "ruby"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/hpoydar/chronic_duration"
+revision = "8f4ea46e36f58dc1018c417b80867cf8a98270a9"
+license_spdx = "MIT"
+source_digest = "sha256:52e0a890becbdef094801f29dd05b0acd979ee80be03ff10fafe2fe2bd322526"
+submodules = []
+
+[environment]
+status = "known"
+runtime_version = "3.4.10"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/ruby"
+base_image_digest = "sha256:1fb3661a02aac22a9025495fe2b53d5bb36e9f8841339c769b2409d8d97c6035"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "The only runtime dependency, numerizer 0.2.0, is supplied by a private hash-verified Bundler cache; the agent and verifier never fetch upstream source."
+
+[dependencies]
+status = "known"
+installer = "bundler"
+packages = ["numerizer 0.2.0"]
+gem_bundle = { digest = "sha256:0c9a69206538324ffa9d4f32cdcb0d4063cdd432184c7dcdf0fcdb322745fee4", size_bytes = 6622, media_type = "application/vnd.nl2repobench.rubygems-bundle+tar", uri = "artifact://private/sha256:0c9a69206538324ffa9d4f32cdcb0d4063cdd432184c7dcdf0fcdb322745fee4", visibility = "private" }
+
+[tests]
+framework = "ruby-contract"
+expected_total = 10
+expected_total_source = "frozen-collection"
+commands = ["bash /tests/private/contract.sh"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Reimplement Chronic Duration's duration parsing, unit arithmetic, output serialization, and invalid-input contract behind an offline Bundler closure."
+keywords = ["ruby", "bundler", "chronic-duration", "parsing", "duration", "json-bridge"]
+agent_timeout_sec = 900.0
+verifier_timeout_sec = 900.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 420.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 2048
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "packaged"
+owner = "ruby-wave2"
+reason = "Source, license, environment, offline dependency closure, network policy, private verifier bundle, and fetch-only Oracle bundle are frozen and hash-bound. The Oracle and control gates have not been executed through Harbor in this worktree, so the task stops at packaged for parent integration."
+
+[oracle_bundle]
+digest = "sha256:f8c904a477b951f0394667c5427dc9f03044d814938cab7640157f775de51967"
+size_bytes = 919
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:f8c904a477b951f0394667c5427dc9f03044d814938cab7640157f775de51967"
+visibility = "private"
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:7e2a1013ce7b4ad5f38f67c2365b3dd8bd66e6f5f0dfbc38bd4844618d041095", size_bytes = 1158, media_type = "application/vnd.nl2repobench.verifier+tar", uri = "artifact://private/sha256:7e2a1013ce7b4ad5f38f67c2365b3dd8bd66e6f5f0dfbc38bd4844618d041095", visibility = "private" }
+entrypoint = "contract.sh"

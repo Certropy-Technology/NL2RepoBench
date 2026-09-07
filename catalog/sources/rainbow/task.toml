@@ -1,0 +1,82 @@
+schema_version = "1.0"
+task_id = "rainbow"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "easy"
+category = "ruby-terminal-color"
+tags = ["ruby", "bundler", "rainbow", "ansi", "terminal-color", "json-bridge"]
+language = "ruby"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/sickill/rainbow"
+revision = "d5e20718cfe890bf9fea9a435e72e9bfff2eab5a"
+license_spdx = "MIT"
+source_digest = "sha256:d84d7ac177fca730e9cce8d730b29564d2cb490a98e82a70dd4e08ed7a1119b3"
+submodules = []
+
+[environment]
+status = "known"
+runtime_version = "3.4.10"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/ruby"
+base_image_digest = "sha256:1fb3661a02aac22a9025495fe2b53d5bb36e9f8841339c769b2409d8d97c6035"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "Bundler dependencies are supplied by a private hash-verified cache; the agent and verifier do not fetch upstream source."
+
+[dependencies]
+status = "known"
+installer = "bundler"
+packages = []
+gem_bundle = { digest = "sha256:8ebeaccd803fe1c90a22d69a0c2ee25c7ce15b0b7ef0a5c2f1358bfbd055fd5f", size_bytes = 10240, media_type = "application/vnd.nl2repobench.rubygems-bundle+tar", uri = "artifact://private/sha256:8ebeaccd803fe1c90a22d69a0c2ee25c7ce15b0b7ef0a5c2f1358bfbd055fd5f", visibility = "private" }
+
+[tests]
+framework = "ruby-contract"
+expected_total = 12
+expected_total_source = "frozen-collection"
+commands = ["bash /tests/private/contract.sh"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Reimplement a tested subset of Rainbow's ANSI color and style presenter: enabled/disabled output, color specification forms, style chaining, deterministic SGR composition, and uncolor."
+keywords = ["ruby", "bundler", "rainbow", "ansi", "terminal-color", "json-bridge", "repository-generation"]
+agent_timeout_sec = 900.0
+verifier_timeout_sec = 900.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 420.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 2048
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "packaged"
+owner = "ruby-wave2-qwen"
+reason = "Frozen pure-Ruby Rainbow 3.1.1 release commit with a private Bundler cache holding zero runtime gems, plus hash-inventoried verifier and Oracle bundles. The 12-leaf ruby-contract-json-v1 contract is grounded in upstream's presenter, color, string-utils and null-presenter behavior; Oracle and control runs are left to the parent integrator."
+
+[oracle_bundle]
+digest = "sha256:6b76e763b4a578d801bb9d2f56dc44544afd7ca5a53e8f7c537c6add77b5ec56"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:6b76e763b4a578d801bb9d2f56dc44544afd7ca5a53e8f7c537c6add77b5ec56"
+visibility = "private"
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:1206afb20b2c34ec566f3a1bd1f6a509e3731a4a0d5611994be495fa3c9cdefc", size_bytes = 10240, media_type = "application/vnd.nl2repobench.verifier+tar", uri = "artifact://private/sha256:1206afb20b2c34ec566f3a1bd1f6a509e3731a4a0d5611994be495fa3c9cdefc", visibility = "private" }
+entrypoint = "contract.sh"
