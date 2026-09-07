@@ -131,6 +131,8 @@ def test_development_compiler_generates_separate_verifier_bundle(tmp_path) -> No
     assert "--ignore-installed" in verifier_dockerfile
     assert "--prefix /opt/candidate-dependencies" in verifier_dockerfile
     assert "--target /opt/candidate-dependencies/site" not in verifier_dockerfile
+    assert "mkdir -p /opt/candidate-dependencies/lib/python3.12/site-packages" in verifier_dockerfile
+    assert verifier_dockerfile.index("mkdir -p /opt/candidate-dependencies") < verifier_dockerfile.index("pip install")
     assert "COPY dependencies" not in verifier_dockerfile
     assert "--no-index" not in verifier_dockerfile
     assert not (task_root / "tests/dependencies").exists()

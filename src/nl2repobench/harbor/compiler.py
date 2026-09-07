@@ -328,7 +328,8 @@ RUN python -m pip install --no-cache-dir --require-hashes \\
   -r /tmp/requirements.lock.txt
 
 COPY candidate-requirements.lock.txt /tmp/candidate-requirements.lock.txt
-RUN python -m pip install \
+RUN mkdir -p /opt/candidate-dependencies/lib/python{python_minor}/site-packages \
+  && python -m pip install \
   --no-cache-dir \
   --ignore-installed \
   --index-url https://pypi.org/simple \
