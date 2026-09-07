@@ -1,0 +1,84 @@
+schema_version = "1.0"
+task_id = "croniter"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "python-library"
+tags = ["python", "cron", "datetime", "iteration", "repository-generation"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/kiorky/croniter"
+revision = "9181ba7de0a91512cb77d537b7e23631ffe4f7e8"
+license_spdx = "MIT"
+source_digest = "sha256:ac8e9d432017f5ef6c70f8660e98359353201d58383c38358c221378b74fbe77"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12"
+os_name = "debian-12-amd64"
+base_image = "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
+network_mode = "no-network"
+build_command = "python -m pip install --no-build-isolation --no-deps --no-index -e ."
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The hatchling build backend is preinstalled into the agent and verifier images from the hash-locked candidate closure. Candidate installation reuses the installed backend with --no-build-isolation, and agent, candidate, verifier, Oracle, and controls run without network access."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = []
+lock_artifact = { digest = "sha256:6b9ee0eed567025e68e2ba9875161a871c1768c1f75c2628473999f8cdb77f5a", size_bytes = 1146, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:6b9ee0eed567025e68e2ba9875161a871c1768c1f75c2628473999f8cdb77f5a", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 15
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+bundle = { digest = "sha256:591d58730faa638ce6733b213ee6952d8d3f6238be3331bf423fc513bb7dd01f", size_bytes = 1797, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:591d58730faa638ce6733b213ee6952d8d3f6238be3331bf423fc513bb7dd01f", visibility = "private" }
+
+[harbor]
+description = "Build the croniter cron iteration library from an empty workspace."
+keywords = ["python", "cron", "datetime", "repository-generation", "separate-verifier"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 900.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 180.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 2048
+storage_mb = 2048
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:dd7c41b14cb76beb49dee8c8807c22b2e2fb698e39a58466992857d767600531"
+size_bytes = 251794
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:dd7c41b14cb76beb49dee8c8807c22b2e2fb698e39a58466992857d767600531"
+visibility = "private"
+
+[lifecycle]
+status = "packaged"
+reason = "Source frozen, dependencies locked, verifier and oracle bundled with custom-json-v1 protocol. Awaiting Oracle and controls validation."

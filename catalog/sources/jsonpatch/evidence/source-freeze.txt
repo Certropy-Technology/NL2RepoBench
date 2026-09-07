@@ -1,0 +1,40 @@
+Source Freeze Evidence for jsonpatch
+=====================================
+
+Task ID: jsonpatch
+Upstream URL: https://github.com/stefankoegl/python-json-patch
+Revision: 1ddce552cd1bdac5db3df931ba3df3bf9dac284c
+Version: 1.33
+License: BSD-3-Clause
+
+Archive Details:
+  Path: /data/NL2RepoBench-integration-20260827/.nl2repo/authoring-work/python-wave2/jsonpatch/source-1ddce552cd1bdac5db3df931ba3df3bf9dac284c.tar.gz
+  SHA-256: 27229586afe96571e8884a1f16170059cb08a43e05a9ff25241c1f8499ef9db6
+  Size: 28672 bytes
+
+Extracted to:
+  .nl2repo/authoring-work/jsonpatch/source/python-json-patch-1ddce552cd1bdac5db3df931ba3df3bf9dac284c/
+
+Source Archive Verification:
+  ✓ SHA-256 matches expected digest
+  ✓ Archive extracted successfully
+  ✓ LICENSE file present (BSD-3-Clause)
+  ✓ Single module package: jsonpatch.py
+  ✓ CLI scripts: bin/jsondiff, bin/jsonpatch
+  ✓ Test file: tests.py (110 test methods)
+  ✓ Runtime dependency: jsonpointer>=1.9
+
+Package Structure:
+  - Single module: jsonpatch.py (931 lines)
+  - Public API: apply_patch(), make_patch(), JsonPatch class
+  - Exception classes: JsonPatchException, InvalidJsonPatch, JsonPatchConflict, JsonPatchTestFailed
+  - Operation classes: PatchOperation, RemoveOperation, AddOperation, ReplaceOperation, MoveOperation, TestOperation, CopyOperation
+  - Two CLI tools: jsondiff and jsonpatch
+  
+Test Collection:
+  - Framework: unittest
+  - Test file: tests.py
+  - Estimated test count: 110 test methods
+  
+Source Status: KNOWN
+Timestamp: 2026-09-07T21:03:00Z

@@ -1,47 +1,50 @@
 schema_version = "1.0"
 task_id = "pyperf"
-version = "0.1.0"
+version = "2.10.0"
 instruction = "instruction.md"
 
 [metadata]
 difficulty = "medium"
 category = "benchmarking-library"
-tags = ["python", "benchmarking", "json", "cli", "repository-generation", "ast-inventoried"]
+tags = ["python", "benchmarking", "json", "cli", "repository-generation"]
 language = "python"
 
 [source]
-status = "unknown"
+status = "known"
 upstream_url = "https://github.com/psf/pyperf"
-# PyPI sdist is the frozen authority for this authoring wave. It does not
-# preserve the upstream Git commit; use the content-addressed sdist identity
-# until a Git revision is separately reconciled by the integrator.
 revision = "dd93ccfda79214725293e95f1fa6e00cb4a64adcf1326039486d4e1f91caaa62"
 license_spdx = "MIT"
-source_digest = "sha256:dd93ccfda79214725293e95f1fa6e00cb4a64adcf1326039486d4e1f91caaa62"
+source_digest = "sha256:82da501eb24ba60494eb86f1ba6c517d566758031832153bbbcc55424b0273fe"
 submodules = []
 
 [environment]
-status = "unknown"
+status = "known"
 python_version = "3.12"
 os_name = "debian-12-amd64"
+base_image = "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
 network_mode = "no-network"
+build_command = "python -m pip install --no-build-isolation --no-deps --no-index -e ."
 
 [environment.network_policy]
 mode = "no-network"
 offline_dependencies = "preinstalled-image"
 reference_source_fetch = "forbidden"
-reason = "The frozen pyperf source and dependency closure are prepared during image build; agent, candidate, verifier, Oracle, and controls have no run-time network access."
+reason = "The frozen pyperf source and dependency closure (including setuptools build backend) are prepared during image build; agent, candidate, verifier, Oracle, and controls have no run-time network access."
 
 [dependencies]
-status = "unknown"
+status = "known"
 installer = "pip"
 packages = ["psutil>=5.9.0"]
+lock_artifact = { digest = "sha256:342cf6cb0f6b5405fc30f26608262d210029c44931f99518742bd0db45c2600c", size_bytes = 3249, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:342cf6cb0f6b5405fc30f26608262d210029c44931f99518742bd0db45c2600c", visibility = "private" }
 
 [tests]
 framework = "pytest"
-expected_total = 0
-expected_total_source = "unknown"
-commands = ["pip install -e .", "pytest --continue-on-collection-errors pyperf/tests"]
+expected_total = 173
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py"]
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
@@ -49,6 +52,11 @@ passed_statuses = ["passed"]
 excluded_statuses = []
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+bundle = { digest = "sha256:2ebfae3e5cb7a1d9a333e48d9869127f2763111233e95c2b9838a3bf32e3542f", size_bytes = 6831, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:2ebfae3e5cb7a1d9a333e48d9869127f2763111233e95c2b9838a3bf32e3542f", visibility = "private" }
 
 [harbor]
 description = "Build the pyperf benchmarking library from an empty workspace with its Python API, JSON benchmark model, and command-line entry point."
@@ -64,7 +72,13 @@ memory_mb = 4096
 storage_mb = 8192
 workspace_artifact = "/workspace"
 
+[oracle_bundle]
+digest = "sha256:c0916d04b2c6fcb0663328592f9a33afa204e1ac5a6cae5390bba9766c32c71b"
+size_bytes = 395565
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:c0916d04b2c6fcb0663328592f9a33afa204e1ac5a6cae5390bba9766c32c71b"
+visibility = "private"
+
 [lifecycle]
-status = "specified"
-owner = "pyperf-authoring-worker"
-reason = "Frozen pyperf 2.10.0 source was statically inventoried with Python AST. Public API contract is specified; test collection, dependency lock artifact, verifier, and Harbor projection remain downstream packaging stages."
+status = "packaged"
+reason = "Task packaged with frozen source, hash-locked dependencies (including setuptools build backend), separate custom-json-v1 verifier with 173 deterministic scenarios, Oracle, and controls. Ready for compilation and Oracle gate."

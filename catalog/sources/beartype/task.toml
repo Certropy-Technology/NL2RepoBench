@@ -12,9 +12,6 @@ language = "python"
 [source]
 status = "known"
 upstream_url = "https://github.com/beartype/beartype"
-# The campaign supplied a frozen PyPI sdist rather than a VCS checkout. The
-# archive digest below is the immutable source authority for this specified
-# task; commit reconciliation is recorded in evidence/source-freeze.txt.
 revision = "9430c6515af3b158acacdc47fe7b1adb646f6624"
 license_spdx = "MIT"
 source_digest = "sha256:8f82b54aa723a2848a56008d18875f91c1db02c32ef6a62319a002e3e25a975f"
@@ -28,25 +25,26 @@ base_image = "python:3.12.14-slim-bookworm"
 base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e"
 system_packages = []
 network_mode = "no-network"
-build_command = "install hash-locked build requirements and build the candidate from the supplied beartype-0.22.9 sdist"
+build_command = "python -m pip install --no-build-isolation --no-deps --no-index -e ."
 
 [environment.network_policy]
 mode = "no-network"
 offline_dependencies = "preinstalled-image"
 reference_source_fetch = "forbidden"
-reason = "The candidate is pinned to the supplied sdist; build dependencies are preinstalled during image construction, while agent, candidate, verifier, Oracle, and controls run without network access."
+reason = "Build backend (hatchling) is preinstalled into the agent and verifier images from the hash-locked candidate closure. Candidate installation reuses the installed backend with --no-build-isolation, and agent, candidate, verifier, Oracle, and controls run without network access."
 
 [dependencies]
-status = "unknown"
+status = "known"
 installer = "pip"
-packages = ["hatchling==1.27.0", "hatch-vcs==0.5.0"]
+packages = []
+lock_artifact = { digest = "sha256:025e5a1ca7c4844766af5118157e73e20b0d0a0bee672cf10a19c166e31bc316", size_bytes = 2160, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:025e5a1ca7c4844766af5118157e73e20b0d0a0bee672cf10a19c166e31bc316", visibility = "private" }
 
 [tests]
 framework = "pytest"
-expected_total = 1
-expected_total_source = "unknown"
+expected_total = 422
+expected_total_source = "frozen-collection"
 commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = []
+protected_paths = ["/tests/verifier/run.py"]
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
@@ -54,6 +52,11 @@ passed_statuses = ["passed"]
 excluded_statuses = []
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+bundle = { digest = "sha256:bf8a8b41188cee651b89b9b604dd2d52ea7c555e0f9e74c2325571a73008793e", size_bytes = 6510, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:bf8a8b41188cee651b89b9b604dd2d52ea7c555e0f9e74c2325571a73008793e", visibility = "private" }
 
 [harbor]
 description = "Build the pure-Python beartype 0.22.9 runtime type-checking library from an empty workspace, covering its decorator, DOOR predicates, validator factories, configuration, exception families, and typing compatibility exports."
@@ -69,7 +72,13 @@ memory_mb = 4096
 storage_mb = 8192
 workspace_artifact = "/workspace"
 
+[oracle_bundle]
+digest = "sha256:48d724200c41ccfbc41ea12e12b13c4f4a7a52147bb887ab24685464b7abc1de"
+size_bytes = 1610330
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:48d724200c41ccfbc41ea12e12b13c4f4a7a52147bb887ab24685464b7abc1de"
+visibility = "private"
+
 [lifecycle]
-status = "specified"
-owner = "python-author-wave1-beartype"
-reason = "Public specification and AST inventory are bound to the supplied beartype 0.22.9 sdist. Dependency lock, automatic collection, separate verifier, Oracle, and controls are downstream packaging stages."
+status = "packaged"
+reason = "Source frozen, artifacts registered in CAS. Custom-json-v1 verifier with 422 deterministic test leaves authored. Ready for compilation and Oracle/controls execution."

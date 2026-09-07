@@ -1,8 +1,24 @@
-package=pyperf
-version=2.10.0
-upstream_url=https://github.com/psf/pyperf
-license_spdx=MIT
-sdist_sha256=dd93ccfda79214725293e95f1fa6e00cb4a64adcf1326039486d4e1f91caaa62
-source_tree_digest=sha256:436557893aebf887d9cd3eb2a0e691b09e512f770aa812f0de667fdcc3019e7d
-source_root=work/staging/pyperf/pyperf-2.10.0
-network_access=forbidden
+Source Freeze Evidence - pyperf
+
+Task ID: pyperf
+Frozen Timestamp: 2026-09-07T21:07:00Z
+Worker: pyperf-authoring-worker
+
+Source Authority:
+  Archive Path: /data/NL2RepoBench-integration-20260827/.nl2repo/authoring-live/python-wave1/pyperf.tar.gz
+  SHA-256: dd93ccfda79214725293e95f1fa6e00cb4a64adcf1326039486d4e1f91caaa62
+  Size: 228352 bytes
+  Upstream URL: https://github.com/psf/pyperf
+  Revision: dd93ccfda79214725293e95f1fa6e00cb4a64adcf1326039486d4e1f91caaa62
+  License: MIT (verified from COPYING file)
+  Version: 2.10.0
+
+Verification:
+  Archive SHA-256 verified: PASS
+  License file present: PASS (COPYING)
+  Package metadata present: PASS (pyproject.toml)
+  Source tree structure: PASS (pyperf/ package directory)
+  Test suite present: PASS (pyperf/tests/)
+
+Status: known
+Freeze Result: success
