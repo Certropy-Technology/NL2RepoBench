@@ -349,12 +349,12 @@ class EnvironmentLock(RecordModel):
 
 
 class DependencyBundle(RecordModel):
-    """Hash-locked build-time dependencies for Python task images.
+    """Hash-locked build-time dependencies for runtime-specific task images.
 
     Python Harbor images install candidate dependencies from the package index
-    during the Docker build.  The final task never carries a wheelhouse and
-    the verifier never uses ``--no-index``.  ``lock_artifact`` contains only a
-    requirements lock file with hashes; ``artifact`` is retained solely so
+    during the Docker build. Ruby images use a private, hash-inventoried
+    Bundler cache and Go images use a private module closure. The final task
+    never carries a Python wheelhouse, and ``artifact`` is retained solely so
     older catalog records can be diagnosed and rejected during publication.
     """
 
@@ -376,6 +376,10 @@ class DependencyBundle(RecordModel):
                                 "required": ["module_bundle"],
                                 "properties": {"module_bundle": {"not": {"type": "null"}}},
                             },
+                            {
+                                "required": ["gem_bundle"],
+                                "properties": {"gem_bundle": {"not": {"type": "null"}}},
+                            },
                         ]
                     },
                 }
@@ -390,26 +394,33 @@ class DependencyBundle(RecordModel):
     module_bundle: ArtifactRef | None = None
     """Private hash-inventoried Go module closure used by the Go compiler."""
 
+    gem_bundle: ArtifactRef | None = None
+    """Private hash-inventoried Ruby gem cache used by the Bundler compiler."""
+
     # Legacy field.  It points to a wheelhouse and is intentionally not used
     # by the Python Harbor compiler anymore.  Keeping it in the model lets us
     # produce a precise publication gap for stale catalog records instead of
     # silently treating vendor installation as valid.
     artifact: ArtifactRef | None = None
-    installer: Literal["uv", "pip", "system", "unknown"] = "unknown"
+    installer: Literal["uv", "pip", "bundler", "system", "unknown"] = "unknown"
     packages: tuple[str, ...] = ()
 
     @model_validator(mode="after")
     def validate_known_bundle(self) -> DependencyBundle:
-        references = (self.lock_artifact, self.module_bundle)
+        references = (self.lock_artifact, self.module_bundle, self.gem_bundle)
         if self.status is ProvenanceStatus.KNOWN and all(item is None for item in references):
-            raise ValueError("known dependency bundle requires lock_artifact or module_bundle")
-        if self.lock_artifact is not None and self.module_bundle is not None:
-            raise ValueError("dependency bundle cannot mix Python and Go locks")
+            raise ValueError(
+                "known dependency bundle requires lock_artifact, module_bundle, or gem_bundle"
+            )
+        if sum(item is not None for item in references) > 1:
+            raise ValueError("dependency bundle cannot mix runtime-specific closures")
         if (
             self.module_bundle is not None
             and self.module_bundle.visibility is not Visibility.PRIVATE
         ):
             raise ValueError("module_bundle must be private")
+        if self.gem_bundle is not None and self.gem_bundle.visibility is not Visibility.PRIVATE:
+            raise ValueError("gem_bundle must be private")
         return self
 
 
@@ -463,7 +474,7 @@ class TestManifest(RecordModel):
         }
     )
 
-    framework: Literal["pytest"] = "pytest"
+    framework: Literal["pytest", "ruby-contract"] = "pytest"
     # Blocked/excluded descriptors may have no frozen collection yet. Runtime
     # publication validation still requires a positive frozen denominator.
     expected_total: Annotated[int, Field(ge=0)] = 0
@@ -684,6 +695,11 @@ class TaskManifest(RecordModel):
                 gaps.append("dependency_bundle.module_bundle")
             elif self.dependency_bundle.module_bundle.visibility is not Visibility.PRIVATE:
                 gaps.append("dependency_bundle.module_bundle.visibility=private")
+        elif self.metadata.language == "ruby":
+            if self.dependency_bundle.gem_bundle is None:
+                gaps.append("dependency_bundle.gem_bundle")
+            elif self.dependency_bundle.gem_bundle.visibility is not Visibility.PRIVATE:
+                gaps.append("dependency_bundle.gem_bundle.visibility=private")
         elif self.dependency_bundle.lock_artifact is None:
             gaps.append("dependency_bundle.lock_artifact")
         if self.dependency_bundle.artifact is not None:
@@ -763,3 +779,85 @@ class MetadataGapReport(RecordModel):
     complete_task_count: Annotated[int, Field(ge=0)]
     gap_counts: dict[str, int]
     tasks: tuple[MetadataGapTask, ...]
+
+
+
+class DependencyOfflineSmoke(BaseModel):
+    model_config = ConfigDict(extra="forbid", frozen=True, str_strip_whitespace=True)
+
+    status: Literal["passed"]
+    command_id: Annotated[str, Field(min_length=1, max_length=128)]
+
+
+class DependencyInventory(RecordModel):
+    """The single external inventory binding dependency lock and store."""
+
+    identity: Annotated[str, Field(pattern=r"^[a-z0-9-]+\+[a-z0-9-]+$")]
+    adapter_version: Annotated[str, Field(min_length=1, max_length=128)]
+    toolchain_digest: str = Field(pattern=SHA256_PATTERN)
+    lock: ArchiveInventory
+    store: ArchiveInventory
+    offline_smoke: DependencyOfflineSmoke
+
+    @model_validator(mode="after")
+    def validate_archive_kinds(self) -> DependencyInventory:
+        if self.lock.archive_kind != "dependency-lock":
+            raise ValueError("dependency lock inventory has the wrong archive kind")
+        if self.store.archive_kind != "offline-store":
+            raise ValueError("dependency store inventory has the wrong archive kind")
+        return self
+
+
+class InventoryEntry(BaseModel):
+    """One canonical dependency archive member."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True, str_strip_whitespace=True)
+
+    path: str
+    type: Literal["file", "directory"]
+    mode: Literal["0444", "0555"]
+    size: Annotated[int, Field(ge=0)]
+    sha256: str | None = Field(default=None, pattern=SHA256_PATTERN)
+
+    @model_validator(mode="after")
+    def validate_entry(self) -> InventoryEntry:
+        path = PurePosixPath(self.path)
+        if path.is_absolute() or not path.parts or any(
+            part in {"", ".", ".."} for part in path.parts
+        ):
+            raise ValueError("dependency inventory path is unsafe")
+        if self.type == "directory":
+            if self.mode != "0555" or self.size != 0 or self.sha256 is not None:
+                raise ValueError("dependency inventory directory metadata is invalid")
+        elif self.sha256 is None:
+            raise ValueError("dependency inventory file requires sha256")
+        return self
+
+
+class ArchiveInventory(BaseModel):
+    """Closed-world inventory for one canonical dependency archive."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True, str_strip_whitespace=True)
+
+    archive_kind: Literal["dependency-lock", "offline-store"]
+    archive_digest: str = Field(pattern=SHA256_PATTERN)
+    tree_digest: str = Field(pattern=SHA256_PATTERN)
+    entries: tuple[InventoryEntry, ...]
+    file_count: Annotated[int, Field(ge=0)]
+    directory_count: Annotated[int, Field(ge=0)]
+    total_bytes: Annotated[int, Field(ge=0)]
+
+    @model_validator(mode="after")
+    def validate_counts(self) -> ArchiveInventory:
+        paths = [entry.path for entry in self.entries]
+        if paths != sorted(paths, key=lambda value: value.encode("utf-8")):
+            raise ValueError("dependency inventory entries must be sorted")
+        if len(paths) != len(set(paths)):
+            raise ValueError("dependency inventory entries must be unique")
+        files = [entry for entry in self.entries if entry.type == "file"]
+        directories = [entry for entry in self.entries if entry.type == "directory"]
+        if self.file_count != len(files) or self.directory_count != len(directories):
+            raise ValueError("dependency inventory entry counts do not match")
+        if self.total_bytes != sum(entry.size for entry in files):
+            raise ValueError("dependency inventory total_bytes does not match")
+        return self

@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0",
+  "task_id": "java-classgraph",
+  "revision": "f6bb003e139d0ba1db9eee7ad273899048d6d2cf",
+  "source_digest": "sha256:3a1db1e5fed09f406aeecbea04d661ba5a47eb46cd9691bc676bb610ee1515f2",
+  "license": {"spdx": "MIT", "path": "LICENSE-ClassGraph.txt", "sha256": "sha256:141fef8921b2f38a9d610168c98c31d89fd8c4f3fca018621e5e36d8be23e276"},
+  "main_java_files": 286,
+  "test_java_files": 104,
+  "contract": {
+    "type": "io.github.classgraph.viz.GraphVizDotFileOptions",
+    "source": "classgraph-viz/src/main/java/io/github/classgraph/viz/GraphVizDotFileOptions.java:55",
+    "methods": [
+      "GraphVizDotFileOptions()",
+      "GraphVizDotFileOptions setLayoutSize(float, float)",
+      "GraphVizDotFileOptions showFields()",
+      "GraphVizDotFileOptions hideFields()",
+      "GraphVizDotFileOptions showFieldTypeDependencyEdges()",
+      "GraphVizDotFileOptions hideFieldTypeDependencyEdges()",
+      "GraphVizDotFileOptions showMethods()",
+      "GraphVizDotFileOptions hideMethods()",
+      "GraphVizDotFileOptions showMethodTypeDependencyEdges()",
+      "GraphVizDotFileOptions hideMethodTypeDependencyEdges()",
+      "GraphVizDotFileOptions showAnnotations()",
+      "GraphVizDotFileOptions hideAnnotations()",
+      "GraphVizDotFileOptions showAnnotationDependencyEdges()",
+      "GraphVizDotFileOptions hideAnnotationDependencyEdges()",
+      "GraphVizDotFileOptions useSimpleNames()",
+      "GraphVizDotFileOptions useFullyQualifiedNames()",
+      "GraphVizDotFileOptions includeExternalClasses()",
+      "GraphVizDotFileOptions excludeExternalClasses()"
+    ]
+  },
+  "risk_flags": ["full ClassGraph scan excluded", "GraphViz renderer excluded", "JSpecify annotation stub used only by Oracle"]
+}

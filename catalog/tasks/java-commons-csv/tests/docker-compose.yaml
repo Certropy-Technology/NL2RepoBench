@@ -1,0 +1,8 @@
+services:
+  main:
+    network_mode: none
+    volumes:
+      - type: bind
+        source: ${NL2REPO_PRIVATE_CAS:?NL2REPO_PRIVATE_CAS is required}
+        target: /nl2repo/private-cas
+        read_only: true

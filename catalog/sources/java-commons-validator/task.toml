@@ -1,0 +1,119 @@
+schema_version = "1.0"
+task_id = "java-commons-validator"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "java-library"
+tags = ["java", "maven", "commons-validator", "regex", "validation"]
+language = "java"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/apache/commons-validator"
+revision = "ea26afdd8ac3cddb460ef22540a8056775db46fe"
+license_spdx = "Apache-2.0"
+source_digest = "sha256:d465719f5bd8460cb3eaf675b9e9b597a41f12c68201be91d4b1a50a8d7175f1"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm-amd64"
+base_image = "nl2repobench/java-runtime@sha256:9f4180fc607186b2cdc958049cd1f230d3cbf5a887eeb5106253a4287260e3ef"
+base_image_digest = "sha256:9f4180fc607186b2cdc958049cd1f230d3cbf5a887eeb5106253a4287260e3ef"
+network_mode = "no-network"
+
+[environment.runtime]
+language = "java"
+runtime = "jdk"
+version = "temurin-21.0.12+8"
+package_manager = "maven"
+package_manager_version = "3.9.11"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The bounded RegexValidator contract uses only JDK regular expressions and an empty Maven closure; all execution phases are offline."
+
+[dependencies]
+status = "known"
+package_manager = "maven"
+packages = []
+
+[dependencies.lock]
+digest = "sha256:b452f54f1c4995ff52a5963e0321c8adb22c7e539a534c1776773a4aafbfe769"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:b452f54f1c4995ff52a5963e0321c8adb22c7e539a534c1776773a4aafbfe769"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:83360dfb14f65b79a824967eaf40bed9933967c1b1099120fe1d4a473bf83565"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:83360dfb14f65b79a824967eaf40bed9933967c1b1099120fe1d4a473bf83565"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:714ffc45debbe2904cfcae346f684873b6b8dde3f2d24fa2dc104045e071942a"
+size_bytes = 1048
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:714ffc45debbe2904cfcae346f684873b6b8dde3f2d24fa2dc104045e071942a"
+visibility = "private"
+
+[tests]
+framework = "junit-platform"
+report_format = "junit-open-test-report-xml-v1"
+expected_total = 10
+expected_total_source = "frozen-collection"
+commands = ["mvn --offline validate", "javac --release 21 verifier-owned ContractMain"]
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.sh"
+contract_sha256 = "sha256:06aacaf12a064f133f427ca1c00da8eaa9d48c27e9bb75fc0b74694c1f247658"
+
+[verifier.bundle]
+digest = "sha256:79f42e06d0afa0b904e4a76b694cb72fedeab60754e38d1e8572d90fb048f34d"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.verifier+tar"
+uri = "artifact://private/sha256:79f42e06d0afa0b904e4a76b694cb72fedeab60754e38d1e8572d90fb048f34d"
+visibility = "private"
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Recreate the bounded Apache Commons Validator RegexValidator API using deterministic JDK regular expressions."
+keywords = ["java", "maven", "commons-validator", "regex", "typed-bridge"]
+agent_timeout_sec = 1200.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 300.0
+candidate_total_timeout_sec = 60.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "inventoried"
+owner = "java-maven-authoring-20260902"
+reason = "Awaiting integrator: source/license freeze, bounded API inventory, ten-leaf verifier, controls, and task-local private staging are complete; parent must register CAS, compile the runtime, and run Oracle/controls."
+
+[oracle_bundle]
+digest = "sha256:48bc783c47c874c37d33a0ce849ad1af90c8a8f392eb77d9e637f9b3e21365fa"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:48bc783c47c874c37d33a0ce849ad1af90c8a8f392eb77d9e637f9b3e21365fa"
+visibility = "private"

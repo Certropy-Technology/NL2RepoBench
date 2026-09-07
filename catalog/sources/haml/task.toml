@@ -1,0 +1,82 @@
+schema_version = "1.0"
+task_id = "haml"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "ruby-template-engine"
+tags = ["ruby", "bundler", "haml", "template-engine", "json-bridge"]
+language = "ruby"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/haml/haml"
+revision = "fcd08e9a89e9fcd491b2f725c51f5f47e2c8c0e7"
+license_spdx = "MIT"
+source_digest = "sha256:1aafbfd497a519bb65c7a827c5c2d201c50392453af5a36f0c66c2eabc01f693"
+submodules = []
+
+[environment]
+status = "known"
+runtime_version = "3.4.10"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/ruby"
+base_image_digest = "sha256:1fb3661a02aac22a9025495fe2b53d5bb36e9f8841339c769b2409d8d97c6035"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "Source, dependency closure, public bridge, controls and private Oracle/verifier artifacts are authored against the frozen Haml 6.4.0 revision and materialized in the task-local private CAS; production compile is deterministic and an offline reference-behavior probe in the pinned Ruby 3.4.10 image passed 10/10 leaves (stub candidate 0/10). Official Harbor Oracle, empty, stub, forgery and offline runs are pending parent integration; no Oracle or controls result is claimed here."
+
+[dependencies]
+status = "known"
+installer = "bundler"
+packages = ["temple", "tilt"]
+gem_bundle = { digest = "sha256:602fecdbc25e38bee52b47a8c60b0ef82bbfe1ead6a30e2230e3c6437a1bb374", size_bytes = 71680, media_type = "application/vnd.nl2repobench.rubygems-bundle+tar", uri = "artifact://private/sha256:602fecdbc25e38bee52b47a8c60b0ef82bbfe1ead6a30e2230e3c6437a1bb374", visibility = "private" }
+
+[tests]
+framework = "ruby-contract"
+expected_total = 10
+expected_total_source = "frozen-collection"
+commands = ["bash /tests/private/contract.sh"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Reimplement a tested subset of the Haml template engine: indentation-based markup, loud and silent Ruby evaluation, escaping, attributes, and compile-time errors."
+keywords = ["ruby", "bundler", "haml", "template-engine", "html-escaping", "json-bridge"]
+agent_timeout_sec = 900.0
+verifier_timeout_sec = 900.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 420.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 2048
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "packaged"
+owner = "ruby-wave1"
+reason = "Source, dependency closure, public bridge, controls and private Oracle/verifier artifacts are authored against the frozen Haml 6.4.0 revision. Production compile plus official Harbor Oracle, empty, stub, forgery and offline runs are pending parent integration; no Oracle or controls result is claimed here."
+
+[oracle_bundle]
+digest = "sha256:12eabe7e8dbeca949c1293b5fd9308b9e5a3b67fdfe4583a41b4b62e5b5c863f"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:12eabe7e8dbeca949c1293b5fd9308b9e5a3b67fdfe4583a41b4b62e5b5c863f"
+visibility = "private"
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:53c5f3fe1bdfe565d080ff10e4387122c10ab1b6dfe10c00bbc72a4c198c205e", size_bytes = 10240, media_type = "application/vnd.nl2repobench.verifier+tar", uri = "artifact://private/sha256:53c5f3fe1bdfe565d080ff10e4387122c10ab1b6dfe10c00bbc72a4c198c205e", visibility = "private" }
+entrypoint = "contract.sh"

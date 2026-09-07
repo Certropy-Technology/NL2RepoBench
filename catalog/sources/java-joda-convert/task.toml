@@ -1,0 +1,119 @@
+schema_version = "1.0"
+task_id = "java-joda-convert"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "java-library"
+tags = ["java", "maven", "joda-convert", "annotations", "conversion"]
+language = "java"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/JodaOrg/joda-convert"
+revision = "87c3e244a63d9ee6e8a24f106a99c067c97600cd"
+license_spdx = "Apache-2.0"
+source_digest = "sha256:e5ebaa6d54088b2ac71eb25126bc42084e24dcbefcb44ea71652f4977f8918cc"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm-amd64"
+base_image = "nl2repobench/java-runtime@sha256:9f4180fc607186b2cdc958049cd1f230d3cbf5a887eeb5106253a4287260e3ef"
+base_image_digest = "sha256:9f4180fc607186b2cdc958049cd1f230d3cbf5a887eeb5106253a4287260e3ef"
+network_mode = "no-network"
+
+[environment.runtime]
+language = "java"
+runtime = "jdk"
+version = "temurin-21.0.12+8"
+package_manager = "maven"
+package_manager_version = "3.9.11"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The bounded FromString and ToString annotation contract uses only JDK APIs; agent, candidate, verifier, Oracle, and controls execute without network access."
+
+[dependencies]
+status = "known"
+package_manager = "maven"
+packages = []
+
+[dependencies.lock]
+digest = "sha256:18a045d672e0707be99ee3f9b050e458da254b8fb56817b910db132708b02d00"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:18a045d672e0707be99ee3f9b050e458da254b8fb56817b910db132708b02d00"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:83360dfb14f65b79a824967eaf40bed9933967c1b1099120fe1d4a473bf83565"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:83360dfb14f65b79a824967eaf40bed9933967c1b1099120fe1d4a473bf83565"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:8a07139c9a6c3f555dab56e1f0019d11c713daa6af978acea80179979bfcd8ef"
+size_bytes = 1048
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:8a07139c9a6c3f555dab56e1f0019d11c713daa6af978acea80179979bfcd8ef"
+visibility = "private"
+
+[tests]
+framework = "junit-platform"
+report_format = "junit-open-test-report-xml-v1"
+expected_total = 10
+expected_total_source = "frozen-collection"
+commands = ["mvn --offline validate", "javac --release 21 verifier-owned ContractMain"]
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.sh"
+contract_sha256 = "sha256:ec6ed9b799cdbbb690a97e1db0f4c02174939f85ce71019d8b38002c2e0fcbec"
+
+[verifier.bundle]
+digest = "sha256:f6ae008943c140a2e6031f36ec31ce203fa4be61bf804da41ad8e33e6076f2cf"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.verifier+tar"
+uri = "artifact://private/sha256:f6ae008943c140a2e6031f36ec31ce203fa4be61bf804da41ad8e33e6076f2cf"
+visibility = "private"
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Recreate the deterministic Joda-Convert FromString and ToString annotation API slice."
+keywords = ["java", "maven", "joda-convert", "annotations"]
+agent_timeout_sec = 1200.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 300.0
+candidate_total_timeout_sec = 60.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "inventoried"
+owner = "java-maven-authoring-20260902"
+reason = "awaiting-integrator: immutable Joda-Convert source and Apache-2.0 license are frozen; bounded ten-leaf FromString/ToString annotation contract and task-local Maven/verifier/Oracle/control staging are complete pending parent CAS registration."
+
+[oracle_bundle]
+digest = "sha256:6b1e4357da3ffa839d564099a535f24be2107196e84ecc1a1316ed82c6e25d7d"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:6b1e4357da3ffa839d564099a535f24be2107196e84ecc1a1316ed82c6e25d7d"
+visibility = "private"

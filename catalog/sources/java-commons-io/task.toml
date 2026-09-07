@@ -1,0 +1,119 @@
+schema_version = "1.0"
+task_id = "java-commons-io"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "java-library"
+tags = ["java", "maven", "commons-io", "endianness", "binary-data"]
+language = "java"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/apache/commons-io"
+revision = "edd1cd734dca7bac7c5cfce07240d3140423f978"
+license_spdx = "Apache-2.0"
+source_digest = "sha256:db263cb64fc521c4d9cd09ee9f90c56d9baa6a46f52ae20f6fe2a8ab3dc005f1"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm-amd64"
+base_image = "nl2repobench/java-runtime@sha256:9f4180fc607186b2cdc958049cd1f230d3cbf5a887eeb5106253a4287260e3ef"
+base_image_digest = "sha256:9f4180fc607186b2cdc958049cd1f230d3cbf5a887eeb5106253a4287260e3ef"
+network_mode = "no-network"
+
+[environment.runtime]
+language = "java"
+runtime = "jdk"
+version = "temurin-21.0.12+8"
+package_manager = "maven"
+package_manager_version = "3.9.11"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "The bounded EndianUtils contract and trusted verifier use only JDK APIs; all Maven, candidate, verifier, Oracle, and control execution is offline."
+
+[dependencies]
+status = "known"
+package_manager = "maven"
+packages = []
+
+[dependencies.lock]
+digest = "sha256:f472abd9b90288004667284910942780a15c4a5b29e4d8a972397f9460f7c3d3"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:f472abd9b90288004667284910942780a15c4a5b29e4d8a972397f9460f7c3d3"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:83360dfb14f65b79a824967eaf40bed9933967c1b1099120fe1d4a473bf83565"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:83360dfb14f65b79a824967eaf40bed9933967c1b1099120fe1d4a473bf83565"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:cfdcf97bd99aecb2492835b6d01a8cc416b4e10637321b4008bd28125c87ce7a"
+size_bytes = 1048
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:cfdcf97bd99aecb2492835b6d01a8cc416b4e10637321b4008bd28125c87ce7a"
+visibility = "private"
+
+[tests]
+framework = "junit-platform"
+report_format = "junit-open-test-report-xml-v1"
+expected_total = 10
+expected_total_source = "frozen-collection"
+commands = ["mvn --offline validate", "javac --release 21 verifier-owned ContractMain"]
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.sh"
+contract_sha256 = "sha256:43023ef6db45f01b643f301c9191290a2443692a9ac405f781eaadd0ea15685d"
+
+[verifier.bundle]
+digest = "sha256:64541c1799511e1d1d8f95f5025903c1cf2fb88eef404cbcdd8975259f72b4b1"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.verifier+tar"
+uri = "artifact://private/sha256:64541c1799511e1d1d8f95f5025903c1cf2fb88eef404cbcdd8975259f72b4b1"
+visibility = "private"
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Recreate the deterministic Apache Commons IO EndianUtils primitive byte-order conversion API slice."
+keywords = ["java", "maven", "commons-io", "endianness", "byte-order"]
+agent_timeout_sec = 1200.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 300.0
+candidate_total_timeout_sec = 60.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "inventoried"
+owner = "java-maven-authoring-20260902"
+reason = "Immutable source/license freeze, bounded ten-leaf EndianUtils contract, empty Maven closure, and task-local verifier/Oracle/control staging are complete; awaiting-integrator means parent must register CAS refs, compile runtime, and run Harbor gates."
+
+[oracle_bundle]
+digest = "sha256:a1b9be6be1cca316cf8fe452fa3523839176be186cfd94cf5b946393eb81edbc"
+size_bytes = 6369280
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:a1b9be6be1cca316cf8fe452fa3523839176be186cfd94cf5b946393eb81edbc"
+visibility = "private"

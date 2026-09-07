@@ -1,0 +1,119 @@
+schema_version = "1.0"
+task_id = "java-commons-bcel"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "java-library"
+tags = ["java", "maven", "bcel", "byte-sequence", "offline"]
+language = "java"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/apache/commons-bcel"
+revision = "279ec2300c1d9757061454c200d5e19090bee39e"
+license_spdx = "Apache-2.0"
+source_digest = "sha256:273653bda961ef41e1c0203480cf66edd88a0aa92e464fddebc4f9c15ef770e0"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "nl2repobench/java-runtime@sha256:9f4180fc607186b2cdc958049cd1f230d3cbf5a887eeb5106253a4287260e3ef"
+base_image_digest = "sha256:9f4180fc607186b2cdc958049cd1f230d3cbf5a887eeb5106253a4287260e3ef"
+network_mode = "no-network"
+
+[environment.runtime]
+language = "java"
+runtime = "jdk"
+version = "temurin-21.0.12+8"
+package_manager = "maven"
+package_manager_version = "3.9.11"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "All dependency, verifier, and Oracle bytes are frozen before Harbor execution; the candidate and verifier have no network access."
+
+[dependencies]
+status = "known"
+package_manager = "maven"
+packages = []
+
+[dependencies.lock]
+digest = "sha256:a0c1689da2cc402e44a1a534ff574907ca259f78f0585f8edce4a100bd21dd34"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:a0c1689da2cc402e44a1a534ff574907ca259f78f0585f8edce4a100bd21dd34"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:83360dfb14f65b79a824967eaf40bed9933967c1b1099120fe1d4a473bf83565"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:83360dfb14f65b79a824967eaf40bed9933967c1b1099120fe1d4a473bf83565"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:6c0a6e62633acd0fc09dab1e8c843d5b9fda6398f4ef605ec29b5350e2fb11ad"
+size_bytes = 1048
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:6c0a6e62633acd0fc09dab1e8c843d5b9fda6398f4ef605ec29b5350e2fb11ad"
+visibility = "private"
+
+[tests]
+framework = "junit-platform"
+report_format = "junit-open-test-report-xml-v1"
+expected_total = 8
+expected_total_source = "frozen-collection"
+commands = ["mvn --offline validate", "javac verifier-owned contract"]
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.sh"
+contract_sha256 = "sha256:d1bbc54f71f585f47b6d2ace7606a628f1c740627a51b21c1d718dabdabe5039"
+
+[verifier.bundle]
+digest = "sha256:bcae189ef4f5ff5a314d5f21597a5e099a1fb86ee1c3ae38f7ada36445177b98"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.verifier+tar"
+uri = "artifact://private/sha256:bcae189ef4f5ff5a314d5f21597a5e099a1fb86ee1c3ae38f7ada36445177b98"
+visibility = "private"
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Recreate the bounded public ByteSequence behavior of Apache Commons BCEL."
+keywords = ["java", "maven", "bcel", "byte-sequence", "offline"]
+agent_timeout_sec = 1200.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 300.0
+candidate_total_timeout_sec = 60.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "inventoried"
+owner = "java-maven-authoring-20260902"
+reason = "Source, license, API inventory, bounded contract, and local artifact staging are complete; parent integration must register private CAS refs before compile/Oracle/controls."
+
+[oracle_bundle]
+digest = "sha256:d2e793897e4351e48af80f78d0c682e48b6087d4ba56256af273437ee8eaff97"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:d2e793897e4351e48af80f78d0c682e48b6087d4ba56256af273437ee8eaff97"
+visibility = "private"

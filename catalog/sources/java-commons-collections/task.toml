@@ -1,0 +1,118 @@
+schema_version = "1.0"
+task_id = "java-commons-collections"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "java-library"
+tags = ["java", "maven", "collections", "multiset", "offline", "separate-verifier"]
+language = "java"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/apache/commons-collections"
+revision = "a6094d11c12ea47ae774256f43e82c7d3097899b"
+license_spdx = "Apache-2.0"
+source_digest = "sha256:5210b454d5441efbeb63bd73289bdac4e4d4551cb2e9417a3ab82478db34c811"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "nl2repobench/java-runtime@sha256:9f4180fc607186b2cdc958049cd1f230d3cbf5a887eeb5106253a4287260e3ef"
+base_image_digest = "sha256:9f4180fc607186b2cdc958049cd1f230d3cbf5a887eeb5106253a4287260e3ef"
+network_mode = "no-network"
+
+[environment.runtime]
+language = "java"
+runtime = "jdk"
+version = "temurin-21.0.12+8"
+package_manager = "maven"
+package_manager_version = "3.9.11"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "The bounded CollectionUtils contract has no third-party runtime dependencies; source and verifier artifacts are privately frozen."
+
+[dependencies]
+status = "known"
+package_manager = "maven"
+packages = []
+
+[dependencies.lock]
+digest = "sha256:7e13359f034ce3a89df16f88e01682eb9044cb6699d609da42d26a15e5497dc6"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:7e13359f034ce3a89df16f88e01682eb9044cb6699d609da42d26a15e5497dc6"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:83360dfb14f65b79a824967eaf40bed9933967c1b1099120fe1d4a473bf83565"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:83360dfb14f65b79a824967eaf40bed9933967c1b1099120fe1d4a473bf83565"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:940f9c75c66f4b4380863a8450c5d6c8be94af761b1628f179d764314d1aabf3"
+size_bytes = 1048
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:940f9c75c66f4b4380863a8450c5d6c8be94af761b1628f179d764314d1aabf3"
+visibility = "private"
+
+[tests]
+framework = "junit-platform"
+report_format = "junit-open-test-report-xml-v1"
+expected_total = 8
+expected_total_source = "frozen-collection"
+commands = ["mvn --offline validate", "javac verifier-owned contract"]
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.sh"
+contract_sha256 = "sha256:752a135ee94158dbc253308023d8236069ab5d614c10ffe596f1b000275b70be"
+
+[verifier.bundle]
+digest = "sha256:99e5875b6078a74ebe3e18d475d7677221191d5a178af2dcb04077b94577209b"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.verifier+tar"
+uri = "artifact://private/sha256:99e5875b6078a74ebe3e18d475d7677221191d5a178af2dcb04077b94577209b"
+visibility = "private"
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Reimplement a bounded Apache Commons Collections CollectionUtils API with duplicate-aware collection operations in an offline Java verifier."
+keywords = ["java", "maven", "collections", "multiset", "junit", "offline"]
+agent_timeout_sec = 900.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 300.0
+candidate_total_timeout_sec = 60.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "inventoried"
+owner = "java-maven-author-wave1"
+reason = "Bounded stdlib-verifiable CollectionUtils contract is staged locally; parent must register private CAS refs, compile the generated runtime, and run Oracle/controls."
+
+[oracle_bundle]
+digest = "sha256:f421fce2f3705c340e89443c2bfe2dcbb544cfb79bd0c400f3734c34852e6862"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:f421fce2f3705c340e89443c2bfe2dcbb544cfb79bd0c400f3734c34852e6862"
+visibility = "private"

@@ -1,0 +1,82 @@
+schema_version = "1.0"
+task_id = "excon"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "ruby-http-client"
+tags = ["ruby", "bundler", "excon", "http", "stub", "middleware", "json-bridge"]
+language = "ruby"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/excon/excon"
+revision = "b6ca2879961d04f8de520c4b740db6aca4fdb48a"
+license_spdx = "MIT"
+source_digest = "sha256:fce18c3bc821c19f587fc34550e94f6caf5c5319483d1e1484b651148ca1cc4c"
+submodules = []
+
+[environment]
+status = "known"
+runtime_version = "3.4.10"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/ruby"
+base_image_digest = "sha256:1fb3661a02aac22a9025495fe2b53d5bb36e9f8841339c769b2409d8d97c6035"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "Bundler dependencies are supplied by a private hash-verified cache; the agent and verifier do not fetch upstream source."
+
+[dependencies]
+status = "known"
+installer = "bundler"
+packages = []
+gem_bundle = { digest = "sha256:fe721f2011247fe5af6a42df19878944b9633669a579ce6c8f72f532a5dc986c", size_bytes = 10240, media_type = "application/vnd.nl2repobench.rubygems-bundle+tar", uri = "artifact://private/sha256:fe721f2011247fe5af6a42df19878944b9633669a579ce6c8f72f532a5dc986c", visibility = "private" }
+
+[tests]
+framework = "ruby-contract"
+expected_total = 9
+expected_total_source = "frozen-collection"
+commands = ["bash /tests/private/contract.sh"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Reimplement a tested subset of Excon's pure-Ruby HTTP client core: module defaults, the global/local stub registry and matcher, mock-mode request dispatch, Connection URL/option merging, case-insensitive response headers, and the mapped status-error surface."
+keywords = ["ruby", "bundler", "excon", "http", "stub", "middleware", "json-bridge", "repository-generation"]
+agent_timeout_sec = 900.0
+verifier_timeout_sec = 900.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 420.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 2048
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "packaged"
+owner = "excon-wave1-recovery-qwen"
+reason = "Frozen pure-Ruby Excon 1.7.1 release with a dependency-free private Bundler cache, hash-inventoried verifier and Oracle bundles, and a public reviewed bridge plus a 9-leaf ruby-contract-json-v1 contract whose expectations were captured by executing the bridge against the pinned revision in the locked Ruby 3.4.10 image. Oracle and control runs in official Harbor are left to the parent integrator."
+
+[oracle_bundle]
+digest = "sha256:6f71ae4530712d9eede1f3850a5fd9bf7741b5e1738a718300767881439303f8"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:6f71ae4530712d9eede1f3850a5fd9bf7741b5e1738a718300767881439303f8"
+visibility = "private"
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:8849d6d26ac1c11f43ce554a87b7a9a6b4bd32fb982f413a18002b8a932fd7cf", size_bytes = 10240, media_type = "application/vnd.nl2repobench.verifier+tar", uri = "artifact://private/sha256:8849d6d26ac1c11f43ce554a87b7a9a6b4bd32fb982f413a18002b8a932fd7cf", visibility = "private" }
+entrypoint = "contract.sh"

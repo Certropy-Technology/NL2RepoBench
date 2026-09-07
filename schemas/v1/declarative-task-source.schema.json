@@ -83,14 +83,37 @@
                 "required": [
                   "module_bundle"
                 ]
+              },
+              {
+                "properties": {
+                  "gem_bundle": {
+                    "not": {
+                      "type": "null"
+                    }
+                  }
+                },
+                "required": [
+                  "gem_bundle"
+                ]
               }
             ]
           }
         }
       ],
-      "description": "Hash-locked build-time dependencies for Python task images.\n\nPython Harbor images install candidate dependencies from the package index\nduring the Docker build.  The final task never carries a wheelhouse and\nthe verifier never uses ``--no-index``.  ``lock_artifact`` contains only a\nrequirements lock file with hashes; ``artifact`` is retained solely so\nolder catalog records can be diagnosed and rejected during publication.",
+      "description": "Hash-locked build-time dependencies for runtime-specific task images.\n\nPython Harbor images install candidate dependencies from the package index\nduring the Docker build. Ruby images use a private, hash-inventoried\nBundler cache and Go images use a private module closure. The final task\nnever carries a Python wheelhouse, and ``artifact`` is retained solely so\nolder catalog records can be diagnosed and rejected during publication.",
       "properties": {
         "artifact": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ArtifactRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "gem_bundle": {
           "anyOf": [
             {
               "$ref": "#/$defs/ArtifactRef"
@@ -106,6 +129,7 @@
           "enum": [
             "uv",
             "pip",
+            "bundler",
             "system",
             "unknown"
           ],
@@ -1068,8 +1092,11 @@
           "type": "string"
         },
         "framework": {
-          "const": "pytest",
           "default": "pytest",
+          "enum": [
+            "pytest",
+            "ruby-contract"
+          ],
           "title": "Framework",
           "type": "string"
         },

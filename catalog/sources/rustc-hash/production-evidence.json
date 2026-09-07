@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.0",
+  "task_id": "rustc-hash",
+  "terminal_kind": "intermediate",
+  "status": "packaged",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/rust-lang/rustc-hash",
+    "revision": "6ced6cb4235295509102d05f8915e0bb0d8cfe54",
+    "source_digest": "sha256:3e00d3ae4824a067ae028eac598b4ba7313f8eae3aac7d673adeab15f7005905",
+    "license_spdx": "Apache-2.0 OR MIT",
+    "license_files": {
+      "LICENSE-APACHE": "sha256:95bd3988beee069fa2848f648dab43cc6e0b2add2ad6bcb17360caf749802bcc",
+      "LICENSE-MIT": "sha256:30fefc3a7d6a0041541858293bcbea2dde4caa4c0a5802f996a7f7e8c0085652"
+    },
+    "archive_command": "git archive --format=tar --prefix=rustc-hash/ 6ced6cb4235295509102d05f8915e0bb0d8cfe54"
+  },
+  "runtime": {
+    "rustc": "1.97.1",
+    "cargo": "1.97.1",
+    "os": "debian-12-amd64",
+    "architecture": "linux/amd64",
+    "network_mode": "no-network"
+  },
+  "private_artifacts": {
+    "cargo_bundle": {"digest": "sha256:afdd81f5f74049287ac41e84ebac8619bc42f75b361529ec05e0b996fcf5c8fe", "size_bytes": 718},
+    "verifier_bundle": {"digest": "sha256:2a17253c08c1ab254afd5298af38b73fbe8d1980b00cc5850a8afc9b207b93c4", "size_bytes": 2655},
+    "oracle_bundle": {"digest": "sha256:eda6d952ae9929b307ffcd5e3fa299d44d849c9aac607a6bf6f51395855c7dc3", "size_bytes": 6644}
+  },
+  "authoring_validation": {
+    "source_validation": {"command": "uv run nl2repo task validate-source catalog/sources/rustc-hash", "exit_code": 0},
+    "cargo_default": {"command": "cargo check --locked --offline", "exit_code": 0},
+    "cargo_no_default_features": {"command": "cargo check --locked --offline --no-default-features", "exit_code": 0},
+    "upstream_library_tests": {"command": "cargo test --lib --locked --offline", "exit_code": 0, "passed": 7},
+    "bridge_smoke": {"command": "NL2REPO_RUST_CANDIDATE=reference python3 tests/verifier/run.py", "exit_code": 0, "collected": 24, "passed": 24},
+    "deterministic_compile": {"command": "uv run nl2repo harbor compile ... twice and cmp bundle.manifest.json", "exit_code": 0, "bundle_manifest_sha256": "sha256:2200ba8bcb736bae68363801a0df17492b107d8f98142078325d7f44cc88f502", "canonical_manifest_digest": "sha256:298b782dbf8cf3f351c7274137664685fbfa69154af1bcd0da967da8e72b1d88"}
+  },
+  "oracle": null,
+  "controls": null,
+  "next_step": "Run Harbor Oracle, Nop/empty, stub, forgery and offline controls against the generated bundle before advancing lifecycle."
+}

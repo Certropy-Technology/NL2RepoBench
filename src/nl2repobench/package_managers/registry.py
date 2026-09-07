@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from .base import PackageManagerAdapter
+from .bundler import BundlerPackageManager
 from .go_modules import GoModulesPackageManager
 from .pnpm import PnpmPackageManager
 
@@ -23,6 +24,7 @@ class PackageManagerRegistry:
             adapters={
                 "go-modules": GoModulesPackageManager(),
                 "pnpm": PnpmPackageManager(),
+                "bundler": BundlerPackageManager(),
             }
         )
 

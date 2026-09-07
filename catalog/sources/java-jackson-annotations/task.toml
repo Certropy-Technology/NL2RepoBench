@@ -1,0 +1,119 @@
+schema_version = "1.0"
+task_id = "java-jackson-annotations"
+version = "0.1.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "java-library"
+tags = ["java", "maven", "jackson", "annotations", "reflection"]
+language = "java"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/FasterXML/jackson-annotations"
+revision = "5b89257f297d432807a8cf5a96867260b304037a"
+license_spdx = "Apache-2.0"
+source_digest = "sha256:82b5ab5459ff779e08a231368f560fcfe677f6e91a212a2caeb34cabfdf47182"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm-amd64"
+base_image = "nl2repobench/java-runtime@sha256:9f4180fc607186b2cdc958049cd1f230d3cbf5a887eeb5106253a4287260e3ef"
+base_image_digest = "sha256:9f4180fc607186b2cdc958049cd1f230d3cbf5a887eeb5106253a4287260e3ef"
+network_mode = "no-network"
+
+[environment.runtime]
+language = "java"
+runtime = "jdk"
+version = "temurin-21.0.12+8"
+package_manager = "maven"
+package_manager_version = "3.9.11"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "The bounded JsonCreator annotation contract and verifier use only JDK reflection; Maven, candidate, verifier, Oracle, and controls run offline."
+
+[dependencies]
+status = "known"
+package_manager = "maven"
+packages = []
+
+[dependencies.lock]
+digest = "sha256:19ff23d24a613c0b640b31a712eda0b7a95710ac375a9f68d94fe4f40348b219"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.package-lock.tar"
+uri = "artifact://private/sha256:19ff23d24a613c0b640b31a712eda0b7a95710ac375a9f68d94fe4f40348b219"
+visibility = "private"
+
+[dependencies.offline_store]
+digest = "sha256:83360dfb14f65b79a824967eaf40bed9933967c1b1099120fe1d4a473bf83565"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.offline-store.tar"
+uri = "artifact://private/sha256:83360dfb14f65b79a824967eaf40bed9933967c1b1099120fe1d4a473bf83565"
+visibility = "private"
+
+[dependencies.inventory]
+digest = "sha256:1e837560d4cd58985081f8089d777a89daeef1e1122f1eb27120185081497240"
+size_bytes = 1048
+media_type = "application/vnd.nl2repobench.inventory+json"
+uri = "artifact://private/sha256:1e837560d4cd58985081f8089d777a89daeef1e1122f1eb27120185081497240"
+visibility = "private"
+
+[tests]
+framework = "junit-platform"
+report_format = "junit-open-test-report-xml-v1"
+expected_total = 8
+expected_total_source = "frozen-collection"
+commands = ["mvn --offline validate", "javac --release 21 verifier-owned ContractMain"]
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.sh"
+contract_sha256 = "sha256:558a9dafd9e02aa91bff5d45f19ebb29341ce175a49ed391af5b49cfadbbb078"
+
+[verifier.bundle]
+digest = "sha256:b9a660459962c4df378e451e44a4cffb5e1f716097c25b140bfa7191dfa2b334"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.verifier+tar"
+uri = "artifact://private/sha256:b9a660459962c4df378e451e44a4cffb5e1f716097c25b140bfa7191dfa2b334"
+visibility = "private"
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[harbor]
+description = "Recreate the deterministic Jackson JsonCreator annotation and creator-mode metadata slice."
+keywords = ["java", "maven", "jackson", "annotations", "reflection"]
+agent_timeout_sec = 1200.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 300.0
+candidate_total_timeout_sec = 60.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 1024
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "inventoried"
+owner = "java-maven-authoring-20260902"
+reason = "awaiting-integrator: immutable source/license freeze, eight-leaf JsonCreator contract, empty Maven closure, and task-local verifier/Oracle/control staging complete; parent CAS registration, compilation, and gates remain."
+
+[oracle_bundle]
+digest = "sha256:05a8aacdf38ee9db6f174b356fbce9d0efd7e13e2e4667105eda48a0c2dd2182"
+size_bytes = 522240
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:05a8aacdf38ee9db6f174b356fbce9d0efd7e13e2e4667105eda48a0c2dd2182"
+visibility = "private"
