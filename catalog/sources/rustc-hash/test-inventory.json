@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "task_id": "rustc-hash",
+  "expected_total": 24,
+  "framework": "cargo",
+  "collection": "fixed native Rust bridge scenarios",
+  "scenarios": [
+    "default hasher bytes", "typed integer hashing", "signed integer hashing",
+    "empty and unicode bytes", "seeded hasher", "build hasher determinism",
+    "map insertion and lookup", "map replacement and removal", "set insertion",
+    "set membership and removal", "map iteration", "set iteration",
+    "clone seeded state", "different seeds", "u8/u16 widths", "u32/u64 widths",
+    "u128/usize widths", "repeated finish", "hasher reset independence",
+    "default aliases", "seeded aliases", "no-std feature", "hash trait use",
+    "stable report collection"
+  ]
+}

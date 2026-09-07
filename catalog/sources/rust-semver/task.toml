@@ -1,0 +1,87 @@
+schema_version = "1.0"
+task_id = "rust-semver"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "rust-semver"
+tags = ["rust", "cargo", "semver", "parser", "version-requirements", "no-std", "separate-verifier"]
+language = "rust"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/dtolnay/semver"
+revision = "6ed8561154715b2c34df417a2052597d586f2c43"
+license_spdx = "MIT OR Apache-2.0"
+source_digest = "sha256:193fa1e8e7fd3f5bd3f5fcf911df523b4d1cd59c33fba7a079bec9dfaf761594"
+submodules = []
+
+[environment]
+status = "known"
+runtime_version = "1.97.1"
+os_name = "debian-12-amd64"
+base_image = "docker.io/library/rust@sha256:2775a09d208ff0d7c1f50490c45b62db929e87ba1dcbc3f2132ac71a704bcdd3"
+base_image_digest = "sha256:2775a09d208ff0d7c1f50490c45b62db929e87ba1dcbc3f2132ac71a704bcdd3"
+system_packages = ["build-essential"]
+build_command = "cargo check --locked --offline"
+network_mode = "no-network"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "The candidate and verifier consume the digest-bound dependency-free Cargo closure at image build time; the Agent, candidate and verifier run without network. Only the trusted Oracle receives the exact upstream host authorisation."
+
+[dependencies]
+status = "known"
+installer = "cargo"
+packages = []
+cargo_bundle = { digest = "sha256:9763738ec1ff83c2d9e03479ac5230e392f5921dcbf93a3e855fa456de232eaa", size_bytes = 823, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:9763738ec1ff83c2d9e03479ac5230e392f5921dcbf93a3e855fa456de232eaa", visibility = "private" }
+
+[tests]
+framework = "cargo"
+expected_total = 26
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = []
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[verifier]
+protocol = "custom-json-v1"
+bundle = { digest = "sha256:a9b913caa178094142ba93e64df7415fac86d7d75243fe5d2a2b5c3a55565e8f", size_bytes = 11432, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:a9b913caa178094142ba93e64df7415fac86d7d75243fe5d2a2b5c3a55565e8f", visibility = "private" }
+entrypoint = "run.py"
+environment = {}
+
+[harbor]
+description = "Rebuild the semver Rust library from an empty Cargo workspace: strict Version parsing and display, SemVer ordering versus Ord over build metadata, Prerelease and BuildMetadata validation, Comparator and VersionReq normalisation and matching, the bounded parse-error catalogue, and no_std compatibility."
+keywords = ["rust", "cargo", "semver", "version", "parser", "requirements", "no-std"]
+agent_timeout_sec = 3600.0
+verifier_timeout_sec = 900.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 360.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 8192
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:db7770012feb1041d59f5ba8a9ac641a2d20f0cb95c9a5a4f6aa60c3752b7182"
+size_bytes = 1174
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:db7770012feb1041d59f5ba8a9ac641a2d20f0cb95c9a5a4f6aa60c3752b7182"
+visibility = "private"
+
+[lifecycle]
+status = "packaged"
+owner = "rust-cargo-wave2"
+reason = "Frozen source, a 26-leaf two-process black-box verifier, a dependency-free offline Cargo closure and a deterministic Harbor projection are in place, with the local reference bridge at 26/26. Official Harbor Oracle, controls, model pilots, review and publication remain parent-level gates."

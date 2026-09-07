@@ -128,6 +128,7 @@ _PYTHON_VERIFIER_FILES = (
     "package_managers/__init__.py",
     "package_managers/base.py",
     "package_managers/go_modules.py",
+    "package_managers/cargo.py",
     "verification/__init__.py",
     "verification/cli.py",
     "verification/candidate_client.py",
@@ -149,6 +150,8 @@ _PYTHON_VERIFIER_FILES = (
     "verification/network_check.py",
     "verification/node_grader.py",
     "verification/node_models.py",
+    "verification/rust_grader.py",
+    "verification/rust_runner.py",
     "verification/process_cleanup.py",
     "verification/pytest_plugin.py",
     "verification/registry.py",
@@ -158,6 +161,7 @@ _PYTHON_VERIFIER_FILES = (
     "verification/normalize/__init__.py",
     "verification/normalize/go_json.py",
     "verification/normalize/node_test_json.py",
+    "verification/normalize/rust_bridge_json.py",
     "verification/normalize/pytest_junit.py",
 )
 

@@ -1,0 +1,61 @@
+{
+  "blocked": {
+    "commands": [
+      {
+        "command": "git fetch --depth 1 origin refs/tags/1.13.1 && git rev-parse FETCH_HEAD && git archive --format=tar --prefix=regex/ FETCH_HEAD | sha256sum && git show FETCH_HEAD:LICENSE-MIT | sha256sum && git show FETCH_HEAD:LICENSE-APACHE | sha256sum",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/rust-regex/evidence/remediation.log",
+          "sha256": "sha256:837c165bb7c5fcb5241e1bf81701a9a3f4a5a8b7f31eef7e6c1f27559802269b"
+        },
+        "result": "source freeze succeeded: revision 7c28ee4dc4aef53571c96757f4825c51ac0c3d44, archive sha256:fcbec4c0..., LICENSE-MIT sha256:6485b8ed..., LICENSE-APACHE sha256:a60eea81...",
+        "tool_version": "rustc 1.97.1 (8bab26f4f 2026-07-14) (Fedora 1.97.1-1.fc44); cargo 1.97.1 (c980f4866 2026-06-30) (Fedora 1.97.1-1.fc44)"
+      },
+      {
+        "command": "sed -n '/actual regex engines/,/^\\[dev-dependencies\\]/p' FETCH_HEAD:Cargo.toml",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/rust-regex/evidence/remediation.log",
+          "sha256": "sha256:837c165bb7c5fcb5241e1bf81701a9a3f4a5a8b7f31eef7e6c1f27559802269b"
+        },
+        "result": "regex-automata 0.4.16 and regex-syntax 0.8.11 declared unconditionally in [dependencies]; default = [std, perf, unicode, regex-syntax/default]",
+        "tool_version": "rustc 1.97.1 (8bab26f4f 2026-07-14) (Fedora 1.97.1-1.fc44); cargo 1.97.1 (c980f4866 2026-06-30) (Fedora 1.97.1-1.fc44)"
+      },
+      {
+        "command": "CARGO_NET_OFFLINE=true cargo check --offline --lib (regex 1.13.1 src, engine crates ABSENT from the vendored-source replacement directory)",
+        "exit_code": 101,
+        "log": {
+          "path": "catalog/sources/rust-regex/evidence/remediation.log",
+          "sha256": "sha256:837c165bb7c5fcb5241e1bf81701a9a3f4a5a8b7f31eef7e6c1f27559802269b"
+        },
+        "result": "error: no matching package named `regex-automata` found; required by package `regex v1.13.1` - the reference cannot compile without the engine crates in the shared offline closure",
+        "tool_version": "rustc 1.97.1 (8bab26f4f 2026-07-14) (Fedora 1.97.1-1.fc44); cargo 1.97.1 (c980f4866 2026-06-30) (Fedora 1.97.1-1.fc44)"
+      },
+      {
+        "command": "du -sh regex-automata/src regex-syntax/src && find regex-syntax/src/unicode_tables -name '*.rs' -printf '%s %f\\n' | sort -rn | head -6",
+        "exit_code": 0,
+        "log": {
+          "path": "catalog/sources/rust-regex/evidence/remediation.log",
+          "sha256": "sha256:837c165bb7c5fcb5241e1bf81701a9a3f4a5a8b7f31eef7e6c1f27559802269b"
+        },
+        "result": "regex-automata/src 2.7M (the engines), regex-syntax/src 1.7M with committed generated Unicode tables (property_bool.rs 266293B, general_category.rs 158564B, case_folding_simple.rs 67576B, ...)",
+        "tool_version": "rustc 1.97.1 (8bab26f4f 2026-07-14) (Fedora 1.97.1-1.fc44); cargo 1.97.1 (c980f4866 2026-06-30) (Fedora 1.97.1-1.fc44)"
+      }
+    ],
+    "failure_class": "environment",
+    "next_step": "Parent-owned Rust-lane change: provide a reference-only engine closure that is NOT present in the candidate environment (so the Oracle can build regex against regex-automata/regex-syntax while the candidate must reimplement), plus a candidate-safe way to supply regex-syntax's generated Unicode tables without leaking them; or select a bounded, non-delegating subject crate whose mandatory closure is primitives-only and generated-data-free. Then freeze, bind a positive auto-collected denominator, compile twice with the current compiler, and run fresh Oracle + empty/stub/forgery/offline controls before any promotion.",
+    "source_freeze": {
+      "detail_path": "catalog/sources/rust-regex/evidence/source-freeze.json",
+      "detail_sha256": "sha256:a03fc3f1c5fb4f5d51d023ce4ce99f74d1cdbd3f458abae3c232351d825acf03",
+      "license_spdx": "MIT OR Apache-2.0",
+      "revision": "7c28ee4dc4aef53571c96757f4825c51ac0c3d44",
+      "source_digest": "sha256:e7d7355ac15b772b23be856ebd317b99f1a5b8c943f91911becbb1cea2c145ae",
+      "status": "known",
+      "upstream_url": "https://github.com/rust-lang/regex"
+    }
+  },
+  "notes": "No Oracle, controls, Harbor runtime, reward, or fixed positive denominator exists for this task. Blocking is a structural dependency-closure/generated-data obstruction in the current single-closure Rust lane, not an unrun-work item. catalog/tasks/rust-regex is intentionally absent.",
+  "schema_version": "1.0",
+  "task_id": "rust-regex",
+  "terminal_kind": "blocked"
+}

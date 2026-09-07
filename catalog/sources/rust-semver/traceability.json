@@ -1,0 +1,137 @@
+{
+  "coverage_note": "Every hidden assertion is stated in instruction.md; no leaf depends on undocumented behaviour.",
+  "pairs": [
+    {
+      "leaf": "semver.version-parse-canonical",
+      "operation_code": 1,
+      "public_spec": "Version::parse + Display over six accepted forms incl. u64::MAX major"
+    },
+    {
+      "leaf": "semver.version-leading-zero-and-structure-errors",
+      "operation_code": 2,
+      "public_spec": "leading zeros, missing patch, extra component, 'v' prefix, empty input"
+    },
+    {
+      "leaf": "semver.version-whitespace-and-empty-segment-errors",
+      "operation_code": 3,
+      "public_spec": "leading/trailing/internal spaces, empty pre and build segments, double dot, underscore"
+    },
+    {
+      "leaf": "semver.version-overflow-and-charset-errors",
+      "operation_code": 4,
+      "public_spec": "u64 overflow and non-numeric components"
+    },
+    {
+      "leaf": "semver.prerelease-and-build-metadata-acceptance",
+      "operation_code": 5,
+      "public_spec": "numeric/alpha pre accepted, 00 rejected, +build.007 accepted, bad build char rejected"
+    },
+    {
+      "leaf": "semver.ord-versus-precedence-with-build",
+      "operation_code": 6,
+      "public_spec": "Ord counts build metadata while cmp_precedence ignores it"
+    },
+    {
+      "leaf": "semver.semver-precedence-chain",
+      "operation_code": 7,
+      "public_spec": "canonical pre-release precedence chain plus release field ordering"
+    },
+    {
+      "leaf": "semver.constructors-traits-and-debug",
+      "operation_code": 8,
+      "public_spec": "Version::new, FromStr, Hash agreement, Debug shape, EMPTY flags"
+    },
+    {
+      "leaf": "semver.requirement-parse-canonical",
+      "operation_code": 9,
+      "public_spec": "Display normalisation for * 1.2 ^ ~ >=,< = 1.x and spaced operator"
+    },
+    {
+      "leaf": "semver.requirement-parse-errors",
+      "operation_code": 10,
+      "public_spec": "bad wildcard, malformed comparator, 4-part, empty pre, trailing space, =>"
+    },
+    {
+      "leaf": "semver.comparator-normalization-projection",
+      "operation_code": 11,
+      "public_spec": "op/major/minor/patch/pre projection incl. empty STAR vector"
+    },
+    {
+      "leaf": "semver.caret-semantics",
+      "operation_code": 12,
+      "public_spec": "^ full, ^0.2.3, ^0.0.3 boundaries"
+    },
+    {
+      "leaf": "semver.tilde-semantics",
+      "operation_code": 13,
+      "public_spec": "~1.2.3, ~1.2, ~1 boundaries"
+    },
+    {
+      "leaf": "semver.wildcard-and-exact-semantics",
+      "operation_code": 14,
+      "public_spec": "* 1.x 1.2.x and = exactness"
+    },
+    {
+      "leaf": "semver.comparison-operators-and-intersection",
+      "operation_code": 15,
+      "public_spec": ">, >=, <, <= and comma intersections incl. empty range"
+    },
+    {
+      "leaf": "semver.prerelease-matching-rule",
+      "operation_code": 16,
+      "public_spec": "pre-release gate for VersionReq incl. wildcard rejecting pre-releases"
+    },
+    {
+      "leaf": "semver.build-metadata-ignored-in-matching",
+      "operation_code": 17,
+      "public_spec": "build metadata discarded by matching, Comparator Display, req display"
+    },
+    {
+      "leaf": "semver.prerelease-validation",
+      "operation_code": 18,
+      "public_spec": "Prerelease::new vs BuildMetadata::new on shared text"
+    },
+    {
+      "leaf": "semver.build-metadata-validation",
+      "operation_code": 19,
+      "public_spec": "build identifier charset, empty segment, hyphen-only, leading zero asymmetry"
+    },
+    {
+      "leaf": "semver.requirement-default-and-star",
+      "operation_code": 20,
+      "public_spec": "STAR, Default equals STAR with zero comparators, whitespace-only req errors"
+    },
+    {
+      "leaf": "semver.error-trait-contract",
+      "operation_code": 21,
+      "public_spec": "Error determinism, Debug wraps Display, std::error::Error present"
+    },
+    {
+      "leaf": "semver.display-roundtrip-stability",
+      "operation_code": 22,
+      "public_spec": "parse(Display(v)) identity and ordering for four forms"
+    },
+    {
+      "leaf": "semver.auto-trait-surface",
+      "operation_code": 23,
+      "public_spec": "public value types are Send + Sync + Unpin + Clone + Eq + Hash + Debug"
+    },
+    {
+      "leaf": "semver.identifier-ordering",
+      "operation_code": 24,
+      "public_spec": "Prerelease ordering, equality, EMPTY is_empty/as_str"
+    },
+    {
+      "leaf": "semver.comparator-level-matching",
+      "operation_code": 25,
+      "public_spec": "Comparator::parse + Comparator::matches, the independent single-comparator path"
+    },
+    {
+      "leaf": "semver.feature-compatibility",
+      "operation_code": "run.py offline cargo check",
+      "public_spec": "Environment Configuration and Core File Requirements: must compile with --no-default-features"
+    }
+  ],
+  "schema_version": "1.0",
+  "task_id": "rust-semver"
+}

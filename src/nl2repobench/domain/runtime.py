@@ -26,6 +26,7 @@ class RuntimeLanguage(StrEnum):
     PYTHON = "python"
     NODE = "node"
     GO = "go"
+    RUST = "rust"
 
 
 class PackageManager(StrEnum):
@@ -36,6 +37,7 @@ class PackageManager(StrEnum):
     NPM = "npm"
     PNPM = "pnpm"
     GO_MODULES = "go-modules"
+    CARGO = "cargo"
     NONE = "none"
 
 

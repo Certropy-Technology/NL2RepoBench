@@ -1,0 +1,182 @@
+{
+  "build_script_inventory": {
+    "commands": [],
+    "decision": "not-applicable",
+    "paths": [],
+    "rationale": "the frozen package has no build.rs and no [build-dependencies] (published include is src plus README and licences), and rng/, tests/, examples/, fuzz/ are separate workspace crates that the Oracle never installs, so there is no build-script execution surface to gate and the build-script-* control kinds do not apply",
+    "risk_flags": []
+  },
+  "commands": [
+    {
+      "command": "git ls-remote --heads --tags https://github.com/uuid-rs/uuid",
+      "exit_code": 0,
+      "log": "catalog/sources/rust-uuid/evidence/logs/ls-remote-tags.log",
+      "log_sha256": "sha256:b72c820f6329de72a32d54c24bad2afb2e65888532ee7e2729861e0305725b68",
+      "log_size_bytes": 503,
+      "result": "passed",
+      "summary": "latest tag v1.26.0 -> cdc96a87bddc38d0eb8f894c764e151d2299b4b3; lightweight tag (no peeled object)"
+    },
+    {
+      "command": "git fetch --depth 1 origin cdc96a87... && git rev-parse FETCH_HEAD",
+      "exit_code": 0,
+      "log": "catalog/sources/rust-uuid/evidence/logs/fetch-revision.log",
+      "log_sha256": "sha256:149c2e198c6fbcd6dac488e574203f7cca9fa745cad3826913aa4431120ef303",
+      "log_size_bytes": 110,
+      "result": "passed",
+      "summary": "second independent fetch equalled the frozen revision"
+    },
+    {
+      "command": "git archive --format=tar --prefix=uuid/ <revision> | sha256sum",
+      "exit_code": 0,
+      "log": "catalog/sources/rust-uuid/evidence/logs/source-archive-digest.log",
+      "log_sha256": "sha256:aae1d86ea091b297d6e6b08e69b4b51ccde232a8095d8eacd4d4992789e03ff5",
+      "log_size_bytes": 289,
+      "result": "passed",
+      "summary": "reproduced sha256:38fe6ae3... (450560 bytes) on a recomputed archive"
+    },
+    {
+      "command": "sha256sum LICENSE-MIT LICENSE-APACHE COPYRIGHT",
+      "exit_code": 0,
+      "log": "catalog/sources/rust-uuid/evidence/logs/license-digests.log",
+      "log_sha256": "sha256:c8a63001d9fe95bae7e489615af2fd65952705245747d9565cf0f1ab4379daa0",
+      "log_size_bytes": 508,
+      "result": "passed",
+      "summary": "licence bytes recorded and installed by the Oracle"
+    },
+    {
+      "command": "cargo generate-lockfile --offline (contract manifest, vendored sha1_smol)",
+      "exit_code": 0,
+      "log": "catalog/sources/rust-uuid/evidence/logs/generate-lockfile.log",
+      "log_sha256": "sha256:9ff5cd7493e7252ed4f76008b3ba8f19fdc6e229e39d24d156294c6473d0a5ca",
+      "log_size_bytes": 159,
+      "result": "passed",
+      "summary": "locked uuid + sha1_smol 1.0.0; lockfile version 4, two packages"
+    },
+    {
+      "command": "cargo check --locked --offline (frozen reference)",
+      "exit_code": 0,
+      "log": "catalog/sources/rust-uuid/evidence/logs/cargo-check.log",
+      "log_sha256": "sha256:ebffe48e5dbaaf1537e3c51fd346fe11b958d04bc0e2a383750456bce651f95e",
+      "log_size_bytes": 312,
+      "result": "passed",
+      "summary": "default-feature profile compiles offline against the private closure"
+    },
+    {
+      "command": "cargo check --locked --offline --features v5 (frozen reference)",
+      "exit_code": 0,
+      "log": "catalog/sources/rust-uuid/evidence/logs/cargo-check-v5.log",
+      "log_sha256": "sha256:406216ff0a75ecf949bb0567c9658ad2f480f7c407090b90f0d13d734b1baf29",
+      "log_size_bytes": 175,
+      "result": "passed",
+      "summary": "name-based v5 profile compiles offline (sha1_smol resolved from vendor)"
+    },
+    {
+      "command": "cargo check --locked --offline --no-default-features (frozen reference)",
+      "exit_code": 0,
+      "log": "catalog/sources/rust-uuid/evidence/logs/cargo-check-nostd.log",
+      "log_sha256": "sha256:104d633e3a66d648876b5fa7be18868e53e14f34c364a56d4c70158a7e0d708d",
+      "log_size_bytes": 303,
+      "result": "passed",
+      "summary": "no_std profile compiles offline with no dependency at all"
+    },
+    {
+      "command": "CargoPackageManager.validate_offline_store(..., expected_version='1.97.1')",
+      "exit_code": 0,
+      "log": "catalog/sources/rust-uuid/evidence/logs/validate-offline-store.log",
+      "log_sha256": "sha256:4b4a259d6213c10d4f61a6ff05364268ca32eec4dfcab9add6a865354c2bc406",
+      "log_size_bytes": 198,
+      "result": "passed",
+      "summary": "17-file closure: lock, vendor bytes, .cargo-checksum.json and crate archive all agree"
+    },
+    {
+      "command": "NL2REPO_RUST_CANDIDATE=<reference> python3 -B bridge/run.py (x2)",
+      "exit_code": 0,
+      "log": "catalog/sources/rust-uuid/evidence/logs/bridge-reference.log",
+      "log_sha256": "sha256:b6a8daab21e90afda758fa78bd626a82a251761e67e6692563602e0ab93cee3d",
+      "log_size_bytes": 235,
+      "result": "passed",
+      "summary": "rust-uuid-bridge-v1 collected 30, passed 30 twice; exit 0"
+    },
+    {
+      "command": "bridge/run.py against empty, stub, forgery and v7-nibble mutant candidates",
+      "exit_code": 0,
+      "log": "catalog/sources/rust-uuid/evidence/logs/bridge-negative-controls.log",
+      "log_sha256": "sha256:c625310174c86c471ac2a1d51991abf30a7a70d476b483c854a207dc08f11568",
+      "log_size_bytes": 1130,
+      "result": "passed",
+      "summary": "empty 30/0, stub 30/0, forgery 30/0 (planted reward/junit/report ignored), mutant 27/30 failing exactly the three v7/timestamp leaves"
+    },
+    {
+      "command": "oracle solve.sh replayed against a local clone of the frozen revision",
+      "exit_code": 0,
+      "log": "catalog/sources/rust-uuid/evidence/logs/oracle-replay.log",
+      "log_sha256": "sha256:9074d101586cdb728734763c861c508bbb06ca0ed4691648f81c896f43e06b5a",
+      "log_size_bytes": 278,
+      "result": "passed",
+      "summary": "commit assertion and strict archive digest passed; src, licences, contract manifest and lock installed"
+    }
+  ],
+  "denominator": {
+    "collected_on_failure_paths": 30,
+    "collection_method": "hidden checker always emits the full leaf list; the offline no-default-features gate is verifier-owned",
+    "expected_total": 30
+  },
+  "generated_projection": {
+    "bundle_manifest_sha256": "sha256:d4a929d93b0a0d140b23f410706174d1d59204a14c052d1c55a34da625e556cd",
+    "canonical_manifest_digest": "sha256:ef7e8337c01e70d57def5ea435276db955294cf00c26417d004b28bad80cd922",
+    "files": 97,
+    "mode": "production"
+  },
+  "leak_scan": "expected observations captured from the reference are absent from instruction.md and every inventory; the checker stores them hex-encoded inside the private verifier bundle only",
+  "local_reference_baseline": {
+    "attempts": 2,
+    "collected": 30,
+    "grading_note": "official Harbor rust_runner/verification.cli receipts remain parent gates",
+    "negative_controls": {
+      "empty": "30 collected / 0 passed",
+      "forgery control": "30/0",
+      "reference with hostile planted reports": "30/30",
+      "stub": "30/0",
+      "v7 nibble mutant": "27/30"
+    },
+    "passed": 30,
+    "report_format": "rust-uuid-bridge-v1"
+  },
+  "not_claimed": [
+    "official Harbor Oracle",
+    "Harbor Nop/stub/forgery/offline controls",
+    "controls-passed",
+    "reviewed",
+    "piloted",
+    "dataset entry",
+    "publication"
+  ],
+  "offline_closure": {
+    "inventory_files": 17,
+    "lockfile_version": 4,
+    "package_count": 2,
+    "packages": [
+      "uuid (source-less)",
+      "sha1_smol 1.0.0 (registry, checksum ae1a4718...)"
+    ],
+    "validation": "CargoPackageManager.validate_offline_store passed against Rust/Cargo 1.97.1"
+  },
+  "private_artifacts": {
+    "cargo_bundle": {
+      "digest": "sha256:76c98313887b5ab5bbe8e73ed0b77ccdf6469efe70ad9fd65b8479000f61d48e",
+      "size_bytes": 22490,
+      "uri": "artifact://private/sha256:76c98313887b5ab5bbe8e73ed0b77ccdf6469efe70ad9fd65b8479000f61d48e"
+    },
+    "oracle_bundle": {
+      "digest": "sha256:ce781fb478987cd7521141ebeac1c12b47edd5d8613d92df76f1f760bd928067",
+      "size_bytes": 1560,
+      "uri": "artifact://private/sha256:ce781fb478987cd7521141ebeac1c12b47edd5d8613d92df76f1f760bd928067"
+    },
+    "verifier_bundle": {
+      "digest": "sha256:7e7b14e02cbf68f1d61f26dce6203eae81f752d684a5a39abb639e3385ea1f38",
+      "size_bytes": 15502,
+      "uri": "artifact://private/sha256:7e7b14e02cbf68f1d61f26dce6203eae81f752d684a5a39abb639e3385ea1f38"
+    }
+  },
+  "task_id": "rust-uuid"
+}
