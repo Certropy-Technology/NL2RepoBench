@@ -1,0 +1,18 @@
+schema_version = "1.0"
+status = "locked"
+rust_version = "1.97.1"
+base_image = "docker.io/library/rust@sha256:2775a09d208ff0d7c1f50490c45b62db929e87ba1dcbc3f2132ac71a704bcdd3"
+base_image_digest = "sha256:2775a09d208ff0d7c1f50490c45b62db929e87ba1dcbc3f2132ac71a704bcdd3"
+verifier_base = "docker.io/library/python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+verifier_requirements_lock = "verifier/requirements.lock.txt"
+verifier_requirements_sha256 = "sha256:0e84b0dd5094c8841088ee35bc7d893399b7f0862b8e4b55065997113453f853"
+
+[harbor]
+version = "0.21.0"
+task_schema = "1.4"
+lock_file = "harbor-runner/uv.lock"
+lock_sha256 = "sha256:715cb5a02d19b3baae3a2e3879b94ea3e5f39c8ab19232c93466b1cf385d8e42"
+
+[agent_runtime]
+image = "nl2repobench/openhands-sdk-fork:930e9b1da-rust-e2e"
+image_id = "sha256:722b854c8b1c38d32e2b9df78f919fc6ddb83b01539d799f0b3dc8fbab2b41d2"
