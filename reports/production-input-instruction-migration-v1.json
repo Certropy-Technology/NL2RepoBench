@@ -1,0 +1,2134 @@
+{
+  "base_commit": "0ad36f76592de34392600817d1944070464df5a1",
+  "campaign_id": "instruction-migration-v1",
+  "content_sha256": "sha256:376e6c3f09bf3fb20edaf52987ee73297151751c784ac4591bc774f5890b8f65",
+  "schema_version": "1.0",
+  "source_count": 531,
+  "source_root": "catalog/sources",
+  "sources": [
+    {
+      "source_tree_sha1": "4f354fff0a0676271550bc2772a58e5f8209830a",
+      "task_id": "@csstools"
+    },
+    {
+      "source_tree_sha1": "f01acea6e59cf5955a9a0bc0dfc64c618194a5c1",
+      "task_id": "@discoveryjs"
+    },
+    {
+      "source_tree_sha1": "a790a1a81d3f23e5df3fc41f06fc0deb42d12cd1",
+      "task_id": "@eslint"
+    },
+    {
+      "source_tree_sha1": "b271dbbe6e71319aa9c9b42c9e1cf841d88f26f3",
+      "task_id": "@jsonjoy.com"
+    },
+    {
+      "source_tree_sha1": "fb595dbd5d04bfe6f0c4699c4012f621012bbe14",
+      "task_id": "@open-draft"
+    },
+    {
+      "source_tree_sha1": "67f1bf78608cb19bd8a69ca6699f973043c400c8",
+      "task_id": "aiobotocore"
+    },
+    {
+      "source_tree_sha1": "3ee2b0302317a8b55bd178d88aa21ed21bd243ce",
+      "task_id": "aiofiles"
+    },
+    {
+      "source_tree_sha1": "6e07560db4a22dc089e832f9711a152e5ec4d189",
+      "task_id": "aiohappyeyeballs"
+    },
+    {
+      "source_tree_sha1": "fb3bcf2c739f96b5674b10879da48690663d823f",
+      "task_id": "aiohttp"
+    },
+    {
+      "source_tree_sha1": "c0ffbcb9dea63c52fee6a0591e239fd480091a62",
+      "task_id": "aiosignal"
+    },
+    {
+      "source_tree_sha1": "7554b6144b72b856423c82f5f019f9060ac8fb87",
+      "task_id": "ajv"
+    },
+    {
+      "source_tree_sha1": "8961000b4804f71f4ff3a765c1061b8f781c978e",
+      "task_id": "ajv-formats"
+    },
+    {
+      "source_tree_sha1": "128501c8ce855df488921c6a52d0e6b8df14b9ff",
+      "task_id": "alembic"
+    },
+    {
+      "source_tree_sha1": "665408368bd24c86b607918a2badb3662c957b4a",
+      "task_id": "annotated-doc"
+    },
+    {
+      "source_tree_sha1": "0a16738b2b896e446dc3704bdc37e3f7e0e5c8d5",
+      "task_id": "annotated-types"
+    },
+    {
+      "source_tree_sha1": "6c1e60b43f681dc33b346e3bdfd0a7066b3e844e",
+      "task_id": "ansi-regex"
+    },
+    {
+      "source_tree_sha1": "dcc2e097dc9f2f3bd91ef2421954289fb509b62b",
+      "task_id": "ansi-styles"
+    },
+    {
+      "source_tree_sha1": "1564440b3ff6d4c56e85589fa30897cf5535bded",
+      "task_id": "anyio"
+    },
+    {
+      "source_tree_sha1": "90f1786a91d0d622ef2a8fcd64291fb3f1771511",
+      "task_id": "anytree"
+    },
+    {
+      "source_tree_sha1": "c8e2305c2a016bb6cef3e34a3060fde1020638cf",
+      "task_id": "argparse"
+    },
+    {
+      "source_tree_sha1": "b687730d218f37b4ec4447074277ffd184c35f2c",
+      "task_id": "arguably"
+    },
+    {
+      "source_tree_sha1": "946129460774585c4fd3924d8a18db37fca3745c",
+      "task_id": "arrow"
+    },
+    {
+      "source_tree_sha1": "7668cd59ee4ba9946bb24e456e94c47b13f0b023",
+      "task_id": "arxiv-mcp-server"
+    },
+    {
+      "source_tree_sha1": "2686afb34590175fedcb31a903b07eb540f7ab56",
+      "task_id": "asteval"
+    },
+    {
+      "source_tree_sha1": "7e9f6a449b6a928cd20d8cb43a6ce19d3e1a9a6c",
+      "task_id": "async"
+    },
+    {
+      "source_tree_sha1": "ddb204f780a2e771c37972238ec09e631c57a413",
+      "task_id": "attrs"
+    },
+    {
+      "source_tree_sha1": "aee4d9e6f5d056d281c911a55c18d82eab62c07f",
+      "task_id": "autojump"
+    },
+    {
+      "source_tree_sha1": "c880469d3fa12e719fe6cb3aa20cb49f4c4a64aa",
+      "task_id": "autopep8"
+    },
+    {
+      "source_tree_sha1": "b000f76a2963de79198097f1633a24b1b3c282f2",
+      "task_id": "autorccar"
+    },
+    {
+      "source_tree_sha1": "8406d1b80dc8de954eebfea3795fe25317876e50",
+      "task_id": "axios"
+    },
+    {
+      "source_tree_sha1": "f444710b58b85b69780479a1958ace4064f4325b",
+      "task_id": "basic-ftp"
+    },
+    {
+      "source_tree_sha1": "607587e65b746647d525c354e8bd8ebdc130f39c",
+      "task_id": "better-sqlite3"
+    },
+    {
+      "source_tree_sha1": "d3232ed47706918f8b683f94f786347d09bde5e4",
+      "task_id": "binaryalert"
+    },
+    {
+      "source_tree_sha1": "3a3a9b633969025314b73dca69314a6e039e97f1",
+      "task_id": "bleach"
+    },
+    {
+      "source_tree_sha1": "82b219e82e62233c29110cf8393d648eed0463ee",
+      "task_id": "boltons"
+    },
+    {
+      "source_tree_sha1": "4f0dc9d44d1fb476db56637a2cb813668edf3b00",
+      "task_id": "boto"
+    },
+    {
+      "source_tree_sha1": "c63798800ea5b28c030a930a481526b4f9312868",
+      "task_id": "boto3"
+    },
+    {
+      "source_tree_sha1": "0eb97450e63c3ebd555b373df378de5e1ad714ab",
+      "task_id": "botocore"
+    },
+    {
+      "source_tree_sha1": "f4a2672f40b2eea1cb2c2f0a08733ef3b7a3d2c6",
+      "task_id": "box"
+    },
+    {
+      "source_tree_sha1": "f6ea378704a260da012d9b4e4cd61869f813e87f",
+      "task_id": "cachecontrol"
+    },
+    {
+      "source_tree_sha1": "26aed74b81bd10469ac8f329c640851477a54e3a",
+      "task_id": "cachetools"
+    },
+    {
+      "source_tree_sha1": "ee0f7143ce405192a5295804bc7ea9c59c07c6cf",
+      "task_id": "cachier"
+    },
+    {
+      "source_tree_sha1": "d4e563c8121f88763c2a82e78d2125900f3eb875",
+      "task_id": "camelcase"
+    },
+    {
+      "source_tree_sha1": "86a54da9032e0e0fa7c054b0d643f71c7067d91f",
+      "task_id": "camelcase-keys"
+    },
+    {
+      "source_tree_sha1": "c593b767c4a2c9056b534f0a9fe174f2dd793418",
+      "task_id": "canonicalize"
+    },
+    {
+      "source_tree_sha1": "1d701cf26d0af80d807589142db59511ee767e37",
+      "task_id": "cattrs"
+    },
+    {
+      "source_tree_sha1": "e32d4bba03aa28d385e1f1591983dda88eee4662",
+      "task_id": "cerberus"
+    },
+    {
+      "source_tree_sha1": "06e07cb5fb58f33241638d01cb3d105d545fa8b4",
+      "task_id": "certifi"
+    },
+    {
+      "source_tree_sha1": "76696c7635d0b340674cde33f157b4ec616580a5",
+      "task_id": "cffi"
+    },
+    {
+      "source_tree_sha1": "678cc38f9d4424de345e54f68be36b30ca1a2b95",
+      "task_id": "chalk"
+    },
+    {
+      "source_tree_sha1": "fba8cba8914d71f37e9eff5eceefba7f00f703c3",
+      "task_id": "charset-normalizer"
+    },
+    {
+      "source_tree_sha1": "effdad93474308322c391cf5792453aaa8bc7f97",
+      "task_id": "cheerio"
+    },
+    {
+      "source_tree_sha1": "9c552018c5a76f39415eb5c2d4d19207ea3a0160",
+      "task_id": "cherry"
+    },
+    {
+      "source_tree_sha1": "b2f14f87b542a324ee4447f19aa153e9de56a315",
+      "task_id": "chokidar"
+    },
+    {
+      "source_tree_sha1": "9eba25af142b4740d7cb32f7a60ff5fc9e5d45c5",
+      "task_id": "chronic_duration"
+    },
+    {
+      "source_tree_sha1": "82b17189e6b5e0a59514fd36f2882abfd396a651",
+      "task_id": "click"
+    },
+    {
+      "source_tree_sha1": "a26b1dc5dd861ad92f781068fb880bca2421c1c5",
+      "task_id": "commander"
+    },
+    {
+      "source_tree_sha1": "4a15838975b11722bd848bfa86c3cb9f3fa35aae",
+      "task_id": "cookie"
+    },
+    {
+      "source_tree_sha1": "5040929937cd5549c8c352fdc15a93d301d9fce4",
+      "task_id": "cookiecutter"
+    },
+    {
+      "source_tree_sha1": "905a649812adc3f7cbd9a70e978c8d1097505d51",
+      "task_id": "coverage"
+    },
+    {
+      "source_tree_sha1": "26d773289a67973a1a8e516e33adb2c6822c0633",
+      "task_id": "coverage_shield"
+    },
+    {
+      "source_tree_sha1": "2f8a211ee023a7ec48e23564b97a8d8e188f034d",
+      "task_id": "coxeter"
+    },
+    {
+      "source_tree_sha1": "3c4bb93b6725f2a8919f38a8b6969d95f7376f4f",
+      "task_id": "cross-fetch"
+    },
+    {
+      "source_tree_sha1": "099db1fc8a1505816226bd3b329a492e7ad89f3d",
+      "task_id": "crypto-random-string"
+    },
+    {
+      "source_tree_sha1": "b3327848bf21f70fe43e75438170a0442559bc1a",
+      "task_id": "cryptography"
+    },
+    {
+      "source_tree_sha1": "936c30954634ffcf40070eac024521ad27a9ba98",
+      "task_id": "css-tree"
+    },
+    {
+      "source_tree_sha1": "67a523e0f4817f2750d278f1d8eba7aa4c7b6d6f",
+      "task_id": "csv-parse"
+    },
+    {
+      "source_tree_sha1": "6c024c42d3325ba6319e2e65e047de2ac7b911f6",
+      "task_id": "dacite"
+    },
+    {
+      "source_tree_sha1": "2aa227ee38b6dbc0bfc0035a2bfac7498eb4f087",
+      "task_id": "databases"
+    },
+    {
+      "source_tree_sha1": "c30f449bf583e36c64cf61b1817d974cd9f1e3e4",
+      "task_id": "dataclasses-json"
+    },
+    {
+      "source_tree_sha1": "6f032d1e4c4415d9fff95089b47994345435d034",
+      "task_id": "date-fns"
+    },
+    {
+      "source_tree_sha1": "76c8b79305a2e407baf9c798a4715c1089937138",
+      "task_id": "dateparser"
+    },
+    {
+      "source_tree_sha1": "f18af79662072b65aa0847ab3678e58f1d9974b8",
+      "task_id": "dbutils"
+    },
+    {
+      "source_tree_sha1": "b8cf10e4a71ab708daafe0b6cdec44662ac7538f",
+      "task_id": "decamelize"
+    },
+    {
+      "source_tree_sha1": "109b48ffba353f26a688051b4a78c13e8264d19b",
+      "task_id": "decouple"
+    },
+    {
+      "source_tree_sha1": "59d0ee9fa08934da89ee89fd18d729a05beeb2d0",
+      "task_id": "deepdiff"
+    },
+    {
+      "source_tree_sha1": "440124e84de4656940949049790b01c3dc725309",
+      "task_id": "deepmerge"
+    },
+    {
+      "source_tree_sha1": "12624a879a77be7f7739cc997189d9a66381f31f",
+      "task_id": "deslib"
+    },
+    {
+      "source_tree_sha1": "1499bacc2df252cf79096d8ae9a41c39a80b3863",
+      "task_id": "detect-indent"
+    },
+    {
+      "source_tree_sha1": "13c8ebf1ca8fafed2aa73ca4a8b3a40eccf0d4cb",
+      "task_id": "dictdatabase"
+    },
+    {
+      "source_tree_sha1": "01bb4866130801c1930e3c432e1bea555b9b1b37",
+      "task_id": "distro"
+    },
+    {
+      "source_tree_sha1": "854cf22f6e9bca3a4478999d580ef6b04c10ee1c",
+      "task_id": "dnspython"
+    },
+    {
+      "source_tree_sha1": "9e339b98d7b1afd4ee20b8e32e7b6bbed75bd028",
+      "task_id": "docopt-ng"
+    },
+    {
+      "source_tree_sha1": "ef7606cb525536fc01bf558bb70afc10c71e6700",
+      "task_id": "docstring-parser"
+    },
+    {
+      "source_tree_sha1": "ea79a78b77438e4757c2e5bb6e43543e582c3e08",
+      "task_id": "doit"
+    },
+    {
+      "source_tree_sha1": "76972b7c60a6247ead140a4b040a9e933007b517",
+      "task_id": "dot-prop"
+    },
+    {
+      "source_tree_sha1": "fe568526bc49bd8b1b13fa6055f70bf2a8705ee5",
+      "task_id": "dotenv"
+    },
+    {
+      "source_tree_sha1": "bb044b6dcc3ef2af7513d2318a1269d87db923bd",
+      "task_id": "editables"
+    },
+    {
+      "source_tree_sha1": "4936ac479bf992a708d022f1f9c373176eca4f44",
+      "task_id": "email-validator"
+    },
+    {
+      "source_tree_sha1": "3e0f068a3355ef76bbc1803bd2543618daaac180",
+      "task_id": "emittery"
+    },
+    {
+      "source_tree_sha1": "e7ee7a2b20079b483e0b4172f82b408bf22855a9",
+      "task_id": "emoji"
+    },
+    {
+      "source_tree_sha1": "e2b12a530ff7f6f114b9a70518c89ea4d6d6f1f4",
+      "task_id": "es-to-primitive"
+    },
+    {
+      "source_tree_sha1": "9e086f6c05012e42ec7b842e7eb514647501629c",
+      "task_id": "esbuild"
+    },
+    {
+      "source_tree_sha1": "e63d4a81d6b975216106fca92d4d3358be56eac0",
+      "task_id": "eslint"
+    },
+    {
+      "source_tree_sha1": "e3077d4e8bf31bb577c423731b3cbd263f16d97b",
+      "task_id": "espree"
+    },
+    {
+      "source_tree_sha1": "f2a17be1a81709e8ad0dd7f33fc71ee0baf73ed6",
+      "task_id": "exceptiongroup"
+    },
+    {
+      "source_tree_sha1": "6fe610b83c1969c7ffa945e1c8ff27ac12749a5a",
+      "task_id": "excon"
+    },
+    {
+      "source_tree_sha1": "c8828b254a5c9bad6d93f9f67b0fc70f8bf024d3",
+      "task_id": "execa"
+    },
+    {
+      "source_tree_sha1": "be6cfe276f7ba1f11dd3a82bcf61d39981f5f9c7",
+      "task_id": "factory-boy"
+    },
+    {
+      "source_tree_sha1": "f3d3845bfe140f6e4f640f29da57b3017144065c",
+      "task_id": "fast-deep-equal"
+    },
+    {
+      "source_tree_sha1": "975aa74b7f03033c7a2683659d5493acdc4fbb07",
+      "task_id": "fast-glob"
+    },
+    {
+      "source_tree_sha1": "d86917b99225edaefc9e17220c789a062a0d6a24",
+      "task_id": "fast-json-stringify"
+    },
+    {
+      "source_tree_sha1": "1534e3f225a320ff6a63f2d0becd5767fdf724f7",
+      "task_id": "fast-string-truncated-width"
+    },
+    {
+      "source_tree_sha1": "3e1be7444d400e7e69b2ba2aa118ef281f3a9d3f",
+      "task_id": "fast-string-width"
+    },
+    {
+      "source_tree_sha1": "67dd97df8824df8a0b1e3d870fb21b546fadf73b",
+      "task_id": "fast-xml-parser"
+    },
+    {
+      "source_tree_sha1": "33b71f37a9f0ac6782b6035638eb7b1dafeba9c3",
+      "task_id": "fastapi"
+    },
+    {
+      "source_tree_sha1": "83f3c806ff3e1d8b7e2f8f3ef5240bdccb1ad692",
+      "task_id": "fastapi-users"
+    },
+    {
+      "source_tree_sha1": "b0285c7efaaa1c36599de1993afdfa2380135036",
+      "task_id": "fastify"
+    },
+    {
+      "source_tree_sha1": "2fafc4863bb4e7023e99d2748c26020b90a983ed",
+      "task_id": "fastjsonschema"
+    },
+    {
+      "source_tree_sha1": "d4975fd36b4707e4cedcc8d774c2e5c98fd917f8",
+      "task_id": "feedparser"
+    },
+    {
+      "source_tree_sha1": "b48a58b0005d9b8d042cbcb035e415df34a3054f",
+      "task_id": "figures"
+    },
+    {
+      "source_tree_sha1": "263048cce8a95f6d4144b3e6e2089c6b662e31c4",
+      "task_id": "filelock"
+    },
+    {
+      "source_tree_sha1": "5726458c681b1ea873e602f70c126e487b671cfb",
+      "task_id": "flask-restful"
+    },
+    {
+      "source_tree_sha1": "f0cc2b9a4e4ecea8723fe87b1a1821a1d5d7d25d",
+      "task_id": "flasky"
+    },
+    {
+      "source_tree_sha1": "37804e218197c95a5f73eb352b33c899aa1dbf51",
+      "task_id": "flatted"
+    },
+    {
+      "source_tree_sha1": "b372fab112685ff142d5249d6c0d4cbf89146fe1",
+      "task_id": "fonttools"
+    },
+    {
+      "source_tree_sha1": "c5752b20ba7c4fb03da51e15bdeb3aaa1ed42fd4",
+      "task_id": "freezegun"
+    },
+    {
+      "source_tree_sha1": "0521dfad9f6019e4e6266123ec3b750b4f9f29fe",
+      "task_id": "frontmatter"
+    },
+    {
+      "source_tree_sha1": "82890dc2acb759f974f84c39d26342a396780c37",
+      "task_id": "frozenlist"
+    },
+    {
+      "source_tree_sha1": "cbc7e08134a1133e63e861c5d0dc4ce81e229b85",
+      "task_id": "fs-extra"
+    },
+    {
+      "source_tree_sha1": "4ff65e51bc402a9866ccfeaa4134d12f4d9d679d",
+      "task_id": "fsspec"
+    },
+    {
+      "source_tree_sha1": "8873683d253a71cea79e105625b495496bde9811",
+      "task_id": "ftfy"
+    },
+    {
+      "source_tree_sha1": "09bf6024be856f6cbf37f3f1e339211ff9fb81d7",
+      "task_id": "funcy"
+    },
+    {
+      "source_tree_sha1": "32d1845686ea7ccf9d2ab81c8fb50c8fecae0f87",
+      "task_id": "furl"
+    },
+    {
+      "source_tree_sha1": "661cf78bd05d5da83afababe2d60f844eaf8d53c",
+      "task_id": "fuzzywuzzy"
+    },
+    {
+      "source_tree_sha1": "72e6f2765284e49816e417c215b737aebbdd937b",
+      "task_id": "get-east-asian-width"
+    },
+    {
+      "source_tree_sha1": "fcef415f695d89fd0bbe96cc2954bff1c3a60d16",
+      "task_id": "get-stream"
+    },
+    {
+      "source_tree_sha1": "5414b6dec5ef05f1d1527bf30ef51489891c1628",
+      "task_id": "ghapi"
+    },
+    {
+      "source_tree_sha1": "a3e37f5b5ba43b9f13140cd96f7306ee55bdee66",
+      "task_id": "gitdb"
+    },
+    {
+      "source_tree_sha1": "49ac04241188d138e0b5f028e8a02d8127259de7",
+      "task_id": "gitingest"
+    },
+    {
+      "source_tree_sha1": "4df7b0b33c0b718e75eb9699a1fba6f71e444f86",
+      "task_id": "gitpython"
+    },
+    {
+      "source_tree_sha1": "f634451af2c62d5a2c06ae0b451c89eef1d6d4b0",
+      "task_id": "globby"
+    },
+    {
+      "source_tree_sha1": "a57fce4e1a6cc34c26f0fa0d055d27f823c17f2c",
+      "task_id": "glom"
+    },
+    {
+      "source_tree_sha1": "dcd47a43d627aa1cfcff7859b97b9d86fed536fa",
+      "task_id": "go-alcless"
+    },
+    {
+      "source_tree_sha1": "0feec72a45e3735790f1d22512ae2999fd632e71",
+      "task_id": "go-backoff"
+    },
+    {
+      "source_tree_sha1": "8a68dc32094316d3b7d5e9f8e0300b2d2be0a973",
+      "task_id": "go-badger"
+    },
+    {
+      "source_tree_sha1": "663a27d01c6fea5108365a7077d1675fa18b3c0e",
+      "task_id": "go-bild"
+    },
+    {
+      "source_tree_sha1": "311dda55fd3862409cb2d37d73f08d1ee0701872",
+      "task_id": "go-brotli"
+    },
+    {
+      "source_tree_sha1": "b5c4d5b4fd3805e4c088664e6aca733ce95827cc",
+      "task_id": "go-bumblebee"
+    },
+    {
+      "source_tree_sha1": "d01b46a99f696a95ab803217135a4da97046b84c",
+      "task_id": "go-buntdb"
+    },
+    {
+      "source_tree_sha1": "3a919b66514d8158b13e85652f16aa00874860c8",
+      "task_id": "go-burrow"
+    },
+    {
+      "source_tree_sha1": "7b62b6e5414934f49197594081a2bc0e7f283302",
+      "task_id": "go-bytebufferpool"
+    },
+    {
+      "source_tree_sha1": "6eb6a873d0b81bde30b1b5375614ec6dcb76c7b3",
+      "task_id": "go-caddy-docker-proxy"
+    },
+    {
+      "source_tree_sha1": "1a0e59d069d6c995f69804d7980dc379e1f50b76",
+      "task_id": "go-cleanhttp"
+    },
+    {
+      "source_tree_sha1": "bd851cb7ca0344fe23fe162e2faec7b176293c5b",
+      "task_id": "go-cli"
+    },
+    {
+      "source_tree_sha1": "2fd9311f88d224715a78309f5ca86489fd37555c",
+      "task_id": "go-cmp"
+    },
+    {
+      "source_tree_sha1": "ab95869092ab7bdd3e23a0e19e83506cbf857885",
+      "task_id": "go-codeforces-go"
+    },
+    {
+      "source_tree_sha1": "d5558c47c7f3041c1b48ef042c17229eb8331491",
+      "task_id": "go-codesearch"
+    },
+    {
+      "source_tree_sha1": "61d9c78a1494285792e6402fe94f56c4c4d74af7",
+      "task_id": "go-colorable"
+    },
+    {
+      "source_tree_sha1": "ae70d87b9a9b4f5139a4520eae01771932ffa8c2",
+      "task_id": "go-concurrent-map"
+    },
+    {
+      "source_tree_sha1": "cf62cfb3de2c0c0b3ae66d095bd966b19da06516",
+      "task_id": "go-copier"
+    },
+    {
+      "source_tree_sha1": "560e2373c94e3b5ce98664415dba375ea6221d9c",
+      "task_id": "go-cron"
+    },
+    {
+      "source_tree_sha1": "c21bd82d16cbf50e70116401d80b118c8a223cd4",
+      "task_id": "go-dasel"
+    },
+    {
+      "source_tree_sha1": "6e4fe6b7f33f0cb6f4e4ba927f567b1a166d67a3",
+      "task_id": "go-dig"
+    },
+    {
+      "source_tree_sha1": "18f7ada5ebe33e0413c1af743ccab1a00d7ba930",
+      "task_id": "go-docker-volume-backup"
+    },
+    {
+      "source_tree_sha1": "bb4bca693b33dccb0f814b727beddcb5529c6db6",
+      "task_id": "go-echoip"
+    },
+    {
+      "source_tree_sha1": "c689caa1d46a5b9decce631b8d0a846e36e2f046",
+      "task_id": "go-errgroup"
+    },
+    {
+      "source_tree_sha1": "64c8fd2df6661f04a749bee9b30f070bfc6c0571",
+      "task_id": "go-fastjson"
+    },
+    {
+      "source_tree_sha1": "e2e3bcb3e9a92d36718ae058014519361722143c",
+      "task_id": "go-freeze"
+    },
+    {
+      "source_tree_sha1": "d91350f42c407079bd383dc64834621d32546090",
+      "task_id": "go-fsql"
+    },
+    {
+      "source_tree_sha1": "a0d79b45f302cf18214be1946999a95b072c0ae8",
+      "task_id": "go-fx"
+    },
+    {
+      "source_tree_sha1": "8d92475957e0e254a9eb88097c145f025f43aadb",
+      "task_id": "go-gjson"
+    },
+    {
+      "source_tree_sha1": "46da89b38990c382eb4e250ddf4b94b6a213eb34",
+      "task_id": "go-glob"
+    },
+    {
+      "source_tree_sha1": "d94210bae5788265a780944d07ae4aded1425147",
+      "task_id": "go-go"
+    },
+    {
+      "source_tree_sha1": "8dfc1bd3f13694e6a1bf03ff6624c698bbd4f000",
+      "task_id": "go-go-funk"
+    },
+    {
+      "source_tree_sha1": "297ff2f967d3b085f26f6616d8cb62c6e42a286c",
+      "task_id": "go-go-mysql"
+    },
+    {
+      "source_tree_sha1": "b70f3379354afbf568661dc19db71cba8c65df40",
+      "task_id": "go-gods"
+    },
+    {
+      "source_tree_sha1": "97a4e5d18c31da9a5796c1f0816456973cacf8bc",
+      "task_id": "go-google-uuid"
+    },
+    {
+      "source_tree_sha1": "a80fb017370bc25f45913b37ad44d18d63b131db",
+      "task_id": "go-govalidator"
+    },
+    {
+      "source_tree_sha1": "a9e00ba7c5ba122c54f1fad677cebd594fdfe4c6",
+      "task_id": "go-humanize"
+    },
+    {
+      "source_tree_sha1": "9489b9a04a7651fc7208d5860ebf2a23920fbdb8",
+      "task_id": "go-isatty"
+    },
+    {
+      "source_tree_sha1": "4d9555ae8d8a9dfb5f4a857522688e4b846f5343",
+      "task_id": "go-mergo"
+    },
+    {
+      "source_tree_sha1": "2d7b48dd99105735248b268b01fc4975bc5ee7a6",
+      "task_id": "go-multierror"
+    },
+    {
+      "source_tree_sha1": "702c2da732034212b94a540b06be1ec8d082b2f2",
+      "task_id": "go-nanoid"
+    },
+    {
+      "source_tree_sha1": "5b7d3244398a228059d47c3767f1a22e8d44a67e",
+      "task_id": "go-ordered-map"
+    },
+    {
+      "source_tree_sha1": "e8f29a7b397ec13d0d3232d9ce3cad6929a2ac6e",
+      "task_id": "go-pterm"
+    },
+    {
+      "source_tree_sha1": "4cf97feef342f21d71069e0d34fe02bd71cefe8b",
+      "task_id": "go-radix"
+    },
+    {
+      "source_tree_sha1": "4a9419f35e268b5e824f9d85defffe94e03f19d3",
+      "task_id": "go-rosedb"
+    },
+    {
+      "source_tree_sha1": "c03cbc6badbf856065c41b519439d33ffbccada4",
+      "task_id": "go-semver"
+    },
+    {
+      "source_tree_sha1": "cadb9869a0d53461abea65f25ab1fbfdcbbfbf02",
+      "task_id": "go-set"
+    },
+    {
+      "source_tree_sha1": "cc7a41ccec80177fef35f9868cb2b182490ada93",
+      "task_id": "go-sqlmock"
+    },
+    {
+      "source_tree_sha1": "65e2709b2204207d198b10aa7be25d9115464b47",
+      "task_id": "go-synthetic"
+    },
+    {
+      "source_tree_sha1": "be5000572cc476ead4c38d71a34f002ecfcf7007",
+      "task_id": "go-uuid"
+    },
+    {
+      "source_tree_sha1": "4de913d8bbbfd94c7643dddfe1c0fb94b8840c11",
+      "task_id": "go-version"
+    },
+    {
+      "source_tree_sha1": "0d439d1a7709357f88196435c4ab5b104c9fb0ea",
+      "task_id": "google-api-core"
+    },
+    {
+      "source_tree_sha1": "76fcb1116699359b2d0b7e68527b235fc0cea0dd",
+      "task_id": "google-auth"
+    },
+    {
+      "source_tree_sha1": "4fe504973d2e84f8ba49f05aec7be79a045b68cd",
+      "task_id": "google-genai"
+    },
+    {
+      "source_tree_sha1": "3e99de72028a2c9920a12cc053a2b74b1ab16158",
+      "task_id": "google-images-download"
+    },
+    {
+      "source_tree_sha1": "f78b0d5bff5a9f592525f0a6ed2f2b99a713109d",
+      "task_id": "graphneuralnetwork"
+    },
+    {
+      "source_tree_sha1": "ccadee3861fde79d16f848cc43174e8975d13bf9",
+      "task_id": "greenlet"
+    },
+    {
+      "source_tree_sha1": "db5ba97d7b5dcbaac365f388517b990095178a5d",
+      "task_id": "h11"
+    },
+    {
+      "source_tree_sha1": "70379e45082c4a1e76f5962de3b0cead980a2a61",
+      "task_id": "haml"
+    },
+    {
+      "source_tree_sha1": "0cf73c3aeda9e0f520298f5ad38281707b68e36d",
+      "task_id": "has-ansi"
+    },
+    {
+      "source_tree_sha1": "4511ba657af27f24108c03235f3434f21b92ee57",
+      "task_id": "hast-util-to-estree"
+    },
+    {
+      "source_tree_sha1": "bf78129b0fee10038ddbe58d1ab8ef7ce128a35e",
+      "task_id": "hast-util-to-jsx-runtime"
+    },
+    {
+      "source_tree_sha1": "788505cfd866c86d31e36ecc3f962a189ca997c8",
+      "task_id": "hast-util-whitespace"
+    },
+    {
+      "source_tree_sha1": "f888e1bbcd92da230e53981e94183e196e3aab60",
+      "task_id": "hatchling"
+    },
+    {
+      "source_tree_sha1": "313bd887496f7375dcd00093d413a8a2f531ca9b",
+      "task_id": "hpack"
+    },
+    {
+      "source_tree_sha1": "8985fd80bd46c24275861fbc717433b4a6855483",
+      "task_id": "httpcore"
+    },
+    {
+      "source_tree_sha1": "d55094759f025399d24aca4cb2ffcfdc10ea0004",
+      "task_id": "httptools"
+    },
+    {
+      "source_tree_sha1": "27e7eb7875a28c07e8edcad06833f99103b18a02",
+      "task_id": "httpx"
+    },
+    {
+      "source_tree_sha1": "65800e4501e4043b6df7b7df10e373462ebeb9b8",
+      "task_id": "httpx-sse"
+    },
+    {
+      "source_tree_sha1": "26a260558489b82149566b2871473cb31d7eb9aa",
+      "task_id": "huggingface-hub"
+    },
+    {
+      "source_tree_sha1": "1a72056407febce651907fd8a9fbbe3ffb922a9a",
+      "task_id": "humanize"
+    },
+    {
+      "source_tree_sha1": "e70518833f5f3fb5e4b6e08d4e2503198aea23eb",
+      "task_id": "icecream"
+    },
+    {
+      "source_tree_sha1": "705e42e32d2b558a7de59d58f14d6af2690568f5",
+      "task_id": "idna"
+    },
+    {
+      "source_tree_sha1": "66496f2ddf6f197e4d69b85c969c16cecfda7b75",
+      "task_id": "immer"
+    },
+    {
+      "source_tree_sha1": "392ee3ed635eb01edebb3ad6c4d7aea88a727ed7",
+      "task_id": "importlib-metadata"
+    },
+    {
+      "source_tree_sha1": "09d1045450b014b55cfab1a7dde63b050378a513",
+      "task_id": "ini"
+    },
+    {
+      "source_tree_sha1": "93c8a777fa69f86773c8688e04b1ae7377c4a287",
+      "task_id": "ip-address"
+    },
+    {
+      "source_tree_sha1": "bab975076f1f993b6aa8fce33e7a027eefd35379",
+      "task_id": "ipytest"
+    },
+    {
+      "source_tree_sha1": "f10fbcd5a955dc3fd16a995331bb94ae8283607b",
+      "task_id": "is-docker"
+    },
+    {
+      "source_tree_sha1": "3eeca6bac7417a20560674cb3a2125a2fdb98fe8",
+      "task_id": "is-fullwidth-code-point"
+    },
+    {
+      "source_tree_sha1": "a4a82ac9d4e0b2d2061163da1ae9d03d7e30e882",
+      "task_id": "is-stream"
+    },
+    {
+      "source_tree_sha1": "2cc9922788ed90abd549a1c96561251eb3b413b8",
+      "task_id": "is-string"
+    },
+    {
+      "source_tree_sha1": "5df0700fd5611d0669c9706ede3e76b5a5dc636b",
+      "task_id": "is-unicode-supported"
+    },
+    {
+      "source_tree_sha1": "f61ed3b04da1aa3c813669f66798fb0cf2ff1753",
+      "task_id": "iso8601"
+    },
+    {
+      "source_tree_sha1": "e214848b619bb62d8e6ca19ba7d963b048c0131e",
+      "task_id": "isodate"
+    },
+    {
+      "source_tree_sha1": "175176d7f9fee2de6913e7dcb79ae6becfb06560",
+      "task_id": "jaraco-classes"
+    },
+    {
+      "source_tree_sha1": "940c9340a65cff1d8db5986c0b9ac1cf059c2bef",
+      "task_id": "jaraco-context"
+    },
+    {
+      "source_tree_sha1": "3857f61d2615be6b52e674c43d80c84140820e36",
+      "task_id": "jaraco-functools"
+    },
+    {
+      "source_tree_sha1": "b6d3e9d2e6a5283cccf1d762157247c5c15e30a6",
+      "task_id": "java-classgraph"
+    },
+    {
+      "source_tree_sha1": "b5539c5afa7ec3b45b227095be59c2939257c737",
+      "task_id": "java-commons-bcel"
+    },
+    {
+      "source_tree_sha1": "4a8940dc841a1658b5c89fdd40eff2901bb1ae0b",
+      "task_id": "java-commons-cli"
+    },
+    {
+      "source_tree_sha1": "c98a91c74598f8ec1dbe8094c4e3c0ab3145d9b6",
+      "task_id": "java-commons-codec"
+    },
+    {
+      "source_tree_sha1": "a002136052836f19e75f7f1c6a7179a37f598e50",
+      "task_id": "java-commons-collections"
+    },
+    {
+      "source_tree_sha1": "6b045e850ab96b304a50ec01d82de42de787c93d",
+      "task_id": "java-commons-compress"
+    },
+    {
+      "source_tree_sha1": "477dc4a9b97fd8b10e3e603eb872ae847b796030",
+      "task_id": "java-commons-configuration"
+    },
+    {
+      "source_tree_sha1": "da30c21b1a9b6b590000cd55e8046bf4a419eadc",
+      "task_id": "java-commons-csv"
+    },
+    {
+      "source_tree_sha1": "f103c12867c7e781b990cafd80b1bacac370d04f",
+      "task_id": "java-commons-dbutils"
+    },
+    {
+      "source_tree_sha1": "5e2c1244f16ddf6e1767a34a5c45ddab25b242bd",
+      "task_id": "java-commons-exec"
+    },
+    {
+      "source_tree_sha1": "d35e2899a79337dce9e8385e499adc646cf2c966",
+      "task_id": "java-commons-imaging"
+    },
+    {
+      "source_tree_sha1": "a697c65e8244a519b231859264413e792d8eedf2",
+      "task_id": "java-commons-io"
+    },
+    {
+      "source_tree_sha1": "c6cb33f82486abb38318cb46397f98ef24cc9b25",
+      "task_id": "java-commons-jexl"
+    },
+    {
+      "source_tree_sha1": "b4835e50fa0809cc2dda3814e9934983dd4ded2e",
+      "task_id": "java-commons-lang"
+    },
+    {
+      "source_tree_sha1": "bb2203da31df4ab5a37bf16de5d66f213712442f",
+      "task_id": "java-commons-logging"
+    },
+    {
+      "source_tree_sha1": "8004d9ffc86976fbcacb1b436f39c45dea5b0e39",
+      "task_id": "java-commons-net"
+    },
+    {
+      "source_tree_sha1": "ef4f6f50ff064ef7db091c063833618d6ad57023",
+      "task_id": "java-commons-pool"
+    },
+    {
+      "source_tree_sha1": "fb19e5b5fde328a4c9c48509c25a800c5c26527a",
+      "task_id": "java-commons-text"
+    },
+    {
+      "source_tree_sha1": "c8f86edd309198d98e1a4b16c46e51d54dba878b",
+      "task_id": "java-commons-validator"
+    },
+    {
+      "source_tree_sha1": "9dd1061a5a4207eff94937b67fead0a6d9b9da9e",
+      "task_id": "java-expiringmap"
+    },
+    {
+      "source_tree_sha1": "1fc4ac784667dbb0625661ef205ac199ce29606e",
+      "task_id": "java-github-api"
+    },
+    {
+      "source_tree_sha1": "f14f813462076be49381ebe2fbf6f4d210728ab0",
+      "task_id": "java-gson"
+    },
+    {
+      "source_tree_sha1": "ea3fac08c36e7039ff9c8e2653e36d0bc14b59e2",
+      "task_id": "java-jackson-annotations"
+    },
+    {
+      "source_tree_sha1": "2a95412c8bce59818c1f0983bc62649b09708443",
+      "task_id": "java-jackson-core"
+    },
+    {
+      "source_tree_sha1": "7efb743c87a88bc3dfdb657db90799d29c9b9408",
+      "task_id": "java-java-util"
+    },
+    {
+      "source_tree_sha1": "ac3db1bcc8272e301472ee73a02b35a32d95edf6",
+      "task_id": "java-joda-convert"
+    },
+    {
+      "source_tree_sha1": "55b8c7dc97cee217b2073a50272d8df168054aa2",
+      "task_id": "java-joda-time"
+    },
+    {
+      "source_tree_sha1": "ecdee278d57c4765719d469e7b565588c1fd97f9",
+      "task_id": "java-jopt-simple"
+    },
+    {
+      "source_tree_sha1": "bde570c750246a953cd0b8519639c41135bd1ab0",
+      "task_id": "java-json-java"
+    },
+    {
+      "source_tree_sha1": "8c895dce57f33aa0f9a3eeb47103094ea82f2f34",
+      "task_id": "java-json-path"
+    },
+    {
+      "source_tree_sha1": "37a43ac4e0a4a4eb9b44843bd932715c43d67655",
+      "task_id": "java-jsoup"
+    },
+    {
+      "source_tree_sha1": "c4bab6c40f3913565f15767d3cfd281555be54ad",
+      "task_id": "java-reflections"
+    },
+    {
+      "source_tree_sha1": "1b30c518648aa0423aae60795fa8ba36b6cc9cae",
+      "task_id": "java-semver4j"
+    },
+    {
+      "source_tree_sha1": "06c18af0f663b8d7fb3e936cb0df55c4afa59177",
+      "task_id": "java-simple-http"
+    },
+    {
+      "source_tree_sha1": "5b4f78e86a4dda425b122b8b9a91a4fec292831f",
+      "task_id": "java-snakeyaml"
+    },
+    {
+      "source_tree_sha1": "73ca05de1a3b7c2bfc7c5bc39c2499b334f3d027",
+      "task_id": "jinja"
+    },
+    {
+      "source_tree_sha1": "7aaba1f084b3cdc2efd9d4956e943fd3a2ca6676",
+      "task_id": "jinja2"
+    },
+    {
+      "source_tree_sha1": "6e4fd1bffcf37d8eaa060b533a6800379c9087a2",
+      "task_id": "jiter"
+    },
+    {
+      "source_tree_sha1": "1afe4c119372998469127a54bd8c487440780e9a",
+      "task_id": "jmespath"
+    },
+    {
+      "source_tree_sha1": "f1e5df2f4a78a20928214154afbe341a486d67c2",
+      "task_id": "joblib"
+    },
+    {
+      "source_tree_sha1": "52a0b487d3fdbe8d5b1b340aad2048627bedbd82",
+      "task_id": "js-yaml"
+    },
+    {
+      "source_tree_sha1": "8325f2b759f2295495c065b5eefdbed29dbdaf79",
+      "task_id": "jsesc"
+    },
+    {
+      "source_tree_sha1": "6d415f6e17daf88adc9612306c3eab4e4748090d",
+      "task_id": "json-parse-even-better-errors"
+    },
+    {
+      "source_tree_sha1": "1977103362ff84fdc83ef17276f8bee4808ea9ff",
+      "task_id": "json-stable-stringify"
+    },
+    {
+      "source_tree_sha1": "7f7f00af4a420d1c4e7fd8965b178b73a08f824a",
+      "task_id": "json5"
+    },
+    {
+      "source_tree_sha1": "d2a0c4226d2c09e6a834d3831750755ce012b12a",
+      "task_id": "jsonc-parser"
+    },
+    {
+      "source_tree_sha1": "a91d6f43d4cb8971b02bc7e8ca5e6a531fd9db53",
+      "task_id": "jsonlines"
+    },
+    {
+      "source_tree_sha1": "249c9df0933a51e5cdcb9e75e8e9c29a47798920",
+      "task_id": "jsonpointer"
+    },
+    {
+      "source_tree_sha1": "4531253d4867de0f36b9007c224ac341d39c6d37",
+      "task_id": "jsonrepair"
+    },
+    {
+      "source_tree_sha1": "095a3ef6f6cbbba5b63f282f74e3e300420a235e",
+      "task_id": "jsonschema"
+    },
+    {
+      "source_tree_sha1": "b752349859843856cfc0c4c16c22f022fbac494d",
+      "task_id": "jsonschema-specifications"
+    },
+    {
+      "source_tree_sha1": "63a7d1d1eb73a97d6a37ef82e04e12b21bf3e22c",
+      "task_id": "justext"
+    },
+    {
+      "source_tree_sha1": "3b40752c24e78026b71ac9d14e92eab097d126ba",
+      "task_id": "keyring"
+    },
+    {
+      "source_tree_sha1": "564a8e9defae9969c8995fe2097082cd05273283",
+      "task_id": "koa"
+    },
+    {
+      "source_tree_sha1": "2cf7c3f2a3176b092af93e41ee846e0b01eef95d",
+      "task_id": "langchain"
+    },
+    {
+      "source_tree_sha1": "1b28bf439a5fc1d1bd2ad3d9dcc1eb22f480d5fb",
+      "task_id": "lark"
+    },
+    {
+      "source_tree_sha1": "45d051787c13d3cbc2fec0df5e12cd47a6a58e78",
+      "task_id": "leven"
+    },
+    {
+      "source_tree_sha1": "cfe9c751dedca29439dcb01a3ea2140f2ec9ff1f",
+      "task_id": "lines-and-columns"
+    },
+    {
+      "source_tree_sha1": "e5161b6f861d92d1d4840eb42ad356091aea1265",
+      "task_id": "locate-path"
+    },
+    {
+      "source_tree_sha1": "7cf12329e140a52b345d8b1fb42ba84bbf98f925",
+      "task_id": "lodash"
+    },
+    {
+      "source_tree_sha1": "6b616aa7b060bd9f2cdf25934f698932657aac8f",
+      "task_id": "lodash-es"
+    },
+    {
+      "source_tree_sha1": "0f9cc8712fb91975aa94de9b40fefda25c6a2ea8",
+      "task_id": "loguru"
+    },
+    {
+      "source_tree_sha1": "6064b220ec827215d803a75f420ef8c9155ebbaf",
+      "task_id": "lossless-json"
+    },
+    {
+      "source_tree_sha1": "7509e3166c97321dc7cf494fbbff4586eb60b9ea",
+      "task_id": "lxml"
+    },
+    {
+      "source_tree_sha1": "79723ec0a126cd2a5756d3a061ae0e18949e84ab",
+      "task_id": "magic-string"
+    },
+    {
+      "source_tree_sha1": "cae016d7c90961f68bf62c24e9359f93b1cd5e5f",
+      "task_id": "markdown-it"
+    },
+    {
+      "source_tree_sha1": "df1abdef040e59ae38899c020f42a6d51c44a9ab",
+      "task_id": "markdown-it-py"
+    },
+    {
+      "source_tree_sha1": "663972658320b93ba4f9d3cc992dfd7f59ed2485",
+      "task_id": "markdownify"
+    },
+    {
+      "source_tree_sha1": "9452da4a48571c767a02c9632e09a33e47b2bc71",
+      "task_id": "markupsafe"
+    },
+    {
+      "source_tree_sha1": "c88e6bd208b9cd17fc77f4fe731d6e6c1e0db6b4",
+      "task_id": "marshmallow"
+    },
+    {
+      "source_tree_sha1": "61f5c45568b424bda39b1f3860c48c6b8b093f61",
+      "task_id": "mashumaro"
+    },
+    {
+      "source_tree_sha1": "5187fbe44c3d8831a9000e614223de104eda594e",
+      "task_id": "math-verify"
+    },
+    {
+      "source_tree_sha1": "5a48a3f518b94e0f5f15a74a2f29b0b4ca2c0a3e",
+      "task_id": "mdast-util-find-and-replace"
+    },
+    {
+      "source_tree_sha1": "a61b2dd44819425cbc62dffa706665d0d026829d",
+      "task_id": "mdast-util-from-markdown"
+    },
+    {
+      "source_tree_sha1": "c8f4c9bb5b581c4c4b0795b0a3cd56d6c080e507",
+      "task_id": "mdast-util-mdxjs-esm"
+    },
+    {
+      "source_tree_sha1": "81f4f6b0e1311634b746ecfc1f78ebaefaa8e1d5",
+      "task_id": "mdast-util-phrasing"
+    },
+    {
+      "source_tree_sha1": "1f5d17be6a81645b2196c9d7c5bbeee0e49a8f4f",
+      "task_id": "mdast-util-to-hast"
+    },
+    {
+      "source_tree_sha1": "1d8639f97e07c9b7aebc2f7c280730897bbbd13e",
+      "task_id": "mdast-util-to-markdown"
+    },
+    {
+      "source_tree_sha1": "360187a6789095f9787a937bcb3b3a913067c371",
+      "task_id": "mdurl"
+    },
+    {
+      "source_tree_sha1": "a51c77a2db8ed582dddcb0c98342c262d60b44ff",
+      "task_id": "mechanicalsoup"
+    },
+    {
+      "source_tree_sha1": "69945379d7688a446a1ebd2d783a40acb6b8e33c",
+      "task_id": "meow"
+    },
+    {
+      "source_tree_sha1": "5ec809238daa12f4f0c1956407b11de4ef189d0e",
+      "task_id": "meros"
+    },
+    {
+      "source_tree_sha1": "d93b8a945c518febce7ffe81e09081234ca783dd",
+      "task_id": "micromark-util-character"
+    },
+    {
+      "source_tree_sha1": "109695a4ee798a9bdc5bf07437ac6026ef98db07",
+      "task_id": "micromark-util-chunked"
+    },
+    {
+      "source_tree_sha1": "8e58ed24cfb30ca4dba026244064aa36ecc84ec1",
+      "task_id": "micromatch"
+    },
+    {
+      "source_tree_sha1": "4e9e12ccf9de0a00615c42acf6bbb1d9b3021c10",
+      "task_id": "mime"
+    },
+    {
+      "source_tree_sha1": "282db5c88bea81fe21a93074b124c520cc375080",
+      "task_id": "mimic-fn"
+    },
+    {
+      "source_tree_sha1": "9509514c428cd5581cae26e04fdcf1ae35887053",
+      "task_id": "minimist"
+    },
+    {
+      "source_tree_sha1": "cd1f9d1917c91109a32c7cbefd908e9c08efd97f",
+      "task_id": "ministats"
+    },
+    {
+      "source_tree_sha1": "5755683ad29f1abb85298b28664ebcb719bca58f",
+      "task_id": "mistune"
+    },
+    {
+      "source_tree_sha1": "f766690701e443efffbb5ea0a7ff8f6b32ae2fa9",
+      "task_id": "mootdx"
+    },
+    {
+      "source_tree_sha1": "6c027758c86f51d42a92005d221f11471a999c67",
+      "task_id": "more-Itertools"
+    },
+    {
+      "source_tree_sha1": "a9dd67725a19729db135b1febd2fc7d2a7b90242",
+      "task_id": "msal"
+    },
+    {
+      "source_tree_sha1": "bde03c8a699d9bbc0d86925714bed24acb555ff7",
+      "task_id": "msgspec"
+    },
+    {
+      "source_tree_sha1": "b620c12027857ff2740b098816f8fa9b551a3870",
+      "task_id": "multidict"
+    },
+    {
+      "source_tree_sha1": "5dc638b6b68fa199d00fb805901d25bea770ce16",
+      "task_id": "mypy-extensions"
+    },
+    {
+      "source_tree_sha1": "a24f187f1e5571227de014262c09b766319995c4",
+      "task_id": "nanoid"
+    },
+    {
+      "source_tree_sha1": "78b6e968645a351f2fe54eea0877a5cc18011121",
+      "task_id": "natsort"
+    },
+    {
+      "source_tree_sha1": "914fa509fe7bde26bdc68756c66362c29985e64b",
+      "task_id": "networkx"
+    },
+    {
+      "source_tree_sha1": "bb9739bb021f3d722fb00896c0d885bec791e705",
+      "task_id": "nock"
+    },
+    {
+      "source_tree_sha1": "dd76ceffdb7b45a1c5786c0620f7e4ab69e2f9f7",
+      "task_id": "node-fetch"
+    },
+    {
+      "source_tree_sha1": "14111ef93cc25112237105a1419da683580231f3",
+      "task_id": "node-pnpm-synthetic"
+    },
+    {
+      "source_tree_sha1": "8f352cdf22670a10b8c190f959a02f7176ec1b9f",
+      "task_id": "node-synthetic"
+    },
+    {
+      "source_tree_sha1": "2d78718dad8ad450dcd278a20581f1f622491d4f",
+      "task_id": "normalize-url"
+    },
+    {
+      "source_tree_sha1": "3b6cd1196fb1fd2707ef24f51dc8ad7eabd1d089",
+      "task_id": "npm-run-path"
+    },
+    {
+      "source_tree_sha1": "5b053816cac85440f154c9acf74e6defb172a289",
+      "task_id": "oauthlib"
+    },
+    {
+      "source_tree_sha1": "7be62b605b41547a76bf4856067ef61785c30c4a",
+      "task_id": "openai"
+    },
+    {
+      "source_tree_sha1": "5fa8a3d74eb208e06bcb49048743649e93371dc5",
+      "task_id": "opentelemetry-semantic-conventions"
+    },
+    {
+      "source_tree_sha1": "1317494bd294f0f26547dbff98e939312095d2d4",
+      "task_id": "orjson"
+    },
+    {
+      "source_tree_sha1": "ff73533c4936b3712f9043d8c701bf9ce057c4cf",
+      "task_id": "ow"
+    },
+    {
+      "source_tree_sha1": "93349d82e041d809b95453554b9acba489bfb3f3",
+      "task_id": "own-keys"
+    },
+    {
+      "source_tree_sha1": "67564db88cdeb1d52a5130df34642373d87ee24b",
+      "task_id": "p-limit"
+    },
+    {
+      "source_tree_sha1": "13d7a01da966eafba2dabc68e91d65e341256672",
+      "task_id": "p-locate"
+    },
+    {
+      "source_tree_sha1": "45a31a8565e724c5001427b25dd1b5635eeeaa52",
+      "task_id": "p-map"
+    },
+    {
+      "source_tree_sha1": "b350bc6ea27cb6f5378cb55741c4668b45e2251f",
+      "task_id": "p-queue"
+    },
+    {
+      "source_tree_sha1": "09e4334aa5ac6376b71dc9ddbcbe373933a21873",
+      "task_id": "p-retry"
+    },
+    {
+      "source_tree_sha1": "d38bbf039af63de9adfb9c136e95b2d78b0bbc50",
+      "task_id": "p-timeout"
+    },
+    {
+      "source_tree_sha1": "289eb66b2e26ba95ed30de8c251decd3ea374eba",
+      "task_id": "packaging"
+    },
+    {
+      "source_tree_sha1": "b19a53157a79de808d53877e115b87f35d7dccff",
+      "task_id": "paillier"
+    },
+    {
+      "source_tree_sha1": "b90c852e2a0d2bdcd9ac6eec005acd98fb4e773d",
+      "task_id": "pandarallel"
+    },
+    {
+      "source_tree_sha1": "9773e3374dc221bf42caefd17e9c6314dd455c37",
+      "task_id": "parse"
+    },
+    {
+      "source_tree_sha1": "6e3a9a14a0245208357e4e0daafe12aa869ca989",
+      "task_id": "parse-json"
+    },
+    {
+      "source_tree_sha1": "3a0206c4bb5cbde41fdacd2027ca0553d3747097",
+      "task_id": "parse-npm-tarball-url"
+    },
+    {
+      "source_tree_sha1": "6ffa6c5f64d0e7b08dce391770de191223795624",
+      "task_id": "parse5"
+    },
+    {
+      "source_tree_sha1": "8fddc2b027924974e06f1eeaddda77a28a32a828",
+      "task_id": "parsy"
+    },
+    {
+      "source_tree_sha1": "b37d855b198c93147b9b8132d771b3019d752087",
+      "task_id": "pathlib2"
+    },
+    {
+      "source_tree_sha1": "c7dd651f277b4af0080f4cf965e427f29a6cd9d5",
+      "task_id": "pathspec"
+    },
+    {
+      "source_tree_sha1": "95c1ef3192ff77c5b346303fab9a11cfd0301255",
+      "task_id": "pathvalidate"
+    },
+    {
+      "source_tree_sha1": "12e6eb8514db04316bc7e232d6bdceb30b639874",
+      "task_id": "pdfplumber-stable"
+    },
+    {
+      "source_tree_sha1": "5e853cd4ba254d81849a2db52daa07d801ced205",
+      "task_id": "pendulum"
+    },
+    {
+      "source_tree_sha1": "169a876d99bc2dc34e83d0605ed986fd2b7625c8",
+      "task_id": "petl"
+    },
+    {
+      "source_tree_sha1": "1ffc737a690e9d79b56bee9b81ab259235b4f6fd",
+      "task_id": "pg-connection-string"
+    },
+    {
+      "source_tree_sha1": "5da7915d7594d5d6590f1173bb184c9cf2c87a47",
+      "task_id": "picocolors"
+    },
+    {
+      "source_tree_sha1": "0b1ca61a18826c65cf3a72ab3fbf0ec8a820b41f",
+      "task_id": "plac"
+    },
+    {
+      "source_tree_sha1": "0bc07abf73e15db82cd779ad87a1eaa4a20a2ae4",
+      "task_id": "platformdirs"
+    },
+    {
+      "source_tree_sha1": "289dbe647747ced7b2b4fbcbf4dd38ea8ead6f47",
+      "task_id": "pluggy"
+    },
+    {
+      "source_tree_sha1": "25806efa33ac622233ba42550ed4c2a2889c1c79",
+      "task_id": "portalocker"
+    },
+    {
+      "source_tree_sha1": "6de721c1fdff3b84a1d844bbca4530189dbed478",
+      "task_id": "postcss"
+    },
+    {
+      "source_tree_sha1": "a3c3cbe1da8a02246d2e742c568b0f03b7bd0e31",
+      "task_id": "pre-commit"
+    },
+    {
+      "source_tree_sha1": "8fd9ed08195ac1644c3ada4f3f6943230cb326b4",
+      "task_id": "prettier"
+    },
+    {
+      "source_tree_sha1": "32e12fc3211ecd3d06c7dbd3bbe0778999d6528f",
+      "task_id": "pretty-ms"
+    },
+    {
+      "source_tree_sha1": "bff779f37f69b9576fe557813f528341bfaadb81",
+      "task_id": "prettytable"
+    },
+    {
+      "source_tree_sha1": "1922962c38392fdae792ef1c6fcc11e3cbd9ba27",
+      "task_id": "process-warning"
+    },
+    {
+      "source_tree_sha1": "c6399a33627c1e08bf1482e05218ec644038dbf3",
+      "task_id": "prompt-toolkit"
+    },
+    {
+      "source_tree_sha1": "d7eaee15c5301de174710be633265dfb9dabfb05",
+      "task_id": "propcache"
+    },
+    {
+      "source_tree_sha1": "e295f3de0d42d18b14b236dfab887794201d10f6",
+      "task_id": "pss"
+    },
+    {
+      "source_tree_sha1": "25b088da5ea5d0b443421ac9c68fc05644afd1a8",
+      "task_id": "pyarrow"
+    },
+    {
+      "source_tree_sha1": "9ca1c8a6c59727a16aac890811a7d54db6e01e46",
+      "task_id": "pyasn1"
+    },
+    {
+      "source_tree_sha1": "5c3617a38738a1df65bdd26b5def8d2a4f57feec",
+      "task_id": "pyasn1-modules"
+    },
+    {
+      "source_tree_sha1": "a2aaedd078b5c9a9f5f15dd532667489f05e969d",
+      "task_id": "pyautogui"
+    },
+    {
+      "source_tree_sha1": "d6769a68b5fbb7bcb7c3a505c5e4c6192edbe8a0",
+      "task_id": "pycparser"
+    },
+    {
+      "source_tree_sha1": "a89e5af2fb4549e83a8d633e629e931ddb82036d",
+      "task_id": "pydantic"
+    },
+    {
+      "source_tree_sha1": "c5a59342804af855834652bf0dc92e695b41fadd",
+      "task_id": "pydantic-settings"
+    },
+    {
+      "source_tree_sha1": "c9d599a6d5e7c2db12c1aac6cf3a2055931ee441",
+      "task_id": "pyfakefs"
+    },
+    {
+      "source_tree_sha1": "f97de1f0f4b4f75e1b3bf4650d34f68a3e1071e8",
+      "task_id": "pygments"
+    },
+    {
+      "source_tree_sha1": "45da8fe8bec119c225876c412e32ff70068c2340",
+      "task_id": "pyjwt"
+    },
+    {
+      "source_tree_sha1": "dbcb03ff9893e10235af87252fa0a723970400f0",
+      "task_id": "pylama"
+    },
+    {
+      "source_tree_sha1": "7d2654078be0668183a0000ee2b0657a4d182828",
+      "task_id": "pymongo"
+    },
+    {
+      "source_tree_sha1": "3519c7309c6f8f3fc17c78769da23f974f72af29",
+      "task_id": "pynacl"
+    },
+    {
+      "source_tree_sha1": "702a1a61e1713e37fa8e9404e29600c3762774a5",
+      "task_id": "pyopenssl"
+    },
+    {
+      "source_tree_sha1": "f755d2724b36b46de9b94fd2e86764ab96cc05c4",
+      "task_id": "pyparsing"
+    },
+    {
+      "source_tree_sha1": "0097df5e31ddcdea342e0b2e69758b9f093435b7",
+      "task_id": "pyperclip"
+    },
+    {
+      "source_tree_sha1": "85b80a934da2b2f821f1d9ae04cca7968682a733",
+      "task_id": "pypinyin"
+    },
+    {
+      "source_tree_sha1": "7e85bc191904d4b54bffe56b9c6eaab9995a9bc9",
+      "task_id": "pyquery"
+    },
+    {
+      "source_tree_sha1": "b17ac0a564def7baf2aa412dc13ced580b5d1e77",
+      "task_id": "pyrsistent"
+    },
+    {
+      "source_tree_sha1": "a47b892f87da8e2baf35a0131a0a05225aace34c",
+      "task_id": "pysondb-v2"
+    },
+    {
+      "source_tree_sha1": "06f145ae37cb700c51065a1cb9b28dfbbdec829f",
+      "task_id": "pytest"
+    },
+    {
+      "source_tree_sha1": "adbda7b8d9fba7056cf91ddc0afbaf2628f54976",
+      "task_id": "pytest-cov"
+    },
+    {
+      "source_tree_sha1": "aa836ed9a6f5b686ae9695005625b1f6d7b1d424",
+      "task_id": "pytest-xdist"
+    },
+    {
+      "source_tree_sha1": "30330ff8be3d18f71be6debd1fa2f7a6083c6c8c",
+      "task_id": "pytestify"
+    },
+    {
+      "source_tree_sha1": "7ab264db4984a01c28e49376b92c5c4456d0e9a8",
+      "task_id": "python-constraint"
+    },
+    {
+      "source_tree_sha1": "498b678205bafece96192bd9de2e65e76ad46d05",
+      "task_id": "python-dateutil"
+    },
+    {
+      "source_tree_sha1": "cb27013bf13553319855649a5ca7c74150dbbb8f",
+      "task_id": "python-discovery"
+    },
+    {
+      "source_tree_sha1": "c49ff5f5b7527d1371dbdbf88d20cd1fc905fbc9",
+      "task_id": "python-dotenv"
+    },
+    {
+      "source_tree_sha1": "3ceb887e7699161ea9efbaa396d4c2f22bc84679",
+      "task_id": "python-fire"
+    },
+    {
+      "source_tree_sha1": "d9b47c4e926041f0e08408a715e1e28057d73526",
+      "task_id": "python-fsutil"
+    },
+    {
+      "source_tree_sha1": "ea984f185952b96cd5e5f18240a04a609fb9e113",
+      "task_id": "python-jose"
+    },
+    {
+      "source_tree_sha1": "a22423fea9782ced6f980bb78866141af9e9097a",
+      "task_id": "python-json-logger"
+    },
+    {
+      "source_tree_sha1": "9cb6f262b42b1151f176f12d247d8443bc51d483",
+      "task_id": "python-multipart"
+    },
+    {
+      "source_tree_sha1": "186243e08cd18c270ea48255f19f46f5118c96d0",
+      "task_id": "python-pathspec"
+    },
+    {
+      "source_tree_sha1": "9d380b6fbbf85fe7975700da6adfbe9558cb0e18",
+      "task_id": "python-patterns"
+    },
+    {
+      "source_tree_sha1": "05c59affd5d04d4aebb0923c12e412846dbf739c",
+      "task_id": "python-pytest-cases"
+    },
+    {
+      "source_tree_sha1": "19c1d8be06f7a004ea66f33069a2f87d40b5238d",
+      "task_id": "python-slugify"
+    },
+    {
+      "source_tree_sha1": "ea1006ffd3b72faaa20a5c9b4e817ac11b05df45",
+      "task_id": "pythonprojecttemplate"
+    },
+    {
+      "source_tree_sha1": "fff2f85edbf921633cbba9b64be94a3eb6102ace",
+      "task_id": "pytorch-grad-cam"
+    },
+    {
+      "source_tree_sha1": "92b01461d57d10c4e940a75b484c110758b333d7",
+      "task_id": "pytz"
+    },
+    {
+      "source_tree_sha1": "36fd388109128ab7bd04b26a40d727d42068621d",
+      "task_id": "pyyaml"
+    },
+    {
+      "source_tree_sha1": "370af65e0113093669729b6b5a832f4f57fb1fd6",
+      "task_id": "qs"
+    },
+    {
+      "source_tree_sha1": "3a3db48fdd6419aed4c5e29a4c7e348336f4d788",
+      "task_id": "query-string"
+    },
+    {
+      "source_tree_sha1": "e298cae4143d4567ae1588e35df6e5896524c14f",
+      "task_id": "quick-lru"
+    },
+    {
+      "source_tree_sha1": "26d750768bc796fec985e6b751f85b5d72def41d",
+      "task_id": "rainbow"
+    },
+    {
+      "source_tree_sha1": "ca67147251caf17b95108a5f4d6bef477fcdca5a",
+      "task_id": "ramda"
+    },
+    {
+      "source_tree_sha1": "bf5a0e35d6898b0c38f07427663e25243a655135",
+      "task_id": "range-parser"
+    },
+    {
+      "source_tree_sha1": "48db56ee7f3d12387ed93048d14c7db12304aa85",
+      "task_id": "records"
+    },
+    {
+      "source_tree_sha1": "efd5541eaf57bd8f961255ae4d456ce744e92eda",
+      "task_id": "referencing"
+    },
+    {
+      "source_tree_sha1": "21d8f25194a45d9a5cf085fd49bc9c35d2c9596e",
+      "task_id": "regex"
+    },
+    {
+      "source_tree_sha1": "a87ae845158c99fc2acf48778531ff3e3dcc13b4",
+      "task_id": "remarshal"
+    },
+    {
+      "source_tree_sha1": "8ceb67bbeb43eb526414b05e8a0a60184d28e92e",
+      "task_id": "remeda"
+    },
+    {
+      "source_tree_sha1": "fe4b20ee8c4c595698fad723a07d585b53933545",
+      "task_id": "requests"
+    },
+    {
+      "source_tree_sha1": "a3589e96d2f1406773f61546a8388def6805b592",
+      "task_id": "requests-cache"
+    },
+    {
+      "source_tree_sha1": "a230c95b52190a8cd9d568270366af85a76ae0ff",
+      "task_id": "requests-html"
+    },
+    {
+      "source_tree_sha1": "cef32834e10c5a7751bbd016fd9c826fae4c7a4c",
+      "task_id": "requests-oauthlib"
+    },
+    {
+      "source_tree_sha1": "927501c3f77cb987dcc697d2916689e7afce3b39",
+      "task_id": "responses"
+    },
+    {
+      "source_tree_sha1": "eeae8b658dd71134d41eb8ee27828f16989a8544",
+      "task_id": "retrying"
+    },
+    {
+      "source_tree_sha1": "181adb0f47982b34010fdfb8326de41b240d1510",
+      "task_id": "rfc3986"
+    },
+    {
+      "source_tree_sha1": "a6c0e47b227f4cc4bb3463a5a34ecbdbd5cb7130",
+      "task_id": "rich"
+    },
+    {
+      "source_tree_sha1": "60f1f830e00972c06d51bf0fc4b3d65bf3538d21",
+      "task_id": "rich-click"
+    },
+    {
+      "source_tree_sha1": "b5f904a3f621827d1200a935c82cb16005af86f7",
+      "task_id": "rollup"
+    },
+    {
+      "source_tree_sha1": "54a331ad65ac6c8a895d83182f4a92fac62bc18b",
+      "task_id": "rpds-py"
+    },
+    {
+      "source_tree_sha1": "f555adf1a7f6ac58ff3fe7cf0257dadb49e6bfad",
+      "task_id": "rsa"
+    },
+    {
+      "source_tree_sha1": "aa6dac8e9200422b759132490a72a7e3d0079a0f",
+      "task_id": "rubyzip"
+    },
+    {
+      "source_tree_sha1": "f695d2031aebf9b578bbe37c84e5d52d1e2f1ac4",
+      "task_id": "ruff"
+    },
+    {
+      "source_tree_sha1": "2041230615fbd8a0341bbb9509e057fe995cd8cd",
+      "task_id": "rust-regex"
+    },
+    {
+      "source_tree_sha1": "802eefc822b5e200c395af0b679ecd155dddb598",
+      "task_id": "rust-semver"
+    },
+    {
+      "source_tree_sha1": "0186d46b00514b7a7e8d854e0824ddbb38dcc0f2",
+      "task_id": "rust-uuid"
+    },
+    {
+      "source_tree_sha1": "228fe87808a4bede0f0460b474823c770661f109",
+      "task_id": "rustc-hash"
+    },
+    {
+      "source_tree_sha1": "895edf4163ce769b6f8a08ea80ff522c4aad6a85",
+      "task_id": "s3fs"
+    },
+    {
+      "source_tree_sha1": "4ae85296220182cabcc8aa47abb1ce51c6eb7946",
+      "task_id": "safe-stable-stringify"
+    },
+    {
+      "source_tree_sha1": "cac71774b4c2302e833b62ad9bb4c6f06cdb3370",
+      "task_id": "salib"
+    },
+    {
+      "source_tree_sha1": "c84381ce1066a8925ef4cb533ac2a91c9a25da39",
+      "task_id": "schedule-master"
+    },
+    {
+      "source_tree_sha1": "1b7b060134d2ab765a1a5b5da77f32f6408c22a3",
+      "task_id": "schema"
+    },
+    {
+      "source_tree_sha1": "6d055bd7d7b17468c9c93643cff53c817b7bf1ed",
+      "task_id": "semver"
+    },
+    {
+      "source_tree_sha1": "0f0542a4dd9d60cacd9ed2c7c0f4b9b3c53f7dc3",
+      "task_id": "sharp"
+    },
+    {
+      "source_tree_sha1": "2c7c6987ec5c5e6b574a7b5a8cc620f49b371528",
+      "task_id": "shellingham"
+    },
+    {
+      "source_tree_sha1": "f68cf74ae9e9e842511c6470955834acf23d295e",
+      "task_id": "simple-parsing"
+    },
+    {
+      "source_tree_sha1": "710f842fbad38177fe707652e3bbe5cefdfd98e1",
+      "task_id": "sinatra"
+    },
+    {
+      "source_tree_sha1": "77ad1db2a6e9b751ac121b2fdc181ddf589fb64e",
+      "task_id": "six"
+    },
+    {
+      "source_tree_sha1": "0940afd876ff153daf70bceb79a5a78267215a90",
+      "task_id": "sklearn"
+    },
+    {
+      "source_tree_sha1": "40e0b07dfef9c03c92fcd926049506d24e66b5e0",
+      "task_id": "slice-ansi"
+    },
+    {
+      "source_tree_sha1": "d5a93bc0287b06a0af1577e04b5d07a9b5ef4ad0",
+      "task_id": "smmap"
+    },
+    {
+      "source_tree_sha1": "25e618007ce41a8a0a34cb11956345e64a0719c9",
+      "task_id": "smol-toml"
+    },
+    {
+      "source_tree_sha1": "8622bc2804b656a6ce64758d4608d0054c5ef19f",
+      "task_id": "sniffio"
+    },
+    {
+      "source_tree_sha1": "677cc850f4576f0e5b9a46ad537a65b23ec908b4",
+      "task_id": "socket.io"
+    },
+    {
+      "source_tree_sha1": "038295826dab6bf30ed5cd46acb07adff1a023f6",
+      "task_id": "sortedcontainers"
+    },
+    {
+      "source_tree_sha1": "115a84ec54fdf5b866b4f724936ea32db1cbb7f7",
+      "task_id": "soupsieve"
+    },
+    {
+      "source_tree_sha1": "65c3b151f508e93ad04164a1c1b4f8eceb2b8fb1",
+      "task_id": "sqlite-utils"
+    },
+    {
+      "source_tree_sha1": "09632a08e94335f80930ab8bf3898e5d2525a305",
+      "task_id": "sqlparse"
+    },
+    {
+      "source_tree_sha1": "f794fbfbf88f437a6e0270a02b07b944281e372e",
+      "task_id": "sse-starlette"
+    },
+    {
+      "source_tree_sha1": "204998f9d66a58e5ea6feff02ffb15de8b3e1ec9",
+      "task_id": "stable-baselines3"
+    },
+    {
+      "source_tree_sha1": "6a14dd084f514bd9bd075d961b49ee97b63ecc81",
+      "task_id": "stamina"
+    },
+    {
+      "source_tree_sha1": "b8a5f5ff78685c216cff30db31b3dfb6237be7c7",
+      "task_id": "starlette"
+    },
+    {
+      "source_tree_sha1": "d0fa0ef8b679de73fdd8714eeb3beb4e403b5d92",
+      "task_id": "string-width"
+    },
+    {
+      "source_tree_sha1": "24cf5fed9115fffc6161506eab4ecb591f8c562f",
+      "task_id": "string.prototype.trim"
+    },
+    {
+      "source_tree_sha1": "8cc4dc0d2d54cd1751ddb524dd2aae62f35f950d",
+      "task_id": "string.prototype.trimstart"
+    },
+    {
+      "source_tree_sha1": "7a956c8961ea5a5155d412e8c4f86cc86a0465bd",
+      "task_id": "stringify-object"
+    },
+    {
+      "source_tree_sha1": "413f16358ee46e58bc0fdde692ddd506bc4296c1",
+      "task_id": "strip-ansi"
+    },
+    {
+      "source_tree_sha1": "803418d1fc01ba27ed223d7356e19a316b1f0512",
+      "task_id": "strip-indent"
+    },
+    {
+      "source_tree_sha1": "d95b534feb24957a17f70904fad8cf6a8d766e29",
+      "task_id": "strnum"
+    },
+    {
+      "source_tree_sha1": "28cc5901c1da201a42d633060289e13b88bd1e04",
+      "task_id": "strtok3"
+    },
+    {
+      "source_tree_sha1": "78b7721b43fe63aa13596d693dac5b9d5babf1fc",
+      "task_id": "structlog"
+    },
+    {
+      "source_tree_sha1": "36de69d5ce04b148ade0b7014e95207889b379fe",
+      "task_id": "sympy"
+    },
+    {
+      "source_tree_sha1": "176e31d358dbe01439840edde28301190967a40e",
+      "task_id": "synthetic"
+    },
+    {
+      "source_tree_sha1": "68291af0bf265a21a4cba4327d354bd9a0c9664b",
+      "task_id": "tablib"
+    },
+    {
+      "source_tree_sha1": "765edea21d2ab56bfaf16f60b322ddfe9042c658",
+      "task_id": "tabulate"
+    },
+    {
+      "source_tree_sha1": "bc8008bb4096405a7f4f64424ae5ca42e6f8e66b",
+      "task_id": "tenacity"
+    },
+    {
+      "source_tree_sha1": "6971933eefa20437a729035a4724bb1cc49029e0",
+      "task_id": "textual"
+    },
+    {
+      "source_tree_sha1": "bafc22b2887ceb3238918d4736d511a89d5cf0a4",
+      "task_id": "tiktoken"
+    },
+    {
+      "source_tree_sha1": "68c3a7fe69deccc0166d355cc67c0bdfb6d37a7d",
+      "task_id": "tilt"
+    },
+    {
+      "source_tree_sha1": "7399f5fc01e24eb223d0bfaa46a4201c50052e5c",
+      "task_id": "tinydb"
+    },
+    {
+      "source_tree_sha1": "9a613dbac74c63301e23de4f5008e94188d8de4b",
+      "task_id": "tokenizers"
+    },
+    {
+      "source_tree_sha1": "35d750bc0d780781bb67458694b7e0bb8a7da9c1",
+      "task_id": "tomli"
+    },
+    {
+      "source_tree_sha1": "639908c1587fac0ed7b6c59576c717cf564e1f3a",
+      "task_id": "tomlkit"
+    },
+    {
+      "source_tree_sha1": "e99fe49e6e4ce90599ba492e7045ec14ea05668e",
+      "task_id": "toolz"
+    },
+    {
+      "source_tree_sha1": "f9918a28a2463d41b7c990d5d28c566dab0b3dd1",
+      "task_id": "tqdm"
+    },
+    {
+      "source_tree_sha1": "7618da6de988d5fa4290662c818a5ad46dc642d0",
+      "task_id": "trimming"
+    },
+    {
+      "source_tree_sha1": "43e002fc40f44e88b3ed6237a19360d81f34a95d",
+      "task_id": "trove-classifiers"
+    },
+    {
+      "source_tree_sha1": "1fbc1a8bdfccc2f01d44a3ee5484a6ee88f80ff2",
+      "task_id": "tsfresh"
+    },
+    {
+      "source_tree_sha1": "693ecfc86d971c4ac2d51242bf98013552356370",
+      "task_id": "type-fest"
+    },
+    {
+      "source_tree_sha1": "0b2224ca2cc7e0dee10687b8dd033474f230abca",
+      "task_id": "typer"
+    },
+    {
+      "source_tree_sha1": "f2876f763ff8906b5fcb98ea82e6e0986835c2e6",
+      "task_id": "typescript"
+    },
+    {
+      "source_tree_sha1": "f53d10f33cfb45f37270e3c09552501d65177191",
+      "task_id": "typing-inspection"
+    },
+    {
+      "source_tree_sha1": "7be1350a0400c706c51ed680094df86f2d89a1aa",
+      "task_id": "typing_extensions"
+    },
+    {
+      "source_tree_sha1": "00da02867a109d8d537eb71f850a6952e837a339",
+      "task_id": "tzdata"
+    },
+    {
+      "source_tree_sha1": "a0b6ee2cfb8add42dd1273f706dd26aa4c679a46",
+      "task_id": "tzlocal"
+    },
+    {
+      "source_tree_sha1": "1e925ceeb84a9efc94e3ea9795f0d178a4270f0b",
+      "task_id": "uiautomator"
+    },
+    {
+      "source_tree_sha1": "de9a21b40f36d23742f52f13a785b249f84f2527",
+      "task_id": "unidecode"
+    },
+    {
+      "source_tree_sha1": "5633dad5b943015e114fbc6fa609f802cfc3fff0",
+      "task_id": "unittest-parametrize"
+    },
+    {
+      "source_tree_sha1": "e5c8b558b67bd3fcac729787550a249c56e11e23",
+      "task_id": "universalify"
+    },
+    {
+      "source_tree_sha1": "766cc523cbbb9c7f4a619e532fed4af397a9399b",
+      "task_id": "urllib3"
+    },
+    {
+      "source_tree_sha1": "54351129aad56e58f2aaf3f7f72bd5da1e0f3ef2",
+      "task_id": "utility-types"
+    },
+    {
+      "source_tree_sha1": "39b9447b0fcc76db76446353409f8b1ee92ecdaa",
+      "task_id": "uuid"
+    },
+    {
+      "source_tree_sha1": "f53b24f61009894da8688118edb60e03b4a8d7fb",
+      "task_id": "uvicorn"
+    },
+    {
+      "source_tree_sha1": "3845de6de5db2ccaaef69ad7054ffd2c705e5737",
+      "task_id": "validate-npm-package-name"
+    },
+    {
+      "source_tree_sha1": "bbde69bbd516569e876bc60eaff3d9350cbf79d4",
+      "task_id": "validator"
+    },
+    {
+      "source_tree_sha1": "fb7a1adf0d0ecc9085f19355f4dd94afc57ba3bc",
+      "task_id": "validators"
+    },
+    {
+      "source_tree_sha1": "e2323b724e0fc75e01a1bfcb843425d30544109a",
+      "task_id": "verifiers"
+    },
+    {
+      "source_tree_sha1": "a4a907a4ba5f471512719850c6a5df11bfe45183",
+      "task_id": "vfile-message"
+    },
+    {
+      "source_tree_sha1": "6f9c755fdca3d0523f103879285dc7496c7eba62",
+      "task_id": "virtualenv"
+    },
+    {
+      "source_tree_sha1": "34b2881c8b46ef7cca591d9c7b020aa9ff29fc12",
+      "task_id": "vite"
+    },
+    {
+      "source_tree_sha1": "5570d0b579c73a264da8f5328e4237d3c46b3d5a",
+      "task_id": "voluptuous"
+    },
+    {
+      "source_tree_sha1": "e7dc80e1cc04d53ae9307dce11618421158f5246",
+      "task_id": "wcwidth"
+    },
+    {
+      "source_tree_sha1": "1b000b44c92a1ec1ffe217d2ba26782b2e723b93",
+      "task_id": "weaviate-client"
+    },
+    {
+      "source_tree_sha1": "8693157ca05f28c1148365c059a43edb0d2937b7",
+      "task_id": "websocket-client"
+    },
+    {
+      "source_tree_sha1": "d1ad355a9e6347e981030500db1b554e991bd76e",
+      "task_id": "websockets"
+    },
+    {
+      "source_tree_sha1": "509bcf1c54d323e0676557c010787854b12df3e0",
+      "task_id": "werkzeug"
+    },
+    {
+      "source_tree_sha1": "00b1ee71caada0c9ecb8aaebcac2d723cdc01a90",
+      "task_id": "widest-line"
+    },
+    {
+      "source_tree_sha1": "20561f535128e2cacc17df2c01b42c0b6bcd9b24",
+      "task_id": "wifiphisher"
+    },
+    {
+      "source_tree_sha1": "bcd97f48128c55288a85564bb430b9e8f4c90c16",
+      "task_id": "winston"
+    },
+    {
+      "source_tree_sha1": "4b9b39071c682ce476a3ed1cbefb755e47db1078",
+      "task_id": "wrapt"
+    },
+    {
+      "source_tree_sha1": "e9a87fe407040455ef27b9fadd287145032171a2",
+      "task_id": "ws"
+    },
+    {
+      "source_tree_sha1": "a97c485355bcd827a15beed434d082e3eff01155",
+      "task_id": "wsgidav"
+    },
+    {
+      "source_tree_sha1": "472cf1866d458595244924db8af17bc66645836e",
+      "task_id": "xlrd"
+    },
+    {
+      "source_tree_sha1": "377c85c8fe304f8552dba2ce64c7097c5b25a765",
+      "task_id": "yaml"
+    },
+    {
+      "source_tree_sha1": "6bfdf9c89cdce24c30aacc834838253b80c73cde",
+      "task_id": "yargs"
+    },
+    {
+      "source_tree_sha1": "e4cacbf892a4100b3efb511c4cc499e929a77db8",
+      "task_id": "yargs-parser"
+    },
+    {
+      "source_tree_sha1": "fdf17d3cdec406b7ccfa2c61cb5265af9c148688",
+      "task_id": "yarl"
+    },
+    {
+      "source_tree_sha1": "0077935fd443149bfdae6badd5b0d49799603d28",
+      "task_id": "ydata-profiling"
+    },
+    {
+      "source_tree_sha1": "866aa3b19911fcc83d6e8fa9587024d65bed2551",
+      "task_id": "yoctocolors"
+    },
+    {
+      "source_tree_sha1": "9f080d71e3429d80fb977699c4c7bea9124792b5",
+      "task_id": "zipp"
+    },
+    {
+      "source_tree_sha1": "67bcb2279e483d2004ea97a7b7d5c637b19c26a8",
+      "task_id": "zod"
+    }
+  ]
+}
