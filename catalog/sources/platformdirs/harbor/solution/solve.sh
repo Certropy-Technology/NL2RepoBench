@@ -6,7 +6,7 @@ echo "[oracle] Starting platformdirs Oracle solution"
 # Locate the bundle directory
 BUNDLE_DIR="$(cd "$(dirname "$0")" && pwd)"
 SOURCE_ARCHIVE="$BUNDLE_DIR/source-frozen.tar.gz"
-EXPECTED_SHA256="0dd96317307f068fd3c2cc34e7e0b80dbe97c01047c9cd93285e9afd1175415f"
+EXPECTED_SHA256="995328414976fd680723de17b111b8024272ed80d558609fe80d7f48253d80b2"
 
 if [ ! -f "$SOURCE_ARCHIVE" ]; then
     echo "[oracle] ERROR: Source archive not found at $SOURCE_ARCHIVE" >&2
@@ -52,7 +52,7 @@ echo "[oracle] Source extracted successfully"
 echo "[oracle] Installing package"
 
 # Install the package with --no-build-isolation since we have hatchling in the environment
-pip install --no-cache-dir --no-build-isolation --no-deps -e . || {
+pip install --no-cache-dir --no-build-isolation --no-deps . || {
     echo "[oracle] ERROR: Installation failed" >&2
     exit 1
 }

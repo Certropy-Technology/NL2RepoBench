@@ -52,6 +52,32 @@ functions and matching `*_path` functions exposed by the package. `AppDirs`
 is a backwards-compatible alias of `PlatformDirs`, and the selected Unix
 class must be a subclass of `PlatformDirsABC`.
 
+
+Ensure the package build configuration (hatchling) includes the full
+`src/platformdirs/` package in the wheel, including `version.py`, so that
+`import platformdirs` and `from platformdirs.version import __version__` succeed
+after a normal `pip install`. Do not rely on a hatch-vcs/git version hook; ship
+`version.py` as a plain source module. Concretely, the hatchling build
+configuration must force-include the version module, e.g.
+
+```toml
+[tool.hatch.build.targets.wheel]
+include = ["src/platformdirs/version.py"]
+```
+
+or, equivalently, declare
+
+```toml
+[tool.hatch]
+build.hooks.vcs.version-file = "src/platformdirs/version.py"
+```
+(the point is that the wheel must contain `platformdirs/version.py`).
+The package must also ship a `platformdirs.version` submodule exposing
+`__version__` (a string, e.g. "4.11.3") and `__version_tuple__` (a tuple of ints).
+The top-level `platformdirs` package re-exports `__version__` and
+`__version_info__` from this submodule, so `import platformdirs` and
+`from platformdirs.version import __version__` must both succeed.
+
 The following public class constructor is required:
 
 ```python

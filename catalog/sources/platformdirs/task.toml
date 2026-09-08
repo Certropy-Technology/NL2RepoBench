@@ -25,7 +25,7 @@ base_image = "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa703
 base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
 system_packages = []
 network_mode = "no-network"
-build_command = "python -m pip install --no-build-isolation --no-deps --no-index -e ."
+build_command = "python -m pip install --no-build-isolation --no-deps --no-index ."
 
 [environment.network_policy]
 mode = "no-network"
@@ -37,7 +37,7 @@ reason = "The hatchling build backend is preinstalled into the agent and verifie
 status = "known"
 installer = "pip"
 packages = []
-lock_artifact = { digest = "sha256:a69675cfd3a96880e2e102866a8f8459921978cba738f37758879c42f38898a9", size_bytes = 585, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:a69675cfd3a96880e2e102866a8f8459921978cba738f37758879c42f38898a9", visibility = "private" }
+lock_artifact = { digest = "sha256:06f0f9383105b0de2c1e7b5d8116108d956551d17d1ec342b2711e3ecd4241b9", size_bytes = 721, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:06f0f9383105b0de2c1e7b5d8116108d956551d17d1ec342b2711e3ecd4241b9", visibility = "private" }
 
 [tests]
 framework = "pytest"
@@ -73,10 +73,10 @@ storage_mb = 2048
 workspace_artifact = "/workspace"
 
 [oracle_bundle]
-digest = "sha256:5581df853651d86cbf497c0dc9e9122071f4f3f60a835c103a6bc165d9d0802a"
-size_bytes = 84345
+digest = "sha256:0e076390a88b9872f6c01f486e9b507ed3bc5dec44e6f68616f18d659e95c118"
+size_bytes = 82504
 media_type = "application/vnd.nl2repobench.private-bundle+tar"
-uri = "artifact://private/sha256:5581df853651d86cbf497c0dc9e9122071f4f3f60a835c103a6bc165d9d0802a"
+uri = "artifact://private/sha256:0e076390a88b9872f6c01f486e9b507ed3bc5dec44e6f68616f18d659e95c118"
 visibility = "private"
 
 [lifecycle]
