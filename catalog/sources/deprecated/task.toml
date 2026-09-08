@@ -1,0 +1,85 @@
+schema_version = "1.0"
+task_id = "deprecated"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "decorator-library"
+tags = ["python", "decorator", "deprecation", "warnings", "sphinx"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/tantale/deprecated"
+revision = "d135459ef6c1fdd005f28c6e2cf7915e8fb8d0e1"
+license_spdx = "MIT"
+source_digest = "sha256:823fb9443b01019b7b608f316882cdca0a4c86032eed207c76055cb368d864c6"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12"
+os_name = "debian-12-amd64"
+base_image = "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
+network_mode = "no-network"
+build_command = "python -m pip install --no-build-isolation --no-deps --no-index -e ."
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "All runtime dependencies (wrapt) are preinstalled into the agent and verifier images from the hash-locked candidate closure. Candidate installation reuses installed dependencies with --no-build-isolation, and agent, candidate, verifier, Oracle, and controls run without network access."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = ["wrapt>=1.10,<3"]
+lock_artifact = { digest = "sha256:2cabd627b31f13947f573a5c95bd847ac0cb91e399fec96a696b5e0d65e89446", size_bytes = 402, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:2cabd627b31f13947f573a5c95bd847ac0cb91e399fec96a696b5e0d65e89446", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 71
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+bundle = { digest = "sha256:194f441f11ffa2202333dc449111fbd4279e782de91b89ece713f5b0aedad65c", size_bytes = 4339, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:194f441f11ffa2202333dc449111fbd4279e782de91b89ece713f5b0aedad65c", visibility = "private" }
+
+[harbor]
+description = "Build deprecated package from an empty workspace: a library providing @deprecated decorators for Python functions, classes, and methods with Sphinx integration."
+keywords = ["python", "decorator", "deprecation", "warnings", "sphinx", "documentation"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 2048
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:e1d70f797f9eb31622a839cd84d64aa923b5fb58e7074355bb5cf002a6df0618"
+size_bytes = 2931267
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:e1d70f797f9eb31622a839cd84d64aa923b5fb58e7074355bb5cf002a6df0618"
+visibility = "private"
+
+[lifecycle]
+status = "controls-passed"
+owner = "python-wave2-parent-deprecated"
+reason = "Oracle 71/71 reward 1.0. Controls: empty 0.0(0), stub 0.056(71), forgery 0.113(71), install-failure 0.0(0), panic 0.0(71), oversized-output 0.0(71), background-process 0.113(71); all valid, all <= 0.20. hang excluded. offline verified."
