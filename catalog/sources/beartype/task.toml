@@ -41,7 +41,7 @@ lock_artifact = { digest = "sha256:025e5a1ca7c4844766af5118157e73e20b0d0a0bee672
 
 [tests]
 framework = "pytest"
-expected_total = 182
+expected_total = 150
 expected_total_source = "frozen-collection"
 commands = ["custom-json-v1 verifier entrypoint"]
 protected_paths = ["/tests/verifier/run.py"]
@@ -56,7 +56,7 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 [verifier]
 protocol = "custom-json-v1"
 entrypoint = "run.py"
-bundle = { digest = "sha256:33932823c8bd0fb9ee61f9a664938e0aa2dd310414fa257b31ccdfffecf62588", size_bytes = 6396, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:33932823c8bd0fb9ee61f9a664938e0aa2dd310414fa257b31ccdfffecf62588", visibility = "private" }
+bundle = { digest = "sha256:3f97e7a200fa32e67151c99343decb6788cfb6265a3790573c44a8e1d7815ef7", size_bytes = 5869, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:3f97e7a200fa32e67151c99343decb6788cfb6265a3790573c44a8e1d7815ef7", visibility = "private" }
 
 [harbor]
 description = "Build the pure-Python beartype 0.22.9 runtime type-checking library from an empty workspace, covering its decorator, DOOR predicates, validator factories, configuration, exception families, and typing compatibility exports."

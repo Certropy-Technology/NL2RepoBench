@@ -221,26 +221,6 @@ CASES: list[tuple[str, str, object]] = [
         {"ok": True, "value": True},
     ),
     (
-        'door-import-is-bearable',
-        'from beartype.door import is_bearable\nresult = callable(is_bearable)',
-        {"ok": True, "value": True},
-    ),
-    (
-        'door-import-die-if-unbearable',
-        'from beartype.door import die_if_unbearable\nresult = callable(die_if_unbearable)',
-        {"ok": True, "value": True},
-    ),
-    (
-        'door-import-is-subhint',
-        'from beartype.door import is_subhint\nresult = callable(is_subhint)',
-        {"ok": True, "value": True},
-    ),
-    (
-        'door-import-typehint',
-        'from beartype.door import TypeHint\nresult = TypeHint is not None',
-        {"ok": True, "value": True},
-    ),
-    (
         'door-is-bearable-int-true',
         'from beartype.door import is_bearable\nresult = is_bearable(42, int)',
         {"ok": True, "value": True},
@@ -456,31 +436,6 @@ CASES: list[tuple[str, str, object]] = [
         {"ok": True, "value": True},
     ),
     (
-        'vale-import-is',
-        'from typing import Annotated\nfrom beartype.vale import Is\nresult = Is is not None',
-        {"ok": True, "value": True},
-    ),
-    (
-        'vale-import-isattr',
-        'from typing import Annotated\nfrom beartype.vale import IsAttr\nresult = IsAttr is not None',
-        {"ok": True, "value": True},
-    ),
-    (
-        'vale-import-isequal',
-        'from typing import Annotated\nfrom beartype.vale import IsEqual\nresult = IsEqual is not None',
-        {"ok": True, "value": True},
-    ),
-    (
-        'vale-import-isinstance',
-        'from typing import Annotated\nfrom beartype.vale import IsInstance\nresult = IsInstance is not None',
-        {"ok": True, "value": True},
-    ),
-    (
-        'vale-import-issubclass',
-        'from typing import Annotated\nfrom beartype.vale import IsSubclass\nresult = IsSubclass is not None',
-        {"ok": True, "value": True},
-    ),
-    (
         'vale-is-positive',
         'from typing import Annotated\nimport beartype as _be\nfrom beartype.vale import Is\nPositive = Annotated[int, Is[lambda x: x > 0]]\n@_be.beartype\ndef square(x: Positive) -> int:\n    return x * x\nresult = square(4)',
         {"ok": True, "value": 16},
@@ -531,41 +486,6 @@ CASES: list[tuple[str, str, object]] = [
         {"ok": True, "value": "HI"},
     ),
     (
-        'roar-import-exception',
-        'from beartype.roar import BeartypeException\nresult = issubclass(BeartypeException, Exception)',
-        {"ok": True, "value": True},
-    ),
-    (
-        'roar-import-door-exception',
-        'from beartype.roar import BeartypeDoorException\nresult = issubclass(BeartypeDoorException, Exception)',
-        {"ok": True, "value": True},
-    ),
-    (
-        'roar-import-door-violation',
-        'from beartype.roar import BeartypeDoorHintViolation\nresult = issubclass(BeartypeDoorHintViolation, Exception)',
-        {"ok": True, "value": True},
-    ),
-    (
-        'roar-import-call-violation',
-        'from beartype.roar import BeartypeCallHintViolation\nresult = issubclass(BeartypeCallHintViolation, Exception)',
-        {"ok": True, "value": True},
-    ),
-    (
-        'roar-import-param-violation',
-        'from beartype.roar import BeartypeCallHintParamViolation\nresult = issubclass(BeartypeCallHintParamViolation, Exception)',
-        {"ok": True, "value": True},
-    ),
-    (
-        'roar-import-return-violation',
-        'from beartype.roar import BeartypeCallHintReturnViolation\nresult = issubclass(BeartypeCallHintReturnViolation, Exception)',
-        {"ok": True, "value": True},
-    ),
-    (
-        'roar-import-warning',
-        'from beartype.roar import BeartypeWarning\nresult = issubclass(BeartypeWarning, Warning)',
-        {"ok": True, "value": True},
-    ),
-    (
         'roar-door-hierarchy',
         'from beartype.roar import BeartypeDoorException, BeartypeDoorHintViolation\nresult = issubclass(BeartypeDoorHintViolation, BeartypeDoorException)',
         {"ok": True, "value": False},
@@ -599,86 +519,6 @@ CASES: list[tuple[str, str, object]] = [
         'roar-catch-door-base',
         "from beartype.door import die_if_unbearable\nfrom beartype.roar import BeartypeDoorHintViolation\ntry:\n    die_if_unbearable('string', int)\n    result = 'no-error'\nexcept BeartypeDoorHintViolation:\n    result = 'caught'",
         {"ok": True, "value": "caught"},
-    ),
-    (
-        'typing-import-any',
-        'from beartype.typing import Any\nresult = Any is not None',
-        {"ok": True, "value": True},
-    ),
-    (
-        'typing-import-optional',
-        'from beartype.typing import Optional\nresult = Optional is not None',
-        {"ok": True, "value": True},
-    ),
-    (
-        'typing-import-union',
-        'from beartype.typing import Union\nresult = Union is not None',
-        {"ok": True, "value": True},
-    ),
-    (
-        'typing-import-literal',
-        'from beartype.typing import Literal\nresult = Literal is not None',
-        {"ok": True, "value": True},
-    ),
-    (
-        'typing-import-annotated',
-        'from beartype.typing import Annotated\nresult = Annotated is not None',
-        {"ok": True, "value": True},
-    ),
-    (
-        'typing-import-callable',
-        'from beartype.typing import Callable\nresult = Callable is not None',
-        {"ok": True, "value": True},
-    ),
-    (
-        'typing-import-typevar',
-        'from beartype.typing import TypeVar\nresult = callable(TypeVar)',
-        {"ok": True, "value": True},
-    ),
-    (
-        'typing-import-generic',
-        'from beartype.typing import Generic\nresult = Generic is not None',
-        {"ok": True, "value": True},
-    ),
-    (
-        'typing-import-typeddict',
-        'from beartype.typing import TypedDict\nresult = TypedDict is not None',
-        {"ok": True, "value": True},
-    ),
-    (
-        'typing-import-namedtuple',
-        'from beartype.typing import NamedTuple\nresult = NamedTuple is not None',
-        {"ok": True, "value": True},
-    ),
-    (
-        'typing-import-cast',
-        'from beartype.typing import cast\nresult = callable(cast)',
-        {"ok": True, "value": True},
-    ),
-    (
-        'typing-import-get-args',
-        'from beartype.typing import get_args\nresult = callable(get_args)',
-        {"ok": True, "value": True},
-    ),
-    (
-        'typing-import-get-origin',
-        'from beartype.typing import get_origin\nresult = callable(get_origin)',
-        {"ok": True, "value": True},
-    ),
-    (
-        'typing-import-get-type-hints',
-        'from beartype.typing import get_type_hints\nresult = callable(get_type_hints)',
-        {"ok": True, "value": True},
-    ),
-    (
-        'typing-import-final',
-        'from beartype.typing import Final\nresult = Final is not None',
-        {"ok": True, "value": True},
-    ),
-    (
-        'typing-import-classvar',
-        'from beartype.typing import ClassVar\nresult = ClassVar is not None',
-        {"ok": True, "value": True},
     ),
     (
         'typing-use-optional',
@@ -937,7 +777,7 @@ CASES: list[tuple[str, str, object]] = [
     ),
 ]
 
-assert len(CASES) == 182, f"Expected 182 cases, got {len(CASES)}"
+assert len(CASES) == 150, f"Expected 150 cases, got {len(CASES)}"
 
 
 def main() -> None:

@@ -1,15 +1,15 @@
 {
-  "canonical_manifest_digest": "sha256:24d3c123052a0b30aee44759a502dd0d7dbfb0b74bee50e9fe8dfdb990e339ee",
+  "canonical_manifest_digest": "sha256:736e9932b1877dfa6374a506530b90082616d135d0660126172dc93f8c385772",
   "files": [
     {
       "path": "README.md",
-      "sha256": "be6fdb4c9fd34bf84f7269d6bfa43e450e7a70067db042977999c80d0b461cdf",
+      "sha256": "b9fae860f16e9d0b6c89b34cf89a02aec80b1d97588554622a031a38893224c2",
       "size_bytes": 514
     },
     {
       "path": "controls/background-process.sh",
-      "sha256": "f97227e2cbcc0a2369ce2f8c664a9fd31e6c6223492a8de285f4d1a1d0c67963",
-      "size_bytes": 5685
+      "sha256": "f370754e58e8271ca757e3ba7358b11a095171f018cae3262864a589d477dd1c",
+      "size_bytes": 5807
     },
     {
       "path": "controls/empty.sh",
@@ -18,8 +18,8 @@
     },
     {
       "path": "controls/forgery.sh",
-      "sha256": "01cfed400d0d7687e86c1236f7adcdc7c4aaad5c9a6fc0d567f896e3bc9b3d9a",
-      "size_bytes": 6155
+      "sha256": "0ac75e1f7fa937292f24a4be1cdf9cf1d0c2f671d642ad035be30ff59920c446",
+      "size_bytes": 6277
     },
     {
       "path": "controls/hang.sh",
@@ -48,8 +48,8 @@
     },
     {
       "path": "controls/stub.sh",
-      "sha256": "ad21bba4bd77954845510df27d58624c1e808a035d3a1a8ce2ac6fbfea070715",
-      "size_bytes": 6126
+      "sha256": "3871ad20917e25b7b27effcbdcf9805e97cdd0c95eaf26ef0197f11456995f9c",
+      "size_bytes": 6262
     },
     {
       "path": "environment/Dockerfile",
@@ -78,7 +78,7 @@
     },
     {
       "path": "task.toml",
-      "sha256": "a7ff9304be48781625c24b8763e9b64aca72a349534436ab708eeea1a72f8831",
+      "sha256": "7ba06f5a147a7b098bab5cd0feddd5e5c79970fdf34ccc50b226438bf785d141",
       "size_bytes": 1348
     },
     {
@@ -363,13 +363,13 @@
     },
     {
       "path": "tests/test.sh",
-      "sha256": "75f236097323a5d6aa96258930692e593f954f09546522e220640ad64aaf5a18",
+      "sha256": "3fac6c904bceadc6fb3cd99890040cfd03b423f22bd07bfd9145bcba0393815a",
       "size_bytes": 2247
     },
     {
       "path": "tests/verifier/run.py",
-      "sha256": "5009f4da04284e27ec2e5fa219e413f2f40577ae4f1c43ea2f04aa4fc3773004",
-      "size_bytes": 41918
+      "sha256": "615c7d624457e6efe4ce4211286cbab0d275974ee104486cba441f1cecee63fe",
+      "size_bytes": 36299
     }
   ],
   "mode": "production",

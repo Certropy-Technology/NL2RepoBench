@@ -61,10 +61,14 @@ class FrozenDict(dict):
     pass
 
 def beartype(func=None, *, conf=None):
-    """Stub decorator that does nothing."""
+    """Stub decorator whose wrapper is non-functional."""
+    def _wrap(f):
+        def _stub(*args, **kwargs):
+            raise NotImplementedError("stub")
+        return _stub
     if func is None:
-        return lambda f: f
-    return func
+        return _wrap
+    return _wrap(func)
 
 __all__ = [
     'beartype',
