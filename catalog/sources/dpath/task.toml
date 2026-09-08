@@ -80,6 +80,6 @@ uri = "artifact://private/sha256:ee0d196facb466c1d03cdbecb70a6e24c09e1b27a5196d7
 visibility = "private"
 
 [lifecycle]
-status = "packaged"
-owner = "python-wave2-dpath"
-reason = "Task packaged and ready for Oracle validation. Placeholder digests to be filled by parent during CAS registration."
+status = "controls-passed"
+owner = "python-wave2-parent-dpath"
+reason = "Oracle 78/78 reward 1.0. Controls: empty 0.0(0), stub 0.077(78), forgery 0.103(78), install-failure 0.0(0), panic 0.0(78), oversized-output 0.0(78), background-process 0.077(78); all valid, all <= 0.20. hang excluded. offline verified via oracle network.json."
