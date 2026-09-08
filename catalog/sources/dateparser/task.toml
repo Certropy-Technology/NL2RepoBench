@@ -1,36 +1,55 @@
 schema_version = "1.0"
 task_id = "dateparser"
-version = "0.1.0"
-instruction = "audit.md"
+version = "1.0.0"
+instruction = "instruction.md"
 
 [metadata]
-difficulty = "hard"
-category = "date-time-parsing"
-tags = ["python", "date-time", "localization", "time-zones", "blocked"]
+difficulty = "medium"
+category = "utility-library"
+tags = ["python", "date-parsing", "datetime", "nlp", "text-processing"]
 language = "python"
 
 [source]
-status = "unknown"
+status = "known"
+upstream_url = "https://github.com/scrapinghub/dateparser"
+revision = "9ce60b1958f1b285886bcfbb743f6419feacfc92"
+license_spdx = "BSD-3-Clause"
+source_digest = "sha256:bab8c43a746266e68142f4926e69438ce551441aa88e54e78bb6410bf3ee7000"
+submodules = []
 
 [environment]
-status = "unknown"
+status = "known"
+python_version = "3.12"
+os_name = "debian-12-amd64"
+base_image = "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
 network_mode = "no-network"
+build_command = "python -m pip install --no-build-isolation --no-deps --no-index -e ."
 
 [environment.network_policy]
 mode = "no-network"
-offline_dependencies = "missing"
+offline_dependencies = "preinstalled-image"
 reference_source_fetch = "forbidden"
-reason = "Source freeze and dependency/data closure were not established; no runtime or Oracle source is authorized."
+reason = "All runtime dependencies (python-dateutil, pytz, regex, tzlocal) and the setuptools build backend are preinstalled into the agent and verifier images from the hash-locked candidate closure. Candidate installation reuses the installed backend with --no-build-isolation, and agent, candidate, verifier, Oracle, and controls run without network access."
 
 [dependencies]
-status = "unknown"
+status = "known"
 installer = "pip"
-packages = []
+packages = [
+    "python-dateutil>=2.7.0",
+    "pytz>=2024.2",
+    "regex>=2024.9.11",
+    "tzlocal>=0.2"
+]
+lock_artifact = { digest = "PLACEHOLDER", size_bytes = 0, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:PLACEHOLDER", visibility = "private" }
 
 [tests]
 framework = "pytest"
-expected_total_source = "unknown"
-commands = []
+expected_total = 70
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py"]
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
@@ -39,21 +58,33 @@ excluded_statuses = []
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+bundle = { digest = "PLACEHOLDER", size_bytes = 0, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:PLACEHOLDER", visibility = "private" }
+
 [harbor]
-description = "Blocked candidate: dateparser cannot enter production until immutable source, locale/time-zone data, dependency closure, and a separate verifier contract are frozen."
-keywords = ["python", "date-time", "localization", "time-zones", "blocked"]
-agent_timeout_sec = 3600.0
+description = "Build dateparser package from an empty workspace: a library for parsing human-readable dates and times in multiple languages."
+keywords = ["python", "date-parsing", "datetime", "natural-language", "multilingual"]
+agent_timeout_sec = 1800.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 120.0
-candidate_total_timeout_sec = 360.0
+candidate_total_timeout_sec = 300.0
 agent_network_mode = "no-network"
 verifier_network_mode = "no-network"
 cpus = 2
 memory_mb = 4096
-storage_mb = 8192
+storage_mb = 2048
 workspace_artifact = "/workspace"
 
+[oracle_bundle]
+digest = "PLACEHOLDER"
+size_bytes = 0
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:PLACEHOLDER"
+visibility = "private"
+
 [lifecycle]
-status = "blocked"
-owner = "repair/dateparser"
-reason = "Source-freeze remediation stopped at discovery: catalog/sources/dateparser/audit.md records unresolved upstream identity, full revision, license/archive, locale/time-zone closure, deterministic test collection, offline dependency closure, and separate-verifier design. No catalog/tasks/dateparser runtime is present."
+status = "packaged"
+owner = "python-wave-dateparser"
+reason = "Source frozen, instruction authored, verifier and controls prepared. Awaiting Oracle and controls validation."
