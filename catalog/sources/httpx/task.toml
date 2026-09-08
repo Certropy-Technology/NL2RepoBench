@@ -97,8 +97,8 @@ environment = {}
 
 [lifecycle]
 status = "controls-passed"
-owner = "integration-parent-httpx"
-reason = "Oracle 1.0 (collected==frozen_total, valid). Controls empty/stub/forgery/install-failure/panic/oversized-output/background-process all valid and <= 0.20. hang excluded by owner decision."
+owner = "python-r1-parent-httpx"
+reason = "Oracle 1.0 (controls gate confirmed). Controls: empty 0.0(0), stub 0.0, forgery 0.0, install-failure 0.0(0), panic 0.0, oversized-output 0.0, background-process 0.0; all valid, all <= 0.20. hang excluded (owner disabled hang). offline verified."
 evidence = [
   { digest = "sha256:433ae625493a17ad9326e42bd56f1431f8fe3e14bc5cf26e88e38d69aec34983", size_bytes = 2298752, media_type = "application/gzip", uri = "artifact://public/sha256:433ae625493a17ad9326e42bd56f1431f8fe3e14bc5cf26e88e38d69aec34983", visibility = "public" },
   { digest = "sha256:39755ebfc0216fd6a10e24c59a29fab33c8fa539f920730e4e0da29fa9ab51af", size_bytes = 20480, media_type = "application/x-tar", uri = "artifact://private/sha256:39755ebfc0216fd6a10e24c59a29fab33c8fa539f920730e4e0da29fa9ab51af", visibility = "private" },

@@ -1,0 +1,63 @@
+{
+  "controls": {
+    "empty": {
+      "collected": 0,
+      "failed": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "forgery": {
+      "collected": 10,
+      "failed": 10,
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "stub": {
+      "collected": 10,
+      "failed": 10,
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    }
+  },
+  "controls_notes": {
+    "hang": "excluded by owner decision; not a gate"
+  },
+  "evidence_files": [
+    {
+      "path": "evidence/gates-20260908/control-empty-grading.json",
+      "sha256": "sha256:4b3949d3f772b4694b9e1325c7bbd03fb09e055faf3a822cc39f18e070f5b3cc"
+    },
+    {
+      "path": "evidence/gates-20260908/control-forgery-grading.json",
+      "sha256": "sha256:f97afa7621082d9ba8a48a4bb2d85242bc70051d19f184aaa1bdae8b86f008e3"
+    },
+    {
+      "path": "evidence/gates-20260908/control-stub-grading.json",
+      "sha256": "sha256:f97afa7621082d9ba8a48a4bb2d85242bc70051d19f184aaa1bdae8b86f008e3"
+    },
+    {
+      "path": "evidence/gates-20260908/oracle-grading.json",
+      "sha256": "sha256:bc5f25dbdfaf1396bb7f39c255ac838add4b7cbfba989edc3840d89eecbcaa24"
+    },
+    {
+      "path": "evidence/gates-20260908/oracle-network.json",
+      "sha256": "sha256:9397a62381f63ac1442716df9011da8cb8f808026f7310a0d15ef214f6f650dd"
+    }
+  ],
+  "license_spdx": "BSD-3-Clause",
+  "offline": "oracle network.json public_network_available=false",
+  "oracle": {
+    "collected": 10,
+    "failed": 0,
+    "passed": 10,
+    "reward": 1.0,
+    "valid": true
+  },
+  "revision": "f5326bfd7c5448b40051dd261a7304657977b838",
+  "schema_version": "1.0",
+  "task_id": "pyperclip",
+  "terminal_kind": "valid"
+}

@@ -1,8 +1,8 @@
 {
   "controls": {
     "background-process": {
-      "collected": 15,
-      "failed": 15,
+      "collected": 33,
+      "failed": 33,
       "passed": 0,
       "reward": 0.0,
       "valid": true
@@ -15,8 +15,8 @@
       "valid": true
     },
     "forgery": {
-      "collected": 15,
-      "failed": 15,
+      "collected": 33,
+      "failed": 33,
       "passed": 0,
       "reward": 0.0,
       "valid": true
@@ -29,24 +29,24 @@
       "valid": true
     },
     "oversized-output": {
-      "collected": 15,
-      "failed": 15,
+      "collected": 33,
+      "failed": 33,
       "passed": 0,
       "reward": 0.0,
       "valid": true
     },
     "panic": {
-      "collected": 15,
-      "failed": 15,
+      "collected": 33,
+      "failed": 33,
       "passed": 0,
       "reward": 0.0,
       "valid": true
     },
     "stub": {
-      "collected": 15,
-      "failed": 14,
-      "passed": 1,
-      "reward": 0.06666666666666667,
+      "collected": 33,
+      "failed": 33,
+      "passed": 0,
+      "reward": 0.0,
       "valid": true
     }
   },
@@ -56,52 +56,52 @@
   "evidence_files": [
     {
       "path": "evidence/gates-20260908/control-background-process-grading.json",
-      "sha256": "sha256:bbd01e67f5bb877c3ec2ff24b4d283b3f1a7be3fcf09b895d94f9da99a6a6747"
+      "sha256": "sha256:5f183b0ccc45d99349afe7d6cc02ab380e29f53604035502902dfa9c4ceef163"
     },
     {
       "path": "evidence/gates-20260908/control-empty-grading.json",
-      "sha256": "sha256:887b9680e4680f733abdbbcec54cafa6e45845a03cc4ddce557f6a36aefbb4ef"
+      "sha256": "sha256:69ad76caf40f2031671365d8a48b1ec3bf7eb2d5c32ef539e7f319690329b711"
     },
     {
       "path": "evidence/gates-20260908/control-forgery-grading.json",
-      "sha256": "sha256:bbd01e67f5bb877c3ec2ff24b4d283b3f1a7be3fcf09b895d94f9da99a6a6747"
+      "sha256": "sha256:5f183b0ccc45d99349afe7d6cc02ab380e29f53604035502902dfa9c4ceef163"
     },
     {
       "path": "evidence/gates-20260908/control-install-failure-grading.json",
-      "sha256": "sha256:887b9680e4680f733abdbbcec54cafa6e45845a03cc4ddce557f6a36aefbb4ef"
+      "sha256": "sha256:69ad76caf40f2031671365d8a48b1ec3bf7eb2d5c32ef539e7f319690329b711"
     },
     {
       "path": "evidence/gates-20260908/control-oversized-output-grading.json",
-      "sha256": "sha256:bbd01e67f5bb877c3ec2ff24b4d283b3f1a7be3fcf09b895d94f9da99a6a6747"
+      "sha256": "sha256:5f183b0ccc45d99349afe7d6cc02ab380e29f53604035502902dfa9c4ceef163"
     },
     {
       "path": "evidence/gates-20260908/control-panic-grading.json",
-      "sha256": "sha256:bbd01e67f5bb877c3ec2ff24b4d283b3f1a7be3fcf09b895d94f9da99a6a6747"
+      "sha256": "sha256:5f183b0ccc45d99349afe7d6cc02ab380e29f53604035502902dfa9c4ceef163"
     },
     {
       "path": "evidence/gates-20260908/control-stub-grading.json",
-      "sha256": "sha256:84f2ed20729f87536a610bc01d738905acb4fc3d2eb2464f5ddb76760b8b8559"
+      "sha256": "sha256:5f183b0ccc45d99349afe7d6cc02ab380e29f53604035502902dfa9c4ceef163"
     },
     {
       "path": "evidence/gates-20260908/oracle-grading.json",
-      "sha256": "sha256:4c2de990b116c3fae4084461e41d4f5cb0cde9a4fc79e4d1c3d17dd9be321162"
+      "sha256": "sha256:9aa60361df4f6b5674b160470a371993efba1716d47ed9ed4ed68b79abb03752"
     },
     {
       "path": "evidence/gates-20260908/oracle-network.json",
-      "sha256": "sha256:b23108fc99a21ea4a0bfea10dd07966fae4993c7a8981d0c9345ef4e37c3dbb7"
+      "sha256": "sha256:a59c2c5c788bdb3b2972e93893e90b7c37184b7c19f88bd9598351a3747dd93f"
     }
   ],
   "license_spdx": "MIT",
   "offline": "oracle network.json public_network_available=false",
   "oracle": {
-    "collected": 15,
+    "collected": 33,
     "failed": 0,
-    "passed": 15,
+    "passed": 33,
     "reward": 1.0,
     "valid": true
   },
-  "revision": "661bca921e29dc3eedd4430bac70816c9154c05e",
+  "revision": "c7b559a1fa3aba57ca6dba0ab336841c5038a782",
   "schema_version": "1.0",
-  "task_id": "pytz",
+  "task_id": "marshmallow",
   "terminal_kind": "valid"
 }

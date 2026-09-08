@@ -88,16 +88,19 @@
     },
     {
       "path": "evidence/gates-20260908/oracle-network.json",
-      "sha256": "sha256:12dc36b579f53c4b0d7d37670f8c39f2a935ece695172226b03af97ec7a1e719"
+      "sha256": "sha256:9397a62381f63ac1442716df9011da8cb8f808026f7310a0d15ef214f6f650dd"
     }
   ],
+  "license_spdx": "BSD-3-Clause",
   "offline": "oracle network.json public_network_available=false",
   "oracle": {
     "collected": 24,
+    "failed": 0,
     "passed": 24,
     "reward": 1.0,
     "valid": true
   },
+  "revision": "b5addb64f0161ff6bfe94c124ef76f6a1fba5254",
   "schema_version": "1.0",
   "task_id": "httpx",
   "terminal_kind": "valid"

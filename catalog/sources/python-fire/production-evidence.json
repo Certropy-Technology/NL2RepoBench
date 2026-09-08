@@ -88,16 +88,19 @@
     },
     {
       "path": "evidence/gates-20260908/oracle-network.json",
-      "sha256": "sha256:51926b446520cfa47a367e0da7ab0175a85a96778ff616fc15621b3e03e03a58"
+      "sha256": "sha256:93c9f816cdfca381b5ab32b31604ba4203ded357b524720d8a8d708aad464643"
     }
   ],
+  "license_spdx": "Apache-2.0",
   "offline": "oracle network.json public_network_available=false",
   "oracle": {
     "collected": 20,
+    "failed": 0,
     "passed": 20,
     "reward": 1.0,
     "valid": true
   },
+  "revision": "716bbc23d7eca949fdb682172283c8d18f742cb6",
   "schema_version": "1.0",
   "task_id": "python-fire",
   "terminal_kind": "valid"

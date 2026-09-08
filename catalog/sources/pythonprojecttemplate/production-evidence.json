@@ -88,16 +88,19 @@
     },
     {
       "path": "evidence/gates-20260908/oracle-network.json",
-      "sha256": "sha256:51926b446520cfa47a367e0da7ab0175a85a96778ff616fc15621b3e03e03a58"
+      "sha256": "sha256:002d7cd0bc12e7ba92a747190467ba8f6f97e8948f43cb44c080b9b0bfee56f2"
     }
   ],
+  "license_spdx": "MIT",
   "offline": "oracle network.json public_network_available=false",
   "oracle": {
     "collected": 36,
+    "failed": 0,
     "passed": 36,
     "reward": 1.0,
     "valid": true
   },
+  "revision": "f1c116379eb485c17fb1b6cd3e2454712e4e0585",
   "schema_version": "1.0",
   "task_id": "pythonprojecttemplate",
   "terminal_kind": "valid"
