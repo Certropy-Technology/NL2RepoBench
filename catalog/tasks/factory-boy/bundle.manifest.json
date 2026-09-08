@@ -3,7 +3,7 @@
   "files": [
     {
       "path": "README.md",
-      "sha256": "382d31a4ba107553255c304f292b668539127b95d3b853ffc78aa58c0f2694fa",
+      "sha256": "39d86906f7cddb1e5e1de19131db9a4650c25caf9606fb8144492dbfeaf23c11",
       "size_bytes": 516
     },
     {
@@ -53,13 +53,13 @@
     },
     {
       "path": "task.toml",
-      "sha256": "d8e114a87de2ec404f99cda2db29a4cd413760b335f82858c6679cd7f449d9b6",
+      "sha256": "68c14182532030e9d9ef08209858bd14cd14842725a8196ab6b54b137c5c57ad",
       "size_bytes": 1329
     },
     {
       "path": "tests/Dockerfile",
-      "sha256": "6c48a8ec92e3b2159171863bbc7e543275f5210ca586fb15df9796295148dc92",
-      "size_bytes": 1094
+      "sha256": "3da646446f65e9d895d54499b65835920abbcfa85484c5493e0c065b8636149c",
+      "size_bytes": 1294
     },
     {
       "path": "tests/candidate-requirements.lock.txt",
@@ -98,8 +98,8 @@
     },
     {
       "path": "tests/runtime/nl2repobench/domain/models.py",
-      "sha256": "2fdcf16080e77749d95d5abcd99fd7fe99c1f9f7c35d3af1bd2f2004372f1ee2",
-      "size_bytes": 30133
+      "sha256": "dedb27880ec3fabf01572d74aac7d5a712fd79ec813fb01f6a46f114a31252c8",
+      "size_bytes": 34554
     },
     {
       "path": "tests/runtime/nl2repobench/domain/models_v2.py",
@@ -113,18 +113,28 @@
     },
     {
       "path": "tests/runtime/nl2repobench/domain/runtime.py",
-      "sha256": "b72eb097de0e25a01c9117bcbd7cbc4e10bcf1e9e9fcdf550b6a609f4efd12c8",
-      "size_bytes": 5529
+      "sha256": "cad605d8447280825b1f11b5317d8ea89e6bde3e5daf8810d465b589c11bcc3f",
+      "size_bytes": 6132
     },
     {
       "path": "tests/runtime/nl2repobench/package_managers/__init__.py",
-      "sha256": "3a2636d788e41dd7a31a20e422c3af2442c2ad6bee39e9cd6e4554666ac1a468",
-      "size_bytes": 1120
+      "sha256": "19a73ea5dc8b7915c5aa5430fd2c7e6c81f53218a45c595041bfb4484e130c1e",
+      "size_bytes": 1278
     },
     {
       "path": "tests/runtime/nl2repobench/package_managers/base.py",
       "sha256": "77c4a81eb31541db2343e80872e9649f32dc5e3434a689bb25d2dca83d47ca29",
       "size_bytes": 784
+    },
+    {
+      "path": "tests/runtime/nl2repobench/package_managers/bundler.py",
+      "sha256": "f5e1b4a003fd5e86ca68030bbe6646c49d63ff06c5125d6e34eebff9a6b7f049",
+      "size_bytes": 8312
+    },
+    {
+      "path": "tests/runtime/nl2repobench/package_managers/cargo.py",
+      "sha256": "34be5e6cf8009072d5246f90c2e1aaa0428e2970094f7c12c00930b82c4f840a",
+      "size_bytes": 25741
     },
     {
       "path": "tests/runtime/nl2repobench/package_managers/go_modules.py",
@@ -143,18 +153,18 @@
     },
     {
       "path": "tests/runtime/nl2repobench/verification/candidate_install.py",
-      "sha256": "a49314a0ad250d9fd5efcda2d15f9d62d9b882c9b2d9bbf813315c14c73ce76a",
-      "size_bytes": 6556
+      "sha256": "4f714f3af9bc9f633bf41bf76f821e087141b53fcf5920cf2e3a9e60a0249d06",
+      "size_bytes": 7451
     },
     {
       "path": "tests/runtime/nl2repobench/verification/candidate_runner.py",
-      "sha256": "3b57b77d2097535362432f4b60353e2f58b181d5e34adde55ff0f3949492b55e",
-      "size_bytes": 9672
+      "sha256": "46503bbbba1fc6812358606e3b94278d02473c3caf53511da04b0dd9479a95ca",
+      "size_bytes": 9675
     },
     {
       "path": "tests/runtime/nl2repobench/verification/cli.py",
-      "sha256": "8427c0b606f76a1c73528dcb4588e7b18b5b35b7d3bf797a5a43758e1c745eb8",
-      "size_bytes": 3012
+      "sha256": "3658562ad4b59f47a1053cb6607263c7efe3dcb03b24085b10ac783583573197",
+      "size_bytes": 3047
     },
     {
       "path": "tests/runtime/nl2repobench/verification/command_plan.py",
@@ -257,6 +267,16 @@
       "size_bytes": 5100
     },
     {
+      "path": "tests/runtime/nl2repobench/verification/normalize/ruby_json.py",
+      "sha256": "7b47db99d3183e5fe61c3d4f853a7fa637985895fcc3a0c3d86f47495bdedf7a",
+      "size_bytes": 4799
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/normalize/rust_bridge_json.py",
+      "sha256": "76b949ed7d4fafd0dd3d271b7c6cab71c45fbff0164349ff5a9af76300edabed",
+      "size_bytes": 6479
+    },
+    {
       "path": "tests/runtime/nl2repobench/verification/process_cleanup.py",
       "sha256": "3038c7a317c3d12cf71efd332e779baba59dc177c3ddfa990a3f5dd07dc79a88",
       "size_bytes": 1587
@@ -268,13 +288,43 @@
     },
     {
       "path": "tests/runtime/nl2repobench/verification/registry.py",
-      "sha256": "3a75909aa2c8238825f90475b40257096f527b4e4acdf6002e406d3ae42b897f",
-      "size_bytes": 4145
+      "sha256": "612632531f5c4a373630b38633f5f00dbd9e8502ff2be37ee90b0c4829b6ac49",
+      "size_bytes": 4895
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/ruby_bridge_proxy.py",
+      "sha256": "17be482598d2c30ee2e4fefe7a72a103b37e777cb9e49ecf03e1f7d6f7c5731e",
+      "size_bytes": 1390
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/ruby_contract_report.py",
+      "sha256": "9cd2116fcba2cba197376f6e559683c1d49a82536409cfbbc252b0b6efaf46db",
+      "size_bytes": 3151
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/ruby_grader.py",
+      "sha256": "150a51af886e58a26dac751c2caadc0a7a19c602d31ac3508a8b8585bf24a362",
+      "size_bytes": 2816
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/ruby_supervisor.py",
+      "sha256": "ba9fa354c8ee2131d84a207ddfc5127b4e96a73348cf0f3519d0af3e5bc592c1",
+      "size_bytes": 5883
     },
     {
       "path": "tests/runtime/nl2repobench/verification/run_pytest.py",
       "sha256": "fd3b7cc9ecd14234c1c06bf172ae3d5974b44e7f92c528468863f5e1f22c0fdb",
       "size_bytes": 924
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/rust_grader.py",
+      "sha256": "09a0466d0356d1de4a6aa4eeb0a9ce9d1fb3e3f46a5cb3578e9d5e522f10bd85",
+      "size_bytes": 4110
+    },
+    {
+      "path": "tests/runtime/nl2repobench/verification/rust_runner.py",
+      "sha256": "990a5b4de9f63fa848e4bb17e1477c7d74419ec4fa0b19a7ce0737746633096f",
+      "size_bytes": 6304
     },
     {
       "path": "tests/runtime/nl2repobench/verification/taxonomy.py",
@@ -288,8 +338,8 @@
     },
     {
       "path": "tests/test.sh",
-      "sha256": "dcf28e2ce93ed0dc14ca39403d200b89cd5876bc64438ca07c0684038e3cb33f",
-      "size_bytes": 2266
+      "sha256": "0100735767c7f87bf1af4a771d52581910a9e60e509bab0ce0959f63bc32e52a",
+      "size_bytes": 2338
     },
     {
       "path": "tests/verifier/run.py",

@@ -101,6 +101,27 @@ class _GoVerifierAdapter:
 
 
 @dataclass(frozen=True)
+class _RubyVerifierAdapter:
+    limits: Mapping[str, int]
+
+    def grade(self, **kwargs: Any) -> Any:
+        from .ruby_grader import grade_ruby_report
+
+        return grade_ruby_report(
+            expected_total=kwargs["expected_total"],
+            metric_contract=kwargs["metric_contract"],
+            report_data=kwargs["report_data"],
+            runner_exit_code=kwargs["runner_exit_code"],
+            explicit_reason=kwargs["explicit_reason"],
+        )
+
+    def write(self, result: Any, output_dir: Path) -> None:
+        from .ruby_grader import write_ruby_grading_outputs
+
+        write_ruby_grading_outputs(result, output_dir)
+
+
+@dataclass(frozen=True)
 class VerifierRuntimeRegistry:
     """Resolve exactly one explicit runtime identity to a verifier adapter."""
 
@@ -115,6 +136,7 @@ class VerifierRuntimeRegistry:
                 ),
                 "node": _NodeVerifierAdapter(limits={"report": 8 * 1024 * 1024}),
                 "go": _GoVerifierAdapter(limits={"report": 8 * 1024 * 1024}),
+                "ruby": _RubyVerifierAdapter(limits={"report": 8 * 1024 * 1024}),
             }
         )
 

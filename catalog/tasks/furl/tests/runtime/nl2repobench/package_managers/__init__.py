@@ -9,6 +9,7 @@ __all__ = [
     "PackageManagerError",
     "PackageManagerRegistry",
     "GoModulesPackageManager",
+    "BundlerPackageManager",
     "PnpmLockSummary",
     "PnpmPackageManager",
     "UnknownPackageManagerError",
@@ -20,6 +21,10 @@ def __getattr__(name: str) -> Any:
         from .go_modules import GoModulesPackageManager
 
         return GoModulesPackageManager
+    if name == "BundlerPackageManager":
+        from .bundler import BundlerPackageManager
+
+        return BundlerPackageManager
     if name == "PnpmPackageManager":
         from .pnpm import PnpmPackageManager
 

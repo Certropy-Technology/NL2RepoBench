@@ -1,193 +1,463 @@
-# Build `natsort`
+# Project Description
 
-Create a complete, installable Python package named `natsort` from an empty
-workspace. The package provides deterministic natural sorting for text and
-JSON-safe scalar data. This candidate is based on SethMMorton/natsort at the
-exact commit `e90771d7c39157d079425b655763938c2709d486`.
+**natsort** is a Python library that provides simple yet flexible natural sorting functionality. Natural sorting orders strings containing numbers in a human-intuitive way, so that "file2.txt" comes before "file10.txt" (not lexicographically as "file10.txt", "file2.txt").
 
-This catalog entry is an audit candidate and is currently blocked. The source
-archive, exact `LICENSE` bytes, source-only LOC report, test collection report,
-offline dependency closure, and repeatability evidence must be completed by
-the authoring pipeline before it is publishable. The commit, URL, and license
-label in `task.toml` are not a substitute for those artifacts.
+The library is designed for developers who need to sort file names, version strings, mixed alphanumeric data, and other human-readable sequences. It supports various sorting modes including locale-aware sorting, path sorting, real number sorting, and case-insensitive sorting.
 
-## Project Description
+## Target Users
+- Python developers sorting file listings, version numbers, or mixed text-numeric data
+- Applications requiring natural ordering of strings with embedded numbers
+- Systems that need locale-dependent or path-aware sorting
 
-Implement a small, installable natural-sort library. Natural sorting splits
-text into comparable text and numeric runs so that values such as `item2`,
-`item10`, and `item100` sort in numeric order while preserving the original
-values in the result. The implementation must be usable from an empty
-workspace and must not depend on a preinstalled copy of `natsort`.
+## Key Capabilities
+- Natural sorting of strings with embedded integers or floats
+- Support for sorting paths with filesystem-specific separators and extensions
+- Locale-aware sorting for international text
+- Flexible algorithm options via bitwise-combinable flags
+- Key generation for in-place sorting with `list.sort()`
+- Convenience functions for common use cases
 
-Runtime behavior in this candidate is the pure Python fallback. The optional
-`fastnumbers` accelerator and optional PyICU locale backend are outside the
-runtime dependency closure. Their absence must not make the package import or
-the pure fallback fail. Do not claim optional-backend parity for behavior that
-cannot be exercised without those packages.
+# Natural Language Instruction
 
-## Supports
+Build a Python package named `natsort` that provides natural sorting functionality. The package must:
 
-- Support CPython `>=3.8,<4.0` unless the frozen source evidence records a
-  narrower supported range.
-- Provide an installable package whose import root is `natsort`.
-- Use only the Python standard library at runtime for the scored fallback.
-- Run installation, import, and tests with no network access and with an empty
-  pip/uv cache. Do not download packages at import time and do not invoke a
-  subprocess or external service.
-- Keep sorting stable: equal comparison keys retain input order, and sorting
-  returns new lists without mutating the input sequence.
-- Keep the candidate scope JSON-safe. Scored values are JSON null, booleans,
-  finite numbers, strings, and arrays containing those values. Nested mappings,
-  arbitrary user objects, open files, and values whose comparison calls user
-  code are outside this candidate scope. Results from `index_*` are integer
-  lists and results from `order_by_index` are lists of original JSON-safe
-  values.
-- Use `PYTHONHASHSEED=0`, `LC_ALL=C.UTF-8`, `LANG=C.UTF-8`, and UTF-8 source
-  handling for deterministic probes. Locale mode must not silently depend on
-  whichever locale happens to be installed on the host.
+1. **Implement `natsorted()` function**: A drop-in replacement for Python's built-in `sorted()` that performs natural sorting, handling numbers within strings intelligently.
 
-## Public API Usage Guide
+2. **Provide `natsort_keygen()` for custom sorting keys**: Generate reusable sorting keys that can be passed to `sorted()` or `list.sort()` for in-place natural sorting.
 
-The following names must be importable from `natsort` or their documented
-submodules. Signatures use the public behavior of the pinned source; harmless
-additional keyword-only compatibility parameters are allowed when they do not
-change the documented fallback behavior.
+3. **Support algorithm customization via `ns` enum**: Provide a flags enum allowing users to control sorting behavior through bitwise OR operations, including:
+   - `ns.IGNORECASE` / `ns.IC`: Case-insensitive sorting
+   - `ns.FLOAT` / `ns.F`: Parse numbers as floats
+   - `ns.SIGNED` / `ns.S`: Respect signs (+ or -)
+   - `ns.REAL` / `ns.R`: Shortcut for `FLOAT | SIGNED`
+   - `ns.PATH` / `ns.P`: Filesystem path-aware sorting
+   - `ns.LOCALE` / `ns.L`: Locale-aware sorting
+   - `ns.LOWERCASEFIRST` / `ns.LF`: Sort lowercase before uppercase
+   - `ns.GROUPLETTERS` / `ns.G`: Group uppercase and lowercase together
+   - `ns.NUMAFTER` / `ns.NA`: Sort numbers after non-numbers
+   - `ns.NOEXP` / `ns.N`: Don't parse scientific notation
+   - `ns.NANLAST` / `ns.NL`: Treat NaN as +Infinity
+   - `ns.PRESORT` / `ns.PS`: Pre-sort input as strings
 
-### Flags
+4. **Provide convenience functions**: `realsorted()`, `humansorted()`, and `os_sorted()` as shortcuts for common algorithm combinations.
 
-Expose `ns`, an integer-compatible flag namespace, with the sorting flags used
-by the package: `INT`, `FLOAT`, `REAL`, `SIGNED`, `UNSIGNED`, `NOEXP`, `PATH`,
-`LOCALE`, `IGNORECASE`, `GROUPLETTERS`, `NANLAST`, `NUMAFTER`, `PRESORT`,
-`LOWERCASEFIRST`, `COMPATIBILITYNORMALIZE`, and `TYPEDVERSION`. Flag values may
-be combined with bitwise operators. `ns` must also expose the package's
-version-compatible enum members without requiring an optional dependency.
+5. **Implement `index_natsorted()`**: Return indices that would sort the input naturally.
 
-### Sorting functions
+6. **Provide helper functions**: `order_by_index()`, `as_utf8()`, `as_ascii()`, and `natsort_key()`.
 
-Implement these functions and preserve their return shapes:
+The package must be installable via `pip install -e .` and expose all public APIs through the `natsort` top-level import. The implementation must handle mixed types (strings, integers, floats), Unicode strings, empty inputs, and preserve sort stability.
 
-```python
-natsorted(seq, key=None, reverse=False, alg=ns.INT | ns.UNSIGNED, **kwargs)
-humansorted(seq, key=None, reverse=False, alg=ns.INT | ns.UNSIGNED, **kwargs)
-realsorted(seq, key=None, reverse=False, alg=ns.REAL | ns.UNSIGNED, **kwargs)
-index_natsorted(seq, key=None, reverse=False, alg=ns.INT | ns.UNSIGNED, **kwargs)
-index_humansorted(seq, key=None, reverse=False, alg=ns.INT | ns.UNSIGNED, **kwargs)
-index_realsorted(seq, key=None, reverse=False, alg=ns.REAL | ns.UNSIGNED, **kwargs)
-order_by_index(seq, index, iter=False)
-```
+# Environment Configuration (Supports)
 
-`natsorted`, `humansorted`, and `realsorted` return a new list. The three
-`index_*` functions return indices that would produce the corresponding sort;
-the indices must be a permutation of the input positions. `order_by_index`
-applies such an index and returns a list unless its documented iterator option
-is requested.
+- **Language**: Python 3.7+
+- **Package Manager**: pip
+- **Installation**: `pip install -e .` from the package root
+- **Build Backend**: Standard setuptools or modern PEP 517 backend
+- **Runtime Dependencies**: None required (all dependencies are optional)
+- **Network Mode**: No network access required after installation
+- **Entry Points**: Package import only (no CLI required for core functionality)
 
-`natsorted` treats integer-looking runs numerically. `humansorted` uses the
-human-oriented numeric interpretation for decimal/exponent text, and
-`realsorted` handles signed real-looking runs. `reverse=True` reverses the
-final ordering while preserving the function's documented stable behavior.
-Empty sequences return empty lists. A non-iterable input, invalid index, or
-unsupported flag combination raises the normal Python exception for that
-operation rather than being silently coerced.
+The package must work in offline environments once installed, with no external API calls or network dependencies during normal operation.
 
-### Key generation
-
-Implement:
-
-```python
-natsort_keygen(key=None, alg=ns.INT | ns.UNSIGNED, **kwargs)
-humansort_keygen(key=None, alg=ns.INT | ns.UNSIGNED, **kwargs)
-realsort_keygen(key=None, alg=ns.REAL | ns.UNSIGNED, **kwargs)
-natsort_key
-humansort_key
-realsort_key
-```
-
-Each `*_keygen` returns a callable suitable for `sorted` and the corresponding
-convenience key is a reusable default key. A supplied `key` is applied once to
-each item before tokenization. Key functions used in scored examples are
-deterministic selectors over JSON-safe records; no custom object serialization
-or side effects are required.
-
-### Compatibility and helper surface
-
-Expose the compatibility helpers and version metadata used by ordinary callers:
+# Project Directory Structure
 
 ```text
-natsort.compat
-natsort.utils
-natsort.__version__
-natsort.__author__
-natsort.__license__
+workspace/
+├── natsort/
+│   ├── __init__.py          # Main exports and version
+│   ├── natsort.py           # Core sorting functions
+│   ├── ns_enum.py           # ns enum and algorithm flags
+│   └── utils.py             # Helper utilities and key generation
+├── pyproject.toml           # Or setup.py/setup.cfg for package metadata
+└── README.md                # Package documentation
 ```
 
-The helpers must be importable without `fastnumbers` or PyICU. If an optional
-module is absent, use the pure Python implementation and keep the public
-function names available. Do not turn an optional import into a required
-runtime dependency.
+The `natsort/` directory contains the library source code. The `__init__.py` exports all public APIs. Package metadata (name, version, author, license) must be defined in `pyproject.toml`, `setup.py`, or `setup.cfg`.
 
-### Flags and deterministic text behavior
+# API Usage Guide
 
-The fallback must cover the following combinations in the scored scope:
+## Core Sorting Function
 
-- `ns.INT | ns.UNSIGNED`: integer runs, including leading zeros, compare by
-  numeric value with the source's deterministic tie behavior;
-- `ns.FLOAT` and `ns.REAL`: decimal, exponent, and signed runs according to
-  the selected flag set;
-- `ns.NOEXP`: an exponent marker is treated as text rather than as part of a
-  number;
-- `ns.PATH`: separators are tokenized consistently for POSIX-style strings;
-- `ns.IGNORECASE` and `ns.GROUPLETTERS`: case handling is deterministic;
-- `ns.COMPATIBILITYNORMALIZE`: normalization is explicit, never implicit; and
-- `ns.LOCALE`: use the frozen `C.UTF-8` locale only, with no PyICU requirement.
+### `natsorted(seq, key=None, reverse=False, alg=ns.INT, **kwargs)`
 
-Unicode strings must round-trip unchanged in results. Include bounded examples
-containing ASCII, combining text such as `cafe\\u0301`, precomposed text such
-as `caf\\u00e9`, full-width digits, and non-Latin scripts. The implementation
-must not use process hash order to break ties.
+Import: `from natsort import natsorted`
 
-## Implementation Notes
+**Purpose**: Sort a sequence using natural sorting algorithm.
 
-- Keep package metadata deterministic and independent of a live Git checkout.
-- Do not copy the upstream source or tests into the generated project. Recreate
-  the behavior from this specification.
-- Do not add `fastnumbers`, `PyICU`, locale data packages, NumPy, pandas, or
-  other third-party packages as runtime dependencies.
-- The authoring verification will run two bounded `pytest --collect-only`
-  probes: one with plugin autoload disabled for deterministic baseline
-  collection, and one with Hypothesis available to confirm property-based
-  tests collect without changing the count. Collection errors, import errors,
-  or differing node-id sets are blockers rather than test failures.
-- The authoring verification will run the same pure-fallback probes twice in
-  fresh processes with the environment in `task.toml`; it will compare sorted
-  values, key outputs, Unicode results, locale results, and serialized reports
-  byte-for-byte.
-- A candidate report must serialize with the standard-library `json` module.
-  It may contain only JSON null, booleans, finite numbers, strings, arrays,
-  and objects with string keys. Do not put sets, bytes, callables, exceptions,
-  or arbitrary Python objects in the candidate evidence payload.
+**Parameters**:
+- `seq` (iterable): The sequence to sort
+- `key` (callable, optional): Custom key function applied before natural sorting
+- `reverse` (bool, default False): Sort in descending order if True
+- `alg` (ns enum, default ns.INT): Algorithm flags (can be combined with `|`)
+- Additional keyword arguments passed to underlying sort
 
-## Audit Gates
+**Returns**: List containing sorted elements
 
-This task remains blocked until all of the following are recorded outside the
-public instruction as reproducible evidence:
+**Behavior**: 
+- Parses embedded numbers and sorts them numerically
+- Preserves Python's stable sort behavior
+- Does not modify input sequence (returns new list)
+- Handles mixed types: strings, integers, floats
+- None values sorted first by default (last with ns.NANLAST)
 
-1. An archive made from exactly commit
-   `e90771d7c39157d079425b655763938c2709d486`, with its SHA-256 and a matching
-   clean-tree commit check.
-2. The exact upstream `LICENSE` bytes and a license classification that allows
-   the task's source-derived tests and distribution model.
-3. Source-only LOC measured from the frozen archive, excluding tests, docs,
-   examples, generated files, packaging metadata, and vendored code.
-4. Pytest and Hypothesis collection reports with stable node IDs and a fixed
-   denominator in the final environment.
-5. A no-network dependency closure showing that the pure fallback imports and
-   tests without `fastnumbers` and PyICU.
-6. Two fresh-process locale/Unicode repeatability runs under the pinned locale,
-   including the explicit normalization cases above.
-7. A JSON-safe candidate-scope report with no arbitrary-object or optional
-   backend claims.
+**Example**:
+```python
+from natsort import natsorted
+result = natsorted(['file10.txt', 'file2.txt', 'file1.txt'])
+# Returns: ['file1.txt', 'file2.txt', 'file10.txt']
+```
 
-Until those gates pass, `expected_total` in `task.toml` is only a positive
-integer required by the current catalog schema and must not be used for a
-score. No hidden tests, Oracle, Harbor bundle, or large source/cache artifact
+## Key Generation
+
+### `natsort_keygen(key=None, alg=ns.INT, **kwargs)`
+
+Import: `from natsort import natsort_keygen`
+
+**Purpose**: Generate a reusable key function for natural sorting.
+
+**Parameters**:
+- `key` (callable, optional): Pre-processing function
+- `alg` (ns enum, default ns.INT): Algorithm flags
+- Additional keyword arguments for key generation
+
+**Returns**: Callable that can be passed to `sorted()` or `list.sort()`
+
+**Example**:
+```python
+from natsort import natsort_keygen
+key_func = natsort_keygen()
+data = ['a10', 'a2', 'a1']
+data.sort(key=key_func)  # In-place sort
+# data is now ['a1', 'a2', 'a10']
+```
+
+### `natsort_key(val, key=None, alg=ns.INT)`
+
+Import: `from natsort import natsort_key`
+
+**Purpose**: Transform a single value using the natural sorting key.
+
+**Parameters**:
+- `val`: The value to transform
+- `key` (callable, optional): Pre-processing function
+- `alg` (ns enum, default ns.INT): Algorithm flags
+
+**Returns**: Tuple representing the natural sorting key for the value
+
+**Example**:
+```python
+from natsort import natsort_key
+result = natsort_key('file10.txt')
+# Returns: ('file', 10, '.txt')
+```
+
+## Algorithm Flags (ns enum)
+
+### `ns` - Natural Sort Algorithm Enum
+
+Import: `from natsort import ns`
+
+**Purpose**: Control natural sorting behavior through bitwise-combinable flags.
+
+**Common Flags**:
+- `ns.INT` or `ns.I`: Parse numbers as integers (default)
+- `ns.FLOAT` or `ns.F`: Parse numbers as floats
+- `ns.SIGNED` or `ns.S`: Respect +/- signs
+- `ns.REAL` or `ns.R`: Equivalent to `ns.FLOAT | ns.SIGNED`
+- `ns.IGNORECASE` or `ns.IC`: Case-insensitive sorting
+- `ns.LOWERCASEFIRST` or `ns.LF`: Sort lowercase before uppercase
+- `ns.PATH` or `ns.P`: Path-aware sorting (respects separators and extensions)
+- `ns.LOCALE` or `ns.L`: Locale-aware sorting
+- `ns.NUMAFTER` or `ns.NA`: Sort numbers after letters
+- `ns.GROUPLETTERS` or `ns.G`: Group upper and lower case together
+- `ns.NOEXP` or `ns.N`: Don't parse scientific notation (e.g., "5E10")
+- `ns.NANLAST` or `ns.NL`: Sort NaN/None values last
+- `ns.PRESORT` or `ns.PS`: Pre-sort strings before natural sort
+
+**Usage**: Combine flags with bitwise OR (`|`)
+
+**Example**:
+```python
+from natsort import natsorted, ns
+result = natsorted(['A10', 'a2', 'A1'], alg=ns.IGNORECASE | ns.REAL)
+```
+
+## Convenience Functions
+
+### `realsorted(seq, key=None, reverse=False, alg=ns.REAL, **kwargs)`
+
+Import: `from natsort import realsorted`
+
+**Purpose**: Sort sequence treating numbers as signed floats.
+
+**Behavior**: Shortcut for `natsorted(seq, alg=ns.REAL | alg)`
+
+**Example**:
+```python
+from natsort import realsorted
+result = realsorted(['val5.10', 'val-3', 'val2'])
+# Returns: ['val-3', 'val2', 'val5.10']
+```
+
+### `humansorted(seq, key=None, reverse=False, alg=ns.LOCALE, **kwargs)`
+
+Import: `from natsort import humansorted`
+
+**Purpose**: Sort with locale-aware comparison.
+
+**Behavior**: Shortcut for `natsorted(seq, alg=ns.LOCALE | alg)`. Respects locale-specific alphabetical order and decimal separators.
+
+**Note**: Requires proper locale configuration via `locale.setlocale()`.
+
+**Example**:
+```python
+import locale
+from natsort import humansorted
+locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
+result = humansorted(['apple10', 'Apple5', 'banana2'])
+```
+
+### `os_sorted(seq, key=None, reverse=False, **kwargs)`
+
+Import: `from natsort import os_sorted`
+
+**Purpose**: Sort paths like the operating system's file browser.
+
+**Behavior**: Applies OS-specific sorting rules (case-insensitive on Windows, locale-aware on Linux/Mac).
+
+**Example**:
+```python
+from natsort import os_sorted
+result = os_sorted(['File10', 'file2', 'File1'])
+```
+
+## Index and Order Functions
+
+### `index_natsorted(seq, key=None, reverse=False, alg=ns.INT, **kwargs)`
+
+Import: `from natsort import index_natsorted`
+
+**Purpose**: Return the indices that would naturally sort the sequence.
+
+**Returns**: List of integer indices
+
+**Example**:
+```python
+from natsort import index_natsorted
+indices = index_natsorted(['a10', 'a2', 'a1'])
+# Returns: [2, 1, 0]  (meaning seq[2], seq[1], seq[0] is the sorted order)
+```
+
+### `order_by_index(seq, index, iter=False)`
+
+Import: `from natsort import order_by_index`
+
+**Purpose**: Reorder a sequence using provided indices.
+
+**Parameters**:
+- `seq` (sequence): The sequence to reorder
+- `index` (list of int): Indices defining the new order
+- `iter` (bool, default False): Return iterator instead of list if True
+
+**Returns**: Reordered sequence
+
+**Example**:
+```python
+from natsort import order_by_index
+result = order_by_index(['a', 'b', 'c'], [2, 0, 1])
+# Returns: ['c', 'a', 'b']
+```
+
+## Helper Functions
+
+### `as_utf8(val)`
+
+Import: `from natsort import as_utf8`
+
+**Purpose**: Decode bytes to UTF-8 string for sorting.
+
+**Use Case**: Sorting sequences containing bytes objects
+
+**Example**:
+```python
+from natsort import natsorted, as_utf8
+result = natsorted([b'a10', b'a2', b'a1'], key=as_utf8)
+# Returns: [b'a1', b'a2', b'a10']
+```
+
+### `as_ascii(val)`
+
+Import: `from natsort import as_ascii`
+
+**Purpose**: Decode bytes to ASCII string for sorting.
+
+**Behavior**: Similar to `as_utf8` but uses ASCII encoding.
+
+# Implementation Notes
+
+## Number Parsing
+- By default, parse consecutive digits as unsigned integers
+- With `ns.FLOAT`, parse numbers as floating-point including decimals
+- With `ns.SIGNED`, recognize +/- immediately before numbers
+- With `ns.NOEXP`, disable scientific notation parsing
+- Leading zeros create distinct values ('01' ≠ '1')
+
+## String Transformation
+- Split strings into alternating text and number components
+- Text components compared lexicographically
+- Number components compared numerically
+- The transformation is tuple-based for proper comparison
+
+## Mixed Type Handling
+- Integers, floats, and strings can be sorted together
+- Type stability: same types maintain relative order
+- None values sort first (or last with `ns.NANLAST`)
+
+## Path Sorting
+- With `ns.PATH`, split on filesystem separators ('/' or '\\')
+- Also split on file extensions (e.g., '.txt')
+- Ensures directories sort correctly relative to files
+
+## Case Sensitivity
+- Default sorting is case-sensitive (uppercase before lowercase)
+- `ns.IGNORECASE`: Ignore case differences
+- `ns.LOWERCASEFIRST`: Lowercase before uppercase
+- `ns.GROUPLETTERS`: Group same letters regardless of case
+
+## Locale Awareness
+- `ns.LOCALE` enables locale-dependent string comparison
+- Requires `locale.setlocale()` to be called first
+- Affects alphabetical order and number formatting
+- Optional PyICU library improves locale handling
+
+## Performance
+- Key generation (`natsort_keygen`) is efficient for repeated sorting
+- Optional `fastnumbers` library can improve performance
+- Stable sort preserves original order for equal elements
+
+## Determinism
+- Sorting is deterministic for the same input and flags
+- With `ns.PRESORT`, pre-sort to eliminate input-order dependency
+
+# Examples
+
+## Basic Natural Sorting
+```python
+from natsort import natsorted
+
+# Simple list
+data = ['item10', 'item2', 'item1']
+result = natsorted(data)
+# Result: ['item1', 'item2', 'item10']
+
+# Version strings
+versions = ['v1.10', 'v1.2', 'v1.1']
+sorted_versions = natsorted(versions)
+# Result: ['v1.1', 'v1.2', 'v1.10']
+```
+
+## Using Algorithm Flags
+```python
+from natsort import natsorted, ns
+
+# Case-insensitive
+data = ['Apple', 'banana', 'apple']
+result = natsorted(data, alg=ns.IGNORECASE)
+# Result: ['Apple', 'apple', 'banana']
+
+# Real numbers (signed floats)
+data = ['val5.3', 'val-10', 'val2']
+result = natsorted(data, alg=ns.REAL)
+# Result: ['val-10', 'val2', 'val5.3']
+
+# Combined flags
+data = ['File10', 'file2', 'File1']
+result = natsorted(data, alg=ns.IGNORECASE | ns.PATH)
+# Result: ['File1', 'file2', 'File10']
+```
+
+## In-Place Sorting
+```python
+from natsort import natsort_keygen
+
+data = ['file10.txt', 'file2.txt', 'file1.txt']
+data.sort(key=natsort_keygen())
+# data is now ['file1.txt', 'file2.txt', 'file10.txt']
+```
+
+## Working with Indices
+```python
+from natsort import index_natsorted, order_by_index
+
+original = ['z10', 'z2', 'z1']
+indices = index_natsorted(original)
+# indices: [2, 1, 0]
+
+# Apply to another list
+labels = ['third', 'second', 'first']
+reordered = order_by_index(labels, indices)
+# reordered: ['first', 'second', 'third']
+```
+
+# Error Handling and Boundary Conditions
+
+## Empty Sequences
+```python
+from natsort import natsorted
+result = natsorted([])
+# Returns: []
+```
+
+## None Values
+```python
+from natsort import natsorted, ns
+
+# Default: None sorted first
+result = natsorted(['a', None, 'b'])
+# Returns: [None, 'a', 'b']
+
+# With NANLAST: None sorted last (intended behavior may vary)
+result = natsorted(['a', None, 'b'], alg=ns.NANLAST)
+```
+
+## Mixed Types
+```python
+from natsort import natsorted
+
+# Integers, floats, and strings
+result = natsorted([3, '10', 2.5, '1'])
+# Returns: ['1', 2.5, 3, '10']
+```
+
+## Invalid Algorithm Flags
+- Flags are combined with bitwise OR
+- Invalid flag values are treated as integers
+- Prefer using named `ns` enum values for clarity
+
+## Unicode Handling
+```python
+from natsort import natsorted
+
+# Unicode strings work correctly
+result = natsorted(['café10', 'café2', 'café1'])
+# Returns: ['café1', 'café2', 'café10']
+```
+
+## Bytes Sorting
+```python
+from natsort import natsorted, as_utf8
+
+# Requires explicit key function
+data = [b'file10', b'file2', b'file1']
+result = natsorted(data, key=as_utf8)
+# Returns: [b'file1', b'file2', b'file10']
+```
+
+## Large Numbers
+```python
+from natsort import natsorted
+
+# Handles arbitrarily large integers
+result = natsorted(['item1000000', 'item999', 'item100'])
+# Returns: ['item100', 'item999', 'item1000000']
+```

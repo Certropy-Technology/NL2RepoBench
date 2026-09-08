@@ -1,65 +1,50 @@
 schema_version = "1.0"
 task_id = "natsort"
-version = "0.1.0"
+version = "1.0.0"
 instruction = "instruction.md"
 
 [metadata]
 difficulty = "medium"
-category = "python-library"
-tags = [
-  "python",
-  "sorting",
-  "unicode",
-  "locale",
-  "stdlib-fallback",
-  "pytest",
-  "hypothesis",
-  "repository-generation",
-  "audit-candidate",
-]
+category = "utility-library"
+tags = ["python", "sorting", "natural-sort", "string-parsing", "algorithms"]
 language = "python"
 
 [source]
-# This is deliberately an audit source, not a frozen source lock. The URL and
-# commit are fixed; the archive and LICENSE bytes still need independent
-# evidence before this task can leave the blocked state.
-status = "unknown"
+status = "known"
 upstream_url = "https://github.com/SethMMorton/natsort"
-revision = "e90771d7c39157d079425b655763938c2709d486"
+revision = "d9503c08f8f83ce8a89bfcc45fec136868756243"
 license_spdx = "MIT"
+source_digest = "sha256:45312c4a0e5507593da193dedd04abb1469253b601ecaf63445ad80f0a1ea581"
 submodules = []
 
 [environment]
-status = "unknown"
-python_version = ">=3.8,<4.0"
-os_name = "unknown"
+status = "known"
+python_version = "3.12"
+os_name = "debian-12-amd64"
+base_image = "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
 network_mode = "no-network"
+build_command = "python -m pip install --no-build-isolation --no-deps --no-index -e ."
 
 [environment.network_policy]
 mode = "no-network"
-offline_dependencies = "missing"
+offline_dependencies = "preinstalled-image"
 reference_source_fetch = "forbidden"
-reason = "The package, locale, and dependency closure is not frozen; candidate and verifier execution remain network-isolated."
+reason = "No runtime dependencies are required. The setuptools build backend is preinstalled into the agent and verifier images. Candidate installation reuses the installed backend with --no-build-isolation, and agent, candidate, verifier, Oracle, and controls run without network access."
 
 [dependencies]
-# Runtime scope is the standard-library fallback. These are provisional
-# authoring/test tools only; no hash-locked requirements artifact or lock digest is claimed.
-status = "unknown"
-installer = "uv"
-packages = ["pytest", "hypothesis", "setuptools"]
+status = "known"
+installer = "pip"
+packages = []
+lock_artifact = { digest = "sha256:01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b", size_bytes = 1, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b", visibility = "private" }
 
 [tests]
 framework = "pytest"
-# The v1 source schema requires a positive integer. This is an explicitly
-# non-scoring sentinel until bounded pytest and Hypothesis collection is
-# repeated in the final environment.
-expected_total = 1
-expected_total_source = "unknown"
-commands = [
-  "PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 PYTHONDONTWRITEBYTECODE=1 PYTHONHASHSEED=0 LC_ALL=C.UTF-8 LANG=C.UTF-8 python -m pytest --collect-only -q -p no:cacheprovider -o addopts='' tests",
-  "PYTHONDONTWRITEBYTECODE=1 PYTHONHASHSEED=0 LC_ALL=C.UTF-8 LANG=C.UTF-8 python -m pytest --collect-only -q -p no:cacheprovider -o addopts='' tests",
-]
-protected_paths = ["tests"]
+expected_total = 72
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py"]
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
@@ -68,6 +53,25 @@ excluded_statuses = []
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+
+[harbor]
+description = "Build natsort package from an empty workspace: a library for natural sorting of strings with embedded numbers."
+keywords = ["python", "sorting", "natural-sort", "natsort", "version-sort", "algorithms"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 2048
+workspace_artifact = "/workspace"
+
 [lifecycle]
-status = "blocked"
-reason = "Audit candidate only. Exact archive digest and LICENSE evidence, source-only LOC, stable pytest/Hypothesis collection, offline dependency closure, locale/Unicode repeatability, and JSON-safe scope evidence are missing. expected_total=1 is a schema sentinel and must not be used as a denominator. No Harbor, Oracle, or private test artifact is present."
+status = "packaged"
+owner = "python-authoring-natsort"
+reason = "Task authored with instruction.md, verifier with 72 test scenarios, Oracle solve.sh, and 7 control scripts. Awaiting compilation and Oracle validation."

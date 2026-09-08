@@ -1,0 +1,85 @@
+schema_version = "1.0"
+task_id = "bidict"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "utility-library"
+tags = ["python", "bidirectional", "mapping", "dict", "collections"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/jab/bidict"
+revision = "3b6a3a714d86fc1d8d97efe52e7082bb26f352f8"
+license_spdx = "MPL-2.0"
+source_digest = "sha256:4dca6c17f0b01700e9f24359daa5ebabf7be022d99f4cb2a257b6af2a5076c88"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12"
+os_name = "debian-12-amd64"
+base_image = "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
+network_mode = "no-network"
+build_command = "python -m pip install --no-build-isolation --no-deps --no-index -e ."
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The uv_build backend is preinstalled into the agent and verifier images from the hash-locked candidate closure. Candidate installation reuses the installed backend with --no-build-isolation, and agent, candidate, verifier, Oracle, and controls run without network access."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = []
+lock_artifact = { digest = "sha256:77d2de6bd711e8f123e7527a81f9a6bc4dcedae5cab06fd6b87b57922105024b", size_bytes = 145, media_type = "text/plain; charset=utf-8", uri = "", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 80
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+bundle = { digest = "", size_bytes = 0, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "", visibility = "private" }
+
+[harbor]
+description = "Build bidict package from an empty workspace: a bidirectional mapping library for Python."
+keywords = ["python", "bidict", "bidirectional", "mapping", "dict", "collections"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 2048
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = ""
+size_bytes = 0
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = ""
+visibility = "private"
+
+[lifecycle]
+status = "packaged"
+owner = "python-wave3-bidict"
+reason = "Source frozen and task authored, awaiting compilation and Oracle validation."
