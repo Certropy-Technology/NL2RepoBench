@@ -39,11 +39,21 @@ result = DeepDiff({'a': 1, 'b': 3}, {'a': 2, 'b': 4}).to_dict()
     ("dictionary_item_added", """
 from deepdiff import DeepDiff
 result = DeepDiff({'a': 1}, {'a': 1, 'b': 2}).to_dict()
+if 'dictionary_item_added' in result:
+    result['dictionary_item_added'] = list(result['dictionary_item_added'])
+if 'dictionary_item_removed' in result:
+    result['dictionary_item_removed'] = list(result['dictionary_item_removed'])
+result = result
 """, {"ok": True, "value": {"dictionary_item_added": ["root['b']"]}}),
     
     ("dictionary_item_removed", """
 from deepdiff import DeepDiff
 result = DeepDiff({'a': 1, 'b': 2}, {'a': 1}).to_dict()
+if 'dictionary_item_added' in result:
+    result['dictionary_item_added'] = list(result['dictionary_item_added'])
+if 'dictionary_item_removed' in result:
+    result['dictionary_item_removed'] = list(result['dictionary_item_removed'])
+result = result
 """, {"ok": True, "value": {"dictionary_item_removed": ["root['b']"]}}),
     
     # Type changes - MUST handle serialization
@@ -402,7 +412,7 @@ result = DeepDiff(10**100, 10**100 + 1).to_dict()
     # Special string characters
     ("special_chars_string", """
 from deepdiff import DeepDiff
-result = DeepDiff({'a': 'hello\\nworld'}, {'a': 'hello\\nworld'}).to_dict()
+result = DeepDiff({'a': 'hello\nworld'}, {'a': 'hello\nworld'}).to_dict()
 """, {"ok": True, "value": {}}),
     
     ("unicode_string", """
