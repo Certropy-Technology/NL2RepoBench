@@ -14,7 +14,7 @@ status = "known"
 upstream_url = "https://github.com/joke2k/faker"
 revision = "59a6872a547248bb40cdd0f809089a605c68467f"
 license_spdx = "MIT"
-source_digest = "sha256:72e421098664edf38478f4269a5d5a539337de5da18883ce67cb1e6bb96b0b3a"
+source_digest = "sha256:581d21fe695a061e9c3872454fb9c1cbf524afd260193da90385af2ce235d791"
 submodules = []
 
 [environment]
@@ -37,7 +37,7 @@ reason = "All dependencies are preinstalled into the agent and verifier images f
 status = "known"
 installer = "pip"
 packages = []
-lock_artifact = { digest = "sha256:39e6a212c5ef58041bed63702fd59445bbf32eda1d915d52992399d46e14fa2a", size_bytes = 94, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:39e6a212c5ef58041bed63702fd59445bbf32eda1d915d52992399d46e14fa2a", visibility = "private" }
+lock_artifact = { digest = "sha256:e8452f21c2c76cd184b2711604c7f3a46da4f1638c9aed5ce57d93f246c653a9", size_bytes = 104, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:e8452f21c2c76cd184b2711604c7f3a46da4f1638c9aed5ce57d93f246c653a9", visibility = "private" }
 
 [tests]
 framework = "pytest"
@@ -56,7 +56,7 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 [verifier]
 protocol = "custom-json-v1"
 entrypoint = "run.py"
-bundle = { digest = "sha256:4bb59c3d1e480f448e502406b1976471a03577ca29173a2989eb6392e30036da", size_bytes = 2783, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:4bb59c3d1e480f448e502406b1976471a03577ca29173a2989eb6392e30036da", visibility = "private" }
+bundle = { digest = "sha256:e371a33bf289a7b29c17942115ca111edff07a0fd124274dc91af09d07d2eb17", size_bytes = 2972, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:e371a33bf289a7b29c17942115ca111edff07a0fd124274dc91af09d07d2eb17", visibility = "private" }
 
 [harbor]
 description = "Build faker package from an empty workspace: a library for generating fake data for testing and development."
@@ -73,13 +73,13 @@ storage_mb = 2048
 workspace_artifact = "/workspace"
 
 [oracle_bundle]
-digest = "sha256:8208a5298901a08b4c45b7ee4765a376b152331ae7cc37b2df219a5b3ba827b4"
-size_bytes = 2007571
+digest = "sha256:fb1aa6be0e921c8aa9ea38455104f9571ef7e86790dd8a0d6161d5a46fb5f680"
+size_bytes = 2028118
 media_type = "application/vnd.nl2repobench.private-bundle+tar"
-uri = "artifact://private/sha256:8208a5298901a08b4c45b7ee4765a376b152331ae7cc37b2df219a5b3ba827b4"
+uri = "artifact://private/sha256:fb1aa6be0e921c8aa9ea38455104f9571ef7e86790dd8a0d6161d5a46fb5f680"
 visibility = "private"
 
 [lifecycle]
-status = "packaged"
-owner = "faker-authoring-worker"
-reason = "Source frozen, instruction authored, verifier and controls created. Awaiting Oracle gate and controls validation."
+status = "controls-passed"
+owner = "python-recover-parent-faker"
+reason = "Oracle 65/65 reward 1.0. Controls: empty 0.0(0), stub 0.0(65), forgery 0.0(65), install-failure 0.0(0), panic 0.0(65), oversized-output 0.0(65), background-process 0.0(65); all valid, all 0.0. hang excluded. offline verified."
