@@ -1,0 +1,85 @@
+schema_version = "1.0"
+task_id = "pycountry"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "data-library"
+tags = ["python", "iso", "countries", "languages", "currencies", "database", "i18n"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/pycountry/pycountry"
+revision = "4ba3951667c2ed98363a3640c9022cf1b7a59300"
+license_spdx = "LGPL-2.1-only"
+source_digest = "sha256:5b6027d453fcd6060112b951dd010f01f168b51b4bf8a1f1fc8c95c8d94a0801"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12"
+os_name = "debian-12-amd64"
+base_image = "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
+network_mode = "no-network"
+build_command = "python -m pip install --no-build-isolation --no-deps --no-index -e ."
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The Poetry build backend (poetry-core) is preinstalled into the agent and verifier images from the hash-locked candidate closure. Candidate installation reuses the installed backend with --no-build-isolation, and agent, candidate, verifier, Oracle, and controls run without network access."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = []
+lock_artifact = { digest = "", size_bytes = 0, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:0596cabcfa4426f04f60e39ff5122ebc3428f9ee8e79e2e576972dc9436c53e3", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 68
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+bundle = { digest = "sha256:bc09d3d4072f4a3d2458856bc9346cd4de5560309d28970bb8e659595a4fc429", size_bytes = 2504, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:bc09d3d4072f4a3d2458856bc9346cd4de5560309d28970bb8e659595a4fc429", visibility = "private" }
+
+[harbor]
+description = "Build pycountry package: ISO country, language, currency and script database with simple query interface."
+keywords = ["python", "iso", "countries", "languages", "currencies", "scripts", "database", "i18n", "3166", "639", "4217", "15924"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 2048
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:0596cabcfa4426f04f60e39ff5122ebc3428f9ee8e79e2e576972dc9436c53e3"
+size_bytes = 7698993
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = ""
+visibility = "private"
+
+[lifecycle]
+status = "packaged"
+owner = "pycountry-author"
+reason = "Source frozen, instruction authored, verifier and controls created. Awaiting compiler and Oracle gate."

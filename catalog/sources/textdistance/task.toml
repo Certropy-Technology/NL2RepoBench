@@ -1,0 +1,85 @@
+schema_version = "1.0"
+task_id = "textdistance"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "utility-library"
+tags = ["python", "text-similarity", "distance-metrics", "nlp", "algorithms"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/orsinium/textdistance"
+revision = "faa25f6ff50d0f34dc9655d4d7b0d8daf6f9ff85"
+license_spdx = "MIT"
+source_digest = "sha256:d6dabc50b4ea832cdcf0e1e6021bd0c7fcd9ade155888d79bb6a3c31fce2dc6f"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12"
+os_name = "debian-12-amd64"
+base_image = "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
+network_mode = "no-network"
+build_command = "python -m pip install --no-build-isolation --no-deps --no-index -e ."
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "Dependencies are installed during the Docker build phase. Agent, candidate, verifier, Oracle, and controls run without network access."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = []
+lock_artifact = "TBD"
+
+[tests]
+framework = "pytest"
+expected_total = 76
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+bundle = "TBD"
+
+[harbor]
+description = "Build textdistance package from an empty workspace: a library for computing distance between text sequences using 30+ algorithms including Hamming, Levenshtein, Jaro-Winkler, Jaccard, and more."
+keywords = ["python", "text-distance", "similarity", "levenshtein", "hamming", "jaro-winkler", "jaccard"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 2048
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "TBD"
+size_bytes = 0
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "TBD"
+visibility = "private"
+
+[lifecycle]
+status = "packaged"
+owner = "textdistance-authoring-worker"
+reason = "Source frozen, instruction authored, verifier implemented with 76 test scenarios, controls created. Pending: dependency lock generation, Oracle bundle creation, compiler validation."
