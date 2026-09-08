@@ -1,0 +1,55 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/tomli-w"
+version = "1.0.0"
+description = "Build the tomli-w TOML writer library from an empty workspace: it serializes Python objects to TOML, compliant with the TOML spec and reversible via tomllib."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "toml",
+    "serialization",
+    "writer",
+    "tomli-w",
+]
+
+[metadata]
+difficulty = "easy"
+category = "serialization-library"
+tags = [
+    "python",
+    "toml",
+    "serialization",
+    "writer",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 90
+canonical_manifest_digest = "sha256:0dbf0b9dcc99bc1160b7ad4727ee9b802493fbf40a3e15fb716ae139388c2b1b"
+toolchain_lock_digest = "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366"
+
+[agent]
+timeout_sec = 1800.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 4096
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 2048

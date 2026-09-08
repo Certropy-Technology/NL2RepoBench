@@ -4,9 +4,9 @@ version = "1.0.0"
 instruction = "instruction.md"
 
 [metadata]
-difficulty = "medium"
-category = "python-library"
-tags = ["python", "repository-generation", "toml", "serialization"]
+difficulty = "easy"
+category = "serialization-library"
+tags = ["python", "toml", "serialization", "writer"]
 language = "python"
 
 [source]
@@ -15,38 +15,36 @@ upstream_url = "https://github.com/hukkin/tomli-w"
 revision = "87e98b1cb9ee0ba1ac28fa7c430dc9af5045ced5"
 license_spdx = "MIT"
 source_digest = "sha256:5b2f86791b0b23b75320ed90096589fbf507895bba7d4f220afd76d4fc5798ee"
+submodules = []
 
 [environment]
 status = "known"
 python_version = "3.12"
-os_name = "debian-12"
-base_image = "python:3.12-slim"
+os_name = "debian-12-amd64"
+base_image = "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
 base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
 network_mode = "no-network"
+build_command = "python -m pip install --no-build-isolation --no-deps --no-index -e ."
 
 [environment.network_policy]
 mode = "no-network"
 offline_dependencies = "preinstalled-image"
 reference_source_fetch = "forbidden"
-reason = "Dependencies are installed during the Docker build phase from hash-locked requirements. Verifier and agent run offline."
+reason = "The flit-core build backend is preinstalled into the agent and verifier images from the hash-locked candidate closure. Candidate installation reuses the installed backend with --no-build-isolation, and agent, candidate, verifier, Oracle, and controls run without network access."
 
 [dependencies]
 status = "known"
 installer = "pip"
-packages = ["pytest==9.1.1", "pytest-randomly==5.0.0", "pytest-cov==7.1.0", "tomli==2.4.1"]
-
-[dependencies.lock_artifact]
-uri = "artifact://private/sha256:f8496525689c5e17b5da419dfaac9943d822aea36d3462559abb4408177e25ae"
-digest = "sha256:f8496525689c5e17b5da419dfaac9943d822aea36d3462559abb4408177e25ae"
-size_bytes = 16133
-media_type = "text/plain"
-visibility = "private"
+packages = []
+lock_artifact = { digest = "sha256:5f9d1814281619e811090182adce8523019e4fe0f54fe615286feb08a87efc85", size_bytes = 703, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:5f9d1814281619e811090182adce8523019e4fe0f54fe615286feb08a87efc85", visibility = "private" }
 
 [tests]
 framework = "pytest"
-expected_total = 45
+expected_total = 90
 expected_total_source = "frozen-collection"
-commands = ["pip install -e /workspace", "python /tests/run.py"]
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py"]
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
@@ -55,20 +53,33 @@ excluded_statuses = []
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+bundle = { digest = "sha256:fc933fb22ff9ae466d5900faf7276443a7660f23617c65e0b6c9685006931214", size_bytes = 3316, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:fc933fb22ff9ae466d5900faf7276443a7660f23617c65e0b6c9685006931214", visibility = "private" }
+
 [harbor]
-description = "Build the tomli-w TOML writer library from an empty workspace."
-keywords = ["python", "repository-generation", "toml", "serialization"]
-agent_timeout_sec = 3600.0
+description = "Build the tomli-w TOML writer library from an empty workspace: it serializes Python objects to TOML, compliant with the TOML spec and reversible via tomllib."
+keywords = ["python", "toml", "serialization", "writer", "tomli-w"]
+agent_timeout_sec = 1800.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 120.0
 candidate_total_timeout_sec = 300.0
 agent_network_mode = "no-network"
 verifier_network_mode = "no-network"
 cpus = 2
-memory_mb = 2048
-storage_mb = 4096
+memory_mb = 4096
+storage_mb = 2048
 workspace_artifact = "/workspace"
 
+[oracle_bundle]
+digest = "sha256:e6a8bf8786fefce68746c4be6bebdffed687d14df43a971d2591788742803bf4"
+size_bytes = 60934
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:e6a8bf8786fefce68746c4be6bebdffed687d14df43a971d2591788742803bf4"
+visibility = "private"
+
 [lifecycle]
-status = "packaged"
-reason = "Source frozen, instruction authored, verifier and oracle created. Awaiting artifact bundle creation and compilation."
+status = "controls-passed"
+owner = "python-wave2-parent-tomli-w"
+reason = "Oracle 90/90 reward 1.0. Controls: empty 0.0(0), stub 0.044(90), forgery 0.044(90), install-failure 0.0(0), panic 0.0(0), oversized-output 0.0(0), background-process 0.0(0); all valid, all <= 0.20. hang excluded. offline verified via oracle network.json."
