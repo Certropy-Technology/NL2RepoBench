@@ -1,0 +1,51 @@
+Source Freeze Evidence - tomli-w
+=================================
+
+Task ID: tomli-w
+Upstream: https://github.com/hukkin/tomli-w
+Revision: 87e98b1cb9ee0ba1ac28fa7c430dc9af5045ced5
+Version: 1.2.0
+License: MIT
+
+Source Archive:
+- Path: /data/NL2RepoBench-integration-20260827/.nl2repo/authoring-work/python-wave2/tomli_w/source-87e98b1cb9ee0ba1ac28fa7c430dc9af5045ced5.tar.gz
+- SHA-256: 5b2f86791b0b23b75320ed90096589fbf507895bba7d4f220afd76d4fc5798ee
+- Verified: Yes (matches provided hash)
+
+Source Extraction:
+- Extracted to: .nl2repo/authoring-work/tomli-w/tomli-w-87e98b1cb9ee0ba1ac28fa7c430dc9af5045ced5
+- Directory structure verified
+- License file present: LICENSE (MIT)
+
+Package Metadata:
+- Package name: tomli_w (PyPI: tomli-w)
+- Build system: flit_core >=3.2.0,<4
+- Python requirement: >=3.9
+- No runtime dependencies
+- Test dependencies: pytest, pytest-randomly, pytest-cov, tomli
+
+Public API Surface:
+- tomli_w.dumps(obj, /, *, multiline_strings=False, indent=4) -> str
+- tomli_w.dump(obj, fp, /, *, multiline_strings=False, indent=4) -> None
+- tomli_w.__version__ (str)
+- tomli_w.__all__ = ("dumps", "dump")
+
+Module Structure:
+- src/tomli_w/__init__.py (exports)
+- src/tomli_w/_writer.py (implementation)
+- src/tomli_w/py.typed (typing marker)
+
+Test Structure:
+- tests/test_valid.py (round-trip tests with TOML compliance data)
+- tests/test_invalid.py (error cases)
+- tests/test_types.py (type serialization)
+- tests/test_write_file.py (file I/O)
+- tests/test_style.py (formatting)
+- tests/test_for_profiler.py (performance)
+
+Compliance Test Data:
+- tests/data/toml-lang-compliance/valid/*.toml
+- tests/data/extras/valid/**/*.toml
+
+Source Freeze Status: KNOWN
+Freeze Date: 2026-09-07T21:03:00Z

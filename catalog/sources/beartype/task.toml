@@ -41,7 +41,7 @@ lock_artifact = { digest = "sha256:025e5a1ca7c4844766af5118157e73e20b0d0a0bee672
 
 [tests]
 framework = "pytest"
-expected_total = 422
+expected_total = 182
 expected_total_source = "frozen-collection"
 commands = ["custom-json-v1 verifier entrypoint"]
 protected_paths = ["/tests/verifier/run.py"]
@@ -56,7 +56,7 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 [verifier]
 protocol = "custom-json-v1"
 entrypoint = "run.py"
-bundle = { digest = "sha256:bf8a8b41188cee651b89b9b604dd2d52ea7c555e0f9e74c2325571a73008793e", size_bytes = 6510, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:bf8a8b41188cee651b89b9b604dd2d52ea7c555e0f9e74c2325571a73008793e", visibility = "private" }
+bundle = { digest = "sha256:33932823c8bd0fb9ee61f9a664938e0aa2dd310414fa257b31ccdfffecf62588", size_bytes = 6396, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:33932823c8bd0fb9ee61f9a664938e0aa2dd310414fa257b31ccdfffecf62588", visibility = "private" }
 
 [harbor]
 description = "Build the pure-Python beartype 0.22.9 runtime type-checking library from an empty workspace, covering its decorator, DOOR predicates, validator factories, configuration, exception families, and typing compatibility exports."
@@ -73,10 +73,10 @@ storage_mb = 8192
 workspace_artifact = "/workspace"
 
 [oracle_bundle]
-digest = "sha256:48d724200c41ccfbc41ea12e12b13c4f4a7a52147bb887ab24685464b7abc1de"
-size_bytes = 1610330
+digest = "sha256:53070950cbcaf1892aa07e90e473a176c9ef1549449e6a2e7ff947bc58e0a518"
+size_bytes = 1610439
 media_type = "application/vnd.nl2repobench.private-bundle+tar"
-uri = "artifact://private/sha256:48d724200c41ccfbc41ea12e12b13c4f4a7a52147bb887ab24685464b7abc1de"
+uri = "artifact://private/sha256:53070950cbcaf1892aa07e90e473a176c9ef1549449e6a2e7ff947bc58e0a518"
 visibility = "private"
 
 [lifecycle]
