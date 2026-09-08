@@ -1,78 +1,107 @@
 {
+  "controls": {
+    "background-process": {
+      "collected": 43,
+      "failed": 43,
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "empty": {
+      "collected": 0,
+      "failed": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "forgery": {
+      "collected": 43,
+      "failed": 43,
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "install-failure": {
+      "collected": 0,
+      "failed": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "oversized-output": {
+      "collected": 43,
+      "failed": 43,
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "panic": {
+      "collected": 43,
+      "failed": 43,
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "stub": {
+      "collected": 43,
+      "failed": 43,
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    }
+  },
+  "controls_notes": {
+    "hang": "excluded by owner decision"
+  },
+  "evidence_files": [
+    {
+      "path": "evidence/gates-20260908/control-background-process-grading.json",
+      "sha256": "sha256:e5b821c5bb512745c51e8f579cb918dbe2571c756e731f2b6db5e3f12923d763"
+    },
+    {
+      "path": "evidence/gates-20260908/control-empty-grading.json",
+      "sha256": "sha256:103761c416cb8082abecad162878f2bcb474f47644886aa832b3033e23f3cff1"
+    },
+    {
+      "path": "evidence/gates-20260908/control-forgery-grading.json",
+      "sha256": "sha256:e5b821c5bb512745c51e8f579cb918dbe2571c756e731f2b6db5e3f12923d763"
+    },
+    {
+      "path": "evidence/gates-20260908/control-install-failure-grading.json",
+      "sha256": "sha256:103761c416cb8082abecad162878f2bcb474f47644886aa832b3033e23f3cff1"
+    },
+    {
+      "path": "evidence/gates-20260908/control-oversized-output-grading.json",
+      "sha256": "sha256:e5b821c5bb512745c51e8f579cb918dbe2571c756e731f2b6db5e3f12923d763"
+    },
+    {
+      "path": "evidence/gates-20260908/control-panic-grading.json",
+      "sha256": "sha256:e5b821c5bb512745c51e8f579cb918dbe2571c756e731f2b6db5e3f12923d763"
+    },
+    {
+      "path": "evidence/gates-20260908/control-stub-grading.json",
+      "sha256": "sha256:e5b821c5bb512745c51e8f579cb918dbe2571c756e731f2b6db5e3f12923d763"
+    },
+    {
+      "path": "evidence/gates-20260908/oracle-grading.json",
+      "sha256": "sha256:141d00b7c12c8d670a5e78f8c0a5b6c2cb3affb2e099479900ec5e526fe412a8"
+    },
+    {
+      "path": "evidence/gates-20260908/oracle-network.json",
+      "sha256": "sha256:4e32df6e54b2bbf2cb1d08d95a208b4d4b2caef10c04c8084309434c7da15372"
+    }
+  ],
+  "license_spdx": "MIT",
+  "offline": "oracle network.json public_network_available=false",
+  "oracle": {
+    "collected": 43,
+    "failed": 0,
+    "passed": 43,
+    "reward": 1.0,
+    "valid": true
+  },
+  "revision": "bfcb95c784e110521fa907e890b2eea34b0ef349",
   "schema_version": "1.0",
   "task_id": "jaraco-context",
-  "terminal_kind": "valid",
-  "status": "controls-passed",
-  "source_revision": "bfcb95c784e110521fa907e890b2eea34b0ef349",
-  "source_tree": "d47521686d049a7aa36dbcbd42b4d594bf81b47a",
-  "source_archive_sha256": "sha256:e228a0721648643e4d7663fc71b03cfa533d60f508fa476fcd197d41a3804328",
-  "source_digest": "sha256:36261a52b1ae453ae1ac46e7ff8d21be9da1993dcdd3823390aaa574daddfb96",
-  "license": "MIT",
-  "environment": {
-    "harbor_version": "0.21.0",
-    "python": "3.12.14",
-    "base_image": "python:3.12.14-slim-bookworm@sha256:0f5b26b9518d002b6173fd61daad821fa340635ebfec5bba471013f9ca114579",
-    "toolchain_lock_sha256": "sha256:a9ced26fa28eb2c6fc1079c306a92a77bdd0f20aee92a45b9a0f192c1b9fae24",
-    "network_policy": "no-network"
-  },
-  "dependencies": {
-    "lock_artifact_sha256": "sha256:1e46c7b4a0449f037ab4666bead1282541bde2119c5fc759a3a881c527e9b551",
-    "lock_artifact_size_bytes": 955,
-    "packages": ["coherent-licensed==0.5.2", "packaging==26.3", "setuptools==84.0.0", "setuptools-scm==10.2.1", "vcs-versioning==2.3.1"]
-  },
-  "bundles": {
-    "verifier": {"sha256": "sha256:014273926f82071bd3901bfa930a831d12e21f5b599de8ed3c0de46554ba8a8d", "size_bytes": 30720},
-    "oracle": {"sha256": "sha256:bc2c5e632443a42b42d234ac17ba6e3beb83212beb62e5af5ca27ee83b2a67c6", "size_bytes": 71680}
-  },
-  "tests": {
-    "framework": "custom-json-v1",
-    "expected_total": 43,
-    "oracle": {"valid": true, "collected": 43, "passed": 43, "failed": 0, "skipped": 0, "reward": 1.0, "evidence": "catalog/sources/jaraco-context/evidence/revalidation-20260905/oracle-grading.json", "evidence_sha256": "sha256:0f1c0c0e121c60cfdfece8c778d56f3951d7c9da8f2d5d781de9970baf129834"},
-    "upstream_probe": {"passed": 4, "skipped": 1, "collected": 5}
-  },
-  "compile": {
-    "manifest": "catalog/sources/jaraco-context/evidence/revalidation-20260905/bundle-manifest.json",
-    "manifest_sha256": "sha256:cdb09260edec6135d084726c1020b6be3f808ad493855dcbf656036f5a5780de",
-    "raw_bundle_manifest_sha256": "sha256:869cdff20ffb5977d5d07f0456ddad09772d7676c99f08816dc10adf9bb87435",
-    "canonical_manifest_digest": "sha256:c3c1b9c7fb882e89ed52ee590edd5e35ef4ff8889436d9b605d318984d227125",
-    "compile_exit_codes": [0, 0],
-    "repeat_compile_byte_identical": true
-  },
-  "oracle": {
-    "valid": true,
-    "expected_total": 43,
-    "collected": 43,
-    "passed": 43,
-    "failed": 0,
-    "skipped": 0,
-    "reward": 1.0,
-    "grading": "catalog/sources/jaraco-context/evidence/revalidation-20260905/oracle-grading.json",
-    "grading_sha256": "sha256:0f1c0c0e121c60cfdfece8c778d56f3951d7c9da8f2d5d781de9970baf129834",
-    "collection": "catalog/sources/jaraco-context/evidence/revalidation-20260905/oracle-collection.json",
-    "collection_sha256": "sha256:794e864a7dd6d85e8aae64154c4a335fce7a5d19795c8ea2f7a8aa519101e425",
-    "network": "catalog/sources/jaraco-context/evidence/revalidation-20260905/oracle-network.json",
-    "network_sha256": "sha256:57261039be6314a8af483431656c20abb25f075fd9a434a3c4e9174edce126da",
-    "result": "catalog/sources/jaraco-context/evidence/revalidation-20260905/result.json",
-    "result_sha256": "sha256:f986b00f2d24fb6cdeb935bafc2df25742f882b6d43432f2a6f76dec12a355e5",
-    "public_network_available": false
-  },
-  "controls": {
-    "grading": "catalog/sources/jaraco-context/evidence/revalidation-20260905/control-grading.json",
-    "grading_sha256": "sha256:9070cf3aa67da1e94f6e7683c62e34d1b0d2486a5e255feca3a4b044fc742f4f",
-    "collection": "catalog/sources/jaraco-context/evidence/revalidation-20260905/control-collection.json",
-    "collection_sha256": "sha256:d29020f5b7c0d26ddb280240c29b62f045c5d0aaf0be124ddec92e203c57c76e",
-    "network": "catalog/sources/jaraco-context/evidence/revalidation-20260905/control-network.json",
-    "network_sha256": "sha256:42d090540cc7128e9476720071b1c708ef16cc97b4b23c1219d8abc46a7e68ed",
-    "empty": {"valid": true, "collected": 0, "passed": 0, "reward": 0.0, "failure_reason": "candidate-installation-failed"},
-    "stub": {"valid": true, "collected": 43, "passed": 0, "reward": 0.0},
-    "forgery": {"valid": true, "collected": 43, "passed": 0, "reward": 0.0, "verifier_owned_reward": true},
-    "install-hang": {"valid": true, "collected": 0, "passed": 0, "reward": 0.0, "failure_reason": "candidate-installation-failed"}
-  },
-  "infrastructure_retries": [{"stage": "oracle", "attempt": 1, "failure_class": "infrastructure", "failure_type": "EnvironmentStartTimeoutError", "evidence": "catalog/sources/jaraco-context/evidence/revalidation-20260905/infrastructure-attempt.json", "evidence_sha256": "sha256:a6cb5317d429aa98614e0c5ceeeae564faf9b7096ab45e671fe605ad388029ea", "bounded_retry_count": 1}],
-  "residual_risks": [
-    "The source's upstream safety collection is small; the 43-leaf contract covers deterministic public behavior through a separate UID-isolated verifier.",
-    "The task uses the commit-derived development version configured by the Oracle rather than the reachable v6.1.2 tag version.",
-    "Model review and publication remain separate gates."
-  ],
-  "handoff_status": "official-gates-passed"
+  "terminal_kind": "valid"
 }

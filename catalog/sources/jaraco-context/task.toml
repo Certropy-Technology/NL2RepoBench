@@ -87,6 +87,6 @@ uri = "artifact://private/sha256:bc2c5e632443a42b42d234ac17ba6e3beb83212beb62e5a
 visibility = "private"
 
 [lifecycle]
-status = "packaged"
-owner = "python-author-wave2-20260828"
-reason = "The final NoNetwork task uses an offline digest-checked source archive, hash-locked build closure, and separate verifier. Oracle passes 43/43; empty, stub, and forgery controls are valid with reward 0.0 and no public network."
+status = "controls-passed"
+owner = "python-recover-parent-jaraco-context"
+reason = "Oracle 43/43 reward 1.0. Controls: empty 0.0(0), stub 0.0(43), forgery 0.0(43), install-failure 0.0(0), panic 0.0(43), oversized-output 0.0(43), background-process 0.0(43); all valid, all 0.0. hang excluded. offline verified."
