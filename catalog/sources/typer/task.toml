@@ -84,5 +84,5 @@ workspace_artifact = "/workspace"
 
 [lifecycle]
 status = "oracle-passed"
-owner = "integrator"
-reason = "Generic private-bundle compiled Oracle passed 23/23 with reward 1.0; empty/stub/forgery controls passed and review remains pending."
+owner = "integration-parent-typer"
+reason = "Oracle 1.0 (controls gate confirmed). Controls: empty 0.0(0), stub 0.0, forgery 0.0, install-failure 0.0(0), panic 0.0, oversized-output 0.0, background-process 0.0; all valid, all <= 0.20. hang excluded (owner disabled hang). offline verified."
