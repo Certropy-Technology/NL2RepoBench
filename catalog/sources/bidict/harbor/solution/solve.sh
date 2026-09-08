@@ -28,6 +28,10 @@ fi
 cd "$WORKSPACE"
 tar -xzf "$SOURCE_ARCHIVE" --strip-components=1
 
+# Remove symlinks (Harbor workspace validation rejects symlinks)
+echo "[solve.sh] Removing symlinks from workspace..."
+find . -type l -delete
+
 echo "[solve.sh] Installing bidict..."
 python3 -m pip install --no-build-isolation --no-deps --no-index -e . >/dev/null 2>&1
 

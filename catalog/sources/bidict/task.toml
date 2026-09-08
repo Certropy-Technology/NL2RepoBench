@@ -5,16 +5,16 @@ instruction = "instruction.md"
 
 [metadata]
 difficulty = "medium"
-category = "utility-library"
-tags = ["python", "bidirectional", "mapping", "dict", "collections"]
+category = "data-structure-library"
+tags = ["python", "bidirectional", "mapping", "collections", "data-structures"]
 language = "python"
 
 [source]
 status = "known"
 upstream_url = "https://github.com/jab/bidict"
-revision = "3b6a3a714d86fc1d8d97efe52e7082bb26f352f8"
+revision = "2798f6088c0b233ddfc5f1d20cb253623a41223d"
 license_spdx = "MPL-2.0"
-source_digest = "sha256:4dca6c17f0b01700e9f24359daa5ebabf7be022d99f4cb2a257b6af2a5076c88"
+source_digest = "sha256:27053e00a1fea61de40cafa4e0f455dfa0d13fee8f898e25d7684954d05d0ca8"
 submodules = []
 
 [environment]
@@ -31,17 +31,17 @@ build_command = "python -m pip install --no-build-isolation --no-deps --no-index
 mode = "no-network"
 offline_dependencies = "preinstalled-image"
 reference_source_fetch = "forbidden"
-reason = "The uv_build backend is preinstalled into the agent and verifier images from the hash-locked candidate closure. Candidate installation reuses the installed backend with --no-build-isolation, and agent, candidate, verifier, Oracle, and controls run without network access."
+reason = "The uv_build build backend is preinstalled into the agent and verifier images from the hash-locked candidate closure. Candidate installation reuses the installed backend with --no-build-isolation, and agent, candidate, verifier, Oracle, and controls run without network access."
 
 [dependencies]
 status = "known"
 installer = "pip"
 packages = []
-lock_artifact = { digest = "sha256:77d2de6bd711e8f123e7527a81f9a6bc4dcedae5cab06fd6b87b57922105024b", size_bytes = 145, media_type = "text/plain; charset=utf-8", uri = "", visibility = "private" }
+lock_artifact = { digest = "sha256:219a3e889a6b2458c6fbf3f05241b3f4f3cd7184885b251536ebfd97164d2b2c", size_bytes = 103, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:219a3e889a6b2458c6fbf3f05241b3f4f3cd7184885b251536ebfd97164d2b2c", visibility = "private" }
 
 [tests]
 framework = "pytest"
-expected_total = 80
+expected_total = 74
 expected_total_source = "frozen-collection"
 commands = ["custom-json-v1 verifier entrypoint"]
 protected_paths = ["/tests/verifier/run.py"]
@@ -56,11 +56,11 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 [verifier]
 protocol = "custom-json-v1"
 entrypoint = "run.py"
-bundle = { digest = "", size_bytes = 0, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "", visibility = "private" }
+bundle = { digest = "sha256:c63933c8c37ed5fe1846960fbe83adf07ecfaf0fee33f32ed2097797f6a514a1", size_bytes = 2563, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:c63933c8c37ed5fe1846960fbe83adf07ecfaf0fee33f32ed2097797f6a514a1", visibility = "private" }
 
 [harbor]
-description = "Build bidict package from an empty workspace: a bidirectional mapping library for Python."
-keywords = ["python", "bidict", "bidirectional", "mapping", "dict", "collections"]
+description = "Build bidict package from an empty workspace: the bidirectional mapping library for Python with inverse property."
+keywords = ["python", "bidirectional", "mapping", "bidict", "collections", "inverse"]
 agent_timeout_sec = 1800.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 120.0
@@ -73,13 +73,13 @@ storage_mb = 2048
 workspace_artifact = "/workspace"
 
 [oracle_bundle]
-digest = ""
-size_bytes = 0
+digest = "sha256:c44c3b43cf49560b65247bb17861878e99cbef3f08d13608d4fdfcf635894834"
+size_bytes = 447090
 media_type = "application/vnd.nl2repobench.private-bundle+tar"
-uri = ""
+uri = "artifact://private/sha256:c44c3b43cf49560b65247bb17861878e99cbef3f08d13608d4fdfcf635894834"
 visibility = "private"
 
 [lifecycle]
 status = "packaged"
-owner = "python-wave3-bidict"
-reason = "Source frozen and task authored, awaiting compilation and Oracle validation."
+owner = "recovery-worker"
+reason = "Artifacts registered. Ready for validation and Oracle gate."
