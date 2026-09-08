@@ -1,20 +1,20 @@
 schema_version = "1.0"
-task_id = "tabulate"
+task_id = "more-itertools"
 version = "1.0.0"
 instruction = "instruction.md"
 
 [metadata]
 difficulty = "medium"
-category = "data-formatting-library"
-tags = ["python", "table", "formatting", "pretty-print", "text-output"]
+category = "utility-library"
+tags = ["python", "itertools", "iteration", "functional", "generators"]
 language = "python"
 
 [source]
 status = "known"
-upstream_url = "https://github.com/astanin/python-tabulate"
-revision = "382a933132b0767fcb1624ebc143d4171c9366fc"
+upstream_url = "https://github.com/more-itertools/more-itertools"
+revision = "64be96ceb2a6e836f76f069f4a96d2394d59fd0c"
 license_spdx = "MIT"
-source_digest = "sha256:e2cfde8f79420f6deeffdeda9aaec3b6bc5abce947655d17ac662b126e48a60d"
+source_digest = "sha256:48e8f4d9e7e5878571ecf6f2b4e57634f93cd474cc8cfbd2376f2d11b396e30d"
 submodules = []
 
 [environment]
@@ -31,17 +31,17 @@ build_command = "python -m pip install --no-build-isolation --no-deps --no-index
 mode = "no-network"
 offline_dependencies = "preinstalled-image"
 reference_source_fetch = "forbidden"
-reason = "The setuptools build backend is preinstalled into the agent and verifier images. Candidate installation reuses the installed backend with --no-build-isolation, and agent, candidate, verifier, Oracle, and controls run without network access."
+reason = "flit_core preinstalled from hash-locked candidate closure"
 
 [dependencies]
 status = "known"
 installer = "pip"
 packages = []
-lock_artifact = { digest = "sha256:PLACEHOLDER_LOCK", size_bytes = 0, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:PLACEHOLDER_LOCK", visibility = "private" }
+lock_artifact = { digest = "sha256:PLACEHOLDER", size_bytes = 1, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:PLACEHOLDER", visibility = "private" }
 
 [tests]
 framework = "pytest"
-expected_total = 74
+expected_total = 87
 expected_total_source = "frozen-collection"
 commands = ["custom-json-v1 verifier entrypoint"]
 protected_paths = ["/tests/verifier/run.py"]
@@ -56,11 +56,11 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 [verifier]
 protocol = "custom-json-v1"
 entrypoint = "run.py"
-bundle = { digest = "sha256:PLACEHOLDER_VERIFIER", size_bytes = 0, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:PLACEHOLDER_VERIFIER", visibility = "private" }
+bundle = { digest = "sha256:PLACEHOLDER", size_bytes = 1, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:PLACEHOLDER", visibility = "private" }
 
 [harbor]
-description = "Build tabulate package from an empty workspace: a library for pretty-printing tabular data in various formats."
-keywords = ["python", "table", "formatting", "pretty-print", "ascii-table", "markdown"]
+description = "Build more-itertools: advanced iteration utilities beyond itertools"
+keywords = ["python", "itertools", "iteration", "generators", "functional"]
 agent_timeout_sec = 1800.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 120.0
@@ -73,13 +73,13 @@ storage_mb = 2048
 workspace_artifact = "/workspace"
 
 [oracle_bundle]
-digest = "sha256:PLACEHOLDER_ORACLE"
-size_bytes = 0
+digest = "sha256:PLACEHOLDER"
+size_bytes = 1
 media_type = "application/vnd.nl2repobench.private-bundle+tar"
-uri = "artifact://private/sha256:PLACEHOLDER_ORACLE"
+uri = "artifact://private/sha256:PLACEHOLDER"
 visibility = "private"
 
 [lifecycle]
 status = "packaged"
-owner = "python-wave-tabulate"
-reason = "Source frozen, instruction authored, verifier and controls prepared, awaiting Oracle gate."
+owner = "python-more-itertools-worker"
+reason = "Source frozen, verifier/oracle staged for CAS registration"

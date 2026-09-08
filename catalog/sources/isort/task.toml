@@ -1,0 +1,85 @@
+schema_version = "1.0"
+task_id = "isort"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "utility-library"
+tags = ["python", "imports", "sorting", "linting", "formatting", "cli"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/PyCQA/isort"
+revision = "131f4adcd5582bfc53928ab0d740eceb8b506b6c"
+license_spdx = "MIT"
+source_digest = "sha256:ba23db109e3e93ef1999f7209a651214994cd807801addd16ac485982eb4edd7"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12"
+os_name = "debian-12-amd64"
+base_image = "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
+network_mode = "no-network"
+build_command = "python -m pip install --no-build-isolation --no-deps --no-index -e ."
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The build backend (hatchling) and all dependencies are preinstalled into the agent and verifier images from the hash-locked candidate closure. Candidate installation reuses the installed backend with --no-build-isolation, and agent, candidate, verifier, Oracle, and controls run without network access."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = ["mypy-extensions>=1.1.0"]
+lock_artifact = { digest = "sha256:70e71b2f4bdc5fd5de60edf660d1aed75dbdea2697b9bb1d7432170b8fedd2ba", size_bytes = 1675, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:70e71b2f4bdc5fd5de60edf660d1aed75dbdea2697b9bb1d7432170b8fedd2ba", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 86
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+bundle = { digest = "sha256:0eddae82796cf79034639f2abed0c783dd4150bb8c96dec3351f3d2f953c683f", size_bytes = 3371, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:0eddae82796cf79034639f2abed0c783dd4150bb8c96dec3351f3d2f953c683f", visibility = "private" }
+
+[harbor]
+description = "Build isort package from an empty workspace: a Python utility to sort and organize import statements."
+keywords = ["python", "imports", "sorting", "linting", "formatting", "cli", "refactor"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 2048
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:00f2a0bb55754aa992fd54617804ea4f0f78252fc46edc5305aed1d017366987"
+size_bytes = 667832
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:00f2a0bb55754aa992fd54617804ea4f0f78252fc46edc5305aed1d017366987"
+visibility = "private"
+
+[lifecycle]
+status = "packaged"
+owner = "python-isort-authoring-worker"
+reason = "Source frozen, instruction authored, verifier with 100 scenarios created, oracle bundle and 7 controls staged. Ready for parent CAS registration, compile, and gate execution."

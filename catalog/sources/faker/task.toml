@@ -1,0 +1,85 @@
+schema_version = "1.0"
+task_id = "faker"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "utility-library"
+tags = ["python", "fake-data", "testing", "fixtures", "generator"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/joke2k/faker"
+revision = "59a6872a547248bb40cdd0f809089a605c68467f"
+license_spdx = "MIT"
+source_digest = "sha256:72e421098664edf38478f4269a5d5a539337de5da18883ce67cb1e6bb96b0b3a"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12"
+os_name = "debian-12-amd64"
+base_image = "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
+network_mode = "no-network"
+build_command = "python -m pip install --no-build-isolation --no-deps --no-index -e ."
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "All dependencies are preinstalled into the agent and verifier images from the hash-locked candidate closure. Candidate installation and all runs execute without network access."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = []
+lock_artifact = { digest = "sha256:39e6a212c5ef58041bed63702fd59445bbf32eda1d915d52992399d46e14fa2a", size_bytes = 94, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:39e6a212c5ef58041bed63702fd59445bbf32eda1d915d52992399d46e14fa2a", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 65
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+bundle = { digest = "sha256:4bb59c3d1e480f448e502406b1976471a03577ca29173a2989eb6392e30036da", size_bytes = 2783, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:4bb59c3d1e480f448e502406b1976471a03577ca29173a2989eb6392e30036da", visibility = "private" }
+
+[harbor]
+description = "Build faker package from an empty workspace: a library for generating fake data for testing and development."
+keywords = ["python", "fake-data", "testing", "fixtures", "generator", "locales"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 2048
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:8208a5298901a08b4c45b7ee4765a376b152331ae7cc37b2df219a5b3ba827b4"
+size_bytes = 2007571
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:8208a5298901a08b4c45b7ee4765a376b152331ae7cc37b2df219a5b3ba827b4"
+visibility = "private"
+
+[lifecycle]
+status = "packaged"
+owner = "faker-authoring-worker"
+reason = "Source frozen, instruction authored, verifier and controls created. Awaiting Oracle gate and controls validation."

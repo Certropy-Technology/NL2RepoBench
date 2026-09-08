@@ -1,20 +1,20 @@
 schema_version = "1.0"
-task_id = "validators"
+task_id = "trafaret"
 version = "1.0.0"
 instruction = "instruction.md"
 
 [metadata]
-difficulty = "easy"
-category = "utility-library"
-tags = ["python", "validation", "email", "url", "ipv4", "ipv6", "domain", "iban", "uuid", "mac-address", "credit-card"]
+difficulty = "medium"
+category = "validation-library"
+tags = ["python", "validation", "data", "schema", "parsing"]
 language = "python"
 
 [source]
 status = "known"
-upstream_url = "https://github.com/python-validators/validators"
-revision = "75788ed9e116fe3bf1bb9699f1696e7f7e132067"
-license_spdx = "MIT"
-source_digest = "sha256:992d6c48a4e77c81f1b4daba10d16c3a9bb0dbb79b3a19ea847ff0928e70497a"
+upstream_url = "https://github.com/Deepwalker/trafaret"
+revision = "4ac577155c93e5a3b024645abd64b1442fd4d550"
+license_spdx = "BSD-2-Clause"
+source_digest = "sha256:d9d00800318fbd343fdfb3353e947b2ebb5557159c844696c5ac24846f76d41c"
 submodules = []
 
 [environment]
@@ -31,17 +31,17 @@ build_command = "python -m pip install --no-build-isolation --no-deps --no-index
 mode = "no-network"
 offline_dependencies = "preinstalled-image"
 reference_source_fetch = "forbidden"
-reason = "Dependencies are installed during the Docker build phase. Candidate installation reuses the build backend with --no-build-isolation, and agent, candidate, verifier, Oracle, and controls run without network access."
+reason = "All dependencies are preinstalled into the agent and verifier images from the hash-locked candidate closure. Candidate installation reuses the installed dependencies with --no-build-isolation, and agent, candidate, verifier, Oracle, and controls run without network access."
 
 [dependencies]
 status = "known"
 installer = "pip"
 packages = []
-lock_artifact = { digest = "sha256:baf88b776544b8603afa26c45f8a2771b5ea6cd2ba0a231eb748f1ee91a5f1eb", size_bytes = 103, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:0000000000000000000000000000000000000000000000000000000000000000", visibility = "private" }
+lock_artifact = { digest = "sha256:0000000000000000000000000000000000000000000000000000000000000000", size_bytes = 0, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:0000000000000000000000000000000000000000000000000000000000000000", visibility = "private" }
 
 [tests]
 framework = "pytest"
-expected_total = 76
+expected_total = 85
 expected_total_source = "frozen-collection"
 commands = ["custom-json-v1 verifier entrypoint"]
 protected_paths = ["/tests/verifier/run.py"]
@@ -59,8 +59,8 @@ entrypoint = "run.py"
 bundle = { digest = "sha256:0000000000000000000000000000000000000000000000000000000000000000", size_bytes = 0, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:0000000000000000000000000000000000000000000000000000000000000000", visibility = "private" }
 
 [harbor]
-description = "Build validators package from an empty workspace: a library for validation of common data types (email, URL, IP address, domain, IBAN, UUID, MAC address, credit card numbers)."
-keywords = ["python", "validation", "email", "url", "ip-address", "domain", "iban", "uuid", "mac-address", "credit-card"]
+description = "Build trafaret package from an empty workspace: a library for data validation and transformation with support for complex schemas."
+keywords = ["python", "validation", "data", "schema", "parsing", "transformation"]
 agent_timeout_sec = 1800.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 120.0
@@ -81,5 +81,5 @@ visibility = "private"
 
 [lifecycle]
 status = "packaged"
-owner = "python-wave-validators"
-reason = "Source frozen, instruction authored, verifier and controls created. Ready for compilation and Oracle gate."
+owner = "trafaret-author"
+reason = "Source frozen, instruction and verifier authored, solution and controls bundled. Awaiting Oracle gate and controls validation."

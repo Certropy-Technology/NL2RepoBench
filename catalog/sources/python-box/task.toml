@@ -1,0 +1,85 @@
+schema_version = "1.0"
+task_id = "python-box"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "utility-library"
+tags = ["python", "dict", "dot-notation", "configuration", "serialization"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/cdgriffith/Box"
+revision = "a4c10e977b574114613431394b30412b50aaacce"
+license_spdx = "MIT"
+source_digest = "sha256:e412e36c25fca8223560516d53ef6c7993591c3b0ec8bb4ec582bf7defdd79f0"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12"
+os_name = "debian-12-amd64"
+base_image = "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
+network_mode = "no-network"
+build_command = "python -m pip install --no-build-isolation --no-deps --no-index -e ."
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The setuptools build backend is preinstalled into the agent and verifier images from the hash-locked candidate closure. Candidate installation reuses the installed backend with --no-build-isolation, and agent, candidate, verifier, Oracle, and controls run without network access."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = []
+lock_artifact = { digest = "sha256:37d1e6924d9a9cb678511bcc814207ad77596ededd3be13ebd950745d927d7d8", size_bytes = 383, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:37d1e6924d9a9cb678511bcc814207ad77596ededd3be13ebd950745d927d7d8", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 90
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+bundle = { digest = "sha256:be2b7a2e101fd7780b9bd54616e762116c7049319864f0ad5e504818afa7f779", size_bytes = 2965, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:be2b7a2e101fd7780b9bd54616e762116c7049319864f0ad5e504818afa7f779", visibility = "private" }
+
+[harbor]
+description = "Build python-box package from an empty workspace: a library for advanced dictionary types with dot notation access and serialization support."
+keywords = ["python", "dict", "dot-notation", "box", "configuration", "json", "yaml", "toml"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 2048
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:cf5028b7eea0f21cbbb2c1bbd071901ca572db032810230b778b5c6b86d04473"
+size_bytes = 50951
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:cf5028b7eea0f21cbbb2c1bbd071901ca572db032810230b778b5c6b86d04473"
+visibility = "private"
+
+[lifecycle]
+status = "packaged"
+owner = "python-box-authoring-worker"
+reason = "Initial authoring complete. Awaiting parent Oracle and controls validation."
