@@ -1,0 +1,55 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/colorama"
+version = "1.0.0"
+description = "Build the colorama library from an empty workspace: it emits ANSI escape sequences for terminal colors and wraps stdout/stderr for cross-platform color output."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "ansi",
+    "terminal",
+    "color",
+    "colorama",
+]
+
+[metadata]
+difficulty = "easy"
+category = "terminal-library"
+tags = [
+    "python",
+    "ansi",
+    "terminal",
+    "color",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 80
+canonical_manifest_digest = "sha256:5e7292fef941c5bf5cd78196ed15e27ac964f7bac2c950d80a1dc86a22779356"
+toolchain_lock_digest = "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366"
+
+[agent]
+timeout_sec = 1800.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 4096
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 2048

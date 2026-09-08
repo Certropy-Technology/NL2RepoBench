@@ -1,0 +1,59 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/dpath"
+version = "1.0.0"
+description = "Build dpath package from an empty workspace: a library for filesystem-like path manipulation and searching in dictionaries using glob patterns."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "dictionary",
+    "path",
+    "nested",
+    "glob",
+    "search",
+    "merge",
+]
+
+[metadata]
+difficulty = "medium"
+category = "data-structure-library"
+tags = [
+    "python",
+    "dictionary",
+    "path",
+    "nested-data",
+    "glob",
+    "search",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 78
+canonical_manifest_digest = "sha256:beae67fc878b70cbe54e4db212bc2a5afc4ef1fe66a592416f037da577ed0269"
+toolchain_lock_digest = "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366"
+
+[agent]
+timeout_sec = 1800.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 4096
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 2048

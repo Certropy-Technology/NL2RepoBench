@@ -1,0 +1,108 @@
+{
+  "controls": {
+    "background-process": {
+      "collected": 80,
+      "failed": 79,
+      "passed": 1,
+      "reward": 0.0125,
+      "valid": true
+    },
+    "empty": {
+      "collected": 0,
+      "failed": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "forgery": {
+      "collected": 80,
+      "failed": 79,
+      "passed": 1,
+      "reward": 0.0125,
+      "valid": true
+    },
+    "install-failure": {
+      "collected": 0,
+      "failed": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "oversized-output": {
+      "collected": 80,
+      "failed": 80,
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "panic": {
+      "collected": 80,
+      "failed": 80,
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "stub": {
+      "collected": 80,
+      "failed": 64,
+      "passed": 16,
+      "reward": 0.2,
+      "valid": true
+    }
+  },
+  "controls_notes": {
+    "hang": "excluded by owner decision; not a gate",
+    "stub": "0.2 (16/80, import/callable-surface scenarios pass under stub; within http <=0.20 gate)"
+  },
+  "evidence_files": [
+    {
+      "path": "evidence/gates-20260908/control-background-process-grading.json",
+      "sha256": "sha256:7bf7115ff5bac2f646b179b8aa28ce33cd0a032666da86f1f54573e349253644"
+    },
+    {
+      "path": "evidence/gates-20260908/control-empty-grading.json",
+      "sha256": "sha256:b2f5ac15a0a592f3a526a256b6f1a6350a443bf4337e5dee4df25bd47fdfcb2c"
+    },
+    {
+      "path": "evidence/gates-20260908/control-forgery-grading.json",
+      "sha256": "sha256:7bf7115ff5bac2f646b179b8aa28ce33cd0a032666da86f1f54573e349253644"
+    },
+    {
+      "path": "evidence/gates-20260908/control-install-failure-grading.json",
+      "sha256": "sha256:b2f5ac15a0a592f3a526a256b6f1a6350a443bf4337e5dee4df25bd47fdfcb2c"
+    },
+    {
+      "path": "evidence/gates-20260908/control-oversized-output-grading.json",
+      "sha256": "sha256:55d5b3c1385d6bd8bf618efab125003b374cdba4c70743a90ae9c637d3c9b70f"
+    },
+    {
+      "path": "evidence/gates-20260908/control-panic-grading.json",
+      "sha256": "sha256:55d5b3c1385d6bd8bf618efab125003b374cdba4c70743a90ae9c637d3c9b70f"
+    },
+    {
+      "path": "evidence/gates-20260908/control-stub-grading.json",
+      "sha256": "sha256:c0232bbc70d93033b96e2833bb97d1563cd3b8d11e643c9bf9654b99cd01e74e"
+    },
+    {
+      "path": "evidence/gates-20260908/oracle-grading.json",
+      "sha256": "sha256:d376e99657b984d9069c937b93ca8e8913770a537442c99161c7b057e15b85be"
+    },
+    {
+      "path": "evidence/gates-20260908/oracle-network.json",
+      "sha256": "sha256:51926b446520cfa47a367e0da7ab0175a85a96778ff616fc15621b3e03e03a58"
+    }
+  ],
+  "license_spdx": "BSD-3-Clause",
+  "offline": "oracle network.json public_network_available=false",
+  "oracle": {
+    "collected": 80,
+    "failed": 0,
+    "passed": 80,
+    "reward": 1.0,
+    "valid": true
+  },
+  "revision": "4ea8b1c7cbf96cc21613bb51b38fc49831fdddb4",
+  "schema_version": "1.0",
+  "task_id": "colorama",
+  "terminal_kind": "valid"
+}

@@ -1,0 +1,85 @@
+schema_version = "1.0"
+task_id = "colorama"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "easy"
+category = "terminal-library"
+tags = ["python", "ansi", "terminal", "color"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/tartley/colorama"
+revision = "4ea8b1c7cbf96cc21613bb51b38fc49831fdddb4"
+license_spdx = "BSD-3-Clause"
+source_digest = "sha256:4dcbc68fed507dbab180aa86538b823cb9af697280dc39aa2cba9a7b9b13a141"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12"
+os_name = "debian-12-amd64"
+base_image = "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
+network_mode = "no-network"
+build_command = "python -m pip install --no-build-isolation --no-deps --no-index -e ."
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The hatchling build backend is preinstalled into the agent and verifier images from the hash-locked candidate closure. Candidate installation reuses the installed backend with --no-build-isolation, and agent, candidate, verifier, Oracle, and controls run without network access."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = []
+lock_artifact = { digest = "sha256:06f0f9383105b0de2c1e7b5d8116108d956551d17d1ec342b2711e3ecd4241b9", size_bytes = 721, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:06f0f9383105b0de2c1e7b5d8116108d956551d17d1ec342b2711e3ecd4241b9", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 80
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+bundle = { digest = "sha256:3d9a5124818a25f733ad5ecd1fe03ed32782d39056a00b04e6a19b213cd8baf6", size_bytes = 2762, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:3d9a5124818a25f733ad5ecd1fe03ed32782d39056a00b04e6a19b213cd8baf6", visibility = "private" }
+
+[harbor]
+description = "Build the colorama library from an empty workspace: it emits ANSI escape sequences for terminal colors and wraps stdout/stderr for cross-platform color output."
+keywords = ["python", "ansi", "terminal", "color", "colorama"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 2048
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:956fccfbee43bc114799ed9452e46fe7fd761bf5149e98852f518819dc70a717"
+size_bytes = 117755
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:956fccfbee43bc114799ed9452e46fe7fd761bf5149e98852f518819dc70a717"
+visibility = "private"
+
+[lifecycle]
+status = "controls-passed"
+owner = "python-wave3-parent-colorama"
+reason = "Oracle 80/80 reward 1.0. Controls: empty 0.0(0), stub 0.2(80), forgery 0.0125(80), install-failure 0.0(0), panic 0.0(80), oversized-output 0.0(80), background-process 0.0125(80); all valid, all <= 0.20. hang excluded. offline verified."

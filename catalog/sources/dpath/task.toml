@@ -1,0 +1,85 @@
+schema_version = "1.0"
+task_id = "dpath"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "data-structure-library"
+tags = ["python", "dictionary", "path", "nested-data", "glob", "search"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/dpath-maintainers/dpath-python"
+revision = "a8169a93b4561cd6c5fe58dbe484bd3b37845fe2"
+license_spdx = "MIT"
+source_digest = "sha256:a5c81f592150e8d3122f9567d09e436fca093c41b41ab88742f44942eb15fc0a"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12"
+os_name = "debian-12-amd64"
+base_image = "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
+network_mode = "no-network"
+build_command = "python -m pip install --no-build-isolation --no-deps --no-index -e ."
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The setuptools build backend is preinstalled into the agent and verifier images from the hash-locked candidate closure. Candidate installation reuses the installed backend with --no-build-isolation, and agent, candidate, verifier, Oracle, and controls run without network access."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = []
+lock_artifact = { digest = "sha256:b3b26b70971419703a43e0eda7b512cc8fdc9cc0ce7c9262ecc936a3ee8f0a40", size_bytes = 542, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:b3b26b70971419703a43e0eda7b512cc8fdc9cc0ce7c9262ecc936a3ee8f0a40", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 78
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+bundle = { digest = "sha256:ba4cf0dcacbb1a083bf3620635a26e2dfee60405a1acf72386a92a7ad803c48d", size_bytes = 3336, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:ba4cf0dcacbb1a083bf3620635a26e2dfee60405a1acf72386a92a7ad803c48d", visibility = "private" }
+
+[harbor]
+description = "Build dpath package from an empty workspace: a library for filesystem-like path manipulation and searching in dictionaries using glob patterns."
+keywords = ["python", "dictionary", "path", "nested", "glob", "search", "merge"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 2048
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:ee0d196facb466c1d03cdbecb70a6e24c09e1b27a5196d7bdc3e0377e6aa322a"
+size_bytes = 28893
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:ee0d196facb466c1d03cdbecb70a6e24c09e1b27a5196d7bdc3e0377e6aa322a"
+visibility = "private"
+
+[lifecycle]
+status = "packaged"
+owner = "python-wave2-dpath"
+reason = "Task packaged and ready for Oracle validation. Placeholder digests to be filled by parent during CAS registration."
