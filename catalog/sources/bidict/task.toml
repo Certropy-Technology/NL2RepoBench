@@ -56,7 +56,7 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 [verifier]
 protocol = "custom-json-v1"
 entrypoint = "run.py"
-bundle = { digest = "sha256:c63933c8c37ed5fe1846960fbe83adf07ecfaf0fee33f32ed2097797f6a514a1", size_bytes = 2563, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:c63933c8c37ed5fe1846960fbe83adf07ecfaf0fee33f32ed2097797f6a514a1", visibility = "private" }
+bundle = { digest = "sha256:b5648795da087f606a96dc3f5841550d2151b0c258b798f195cd64dd67d8ebd3", size_bytes = 2489, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:b5648795da087f606a96dc3f5841550d2151b0c258b798f195cd64dd67d8ebd3", visibility = "private" }
 
 [harbor]
 description = "Build bidict package from an empty workspace: the bidirectional mapping library for Python with inverse property."
@@ -80,6 +80,6 @@ uri = "artifact://private/sha256:c44c3b43cf49560b65247bb17861878e99cbef3f08d1360
 visibility = "private"
 
 [lifecycle]
-status = "packaged"
+status = "blocked"
 owner = "recovery-worker"
-reason = "Artifacts registered. Ready for validation and Oracle gate."
+reason = "Verifier internal error: custom-stdout empty, Harbor reports invalid JSON. Verifier run.py validated locally (syntax OK, 74 cases, all JSON-serializable). Same nl2repobench.verification.candidate_client import pattern as working shortuuid task. Needs Harbor verifier runtime investigation."
