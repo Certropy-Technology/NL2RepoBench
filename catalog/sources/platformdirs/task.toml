@@ -1,14 +1,12 @@
 schema_version = "1.0"
 task_id = "platformdirs"
-version = "0.2.0"
+version = "1.0.0"
 instruction = "instruction.md"
-
-oracle_bundle = { digest = "sha256:35c3c271c7bf483eb3f3c2c86c4b50d821b9215ea0f2dfeccab3aef86f953654", size_bytes = 10240, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:35c3c271c7bf483eb3f3c2c86c4b50d821b9215ea0f2dfeccab3aef86f953654", visibility = "private" }
 
 [metadata]
 difficulty = "medium"
-category = "filesystem"
-tags = ["python", "platform-directories", "xdg", "path-api", "separate-verifier"]
+category = "utility-library"
+tags = ["python", "directories", "xdg", "platform", "paths"]
 language = "python"
 
 [source]
@@ -16,37 +14,37 @@ status = "known"
 upstream_url = "https://github.com/tox-dev/platformdirs"
 revision = "d3cf61ce5e729f2c35f830b69e14adb7b6970a00"
 license_spdx = "MIT"
-source_digest = "sha256:01837750779cd8f90d271f9b6184cf7d8d78fac37c72ce40ac97ccfb4064d572"
+source_digest = "sha256:b74e69d9d4fcbf9ca6d03c63a15281b5761437ff0bbd95ce02e5e142bd154337"
 submodules = []
 
 [environment]
 status = "known"
-python_version = "3.12.14"
+python_version = "3.12"
 os_name = "debian-12-amd64"
-base_image = "python:3.12.14-slim-bookworm"
-base_image_digest = "sha256:356b0d18f9385f4bdcc673af60e1e64c9d1504952e4ec36ee32044c722a6bc4e"
-system_packages = ["git", "ca-certificates"]
+base_image = "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
 network_mode = "no-network"
-build_command = "generate static version.py and setuptools pyproject after exact archive verification"
+build_command = "python -m pip install --no-build-isolation --no-deps --no-index -e ."
 
 [environment.network_policy]
 mode = "no-network"
 offline_dependencies = "preinstalled-image"
 reference_source_fetch = "forbidden"
-reason = "Third-party build and test dependencies are installed during the Docker build phase, which has network. The agent phase therefore needs no egress. A model provider host, when needed, is injected per run via Harbor agent.extra_allowed_hosts."
+reason = "The hatchling build backend is preinstalled into the agent and verifier images from the hash-locked candidate closure. Candidate installation reuses the installed backend with --no-build-isolation, and agent, candidate, verifier, Oracle, and controls run without network access."
 
 [dependencies]
 status = "known"
 installer = "pip"
-packages = ["setuptools==80.10.2", "wheel==0.45.1"]
-lock_artifact = { digest = "sha256:24713a5496e38f6da905cbc7944c15efd8863916e5da6825b835f66aa99068f7", size_bytes = 204, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:24713a5496e38f6da905cbc7944c15efd8863916e5da6825b835f66aa99068f7", visibility = "private" }
+packages = []
+lock_artifact = { digest = "sha256:a69675cfd3a96880e2e102866a8f8459921978cba738f37758879c42f38898a9", size_bytes = 585, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:a69675cfd3a96880e2e102866a8f8459921978cba738f37758879c42f38898a9", visibility = "private" }
 
 [tests]
 framework = "pytest"
-expected_total = 20
+expected_total = 64
 expected_total_source = "frozen-collection"
 commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = []
+protected_paths = ["/tests/verifier/tests/run.py"]
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
@@ -55,27 +53,33 @@ excluded_statuses = []
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "tests/verifier/tests/run.py"
+bundle = { digest = "sha256:155e97ae8dc864d2cc75445eeb784e2ec049ad106ce40b2b3fbd3f8e19a0ebbd", size_bytes = 2436, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:155e97ae8dc864d2cc75445eeb784e2ec049ad106ce40b2b3fbd3f8e19a0ebbd", visibility = "private" }
+
 [harbor]
-description = "Build the pinned platformdirs Unix/XDG API slice from an empty workspace with a separate JSON verifier."
-keywords = ["python", "platform-directories", "xdg", "filesystem", "separate-verifier"]
-agent_timeout_sec = 3600.0
+description = "Build platformdirs package from an empty workspace: a library for determining appropriate platform-specific directories (user data, config, cache, etc.) following XDG standards on Unix."
+keywords = ["python", "directories", "xdg", "platform", "paths", "config", "cache", "data"]
+agent_timeout_sec = 1800.0
 verifier_timeout_sec = 600.0
-candidate_install_timeout_sec = 90.0
+candidate_install_timeout_sec = 120.0
 candidate_total_timeout_sec = 300.0
 agent_network_mode = "no-network"
 verifier_network_mode = "no-network"
 cpus = 2
 memory_mb = 4096
-storage_mb = 8192
+storage_mb = 2048
 workspace_artifact = "/workspace"
 
-[verifier]
-protocol = "custom-json-v1"
-bundle = { digest = "sha256:550041dc83296bd96733103e086fc7bb0e8ca8e83bcab9a869144e51818fddcc", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:550041dc83296bd96733103e086fc7bb0e8ca8e83bcab9a869144e51818fddcc", visibility = "private" }
-entrypoint = "run.py"
-environment = {}
+[oracle_bundle]
+digest = "sha256:5581df853651d86cbf497c0dc9e9122071f4f3f60a835c103a6bc165d9d0802a"
+size_bytes = 84345
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:5581df853651d86cbf497c0dc9e9122071f4f3f60a835c103a6bc165d9d0802a"
+visibility = "private"
 
 [lifecycle]
-status = "oracle-passed"
-owner = "integration-parent-platformdirs"
-reason = "Oracle 1.0 (controls gate confirmed). Controls: empty 0.0(0), stub 0.0, forgery 0.0, install-failure 0.0(0), panic 0.0, oversized-output 0.0, background-process 0.0; all valid, all <= 0.20. hang excluded (owner disabled hang). offline verified."
+status = "packaged"
+owner = "platformdirs-recovery-worker"
+reason = "Source frozen with static version 4.11.3, verifier with 61 scenarios built, Oracle and controls prepared. Ready for Oracle and controls gates."

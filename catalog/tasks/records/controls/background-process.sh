@@ -1,29 +1,52 @@
 #!/bin/bash
 set -euo pipefail
+
 echo "[control:background-process] Creating package that spawns background processes"
+
 cd /workspace
-cat > pyproject.toml << 'PYPROJECT'
-[build-system]
-requires = ["setuptools>=70"]
-build-backend = "setuptools.build_meta"
 
-[project]
-name = "records"
-version = "0.0.0"
-description = "Background process control"
+# Create setup.py
+cat > setup.py << 'SETUP'
+from setuptools import setup
 
-[tool.setuptools]
-packages = ["records"]
-PYPROJECT
-mkdir -p records
-cat > records/__init__.py << 'INIT'
+setup(
+    name="records",
+    version="0.6.0",
+    py_modules=["records"],
+    install_requires=[],
+)
+SETUP
+
+# Create records.py that spawns background process
+cat > records.py << 'RECORDS'
+"""Background process implementation."""
 import subprocess
 import sys
+
+# Spawn a background process that will not exit
 try:
-    for _ in range(5):
-        subprocess.Popen([sys.executable, "-c", "import time; time.sleep(300)"],
-                         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-except Exception:
+    subprocess.Popen([sys.executable, "-c", "import time; time.sleep(3600)"], 
+                     stdout=subprocess.DEVNULL, 
+                     stderr=subprocess.DEVNULL)
+except:
     pass
-INIT
-echo "[control:background-process] Done"
+
+class Database:
+    def __init__(self, db_url=None):
+        try:
+            subprocess.Popen(["sleep", "3600"], 
+                           stdout=subprocess.DEVNULL, 
+                           stderr=subprocess.DEVNULL)
+        except:
+            pass
+
+class Record:
+    pass
+
+class RecordCollection:
+    pass
+
+__version__ = "0.6.0"
+RECORDS
+
+echo "[control:background-process] Background process package created"

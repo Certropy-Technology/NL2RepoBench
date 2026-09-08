@@ -5,36 +5,39 @@ artifacts = [
 
 [task]
 name = "nl2repobench/platformdirs"
-version = "0.2.0"
-description = "Build the pinned platformdirs Unix/XDG API slice from an empty workspace with a separate JSON verifier."
+version = "1.0.0"
+description = "Build platformdirs package from an empty workspace: a library for determining appropriate platform-specific directories (user data, config, cache, etc.) following XDG standards on Unix."
 authors = [
     { name = "NL2RepoBench" },
 ]
 keywords = [
     "python",
-    "platform-directories",
+    "directories",
     "xdg",
-    "filesystem",
-    "separate-verifier",
+    "platform",
+    "paths",
+    "config",
+    "cache",
+    "data",
 ]
 
 [metadata]
 difficulty = "medium"
-category = "filesystem"
+category = "utility-library"
 tags = [
     "python",
-    "platform-directories",
+    "directories",
     "xdg",
-    "path-api",
-    "separate-verifier",
+    "platform",
+    "paths",
 ]
 metric_contract = "fixed-test-pass-rate-v1"
-expected_test_count = 20
-canonical_manifest_digest = "sha256:97392c7149f8ffbc6b3c56a7a37e87a3158e761b744e869043b47d336b43b39f"
-toolchain_lock_digest = "sha256:f4effe9ffc4b8a0dc0762b3dfce2d575f03bcf4df7c2755c2157cd36b35eb4ff"
+expected_test_count = 64
+canonical_manifest_digest = "sha256:8d44d61d03205780240fae23cc2602c66716cab1288ef4da9e655bc7a2f2da09"
+toolchain_lock_digest = "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366"
 
 [agent]
-timeout_sec = 3600.0
+timeout_sec = 1800.0
 
 [verifier]
 timeout_sec = 600.0
@@ -46,11 +49,11 @@ network_mode = "no-network"
 build_timeout_sec = 600.0
 cpus = 1
 memory_mb = 2048
-storage_mb = 16384
+storage_mb = 4096
 
 [environment]
 network_mode = "no-network"
 build_timeout_sec = 600.0
 cpus = 2
 memory_mb = 4096
-storage_mb = 8192
+storage_mb = 2048

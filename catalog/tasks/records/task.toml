@@ -5,8 +5,8 @@ artifacts = [
 
 [task]
 name = "nl2repobench/records"
-version = "0.1.0"
-description = "Build the Records human-friendly SQL query and export library from an empty workspace."
+version = "1.0.0"
+description = "Build records package from an empty workspace: a human-friendly SQL query library with elegant result handling and multi-format export."
 authors = [
     { name = "NL2RepoBench" },
 ]
@@ -14,29 +14,29 @@ keywords = [
     "python",
     "sql",
     "database",
+    "orm",
+    "records",
     "tablib",
-    "repository-generation",
-    "separate-verifier",
+    "export",
 ]
 
 [metadata]
-difficulty = "easy"
-category = "python-library"
+difficulty = "medium"
+category = "database-library"
 tags = [
     "python",
     "sql",
     "database",
+    "orm",
     "tablib",
-    "repository-generation",
-    "separate-verifier",
 ]
 metric_contract = "fixed-test-pass-rate-v1"
-expected_test_count = 31
-canonical_manifest_digest = "sha256:2d69be741c789886c36f2de1a174e8280789d23ee384af9d9dd4fcb56aae8a8e"
-toolchain_lock_digest = "sha256:f4effe9ffc4b8a0dc0762b3dfce2d575f03bcf4df7c2755c2157cd36b35eb4ff"
+expected_test_count = 48
+canonical_manifest_digest = "sha256:fd0b8478821eead67dec3f4516e99b82c189736dda80d1024778cfd294398e6e"
+toolchain_lock_digest = "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366"
 
 [agent]
-timeout_sec = 3600.0
+timeout_sec = 1800.0
 
 [verifier]
 timeout_sec = 600.0
@@ -48,11 +48,11 @@ network_mode = "no-network"
 build_timeout_sec = 600.0
 cpus = 1
 memory_mb = 2048
-storage_mb = 16384
+storage_mb = 4096
 
 [environment]
 network_mode = "no-network"
 build_timeout_sec = 600.0
 cpus = 2
 memory_mb = 4096
-storage_mb = 8192
+storage_mb = 2048

@@ -1,54 +1,86 @@
-#!/usr/bin/env bash
-# Stub control: a minimally-importable but non-functional `records` package.
-# The candidate install must succeed so the verifier reaches its probes, but
-# every behavioural leaf must fail.
+#!/bin/bash
 set -euo pipefail
 
-rm -rf /workspace/* /workspace/.[!.]* /workspace/..?* 2>/dev/null || true
+echo "[control:stub] Creating stub implementation with correct package structure but non-functional code"
 
-cat > /workspace/setup.py <<'EOF'
+cd /workspace
+
+# Create setup.py
+cat > setup.py << 'SETUP'
 from setuptools import setup
 
 setup(
     name="records",
     version="0.6.0",
-    description="SQL for Humans",
+    description="Stub implementation",
     py_modules=["records"],
-    license="ISC",
-    zip_safe=False,
+    install_requires=[],
 )
-EOF
+SETUP
 
-cat > /workspace/records.py <<'EOF'
-"""Importable stub with no working behaviour."""
+# Create records.py with stub functions that raise NotImplementedError
+cat > records.py << 'RECORDS'
+"""Stub implementation of records."""
+
+class Database:
+    def __init__(self, db_url=None):
+        pass
+    
+    def query(self, query, fetchall=False, **params):
+        raise NotImplementedError("Stub implementation")
+    
+    def get_table_names(self, internal=False, **kwargs):
+        raise NotImplementedError("Stub implementation")
+    
+    def get_connection(self):
+        raise NotImplementedError("Stub implementation")
+    
+    def transaction(self):
+        raise NotImplementedError("Stub implementation")
+    
+    def close(self):
+        raise NotImplementedError("Stub implementation")
+
+class Record:
+    def __init__(self, keys, values):
+        raise NotImplementedError("Stub implementation")
+    
+    def keys(self):
+        raise NotImplementedError("Stub implementation")
+    
+    def values(self):
+        raise NotImplementedError("Stub implementation")
+    
+    def as_dict(self, ordered=False):
+        raise NotImplementedError("Stub implementation")
+    
+    def get(self, key, default=None):
+        raise NotImplementedError("Stub implementation")
+    
+    def export(self, format, **kwargs):
+        raise NotImplementedError("Stub implementation")
+
+class RecordCollection:
+    def __init__(self, rows):
+        raise NotImplementedError("Stub implementation")
+    
+    def all(self, as_dict=False, as_ordereddict=False):
+        raise NotImplementedError("Stub implementation")
+    
+    def first(self, default=None, as_dict=False, as_ordereddict=False):
+        raise NotImplementedError("Stub implementation")
+    
+    def one(self, default=None, as_dict=False, as_ordereddict=False):
+        raise NotImplementedError("Stub implementation")
+    
+    def scalar(self, default=None):
+        raise NotImplementedError("Stub implementation")
+    
+    def export(self, format, **kwargs):
+        raise NotImplementedError("Stub implementation")
 
 __version__ = "0.6.0"
+RECORDS
 
-
-def isexception(obj):
-    raise NotImplementedError
-
-
-class Record(object):
-    def __init__(self, keys, values):
-        raise NotImplementedError
-
-
-class RecordCollection(object):
-    def __init__(self, rows):
-        raise NotImplementedError
-
-
-class Connection(object):
-    def __init__(self, connection, close_with_result=False):
-        raise NotImplementedError
-
-
-class Database(object):
-    def __init__(self, db_url=None, **kwargs):
-        raise NotImplementedError
-
-
-def cli():
-    raise NotImplementedError
-EOF
+echo "[control:stub] Stub implementation created"
+echo "[control:stub] Package structure is correct but all functions raise NotImplementedError"

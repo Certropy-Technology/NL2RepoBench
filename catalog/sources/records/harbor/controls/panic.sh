@@ -1,22 +1,28 @@
 #!/bin/bash
 set -euo pipefail
-echo "[control:panic] Creating package that raises on import"
+
+echo "[control:panic] Creating package that panics immediately on import"
+
 cd /workspace
-cat > pyproject.toml << 'PYPROJECT'
-[build-system]
-requires = ["setuptools>=70"]
-build-backend = "setuptools.build_meta"
 
-[project]
-name = "records"
-version = "0.0.0"
-description = "Panic control"
+# Create setup.py
+cat > setup.py << 'SETUP'
+from setuptools import setup
 
-[tool.setuptools]
-packages = ["records"]
-PYPROJECT
-mkdir -p records
-cat > records/__init__.py << 'INIT'
-raise RuntimeError("panic control: import always fails")
-INIT
-echo "[control:panic] Done"
+setup(
+    name="records",
+    version="0.6.0",
+    py_modules=["records"],
+    install_requires=[],
+)
+SETUP
+
+# Create records.py that panics on import
+cat > records.py << 'RECORDS'
+"""Panic implementation that crashes on import."""
+
+# Panic immediately
+raise RuntimeError("PANIC: Immediate crash on import")
+RECORDS
+
+echo "[control:panic] Panic package created"

@@ -1,16 +1,20 @@
 #!/bin/bash
 set -euo pipefail
-echo "[control:install-failure] Creating package with broken installation"
+
+echo "[control:install-failure] Creating package that will fail to install"
+
 cd /workspace
+rm -rf /workspace/*
+
+# Create pyproject.toml with invalid backend
 cat > pyproject.toml << 'PYPROJECT'
 [build-system]
-requires = ["setuptools>=70"]
-build-backend = "setuptools.build_meta"
+build-backend = "nonexistent.backend"
+requires = ["nonexistent-package-xyz>=999.0"]
 
 [project]
 name = "platformdirs"
-version = "0.0.0"
-# invalid toml below
-this is not valid toml !!!
+version = "4.11.3"
 PYPROJECT
-echo "[control:install-failure] Created invalid pyproject.toml"
+
+echo "[control:install-failure] Created package with nonexistent build backend"

@@ -1,24 +1,62 @@
-#!/usr/bin/env bash
-# Oracle reference solution for the frozen `records` task.
-#
-# The agent image runs with no network, and fetching upstream would also leak
-# the reference implementation, so this script is purely local: the frozen
-# source tree at revision 72efce67874d1b40ac2a35542127e8830da49707 travels
-# inside the private Oracle bundle and is unpacked from /solution.
+#!/bin/bash
 set -euo pipefail
 
-SOURCE_ARCHIVE=/solution/source.tar
-SOURCE_ARCHIVE_SHA256=a052449f71402b8e53d0121e08a79d2c6a10e65cbc43cdfdb715ff077a8b6e12
+echo "[oracle] Starting records Oracle solution"
 
-printf '%s  %s\n' "$SOURCE_ARCHIVE_SHA256" "$SOURCE_ARCHIVE" | sha256sum --check --strict
+# Locate the bundle directory
+BUNDLE_DIR="$(cd "$(dirname "$0")" && pwd)"
+SOURCE_ARCHIVE="$BUNDLE_DIR/source-frozen.tar.gz"
+EXPECTED_SHA256="3c13f1ba614bb512e566203d76cfc2ed2225fd021832ad875e87bf017cbeeea4"
 
-rm -rf /workspace/* /workspace/.[!.]* /workspace/..?* 2>/dev/null || true
-tar -xf "$SOURCE_ARCHIVE" -C /workspace
+if [ ! -f "$SOURCE_ARCHIVE" ]; then
+    echo "[oracle] ERROR: Source archive not found at $SOURCE_ARCHIVE" >&2
+    exit 1
+fi
 
-# The upstream test suite is deliberately absent: the hidden slice lives in the
-# separate verifier image, and shipping tests here would leak the denominator.
-test -f /workspace/records.py
-test -f /workspace/setup.py
-test -f /workspace/README.rst
-test -f /workspace/HISTORY.rst
-test ! -e /workspace/tests
+# Verify SHA-256
+echo "[oracle] Verifying source archive integrity"
+ACTUAL_SHA256=$(sha256sum "$SOURCE_ARCHIVE" | awk '{print $1}')
+
+if [ "$ACTUAL_SHA256" != "$EXPECTED_SHA256" ]; then
+    echo "[oracle] ERROR: SHA-256 mismatch" >&2
+    echo "[oracle]   Expected: $EXPECTED_SHA256" >&2
+    echo "[oracle]   Actual:   $ACTUAL_SHA256" >&2
+    exit 1
+fi
+
+echo "[oracle] SHA-256 verified: $ACTUAL_SHA256"
+
+# Clean workspace and extract
+echo "[oracle] Cleaning workspace and extracting source to /workspace"
+rm -rf /workspace/*
+cd /workspace
+tar -xzf "$SOURCE_ARCHIVE" --strip-components=1
+
+# Verify extracted structure
+if [ ! -f "setup.py" ]; then
+    echo "[oracle] ERROR: setup.py not found after extraction" >&2
+    exit 1
+fi
+
+if [ ! -f "records.py" ]; then
+    echo "[oracle] ERROR: records.py not found after extraction" >&2
+    exit 1
+fi
+
+echo "[oracle] Source extracted successfully"
+echo "[oracle] Installing package"
+
+# Install the package with no build isolation
+pip install --no-cache-dir --no-build-isolation -e . || {
+    echo "[oracle] ERROR: Installation failed" >&2
+    exit 1
+}
+
+# Verify installation
+python -c "import records; print('[oracle] records imported successfully')" || {
+    echo "[oracle] ERROR: Failed to import records" >&2
+    exit 1
+}
+
+echo "[oracle] Installation complete"
+echo "[oracle] Oracle solution ready"

@@ -1,26 +1,62 @@
-#!/usr/bin/env bash
+#!/bin/bash
 set -euo pipefail
 
-UPSTREAM_URL="https://github.com/kennethreitz/records"
-UPSTREAM_REVISION="72efce67874d1b40ac2a35542127e8830da49707"
-SOURCE_ARCHIVE_SHA256="4e0a1b23d7d38f96182d2be29d915fa45165fddd8ec14f193acb5304a57b0e04"
-SOURCE_DIR="/tmp/records-source"
-SOURCE_ARCHIVE="/tmp/records-source.tar"
+echo "[oracle] Starting records Oracle solution"
 
-rm -rf "$SOURCE_DIR" "$SOURCE_ARCHIVE"
-git init "$SOURCE_DIR" >/dev/null
-git -C "$SOURCE_DIR" remote add origin "$UPSTREAM_URL"
-git -C "$SOURCE_DIR" fetch --depth 1 origin "$UPSTREAM_REVISION" >/dev/null
-git -C "$SOURCE_DIR" checkout --detach FETCH_HEAD >/dev/null
+# Locate the bundle directory
+BUNDLE_DIR="$(cd "$(dirname "$0")" && pwd)"
+SOURCE_ARCHIVE="$BUNDLE_DIR/source-frozen.tar.gz"
+EXPECTED_SHA256="3c13f1ba614bb512e566203d76cfc2ed2225fd021832ad875e87bf017cbeeea4"
 
-resolved_revision=$(git -C "$SOURCE_DIR" rev-parse HEAD)
-if [[ "$resolved_revision" != "$UPSTREAM_REVISION" ]]; then
-    echo "unexpected source revision: $resolved_revision" >&2
+if [ ! -f "$SOURCE_ARCHIVE" ]; then
+    echo "[oracle] ERROR: Source archive not found at $SOURCE_ARCHIVE" >&2
     exit 1
 fi
 
-git -C "$SOURCE_DIR" archive --format=tar "$UPSTREAM_REVISION" > "$SOURCE_ARCHIVE"
-printf '%s  %s\n' "$SOURCE_ARCHIVE_SHA256" "$SOURCE_ARCHIVE" | sha256sum -c -
+# Verify SHA-256
+echo "[oracle] Verifying source archive integrity"
+ACTUAL_SHA256=$(sha256sum "$SOURCE_ARCHIVE" | awk '{print $1}')
 
-find /workspace -mindepth 1 -maxdepth 1 -exec rm -rf -- {} +
-tar -xf "$SOURCE_ARCHIVE" -C /workspace
+if [ "$ACTUAL_SHA256" != "$EXPECTED_SHA256" ]; then
+    echo "[oracle] ERROR: SHA-256 mismatch" >&2
+    echo "[oracle]   Expected: $EXPECTED_SHA256" >&2
+    echo "[oracle]   Actual:   $ACTUAL_SHA256" >&2
+    exit 1
+fi
+
+echo "[oracle] SHA-256 verified: $ACTUAL_SHA256"
+
+# Clean workspace and extract
+echo "[oracle] Cleaning workspace and extracting source to /workspace"
+rm -rf /workspace/*
+cd /workspace
+tar -xzf "$SOURCE_ARCHIVE" --strip-components=1
+
+# Verify extracted structure
+if [ ! -f "setup.py" ]; then
+    echo "[oracle] ERROR: setup.py not found after extraction" >&2
+    exit 1
+fi
+
+if [ ! -f "records.py" ]; then
+    echo "[oracle] ERROR: records.py not found after extraction" >&2
+    exit 1
+fi
+
+echo "[oracle] Source extracted successfully"
+echo "[oracle] Installing package"
+
+# Install the package with no build isolation
+pip install --no-cache-dir --no-build-isolation -e . || {
+    echo "[oracle] ERROR: Installation failed" >&2
+    exit 1
+}
+
+# Verify installation
+python -c "import records; print('[oracle] records imported successfully')" || {
+    echo "[oracle] ERROR: Failed to import records" >&2
+    exit 1
+}
+
+echo "[oracle] Installation complete"
+echo "[oracle] Oracle solution ready"

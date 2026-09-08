@@ -3,10 +3,10 @@
 Generated deterministically from the canonical NL2RepoBench catalog.
 
 - Mode: production
-- Canonical manifest: `sha256:de74a5ec82fd86d5b4c69fd3df040a617e2e373c7fa8e6207f340eabcb0643f9`
-- Toolchain lock: `sha256:f4effe9ffc4b8a0dc0762b3dfce2d575f03bcf4df7c2755c2157cd36b35eb4ff`
+- Canonical manifest: `sha256:8d44d61d03205780240fae23cc2602c66716cab1288ef4da9e655bc7a2f2da09`
+- Toolchain lock: `sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366`
 - Metric: `fixed-test-pass-rate-v1`
-- Expected tests: `20`
+- Expected tests: `64`
 - Verifier: separate environment, no network
 
 Run with Harbor 0.21.0:

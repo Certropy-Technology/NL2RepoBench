@@ -1,12 +1,12 @@
 schema_version = "1.0"
 task_id = "records"
-version = "0.1.0"
+version = "1.0.0"
 instruction = "instruction.md"
 
 [metadata]
-difficulty = "easy"
-category = "python-library"
-tags = ["python", "sql", "database", "tablib", "repository-generation", "separate-verifier"]
+difficulty = "medium"
+category = "database-library"
+tags = ["python", "sql", "database", "orm", "tablib"]
 language = "python"
 
 [source]
@@ -14,56 +14,37 @@ status = "known"
 upstream_url = "https://github.com/kennethreitz/records"
 revision = "72efce67874d1b40ac2a35542127e8830da49707"
 license_spdx = "ISC"
-source_digest = "sha256:4e0a1b23d7d38f96182d2be29d915fa45165fddd8ec14f193acb5304a57b0e04"
+source_digest = "sha256:3c13f1ba614bb512e566203d76cfc2ed2225fd021832ad875e87bf017cbeeea4"
 submodules = []
 
 [environment]
 status = "known"
-python_version = "3.12.4"
-os_name = "debian-12"
-base_image = "ghcr.io/multimodal-art-projection/nl2repobench/records"
-base_image_digest = "sha256:03378b1619c4ddcfebb0f3941e8fd448fe2754cf9489f13594cb0b40551f5a2d"
+python_version = "3.12"
+os_name = "debian-12-amd64"
+base_image = "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
 network_mode = "no-network"
-
-# The verifier image is the immutable legacy image. The hash-locked requirements artifact
-# below reproduces its runtime closure for the offline candidate install.
+build_command = "python -m pip install --no-build-isolation --no-deps --no-index -e ."
 
 [environment.network_policy]
 mode = "no-network"
 offline_dependencies = "preinstalled-image"
 reference_source_fetch = "forbidden"
-reason = "Third-party build and test dependencies are installed during the Docker build phase, which has network. The agent phase therefore needs no egress. A model provider host, when an in-container agent needs one, is injected per run via Harbor agent.extra_allowed_hosts instead of being pinned in task metadata."
+reason = "Dependencies are preinstalled into the agent and verifier images from the hash-locked candidate closure. Candidate installation reuses the installed setuptools with --no-build-isolation, and agent, candidate, verifier, Oracle, and controls run without network access."
+
 [dependencies]
 status = "known"
 installer = "pip"
-packages = [
-  "SQLAlchemy==2.0.43",
-  "tablib==3.8.0",
-  "openpyxl==3.1.5",
-  "docopt==0.6.2",
-  "psycopg2-binary==2.9.10",
-]
-lock_artifact = { digest = "sha256:2623a937c29ac4cdbbec4493389c4a04d23b4cb92af4b4d8f07c06b4651dd6f7", size_bytes = 1011, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:2623a937c29ac4cdbbec4493389c4a04d23b4cb92af4b4d8f07c06b4651dd6f7", visibility = "private" }
+packages = []
+lock_artifact = { digest = "sha256:f3b8aac8f606c96b7ee8ed1083dc4b890735547909bdc34dd91538ac759365f5", size_bytes = 1351, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:f3b8aac8f606c96b7ee8ed1083dc4b890735547909bdc34dd91538ac759365f5", visibility = "private" }
 
 [tests]
 framework = "pytest"
-expected_total = 31
+expected_total = 48
 expected_total_source = "frozen-collection"
 commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["tests"]
-
-[verifier]
-protocol = "custom-json-v1"
-bundle = { digest = "sha256:93936ab95cc75c76050b09b66f5c660189aa637c7a02287a64326da9ee6d5844", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:93936ab95cc75c76050b09b66f5c660189aa637c7a02287a64326da9ee6d5844", visibility = "private" }
-entrypoint = "run.py"
-environment = {}
-
-[oracle_bundle]
-digest = "sha256:fd6f422a6d1608561be3188189f5749e9d7bd14ce4837861ec42b48e43bd00de"
-size_bytes = 61440
-media_type = "application/vnd.nl2repobench.private-bundle+tar"
-uri = "artifact://private/sha256:fd6f422a6d1608561be3188189f5749e9d7bd14ce4837861ec42b48e43bd00de"
-visibility = "private"
+protected_paths = ["/tests/verifier/run.py"]
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
@@ -72,21 +53,33 @@ excluded_statuses = []
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
 
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+bundle = { digest = "sha256:859206325c88bd000edab05add1c390874b733ba935fb12033640876cb403f9f", size_bytes = 2894, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:859206325c88bd000edab05add1c390874b733ba935fb12033640876cb403f9f", visibility = "private" }
+
 [harbor]
-description = "Build the Records human-friendly SQL query and export library from an empty workspace."
-keywords = ["python", "sql", "database", "tablib", "repository-generation", "separate-verifier"]
-agent_timeout_sec = 3600.0
+description = "Build records package from an empty workspace: a human-friendly SQL query library with elegant result handling and multi-format export."
+keywords = ["python", "sql", "database", "orm", "records", "tablib", "export"]
+agent_timeout_sec = 1800.0
 verifier_timeout_sec = 600.0
-candidate_install_timeout_sec = 90.0
+candidate_install_timeout_sec = 120.0
 candidate_total_timeout_sec = 300.0
 agent_network_mode = "no-network"
 verifier_network_mode = "no-network"
 cpus = 2
 memory_mb = 4096
-storage_mb = 8192
+storage_mb = 2048
 workspace_artifact = "/workspace"
 
+[oracle_bundle]
+digest = "sha256:78712b31f5287ede553f14290b6b5066e88d0f1f8263c4f1efe95f30debef00d"
+size_bytes = 14433
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:78712b31f5287ede553f14290b6b5066e88d0f1f8263c4f1efe95f30debef00d"
+visibility = "private"
+
 [lifecycle]
-status = "oracle-passed"
-owner = "integrator"
-reason = "Generic private-bundle compiled Oracle passed 31/31 with reward 1.0, collected 31 == expected_total 31, valid=true; stub/forgery/empty controls all scored 0.0 and the verifier ran with no public network. Blind and traceability review remain pending."
+status = "packaged"
+owner = "recovery-records-worker"
+reason = "Packaged with 48 calibrated scenarios, Oracle bundle, controls, and hash-locked dependencies. Ready for Oracle and controls gates."

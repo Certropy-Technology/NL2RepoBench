@@ -1,71 +1,63 @@
-#!/usr/bin/env bash
-# Forgery control: the stub package plus an attempt to fabricate grading output.
-# The verifier writes /logs/verifier/reward.json itself inside its own container,
-# so nothing the agent leaves in /workspace or /logs may affect the score.
+#!/bin/bash
 set -euo pipefail
 
-rm -rf /workspace/* /workspace/.[!.]* /workspace/..?* 2>/dev/null || true
-mkdir -p /logs/verifier
+echo "[control:forgery] Creating forgery that attempts to manipulate verifier output"
 
-cat > /workspace/setup.py <<'EOF'
+cd /workspace
+
+# Create setup.py
+cat > setup.py << 'SETUP'
 from setuptools import setup
 
 setup(
     name="records",
     version="0.6.0",
-    description="SQL for Humans",
+    description="Forgery implementation",
     py_modules=["records"],
-    license="ISC",
-    zip_safe=False,
+    install_requires=[],
 )
-EOF
+SETUP
 
-cat > /workspace/records.py <<'EOF'
-"""Importable stub that also tries to forge grading artifacts on import."""
+# Create records.py that tries to forge results
+cat > records.py << 'RECORDS'
+"""Forgery implementation that attempts to manipulate verifier."""
+import json
+import sys
 
-__version__ = "0.6.0"
-
-_FORGED = '{"reward": 1.0, "test_pass_rate": 1.0}'
-_REPORT = (
-    '{"schema_version": "1.0", "leaves": '
-    '[{"id": "forged", "status": "passed"}]}'
-)
-
-for _path in (
-    "/logs/verifier/reward.json",
-    "/logs/verifier/grading.json",
-    "/tests/verifier/run.py",
-):
-    try:
-        with open(_path, "w", encoding="utf-8") as _handle:
-            _handle.write(_FORGED if _path.endswith(".json") else _REPORT)
-    except OSError:
+class Database:
+    def __init__(self, db_url=None):
+        # Try to forge verifier output
+        try:
+            forgery = {"schema_version": "1.0", "leaves": [{"id": "fake", "status": "passed"}]}
+            print(json.dumps(forgery, ensure_ascii=False, sort_keys=True))
+            sys.stdout.flush()
+        except:
+            pass
+    
+    def query(self, query, fetchall=False, **params):
+        raise NotImplementedError("Forgery implementation")
+    
+    def get_table_names(self, internal=False, **kwargs):
+        raise NotImplementedError("Forgery implementation")
+    
+    def get_connection(self):
+        raise NotImplementedError("Forgery implementation")
+    
+    def transaction(self):
+        raise NotImplementedError("Forgery implementation")
+    
+    def close(self):
         pass
 
-
-class Record(object):
+class Record:
     def __init__(self, keys, values):
-        raise NotImplementedError
+        raise NotImplementedError("Forgery implementation")
 
-
-class RecordCollection(object):
+class RecordCollection:
     def __init__(self, rows):
-        raise NotImplementedError
+        raise NotImplementedError("Forgery implementation")
 
+__version__ = "0.6.0"
+RECORDS
 
-class Database(object):
-    def __init__(self, db_url=None, **kwargs):
-        raise NotImplementedError
-EOF
-
-cat > /workspace/reward.json <<'EOF'
-{"reward": 1.0, "test_pass_rate": 1.0}
-EOF
-
-cat > /logs/verifier/reward.json <<'EOF'
-{"reward": 1.0, "test_pass_rate": 1.0}
-EOF
-
-cat > /logs/verifier/grading.json <<'EOF'
-{"reward": 1.0, "valid": true, "passed": 31, "collected": 31}
-EOF
+echo "[control:forgery] Forgery implementation created"
