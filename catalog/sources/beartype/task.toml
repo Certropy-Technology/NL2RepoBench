@@ -80,5 +80,6 @@ uri = "artifact://private/sha256:53070950cbcaf1892aa07e90e473a176c9ef1549449e6a2
 visibility = "private"
 
 [lifecycle]
-status = "packaged"
-reason = "Source frozen, artifacts registered in CAS. Custom-json-v1 verifier with 422 deterministic test leaves authored. Ready for compilation and Oracle/controls execution."
+status = "controls-passed"
+owner = "python-wave1-parent-beartype"
+reason = "Oracle 150/150 reward 1.0. Controls: empty 0.0(0), stub 0.127(150), forgery 0.127(150), install-failure 0.0(0), panic 0.0(150), oversized-output 0.0(150), background-process 0.127(150); all valid, all <= 0.20. hang excluded by owner decision (not a gate). offline verified via oracle network.json."
