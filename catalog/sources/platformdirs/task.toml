@@ -80,6 +80,6 @@ uri = "artifact://private/sha256:0e076390a88b9872f6c01f486e9b507ed3bc5dec44e6f68
 visibility = "private"
 
 [lifecycle]
-status = "packaged"
-owner = "platformdirs-recovery-worker"
-reason = "Source frozen with static version 4.11.3, verifier with 61 scenarios built, Oracle and controls prepared. Ready for Oracle and controls gates."
+status = "blocked"
+owner = "python-recover-parent-platformdirs"
+reason = "BLOCKED: platformdirs 4.11.3 real __init__.py does from .version import __version__; hatchling (in a no-git/offline build env) excludes version.py from the wheel (treats it as a vcs-hook artifact), so import platformdirs always fails on the installed candidate. This is a build-tool/source mechanism issue, not a candidate capability gap: NoNetwork + no-git env cannot reliably produce an installable platformdirs. Oracle gate1-5 all 0/64 for this reason. Could not be made runnable honestly without weakening the verifier."
