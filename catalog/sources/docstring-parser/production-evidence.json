@@ -1,0 +1,104 @@
+{
+  "controls": {
+    "background-process": {
+      "collected": 20,
+      "failed": 20,
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "empty": {
+      "collected": 0,
+      "failed": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "forgery": {
+      "collected": 20,
+      "failed": 20,
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "install-failure": {
+      "collected": 0,
+      "failed": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "oversized-output": {
+      "collected": 20,
+      "failed": 20,
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "panic": {
+      "collected": 20,
+      "failed": 20,
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "stub": {
+      "collected": 20,
+      "failed": 20,
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    }
+  },
+  "controls_notes": {
+    "hang": "excluded by owner decision; not a gate"
+  },
+  "evidence_files": [
+    {
+      "path": "evidence/gates-20260908/control-background-process-grading.json",
+      "sha256": "sha256:3c549c188d51a85843e15d10e6935661cead38bd0ff108df2ccd8b809314d9ce"
+    },
+    {
+      "path": "evidence/gates-20260908/control-empty-grading.json",
+      "sha256": "sha256:3ff00184317b956bc685a3e5fb456c1a6d5844794f470da490e8c9077f81b72c"
+    },
+    {
+      "path": "evidence/gates-20260908/control-forgery-grading.json",
+      "sha256": "sha256:3c549c188d51a85843e15d10e6935661cead38bd0ff108df2ccd8b809314d9ce"
+    },
+    {
+      "path": "evidence/gates-20260908/control-install-failure-grading.json",
+      "sha256": "sha256:3ff00184317b956bc685a3e5fb456c1a6d5844794f470da490e8c9077f81b72c"
+    },
+    {
+      "path": "evidence/gates-20260908/control-oversized-output-grading.json",
+      "sha256": "sha256:3c549c188d51a85843e15d10e6935661cead38bd0ff108df2ccd8b809314d9ce"
+    },
+    {
+      "path": "evidence/gates-20260908/control-panic-grading.json",
+      "sha256": "sha256:3c549c188d51a85843e15d10e6935661cead38bd0ff108df2ccd8b809314d9ce"
+    },
+    {
+      "path": "evidence/gates-20260908/control-stub-grading.json",
+      "sha256": "sha256:3c549c188d51a85843e15d10e6935661cead38bd0ff108df2ccd8b809314d9ce"
+    },
+    {
+      "path": "evidence/gates-20260908/oracle-grading.json",
+      "sha256": "sha256:88481b4202fa7481ee4a1257646c170f986aeacb2fa6fee91284dba036e6ca40"
+    },
+    {
+      "path": "evidence/gates-20260908/oracle-network.json",
+      "sha256": "sha256:d8bf3597829ed9aefa394c2732402045b91b244306679c0462df93477df49dfb"
+    }
+  ],
+  "offline": "oracle network.json public_network_available=false",
+  "oracle": {
+    "collected": 20,
+    "passed": 20,
+    "reward": 1.0,
+    "valid": true
+  },
+  "schema_version": "1.0",
+  "task_id": "docstring-parser",
+  "terminal_kind": "valid"
+}

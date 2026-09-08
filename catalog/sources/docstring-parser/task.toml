@@ -78,9 +78,9 @@ uri = "artifact://private/sha256:d5ecf42a87e0a3744533459a1f3fba37e9731851dfdedcc
 visibility = "private"
 
 [lifecycle]
-status = "oracle-passed"
-owner = "integrator"
-reason = "Generic private-bundle compiled Oracle passed 20/20 with reward 1.0; controls and review remain pending."
+status = "controls-passed"
+owner = "integration-parent-docstring-parser"
+reason = "Oracle 1.0 (collected==frozen_total, valid). Controls empty/stub/forgery/install-failure/panic/oversized-output/background-process all valid and <= 0.20. hang excluded by owner decision."
 evidence = [
   { digest = "sha256:88481b4202fa7481ee4a1257646c170f986aeacb2fa6fee91284dba036e6ca40", size_bytes = 1035, media_type = "application/json", uri = "artifact://private/sha256:88481b4202fa7481ee4a1257646c170f986aeacb2fa6fee91284dba036e6ca40", visibility = "private" },
 ]
