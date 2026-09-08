@@ -1,0 +1,76 @@
+schema_version = "1.0"
+task_id = "toposort"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "utility-library"
+tags = ["python", "graph", "topological-sort", "dag", "dependencies"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://gitlab.com/ericvsmith/toposort"
+revision = "e67c242ceec5908564837ce6ac2cb661659b0cc8"
+license_spdx = "Apache-2.0"
+source_digest = "sha256:bfbb479c53d0a696ea7402601f4e693c97b0367837c8898bc6471adfca37a6bd"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12"
+os_name = "debian-12-amd64"
+base_image = "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
+network_mode = "no-network"
+build_command = "python -m pip install --no-build-isolation --no-deps --no-index -e ."
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "No runtime dependencies required. Package uses only Python standard library. Build backend and dependencies are preinstalled in images."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = []
+
+[tests]
+framework = "pytest"
+expected_total = 61
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+
+[harbor]
+description = "Build toposort package from an empty workspace: a library implementing topological sort for directed acyclic graphs with circular dependency detection."
+keywords = ["python", "graph", "topological-sort", "dag", "dependencies", "circular-dependency"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 2048
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "packaged"
+owner = "python-authoring-toposort"
+reason = "Source frozen, instruction authored, verifier and controls created. Ready for compilation and Oracle gate."

@@ -1,0 +1,80 @@
+schema_version = "1.0"
+task_id = "jsonpath-ng"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "data-library"
+tags = ["python", "json", "jsonpath", "query", "xpath", "data-extraction"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/h2non/jsonpath-ng"
+revision = "e59ead334ac47618e6d844ad758114b3bfafcc8a"
+license_spdx = "Apache-2.0"
+source_digest = "sha256:54252968134b5e549ea5b872f1df1168bd7defe1a52fed5a358c194e1943ddc3"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12"
+os_name = "debian-12-amd64"
+base_image = "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
+network_mode = "no-network"
+build_command = "python -m pip install --no-build-isolation --no-deps --no-index -e ."
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "jsonpath-ng has no runtime dependencies. All build tools are preinstalled in the image."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = []
+lock_artifact = {}
+
+[tests]
+framework = "pytest"
+expected_total = 100
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+bundle = {}
+
+[harbor]
+description = "Build jsonpath-ng package from an empty workspace: a robust JSONPath implementation for Python with parsing, querying, updating, filters, and arithmetic."
+keywords = ["python", "json", "jsonpath", "xpath", "query", "data", "filter", "parser"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 2048
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+
+[lifecycle]
+status = "packaged"
+owner = "jsonpath-ng-authoring"
+reason = "Source frozen, instruction authored, verifier with 100 scenarios created, awaiting Oracle and controls."
