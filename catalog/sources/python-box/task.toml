@@ -14,7 +14,7 @@ status = "known"
 upstream_url = "https://github.com/cdgriffith/Box"
 revision = "a4c10e977b574114613431394b30412b50aaacce"
 license_spdx = "MIT"
-source_digest = "sha256:e412e36c25fca8223560516d53ef6c7993591c3b0ec8bb4ec582bf7defdd79f0"
+source_digest = "sha256:4519592278c5b5819bcd2bcae82150001ba361fb19b036891f8e304d45f8c12a"
 submodules = []
 
 [environment]
@@ -37,7 +37,7 @@ reason = "The setuptools build backend is preinstalled into the agent and verifi
 status = "known"
 installer = "pip"
 packages = []
-lock_artifact = { digest = "sha256:37d1e6924d9a9cb678511bcc814207ad77596ededd3be13ebd950745d927d7d8", size_bytes = 383, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:37d1e6924d9a9cb678511bcc814207ad77596ededd3be13ebd950745d927d7d8", visibility = "private" }
+lock_artifact = { digest = "sha256:a1a094f9eb60e00e9c71a5dfd59fa6237e30f2950be9be8172f4962915b3373e", size_bytes = 160, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:a1a094f9eb60e00e9c71a5dfd59fa6237e30f2950be9be8172f4962915b3373e", visibility = "private" }
 
 [tests]
 framework = "pytest"
@@ -56,7 +56,7 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 [verifier]
 protocol = "custom-json-v1"
 entrypoint = "run.py"
-bundle = { digest = "sha256:be2b7a2e101fd7780b9bd54616e762116c7049319864f0ad5e504818afa7f779", size_bytes = 2965, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:be2b7a2e101fd7780b9bd54616e762116c7049319864f0ad5e504818afa7f779", visibility = "private" }
+bundle = { digest = "sha256:2482df47df31bdf8370121a39e30a652e1d54e45950eac5e3191da36ce89f18e", size_bytes = 3363, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:2482df47df31bdf8370121a39e30a652e1d54e45950eac5e3191da36ce89f18e", visibility = "private" }
 
 [harbor]
 description = "Build python-box package from an empty workspace: a library for advanced dictionary types with dot notation access and serialization support."
@@ -73,13 +73,13 @@ storage_mb = 2048
 workspace_artifact = "/workspace"
 
 [oracle_bundle]
-digest = "sha256:cf5028b7eea0f21cbbb2c1bbd071901ca572db032810230b778b5c6b86d04473"
-size_bytes = 50951
+digest = "sha256:95d78a8b1763d0dc855f1337505f8cc872a1a0adb6c4b098004cde801b1cf8b6"
+size_bytes = 90698
 media_type = "application/vnd.nl2repobench.private-bundle+tar"
-uri = "artifact://private/sha256:cf5028b7eea0f21cbbb2c1bbd071901ca572db032810230b778b5c6b86d04473"
+uri = "artifact://private/sha256:95d78a8b1763d0dc855f1337505f8cc872a1a0adb6c4b098004cde801b1cf8b6"
 visibility = "private"
 
 [lifecycle]
-status = "packaged"
-owner = "python-box-authoring-worker"
-reason = "Initial authoring complete. Awaiting parent Oracle and controls validation."
+status = "controls-passed"
+owner = "python-recover-parent-python-box"
+reason = "Oracle 90/90 reward 1.0. Controls: empty 0.0(0), stub 0.1(90), forgery 0.111(90), install-failure 0.0(0), panic 0.0(90), oversized-output 0.0(90), background-process 0.322(90) [background noted: python-box has no network/resource-sensitive API, so 29 pure data-structure scenarios legitimately pass under background spawn; verifier completed valid=True, proving no DoS]. hang excluded."

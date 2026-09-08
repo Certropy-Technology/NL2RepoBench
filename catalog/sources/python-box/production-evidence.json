@@ -1,0 +1,101 @@
+{
+  "controls": {
+    "empty": {
+      "collected": 0,
+      "failed": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "forgery": {
+      "collected": 90,
+      "failed": 80,
+      "passed": 10,
+      "reward": 0.1111111111111111,
+      "valid": true
+    },
+    "install-failure": {
+      "collected": 0,
+      "failed": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "oversized-output": {
+      "collected": 90,
+      "failed": 90,
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "panic": {
+      "collected": 90,
+      "failed": 90,
+      "passed": 0,
+      "reward": 0.0,
+      "valid": true
+    },
+    "stub": {
+      "collected": 90,
+      "failed": 81,
+      "passed": 9,
+      "reward": 0.1,
+      "valid": true
+    }
+  },
+  "controls_notes": {
+    "background-process": "0.322; python-box has no network/resource-sensitive API, 29 pure data-structure scenarios pass; verifier valid=True (no DoS)",
+    "hang": "excluded"
+  },
+  "evidence_files": [
+    {
+      "path": "evidence/gates-20260908/control-background-process-grading.json",
+      "sha256": "sha256:5cad67979fc59564b4de8df946980e730bdd51868a0f4930446e7977dd8a0de6"
+    },
+    {
+      "path": "evidence/gates-20260908/control-empty-grading.json",
+      "sha256": "sha256:ed71c008b47a32d8f288d2b5e81cb2d609e47d5f7cda54cd95b280f8cddd9f91"
+    },
+    {
+      "path": "evidence/gates-20260908/control-forgery-grading.json",
+      "sha256": "sha256:536cddb5d435f9e4c298ec3da13075283a6a63e983b556c9dee07cabd72a5967"
+    },
+    {
+      "path": "evidence/gates-20260908/control-install-failure-grading.json",
+      "sha256": "sha256:ed71c008b47a32d8f288d2b5e81cb2d609e47d5f7cda54cd95b280f8cddd9f91"
+    },
+    {
+      "path": "evidence/gates-20260908/control-oversized-output-grading.json",
+      "sha256": "sha256:645a421e49584006e6dddddff2fbf50e0e968857b373659a4287c2bd53cc6148"
+    },
+    {
+      "path": "evidence/gates-20260908/control-panic-grading.json",
+      "sha256": "sha256:645a421e49584006e6dddddff2fbf50e0e968857b373659a4287c2bd53cc6148"
+    },
+    {
+      "path": "evidence/gates-20260908/control-stub-grading.json",
+      "sha256": "sha256:c53125c866a53cc8ec6f8114741a5b2ea42409fc51a10998dd1f73976504f860"
+    },
+    {
+      "path": "evidence/gates-20260908/oracle-grading.json",
+      "sha256": "sha256:2d71a8ab0b3bfcf732caaaccbb1702689c5ae1c2b6b6aba279d16367fee591bb"
+    },
+    {
+      "path": "evidence/gates-20260908/oracle-network.json",
+      "sha256": "sha256:593a944dca6139e32a0bf5a02f9912bad6e552378ad26807fa56069e0b5e4dd5"
+    }
+  ],
+  "license_spdx": "MIT",
+  "offline": "oracle network.json public_network_available=false",
+  "oracle": {
+    "collected": 90,
+    "failed": 0,
+    "passed": 90,
+    "reward": 1.0,
+    "valid": true
+  },
+  "revision": "a4c10e977b574114613431394b30412b50aaacce",
+  "schema_version": "1.0",
+  "task_id": "python-box",
+  "terminal_kind": "valid"
+}

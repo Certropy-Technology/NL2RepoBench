@@ -1,0 +1,59 @@
+schema_version = "1.4"
+artifacts = [
+    "/workspace",
+]
+
+[task]
+name = "nl2repobench/python-box"
+version = "1.0.0"
+description = "Build python-box package from an empty workspace: a library for advanced dictionary types with dot notation access and serialization support."
+authors = [
+    { name = "NL2RepoBench" },
+]
+keywords = [
+    "python",
+    "dict",
+    "dot-notation",
+    "box",
+    "configuration",
+    "json",
+    "yaml",
+    "toml",
+]
+
+[metadata]
+difficulty = "medium"
+category = "utility-library"
+tags = [
+    "python",
+    "dict",
+    "dot-notation",
+    "configuration",
+    "serialization",
+]
+metric_contract = "fixed-test-pass-rate-v1"
+expected_test_count = 90
+canonical_manifest_digest = "sha256:179d71f1e2c548b770ef1c1c1ab562e5d8289f33ab2147a737b302a6dc0ef807"
+toolchain_lock_digest = "sha256:230a7dd32d1de931a868d75901ea4f340882cf1aad24e61ee7918543075ab366"
+
+[agent]
+timeout_sec = 1800.0
+
+[verifier]
+timeout_sec = 600.0
+environment_mode = "separate"
+network_mode = "no-network"
+
+[verifier.environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 4096
+
+[environment]
+network_mode = "no-network"
+build_timeout_sec = 600.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 2048
