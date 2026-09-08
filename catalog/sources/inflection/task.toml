@@ -14,7 +14,7 @@ status = "known"
 upstream_url = "https://github.com/jpvanhal/inflection"
 revision = "b00d4d348b32ef5823221b20ee4cbd1d2d924462"
 license_spdx = "MIT"
-source_digest = "sha256:1a29730d366e996aaacffb2f1f1cb9593dc38e2ddd30c91250c6dde09ea9b417"
+source_digest = "sha256:dd81402dcb911918c7beb07595664103075c1d20635587432a4bd6fee94cf5c9"
 submodules = []
 
 [environment]
@@ -37,7 +37,7 @@ reason = "The setuptools build backend is preinstalled into the agent and verifi
 status = "known"
 installer = "pip"
 packages = []
-lock_artifact = { digest = "sha256:PLACEHOLDER", size_bytes = 0, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:PLACEHOLDER", visibility = "private" }
+lock_artifact = { digest = "sha256:d001e22c45bc63d7395c81bccbfbcfa30c802778852af6cf66eb828627334347", size_bytes = 304, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:d001e22c45bc63d7395c81bccbfbcfa30c802778852af6cf66eb828627334347", visibility = "private" }
 
 [tests]
 framework = "pytest"
@@ -56,7 +56,7 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 [verifier]
 protocol = "custom-json-v1"
 entrypoint = "run.py"
-bundle = { digest = "sha256:PLACEHOLDER", size_bytes = 0, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:PLACEHOLDER", visibility = "private" }
+bundle = { digest = "sha256:c1b79ab47dcedf3c1d18e874642aa2222dbc52d853f397597cbd94cd6b431308", size_bytes = 2563, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:c1b79ab47dcedf3c1d18e874642aa2222dbc52d853f397597cbd94cd6b431308", visibility = "private" }
 
 [harbor]
 description = "Build inflection package from an empty workspace: a library for string transformations including pluralization, singularization, camelization, and other Rails-style inflection."
@@ -73,13 +73,13 @@ storage_mb = 2048
 workspace_artifact = "/workspace"
 
 [oracle_bundle]
-digest = "sha256:PLACEHOLDER"
-size_bytes = 0
+digest = "sha256:cef10d4cc967517060626902d3eee35529971f8975ae3dc5664793c3e9ababa4"
+size_bytes = 14230
 media_type = "application/vnd.nl2repobench.private-bundle+tar"
-uri = "artifact://private/sha256:PLACEHOLDER"
+uri = "artifact://private/sha256:cef10d4cc967517060626902d3eee35529971f8975ae3dc5664793c3e9ababa4"
 visibility = "private"
 
 [lifecycle]
-status = "packaged"
-owner = "python-inflection-worker"
-reason = "Source frozen, instruction authored, verifier and Oracle bundle staged for parent integration."
+status = "controls-passed"
+owner = "python-recover-parent-inflection"
+reason = "Oracle 80/80 reward 1.0. Controls: empty 0.0(0), stub 0.0(80), forgery 0.0(80), install-failure 0.0(0), panic 0.0(80), oversized-output 0.0(80), background-process 0.15(80); all valid, <= 0.20. hang excluded. offline verified."
