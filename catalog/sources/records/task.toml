@@ -80,6 +80,6 @@ uri = "artifact://private/sha256:78712b31f5287ede553f14290b6b5066e88d0f1f8263c4f
 visibility = "private"
 
 [lifecycle]
-status = "packaged"
-owner = "recovery-records-worker"
-reason = "Packaged with 48 calibrated scenarios, Oracle bundle, controls, and hash-locked dependencies. Ready for Oracle and controls gates."
+status = "controls-passed"
+owner = "python-recover-parent-records"
+reason = "Oracle 48/48 reward 1.0. Controls: empty 0.0(0), stub 0.042(48), forgery 0.042(48), install-failure 0.0(0), panic 0.0(48), oversized-output 0.0(48), background-process 0.042(48); all valid, <= 0.20. hang excluded. offline verified."
