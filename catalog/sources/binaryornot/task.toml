@@ -1,0 +1,77 @@
+schema_version = "1.0"
+task_id = "binaryornot"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "utility-library"
+tags = ["python", "binary-detection", "file-analysis", "encoding", "machine-learning"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/binaryornot/binaryornot"
+revision = "9c979cd0dce0627ed01a52d2c160357d79b9af36"
+license_spdx = "MIT"
+source_digest = "sha256:cc8d57cfa71d74ff8c28a7726734d53a851d02fad9e3a5581fb807f989f702f0"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12"
+os_name = "debian-12-amd64"
+base_image = "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
+network_mode = "no-network"
+build_command = "python -m pip install --no-build-isolation --no-deps --no-index -e ."
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The Hatch build backend (hatchling) is preinstalled into the agent and verifier images from the hash-locked candidate closure. Candidate installation reuses the installed backend with --no-build-isolation, and agent, candidate, verifier, Oracle, and controls run without network access."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = []
+lock_artifact = { digest = "sha256:3c72a68ef86155b76d422abf76b3916eb726134277e6e47a99d655bca26a23fc", size_bytes = 48, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:3c72a68ef86155b76d422abf76b3916eb726134277e6e47a99d655bca26a23fc", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 101
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+
+[harbor]
+description = "Build binaryornot package from an empty workspace: a lightweight library for detecting whether files are binary or text using statistical analysis and decision trees."
+keywords = ["python", "binary-detection", "file-analysis", "text-detection", "encoding", "machine-learning", "zero-dependencies"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 2048
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "packaged"
+owner = "python-authoring-binaryornot"
+reason = "Source frozen, instruction and verifier authored, controls created. Awaiting compilation and Oracle gate."

@@ -1,0 +1,76 @@
+schema_version = "1.0"
+task_id = "parso"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "parser-library"
+tags = ["python", "parser", "ast", "syntax-tree", "code-analysis"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/davidhalter/parso"
+revision = "bfe30584415cde2e5a686512c2b109e1d06da3b6"
+license_spdx = "MIT"
+source_digest = "sha256:eaaac4c9fdd5e9e8852dc778d2d7405897ec510f2a298071453e5e3a07914bb1"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12"
+os_name = "debian-12-amd64"
+base_image = "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
+network_mode = "no-network"
+build_command = "python -m pip install --no-build-isolation --no-deps --no-index -e ."
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "Dependencies are preinstalled during the Docker build phase. Candidate installation and all execution occurs without network access."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = []
+
+[tests]
+framework = "pytest"
+expected_total = 75
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+
+[harbor]
+description = "Build parso package from an empty workspace: a Python parser supporting error recovery and round-trip parsing for multiple Python versions."
+keywords = ["python", "parser", "ast", "syntax-tree", "jedi", "code-analysis"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 2048
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "packaged"
+owner = "python-authoring-parso"
+reason = "Source frozen, instruction authored, verifier and controls implemented. Awaiting Oracle gate and controls validation."

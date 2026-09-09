@@ -1,0 +1,85 @@
+schema_version = "1.0"
+task_id = "pydash"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "utility-library"
+tags = ["python", "functional", "lodash", "underscore", "utilities", "collections"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/dgilland/pydash"
+revision = "f46de3669742c075e5379c1e193c86c1c2c70dc2"
+license_spdx = "MIT"
+source_digest = "sha256:30914c3e9d377ea2cd0d3c0a4f252889b08392f730a5eb4d117e5b598cdf1d52"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12"
+os_name = "debian-12-amd64"
+base_image = "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
+network_mode = "no-network"
+build_command = "python -m pip install --no-build-isolation --no-deps --no-index -e ."
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "Dependencies (typing-extensions) are preinstalled into the agent and verifier images from the hash-locked candidate closure. Candidate installation reuses the installed packages with --no-build-isolation, and agent, candidate, verifier, Oracle, and controls run without network access."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = ["typing-extensions>3.10,!=4.6.0"]
+lock_artifact = { digest = "sha256:3951a5811cba21f7616ad436592194bac289c9fe6a2db53c54f3adac549a08fb", size_bytes = 137, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:3951a5811cba21f7616ad436592194bac289c9fe6a2db53c54f3adac549a08fb", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 85
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+bundle = { digest = "sha256:156a593e94f8d8bb2d2af1278e30ca6c6e9f0988c225c52636d62a03e7a47548", size_bytes = 2352, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:156a593e94f8d8bb2d2af1278e30ca6c6e9f0988c225c52636d62a03e7a47548", visibility = "private" }
+
+[harbor]
+description = "Build pydash package from an empty workspace: a Python utility library for functional programming with collections, objects, arrays, strings, and functions."
+keywords = ["python", "functional", "lodash", "underscore", "utilities", "collections", "objects", "arrays"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 2048
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:846f1f755ed65f8ff46e61b1af495ed1608781f573545ffe2119c52784efd27c"
+size_bytes = 168466
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:846f1f755ed65f8ff46e61b1af495ed1608781f573545ffe2119c52784efd27c"
+visibility = "private"
+
+[lifecycle]
+status = "packaged"
+owner = "python-wave-pydash"
+reason = "Task authored with 85 test scenarios covering array operations, object path access, collection operations, predicates, object manipulation, function utilities, and string transformations. Ready for compilation and Oracle validation."

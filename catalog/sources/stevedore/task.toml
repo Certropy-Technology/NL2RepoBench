@@ -1,0 +1,85 @@
+schema_version = "1.0"
+task_id = "stevedore"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "plugin-framework"
+tags = ["python", "plugins", "entry-points", "extensibility", "setuptools"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://opendev.org/openstack/stevedore"
+revision = "44e1028b014a73d00ef31251a10cb08cd989e8a6"
+license_spdx = "Apache-2.0"
+source_digest = "sha256:e97a2667923efda926e8713fde6a73616df68210a3cbc6f02b48967b676fd8bf"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12"
+os_name = "debian-12-amd64"
+base_image = "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
+network_mode = "no-network"
+build_command = "python -m pip install --no-build-isolation --no-deps --no-index -e ."
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The pbr build backend is preinstalled into the agent and verifier images from the hash-locked candidate closure. Candidate installation reuses the installed backend with --no-build-isolation, and agent, candidate, verifier, Oracle, and controls run without network access."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = []
+lock_artifact = {}
+
+[tests]
+framework = "pytest"
+expected_total = 72
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+bundle = {}
+
+[harbor]
+description = "Build stevedore package from an empty workspace: a Python library for managing dynamic plugins using setuptools entry points."
+keywords = ["python", "plugins", "entry-points", "extensibility", "stevedore", "openstack"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 2048
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:5a4719a32ee883b212c7d120a4e86ea44b0f8f53eda2ee4cac55d2fe86d7dd0d"
+size_bytes = 518980
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:5a4719a32ee883b212c7d120a4e86ea44b0f8f53eda2ee4cac55d2fe86d7dd0d"
+visibility = "private"
+
+[lifecycle]
+status = "packaged"
+owner = "python-stevedore-authoring"
+reason = "Source frozen, instruction authored, verifier calibrated with 72 scenarios (0 mismatches), Oracle bundle and controls prepared. Ready for compiler and Oracle gates."
