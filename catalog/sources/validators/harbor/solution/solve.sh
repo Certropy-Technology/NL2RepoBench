@@ -18,7 +18,7 @@ tar -xzf "$BUNDLE_DIR/source.tar.gz" --strip-components=1
 
 # Install the package
 echo "Installing validators package..."
-python -m pip install --no-build-isolation --no-deps --no-index -e .
+python -m pip install --no-build-isolation --no-deps --no-index .
 
 # Verify import
 echo "Verifying installation..."

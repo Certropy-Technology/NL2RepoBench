@@ -45,7 +45,7 @@ echo "[oracle] Source extracted successfully"
 echo "[oracle] Installing package"
 
 # Install the package
-pip install --no-cache-dir --no-build-isolation -e . || {
+pip install --no-cache-dir --no-build-isolation --no-index -e . || {
     echo "[oracle] ERROR: Installation failed" >&2
     exit 1
 }

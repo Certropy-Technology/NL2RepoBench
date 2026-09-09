@@ -412,7 +412,7 @@ result = DeepDiff(10**100, 10**100 + 1).to_dict()
     # Special string characters
     ("special_chars_string", """
 from deepdiff import DeepDiff
-result = DeepDiff({'a': 'hello\nworld'}, {'a': 'hello\nworld'}).to_dict()
+result = DeepDiff({'a': 'hello\\nworld'}, {'a': 'hello\\nworld'}).to_dict()
 """, {"ok": True, "value": {}}),
     
     ("unicode_string", """
@@ -489,7 +489,11 @@ def run_verifier():
     for test_id, script, expected in CASES:
         try:
             # Execute the candidate script
-            actual = execute_script(script)
+            observed = execute_script(script)
+            actual = {"ok": observed.ok, "value": observed.value}
+            if not observed.ok:
+                actual["exception_type"] = observed.exception_type
+                actual["exception_message"] = observed.exception_message
             
             # Compare results
             if actual == expected:

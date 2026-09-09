@@ -6,7 +6,7 @@ instruction = "instruction.md"
 [metadata]
 difficulty = "easy"
 category = "utility-library"
-tags = ["python", "validation", "email", "url", "ipv4", "ipv6", "domain", "iban", "uuid", "mac-address", "credit-card"]
+tags = [ "python", "validation", "email", "url", "ipv4", "ipv6", "domain", "iban", "uuid", "mac-address", "credit-card",]
 language = "python"
 
 [source]
@@ -25,30 +25,23 @@ base_image = "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa703
 base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
 system_packages = []
 network_mode = "no-network"
-build_command = "python -m pip install --no-build-isolation --no-deps --no-index -e ."
-
-[environment.network_policy]
-mode = "no-network"
-offline_dependencies = "preinstalled-image"
-reference_source_fetch = "forbidden"
-reason = "Dependencies are installed during the Docker build phase. Candidate installation reuses the build backend with --no-build-isolation, and agent, candidate, verifier, Oracle, and controls run without network access."
+build_command = "python -m pip install --no-build-isolation --no-deps --no-index ."
 
 [dependencies]
 status = "known"
 installer = "pip"
 packages = []
-lock_artifact = { digest = "sha256:baf88b776544b8603afa26c45f8a2771b5ea6cd2ba0a231eb748f1ee91a5f1eb", size_bytes = 103, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:0000000000000000000000000000000000000000000000000000000000000000", visibility = "private" }
 
 [tests]
 framework = "pytest"
 expected_total = 76
 expected_total_source = "frozen-collection"
-commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py"]
+commands = [ "custom-json-v1 verifier entrypoint",]
+protected_paths = [ "/tests/verifier/run.py",]
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
-passed_statuses = ["passed"]
+passed_statuses = [ "passed",]
 excluded_statuses = []
 collection_mismatch = "fail"
 formula = "clamp(passed / frozen_total, 0, 1)"
@@ -56,11 +49,10 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 [verifier]
 protocol = "custom-json-v1"
 entrypoint = "run.py"
-bundle = { digest = "sha256:0000000000000000000000000000000000000000000000000000000000000000", size_bytes = 0, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:0000000000000000000000000000000000000000000000000000000000000000", visibility = "private" }
 
 [harbor]
 description = "Build validators package from an empty workspace: a library for validation of common data types (email, URL, IP address, domain, IBAN, UUID, MAC address, credit card numbers)."
-keywords = ["python", "validation", "email", "url", "ip-address", "domain", "iban", "uuid", "mac-address", "credit-card"]
+keywords = [ "python", "validation", "email", "url", "domain", "iban", "uuid", "credit-card",]
 agent_timeout_sec = 1800.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 120.0
@@ -73,13 +65,33 @@ storage_mb = 2048
 workspace_artifact = "/workspace"
 
 [oracle_bundle]
-digest = "sha256:0000000000000000000000000000000000000000000000000000000000000000"
-size_bytes = 0
+digest = "sha256:0f746b4f53f1f2c9ac8fe0e390c34ca64e2f7d2c09240d727a370b5c7ebc7bed"
+size_bytes = 73825
 media_type = "application/vnd.nl2repobench.private-bundle+tar"
-uri = "artifact://private/sha256:0000000000000000000000000000000000000000000000000000000000000000"
+uri = "artifact://private/sha256:0f746b4f53f1f2c9ac8fe0e390c34ca64e2f7d2c09240d727a370b5c7ebc7bed"
 visibility = "private"
 
 [lifecycle]
 status = "packaged"
-owner = "python-wave-validators"
+owner = "recovery-worker"
 reason = "Source frozen, instruction authored, verifier and controls created. Ready for compilation and Oracle gate."
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "Dependencies are installed during the Docker build phase. Candidate installation reuses the build backend with --no-build-isolation, and agent, candidate, verifier, Oracle, and controls run without network access."
+
+[dependencies.lock_artifact]
+digest = "sha256:e8452f21c2c76cd184b2711604c7f3a46da4f1638c9aed5ce57d93f246c653a9"
+size_bytes = 104
+media_type = "text/plain; charset=utf-8"
+uri = "artifact://private/sha256:e8452f21c2c76cd184b2711604c7f3a46da4f1638c9aed5ce57d93f246c653a9"
+visibility = "private"
+
+[verifier.bundle]
+digest = "sha256:032b25d099a87f04aeda952b42aafe1c6a823790eec0469e2224c06fae87e46e"
+size_bytes = 2332
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:032b25d099a87f04aeda952b42aafe1c6a823790eec0469e2224c06fae87e46e"
+visibility = "private"

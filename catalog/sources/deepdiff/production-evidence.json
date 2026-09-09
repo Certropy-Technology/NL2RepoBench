@@ -1,0 +1,21 @@
+{
+ "schema_version": "1.0",
+ "task_id": "deepdiff",
+ "status": "oracle-failed",
+ "language": "python",
+ "source_freeze": {
+  "upstream_url": "https://github.com/qlustered/deepdiff",
+  "revision": "c59636cda63cd3951777208c783285e6bf634159",
+  "source_digest": "sha256:07e9e366fab4297755153c4eab795ad4ef3cbd0d51660e847f5751c6bd727687"
+ },
+ "oracle": {
+  "valid": true,
+  "reward": 0.0,
+  "collected": 74,
+  "passed": 0,
+  "failed": 74,
+  "grading": ".nl2repo/work/oracle-jobs/deepdiff-oracle/2026-09-08__23-45-56/deepdiff__HL9faty/verifier/grading.json",
+  "updated": "2026-09-08-oracle-rerun",
+  "offline_fixed": true
+ }
+}

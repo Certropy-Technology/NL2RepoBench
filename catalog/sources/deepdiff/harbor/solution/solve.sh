@@ -19,18 +19,20 @@ if [ "${ACTUAL_SHA256}" != "${EXPECTED_SHA256}" ]; then
 fi
 echo "✓ SHA256 verified: ${EXPECTED_SHA256}"
 
-# Extract to /workspace
+# Extract to /workspace with --strip-components=1
 echo "Extracting source to /workspace..."
 cd /workspace
-tar -xzf "${SOURCE_TAR}"
+tar -xzf "${SOURCE_TAR}" --strip-components=1
+
+# Remove symlinks (Harbor workspace validation rejects symlinks)
+echo "Removing symlinks from workspace..."
+find . -type l -delete
 
 # Verify extraction
-if [ ! -d "deepdiff-9.1.0" ]; then
-    echo "ERROR: Expected directory deepdiff-9.1.0 not found!"
+if [ ! -f "pyproject.toml" ]; then
+    echo "ERROR: pyproject.toml not found in /workspace!"
     exit 1
 fi
-
-cd deepdiff-9.1.0
 
 # Verify the version in pyproject.toml
 echo "Verifying version..."
@@ -40,7 +42,7 @@ fi
 
 # Install the package
 echo "Installing deepdiff..."
-python3 -m pip install --no-build-isolation --no-deps --no-index -e . > /dev/null 2>&1
+python3 -m pip install --no-build-isolation --no-deps --no-index . > /dev/null 2>&1
 
 # Verify installation and imports
 echo "Verifying installation..."

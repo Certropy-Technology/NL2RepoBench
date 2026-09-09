@@ -405,19 +405,19 @@ result = natsorted([['a', '10'], ['a', '2'], ['a', '1']])
     ("natsort_key_direct", """
 from natsort import natsort_key
 result = natsort_key('test10')
-""", {"ok": True, "value": ('test', 10)}),
+""", {"ok": True, "value": ['test', 10]}),
     
     # More complex natsort_key
     ("natsort_key_complex", """
 from natsort import natsort_key
 result = natsort_key('file-2.10.txt')
-""", {"ok": True, "value": ('file-', 2, '.', 10, '.txt')}),
+""", {"ok": True, "value": ['file-', 2, '.', 10, '.txt']}),
     
     # Stability of sort
     ("stability", """
 from natsort import natsorted
 result = natsorted([('a', 2), ('a', 1), ('b', 2), ('b', 1)], key=lambda x: x[0])
-""", {"ok": True, "value": [('a', 2), ('a', 1), ('b', 2), ('b', 1)]}),
+""", {"ok": True, "value": [['a', 2], ['a', 1], ['b', 2], ['b', 1]]}),
     
     # Empty strings
     ("empty_strings", """
@@ -444,8 +444,12 @@ def main() -> None:
     
     for case_id, script, expected in CASES:
         try:
-            actual = execute_script(script)
-            
+            observed = execute_script(script)
+            actual = {"ok": observed.ok, "value": observed.value}
+            if not observed.ok:
+                actual["exception_type"] = observed.exception_type
+                actual["exception_message"] = observed.exception_message
+
             # Compare actual vs expected
             if actual == expected:
                 status = "passed"

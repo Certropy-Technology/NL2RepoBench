@@ -92,8 +92,12 @@ def main():
     leaves = []
     
     for case_id, script, expected in CASES:
-        actual = execute_script(script)
-        
+        observed = execute_script(script)
+        actual = {"ok": observed.ok, "value": observed.value}
+        if not observed.ok:
+            actual["exception_type"] = observed.exception_type
+            actual["exception_message"] = observed.exception_message
+
         # Compare actual vs expected
         if actual == expected:
             status = "passed"

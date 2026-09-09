@@ -56,6 +56,7 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 [verifier]
 protocol = "custom-json-v1"
 entrypoint = "run.py"
+bundle = { digest = "sha256:sha256:527cce146757801f4536caed815437cf2529c86c180c2bd9e9abec3fa539ccb2", size_bytes = 3477, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:sha256:527cce146757801f4536caed815437cf2529c86c180c2bd9e9abec3fa539ccb2", visibility = "private" }
 
 [harbor]
 description = "Build natsort package from an empty workspace: a library for natural sorting of strings with embedded numbers."
@@ -75,3 +76,10 @@ workspace_artifact = "/workspace"
 status = "packaged"
 owner = "python-authoring-natsort"
 reason = "Task authored with instruction.md, verifier with 72 test scenarios, Oracle solve.sh, and 7 control scripts. Awaiting compilation and Oracle validation."
+
+[oracle_bundle]
+digest = "sha256:33997498edcda2d633037e37142014c618af49d57544321406f77a06d09951ec"
+size_bytes = 76305
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:33997498edcda2d633037e37142014c618af49d57544321406f77a06d09951ec"
+visibility = "private"

@@ -14,7 +14,7 @@ status = "known"
 upstream_url = "https://github.com/astanin/python-tabulate"
 revision = "382a933132b0767fcb1624ebc143d4171c9366fc"
 license_spdx = "MIT"
-source_digest = "sha256:e2cfde8f79420f6deeffdeda9aaec3b6bc5abce947655d17ac662b126e48a60d"
+source_digest = "sha256:5a1c6005c858c13c2575a31bd1cc7a5a63184e63e55db5affb2e991232b23e9c"
 submodules = []
 
 [environment]
@@ -25,19 +25,19 @@ base_image = "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa703
 base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
 system_packages = []
 network_mode = "no-network"
-build_command = "python -m pip install --no-build-isolation --no-deps --no-index -e ."
+build_command = "python -m pip install --no-build-isolation --no-deps --no-index ."
 
 [environment.network_policy]
 mode = "no-network"
 offline_dependencies = "preinstalled-image"
 reference_source_fetch = "forbidden"
-reason = "The setuptools build backend is preinstalled into the agent and verifier images. Candidate installation reuses the installed backend with --no-build-isolation, and agent, candidate, verifier, Oracle, and controls run without network access."
+reason = "The flit_core build backend is preinstalled into the agent and verifier images. Candidate installation reuses the installed backend with --no-build-isolation, and agent, candidate, verifier, Oracle, and controls run without network access."
 
 [dependencies]
 status = "known"
 installer = "pip"
 packages = []
-lock_artifact = { digest = "sha256:PLACEHOLDER_LOCK", size_bytes = 0, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:PLACEHOLDER_LOCK", visibility = "private" }
+lock_artifact = { digest = "sha256:9ede00c9ae24c132d551a6c3a1dcb23133fce8b6ceabde14ba546e6757738b62", size_bytes = 102, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:9ede00c9ae24c132d551a6c3a1dcb23133fce8b6ceabde14ba546e6757738b62", visibility = "private" }
 
 [tests]
 framework = "pytest"
@@ -56,7 +56,7 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 [verifier]
 protocol = "custom-json-v1"
 entrypoint = "run.py"
-bundle = { digest = "sha256:PLACEHOLDER_VERIFIER", size_bytes = 0, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:PLACEHOLDER_VERIFIER", visibility = "private" }
+bundle = { digest = "sha256:sha256:ee95f3b7c90433285d058f509d1a3a699e9b03696c840f3d018f4f6769920853", size_bytes = 4303, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:sha256:ee95f3b7c90433285d058f509d1a3a699e9b03696c840f3d018f4f6769920853", visibility = "private" }
 
 [harbor]
 description = "Build tabulate package from an empty workspace: a library for pretty-printing tabular data in various formats."
@@ -73,13 +73,13 @@ storage_mb = 2048
 workspace_artifact = "/workspace"
 
 [oracle_bundle]
-digest = "sha256:PLACEHOLDER_ORACLE"
-size_bytes = 0
+digest = "sha256:6eba7bdfd4a1cd59362902d1ab86138f992d6a3521bd72a46eaa193267350bf4"
+size_bytes = 71712
 media_type = "application/vnd.nl2repobench.private-bundle+tar"
-uri = "artifact://private/sha256:PLACEHOLDER_ORACLE"
+uri = "artifact://private/sha256:6eba7bdfd4a1cd59362902d1ab86138f992d6a3521bd72a46eaa193267350bf4"
 visibility = "private"
 
 [lifecycle]
 status = "packaged"
-owner = "python-wave-tabulate"
-reason = "Source frozen, instruction authored, verifier and controls prepared, awaiting Oracle gate."
+owner = "recovery-worker"
+reason = "Oracle gate runs but all 74 scenarios fail (reward 0.0). Local calibration shows scenarios pass with frozen implementation. Requires investigation of candidate execution environment or verifier protocol mismatch. Bundles registered, task compiles successfully."
