@@ -1,0 +1,89 @@
+schema_version = "1.0"
+task_id = "blinker"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "utility-library"
+tags = ["python", "signals", "events", "observer-pattern", "notifications"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/pallets-eco/blinker"
+revision = "669f3a027828d19786e708b511277fabcd6b9532"
+license_spdx = "MIT"
+source_digest = "sha256:b4ce2265a7abece45e7cc896e98dbebe6cead56bcf805a3d23136d145f5445bf"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12"
+os_name = "debian-12-amd64"
+base_image = "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
+network_mode = "no-network"
+build_command = "python -m pip install --no-build-isolation --no-deps --no-index -e ."
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The flit-core build backend is preinstalled into the agent and verifier images from the hash-locked candidate closure. Candidate installation reuses the installed backend with --no-build-isolation, and agent, candidate, verifier, Oracle, and controls run without network access."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = []
+lock_artifact = { digest = "sha256:095fed9e275d41996f9616115793161cedc6428af62bc3511ee982f1ee9de9a1", size_bytes = 125, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:095fed9e275d41996f9616115793161cedc6428af62bc3511ee982f1ee9de9a1", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 69
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+bundle = { digest = "sha256:b5f93339b46f9c31176279aedb338ff25c1597f7e1cf8d1d8baa715d6e45ec1a", size_bytes = 3748, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:b5f93339b46f9c31176279aedb338ff25c1597f7e1cf8d1d8baa715d6e45ec1a", visibility = "private" }
+
+[harbor]
+description = "Build blinker package from an empty workspace: a fast Python in-process signal/event dispatching system with named signals, sender filtering, and weak references."
+keywords = ["python", "signals", "events", "observer", "notifications", "dispatch"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 2048
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:7e8568f0a354b78392dee052db635b4f5f1aef2695133ebf6290dc1268fc6796"
+size_bytes = 23399
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:7e8568f0a354b78392dee052db635b4f5f1aef2695133ebf6290dc1268fc6796"
+visibility = "private"
+
+[lifecycle]
+status = "packaged"
+owner = "python-wave-blinker"
+reason = "Source frozen, instruction complete, verifier calibrated with 69 test scenarios covering Signal creation, sending, connecting, disconnecting, has_receivers_for, receivers_for, connect_via, connected_to, muted, named signals, Namespace, weak references, receiver_connected/disconnected signals, ANY symbol, return values, and complex multi-sender scenarios."
+
+[candidate_requirements]
+digest = "sha256:095fed9e275d41996f9616115793161cedc6428af62bc3511ee982f1ee9de9a1"
+size_bytes = 125

@@ -1,50 +1,49 @@
 schema_version = "1.0"
 task_id = "wcwidth"
-version = "0.1.0"
+version = "1.0.0"
 instruction = "instruction.md"
 
 [metadata]
-difficulty = "hard"
-category = "unicode-terminal-text"
-tags = ["python", "unicode", "terminal", "grapheme", "ansi", "text-layout", "separate-verifier"]
+difficulty = "medium"
+category = "text-processing"
+tags = ["python", "unicode", "terminal", "cjk", "text-width"]
 language = "python"
 
 [source]
 status = "known"
 upstream_url = "https://github.com/jquast/wcwidth"
-revision = "551710eabf316ed2d9e3782c1fe9cf80ff0f6ed9"
+revision = "17986f51ddea489b1c83bff85169e4521a8fb080"
 license_spdx = "MIT"
-source_digest = "sha256:d8621c78e2a93b9f7a97ee756832a3639e8bbb87c7c79f4c8344ef7fb4bf8fb6"
-submodules = ["ucs-detect@4ce9df355f17ee8278768d05dcbdde878b80dd48"]
+source_digest = "sha256:d128512515fbf4612e0ff21fd6380399210318b7b54a9af59dff8454cf9730eb"
+submodules = []
 
 [environment]
 status = "known"
-python_version = "3.12.14"
+python_version = "3.12"
 os_name = "debian-12-amd64"
 base_image = "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
 base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
 system_packages = []
 network_mode = "no-network"
-build_command = "install the hash-locked hatchling build backend during the image build; candidate installation uses pip --no-build-isolation and no runtime dependencies"
+build_command = "python -m pip install --no-build-isolation --no-deps --no-index -e ."
 
 [environment.network_policy]
 mode = "no-network"
 offline_dependencies = "preinstalled-image"
 reference_source_fetch = "forbidden"
-reason = "The candidate build backend closure is installed during image build from a private hash-locked requirements artifact. Agent and separate verifier runs have no egress; only the trusted Oracle receives a run-scoped authorization for github.com."
+reason = "The build backend (hatchling) is preinstalled into the agent and verifier images from the hash-locked candidate closure. Candidate installation reuses the installed backend with --no-build-isolation, and agent, candidate, verifier, Oracle, and controls run without network access."
 
 [dependencies]
 status = "known"
 installer = "pip"
-packages = ["hatchling==1.27.0", "packaging==26.3", "pathspec==1.1.1", "pluggy==1.6.0", "trove-classifiers==2026.6.1.19"]
-lock_artifact = { digest = "sha256:b059b74bc449113dd6bada0ab1afb19364d30baa0c17fc61cfc480997be2f4e4", size_bytes = 1013, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:b059b74bc449113dd6bada0ab1afb19364d30baa0c17fc61cfc480997be2f4e4", visibility = "private" }
+packages = []
 
 [tests]
 framework = "pytest"
-expected_total = 36
+expected_total = 96
 expected_total_source = "frozen-collection"
 commands = ["custom-json-v1 verifier entrypoint"]
-protected_paths = ["/tests/verifier/run.py", "/tests/verifier/adapter.py"]
+protected_paths = ["/tests/verifier/run.py"]
 
 [metric]
 contract_id = "fixed-test-pass-rate-v1"
@@ -56,32 +55,30 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 [verifier]
 protocol = "custom-json-v1"
 entrypoint = "run.py"
-bundle = { digest = "sha256:b99d5780c09693b14ee2aed762b8ed8fcb2cad4838db0e9acc33c462a0f96b9a", size_bytes = 20480, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:b99d5780c09693b14ee2aed762b8ed8fcb2cad4838db0e9acc33c462a0f96b9a", visibility = "private" }
-environment = {}
 
 [harbor]
-description = "Build wcwidth from an empty workspace and reproduce deterministic Unicode display-width, grapheme, terminal-sequence, clipping, wrapping, and text-layout behavior through a separate child-side JSON verifier."
-keywords = ["python", "unicode", "terminal", "grapheme", "ansi", "text-layout", "separate-verifier"]
-agent_timeout_sec = 3600.0
-verifier_timeout_sec = 900.0
-candidate_install_timeout_sec = 180.0
-candidate_total_timeout_sec = 600.0
+description = "Build wcwidth package from an empty workspace: measure display width of Unicode strings in terminals, supporting CJK characters, combining marks, and emoji."
+keywords = ["python", "unicode", "terminal", "wcwidth", "cjk", "width", "east-asian"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 300.0
 agent_network_mode = "no-network"
-agent_allowed_hosts = []
 verifier_network_mode = "no-network"
 cpus = 2
 memory_mb = 4096
-storage_mb = 8192
+storage_mb = 2048
 workspace_artifact = "/workspace"
 
-[oracle_bundle]
-digest = "sha256:c0d116b5d9f6df385cfd1ed5ee71aeb6d2fcb9b47c9d63111bd52c54d98b5d63"
-size_bytes = 10240
-media_type = "application/vnd.nl2repobench.private-bundle+tar"
-uri = "artifact://private/sha256:c0d116b5d9f6df385cfd1ed5ee71aeb6d2fcb9b47c9d63111bd52c54d98b5d63"
-visibility = "private"
-
 [lifecycle]
-status = "controls-passed"
-owner = "parent-integration-20260904"
-reason = "The current production bundle passed the official Harbor 0.21.0 Oracle at 36/36. Empty, stub, and forgery controls produced valid bounded low scores with verifier-owned reports; verifier network probes were false."
+status = "packaged"
+owner = "wcwidth-authoring"
+reason = "Source frozen, verifier and Oracle prepared, ready for compilation and gates."
+
+[oracle_bundle]
+digest = "sha256:40e3a2cbf1278bea5bd01ca95e70f98e8a646315b1fd0a02482d96cb3bf6d52d"
+size_bytes = 1754726
+
+[candidate_requirements]
+digest = "sha256:c36088e3a17f13a56117842c3374934eac62eeee2cabe32d089c63c3a8f78891"
+size_bytes = 192

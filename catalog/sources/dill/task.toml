@@ -1,0 +1,89 @@
+schema_version = "1.0"
+task_id = "dill"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "serialization-library"
+tags = ["python", "pickle", "serialization", "lambda", "closure"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/uqfoundation/dill"
+revision = "a9d4d39c411296fb3608c4ffd142134559942d21"
+license_spdx = "BSD-3-Clause"
+source_digest = "sha256:423092df4182177d4d8ba8290c8a5b640c66ab35ec7da59ccfa00f6fa3eea5fa"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12"
+os_name = "debian-12-amd64"
+base_image = "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
+network_mode = "no-network"
+build_command = "python -m pip install --no-build-isolation --no-deps --no-index -e ."
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "Dill has no runtime dependencies. The setuptools build backend is preinstalled in the agent and verifier images. Candidate installation uses --no-build-isolation --no-deps --no-index, and agent, candidate, verifier, Oracle, and controls run without network access."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = []
+lock_artifact = { digest = "sha256:201d9c244f791934ae8ddedd4443cc9fa896c6e0b2ff14e40b940aedb4555f00", size_bytes = 130, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:201d9c244f791934ae8ddedd4443cc9fa896c6e0b2ff14e40b940aedb4555f00", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 70
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+bundle = { digest = "sha256:2be600305734e9c19acee58b188d039fe33ed9937bc874224592957c72230669", size_bytes = 4671, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:2be600305734e9c19acee58b188d039fe33ed9937bc874224592957c72230669", visibility = "private" }
+
+[harbor]
+description = "Build dill package from an empty workspace: extended pickle serialization for Python objects including lambdas, closures, and nested functions."
+keywords = ["python", "pickle", "serialization", "lambda", "closure", "dill"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 2048
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:e47ec5a6a84079a9741c0f5d9a1f48632a263df0ee834355eb2d8da2af202708"
+size_bytes = 188494
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:e47ec5a6a84079a9741c0f5d9a1f48632a263df0ee834355eb2d8da2af202708"
+visibility = "private"
+
+[lifecycle]
+status = "packaged"
+owner = "python-authoring-dill"
+reason = "Authoring complete: 70 test scenarios covering dill serialization, source frozen, verifier and controls created. Ready for compilation and Oracle gate."
+
+[candidate_requirements]
+digest = "sha256:201d9c244f791934ae8ddedd4443cc9fa896c6e0b2ff14e40b940aedb4555f00"
+size_bytes = 130

@@ -1,0 +1,476 @@
+#!/usr/bin/env python3
+"""
+Verifier for pathvalidate task.
+Protocol: custom-json-v1
+"""
+import json
+import sys
+from typing import Any
+
+from nl2repobench.verification.candidate_client import execute_script
+
+# Test scenarios: (id, script, expected)
+CASES: list[tuple[str, str, object]] = [
+    # Basic validation tests - valid filenames
+    ("valid_01", """
+from pathvalidate import is_valid_filename
+result = is_valid_filename('test.txt')
+""", {"ok": True, "value": True}),
+    
+    ("valid_02", """
+from pathvalidate import is_valid_filename
+result = is_valid_filename('my-file_123.txt')
+""", {"ok": True, "value": True}),
+    
+    ("valid_03", """
+from pathvalidate import is_valid_filename
+result = is_valid_filename('新しいファイル.txt')
+""", {"ok": True, "value": True}),
+    
+    # Invalid filenames - universal
+    ("invalid_01", """
+from pathvalidate import is_valid_filename
+result = is_valid_filename('file/name.txt')
+""", {"ok": True, "value": False}),
+    
+    ("invalid_02", """
+from pathvalidate import is_valid_filename
+result = is_valid_filename('COM1')
+""", {"ok": True, "value": False}),
+    
+    ("invalid_03", """
+from pathvalidate import is_valid_filename
+result = is_valid_filename('')
+""", {"ok": True, "value": False}),
+    
+    ("invalid_04", """
+from pathvalidate import is_valid_filename
+result = is_valid_filename('file:name.txt')
+""", {"ok": True, "value": False}),
+    
+    # Platform-specific validation
+    ("platform_01", """
+from pathvalidate import is_valid_filename
+result = is_valid_filename('file:name.txt', platform='linux')
+""", {"ok": True, "value": True}),
+    
+    ("platform_02", """
+from pathvalidate import is_valid_filename
+result = is_valid_filename('file:name.txt', platform='windows')
+""", {"ok": True, "value": False}),
+    
+    ("platform_03", """
+from pathvalidate import is_valid_filename
+result = is_valid_filename('file<name.txt', platform='windows')
+""", {"ok": True, "value": False}),
+    
+    ("platform_04", """
+from pathvalidate import is_valid_filename
+result = is_valid_filename('file<name.txt', platform='linux')
+""", {"ok": True, "value": True}),
+    
+    ("platform_05", """
+from pathvalidate import is_valid_filename, Platform
+result = is_valid_filename('file|name.txt', platform=Platform.WINDOWS)
+""", {"ok": True, "value": False}),
+    
+    ("platform_06", """
+from pathvalidate import is_valid_filename, Platform
+result = is_valid_filename('filename.txt', platform=Platform.POSIX)
+""", {"ok": True, "value": True}),
+    
+    # Reserved names
+    ("reserved_01", """
+from pathvalidate import is_valid_filename
+result = is_valid_filename('CON')
+""", {"ok": True, "value": False}),
+    
+    ("reserved_02", """
+from pathvalidate import is_valid_filename
+result = is_valid_filename('PRN')
+""", {"ok": True, "value": False}),
+    
+    ("reserved_03", """
+from pathvalidate import is_valid_filename
+result = is_valid_filename('AUX')
+""", {"ok": True, "value": False}),
+    
+    ("reserved_04", """
+from pathvalidate import is_valid_filename
+result = is_valid_filename('NUL')
+""", {"ok": True, "value": False}),
+    
+    ("reserved_05", """
+from pathvalidate import is_valid_filename
+result = is_valid_filename('COM1')
+""", {"ok": True, "value": False}),
+    
+    ("reserved_06", """
+from pathvalidate import is_valid_filename
+result = is_valid_filename('COM9')
+""", {"ok": True, "value": False}),
+    
+    ("reserved_07", """
+from pathvalidate import is_valid_filename
+result = is_valid_filename('LPT1')
+""", {"ok": True, "value": False}),
+    
+    ("reserved_08", """
+from pathvalidate import is_valid_filename
+result = is_valid_filename('LPT9')
+""", {"ok": True, "value": False}),
+    
+    ("reserved_09", """
+from pathvalidate import is_valid_filename
+result = is_valid_filename('COM1.txt')
+""", {"ok": True, "value": False}),
+    
+    ("reserved_10", """
+from pathvalidate import is_valid_filename
+result = is_valid_filename('con')
+""", {"ok": True, "value": False}),
+    
+    # Sanitization tests
+    ("sanitize_01", """
+from pathvalidate import sanitize_filename
+result = sanitize_filename('file:name.txt')
+""", {"ok": True, "value": "filename.txt"}),
+    
+    ("sanitize_02", """
+from pathvalidate import sanitize_filename
+result = sanitize_filename('fi:l*e/p"a?t>h|.t<xt')
+""", {"ok": True, "value": "filepath.txt"}),
+    
+    ("sanitize_03", """
+from pathvalidate import sanitize_filename
+result = sanitize_filename('COM1')
+""", {"ok": True, "value": "COM1_"}),
+    
+    ("sanitize_04", """
+from pathvalidate import sanitize_filename
+result = sanitize_filename('file<>name.txt', platform='windows')
+""", {"ok": True, "value": "filename.txt"}),
+    
+    ("sanitize_05", """
+from pathvalidate import sanitize_filename
+result = sanitize_filename('file:name.txt', replacement_text='_')
+""", {"ok": True, "value": "file_name.txt"}),
+    
+    ("sanitize_06", """
+from pathvalidate import sanitize_filename
+result = sanitize_filename('file|name.txt', replacement_text='-')
+""", {"ok": True, "value": "file-name.txt"}),
+    
+    # Validate with exceptions
+    ("validate_01", """
+from pathvalidate import validate_filename
+result = None
+validate_filename('valid_file.txt')
+result = 'passed'
+""", {"ok": True, "value": "passed"}),
+    
+    ("validate_02", """
+from pathvalidate import validate_filename, ValidationError
+try:
+    validate_filename('')
+    result = 'no_exception'
+except ValidationError:
+    result = 'exception_raised'
+""", {"ok": True, "value": "exception_raised"}),
+    
+    ("validate_03", """
+from pathvalidate import validate_filename, ValidationError
+try:
+    validate_filename('')
+except ValidationError:
+    result = 'validation_error'
+""", {"ok": True, "value": "validation_error"}),
+    
+    ("validate_04", """
+from pathvalidate import validate_filename, InvalidCharError
+try:
+    validate_filename('file:name.txt')
+    result = 'no_exception'
+except InvalidCharError:
+    result = 'invalid_char_error'
+""", {"ok": True, "value": "invalid_char_error"}),
+    
+    ("validate_05", """
+from pathvalidate import validate_filename, ReservedNameError
+try:
+    validate_filename('COM1')
+    result = 'no_exception'
+except ReservedNameError:
+    result = 'reserved_name_error'
+""", {"ok": True, "value": "reserved_name_error"}),
+    
+    # Exception attributes
+    ("exception_01", """
+from pathvalidate import validate_filename, ErrorReason
+try:
+    validate_filename('')
+except Exception as e:
+    result = e.reason.name
+""", {"ok": True, "value": "NULL_NAME"}),
+    
+    ("exception_02", """
+from pathvalidate import validate_filename, ErrorReason
+try:
+    validate_filename('file:name.txt')
+except Exception as e:
+    result = e.reason.name
+""", {"ok": True, "value": "INVALID_CHARACTER"}),
+    
+    ("exception_03", """
+from pathvalidate import validate_filename
+try:
+    validate_filename('COM1')
+except Exception as e:
+    result = e.reason.name
+""", {"ok": True, "value": "RESERVED_NAME"}),
+    
+    ("exception_04", """
+from pathvalidate import validate_filename
+try:
+    validate_filename('PRN')
+except Exception as e:
+    result = e.reserved_name
+""", {"ok": True, "value": "PRN"}),
+    
+    ("exception_05", """
+from pathvalidate import validate_filename
+try:
+    validate_filename('AUX')
+except Exception as e:
+    result = e.reusable_name
+""", {"ok": True, "value": False}),
+    
+    # Filepath validation
+    ("filepath_01", """
+from pathvalidate import is_valid_filepath
+result = is_valid_filepath('path/to/file.txt')
+""", {"ok": True, "value": True}),
+    
+    ("filepath_02", """
+from pathvalidate import is_valid_filepath
+result = is_valid_filepath('path/to/COM1.txt')
+""", {"ok": True, "value": False}),
+    
+    ("filepath_03", """
+from pathvalidate import is_valid_filepath
+result = is_valid_filepath('valid/path/file.txt', platform='linux')
+""", {"ok": True, "value": True}),
+    
+    # Filepath sanitization
+    ("filepath_sanitize_01", """
+from pathvalidate import sanitize_filepath
+result = sanitize_filepath('path/to/fi:le.txt')
+""", {"ok": True, "value": "path/to/file.txt"}),
+    
+    ("filepath_sanitize_02", """
+from pathvalidate import sanitize_filepath
+result = sanitize_filepath('path/to/file.txt')
+""", {"ok": True, "value": "path/to/file.txt"}),
+    
+    # Filepath validation with exceptions
+    ("filepath_validate_01", """
+from pathvalidate import validate_filepath
+result = None
+validate_filepath('path/to/file.txt')
+result = 'passed'
+""", {"ok": True, "value": "passed"}),
+    
+    ("filepath_validate_02", """
+from pathvalidate import validate_filepath, ValidationError
+try:
+    validate_filepath('path/to/COM1.txt')
+    result = 'no_exception'
+except ValidationError:
+    result = 'exception_raised'
+""", {"ok": True, "value": "exception_raised"}),
+    
+    # Check reserved parameter
+    ("check_reserved_01", """
+from pathvalidate import is_valid_filename
+result = is_valid_filename('COM1', check_reserved=False)
+""", {"ok": True, "value": True}),
+    
+    ("check_reserved_02", """
+from pathvalidate import is_valid_filename
+result = is_valid_filename('COM1', check_reserved=True)
+""", {"ok": True, "value": False}),
+    
+    ("check_reserved_03", """
+from pathvalidate import sanitize_filename
+result = sanitize_filename('COM1', check_reserved=False)
+""", {"ok": True, "value": "COM1"}),
+    
+    # Special characters
+    ("special_01", """
+from pathvalidate import sanitize_filename
+result = sanitize_filename('file*name.txt')
+""", {"ok": True, "value": "filename.txt"}),
+    
+    ("special_02", """
+from pathvalidate import sanitize_filename
+result = sanitize_filename('file?name.txt')
+""", {"ok": True, "value": "filename.txt"}),
+    
+    ("special_03", """
+from pathvalidate import sanitize_filename
+result = sanitize_filename('file"name.txt')
+""", {"ok": True, "value": "filename.txt"}),
+    
+    ("special_04", """
+from pathvalidate import is_valid_filename
+result = is_valid_filename('file\\\\name.txt')
+""", {"ok": True, "value": False}),
+    
+    # Unicode handling
+    ("unicode_01", """
+from pathvalidate import is_valid_filename
+result = is_valid_filename('ファイル名.txt')
+""", {"ok": True, "value": True}),
+    
+    ("unicode_02", """
+from pathvalidate import sanitize_filename
+result = sanitize_filename('文件:名称.txt')
+""", {"ok": True, "value": "文件名称.txt"}),
+    
+    # Platform enum usage
+    ("enum_01", """
+from pathvalidate import Platform
+result = Platform.WINDOWS.value
+""", {"ok": True, "value": "Windows"}),
+    
+    ("enum_02", """
+from pathvalidate import Platform
+result = Platform.LINUX.value
+""", {"ok": True, "value": "Linux"}),
+    
+    ("enum_03", """
+from pathvalidate import Platform
+result = Platform.UNIVERSAL.value
+""", {"ok": True, "value": "universal"}),
+    
+    # Edge cases
+    ("edge_01", """
+from pathvalidate import is_valid_filename
+result = is_valid_filename('.hidden')
+""", {"ok": True, "value": True}),
+    
+    ("edge_02", """
+from pathvalidate import is_valid_filename
+result = is_valid_filename('file.')
+""", {"ok": True, "value": False}),
+    
+    ("edge_03", """
+from pathvalidate import sanitize_filename
+result = sanitize_filename('   spaces   ')
+""", {"ok": True, "value": "spaces"}),
+    
+    ("edge_04", """
+from pathvalidate import is_valid_filename
+result = is_valid_filename('a' * 260)
+""", {"ok": True, "value": True}),
+    
+    ("edge_05", """
+from pathvalidate import is_valid_filename
+result = is_valid_filename('a' * 261)
+""", {"ok": True, "value": False}),
+    
+    # Null byte handling
+    ("null_01", """
+from pathvalidate import is_valid_filename
+result = is_valid_filename('file\\x00name.txt')
+""", {"ok": True, "value": False}),
+    
+    ("null_02", """
+from pathvalidate import sanitize_filename
+result = sanitize_filename('file\\x00name.txt')
+""", {"ok": True, "value": "filename.txt"}),
+    
+    # Additional reserved names
+    ("reserved_clock", """
+from pathvalidate import is_valid_filename
+result = is_valid_filename('CLOCK$')
+""", {"ok": True, "value": False}),
+    
+    ("reserved_com2", """
+from pathvalidate import is_valid_filename
+result = is_valid_filename('COM2')
+""", {"ok": True, "value": False}),
+    
+    ("reserved_lpt5", """
+from pathvalidate import is_valid_filename
+result = is_valid_filename('LPT5')
+""", {"ok": True, "value": False}),
+    
+    # More platform tests
+    ("platform_macos_01", """
+from pathvalidate import is_valid_filename, Platform
+result = is_valid_filename('file:name.txt', platform=Platform.MACOS)
+""", {"ok": True, "value": True}),
+    
+    ("platform_posix_01", """
+from pathvalidate import is_valid_filename
+result = is_valid_filename('file:name.txt', platform='posix')
+""", {"ok": True, "value": True}),
+    
+    # More sanitization tests
+    ("sanitize_07", """
+from pathvalidate import sanitize_filename
+result = sanitize_filename('aux.txt')
+""", {"ok": True, "value": "aux_.txt"}),
+    
+    ("sanitize_08", """
+from pathvalidate import sanitize_filename
+result = sanitize_filename('LPT3.doc')
+""", {"ok": True, "value": "LPT3_.doc"}),
+    
+    # Additional validation tests
+    ("validate_filepath_03", """
+from pathvalidate import validate_filepath
+result = None
+validate_filepath('dir/subdir/file.txt')
+result = 'passed'
+""", {"ok": True, "value": "passed"}),
+    
+    ("sanitize_09", """
+from pathvalidate import sanitize_filename
+result = sanitize_filename('PRN.txt')
+""", {"ok": True, "value": "PRN_.txt"}),
+    
+    ("platform_universal_01", """
+from pathvalidate import is_valid_filename
+result = is_valid_filename('normalfile.txt', platform='universal')
+""", {"ok": True, "value": True}),
+
+]
+
+assert len(CASES) == 75, f"Expected 75 test cases, got {len(CASES)}"
+
+def main() -> None:
+    leaves = []
+    
+    for test_id, script, expected in CASES:
+        actual = execute_script(script)
+        
+        # Determine status
+        status = "passed" if actual == expected else "failed"
+        
+        leaves.append({
+            "id": test_id,
+            "status": status
+        })
+    
+    # Output in custom-json-v1 format
+    output = {
+        "schema_version": "1.0",
+        "leaves": leaves
+    }
+    
+    print(json.dumps(output))
+
+if __name__ == "__main__":
+    main()

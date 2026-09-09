@@ -1,43 +1,32 @@
-#!/usr/bin/env bash
+#!/bin/bash
 set -euo pipefail
 
-# Oracle-only reference source acquisition. This file is uploaded only to the
-# trusted Oracle run. The model Agent receives no source-host authorization.
-UPSTREAM_URL="https://github.com/jquast/wcwidth"
-UPSTREAM_REVISION="551710eabf316ed2d9e3782c1fe9cf80ff0f6ed9"
-SOURCE_ARCHIVE_SHA256="d8621c78e2a93b9f7a97ee756832a3639e8bbb87c7c79f4c8344ef7fb4bf8fb6"
-SOURCE_DIR="/tmp/wcwidth-source"
-SOURCE_ARCHIVE="/tmp/wcwidth-source.tar"
+BUNDLE_DIR=$(dirname "$0")
+EXPECTED_SHA256="d128512515fbf4612e0ff21fd6380399210318b7b54a9af59dff8454cf9730eb"
 
-rm -rf "$SOURCE_DIR" "$SOURCE_ARCHIVE"
-git init -q "$SOURCE_DIR"
-git -C "$SOURCE_DIR" remote add origin "$UPSTREAM_URL"
-git -C "$SOURCE_DIR" fetch -q --depth 1 origin "$UPSTREAM_REVISION"
-git -C "$SOURCE_DIR" checkout -q --detach FETCH_HEAD
-
-resolved_revision="$(git -C "$SOURCE_DIR" rev-parse HEAD)"
-if [[ "$resolved_revision" != "$UPSTREAM_REVISION" ]]; then
-    echo "unexpected source revision: $resolved_revision" >&2
+# Verify source archive
+ACTUAL_SHA256=$(sha256sum "$BUNDLE_DIR/wcwidth-0.8.3.tar.gz" | cut -d' ' -f1)
+if [ "$ACTUAL_SHA256" != "$EXPECTED_SHA256" ]; then
+    echo "ERROR: SHA256 mismatch for wcwidth-0.8.3.tar.gz"
+    echo "Expected: $EXPECTED_SHA256"
+    echo "Got: $ACTUAL_SHA256"
     exit 1
 fi
 
-git -C "$SOURCE_DIR" archive --format=tar "$UPSTREAM_REVISION" > "$SOURCE_ARCHIVE"
-printf '%s  %s\n' "$SOURCE_ARCHIVE_SHA256" "$SOURCE_ARCHIVE" | sha256sum --check --strict
+# Extract to /workspace
+cd /workspace
+tar -xzf "$BUNDLE_DIR/wcwidth-0.8.3.tar.gz"
 
-find /workspace -mindepth 1 -maxdepth 1 -exec rm -rf -- {} +
-tar -xf "$SOURCE_ARCHIVE" -C /workspace
+# Check topology
+if [ ! -d "/workspace/wcwidth-0.8.3" ]; then
+    echo "ERROR: Expected wcwidth-0.8.3 directory not found"
+    exit 1
+fi
 
-# The verifier rejects symlinks when it copies the untrusted candidate workspace.
-# Materialize only links that resolve to regular files inside this trusted Oracle
-# checkout; reject every other link rather than weakening the copy boundary.
-while IFS= read -r -d '' link; do
-    target="$(readlink -f "$link")"
-    if [[ "$target" != /workspace/* || ! -f "$target" ]]; then
-        echo "unsupported Oracle source symlink: $link" >&2
-        exit 1
-    fi
-    temporary="$(mktemp "${link}.XXXXXX")"
-    cat "$target" > "$temporary"
-    rm "$link"
-    mv "$temporary" "$link"
-done < <(find /workspace -type l -print0)
+# Install
+pip install --no-index --no-deps /workspace/wcwidth-0.8.3
+
+# Verify imports
+python3 -c "import wcwidth; assert wcwidth.__version__ == '0.8.3', f'Version mismatch: {wcwidth.__version__}'"
+
+echo "Oracle solution installed successfully"

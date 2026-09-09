@@ -1,18 +1,28 @@
-#!/usr/bin/env bash
+#!/bin/bash
 set -euo pipefail
-find /workspace -mindepth 1 -maxdepth 1 -exec rm -rf -- {} +
+
+# Create stub implementation with NotImplementedError
 mkdir -p /workspace/wcwidth
-cat > /workspace/pyproject.toml <<'TOML'
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
-[project]
-name = "wcwidth"
-version = "0.0.0"
-[tool.hatch.build.targets.wheel]
-packages = ["wcwidth"]
-TOML
-cat > /workspace/wcwidth/__init__.py <<'PY'
-def wcwidth(value, *args, **kwargs):
-    return 1
-PY
+cat > /workspace/wcwidth/__init__.py << 'STUB'
+"""Stub implementation of wcwidth module."""
+
+__version__ = "0.8.3"
+
+def wcwidth(wc, unicode_version='auto', ambiguous_width=1):
+    """Stub implementation."""
+    raise NotImplementedError("wcwidth not implemented")
+
+def wcswidth(pwcs, n=None, unicode_version='auto', ambiguous_width=1):
+    """Stub implementation."""
+    raise NotImplementedError("wcswidth not implemented")
+
+def wcstwidth(pwcs, n=None, unicode_version='auto', ambiguous_width=1, term_program=True):
+    """Stub implementation."""
+    raise NotImplementedError("wcstwidth not implemented")
+STUB
+
+# Install as editable
+pip install -e /workspace
+
+# Verify import works (but functions raise)
+python3 -c "import wcwidth; print('Stub installed')"

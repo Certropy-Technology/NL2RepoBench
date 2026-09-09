@@ -1,63 +1,93 @@
-#!/usr/bin/env bash
+#!/bin/bash
 set -euo pipefail
-find /workspace -mindepth 1 -maxdepth 1 -exec rm -rf -- {} +
+
 mkdir -p /workspace/pathvalidate
-cat > /workspace/pyproject.toml <<'TOML'
-[build-system]
-requires = ["setuptools==84.0.0"]
-build-backend = "setuptools.build_meta"
-[project]
-name = "pathvalidate"
-version = "3.3.1"
-TOML
-cat > /workspace/pathvalidate/__init__.py <<'PY'
-__author__ = "Tsuyoshi Hombashi"
-__copyright__ = "Copyright 2016-2025, Tsuyoshi Hombashi"
-__email__ = "tsuyoshi.hombashi@gmail.com"
-__license__ = "MIT License"
-__version__ = "3.3.1"
-__all__ = (
-    "__author__", "__copyright__", "__email__", "__license__", "__version__",
-    "AbstractSanitizer", "AbstractValidator", "Platform", "ascii_symbols",
-    "normalize_platform", "replace_ansi_escape", "replace_unprintable_char",
-    "unprintable_ascii_chars", "validate_pathtype", "validate_unprintable_char",
-    "FileNameSanitizer", "FileNameValidator", "is_valid_filename",
-    "sanitize_filename", "validate_filename", "FilePathSanitizer",
-    "FilePathValidator", "is_valid_filepath", "sanitize_filepath",
-    "validate_filepath", "sanitize_ltsv_label", "validate_ltsv_label",
-    "replace_symbol", "validate_symbol", "ErrorReason", "InvalidCharError",
-    "InvalidReservedNameError", "NullNameError", "ReservedNameError",
-    "ValidationError", "ValidReservedNameError",
+cat > /workspace/pathvalidate/__init__.py << 'EOFPY'
+"""Stub implementation for pathvalidate"""
+
+class Platform:
+    WINDOWS = "Windows"
+    LINUX = "Linux"
+    MACOS = "macOS"
+    POSIX = "POSIX"
+    UNIVERSAL = "universal"
+    
+    def __init__(self, value):
+        self.value = value
+
+Platform.WINDOWS = Platform("Windows")
+Platform.LINUX = Platform("Linux")
+Platform.MACOS = Platform("macOS")
+Platform.POSIX = Platform("POSIX")
+Platform.UNIVERSAL = Platform("universal")
+
+class ErrorReason:
+    NULL_NAME = "NULL_NAME"
+    RESERVED_NAME = "RESERVED_NAME"
+    INVALID_CHARACTER = "INVALID_CHARACTER"
+    INVALID_LENGTH = "INVALID_LENGTH"
+    
+    def __init__(self, name):
+        self.name = name
+
+class ValidationError(ValueError):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args)
+        self.reason = kwargs.get('reason')
+        self.platform = kwargs.get('platform')
+        self.reserved_name = kwargs.get('reserved_name', '')
+        self.reusable_name = kwargs.get('reusable_name')
+
+class NullNameError(ValidationError):
+    pass
+
+class InvalidCharError(ValidationError):
+    pass
+
+class ReservedNameError(ValidationError):
+    pass
+
+def validate_filename(filename, platform="universal", **kwargs):
+    raise NotImplementedError("validate_filename not implemented")
+
+def sanitize_filename(filename, platform="universal", **kwargs):
+    raise NotImplementedError("sanitize_filename not implemented")
+
+def is_valid_filename(filename, platform="universal", **kwargs):
+    raise NotImplementedError("is_valid_filename not implemented")
+
+def validate_filepath(filepath, platform="auto", **kwargs):
+    raise NotImplementedError("validate_filepath not implemented")
+
+def sanitize_filepath(filepath, platform="auto", **kwargs):
+    raise NotImplementedError("sanitize_filepath not implemented")
+
+def is_valid_filepath(filepath, platform="auto", **kwargs):
+    raise NotImplementedError("is_valid_filepath not implemented")
+
+__version__ = "0.0.0"
+__author__ = "Stub"
+__email__ = "stub@example.com"
+__license__ = "MIT"
+EOFPY
+
+cat > /workspace/setup.py << 'EOFPY'
+from setuptools import setup, find_packages
+
+setup(
+    name="pathvalidate",
+    version="0.0.0",
+    packages=find_packages(),
+    python_requires=">=3.9",
 )
-class AbstractValidator: pass
-class AbstractSanitizer: pass
-class Platform: pass
-ascii_symbols = ()
-unprintable_ascii_chars = ()
-def normalize_platform(value): return value
-def replace_ansi_escape(value, replacement_text=""): return value
-def replace_unprintable_char(value, replacement_text=""): return value
-def validate_pathtype(value, allow_whitespaces=False, error_msg=None): return None
-def validate_unprintable_char(value): return None
-class FileNameSanitizer: pass
-class FileNameValidator: pass
-class FilePathSanitizer: pass
-class FilePathValidator: pass
-def sanitize_filename(filename, replacement_text="", **kwargs): return filename
-def sanitize_filepath(file_path, replacement_text="", **kwargs): return file_path
-def validate_filename(filename, **kwargs): return None
-def validate_filepath(file_path, **kwargs): return None
-def is_valid_filename(filename, **kwargs): return True
-def is_valid_filepath(file_path, **kwargs): return True
-def sanitize_ltsv_label(label, replacement_text=""): return label
-def validate_ltsv_label(label): return None
-def replace_symbol(text, replacement_text="", **kwargs): return text
-def validate_symbol(text): return None
-class ErrorReason: pass
-class ValidationError(ValueError): pass
-class InvalidCharError(ValidationError): pass
-class ReservedNameError(ValidationError): pass
-class NullNameError(ValidationError): pass
-class ValidReservedNameError(ReservedNameError): pass
-class InvalidReservedNameError(ReservedNameError): pass
-PY
+EOFPY
+
+cat > /workspace/pyproject.toml << 'EOFPY'
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+EOFPY
+
+cd /workspace
+python -m pip install --no-build-isolation --no-deps --no-index -e . > /tmp/stub_install.log 2>&1
+echo "Stub installation complete"

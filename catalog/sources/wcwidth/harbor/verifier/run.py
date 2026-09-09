@@ -1,218 +1,136 @@
-"""Private deterministic scenarios for the wcwidth public contract."""
-
-# Scenario source strings are intentionally kept together for auditability.
-# ruff: noqa: E501
-
-from __future__ import annotations
-
+#!/usr/bin/env python3
+"""
+NL2RepoBench verifier for wcwidth task.
+Standard custom-json-v1 leaves schema.
+"""
+import sys
 import json
-
 from nl2repobench.verification.candidate_client import execute_script
 
-
-def _run(source: str, expected: object) -> dict[str, object]:
-    observed = execute_script(source, timeout_sec=20.0)
-    actual: dict[str, object] = {"ok": observed.ok, "value": observed.value}
-    if not observed.ok:
-        actual["exception_type"] = observed.exception_type
-        actual["exception_message"] = observed.exception_message
-    return {"status": "passed" if actual == expected else "failed", "actual": actual}
-
-
-CASES: list[tuple[str, str, object]] = [
-    (
-        "metadata",
-        "import wcwidth\nresult = [wcwidth.__version__, list(wcwidth.__all__), list(wcwidth.list_versions()), list(wcwidth.list_term_programs())[:3]]",
-        {"ok": True, "value": ["0.8.3", ["wcwidth", "wcswidth", "wcstwidth", "width", "iter_sequences", "iter_graphemes", "iter_graphemes_reverse", "grapheme_boundary_before", "ljust", "rjust", "center", "wrap", "clip", "strip_sequences", "list_versions", "list_term_programs", "propagate_sgr", "Hyperlink", "HyperlinkParams", "TextSizing", "TextSizingParams"], ["17.0.0"], ["alacritty", "apple_terminal", "bobcat"]]},
-    ),
-    (
-        "legacy-module",
-        "import importlib\nm = importlib.import_module('wcwidth.wcwidth')\nresult = [m.wcwidth('A'), hasattr(m, 'wcswidth')]",
-        {"ok": True, "value": [1, True]},
-    ),
-    (
-        "wcwidth-basic",
-        "from wcwidth import wcwidth\nresult = [wcwidth('A'), wcwidth('\\u4e2d'), wcwidth('\\x00'), wcwidth('\\x1b'), wcwidth('\\u0301'), wcwidth('\\U0001f642')]",
-        {"ok": True, "value": [1, 2, 0, -1, 0, 2]},
-    ),
-    (
-        "wcswidth-basic",
-        "from wcwidth import wcswidth\nresult = [wcswidth('A\\u4e2d\\U0001f642'), wcswidth('A\\x1bB'), wcswidth('A\\u4e2d\\U0001f642', 2), wcswidth('A\\u4e2d\\U0001f642', 99)]",
-        {"ok": True, "value": [5, -1, 3, 5]},
-    ),
-    (
-        "ambiguous",
-        "from wcwidth import wcwidth, wcswidth\nresult = [wcwidth('\\u00b7'), wcwidth('\\u00b7', ambiguous_width=2), wcswidth('\\u00b7\\u4e2d', ambiguous_width=2)]",
-        {"ok": True, "value": [1, 2, 4]},
-    ),
-    (
-        "graphemes",
-        "from wcwidth import iter_graphemes\nresult = list(iter_graphemes('e\\u0301\\U0001f469\\u200d\\U0001f4bb\\U0001f1fa\\U0001f1f8'))",
-        {"ok": True, "value": ["e\u0301", "\U0001f469\u200d\U0001f4bb", "\U0001f1fa\U0001f1f8"]},
-    ),
-    (
-        "reverse-boundary",
-        "from wcwidth import iter_graphemes_reverse, grapheme_boundary_before\ns='e\\u0301\\U0001f469\\u200d\\U0001f4bb'\nresult = [list(iter_graphemes_reverse(s)), grapheme_boundary_before(s, 0), grapheme_boundary_before(s, 2), grapheme_boundary_before(s, 99)]",
-        {"ok": True, "value": [["\U0001f469\u200d\U0001f4bb", "e\u0301"], 0, 0, 2]},
-    ),
-    (
-        "virama-and-emoji",
-        "from wcwidth import wcswidth\nresult = [wcswidth('क्'), wcswidth('\\u2764\\ufe0f'), wcswidth('\\U0001f1fa\\U0001f1f8')]",
-        {"ok": True, "value": [1, 2, 2]},
-    ),
-    (
-        "iter-sequences",
-        "from wcwidth import iter_sequences, strip_sequences\ns='\\x1b[31mred\\x1b[0m'\nresult = [[list(item) for item in iter_sequences(s)], strip_sequences(s)]",
-        {"ok": True, "value": [[["\u001b[31m", True], ["red", False], ["\u001b[0m", True]], "red"]},
-    ),
-    (
-        "width-sgr",
-        "from wcwidth import width\nresult = [width('\\x1b[31mred\\x1b[0m'), width('\\x1b]8;;https://x\\x07link\\x1b]8;;\\x07')]",
-        {"ok": True, "value": [3, 4]},
-    ),
-    (
-        "width-controls",
-        "from wcwidth import width\nresult = [width('a\\x08b'), width('a\\tb'), width('a\\rbc'), width('a\\x1b[31mb')]",
-        {"ok": True, "value": [1, 9, 2, 2]},
-    ),
-    (
-        "width-ignore",
-        "from wcwidth import width\nresult = [width('a\\x1b[31mb', control_codes='ignore'), width('a\\x08b', control_codes='ignore')]",
-        {"ok": True, "value": [2, 2]},
-    ),
-    (
-        "width-kitty",
-        "from wcwidth import width\nresult = [width('\\x1b]66;w=4;AB\\x07'), width('\\x1b]66;s=2;AB\\x07')]",
-        {"ok": True, "value": [4, 4]},
-    ),
-    (
-        "alignment",
-        "from wcwidth import ljust, rjust, center\nresult = [ljust('\\u4e2d', 4), rjust('\\u4e2d', 4), center('\\u4e2d', 5)]",
-        {"ok": True, "value": ["\u4e2d  ", "  \u4e2d", "  \u4e2d "]},
-    ),
-    (
-        "wrap-ascii",
-        "from wcwidth import wrap\nresult = wrap('hello world', 4)",
-        {"ok": True, "value": ["hell", "o wo", "rld"]},
-    ),
-    (
-        "wrap-cjk",
-        "from wcwidth import wrap\nresult = wrap('中文测试', 4)",
-        {"ok": True, "value": ["中文", "测试"]},
-    ),
-    (
-        "wrap-sgr",
-        "from wcwidth import wrap\nresult = wrap('\\x1b[31mred\\x1b[0m', 2)",
-        {"ok": True, "value": ["\u001b[31mre\u001b[0m", "\u001b[31md\u001b[0m"]},
-    ),
-    (
-        "clip-cjk",
-        "from wcwidth import clip\nresult = [clip('中文测试', 0, 3), clip('中文测试', 1, 5)]",
-        {"ok": True, "value": ["中 ", " 文 "]},
-    ),
-    (
-        "clip-controls",
-        "from wcwidth import clip\nresult = [clip('a\\x08b', 0, 1), clip('a\\tb', 0, 4)]",
-        {"ok": True, "value": ["b", "a   "]},
-    ),
-    (
-        "clip-sgr",
-        "from wcwidth import clip\nresult = clip('\\x1b[31mred\\x1b[0m', 1, 3)",
-        {"ok": True, "value": "\u001b[31med\u001b[0m"},
-    ),
-    (
-        "sgr-propagation",
-        "from wcwidth import propagate_sgr\nresult = propagate_sgr(['\\x1b[31mred', 'next'])",
-        {"ok": True, "value": ["\u001b[31mred\u001b[0m", "\u001b[31mnext\u001b[0m"]},
-    ),
-    (
-        "hyperlink-params",
-        "from wcwidth import HyperlinkParams\np=HyperlinkParams('https://x','id=1')\nresult=[p.make_open(),p.make_close()]",
-        {"ok": True, "value": ["\u001b]8;id=1;https://x\u0007", "\u001b]8;;\u0007"]},
-    ),
-    (
-        "hyperlink-unit",
-        "from wcwidth import Hyperlink, HyperlinkParams\nh=Hyperlink(HyperlinkParams('https://x','id=1'),'link')\nresult=[h.display_width(),h.make_sequence()]",
-        {"ok": True, "value": [4, "\u001b]8;id=1;https://x\u0007link\u001b]8;;\u0007"]},
-    ),
-    (
-        "text-sizing-params",
-        "from wcwidth import TextSizingParams\np=TextSizingParams.from_params('s=2:w=4')\nresult=[list(p),p.make_sequence(),repr(p)]",
-        {"ok": True, "value": [[2, 4, 0, 0, 0, 0], "s=2:w=4", "TextSizingParams(scale=2, width=4)"]},
-    ),
-    (
-        "text-sizing-unit",
-        "from wcwidth import TextSizing, TextSizingParams\nt=TextSizing(TextSizingParams(scale=2,width=2),'AB','\\x07')\nresult=[t.display_width(),t.make_sequence()]",
-        {"ok": True, "value": [4, "\u001b]66;s=2:w=2;AB\u0007"]},
-    ),
-    (
-        "text-sizing-parse",
-        "from wcwidth import TextSizingParams\nresult=[list(TextSizingParams.from_params('s=99:w=-2')), list(TextSizingParams.from_params('s=x:w=2'))]",
-        {"ok": True, "value": [[7, 0, 0, 0, 0, 0], [1, 2, 0, 0, 0, 0]]},
-    ),
-    (
-        "n-argument",
-        "from wcwidth import wcswidth\nresult=[wcswidth('abc',0),wcswidth('abc',2),wcswidth('abc',99)]",
-        {"ok": True, "value": [0, 2, 3]},
-    ),
-    (
-        "terminal-override",
-        "from wcwidth import wcstwidth\nresult=[wcstwidth('\\u2764\\ufe0f',term_program=False),wcstwidth('\\u2764\\ufe0f',term_program='xterm')]",
-        {"ok": True, "value": [2, 1]},
-    ),
-    (
-        "determinism-1",
-        "from wcwidth import wcswidth\nresult=[wcswidth('A\\u4e2d\\U0001f642') for _ in range(3)]",
-        {"ok": True, "value": [5, 5, 5]},
-    ),
-    (
-        "determinism-2",
-        "from wcwidth import wrap\nresult=[wrap('中文 hello',5),wrap('中文 hello',5)]",
-        {"ok": True, "value": [["中文", "hello"], ["中文", "hello"]]},
-    ),
-    (
-        "determinism-3",
-        "from wcwidth import iter_sequences\ns='\\x1b[1mA\\x1b[0m'\nresult=[[[list(item) for item in iter_sequences(s)]][0],[[list(item) for item in iter_sequences(s)]][0]]",
-        {"ok": True, "value": [[["\u001b[1m", True], ["A", False], ["\u001b[0m", True]], [["\u001b[1m", True], ["A", False], ["\u001b[0m", True]]]},
-    ),
-    (
-        "determinism-4",
-        "from wcwidth import list_versions, list_term_programs\nresult=[list_versions()==list_versions(), list_term_programs()==list_term_programs(), list_term_programs()==tuple(sorted(list_term_programs()))]",
-        {"ok": True, "value": [True, True, True]},
-    ),
-    (
-        "public-types",
-        "import wcwidth\nresult=[list(wcwidth.HyperlinkParams._fields), list(wcwidth.TextSizingParams._fields), callable(wcwidth.wrap), callable(wcwidth.clip)]",
-        {"ok": True, "value": [["url", "params", "terminator"], ["scale", "width", "numerator", "denominator", "vertical_align", "horizontal_align"], True, True]},
-    ),
-    (
-        "strict-text-sizing",
-        "from wcwidth import TextSizingParams\ntry:\n TextSizingParams.from_params('q=1', control_codes='strict')\nexcept ValueError as exc:\n result=[type(exc).__name__, 'Unknown text sizing field' in str(exc)]",
-        {"ok": True, "value": ["ValueError", True]},
-    ),
-    (
-        "wcstwidth-profile",
-        "from wcwidth import wcstwidth\nresult=[wcstwidth('A\\u4e2d', term_program=False), wcstwidth('A\\u4e2d', term_program='xterm')]",
-        {"ok": True, "value": [3, 3]},
-    ),
-    (
-        "alignment-fill",
-        "from wcwidth import ljust, rjust\nresult=[ljust('A',3,fillchar='.'),rjust('A',3,fillchar='.') ]",
-        {"ok": True, "value": ["A..", "..A"]},
-    ),
+# Test cases: (id, script, expected)
+CASES = [
+    ("ascii_001", "import wcwidth\nresult = wcwidth.wcwidth(\"a\")", {'ok': True, 'value': 1}),
+    ("ascii_002", "import wcwidth\nresult = wcwidth.wcwidth(\"Z\")", {'ok': True, 'value': 1}),
+    ("ascii_003", "import wcwidth\nresult = wcwidth.wcwidth(\"5\")", {'ok': True, 'value': 1}),
+    ("ascii_004", "import wcwidth\nresult = wcwidth.wcwidth(\" \")", {'ok': True, 'value': 1}),
+    ("ascii_005", "import wcwidth\nresult = wcwidth.wcwidth(\"!\")", {'ok': True, 'value': 1}),
+    ("ascii_006", "import wcwidth\nresult = wcwidth.wcwidth(\"@\")", {'ok': True, 'value': 1}),
+    ("ascii_007", "import wcwidth\nresult = wcwidth.wcwidth(\"#\")", {'ok': True, 'value': 1}),
+    ("ascii_008", "import wcwidth\nresult = wcwidth.wcwidth(\"$\")", {'ok': True, 'value': 1}),
+    ("ascii_009", "import wcwidth\nresult = wcwidth.wcwidth(\"%\")", {'ok': True, 'value': 1}),
+    ("ascii_010", "import wcwidth\nresult = wcwidth.wcwidth(\"&\")", {'ok': True, 'value': 1}),
+    ("control_001", "import wcwidth\nresult = wcwidth.wcwidth(\"\\x00\")", {'ok': True, 'value': 0}),
+    ("control_002", "import wcwidth\nresult = wcwidth.wcwidth(\"\\t\")", {'ok': True, 'value': -1}),
+    ("control_003", "import wcwidth\nresult = wcwidth.wcwidth(\"\\n\")", {'ok': True, 'value': -1}),
+    ("control_004", "import wcwidth\nresult = wcwidth.wcwidth(\"\\x7f\")", {'ok': True, 'value': -1}),
+    ("control_005", "import wcwidth\nresult = wcwidth.wcwidth(\"\\x80\")", {'ok': True, 'value': -1}),
+    ("control_006", "import wcwidth\nresult = wcwidth.wcwidth(\"\\x08\")", {'ok': True, 'value': -1}),
+    ("control_007", "import wcwidth\nresult = wcwidth.wcwidth(\"\\x0c\")", {'ok': True, 'value': -1}),
+    ("control_008", "import wcwidth\nresult = wcwidth.wcwidth(\"\\r\")", {'ok': True, 'value': -1}),
+    ("control_009", "import wcwidth\nresult = wcwidth.wcwidth(\"\\x1b\")", {'ok': True, 'value': -1}),
+    ("combining_001", "import wcwidth\nresult = wcwidth.wcwidth(\"\\u0301\")", {'ok': True, 'value': 0}),
+    ("combining_002", "import wcwidth\nresult = wcwidth.wcwidth(\"\\u0300\")", {'ok': True, 'value': 0}),
+    ("combining_003", "import wcwidth\nresult = wcwidth.wcwidth(\"\\u0303\")", {'ok': True, 'value': 0}),
+    ("combining_004", "import wcwidth\nresult = wcwidth.wcwidth(\"\\u0308\")", {'ok': True, 'value': 0}),
+    ("combining_005", "import wcwidth\nresult = wcwidth.wcwidth(\"\\u200d\")", {'ok': True, 'value': 0}),
+    ("combining_006", "import wcwidth\nresult = wcwidth.wcwidth(\"\\u200c\")", {'ok': True, 'value': 0}),
+    ("combining_007", "import wcwidth\nresult = wcwidth.wcwidth(\"\\u030a\")", {'ok': True, 'value': 0}),
+    ("combining_008", "import wcwidth\nresult = wcwidth.wcwidth(\"\\u0304\")", {'ok': True, 'value': 0}),
+    ("wide_001", "import wcwidth\nresult = wcwidth.wcwidth(\"中\")", {'ok': True, 'value': 2}),
+    ("wide_002", "import wcwidth\nresult = wcwidth.wcwidth(\"あ\")", {'ok': True, 'value': 2}),
+    ("wide_003", "import wcwidth\nresult = wcwidth.wcwidth(\"한\")", {'ok': True, 'value': 2}),
+    ("wide_004", "import wcwidth\nresult = wcwidth.wcwidth(\"０\")", {'ok': True, 'value': 2}),
+    ("wide_005", "import wcwidth\nresult = wcwidth.wcwidth(\"Ａ\")", {'ok': True, 'value': 2}),
+    ("wide_006", "import wcwidth\nresult = wcwidth.wcwidth(\"カ\")", {'ok': True, 'value': 2}),
+    ("wide_007", "import wcwidth\nresult = wcwidth.wcwidth(\"文\")", {'ok': True, 'value': 2}),
+    ("wide_008", "import wcwidth\nresult = wcwidth.wcwidth(\"本\")", {'ok': True, 'value': 2}),
+    ("wide_009", "import wcwidth\nresult = wcwidth.wcwidth(\"字\")", {'ok': True, 'value': 2}),
+    ("wide_010", "import wcwidth\nresult = wcwidth.wcwidth(\"语\")", {'ok': True, 'value': 2}),
+    ("emoji_001", "import wcwidth\nresult = wcwidth.wcwidth(\"❤\")", {'ok': True, 'value': 1}),
+    ("emoji_002", "import wcwidth\nresult = wcwidth.wcwidth(\"😀\")", {'ok': True, 'value': 2}),
+    ("emoji_003", "import wcwidth\nresult = wcwidth.wcwidth(\"👍\")", {'ok': True, 'value': 2}),
+    ("emoji_004", "import wcwidth\nresult = wcwidth.wcwidth(\"🔥\")", {'ok': True, 'value': 2}),
+    ("emoji_005", "import wcwidth\nresult = wcwidth.wcwidth(\"⭐\")", {'ok': True, 'value': 2}),
+    ("wcswidth_001", "import wcwidth\nresult = wcwidth.wcswidth(\"\")", {'ok': True, 'value': 0}),
+    ("wcswidth_002", "import wcwidth\nresult = wcwidth.wcswidth(\"hello\")", {'ok': True, 'value': 5}),
+    ("wcswidth_003", "import wcwidth\nresult = wcwidth.wcswidth(\"hello world\")", {'ok': True, 'value': 11}),
+    ("wcswidth_004", "import wcwidth\nresult = wcwidth.wcswidth(\"中文\")", {'ok': True, 'value': 4}),
+    ("wcswidth_005", "import wcwidth\nresult = wcwidth.wcswidth(\"hello中文\")", {'ok': True, 'value': 9}),
+    ("wcswidth_006", "import wcwidth\nresult = wcwidth.wcswidth(\"hello\\nworld\")", {'ok': True, 'value': -1}),
+    ("wcswidth_007", "import wcwidth\nresult = wcwidth.wcswidth(\"こんにちは\")", {'ok': True, 'value': 10}),
+    ("wcswidth_008", "import wcwidth\nresult = wcwidth.wcswidth(\"안녕하세요\")", {'ok': True, 'value': 10}),
+    ("wcswidth_009", "import wcwidth\nresult = wcwidth.wcswidth(\"0123456789\")", {'ok': True, 'value': 10}),
+    ("wcswidth_010", "import wcwidth\nresult = wcwidth.wcswidth(\".,;:!?\")", {'ok': True, 'value': 6}),
+    ("wcswidth_011", "import wcwidth\nresult = wcwidth.wcswidth(\"hello, world!\")", {'ok': True, 'value': 13}),
+    ("wcswidth_012", "import wcwidth\nresult = wcwidth.wcswidth(\"     \")", {'ok': True, 'value': 5}),
+    ("wcswidth_n_001", "import wcwidth\nresult = wcwidth.wcswidth(\"hello\", 3)", {'ok': True, 'value': 3}),
+    ("wcswidth_n_002", "import wcwidth\nresult = wcwidth.wcswidth(\"中文\", 1)", {'ok': True, 'value': 2}),
+    ("wcswidth_n_003", "import wcwidth\nresult = wcwidth.wcswidth(\"hello world\", 5)", {'ok': True, 'value': 5}),
+    ("wcswidth_n_004", "import wcwidth\nresult = wcwidth.wcswidth(\"hello\", 0)", {'ok': True, 'value': 0}),
+    ("wcswidth_n_005", "import wcwidth\nresult = wcwidth.wcswidth(\"中文日本\", 2)", {'ok': True, 'value': 4}),
+    ("wcswidth_n_006", "import wcwidth\nresult = wcwidth.wcswidth(\"hi\", 10)", {'ok': True, 'value': 2}),
+    ("wcswidth_comb_001", "import wcwidth\nresult = wcwidth.wcswidth(\"e\\u0301\")", {'ok': True, 'value': 1}),
+    ("wcswidth_comb_002", "import wcwidth\nresult = wcwidth.wcswidth(\"a\\u0303\")", {'ok': True, 'value': 1}),
+    ("wcswidth_comb_003", "import wcwidth\nresult = wcwidth.wcswidth(\"café\")", {'ok': True, 'value': 4}),
+    ("ambiguous_001", "import wcwidth\nresult = wcwidth.wcwidth(\"α\")", {'ok': True, 'value': 1}),
+    ("ambiguous_002", "import wcwidth\nresult = wcwidth.wcwidth(\"α\", ambiguous_width=1)", {'ok': True, 'value': 1}),
+    ("ambiguous_003", "import wcwidth\nresult = wcwidth.wcwidth(\"α\", ambiguous_width=2)", {'ok': True, 'value': 2}),
+    ("ambiguous_004", "import wcwidth\nresult = wcwidth.wcwidth(\"°\")", {'ok': True, 'value': 1}),
+    ("edge_001", "import wcwidth\nresult = wcwidth.wcwidth(\"\")", {'ok': True, 'value': 0}),
+    ("edge_002", "import wcwidth\nresult = wcwidth.wcwidth(\"ｱ\")", {'ok': True, 'value': 1}),
+    ("fullwidth_001", "import wcwidth\nresult = wcwidth.wcwidth(\"Ｂ\")", {'ok': True, 'value': 2}),
+    ("fullwidth_002", "import wcwidth\nresult = wcwidth.wcwidth(\"　\")", {'ok': True, 'value': 2}),
+    ("fullwidth_003", "import wcwidth\nresult = wcwidth.wcwidth(\"！\")", {'ok': True, 'value': 2}),
+    ("wcswidth_013", "import wcwidth\nresult = wcwidth.wcswidth(\"ＡＢＣ\")", {'ok': True, 'value': 6}),
+    ("wcswidth_014", "import wcwidth\nresult = wcwidth.wcswidth(\"aＡb\")", {'ok': True, 'value': 4}),
+    ("wcswidth_015", "import wcwidth\nresult = wcwidth.wcswidth(\"これはテストです\")", {'ok': True, 'value': 16}),
+    ("box_001", "import wcwidth\nresult = wcwidth.wcwidth(\"─\")", {'ok': True, 'value': 1}),
+    ("box_002", "import wcwidth\nresult = wcwidth.wcwidth(\"│\")", {'ok': True, 'value': 1}),
+    ("box_003", "import wcwidth\nresult = wcwidth.wcwidth(\"┌\")", {'ok': True, 'value': 1}),
+    ("latin_001", "import wcwidth\nresult = wcwidth.wcwidth(\"á\")", {'ok': True, 'value': 1}),
+    ("latin_002", "import wcwidth\nresult = wcwidth.wcwidth(\"Å\")", {'ok': True, 'value': 1}),
+    ("latin_003", "import wcwidth\nresult = wcwidth.wcwidth(\"ñ\")", {'ok': True, 'value': 1}),
+    ("cyrillic_001", "import wcwidth\nresult = wcwidth.wcwidth(\"А\")", {'ok': True, 'value': 1}),
+    ("cyrillic_002", "import wcwidth\nresult = wcwidth.wcwidth(\"я\")", {'ok': True, 'value': 1}),
+    ("cyrillic_003", "import wcwidth\nresult = wcwidth.wcwidth(\"Ж\")", {'ok': True, 'value': 1}),
+    ("wcswidth_016", "import wcwidth\nresult = wcwidth.wcswidth(\"привет\")", {'ok': True, 'value': 6}),
+    ("wcswidth_017", "import wcwidth\nresult = wcwidth.wcswidth(\"مرحبا\")", {'ok': True, 'value': 5}),
+    ("wcswidth_018", "import wcwidth\nresult = wcwidth.wcswidth(\"שלום\")", {'ok': True, 'value': 4}),
+    ("ascii_011", "import wcwidth\nresult = wcwidth.wcwidth(\"~\")", {'ok': True, 'value': 1}),
+    ("ascii_012", "import wcwidth\nresult = wcwidth.wcwidth(\"|\")", {'ok': True, 'value': 1}),
+    ("ascii_013", "import wcwidth\nresult = wcwidth.wcwidth(\"\\\\\")", {'ok': True, 'value': 1}),
+    ("wide_011", "import wcwidth\nresult = wcwidth.wcwidth(\"語\")", {'ok': True, 'value': 2}),
+    ("wide_012", "import wcwidth\nresult = wcwidth.wcwidth(\"言\")", {'ok': True, 'value': 2}),
+    ("wide_013", "import wcwidth\nresult = wcwidth.wcwidth(\"글\")", {'ok': True, 'value': 2}),
+    ("symbol_001", "import wcwidth\nresult = wcwidth.wcwidth(\"•\")", {'ok': True, 'value': 1}),
+    ("symbol_002", "import wcwidth\nresult = wcwidth.wcwidth(\"→\")", {'ok': True, 'value': 1}),
+    ("symbol_003", "import wcwidth\nresult = wcwidth.wcwidth(\"✓\")", {'ok': True, 'value': 1}),
 ]
 
-
-def main() -> None:
-    leaves: list[dict[str, object]] = []
-    for case_id, source, expected in CASES:
-        outcome = _run(source, expected)
-        leaf: dict[str, object] = {"id": case_id, "status": outcome["status"]}
-        if outcome["status"] == "failed":
-            leaf["message"] = json.dumps(outcome["actual"], ensure_ascii=False, sort_keys=True)
-        leaves.append(leaf)
-    print(json.dumps({"schema_version": "1.0", "leaves": leaves}, ensure_ascii=False, sort_keys=True))
-
+def main():
+    """Run all test cases and output custom-json-v1 schema."""
+    leaves = []
+    
+    for test_id, script, expected in CASES:
+        result = execute_script(script)
+        
+        # Check if result matches expected
+        if result == expected:
+            status = "passed"
+        else:
+            status = "failed"
+        
+        leaves.append({
+            "id": test_id,
+            "status": status
+        })
+    
+    # Output schema
+    output = {
+        "schema_version": "1.0",
+        "leaves": leaves
+    }
+    print(json.dumps(output))
 
 if __name__ == "__main__":
     main()

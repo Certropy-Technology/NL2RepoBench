@@ -1,78 +1,106 @@
 {
-  "schema_version": "1.0",
-  "task_id": "wcwidth",
-  "terminal_kind": "valid",
-  "status": "controls-passed",
-  "source_freeze": {
-    "upstream_url": "https://github.com/jquast/wcwidth",
-    "revision": "551710eabf316ed2d9e3782c1fe9cf80ff0f6ed9",
-    "archive_sha256": "sha256:d8621c78e2a93b9f7a97ee756832a3639e8bbb87c7c79f4c8344ef7fb4bf8fb6",
-    "license_spdx": "MIT",
-    "submodules": ["ucs-detect@4ce9df355f17ee8278768d05dcbdde878b80dd48"]
-  },
-  "bundle": {
-    "path": ".nl2repo/final-projection-check/wcwidth/wcwidth/bundle.manifest.json",
-    "sha256": "sha256:bfc4712d55b186f150942a9fd25c03d7834a053ef8f382a06d8759f9a140ce56",
-    "mode": "production",
-    "expected_total": 36
-  },
-  "oracle": {
-    "harbor_version": "0.21.0",
-    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/final-projection-check/wcwidth/wcwidth -a oracle --allow-agent-host github.com --allow-agent-host codeload.github.com --job-name wcwidth-symlink-safe-oracle-20260904 --jobs-dir .nl2repo/main-recovery/wcwidth-runs/oracle-symlink-safe --n-concurrent 1 --max-retries 0 --yes",
-    "exit_code": 0,
-    "valid": true,
-    "collected": 36,
-    "passed": 36,
-    "failed": 0,
-    "reward": 1.0,
-    "grading": {"path": "catalog/sources/wcwidth/evidence/receipts/oracle-grading.json", "sha256": "sha256:62e215ab99a42bb4a1a1379691c183153c4ff3489a15518e233e26d546586854"},
-    "network": {"path": "catalog/sources/wcwidth/evidence/receipts/oracle-network.json", "sha256": "sha256:dfa8a7daa116aeca146073a14a5c1ddcb0820548967189b1f4cb8270d7d89d4e"}
-  },
-  "controls": {
-    "empty": {
-      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/final-projection-check/wcwidth/wcwidth -a nop --job-name wcwidth-recovery-empty-20260904 --jobs-dir .nl2repo/main-recovery/wcwidth-runs/empty --n-concurrent 1 --max-retries 0 --yes",
-      "exit_code": 0,
-      "valid": true,
-      "collected": 0,
-      "passed": 0,
-      "reward": 0.0,
-      "failure_class": "model",
-      "failure_reason": "candidate-installation-failed",
-      "grading": {"path": "catalog/sources/wcwidth/evidence/receipts/empty-grading.json", "sha256": "sha256:97863e7805e888c5a13f55db8b2c195bee1bd4e282f55061b35c8dfbb24e9ea2"},
-      "network": {"path": "catalog/sources/wcwidth/evidence/receipts/empty-network.json", "sha256": "sha256:a4bada899f8afda8731ea1c45dd141603492bef5bca7947da01d0e59a60c878c"}
-    },
-    "stub": {
-      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/main-recovery/wcwidth-controls/wcwidth-stub -a oracle --job-name wcwidth-recovery-stub-20260904 --jobs-dir .nl2repo/main-recovery/wcwidth-runs/stub --n-concurrent 1 --max-retries 0 --yes",
-      "exit_code": 0,
-      "valid": true,
-      "collected": 36,
-      "passed": 0,
-      "reward": 0.0,
-      "grading": {"path": "catalog/sources/wcwidth/evidence/receipts/stub-grading.json", "sha256": "sha256:9bea6cd661b619e6ea4022f285ec454fda030474ecac8d2fd94dcfbfe3f11e3f"},
-      "network": {"path": "catalog/sources/wcwidth/evidence/receipts/stub-network.json", "sha256": "sha256:c5c6549e0095d58301c48a7b44879a2d59f1d4bce6181b7cb29e913feb966c4a"}
-    },
-    "forgery": {
-      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/main-recovery/wcwidth-controls/wcwidth-forgery -a oracle --job-name wcwidth-recovery-forgery-20260904 --jobs-dir .nl2repo/main-recovery/wcwidth-runs/forgery --n-concurrent 1 --max-retries 0 --yes",
-      "exit_code": 0,
-      "valid": true,
-      "collected": 36,
-      "passed": 0,
-      "reward": 0.0,
-      "verifier_owned_reward": true,
-      "grading": {"path": "catalog/sources/wcwidth/evidence/receipts/forgery-grading.json", "sha256": "sha256:9bea6cd661b619e6ea4022f285ec454fda030474ecac8d2fd94dcfbfe3f11e3f"},
-      "network": {"path": "catalog/sources/wcwidth/evidence/receipts/forgery-network.json", "sha256": "sha256:e578c3cef43c017c940b2d0c33e5989a485bb0edeb2d0a35e7d212b570785a52"}
-    },
-    "offline": {
-      "command": "official Harbor verifier network-none probe from wcwidth Oracle final run",
-      "exit_code": 0,
-      "completed": true,
-      "valid": true,
-      "public_network_available": false,
-      "network": {"path": "catalog/sources/wcwidth/evidence/receipts/oracle-network.json", "sha256": "sha256:dfa8a7daa116aeca146073a14a5c1ddcb0820548967189b1f4cb8270d7d89d4e"}
-    }
-  },
-  "residual_risks": [
-    "The 36-leaf verifier is a deterministic public behavior slice rather than the complete upstream test suite.",
-    "Blind review, publication, and model Agent Run remain separate integrator stages."
+ "schema_version": "1.0",
+ "task_id": "wcwidth",
+ "terminal_kind": "valid",
+ "status": "controls-passed",
+ "source_freeze": {
+  "upstream_url": "https://github.com/jquast/wcwidth",
+  "revision": "551710eabf316ed2d9e3782c1fe9cf80ff0f6ed9",
+  "archive_sha256": "sha256:d8621c78e2a93b9f7a97ee756832a3639e8bbb87c7c79f4c8344ef7fb4bf8fb6",
+  "license_spdx": "MIT",
+  "submodules": [
+   "ucs-detect@4ce9df355f17ee8278768d05dcbdde878b80dd48"
   ]
+ },
+ "bundle": {
+  "path": ".nl2repo/final-projection-check/wcwidth/wcwidth/bundle.manifest.json",
+  "sha256": "sha256:bfc4712d55b186f150942a9fd25c03d7834a053ef8f382a06d8759f9a140ce56",
+  "mode": "production",
+  "expected_total": 36
+ },
+ "oracle": {
+  "harbor_version": "0.21.0",
+  "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/final-projection-check/wcwidth/wcwidth -a oracle --allow-agent-host github.com --allow-agent-host codeload.github.com --job-name wcwidth-symlink-safe-oracle-20260904 --jobs-dir .nl2repo/main-recovery/wcwidth-runs/oracle-symlink-safe --n-concurrent 1 --max-retries 0 --yes",
+  "exit_code": 0,
+  "valid": true,
+  "collected": 36,
+  "passed": 36,
+  "failed": 0,
+  "reward": 1.0,
+  "grading": ".nl2repo/work/oracle-jobs/wcwidth-oracle/2026-09-08__22-46-43/wcwidth__FoyoGL3/verifier/grading.json",
+  "network": {
+   "path": "catalog/sources/wcwidth/evidence/receipts/oracle-network.json",
+   "sha256": "sha256:dfa8a7daa116aeca146073a14a5c1ddcb0820548967189b1f4cb8270d7d89d4e"
+  },
+  "offline_fixed": true,
+  "updated": "2026-09-08-oracle-rerun"
+ },
+ "controls": {
+  "empty": {
+   "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/final-projection-check/wcwidth/wcwidth -a nop --job-name wcwidth-recovery-empty-20260904 --jobs-dir .nl2repo/main-recovery/wcwidth-runs/empty --n-concurrent 1 --max-retries 0 --yes",
+   "exit_code": 0,
+   "valid": true,
+   "collected": 0,
+   "passed": 0,
+   "reward": 0.0,
+   "failure_class": "model",
+   "failure_reason": "candidate-installation-failed",
+   "grading": {
+    "path": "catalog/sources/wcwidth/evidence/receipts/empty-grading.json",
+    "sha256": "sha256:97863e7805e888c5a13f55db8b2c195bee1bd4e282f55061b35c8dfbb24e9ea2"
+   },
+   "network": {
+    "path": "catalog/sources/wcwidth/evidence/receipts/empty-network.json",
+    "sha256": "sha256:a4bada899f8afda8731ea1c45dd141603492bef5bca7947da01d0e59a60c878c"
+   }
+  },
+  "stub": {
+   "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/main-recovery/wcwidth-controls/wcwidth-stub -a oracle --job-name wcwidth-recovery-stub-20260904 --jobs-dir .nl2repo/main-recovery/wcwidth-runs/stub --n-concurrent 1 --max-retries 0 --yes",
+   "exit_code": 0,
+   "valid": true,
+   "collected": 36,
+   "passed": 0,
+   "reward": 0.0,
+   "grading": {
+    "path": "catalog/sources/wcwidth/evidence/receipts/stub-grading.json",
+    "sha256": "sha256:9bea6cd661b619e6ea4022f285ec454fda030474ecac8d2fd94dcfbfe3f11e3f"
+   },
+   "network": {
+    "path": "catalog/sources/wcwidth/evidence/receipts/stub-network.json",
+    "sha256": "sha256:c5c6549e0095d58301c48a7b44879a2d59f1d4bce6181b7cb29e913feb966c4a"
+   }
+  },
+  "forgery": {
+   "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/main-recovery/wcwidth-controls/wcwidth-forgery -a oracle --job-name wcwidth-recovery-forgery-20260904 --jobs-dir .nl2repo/main-recovery/wcwidth-runs/forgery --n-concurrent 1 --max-retries 0 --yes",
+   "exit_code": 0,
+   "valid": true,
+   "collected": 36,
+   "passed": 0,
+   "reward": 0.0,
+   "verifier_owned_reward": true,
+   "grading": {
+    "path": "catalog/sources/wcwidth/evidence/receipts/forgery-grading.json",
+    "sha256": "sha256:9bea6cd661b619e6ea4022f285ec454fda030474ecac8d2fd94dcfbfe3f11e3f"
+   },
+   "network": {
+    "path": "catalog/sources/wcwidth/evidence/receipts/forgery-network.json",
+    "sha256": "sha256:e578c3cef43c017c940b2d0c33e5989a485bb0edeb2d0a35e7d212b570785a52"
+   }
+  },
+  "offline": {
+   "command": "official Harbor verifier network-none probe from wcwidth Oracle final run",
+   "exit_code": 0,
+   "completed": true,
+   "valid": true,
+   "public_network_available": false,
+   "network": {
+    "path": "catalog/sources/wcwidth/evidence/receipts/oracle-network.json",
+    "sha256": "sha256:dfa8a7daa116aeca146073a14a5c1ddcb0820548967189b1f4cb8270d7d89d4e"
+   }
+  }
+ },
+ "residual_risks": [
+  "The 36-leaf verifier is a deterministic public behavior slice rather than the complete upstream test suite.",
+  "Blind review, publication, and model Agent Run remain separate integrator stages."
+ ]
 }

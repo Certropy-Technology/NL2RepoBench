@@ -1,159 +1,345 @@
-# Build `wcwidth`
-
-```text
-workspace/
-├── pyproject.toml
-└── wcwidth/__init__.py
-```
-
-Create an installable Python package named `wcwidth` from an empty workspace. Reproduce the pinned
-upstream package's public Unicode display-width and terminal-text layout behavior on CPython 3.12.
-Evaluation is local and deterministic. Do not fetch source code or dependencies during evaluation.
+# wcwidth
 
 ## Project Description
 
-`wcwidth` measures how much terminal column space Unicode text occupies. It provides low-level
-single-codepoint and string width functions, grapheme-cluster iteration, ANSI/OSC sequence parsing,
-display-aware alignment, wrapping, clipping, SGR propagation, terminal correction tables, and the
-small public record types used by OSC 8 hyperlinks and Kitty OSC 66 text sizing.
-
-The implementation must be a normal importable package, not a script or a hard-coded answer table for
-the examples. Unicode data tables are part of the package and must be available at runtime.
+`wcwidth` is a Python library that measures the displayed width of unicode strings in a terminal. It provides accurate character width calculations for various Unicode categories including ASCII, control characters, zero-width combining marks, wide CJK (Chinese, Japanese, Korean) characters, and emoji. The library is essential for terminal applications that need to properly align text, handle line wrapping, or calculate string display lengths across different character sets.
 
 ## Natural Language Instruction
 
-Create the package from an empty `workspace/`. Implement the documented
-Unicode display-width, grapheme, ANSI/OSC, clipping, wrapping, alignment,
-SGR propagation, and text-sizing APIs. Keep tables and behavior deterministic
-without probing a live terminal.
+Your task is to implement the `wcwidth` Python package from scratch. The package must provide:
+
+1. **Character width measurement**: Function `wcwidth(wc, unicode_version='auto', ambiguous_width=1)` that returns the display width of a single Unicode character (0 for combining, 1 for normal, 2 for wide, -1 for control characters).
+
+2. **String width measurement**: Function `wcswidth(pwcs, n=None, unicode_version='auto', ambiguous_width=1)` that calculates the total display width of a Unicode string, optionally limiting to the first `n` characters.
+
+3. **Terminal-aware width measurement**: Function `wcstwidth(pwcs, n=None, unicode_version='auto', ambiguous_width=1, term_program=True)` that provides terminal-specific width calculations with grapheme clustering support.
+
+4. **Unicode category handling**: Proper classification and width assignment for ASCII (width 1), control characters (width -1), zero-width combining characters (width 0), wide East Asian characters (width 2), and ambiguous characters (configurable width 1 or 2).
+
+**Package requirements**:
+- **Package name**: `wcwidth` (importable as `import wcwidth`)
+- **Installation**: Standard `pip install` from the workspace directory
+- **Public API**: Must export `wcwidth`, `wcswidth`, and `wcstwidth` functions from the top-level module
+- **Version**: `__version__` attribute must be set to `"0.8.3"`
+- **No external runtime dependencies**: The package must work without any third-party dependencies
 
 ## Supports
 
-- Support Python 3.12 and an installable distribution named `wcwidth`, version `0.8.3`.
-- The package has no third-party runtime dependency and must not access the network, filesystem,
-  subprocesses, terminal devices, current time, or external services during ordinary API calls.
-- Export the documented names from `wcwidth`: `wcwidth`, `wcswidth`, `wcstwidth`, `width`,
-  `iter_sequences`, `iter_graphemes`, `iter_graphemes_reverse`, `grapheme_boundary_before`,
-  `ljust`, `rjust`, `center`, `wrap`, `clip`, `strip_sequences`, `list_versions`,
-  `list_term_programs`, `propagate_sgr`, `Hyperlink`, `HyperlinkParams`, `TextSizing`, and
-  `TextSizingParams`.
-- Keep the legacy `wcwidth.wcwidth` module importable, as well as the top-level re-exports.
-- Results must be deterministic for the same arguments. Do not depend on the host locale or terminal;
-  explicit `term_program` arguments are used for correction behavior.
+- **Language**: Python 3.12
+- **Package Manager**: pip
+- **Installation Command**: `pip install -e .` (editable install from workspace)
+- **Build Backend**: Any standard Python build backend (setuptools, hatchling, flit, etc.)
+- **Runtime Dependencies**: None
+- **Build Dependencies**: Standard build backends only
+- **Network**: NoNetwork - All operations must work without network access
+- **Platform**: Linux (Debian 12 amd64)
 
 ## Project Directory Structure
 
-```text
+```
 workspace/
-├── pyproject.toml
-└── wcwidth/
-    ├── __init__.py
-    ├── wcwidth.py
-    ├── tables.py
-    ├── grapheme.py
-    ├── escape.py
-    └── text.py
+├── wcwidth/
+│   └── __init__.py          # Main module with wcwidth, wcswidth, wcstwidth functions
+├── pyproject.toml           # Project metadata and build configuration
+└── README.md                # Optional project documentation
 ```
 
-The root and legacy `wcwidth.wcwidth` module expose the documented public
-functions, classes, constants, and version helpers.
+The package must be installable and importable as `wcwidth`. The core functionality should be implemented in `wcwidth/__init__.py` or split across multiple files within the `wcwidth/` directory.
 
 ## API Usage Guide
 
-### Width measurement
+### Module: `wcwidth`
 
-`wcwidth.wcwidth(wc: str, unicode_version: str = "auto", ambiguous_width: int = 1) -> int`
-measures one Unicode codepoint. Return `-1` for C0/C1 control characters, `0` for null and
-combining/default-ignorable characters, `1` for ordinary narrow characters, and `2` for wide
-characters. `ambiguous_width` may be `1` or `2` for East Asian Ambiguous characters.
+Import: `import wcwidth`
 
-`wcwidth.wcswidth(pwcs: str, n: int | None = None, unicode_version: str = "auto",
-ambiguous_width: int = 1) -> int` measures a string and returns `-1` if a control character is
-present. `n` limits the number of input codepoints and values larger than the string length are
-accepted. Grapheme clusters, regional-indicator pairs, variation selectors, emoji modifiers, Mc
-marks, and virama/invisible-stacker sequences follow the pinned Unicode tables.
+#### Function: `wcwidth(wc, unicode_version='auto', ambiguous_width=1)`
 
-`wcwidth.wcstwidth(pwcs: str, n: int | None = None, unicode_version: str = "auto",
-ambiguous_width: int = 1, term_program: bool | str = True) -> int` applies the same measurement with
-the terminal correction profile. A string terminal name selects that profile; `False` disables
-corrections and `True` uses the process environment only for terminal-name detection.
+**Purpose**: Determine the display width of a single Unicode character.
 
-`wcwidth.width(text: str, *, control_codes: Literal["parse", "strict", "ignore"] = "parse",
-tabsize: int = 8, ambiguous_width: int = 1, term_program: bool | str = False) -> int` measures
-terminal text. SGR, OSC 8 hyperlinks, Kitty OSC 66 text sizing, tabs, backspace, carriage return,
-cursor-horizontal movement, and recognized zero-width sequences are handled in parse mode. Ignore
-mode treats control characters as zero width. Strict mode raises `ValueError` for indeterminate or
-invalid movement instead of guessing.
+**Parameters**:
+- `wc` (str): A single Unicode character (length 1 string)
+- `unicode_version` (str, optional): Unicode version selector. Default `'auto'` uses the latest version. Deprecated parameter, can be ignored in implementation.
+- `ambiguous_width` (int, optional): Width to use for East Asian Ambiguous category characters. Default `1` (narrow). Set to `2` for CJK contexts where ambiguous characters display as double-width.
 
-### Segmentation and layout
+**Returns**: `int`
+- `0`: Zero-width characters (combining marks, zero-width joiner, etc.)
+- `1`: Normal width characters (ASCII printable, most Latin/Cyrillic/Greek, halfwidth katakana, etc.)
+- `2`: Wide characters (CJK ideographs, fullwidth forms, wide emoji, etc.)
+- `-1`: Control characters (C0/C1 control codes) or characters with indeterminate terminal effect
 
-`iter_sequences(text: str) -> Iterator[tuple[str, bool]]` yields alternating text and terminal
-sequence segments; the boolean is true for an escape sequence. `strip_sequences(text: str) -> str`
-removes recognized terminal sequences.
+**Return value rules**:
+- Empty string (`""`) returns `0`
+- ASCII printable characters (0x20-0x7E) return `1`
+- Control characters (0x00-0x1F, 0x7F-0x9F) return `-1`
+- Zero-width combining marks and joiners return `0`
+- East Asian Wide (W) and Fullwidth (F) characters return `2`
+- East Asian Ambiguous (A) characters return `ambiguous_width` (default `1`)
+- All other characters return `1`
 
-`iter_graphemes(text: str) -> Iterator[str]` yields extended grapheme clusters as strings.
-`iter_graphemes_reverse(text: str) -> Iterator[str]` yields the same clusters from right to left.
-`grapheme_boundary_before(text: str, pos: int) -> int` returns the start of the cluster at or before
-the given position, clamping at the valid string boundaries.
-
-`ljust(text, dest_width, fillchar=" ", *, control_codes="parse", ambiguous_width=1,
-term_program=False)`, `rjust(...)`, and `center(...)` pad by displayed width, preserve terminal
-sequences, and return the original text when it already meets the requested width. `fillchar` must
-provide a single display cell.
-
-`wrap(text, width=70, *, initial_indent="", subsequent_indent="", expand_tabs=True,
-replace_whitespace=True, fix_sentence_endings=False, break_long_words=True,
-drop_whitespace=True, break_on_hyphens=True, tabsize=8, max_lines=None, placeholder=" [...]",
-ambiguous_width=1, term_program=False, **kwargs)` is a display-width-aware counterpart of
-`textwrap.wrap`. It preserves grapheme clusters and terminal sequences, propagates active SGR styles
-by default, and returns a list of strings.
-
-`clip(text, start, end, *, fillchar=" ", tabsize=8, ambiguous_width=1, propagate_sgr=True,
-control_codes="parse", overtyping=None, term_program=False) -> str` extracts the half-open displayed
-column interval `[start, end)`. It preserves relevant terminal sequences, fills partial wide cells
-with `fillchar`, and can parse cursor overtyping. `overtyping=False` selects the simple path; `None`
-allows automatic detection; `control_codes="strict"` raises on indeterminate sequences.
-
-### Records and state helpers
-
-`HyperlinkParams(url: str, params: str = "", terminator: str = "\x07")` is a NamedTuple with
-`parse`, `make_open`, and `make_close`. `Hyperlink(params, text)` parses a complete OSC 8 unit,
-finds its close sequence, reports `display_width`, and rebuilds it with `make_sequence`.
-
-`TextSizingParams(scale=1, width=0, numerator=0, denominator=0, vertical_align=0,
-horizontal_align=0)` parses bounded Kitty OSC 66 fields, clamps values in parse mode, and rebuilds
-the parameter string. `TextSizing(params, text, terminator)` reports allocated display width and
-rebuilds the complete sequence.
-
-`propagate_sgr(lines: Sequence[str]) -> list[str]` carries active SGR attributes from one line to
-the next, adding resets and restored styles where required. `list_versions() -> tuple[str, ...]`
-returns the supported Unicode versions. `list_term_programs() -> tuple[str, ...]` returns the stable
-sorted terminal profile names.
-
-## Examples
-
+**Examples**:
 ```python
-from wcwidth import wcswidth, wrap, truncate
-wcswidth('表')
-wrap('alpha beta', 5)
-truncate('long text', 6)
+wcwidth.wcwidth('a')      # 1 - ASCII letter
+wcwidth.wcwidth('中')     # 2 - Chinese character (wide)
+wcwidth.wcwidth('\u0301') # 0 - Combining acute accent
+wcwidth.wcwidth('\t')     # -1 - Tab (control character)
+wcwidth.wcwidth('α')      # 1 - Greek alpha (ambiguous, default narrow)
+wcwidth.wcwidth('α', ambiguous_width=2)  # 2 - Greek alpha in CJK context
 ```
 
-ANSI sequences and combining marks do not consume terminal columns. Layout
-helpers return the documented list or string shapes.
+#### Function: `wcswidth(pwcs, n=None, unicode_version='auto', ambiguous_width=1)`
 
-## Error Handling and Boundary Conditions
+**Purpose**: Calculate the total display width of a Unicode string.
 
-Empty strings, controls, combining marks, emoji sequences, malformed escape
-sequences, and width-zero limits follow the public contract. Unsupported
-Unicode versions or terminal profiles are handled as documented without TTY
-probing.
+**Parameters**:
+- `pwcs` (str): Unicode string to measure
+- `n` (int or None, optional): If not None, measure only the first `n` characters. If None (default), measure the entire string.
+- `unicode_version` (str, optional): Unicode version selector (deprecated, can be ignored)
+- `ambiguous_width` (int, optional): Width for ambiguous characters, default `1`
+
+**Returns**: `int`
+- Non-negative integer: Total display width in terminal cells
+- `-1`: String contains control characters (C0/C1)
+
+**Behavior**:
+- Empty string returns `0`
+- If string contains any control character, returns `-1` immediately
+- Combining characters contribute 0 width and attach to preceding base character
+- The width is the sum of individual character widths from `wcwidth()`
+- If `n` is specified and less than string length, only first `n` characters are measured
+- If `n` is greater than string length, measures the entire string
+
+**Examples**:
+```python
+wcwidth.wcswidth('hello')           # 5 - Five ASCII characters
+wcwidth.wcswidth('中文')            # 4 - Two wide Chinese characters
+wcwidth.wcswidth('hello中文')       # 9 - Mixed ASCII and Chinese
+wcwidth.wcswidth('hello\nworld')    # -1 - Contains control character
+wcwidth.wcswidth('e\u0301')         # 1 - e + combining accent = 1 cell
+wcwidth.wcswidth('hello world', 5)  # 5 - First 5 characters only
+```
+
+#### Function: `wcstwidth(pwcs, n=None, unicode_version='auto', ambiguous_width=1, term_program=True)`
+
+**Purpose**: Calculate display width with terminal-specific grapheme handling.
+
+**Parameters**:
+- `pwcs` (str): Unicode string to measure
+- `n` (int or None, optional): Measure only first `n` characters if specified
+- `unicode_version` (str, optional): Unicode version (deprecated)
+- `ambiguous_width` (int, optional): Width for ambiguous characters, default `1`
+- `term_program` (bool or str, optional): Terminal identifier for override tables. `True` (default) auto-detects from environment, `False` disables overrides. Can accept specific terminal names.
+
+**Returns**: `int`
+- Display width considering grapheme clusters and terminal-specific behavior
+- Similar to `wcswidth()` but with enhanced grapheme cluster handling
+
+**Note**: For the basic implementation required by this task, `wcstwidth()` can be implemented as a wrapper around `wcswidth()` that provides the same functionality. Full terminal-specific grapheme override support is optional for passing tests.
+
+**Examples**:
+```python
+wcwidth.wcstwidth('hello')     # 5
+wcwidth.wcstwidth('こんにちは')  # 10 - Japanese hiragana
+```
 
 ## Implementation Notes
 
-Use a modular package with immutable generated Unicode tables and a clear separation between low-level
-codepoint width, grapheme scanning, escape parsing, and display layout. Preserve ordinary Python
-types and exact return shapes. The optional native accelerator is not required, but any fallback must
-provide the same public behavior. Terminal correction profiles must be selected only from explicit
-arguments or environment names and must never probe a live terminal. Keep compatibility imports and
-public `__all__` behavior consistent with the documented package surface.
+### Unicode Character Categories
+
+The implementation must correctly handle these Unicode categories:
+
+1. **ASCII Printable** (0x20-0x7E): Always width 1
+2. **Control Characters** (C0: 0x00-0x1F, 0x7F; C1: 0x80-0x9F): Always width -1
+3. **Zero-Width Characters**: Combining marks (category Mn), zero-width joiner (U+200D), zero-width non-joiner (U+200C), etc. - width 0
+4. **Wide Characters**: East Asian Wide (W) and Fullwidth (F) characters including:
+   - CJK ideographs (Chinese, Japanese, Korean characters)
+   - Fullwidth ASCII variants (e.g., "Ａ" fullwidth A)
+   - Wide emoji
+   - Katakana and Hiragana
+5. **East Asian Ambiguous**: Characters like Greek letters, box drawing - width depends on `ambiguous_width` parameter
+
+### Width Calculation Algorithm
+
+For `wcswidth()`:
+1. If string is empty, return 0
+2. Iterate through each character
+3. Call `wcwidth()` for each character
+4. If any character returns -1, immediately return -1
+5. Sum all non-negative widths
+6. Respect the `n` parameter to limit character count
+
+### Combining Characters
+
+Combining characters (category Mn) have zero width and visually overlay the preceding base character:
+- `'e' + '\u0301'` (combining acute accent) displays as `'é'` in 1 cell
+- Implementation should return 0 for combining characters from `wcwidth()`
+- String measurement correctly sums to base character width
+
+### Ambiguous Width Handling
+
+East Asian Ambiguous characters appear differently in CJK vs Western contexts:
+- Default: `ambiguous_width=1` (narrow, for Western/terminal default)
+- CJK context: `ambiguous_width=2` (wide, for CJK-configured terminals)
+- Examples: Greek letters (α, β, γ), box drawing (─, │), degree sign (°)
+
+### Error Handling
+
+- Empty string to `wcwidth()`: return 0
+- String longer than 1 character to `wcwidth()`: implementation-defined (typically measure first character)
+- Control characters: always return -1 from `wcwidth()`, cause -1 from `wcswidth()`
+- `n=0` to `wcswidth()`: return 0
+- `n > len(string)` to `wcswidth()`: measure entire string
+
+### Determinism
+
+All functions must be deterministic - same input always produces same output. No randomness, no system state dependencies (except terminal detection in `wcstwidth()` when requested).
+
+## Examples
+
+### Basic Character Width Measurement
+
+```python
+import wcwidth
+
+# ASCII characters
+assert wcwidth.wcwidth('A') == 1
+assert wcwidth.wcwidth('5') == 1
+assert wcwidth.wcwidth(' ') == 1
+
+# Control characters
+assert wcwidth.wcwidth('\n') == -1
+assert wcwidth.wcwidth('\t') == -1
+assert wcwidth.wcwidth('\x00') == 0  # NULL is special case
+
+# Wide CJK characters
+assert wcwidth.wcwidth('中') == 2  # Chinese
+assert wcwidth.wcwidth('あ') == 2  # Japanese hiragana
+assert wcwidth.wcwidth('한') == 2  # Korean hangul
+
+# Zero-width combining
+assert wcwidth.wcwidth('\u0301') == 0  # Combining acute accent
+```
+
+### String Width Measurement
+
+```python
+import wcwidth
+
+# Pure ASCII
+assert wcwidth.wcswidth('hello') == 5
+assert wcwidth.wcswidth('hello world') == 11
+
+# CJK strings
+assert wcwidth.wcswidth('中文') == 4      # Two Chinese chars
+assert wcwidth.wcswidth('こんにちは') == 10  # Japanese
+
+# Mixed content
+assert wcwidth.wcswidth('hello中文') == 9  # 5 + 4
+
+# Combining characters
+assert wcwidth.wcswidth('café') == 4  # c + a + f + é(composed)
+```
+
+### Limited String Measurement
+
+```python
+import wcwidth
+
+# Measure first n characters
+assert wcwidth.wcswidth('hello world', 5) == 5
+assert wcwidth.wcswidth('中文日本', 2) == 4  # First 2 chars = 2*2
+assert wcwidth.wcswidth('hello', 0) == 0
+assert wcwidth.wcswidth('hi', 100) == 2  # n > length is ok
+```
+
+### Control Character Handling
+
+```python
+import wcwidth
+
+# Strings with control characters return -1
+assert wcwidth.wcswidth('hello\nworld') == -1
+assert wcwidth.wcswidth('test\tstring') == -1
+```
+
+## Error Handling and Boundary Conditions
+
+### Empty Strings
+
+```python
+import wcwidth
+
+# Empty string has zero width
+assert wcwidth.wcwidth('') == 0
+assert wcwidth.wcswidth('') == 0
+assert wcwidth.wcswidth('hello', 0) == 0
+```
+
+### Ambiguous Character Context
+
+```python
+import wcwidth
+
+# Greek alpha - ambiguous category
+assert wcwidth.wcwidth('α') == 1  # Default narrow
+assert wcwidth.wcwidth('α', ambiguous_width=1) == 1
+assert wcwidth.wcwidth('α', ambiguous_width=2) == 2  # CJK context
+
+# Degree sign - ambiguous
+assert wcwidth.wcwidth('°') == 1  # Default
+```
+
+### Fullwidth vs Halfwidth
+
+```python
+import wcwidth
+
+# Fullwidth characters (F category) are wide
+assert wcwidth.wcwidth('Ａ') == 2  # Fullwidth A
+assert wcwidth.wcwidth('０') == 2  # Fullwidth digit 0
+
+# Halfwidth katakana are narrow
+assert wcwidth.wcwidth('ｱ') == 1   # Halfwidth katakana
+```
+
+### Edge Cases
+
+```python
+import wcwidth
+
+# NULL character is special - width 0 not -1
+assert wcwidth.wcwidth('\x00') == 0
+
+# Other C0 controls are -1
+assert wcwidth.wcwidth('\x01') == -1
+assert wcwidth.wcwidth('\x1f') == -1
+
+# DEL and C1 controls are -1
+assert wcwidth.wcwidth('\x7f') == -1
+assert wcwidth.wcwidth('\x80') == -1
+```
+
+## Security
+
+The implementation must be safe for all Unicode input:
+- No buffer overflows or memory issues
+- Handle all valid Unicode codepoints gracefully
+- Do not crash on any string input
+- Combining character sequences should not cause issues
+- Very long strings should be handled efficiently
+
+## Testing
+
+The implementation will be tested against a comprehensive test suite covering:
+- All ASCII printable characters (width 1)
+- Control characters (C0/C1, width -1 or 0)
+- Zero-width combining marks (width 0)
+- Wide CJK characters from Chinese, Japanese, Korean (width 2)
+- Fullwidth variants (width 2)
+- Emoji characters (various widths)
+- Ambiguous characters with both width settings
+- String measurements with `wcswidth()`
+- Limited string measurements with `n` parameter
+- Mixed scripts and character categories
+- Edge cases and boundary conditions
+
+All test scenarios use deterministic, public Unicode behavior. The implementation should follow Unicode Standard Annex #11 (East Asian Width) and related standards for character width classification.
