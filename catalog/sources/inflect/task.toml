@@ -1,20 +1,20 @@
 schema_version = "1.0"
-task_id = "arrow"
+task_id = "inflect"
 version = "1.0.0"
 instruction = "instruction.md"
 
 [metadata]
 difficulty = "medium"
-category = "datetime-library"
-tags = ["python", "datetime", "timezone", "parsing", "formatting", "humanization"]
+category = "utility-library"
+tags = ["python", "nlp", "inflection", "grammar", "natural-language"]
 language = "python"
 
 [source]
 status = "known"
-upstream_url = "https://github.com/arrow-py/arrow"
-revision = "2c1f5185ad66bf3b1cf8c0812f4b4fe65ac46656"
-license_spdx = "Apache-2.0"
-source_digest = "sha256:ed0cc050e98001b8779e84d461b0098c4ac597e88704a655582b21d116e526d7"
+upstream_url = "https://github.com/jaraco/inflect"
+revision = "c079a96a573ece60b54bd5210bb0f414beb74dcd"
+license_spdx = "MIT"
+source_digest = "sha256:faf19801c3742ed5a05a8ce388e0d8fe1a07f8d095c82201eb904f5d27ad571f"
 submodules = []
 
 [environment]
@@ -31,13 +31,12 @@ build_command = "python -m pip install --no-build-isolation --no-deps --no-index
 mode = "no-network"
 offline_dependencies = "preinstalled-image"
 reference_source_fetch = "forbidden"
-reason = "The flit-core build backend is preinstalled into the agent and verifier images from the hash-locked candidate closure. Candidate installation reuses the installed backend with --no-build-isolation, and agent, candidate, verifier, Oracle, and controls run without network access."
+reason = "Dependencies (more_itertools, typeguard) are preinstalled into the agent and verifier images from the hash-locked candidate closure. Candidate installation reuses the installed dependencies with --no-build-isolation, and agent, candidate, verifier, Oracle, and controls run without network access."
 
 [dependencies]
 status = "known"
 installer = "pip"
-packages = ["python-dateutil>=2.7.0", "tzdata"]
-lock_artifact = {}
+packages = ["more_itertools>=8.5.0", "typeguard>=4.0.1"]
 
 [tests]
 framework = "pytest"
@@ -56,11 +55,10 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 [verifier]
 protocol = "custom-json-v1"
 entrypoint = "run.py"
-bundle = {}
 
 [harbor]
-description = "Build arrow package from an empty workspace: a Python library for better dates & times with intuitive API, timezone support, parsing, formatting and humanization."
-keywords = ["python", "datetime", "timezone", "arrow", "date", "time", "parsing", "formatting", "humanization"]
+description = "Build inflect package from an empty workspace: a library for accurate English language inflection including plurals, singulars, ordinals, indefinite articles, and number-to-words conversion."
+keywords = ["python", "nlp", "inflection", "pluralization", "grammar", "natural-language"]
 agent_timeout_sec = 1800.0
 verifier_timeout_sec = 600.0
 candidate_install_timeout_sec = 120.0
@@ -72,9 +70,7 @@ memory_mb = 4096
 storage_mb = 2048
 workspace_artifact = "/workspace"
 
-[oracle_bundle]
-
 [lifecycle]
 status = "packaged"
-owner = "python-author-arrow"
-reason = "Source frozen, instruction authored, verifier with 90 deterministic scenarios calibrated, Oracle and 7 controls prepared. Ready for compilation and Oracle gate."
+owner = "inflect-authoring-worker"
+reason = "Source frozen, instruction authored, verifier with 90 scenarios created, 7 controls ready, Oracle solve.sh prepared. Awaiting compilation and Oracle gate."
