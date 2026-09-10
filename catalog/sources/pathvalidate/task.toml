@@ -37,6 +37,7 @@ reason = "Dependencies are installed during the Docker build phase with hash-loc
 status = "known"
 installer = "pip"
 packages = []
+lock_artifact = { digest = "sha256:325c313a205896c14ac40e51b2ff49d24139d3b7e1e8130f8f36bebc3ebe7d36", size_bytes = 43, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:325c313a205896c14ac40e51b2ff49d24139d3b7e1e8130f8f36bebc3ebe7d36", visibility = "private" }
 
 [tests]
 framework = "pytest"
@@ -55,6 +56,7 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 [verifier]
 protocol = "custom-json-v1"
 entrypoint = "run.py"
+bundle = { digest = "sha256:246b928b06ea27baed05dba47cd3b04accecd262a46f924684163df08b7983bd", size_bytes = 2417, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:246b928b06ea27baed05dba47cd3b04accecd262a46f924684163df08b7983bd", visibility = "private" }
 
 [harbor]
 description = "Build pathvalidate package from an empty workspace: a library for filename/filepath validation and sanitization across platforms."
@@ -78,6 +80,9 @@ reason = "Source frozen, instruction and verifier authored, awaiting Oracle vali
 [oracle_bundle]
 digest = "sha256:267627523480c4442de52a433473f6f65f77750352c9269d24c4743ca48e4869"
 size_bytes = 122115
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:267627523480c4442de52a433473f6f65f77750352c9269d24c4743ca48e4869"
+visibility = "private"
 
 [candidate_requirements]
 digest = "sha256:325c313a205896c14ac40e51b2ff49d24139d3b7e1e8130f8f36bebc3ebe7d36"

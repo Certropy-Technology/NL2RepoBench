@@ -37,6 +37,7 @@ reason = "Package has no runtime dependencies. Installation uses setuptools whic
 status = "known"
 installer = "pip"
 packages = []
+lock_artifact = { digest = "sha256:436c44c12df27a5ebf7517e8cc47d5896c04d81e0e2e72f890e7d19ab050bea4", size_bytes = 124, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:436c44c12df27a5ebf7517e8cc47d5896c04d81e0e2e72f890e7d19ab050bea4", visibility = "private" }
 
 [tests]
 framework = "pytest"
@@ -55,6 +56,7 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 [verifier]
 protocol = "custom-json-v1"
 entrypoint = "run.py"
+bundle = { digest = "sha256:8bbbfb32cffa3c7c3365c3b3d83d7eae74ab60c666951a28699686e7144a43cc", size_bytes = 2501, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:8bbbfb32cffa3c7c3365c3b3d83d7eae74ab60c666951a28699686e7144a43cc", visibility = "private" }
 
 [harbor]
 description = "Build humanfriendly package from an empty workspace: a library for human-friendly formatting and parsing of file sizes, timespans, numbers, and lengths."
@@ -69,6 +71,13 @@ cpus = 2
 memory_mb = 4096
 storage_mb = 2048
 workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:b490ac9b2703e4dbf0cb6ae813c1f498ed6507b8d3a074af2a021f553b5c2e81"
+size_bytes = 361553
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:b490ac9b2703e4dbf0cb6ae813c1f498ed6507b8d3a074af2a021f553b5c2e81"
+visibility = "private"
 
 [lifecycle]
 status = "packaged"

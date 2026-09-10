@@ -37,7 +37,7 @@ reason = "The flit-core build backend is preinstalled into the agent and verifie
 status = "known"
 installer = "pip"
 packages = ["python-dateutil>=2.7.0", "tzdata"]
-lock_artifact = {}
+lock_artifact = { digest = "sha256:3aeaf6304fddc54e23a7abbae91fb7b1b12d7361a848075db8544640214a00b4", size_bytes = 69, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:3aeaf6304fddc54e23a7abbae91fb7b1b12d7361a848075db8544640214a00b4", visibility = "private" }
 
 [tests]
 framework = "pytest"
@@ -56,7 +56,7 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 [verifier]
 protocol = "custom-json-v1"
 entrypoint = "run.py"
-bundle = {}
+bundle = { digest = "sha256:a0ce905b7e7e6816849aa2cb6d030342fca50c651202ed0bd34c58a1e3d417aa", size_bytes = 2580, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:a0ce905b7e7e6816849aa2cb6d030342fca50c651202ed0bd34c58a1e3d417aa", visibility = "private" }
 
 [harbor]
 description = "Build arrow package from an empty workspace: a Python library for better dates & times with intuitive API, timezone support, parsing, formatting and humanization."
@@ -73,6 +73,11 @@ storage_mb = 2048
 workspace_artifact = "/workspace"
 
 [oracle_bundle]
+digest = "sha256:0b18243c46cdaf79c9eaab7d0adceaebbb2414f38f3e9f13ddb066af1a696520"
+size_bytes = 153647
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:0b18243c46cdaf79c9eaab7d0adceaebbb2414f38f3e9f13ddb066af1a696520"
+visibility = "private"
 
 [lifecycle]
 status = "packaged"

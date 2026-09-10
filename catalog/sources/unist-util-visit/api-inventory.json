@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0",
+  "task_id": "unist-util-visit",
+  "language": "node",
+  "package": {
+    "name": "unist-util-visit",
+    "version": "5.1.0",
+    "type": "module",
+    "exports": "./index.js",
+    "license": "MIT",
+    "source_revision": "5d601df684ca7341646d6b57eb0f20fdfe277bc2"
+  },
+  "public_exports": [
+    {"name": "visit", "kind": "function", "import_path": "unist-util-visit"},
+    {"name": "CONTINUE", "kind": "constant", "import_path": "unist-util-visit"},
+    {"name": "EXIT", "kind": "constant", "import_path": "unist-util-visit"},
+    {"name": "SKIP", "kind": "constant", "import_path": "unist-util-visit"}
+  ],
+  "signatures": [
+    "visit(tree, visitor, reverse?)",
+    "visit(tree, test, visitor, reverse?)"
+  ],
+  "imports": ["unist-util-is", "unist-util-visit-parents"],
+  "risk_flags": [],
+  "completeness": "runtime exports, callback boundary, dependency closure, and upstream test source inventoried"
+}

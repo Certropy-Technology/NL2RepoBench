@@ -37,6 +37,7 @@ reason = "Dependencies (more_itertools, typeguard) are preinstalled into the age
 status = "known"
 installer = "pip"
 packages = ["more_itertools>=8.5.0", "typeguard>=4.0.1"]
+lock_artifact = { digest = "sha256:11e837b82100cba9b71ba03001929bb4b9833ce86c4965172c2f27c02d0adc37", size_bytes = 576, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:11e837b82100cba9b71ba03001929bb4b9833ce86c4965172c2f27c02d0adc37", visibility = "private" }
 
 [tests]
 framework = "pytest"
@@ -55,6 +56,7 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 [verifier]
 protocol = "custom-json-v1"
 entrypoint = "run.py"
+bundle = { digest = "sha256:6a2617121d738db1acc51e5e513336004aafbe996fc8a401afa3296b6713d37c", size_bytes = 2134, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:6a2617121d738db1acc51e5e513336004aafbe996fc8a401afa3296b6713d37c", visibility = "private" }
 
 [harbor]
 description = "Build inflect package from an empty workspace: a library for accurate English language inflection including plurals, singulars, ordinals, indefinite articles, and number-to-words conversion."
@@ -69,6 +71,13 @@ cpus = 2
 memory_mb = 4096
 storage_mb = 2048
 workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:b8dcd665c7dc60543cf109ffec4444a1211414fd49c59cfaa6ec24b4eab8c322"
+size_bytes = 74466
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:b8dcd665c7dc60543cf109ffec4444a1211414fd49c59cfaa6ec24b4eab8c322"
+visibility = "private"
 
 [lifecycle]
 status = "packaged"

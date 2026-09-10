@@ -1,0 +1,110 @@
+schema_version = "2.0"
+task_id = "wrap-ansi"
+version = "2.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "hard"
+category = "terminal-formatting"
+tags = ["node", "npm", "esm", "ansi", "unicode", "word-wrap", "repository-generation"]
+language = "node"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/chalk/wrap-ansi"
+revision = "c6b6259a58843e491e8703c5010a2a517b5f5738"
+license_spdx = "MIT"
+source_digest = "sha256:dccdb394d6c59a10e8f50aba2b8ebbbbf4f27a3a2d822e73a8fa9190934ccec6"
+submodules = []
+
+[environment]
+status = "known"
+os_name = "debian-bookworm"
+base_image = "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+base_image_digest = "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848"
+network_mode = "no-network"
+
+[environment.runtime]
+language = "node"
+runtime = "node"
+version = "24.19.0"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+architecture = "linux/amd64"
+libc = "glibc"
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "private-artifact"
+reference_source_fetch = "forbidden"
+reason = "The exact npm v3 dependency lock and integrity-checked cache are supplied during image construction. Candidate and verifier execution have no egress; only the trusted Oracle receives a run-scoped exact GitHub authorization for the frozen revision."
+
+[dependencies]
+status = "known"
+ecosystem = "npm"
+consumer = "candidate-runtime"
+lockfile_name = "package-lock.json"
+lockfile_version = "3"
+package_manager = "npm"
+package_manager_version = "11.17.0"
+install_mode = "offline"
+lifecycle_scripts = "ignore-scripts"
+packages = ["ansi-styles@6.2.3", "string-width@8.2.0", "get-east-asian-width@1.6.0", "strip-ansi@7.2.0", "ansi-regex@6.3.0"]
+
+[dependencies.artifact]
+digest = "sha256:e2afe0fb68b4a534011a110eee20317c0ff56001d792ae19373e45987af83487"
+size_bytes = 348160
+media_type = "application/vnd.nl2repobench.npm-bundle+tar"
+uri = "artifact://private/sha256:e2afe0fb68b4a534011a110eee20317c0ff56001d792ae19373e45987af83487"
+visibility = "private"
+
+[tests]
+framework = "node:test"
+report_format = "node-test-json-v1"
+expected_total = 44
+expected_total_source = "frozen-collection"
+
+[tests.commands_artifact]
+digest = "sha256:a832562812d78324c3ac1b16a15a9ab97c6e9e92ad7de119f2da7bb997be8661"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.node-commands+tar"
+uri = "artifact://private/sha256:a832562812d78324c3ac1b16a15a9ab97c6e9e92ad7de119f2da7bb997be8661"
+visibility = "private"
+
+[tests.test_bundle]
+digest = "sha256:d05c500292bba6e02fba7af8eb70a975c86a996ebffd20d04615ce9a6d0475dd"
+size_bytes = 20480
+media_type = "application/vnd.nl2repobench.node-tests+tar"
+uri = "artifact://private/sha256:d05c500292bba6e02fba7af8eb70a975c86a996ebffd20d04615ce9a6d0475dd"
+visibility = "private"
+
+[metric]
+contract_id = "node-test-leaf-pass-rate-v1"
+collection_mismatch = "fail"
+
+[harbor]
+description = "Build wrap-ansi as a deterministic ESM terminal word-wrapper that preserves ANSI styles, Unicode width, hyperlinks, tabs, and line boundaries."
+keywords = ["node", "npm", "esm", "ansi", "unicode", "word-wrap", "terminal"]
+agent_timeout_sec = 1200.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 90.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+agent_allowed_hosts = []
+verifier_network_mode = "no-network"
+cpus = 1
+memory_mb = 2048
+storage_mb = 4096
+workspace_artifact = "/workspace"
+
+[lifecycle]
+status = "controls-passed"
+owner = "node-author-wave2-20260828"
+reason = "The frozen source, exact npm closure, 44-leaf separate verifier, reproducible production compile, Oracle, and required adversarial controls passed in this lane. Independent review, model Agent Run, integration, and publication remain downstream gates."
+
+[oracle_bundle]
+digest = "sha256:47412948233d3c5c6bcb71365e7297eb2f2d120d139efee4d01cdcee35837276"
+size_bytes = 10240
+media_type = "application/vnd.nl2repobench.oracle+tar"
+uri = "artifact://private/sha256:47412948233d3c5c6bcb71365e7297eb2f2d120d139efee4d01cdcee35837276"
+visibility = "private"

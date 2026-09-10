@@ -37,7 +37,7 @@ reason = "The Poetry build backend (poetry-core) is preinstalled into the agent 
 status = "known"
 installer = "pip"
 packages = []
-lock_artifact = { digest = "", size_bytes = 0, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:0596cabcfa4426f04f60e39ff5122ebc3428f9ee8e79e2e576972dc9436c53e3", visibility = "private" }
+lock_artifact = { digest = "sha256:a41cef59dbee3558727288d035b5435bcc6d4895c8c5ee88420a345563712a3c", size_bytes = 88, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:a41cef59dbee3558727288d035b5435bcc6d4895c8c5ee88420a345563712a3c", visibility = "private" }
 
 [tests]
 framework = "pytest"
@@ -56,7 +56,7 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 [verifier]
 protocol = "custom-json-v1"
 entrypoint = "run.py"
-bundle = { digest = "sha256:bc09d3d4072f4a3d2458856bc9346cd4de5560309d28970bb8e659595a4fc429", size_bytes = 2504, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:bc09d3d4072f4a3d2458856bc9346cd4de5560309d28970bb8e659595a4fc429", visibility = "private" }
+bundle = { digest = "sha256:a6725656523ef90223e3a725b49c1ee105df5dd9603a2cb1a6e7dfa52a875137", size_bytes = 2535, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:a6725656523ef90223e3a725b49c1ee105df5dd9603a2cb1a6e7dfa52a875137", visibility = "private" }
 
 [harbor]
 description = "Build pycountry package: ISO country, language, currency and script database with simple query interface."
@@ -73,10 +73,10 @@ storage_mb = 2048
 workspace_artifact = "/workspace"
 
 [oracle_bundle]
-digest = "sha256:0596cabcfa4426f04f60e39ff5122ebc3428f9ee8e79e2e576972dc9436c53e3"
-size_bytes = 7698993
+digest = "sha256:7366b17d91577849d9fb2f22195934e46315099b2f29f0f292b4b7a9bcbe3945"
+size_bytes = 2370
 media_type = "application/vnd.nl2repobench.private-bundle+tar"
-uri = ""
+uri = "artifact://private/sha256:7366b17d91577849d9fb2f22195934e46315099b2f29f0f292b4b7a9bcbe3945"
 visibility = "private"
 
 [lifecycle]

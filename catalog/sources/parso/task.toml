@@ -37,6 +37,7 @@ reason = "Dependencies are preinstalled during the Docker build phase. Candidate
 status = "known"
 installer = "pip"
 packages = []
+lock_artifact = { digest = "sha256:d89a73491023ce9db3491cd6845f5d1bf8bbb205385426c31cc31f89d5c57c56", size_bytes = 13, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:d89a73491023ce9db3491cd6845f5d1bf8bbb205385426c31cc31f89d5c57c56", visibility = "private" }
 
 [tests]
 framework = "pytest"
@@ -55,6 +56,7 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 [verifier]
 protocol = "custom-json-v1"
 entrypoint = "run.py"
+bundle = { digest = "sha256:ec5b5dc14aad489de26b90dc65fad080703a0f63e11293b1e4d2579974041f48", size_bytes = 2511, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:ec5b5dc14aad489de26b90dc65fad080703a0f63e11293b1e4d2579974041f48", visibility = "private" }
 
 [harbor]
 description = "Build parso package from an empty workspace: a Python parser supporting error recovery and round-trip parsing for multiple Python versions."
@@ -69,6 +71,13 @@ cpus = 2
 memory_mb = 4096
 storage_mb = 2048
 workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:ef0790175fa247ee51f83f9af336dde8c1d7fc060873a7add354554c6cf9e5b0"
+size_bytes = 402600
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:ef0790175fa247ee51f83f9af336dde8c1d7fc060873a7add354554c6cf9e5b0"
+visibility = "private"
 
 [lifecycle]
 status = "packaged"

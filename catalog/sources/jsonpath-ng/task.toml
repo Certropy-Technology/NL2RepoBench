@@ -37,7 +37,7 @@ reason = "jsonpath-ng has no runtime dependencies. All build tools are preinstal
 status = "known"
 installer = "pip"
 packages = []
-lock_artifact = {}
+lock_artifact = { digest = "sha256:51e99132f9bab8eeb36fb26cc9665ae65f915c5e6d39e3d584f07b526ec2cfd1", size_bytes = 223, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:51e99132f9bab8eeb36fb26cc9665ae65f915c5e6d39e3d584f07b526ec2cfd1", visibility = "private" }
 
 [tests]
 framework = "pytest"
@@ -56,7 +56,7 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 [verifier]
 protocol = "custom-json-v1"
 entrypoint = "run.py"
-bundle = {}
+bundle = { digest = "sha256:de77af0d0f8410f659afa26d21c7f515a2933b5866cb819b1fb5c922493ea726", size_bytes = 3316, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:de77af0d0f8410f659afa26d21c7f515a2933b5866cb819b1fb5c922493ea726", visibility = "private" }
 
 [harbor]
 description = "Build jsonpath-ng package from an empty workspace: a robust JSONPath implementation for Python with parsing, querying, updating, filters, and arithmetic."
@@ -73,6 +73,11 @@ storage_mb = 2048
 workspace_artifact = "/workspace"
 
 [oracle_bundle]
+digest = "sha256:7b3e3b19eb5bcb8c10e700c11e02ff3ab7a3dbf0dc60e1fbd8e7e02334e82c98"
+size_bytes = 969
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:7b3e3b19eb5bcb8c10e700c11e02ff3ab7a3dbf0dc60e1fbd8e7e02334e82c98"
+visibility = "private"
 
 [lifecycle]
 status = "packaged"

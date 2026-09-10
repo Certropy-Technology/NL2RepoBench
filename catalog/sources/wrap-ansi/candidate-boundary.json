@@ -1,0 +1,9 @@
+{
+  "schema_version": "1.0",
+  "status": "audited",
+  "purpose": "Deterministic child-side JSON boundary for wrap-ansi.",
+  "transport": {"mode": "single-json-request", "encoding": "utf-8", "stderr": "diagnostics only"},
+  "request": {"operation": "wrap or shape", "string": "JSON value converted by String", "columns": "finite non-negative integer", "options": "optional object with hard, wordWrap, trim booleans"},
+  "response": {"success": "string", "failure": "bounded error response"},
+  "determinism": {"network": "forbidden", "filesystem": "package and caller objects only", "output": "no diagnostics on stdout"}
+}

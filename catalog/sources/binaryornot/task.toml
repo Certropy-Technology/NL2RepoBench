@@ -56,6 +56,7 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 [verifier]
 protocol = "custom-json-v1"
 entrypoint = "run.py"
+bundle = { digest = "sha256:23a856686d576d9da7568e64e3cac8a51e3042b7a933177b98f9a901692da644", size_bytes = 3608, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:23a856686d576d9da7568e64e3cac8a51e3042b7a933177b98f9a901692da644", visibility = "private" }
 
 [harbor]
 description = "Build binaryornot package from an empty workspace: a lightweight library for detecting whether files are binary or text using statistical analysis and decision trees."
@@ -70,6 +71,13 @@ cpus = 2
 memory_mb = 4096
 storage_mb = 2048
 workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:3b58443c3e4c60797af2845874a45c341ae89055d1dbf68ba0d1d6016348269c"
+size_bytes = 479203
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:3b58443c3e4c60797af2845874a45c341ae89055d1dbf68ba0d1d6016348269c"
+visibility = "private"
 
 [lifecycle]
 status = "packaged"

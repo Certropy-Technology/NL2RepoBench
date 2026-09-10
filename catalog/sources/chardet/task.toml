@@ -37,7 +37,7 @@ reason = "The hatchling build backend is preinstalled into the agent and verifie
 status = "known"
 installer = "pip"
 packages = []
-lock_artifact = { digest = "PLACEHOLDER", size_bytes = 0, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:PLACEHOLDER", visibility = "private" }
+lock_artifact = { digest = "sha256:1e22972827e110fcf820015dc71e8a9f3af124dbf30cabda390ef04c648b82eb", size_bytes = 110, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:1e22972827e110fcf820015dc71e8a9f3af124dbf30cabda390ef04c648b82eb", visibility = "private" }
 
 [tests]
 framework = "pytest"
@@ -56,7 +56,7 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 [verifier]
 protocol = "custom-json-v1"
 entrypoint = "run.py"
-bundle = { digest = "PLACEHOLDER", size_bytes = 0, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:PLACEHOLDER", visibility = "private" }
+bundle = { digest = "sha256:2aa58b144840e8ac6dced5bab2d3aabd13851f5a19fe3e0438b2d47cee7ccaed", size_bytes = 3310, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:2aa58b144840e8ac6dced5bab2d3aabd13851f5a19fe3e0438b2d47cee7ccaed", visibility = "private" }
 
 [harbor]
 description = "Build chardet package from an empty workspace: a library for universal character encoding detection supporting ASCII, UTF-8/16/32, Latin, Chinese, Japanese, Korean, Cyrillic, and other encodings."
@@ -73,10 +73,10 @@ storage_mb = 2048
 workspace_artifact = "/workspace"
 
 [oracle_bundle]
-digest = "PLACEHOLDER"
-size_bytes = 0
+digest = "sha256:fab07e8e4879ae166289e8a7a0a9a7eed1217c817da0d1154b6cf8ad113c5227"
+size_bytes = 915733
 media_type = "application/vnd.nl2repobench.private-bundle+tar"
-uri = "artifact://private/sha256:PLACEHOLDER"
+uri = "artifact://private/sha256:fab07e8e4879ae166289e8a7a0a9a7eed1217c817da0d1154b6cf8ad113c5227"
 visibility = "private"
 
 [lifecycle]

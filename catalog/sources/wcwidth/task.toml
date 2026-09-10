@@ -37,6 +37,7 @@ reason = "The build backend (hatchling) is preinstalled into the agent and verif
 status = "known"
 installer = "pip"
 packages = []
+lock_artifact = { digest = "sha256:c36088e3a17f13a56117842c3374934eac62eeee2cabe32d089c63c3a8f78891", size_bytes = 192, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:c36088e3a17f13a56117842c3374934eac62eeee2cabe32d089c63c3a8f78891", visibility = "private" }
 
 [tests]
 framework = "pytest"
@@ -55,6 +56,7 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 [verifier]
 protocol = "custom-json-v1"
 entrypoint = "run.py"
+bundle = { digest = "sha256:557ad31b6fd8725b47a1485635e5f2c8c8fdb27555f27716276a0a11aa744650", size_bytes = 1754, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:557ad31b6fd8725b47a1485635e5f2c8c8fdb27555f27716276a0a11aa744650", visibility = "private" }
 
 [harbor]
 description = "Build wcwidth package from an empty workspace: measure display width of Unicode strings in terminals, supporting CJK characters, combining marks, and emoji."
@@ -78,6 +80,9 @@ reason = "Source frozen, verifier and Oracle prepared, ready for compilation and
 [oracle_bundle]
 digest = "sha256:40e3a2cbf1278bea5bd01ca95e70f98e8a646315b1fd0a02482d96cb3bf6d52d"
 size_bytes = 1754726
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:40e3a2cbf1278bea5bd01ca95e70f98e8a646315b1fd0a02482d96cb3bf6d52d"
+visibility = "private"
 
 [candidate_requirements]
 digest = "sha256:c36088e3a17f13a56117842c3374934eac62eeee2cabe32d089c63c3a8f78891"

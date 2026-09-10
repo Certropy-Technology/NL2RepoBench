@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0",
+  "task_id": "wrap-ansi",
+  "upstream": {
+    "framework": "node:test, XO, and tsd",
+    "command": "npm install --ignore-scripts --no-audit --no-fund && npm test",
+    "node_version": "24.19.0",
+    "npm_version": "11.17.0",
+    "runtime_leaves": 80,
+    "passed": 80,
+    "failed": 0,
+    "source_test_file": "test.js",
+    "declaration_test_file": "index.test-d.ts"
+  },
+  "verifier": {
+    "protocol": "custom-json-v1",
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "expected_total": 44,
+    "collection_errors": [],
+    "groups": {
+      "package-shape": 1,
+      "core-wrapping": 6,
+      "whitespace-and-lines": 9,
+      "ansi-styles": 9,
+      "hyperlinks-and-controls": 6,
+      "tabs": 3,
+      "unicode-graphemes": 6,
+      "styled-trim-and-coercion": 4
+    },
+    "boundary": "one bounded UID-10001 JSON child per API call; trusted runner never imports candidate code"
+  }
+}

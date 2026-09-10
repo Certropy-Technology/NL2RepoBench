@@ -1,0 +1,85 @@
+schema_version = "1.0"
+task_id = "pyfiglet"
+version = "1.0.0"
+instruction = "instruction.md"
+
+[metadata]
+difficulty = "medium"
+category = "text-rendering"
+tags = ["python", "figlet", "ascii-art", "text-rendering", "cli"]
+language = "python"
+
+[source]
+status = "known"
+upstream_url = "https://github.com/pwaller/pyfiglet"
+revision = "e7590f2b80a403db9605750df8a51198759757ee"
+license_spdx = "MIT"
+source_digest = "sha256:db9c9940ed1bf3048deff534ed52ff2dafbbc2cd7610b17bb5eca1df6d4278ef"
+submodules = []
+
+[environment]
+status = "known"
+python_version = "3.12"
+os_name = "debian-12-amd64"
+base_image = "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+base_image_digest = "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a"
+system_packages = []
+network_mode = "no-network"
+build_command = "python -m pip install --no-build-isolation --no-deps --no-index -e ."
+
+[environment.network_policy]
+mode = "no-network"
+offline_dependencies = "preinstalled-image"
+reference_source_fetch = "forbidden"
+reason = "The setuptools build backend is preinstalled into the agent and verifier images from the hash-locked candidate closure. pyfiglet has no runtime dependencies. Candidate installation reuses the installed backend with --no-build-isolation, and agent, candidate, verifier, Oracle, and controls run without network access."
+
+[dependencies]
+status = "known"
+installer = "pip"
+packages = []
+lock_artifact = { digest = "sha256:PLACEHOLDER_LOCK", size_bytes = 0, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:PLACEHOLDER_LOCK", visibility = "private" }
+
+[tests]
+framework = "pytest"
+expected_total = 80
+expected_total_source = "frozen-collection"
+commands = ["custom-json-v1 verifier entrypoint"]
+protected_paths = ["/tests/verifier/run.py"]
+
+[metric]
+contract_id = "fixed-test-pass-rate-v1"
+passed_statuses = ["passed"]
+excluded_statuses = []
+collection_mismatch = "fail"
+formula = "clamp(passed / frozen_total, 0, 1)"
+
+[verifier]
+protocol = "custom-json-v1"
+entrypoint = "run.py"
+bundle = { digest = "sha256:PLACEHOLDER_VERIFIER", size_bytes = 0, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:PLACEHOLDER_VERIFIER", visibility = "private" }
+
+[harbor]
+description = "Build pyfiglet from an empty workspace: a pure-Python FIGlet implementation that renders text as ASCII art from bundled FIGfont definitions."
+keywords = ["python", "figlet", "ascii-art", "text-rendering", "cli"]
+agent_timeout_sec = 1800.0
+verifier_timeout_sec = 600.0
+candidate_install_timeout_sec = 120.0
+candidate_total_timeout_sec = 300.0
+agent_network_mode = "no-network"
+verifier_network_mode = "no-network"
+cpus = 2
+memory_mb = 4096
+storage_mb = 2048
+workspace_artifact = "/workspace"
+
+[oracle_bundle]
+digest = "sha256:PLACEHOLDER_ORACLE"
+size_bytes = 0
+media_type = "application/vnd.nl2repobench.private-bundle+tar"
+uri = "artifact://private/sha256:PLACEHOLDER_ORACLE"
+visibility = "private"
+
+[lifecycle]
+status = "blocked"
+owner = "python-wave-k-pyfiglet"
+reason = "Blocked on spec derivability (AGENTS.md 7). Rendering assertions depend on 571 third-party FIGfont data files that an agent cannot derive from a public instruction under no-network; one scenario also requires >100 bundled fonts. Source freeze, license, and 80 calibrated scenarios (0 mismatches) are recorded in blocked.md; no Oracle or control claim is made."

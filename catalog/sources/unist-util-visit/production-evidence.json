@@ -1,0 +1,217 @@
+{
+  "schema_version": "1.0",
+  "task_id": "unist-util-visit",
+  "terminal_kind": "valid",
+  "status_boundary": "awaiting-agent-run",
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/syntax-tree/unist-util-visit",
+    "revision": "5d601df684ca7341646d6b57eb0f20fdfe277bc2",
+    "source_archive_sha256": "sha256:d59ced4aa115b1ba3769a58fa82ffed6ea6f2b06cecc80cc846504399b1367ab",
+    "license_spdx": "MIT",
+    "license_sha256": "sha256:63cb98b3f6abfb3c3592c16f88253c1bdc834087bf52671e8ce5609e4eb693cf",
+    "package_json_sha256": "sha256:cea217c9abfbf4d5cbbb3878acdefe0293c97011e4587684408aa24f7fa992f4",
+    "source_fetch_proof": "Oracle solve.sh fetched the exact revision, asserted FETCH_HEAD, archived it, and verified the archive digest before restoring /workspace."
+  },
+  "bundle": {
+    "path": ".nl2repo/compiled-final-visit/unist-util-visit/bundle.manifest.json",
+    "sha256": "sha256:f5c69419fbfa51b7b42dc433e19649ab96672d57d6e315010eedd1eb365aac5c",
+    "size_bytes": 21252,
+    "mode": "production",
+    "canonical_manifest_digest": "sha256:6a4e9936e4106f0ea1b0508edf129d1bed08069f406399661810c8f4440c74be",
+    "toolchain_lock_digest": "sha256:aac76d5c1a423cd3c5c9c96870198475e0fed151793b60eeb830a7c053692dc8"
+  },
+  "toolchain": {
+    "node": "24.19.0",
+    "npm": "11.17.0",
+    "harbor_version": "0.21.0",
+    "toolchain_lock": "toolchain.node.lock.toml",
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "verifier_python_base": "python@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "platform": "linux/amd64",
+    "agent_network_mode": "no-network",
+    "agent_allowed_hosts": [],
+    "verifier_network_mode": "no-network",
+    "agent_runtime_image_note": "The local OpenHands tag resolves to sha256:bb48824b85940a3b6083ce0a1d713af6963ebf92bcba318dfc5838461a4081c3, differing from the locked sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f; integrator must restore or verify the locked image before a model Agent Run."
+  },
+  "dependencies": {
+    "lockfile_version": "3",
+    "package_manager": "npm",
+    "package_manager_version": "11.17.0",
+    "install_mode": "offline",
+    "lifecycle_scripts": "ignore-scripts",
+    "packages": ["@types/unist@3.0.3", "unist-util-is@6.0.0", "unist-util-visit-parents@6.0.2"],
+    "artifact": {
+      "digest": "sha256:3fc2a20c2de896bea5703b09947450419d715a07297244767eaa4a2a42842fee",
+      "size_bytes": 81580,
+      "path": ".nl2repo/artifacts/private/sha256/3f/3fc2a20c2de896bea5703b09947450419d715a07297244767eaa4a2a42842fee"
+    }
+  },
+  "tests": {
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "expected_total": 32,
+    "collection": "32 leaves, no collection errors",
+    "commands_artifact": {
+      "digest": "sha256:02fc18dec100b57a6c53e6104e7299258c226454be50c477b566baddb24a7ee0",
+      "size_bytes": 250,
+      "path": ".nl2repo/artifacts/private/sha256/02/02fc18dec100b57a6c53e6104e7299258c226454be50c477b566baddb24a7ee0"
+    },
+    "test_bundle": {
+      "digest": "sha256:20dd1516eca1b96f81ac8accf030604f1b0f1e6e4e683ca88627adbc246d1f31",
+      "size_bytes": 2484,
+      "path": ".nl2repo/artifacts/private/sha256/20/20dd1516eca1b96f81ac8accf030604f1f0f1e6e4e683ca88627adbc246d1f31"
+    }
+  },
+  "commands": [
+    {
+      "stage": "source-validation",
+      "command": "uv run nl2repo task validate-source catalog/sources/unist-util-visit",
+      "tool_version": "nl2repobench current checkout",
+      "exit_code": 0,
+      "log": ".nl2repo/evidence/unist-util-visit/source-validation-final2.txt"
+    },
+    {
+      "stage": "network-lint",
+      "command": "uv run nl2repo task lint-network --tasks-root catalog/sources",
+      "tool_version": "nl2repobench current checkout",
+      "exit_code": 0,
+      "log": ".nl2repo/evidence/unist-util-visit/network-lint-final.txt",
+      "note": "Repository-wide lint has zero errors; the task has the expected Oracle source-fetch warning only."
+    },
+    {
+      "stage": "production-compile",
+      "command": "uv run nl2repo harbor compile catalog/sources/unist-util-visit --output .nl2repo/compiled-final-visit --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private",
+      "tool_version": "nl2repobench current checkout; Node toolchain lock",
+      "exit_code": 0,
+      "log": ".nl2repo/evidence/unist-util-visit/production-compile-final2.txt",
+      "result": "production bundle manifest sha256:f5c69419fbfa51b7b42dc433e19649ab96672d57d6e315010eedd1eb365aac5c"
+    },
+    {
+      "stage": "syntax-and-serialization",
+      "command": "bash -n controls and solution scripts; node --check private JavaScript; parse source JSON/TOML",
+      "tool_version": "Node 22.23.1 host; bash 5.x; Python tomllib",
+      "exit_code": 0,
+      "log": ".nl2repo/evidence/unist-util-visit/syntax-final.txt"
+    },
+    {
+      "stage": "control-preparation-remediation",
+      "command": "prepare-control without explicit --toolchain, then retry with --toolchain toolchain.node.lock.toml",
+      "tool_version": "nl2repobench current checkout",
+      "exit_code": 1,
+      "log": ".nl2repo/evidence/unist-util-visit/control-preparation.txt",
+      "note": "The default selected the incompatible v1 lock; all final Node control preparations succeeded with the explicit Node lock."
+    },
+    {
+      "stage": "deterministic-compile",
+      "command": "repeat production compile and diff -qr .nl2repo/compiled-final-visit/unist-util-visit .nl2repo/compiled-repeat-visit/unist-util-visit",
+      "tool_version": "nl2repobench current checkout; Node toolchain lock",
+      "exit_code": 0,
+      "log": ".nl2repo/evidence/unist-util-visit/compile-repeat-diff.txt",
+      "result": "99-file bundles are byte-identical"
+    }
+  ],
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/compiled-final-visit/unist-util-visit -a oracle --allow-agent-host github.com --job-name unist-util-visit-final-oracle-20260830 -o .nl2repo/runs/unist-util-visit-final-oracle-20260830 --n-concurrent 1 --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "valid": true,
+    "expected_total": 32,
+    "collected": 32,
+    "passed": 32,
+    "failed": 0,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/runs/unist-util-visit-final-oracle-20260830/unist-util-visit-final-oracle-20260830/unist-util-visit__oWy8V3f/verifier/grading.json",
+      "sha256": "sha256:13e64863dd0eb6b252a7c68765ae38a2ca9acd7dcd727aaa68508e152990fade"
+    },
+    "network": {
+      "path": ".nl2repo/runs/unist-util-visit-final-oracle-20260830/unist-util-visit-final-oracle-20260830/unist-util-visit__oWy8V3f/verifier/network.json",
+      "sha256": "sha256:7dc6f398f00a883d74e9f0bf0f07fb851278e80dfd6795c3f63ca00b6e3d1124"
+    },
+    "public_network_available": false
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final-visit/unist-util-visit-empty -a oracle --job-name unist-util-visit-final-empty-20260830 -o .nl2repo/runs/unist-util-visit-final-empty-20260830 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 32,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {"path": ".nl2repo/runs/unist-util-visit-final-empty-20260830/unist-util-visit-final-empty-20260830/unist-util-visit-empty__UjgPZ7g/verifier/grading.json", "sha256": "sha256:e45b0a3c684318f96a78fa8c1f917e2ff1ac9e51e85ff54d47b0089b92583961"},
+      "network": {"path": ".nl2repo/runs/unist-util-visit-final-empty-20260830/unist-util-visit-final-empty-20260830/unist-util-visit-empty__UjgPZ7g/verifier/network.json", "sha256": "sha256:7dc6f398f00a883d74e9f0bf0f07fb851278e80dfd6795c3f63ca00b6e3d1124"},
+      "public_network_available": false
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final-visit/unist-util-visit-stub -a oracle --job-name unist-util-visit-final-stub-20260830 -o .nl2repo/runs/unist-util-visit-final-stub-20260830 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 32,
+      "collected": 32,
+      "passed": 5,
+      "failed": 27,
+      "reward": 0.15625,
+      "grading": {"path": ".nl2repo/runs/unist-util-visit-final-stub-20260830/unist-util-visit-final-stub-20260830/unist-util-visit-stub__wpcgcwx/verifier/grading.json", "sha256": "sha256:8263333e62648cb9aa42330f18b139b2e9dbfedc8b26d7481b6da3a84d878442"},
+      "network": {"path": ".nl2repo/runs/unist-util-visit-final-stub-20260830/unist-util-visit-final-stub-20260830/unist-util-visit-stub__wpcgcwx/verifier/network.json", "sha256": "sha256:bcbdec45d54bc642b1f5eda83d6674ce15b56f5b66f2247eea11548e2c966dbe"},
+      "public_network_available": false
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final-visit/unist-util-visit-forgery -a oracle --job-name unist-util-visit-final-forgery-rerun-20260830 -o .nl2repo/runs/unist-util-visit-final-forgery-rerun-20260830 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 32,
+      "collected": 32,
+      "passed": 5,
+      "failed": 27,
+      "reward": 0.15625,
+      "verifier_owned_reward": true,
+      "workspace_forged_reward": 1.0,
+      "grading": {"path": ".nl2repo/runs/unist-util-visit-final-forgery-rerun-20260830/unist-util-visit-final-forgery-rerun-20260830/unist-util-visit-forgery__KXBVzgX/verifier/grading.json", "sha256": "sha256:8263333e62648cb9aa42330f18b139b2e9dbfedc8b26d7481b6da3a84d878442"},
+      "network": {"path": ".nl2repo/runs/unist-util-visit-final-forgery-rerun-20260830/unist-util-visit-final-forgery-rerun-20260830/unist-util-visit-forgery__KXBVzgX/verifier/network.json", "sha256": "sha256:e0bfae6ddc0af146f22a6d0b80f016a9efd23fae9f14ec90661b427524aa01ef"},
+      "public_network_available": false
+    },
+    "offline": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final-visit/unist-util-visit-offline -a oracle --job-name unist-util-visit-final-offline-rerun-20260830 -o .nl2repo/runs/unist-util-visit-final-offline-rerun-20260830 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "completed": true,
+      "expected_total": 32,
+      "collected": 32,
+      "passed": 5,
+      "failed": 27,
+      "reward": 0.15625,
+      "grading": {"path": ".nl2repo/runs/unist-util-visit-final-offline-rerun-20260830/unist-util-visit-final-offline-rerun-20260830/unist-util-visit-offline__X6TWojz/verifier/grading.json", "sha256": "sha256:8263333e62648cb9aa42330f18b139b2e9dbfedc8b26d7481b6da3a84d878442"},
+      "network": {"path": ".nl2repo/runs/unist-util-visit-final-offline-rerun-20260830/unist-util-visit-final-offline-rerun-20260830/unist-util-visit-offline__X6TWojz/verifier/network.json", "sha256": "sha256:10f428adfb4b9dd9df42d1b943c811ffc69f06a7ce850aace4470926cabf1af2"},
+      "public_network_available": false
+    },
+    "call_hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-final-visit/unist-util-visit-call-hang -a oracle --job-name unist-util-visit-final-call-hang-20260830 -o .nl2repo/runs/unist-util-visit-final-call-hang-20260830 --n-concurrent 1 --yes",
+      "exit_code": 0,
+      "valid": true,
+      "bounded": true,
+      "expected_total": 32,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-call-failed",
+      "grading": {"path": ".nl2repo/runs/unist-util-visit-final-call-hang-20260830/unist-util-visit-final-call-hang-20260830/unist-util-visit-call-hang__XuXHz2h/verifier/grading.json", "sha256": "sha256:47f90bc79aea76213c04d06ec6d29824220f58db2b8119ce656421c7b1d6176a"},
+      "network": {"path": ".nl2repo/runs/unist-util-visit-final-call-hang-20260830/unist-util-visit-final-call-hang-20260830/unist-util-visit-call-hang__XuXHz2h/verifier/network.json", "sha256": "sha256:bcbdec45d54bc642b1f5eda83d6674ce15b56f5b66f2247eea11548e2c966dbe"},
+      "public_network_available": false
+    }
+  },
+  "additional_controls": {
+    "install_script": {"valid": true, "collected": 0, "passed": 0, "reward": 0.0, "failure_reason": "candidate-installation-failed", "network_public": false, "grading_sha256": "sha256:e45b0a3c684318f96a78fa8c1f917e2ff1ac9e51e85ff54d47b0089b92583961"},
+    "loader_hook": {"valid": true, "collected": 32, "passed": 0, "reward": 0.0, "network_public": false, "grading_sha256": "sha256:e2e2dfc642e88296b678489933a12580d7db9a741f869546e1239a744fe332a3"}
+  },
+  "residual_risks": [
+    "No model Agent Run was started by lane contract.",
+    "Blind review, spec traceability approval, dataset integration, pilot, and publication remain integrator stages.",
+    "The local OpenHands runtime image differs from the locked digest and must be restored or explicitly verified before a model run.",
+    "The task intentionally exposes a bounded JSON callback adaptation, not every non-JSON callback or TypeScript declaration assertion from upstream."
+  ]
+}

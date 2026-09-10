@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0",
+  "task_id": "wrap-ansi",
+  "package_version": "10.0.1",
+  "module_kind": "esm",
+  "entrypoints": {
+    ".": {
+      "runtime": "./index.js",
+      "types": "./index.d.ts"
+    }
+  },
+  "public_exports": [
+    {
+      "kind": "default-function",
+      "name": "wrapAnsi",
+      "signature": "wrapAnsi(string: string, columns: number, options?: Options): string",
+      "runtime_string_domain": "JSON-compatible values converted with String()",
+      "columns_domain": "finite non-negative integers",
+      "options": {
+        "hard": {"type": "boolean", "default": false},
+        "wordWrap": {"type": "boolean", "default": true},
+        "trim": {"type": "boolean", "default": true}
+      },
+      "state": "stateless",
+      "determinism": "deterministic",
+      "side_effects": []
+    },
+    {
+      "kind": "type",
+      "name": "Options",
+      "members": ["hard?", "wordWrap?", "trim?"]
+    }
+  ],
+  "runtime_dependencies": {
+    "direct": ["ansi-styles@6.2.3", "string-width@8.2.0"],
+    "transitive": ["get-east-asian-width@1.6.0", "strip-ansi@7.2.0", "ansi-regex@6.3.0"]
+  },
+  "excluded_surfaces": [
+    "CLI entry point",
+    "CommonJS entry point",
+    "browser bundle",
+    "filesystem, subprocess, TTY, clock, randomness, service, or network behavior",
+    "terminal emulation beyond the documented CSI, SGR, OSC, and malformed-sequence boundary"
+  ]
+}

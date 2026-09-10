@@ -37,7 +37,7 @@ reason = "The pbr build backend is preinstalled into the agent and verifier imag
 status = "known"
 installer = "pip"
 packages = []
-lock_artifact = {}
+lock_artifact = { digest = "sha256:9229e4ab96ca41efd7afcd36367bbcd6b3d8e5a07ce0f40f748a29d68820dd5d", size_bytes = 169, media_type = "text/plain; charset=utf-8", uri = "artifact://private/sha256:9229e4ab96ca41efd7afcd36367bbcd6b3d8e5a07ce0f40f748a29d68820dd5d", visibility = "private" }
 
 [tests]
 framework = "pytest"
@@ -56,7 +56,7 @@ formula = "clamp(passed / frozen_total, 0, 1)"
 [verifier]
 protocol = "custom-json-v1"
 entrypoint = "run.py"
-bundle = {}
+bundle = { digest = "sha256:9079f965c0e132695761b5c47ee6f1723a728c1fbae5871bdb354f74cb7f9bda", size_bytes = 2952, media_type = "application/vnd.nl2repobench.private-bundle+tar", uri = "artifact://private/sha256:9079f965c0e132695761b5c47ee6f1723a728c1fbae5871bdb354f74cb7f9bda", visibility = "private" }
 
 [harbor]
 description = "Build stevedore package from an empty workspace: a Python library for managing dynamic plugins using setuptools entry points."

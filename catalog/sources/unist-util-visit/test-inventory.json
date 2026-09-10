@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "task_id": "unist-util-visit",
+  "upstream_test_files": ["test.js", "index.test-d.ts"],
+  "upstream_runner": "node --conditions development test.js",
+  "upstream_behavior_groups": [
+    "public export shape",
+    "preorder and reverse traversal",
+    "string, array, object, and predicate tests",
+    "CONTINUE, EXIT, SKIP, and index actions",
+    "callback index and parent metadata",
+    "tree mutation and deterministic repeated walks"
+  ],
+  "private_collection": {
+    "framework": "node:test",
+    "files": ["contract.test.mjs"],
+    "expected_total": 32,
+    "collection_errors": 0,
+    "excluded": ["TypeScript-only declaration assertions", "non-JSON callbacks", "network and CLI behavior"]
+  }
+}

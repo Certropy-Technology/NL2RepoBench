@@ -1,0 +1,254 @@
+{
+  "schema_version": "1.0",
+  "task_id": "wrap-ansi",
+  "task_version": "2.0.0",
+  "terminal_kind": "valid",
+  "status": "controls-passed",
+  "expected_total": 44,
+  "source_freeze": {
+    "status": "known",
+    "upstream_url": "https://github.com/chalk/wrap-ansi",
+    "revision": "c6b6259a58843e491e8703c5010a2a517b5f5738",
+    "commit_timestamp": "2026-08-18T00:40:33+02:00",
+    "source_archive_size_bytes": 92160,
+    "source_archive_sha256": "sha256:dccdb394d6c59a10e8f50aba2b8ebbbbf4f27a3a2d822e73a8fa9190934ccec6",
+    "license_spdx": "MIT",
+    "license_path": "license",
+    "license_sha256": "sha256:5c932d88256b4ab958f64a856fa48e8bd1f55bc1d96b8149c65689e0c61789d3",
+    "submodules": [],
+    "source_worktree_clean": true
+  },
+  "upstream_baseline": {
+    "command": "docker run --rm --platform linux/amd64 -v $PWD/.nl2repo/authoring-work/node-author-wave2-20260828/wrap-ansi/baseline:/work -w /work docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848 bash -lc 'node --version; npm --version; npm install --ignore-scripts --no-audit --no-fund; npm test'",
+    "exit_code": 0,
+    "node_version": "24.19.0",
+    "npm_version": "11.17.0",
+    "runtime_tests_collected": 80,
+    "runtime_tests_passed": 80,
+    "runtime_tests_failed": 0,
+    "xo_and_tsd_exit_code": 0,
+    "log": ".nl2repo/authoring-work/node-author-wave2-20260828/wrap-ansi/logs/upstream-baseline.log",
+    "log_sha256": "sha256:ba755ec031f8c42e4b3ee61e1d3301601d8f154c00a48713b7b193b234a66719"
+  },
+  "environment": {
+    "os_name": "debian-bookworm",
+    "base_image": "docker.io/library/node@sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "base_image_digest": "sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848",
+    "verifier_python_base_digest": "sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a",
+    "runtime": "node 24.19.0",
+    "package_manager": "npm 11.17.0",
+    "architecture": "linux/amd64",
+    "libc": "glibc 2.36",
+    "network_mode": "no-network",
+    "network_policy": {
+      "mode": "no-network",
+      "agent_allowed_hosts": [],
+      "offline_dependencies": "private-artifact",
+      "reference_source_fetch": "forbidden",
+      "oracle_run_scoped_host": "github.com"
+    },
+    "toolchain_lock_path": "toolchain.node.lock.toml",
+    "toolchain_lock_sha256": "sha256:e5ff4d5a5995022c048fbe7242561d2a6be95b908f40973d72104c6b2d30f27c",
+    "harbor_runner_lock_sha256": "sha256:715cb5a02d19b3baae3a2e3879b94ea3e5f39c8ab19232c93466b1cf385d8e42",
+    "harbor_version": "0.21.0"
+  },
+  "dependencies": {
+    "status": "known",
+    "ecosystem": "npm",
+    "package_manager": "npm",
+    "package_manager_version": "11.17.0",
+    "lockfile_name": "package-lock.json",
+    "lockfile_version": 3,
+    "install_mode": "offline",
+    "lifecycle_scripts": "ignore-scripts",
+    "direct": ["ansi-styles@6.2.3", "string-width@8.2.0"],
+    "transitive": ["get-east-asian-width@1.6.0", "strip-ansi@7.2.0", "ansi-regex@6.3.0"],
+    "artifact": {
+      "digest": "sha256:e2afe0fb68b4a534011a110eee20317c0ff56001d792ae19373e45987af83487",
+      "size_bytes": 348160,
+      "media_type": "application/vnd.nl2repobench.npm-bundle+tar",
+      "uri": "artifact://private/sha256:e2afe0fb68b4a534011a110eee20317c0ff56001d792ae19373e45987af83487",
+      "visibility": "private"
+    }
+  },
+  "tests": {
+    "protocol": "custom-json-v1",
+    "framework": "node:test",
+    "report_format": "node-test-json-v1",
+    "frozen_total": 44,
+    "commands_artifact": "sha256:a832562812d78324c3ac1b16a15a9ab97c6e9e92ad7de119f2da7bb997be8661",
+    "test_bundle": "sha256:d05c500292bba6e02fba7af8eb70a975c86a996ebffd20d04615ce9a6d0475dd",
+    "collection": "44 unique node:test leaves; no collection errors",
+    "candidate_boundary": "candidate-boundary.json",
+    "trusted_imports_candidate": false,
+    "candidate_uid": 10001
+  },
+  "metric": {
+    "contract_id": "node-test-leaf-pass-rate-v1",
+    "formula": "clamp(passed / frozen_total, 0, 1)",
+    "collection_mismatch": "fail"
+  },
+  "receipt_binding": {
+    "instruction_sha256": "sha256:502acc51532268eb3bc49f31723f3ae2e36faa42ba10e370fa4ba6ebbc5962a6",
+    "task_toml_sha256": "sha256:bf01b77f24d49ab53c2df705bf70a80b8ef011e46a85176ab6f349a8059729ba",
+    "api_inventory_sha256": "sha256:75db9a75d2c7a4f11b161c77e4e11800db8e9eab6660217c23ff73c8ac594b0e",
+    "test_inventory_sha256": "sha256:73582608317139f87e39c65931f0e55f8bb05129f5e5955596ed46cf322f31c5",
+    "candidate_boundary_sha256": "sha256:e64071f22845e59ebc5d31a665b36d99663c5e85229c8a93d8c35fd7d9602f46",
+    "dependency_artifact": "sha256:e2afe0fb68b4a534011a110eee20317c0ff56001d792ae19373e45987af83487",
+    "commands_artifact": "sha256:a832562812d78324c3ac1b16a15a9ab97c6e9e92ad7de119f2da7bb997be8661",
+    "test_bundle": "sha256:d05c500292bba6e02fba7af8eb70a975c86a996ebffd20d04615ce9a6d0475dd",
+    "oracle_bundle": "sha256:47412948233d3c5c6bcb71365e7297eb2f2d120d139efee4d01cdcee35837276"
+  },
+  "compiled_bundle": {
+    "mode": "production",
+    "path": ".nl2repo/current-compile/wrap-ansi",
+    "bundle_manifest_sha256": "sha256:58ee53b9190bf9a08b40fa75c621496c4a5b43842f7156843e5d977a38dd6f87",
+    "canonical_manifest_digest": "sha256:77ecfbdf1719b796b0d50d4bc4341dad752431db8f989e58106242d409477964",
+    "file_count": 117,
+    "repeat_compile_path": ".nl2repo/current-repeat/wrap-ansi",
+    "repeat_bundle_manifest_sha256": "sha256:58ee53b9190bf9a08b40fa75c621496c4a5b43842f7156843e5d977a38dd6f87",
+    "byte_identical": true,
+    "allow_incomplete": false
+  },
+  "oracle": {
+    "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/current-compile/wrap-ansi -a oracle --allow-agent-host github.com --job-name wrap-ansi-oracle-current --jobs-dir .nl2repo/runs/wrap-ansi/current/oracle --n-concurrent 1 --max-retries 0 --quiet --yes",
+    "exit_code": 0,
+    "harbor_version": "0.21.0",
+    "trial": "wrap-ansi__ibm8tDv",
+    "valid": true,
+    "expected_total": 44,
+    "collected": 44,
+    "passed": 44,
+    "failed": 0,
+    "reward": 1.0,
+    "grading": {
+      "path": ".nl2repo/runs/wrap-ansi/current/oracle/wrap-ansi-oracle-current/wrap-ansi__ibm8tDv/verifier/grading.json",
+      "sha256": "sha256:db9384c7f42ca85d694b1bf0f8cc898a01aec7bf4d73bbf44397181a9dcdc492"
+    },
+    "network": {
+      "path": ".nl2repo/runs/wrap-ansi/current/oracle/wrap-ansi-oracle-current/wrap-ansi__ibm8tDv/verifier/network.json",
+      "sha256": "sha256:bcbdec45d54bc642b1f5eda83d6674ce15b56f5b66f2247eea11548e2c966dbe",
+      "public_network_available": false,
+      "public_hostname_probe": false,
+      "numeric_ip_probe": false
+    }
+  },
+  "controls": {
+    "empty": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-current/wrap-ansi/wrap-ansi-empty -a oracle --job-name wrap-ansi-empty-current --jobs-dir .nl2repo/runs/wrap-ansi/current/empty --n-concurrent 1 --max-retries 0 --quiet --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {"path": ".nl2repo/runs/wrap-ansi/current/empty/wrap-ansi-empty-current/wrap-ansi-empty__yHRCARa/verifier/grading.json", "sha256": "sha256:057942984501d7f6c93c45d950f01111fceb078de548b8796330dadbf0cc95ca"},
+      "network": {"path": ".nl2repo/runs/wrap-ansi/current/empty/wrap-ansi-empty-current/wrap-ansi-empty__yHRCARa/verifier/network.json", "sha256": "sha256:292a2ab37f75af9ec7d04a07098d4bafa7ed79961a5334e0a855aa31441e3399", "public_network_available": false}
+    },
+    "stub": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-current/wrap-ansi/wrap-ansi-stub -a oracle --job-name wrap-ansi-stub-current --jobs-dir .nl2repo/runs/wrap-ansi/current/stub --n-concurrent 1 --max-retries 0 --quiet --yes",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 44,
+      "collected": 44,
+      "passed": 0,
+      "reward": 0.0,
+      "grading": {"path": ".nl2repo/runs/wrap-ansi/current/stub/wrap-ansi-stub-current/wrap-ansi-stub__5mgoMs5/verifier/grading.json", "sha256": "sha256:d76866d8ea0348bbf6b395f3cc21db14489b8b8a12582b4e897fdee40c688cb1"},
+      "network": {"path": ".nl2repo/runs/wrap-ansi/current/stub/wrap-ansi-stub-current/wrap-ansi-stub__5mgoMs5/verifier/network.json", "sha256": "sha256:10f428adfb4b9dd9df42d1b943c811ffc69f06a7ce850aace4470926cabf1af2", "public_network_available": false}
+    },
+    "forgery": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-current/wrap-ansi/wrap-ansi-forgery -a oracle --job-name wrap-ansi-forgery-current --jobs-dir .nl2repo/runs/wrap-ansi/current/forgery --n-concurrent 1 --max-retries 0 --quiet --yes",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 44,
+      "collected": 44,
+      "passed": 0,
+      "reward": 0.0,
+      "candidate_written_reward": 1.0,
+      "verifier_owned_reward": true,
+      "grading": {"path": ".nl2repo/runs/wrap-ansi/current/forgery/wrap-ansi-forgery-current/wrap-ansi-forgery__nsbxMiT/verifier/grading.json", "sha256": "sha256:d76866d8ea0348bbf6b395f3cc21db14489b8b8a12582b4e897fdee40c688cb1"},
+      "network": {"path": ".nl2repo/runs/wrap-ansi/current/forgery/wrap-ansi-forgery-current/wrap-ansi-forgery__nsbxMiT/verifier/network.json", "sha256": "sha256:bcbdec45d54bc642b1f5eda83d6674ce15b56f5b66f2247eea11548e2c966dbe", "public_network_available": false}
+    },
+    "hang": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-current/wrap-ansi/wrap-ansi-hang -a oracle --job-name wrap-ansi-hang-current --jobs-dir .nl2repo/runs/wrap-ansi/current/hang --n-concurrent 1 --max-retries 0 --quiet --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-call-failed",
+      "bounded": true,
+      "harbor_wall_seconds": 179,
+      "grading": {"path": ".nl2repo/runs/wrap-ansi/current/hang/wrap-ansi-hang-current/wrap-ansi-hang__rvUQsty/verifier/grading.json", "sha256": "sha256:b175f516cebd32bdc2e3f1f82e7d2c83b38b40104d3907a99545c6c16060c059"},
+      "network": {"path": ".nl2repo/runs/wrap-ansi/current/hang/wrap-ansi-hang-current/wrap-ansi-hang__rvUQsty/verifier/network.json", "sha256": "sha256:bcbdec45d54bc642b1f5eda83d6674ce15b56f5b66f2247eea11548e2c966dbe", "public_network_available": false}
+    },
+    "offline": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-current/wrap-ansi/wrap-ansi-offline -a oracle --job-name wrap-ansi-offline-current --jobs-dir .nl2repo/runs/wrap-ansi/current/offline --n-concurrent 1 --max-retries 0 --quiet --yes",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 44,
+      "collected": 44,
+      "passed": 4,
+      "failed": 40,
+      "reward": 0.09090909090909091,
+      "public_network_available": false,
+      "public_hostname_probe": false,
+      "numeric_ip_probe": false,
+      "grading": {"path": ".nl2repo/runs/wrap-ansi/current/offline/wrap-ansi-offline-current/wrap-ansi-offline__bYrm86q/verifier/grading.json", "sha256": "sha256:965b83b9aa9c071e185c9a9ca5b1f19469ba956cb2e45dc8d93ddf5fc41ee7c4"},
+      "network": {"path": ".nl2repo/runs/wrap-ansi/current/offline/wrap-ansi-offline-current/wrap-ansi-offline__bYrm86q/verifier/network.json", "sha256": "sha256:bcbdec45d54bc642b1f5eda83d6674ce15b56f5b66f2247eea11548e2c966dbe", "public_network_available": false}
+    },
+    "install-script": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-current/wrap-ansi/wrap-ansi-install-script -a oracle --job-name wrap-ansi-install-script-current --jobs-dir .nl2repo/runs/wrap-ansi/current/install-script --n-concurrent 1 --max-retries 0 --quiet --yes",
+      "exit_code": 0,
+      "valid": true,
+      "collected": 0,
+      "passed": 0,
+      "reward": 0.0,
+      "failure_class": "model",
+      "failure_reason": "candidate-installation-failed",
+      "grading": {"path": ".nl2repo/runs/wrap-ansi/current/install-script/wrap-ansi-install-script-current/wrap-ansi-install-script__y3nQC9T/verifier/grading.json", "sha256": "sha256:057942984501d7f6c93c45d950f01111fceb078de548b8796330dadbf0cc95ca"},
+      "network": {"path": ".nl2repo/runs/wrap-ansi/current/install-script/wrap-ansi-install-script-current/wrap-ansi-install-script__y3nQC9T/verifier/network.json", "sha256": "sha256:7dc6f398f00a883d74e9f0bf0f07fb851278e80dfd6795c3f63ca00b6e3d1124", "public_network_available": false}
+    },
+    "loader-hook": {
+      "command": "uv run --frozen --project harbor-runner harbor run -p .nl2repo/controls-current/wrap-ansi/wrap-ansi-loader-hook -a oracle --job-name wrap-ansi-loader-hook-current --jobs-dir .nl2repo/runs/wrap-ansi/current/loader-hook --n-concurrent 1 --max-retries 0 --quiet --yes",
+      "exit_code": 0,
+      "valid": true,
+      "expected_total": 44,
+      "collected": 44,
+      "passed": 0,
+      "reward": 0.0,
+      "grading": {"path": ".nl2repo/runs/wrap-ansi/current/loader-hook/wrap-ansi-loader-hook-current/wrap-ansi-loader-hook__7i9fjwr/verifier/grading.json", "sha256": "sha256:d76866d8ea0348bbf6b395f3cc21db14489b8b8a12582b4e897fdee40c688cb1"},
+      "network": {"path": ".nl2repo/runs/wrap-ansi/current/loader-hook/wrap-ansi-loader-hook-current/wrap-ansi-loader-hook__7i9fjwr/verifier/network.json", "sha256": "sha256:bcbdec45d54bc642b1f5eda83d6674ce15b56f5b66f2247eea11548e2c966dbe", "public_network_available": false}
+    }
+  },
+  "static_gates": {
+    "validate_source": {"command": "uv run nl2repo task validate-source catalog/sources/wrap-ansi", "exit_code": 0, "status": "controls-passed"},
+    "network_lint": {"command": "uv run nl2repo task lint-network --tasks-root catalog/sources", "exit_code": 0, "repository_error_count": 0, "repository_warning_count": 169, "task_findings": 1, "task_warning": "expected Oracle source-host authorization"},
+    "production_compile": {"command": "uv run nl2repo harbor compile catalog/sources/wrap-ansi --output .nl2repo/current-compile --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "exit_code": 0},
+    "repeat_compile": {"command": "uv run nl2repo harbor compile catalog/sources/wrap-ansi --output .nl2repo/current-repeat --toolchain toolchain.node.lock.toml --artifact-root .nl2repo/artifacts --allow-private", "exit_code": 0, "byte_identical": true},
+    "production_gate": {"command": "python3 scripts/validate_node_production.py --task catalog/sources/wrap-ansi --bundle .nl2repo/current-compile/wrap-ansi --toolchain toolchain.node.lock.toml --oracle-root .nl2repo/runs/wrap-ansi/current/oracle --controls .nl2repo/evidence/wrap-ansi/control-summary-current.json --output .nl2repo/evidence/wrap-ansi/production-gate-current.json", "exit_code": 0},
+    "focused_tests": {"command": "uv run pytest -q --no-cov tests/test_node_controls.py tests/test_node_control_summary.py tests/test_node_foundation.py tests/test_node_production_gate.py", "exit_code": 0, "passed": 53},
+    "full_tests": {"command": "uv run pytest -q", "exit_code": 0, "passed": 427, "coverage_percent": 80.06},
+    "ruff": {"command": "uv run ruff check src tests scripts", "exit_code": 0},
+    "mypy": {"command": "uv run mypy src/nl2repobench", "exit_code": 0, "source_files": 81},
+    "no_vendor": {"command": "uv run pytest -q -p no:cacheprovider --no-cov tests/test_no_vendor_install.py", "exit_code": 0, "passed": 1},
+    "syntax": {"command": "bash -n catalog/sources/wrap-ansi/harbor/solution/solve.sh catalog/sources/wrap-ansi/harbor/controls/*.sh && node --check catalog/sources/wrap-ansi/harbor/tests/private/contract.test.mjs && node --check catalog/sources/wrap-ansi/harbor/tests/private/test_client.mjs", "exit_code": 0}
+  },
+  "agent_run_precondition": {
+    "status": "unmet",
+    "failure_class": "infrastructure",
+    "locked_image": "nl2repobench/openhands-sdk-fork:930e9b1da-bookworm",
+    "locked_image_id": "sha256:c50b3e3c39e1802399d659604f0a4d478ee48997ec463bcf815fe3fdc9abc85f",
+    "local_image_id": "sha256:bb48824b85940a3b6083ce0a1d713af6963ebf92bcba318dfc5838461a4081c3",
+    "next_step": "Restore the exact locked OpenHands runtime image and rerun affected integration checks before starting any model Agent Run."
+  },
+  "residual_risks": [
+    "No model Agent Run was started in this authoring lane.",
+    "Independent blind review, traceability approval, generated catalog/tasks integration, pilot, dataset publication, and release approval remain downstream stages.",
+    "The frozen verifier is an independently authored 44-leaf contract suite, not the full 80-leaf upstream runtime suite; the upstream suite passed separately and the mapping is documented.",
+    "The repository-wide network lint has 169 unrelated warnings; this task has only the expected trusted-Oracle host-authorization warning and zero errors.",
+    "The locked OpenHands image ID differs from the local tag. This does not invalidate Oracle or separate-verifier receipts, but it blocks a comparable model Agent Run until the exact image is restored."
+  ]
+}
